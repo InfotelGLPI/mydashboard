@@ -1,0 +1,553 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Activity Development Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - Mydashboard plugin 2.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-29 14:40+0100\n"
+"PO-Revision-Date: 2016-02-29 14:41+0100\n"
+"Last-Translator: Xavier CAILLAUD <tsmr@thetsmr.fr>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: setup.php:115 inc/menu.class.php:81 inc/menu.class.php:236
+#: inc/preference.class.php:46
+msgid "My Dashboard"
+msgstr "Dashboard"
+
+#: setup.php:128
+msgid "This plugin requires GLPI >= 0.90"
+msgstr "Ce plugin nécessite GLPI >= 0.90"
+
+#: ajax/saveConfig.php:67
+msgid "Can't add this widget in Database"
+msgstr "Impossible d'ajouter ce widget dans la Base de Données"
+
+#: ajax/saveConfig.php:72
+msgid "Added"
+msgstr "Ajouté"
+
+#: ajax/saveConfig.php:74
+msgid "Can't add this widget on users Dashboard"
+msgstr "Impossible d'ajouter ce widget sur le Dashboard de l'utilisateur"
+
+#: ajax/saveConfig.php:81
+msgid "Deleted"
+msgstr "Supprimé"
+
+#: ajax/saveConfig.php:97
+msgid "Updated"
+msgstr "Mis à jour"
+
+#: ajax/saveConfig.php:99
+msgid "Can't save new order"
+msgstr "Impossible de sauvegarder le nouvel arrangement"
+
+#: ajax/saveConfig.php:115 inc/menu.class.php:865
+msgid "Dashboard not saved"
+msgstr "Dashboard non sauvegardé"
+
+#: ajax/saveConfig.php:115 inc/menu.class.php:864
+msgid "Dashboard saved"
+msgstr "Dashboard sauvegardé"
+
+#: inc/alert.class.php:32 inc/alert.class.php:48 inc/alert.class.php:57
+#: inc/alert.class.php:222
+msgid "Alert"
+msgid_plural "Alerts"
+msgstr[0] "Alerte"
+msgstr[1] "Alertes"
+
+#: inc/alert.class.php:151
+msgid "Monitoring"
+msgstr "Surveillance"
+
+#: inc/alert.class.php:194
+msgid "No problem"
+msgstr "Pas de problème"
+
+#: inc/alert.class.php:216
+msgid "No impact"
+msgstr "Pas d'impact"
+
+#: inc/alert.class.php:223
+msgid "Alert level"
+msgstr "Niveau d'alerte"
+
+#: inc/central.class.php:46
+msgid "Central"
+msgstr "Central"
+
+#: inc/central.class.php:66 inc/change.class.php:35 inc/config.class.php:118
+#: inc/datatable.class.php:47 inc/html.class.php:43 inc/menu.class.php:863
+#: inc/module.class.php:50 inc/planning.class.php:37 inc/problem.class.php:35
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: inc/change.class.php:47 inc/change.class.php:52 inc/change.class.php:95
+#: inc/change.class.php:215 inc/change.class.php:266
+msgid "Changes to be processed"
+msgstr "Changements à traiter"
+
+#: inc/change.class.php:48 inc/change.class.php:53 inc/change.class.php:197
+#: inc/change.class.php:250
+msgid "Changes on pending status"
+msgstr "Changements en attente"
+
+#: inc/change.class.php:58 inc/change.class.php:467
+msgid "Change followup"
+msgstr "Suivi des changements"
+
+#: inc/chart.class.php:81 inc/datatable.class.php:178
+msgid "No data is given to the widget"
+msgstr "Les données du widget n’ont pas été initialisées"
+
+#: inc/chart.class.php:96
+msgid "No data available"
+msgstr "Pas de données disponibles"
+
+#: inc/chart.class.php:101 inc/datatable.class.php:98
+msgid "Not an array"
+msgstr "Pas un tableau"
+
+#: inc/config.class.php:39
+msgid "Dashboard - Configuration"
+msgstr "Dashboard - Configuration"
+
+#: inc/config.class.php:80
+msgid "Enable the possibility to display Dashboard in full screen"
+msgstr "Autoriser l'affichage du Dashboard en plein écran"
+
+#: inc/config.class.php:86
+msgid "Display the menu"
+msgstr "Afficher le menu d'ajout de widget"
+
+#: inc/config.class.php:93
+msgid "Display widgets from plugins"
+msgstr "Afficher les widgets des plugins"
+
+#: inc/config.class.php:118
+msgid "By Default for"
+msgstr "Par Défaut pour"
+
+#: inc/datatable.class.php:206
+msgid "No column defined"
+msgstr "Pas de colonne définie"
+
+#: inc/example.class.php:39 inc/example.class.php:199
+msgid "My first widget (HTML)"
+msgstr "Mon premier widget (HTML)"
+
+#: inc/example.class.php:40 inc/example.class.php:67
+msgid "My second widget (VBarChart)"
+msgstr "Mon second widget (VBarChart)"
+
+#: inc/example.class.php:41 inc/example.class.php:87
+msgid "My third widget (HBarChart)"
+msgstr "Mon troisième widget (HBarChart)"
+
+#: inc/example.class.php:42 inc/example.class.php:108
+msgid "My fourth widget (PieChart)"
+msgstr "Mon quatrième widget (PieChart)"
+
+#: inc/example.class.php:43 inc/example.class.php:121
+msgid "My fifth widget (LineChart)"
+msgstr "Mon cinquième widget (LineChart)"
+
+#: inc/example.class.php:44 inc/example.class.php:128
+msgid "My sixth widget (Datatable)"
+msgstr "Mon sixième widget (Datatable)"
+
+#: inc/example.class.php:46 inc/example.class.php:145
+msgid "My seventh widget (Clock)"
+msgstr "Mon septième widget (Horloge)"
+
+#: inc/example.class.php:47 inc/example.class.php:178
+msgid "My eighth widget (RadarChart)"
+msgstr "Mon huitième widget (RadarChart)"
+
+#: inc/example.class.php:48
+msgid "My nineth widget (Fake one)"
+msgstr "Mon neuvième widget (Faux widget)"
+
+#: inc/example.class.php:114
+msgid "Value"
+msgstr "Valeur"
+
+#: inc/example.class.php:114
+msgid "units"
+msgstr "unités"
+
+#: inc/example.class.php:149
+msgid "Minutes elapsed"
+msgstr "Minutes écoulées"
+
+#: inc/example.class.php:149
+msgid "Minutes left"
+msgstr "Minutes restantes"
+
+#: inc/example.class.php:166
+msgid "This example widget display the time, it refreshes every "
+msgstr "Cet exemple de widget affiche l'heure, il rafraichit toutes les "
+
+#: inc/example.class.php:171
+msgid "This example widget display the time, it can be refreshed manually"
+msgstr "Cet exemple de widget affiche l'heure, il peut être rafraichit manuellement"
+
+#: inc/example.class.php:202
+msgid "Answer"
+msgstr "Réponse"
+
+#: inc/example.class.php:211
+msgid "Examples widgets"
+msgstr "Widgets exemples"
+
+#: inc/example.class.php:220
+msgid "In all example widgets the datas are the same :"
+msgstr "Dans tous les widgets exemples les données sont les mêmes  "
+
+#: inc/example.class.php:226
+msgid "Maximized"
+msgstr "Maximisé"
+
+#: inc/example.class.php:227
+msgid "Minimized"
+msgstr "Minimisé"
+
+#: inc/example.class.php:228
+msgid "Initialized"
+msgstr "Initialisé"
+
+#: inc/helper.class.php:323
+msgid "Not a valid SQL SELECT query"
+msgstr "Requête SQL SELECT non valide"
+
+#: inc/infotel.class.php:14 inc/infotel.class.php:86
+#: inc/infoteldemo.class.php:14 inc/infoteldemo.class.php:85
+msgid "Opened tickets backlog"
+msgstr "Backlog des tickets en cours"
+
+#: inc/infotel.class.php:15 inc/infotel.class.php:118
+#: inc/infoteldemo.class.php:15 inc/infoteldemo.class.php:116
+msgid "Number of opened tickets by priority"
+msgstr "Nombre de tickets ouverts par priorité"
+
+#: inc/infotel.class.php:16 inc/infotel.class.php:153
+#: inc/infoteldemo.class.php:17 inc/infoteldemo.class.php:151
+msgid "Internal annuary"
+msgstr "Annuaire interne"
+
+#: inc/infotel.class.php:17 inc/infotel.class.php:192
+#: inc/infoteldemo.class.php:18 inc/infoteldemo.class.php:190
+msgid "Mails collector"
+msgstr "Mails collecteurs"
+
+#: inc/infotel.class.php:18 inc/infotel.class.php:227
+#: inc/infoteldemo.class.php:19 inc/infoteldemo.class.php:225
+msgid "Logged users"
+msgstr "Utilisateurs connectés"
+
+#: inc/infotel.class.php:19 inc/infotel.class.php:306
+#: inc/infoteldemo.class.php:20 inc/infoteldemo.class.php:304
+msgid "Tickets stock by month"
+msgstr "Stock de ticket par mois"
+
+#: inc/infotel.class.php:20 inc/infotel.class.php:380
+#: inc/infoteldemo.class.php:21 inc/infoteldemo.class.php:378
+msgid "Top ten ticket authors of the previous month"
+msgstr "Top 10 des auteurs de tickets du mois précedent"
+
+#: inc/infotel.class.php:21 inc/infotel.class.php:424
+#: inc/infoteldemo.class.php:422
+msgid "Process time by tech by month"
+msgstr "Durée de traitement des techniciens par mois"
+
+#: inc/infotel.class.php:24 inc/infotel.class.php:519
+#: inc/infoteldemo.class.php:23 inc/infoteldemo.class.php:448
+msgid "GLPI Status"
+msgstr "Statut de GLPI"
+
+#: inc/infotel.class.php:25 inc/infotel.class.php:566
+msgid "SLA Compliance"
+msgstr "Respect des SLA"
+
+#: inc/infotel.class.php:305 inc/infoteldemo.class.php:303
+msgid "Tickets stock"
+msgstr "Stock de tickets"
+
+#: inc/infotel.class.php:438
+msgid "Latest version"
+msgstr "Dernière version"
+
+#: inc/infotel.class.php:466
+msgid "News from GLPI"
+msgstr "Nouvelles de GLPI"
+
+#: inc/infotel.class.php:474
+msgid "Supervision map"
+msgstr "Carte de supervision"
+
+#: inc/infotel.class.php:562
+msgid "Respected SLA"
+msgstr "SLA respectées"
+
+#: inc/infotel.class.php:563
+msgid "Not respected SLA"
+msgstr "SLA non respectées"
+
+#: inc/infotel.class.php:580 inc/infoteldemo.class.php:462
+msgid "Problem with GLPI"
+msgstr "Problème sur GLPI"
+
+#: inc/infotel.class.php:585 inc/infoteldemo.class.php:467
+msgid "GLPI is OK"
+msgstr "GLPI est OK"
+
+#: inc/infotel.class.php:587 inc/infoteldemo.class.php:469
+msgid "Alert is not properly configured"
+msgstr "L'alerte n'est pas configurée correctement"
+
+#: inc/infotel.class.php:597 inc/infoteldemo.class.php:478
+msgid "Show Profile"
+msgstr "Voir Profil"
+
+#: inc/infotel.class.php:720 inc/infoteldemo.class.php:601
+msgid "Curl PHP package not installed"
+msgstr "le paquet CURL pour PHP n'est pas installé"
+
+#: inc/menu.class.php:835
+msgid "No data available in table"
+msgstr "Pas de données disponibles"
+
+#: inc/menu.class.php:836
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Affichage de _START_ à _END_ de _TOTAL_ entrées"
+
+#: inc/menu.class.php:837
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Afficher de 0 à 0 de 0 entrées"
+
+#: inc/menu.class.php:838
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtré depuis _MAX_ entrées au total)"
+
+#: inc/menu.class.php:841
+msgid "Show _MENU_ entries"
+msgstr "Afficher _MENU_ entrées"
+
+#: inc/menu.class.php:845
+msgid "No matching records found"
+msgstr "Pas de résultats trouvés"
+
+#: inc/menu.class.php:853
+msgid ": activate to sort column ascending"
+msgstr ": activer pour trier par ordre croissant"
+
+#: inc/menu.class.php:854
+msgid ": activate to sort column descending"
+msgstr ": activer pour trier par ordre décroissant"
+
+#: inc/menu.class.php:856 inc/menu.class.php:862
+msgid "Close"
+msgstr "Fermer"
+
+#: inc/menu.class.php:857
+msgid "Maximize"
+msgstr "Agrandir"
+
+#: inc/menu.class.php:858
+msgid "Minimize"
+msgstr "Réduire"
+
+#: inc/menu.class.php:859
+msgid "Refresh"
+msgstr "Rafraichir"
+
+#: inc/menu.class.php:866
+msgid "Data received for"
+msgstr "Données reçues pour"
+
+#: inc/menu.class.php:867
+msgid "No data received for"
+msgstr "Pas de données reçues pour"
+
+#: inc/menu.class.php:868
+msgid "Updating all widgets"
+msgstr "Mise à jour de tous les widgets"
+
+#: inc/menu.class.php:869
+msgid "Widget added on Dashboard"
+msgstr "Widget ajouté au Dashboard"
+
+#: inc/module.class.php:123 inc/module.class.php:253
+msgid "notice"
+msgstr "information"
+
+#: inc/module.class.php:123 inc/module.class.php:254
+msgid "warning"
+msgstr "avertissement"
+
+#: inc/module.class.php:123 inc/module.class.php:255
+msgid "error"
+msgstr "erreur"
+
+#: inc/piechart.class.php:57
+msgid "You can't have more than one serie for a pie chart"
+msgstr "Vous ne pouvez pas avoir plus d'un série pour un diagramme circulaire"
+
+#: inc/preference.class.php:77
+msgid "Automatic refreshing of the widgets that can be refreshed"
+msgstr "Rafraichissement automatique des widgets qui peuvent être rafraichis"
+
+#: inc/preference.class.php:82
+msgid "Refresh every "
+msgstr "Rafraichir toutes les"
+
+#: inc/preference.class.php:85
+msgid "minute(s)"
+msgstr "minute(s)"
+
+#: inc/preference.class.php:87
+msgid "Number of widget in width"
+msgstr "Nombre de widgets en largeur"
+
+#: inc/preference.class.php:93
+msgid "Replace central interface"
+msgstr "Remplacer l'interface centrale"
+
+#: inc/preferenceuserblacklist.class.php:57
+msgid "From which plugins you want to display the widgets?"
+msgstr "De quels plugins souhaitez vous afficher les widgets?"
+
+#: inc/profileauthorizedwidget.class.php:45
+msgid "Authorize/Unauthorize all"
+msgstr "Autoriser/Interdire tous"
+
+#: inc/profile.class.php:42
+msgid "Rights management"
+msgstr "Gestion des droits"
+
+#: inc/profile.class.php:120
+msgid "Full"
+msgstr "Complet"
+
+#: inc/profile.class.php:120
+msgid "Custom"
+msgstr "Personnalisé"
+
+#: inc/profile.class.php:122
+msgid "Dashboard Access"
+msgstr "Accès au Dashboard"
+
+#: inc/profile.class.php:134
+msgid "Configuration Access"
+msgstr "Accès à la configuration"
+
+#: inc/profile.class.php:251
+msgid "See the dashboard"
+msgstr "Voir le dashboard"
+
+#: inc/profile.class.php:255
+msgid "See the configuration"
+msgstr "Voir la configuration"
+
+#: inc/ticket.class.php:75 inc/ticket.class.php:843
+msgid "New tickets"
+msgstr "Nouveaux Tickets"
+
+#: inc/userwidget.class.php:55
+msgid "user_widget management"
+msgstr "Gestion de user_widget"
+
+#: inc/widget.class.php:35
+msgid "Widget management"
+msgstr "Gestion du widget"
+
+#: scripts/insert_stock_tickets.php:32
+msgid "Plugin disabled"
+msgstr "Plugin désactivé"
+
+#~ msgid "Backlog des tickets en cours"
+#~ msgstr "Backlog des tickets en cours"
+
+#~ msgid "Nombre de tickets en cours par priorites"
+#~ msgstr "Nombre de tickets en cours par priorites"
+
+#~ msgid "Nombre de jours restants par contrat client"
+#~ msgstr "Nombre de jours restants par contrat client"
+
+#~ msgid "Annuaire interne"
+#~ msgstr "Annuaire interne"
+
+#~ msgid "Annuaire Client"
+#~ msgstr "Annuaire Client"
+
+#~ msgid "Tickets sans CRI"
+#~ msgstr "Tickets sans CRI"
+
+#~ msgid "Mails collecteur"
+#~ msgstr "Mails collecteur"
+
+#~ msgid "Interventions with old contract"
+#~ msgstr "Intervention sur des contrats terminés"
+
+#~ msgid "Backup Report"
+#~ msgstr "Rapport de sauvegarde"
+
+#~ msgid "Interventions not billed"
+#~ msgstr "Interventions non facturées"
+
+#~ msgid "Plugin is not activated"
+#~ msgstr "Le plugin n'est pas activé"
+
+#~ msgid "Type of Backup"
+#~ msgstr "Type de sauvegarde"
+
+#~ msgid "Data recieved for"
+#~ msgstr "Données reçues pour"
+
+#~ msgid "No data recieved for"
+#~ msgstr "Pas de données reçues pour"
+
+#~ msgid "This plugin requires GLPI >= 0.85"
+#~ msgstr "Ce plugin nécessite GLPI >=0.85"
+
+#~ msgid "This plugin requires GLPI >= 0.84"
+#~ msgstr "Ce plugin requiert GLPI >= 0.84"
+
+#~ msgid "Generated with SQL Query"
+#~ msgstr "Généré avec une requête SQL"
+
+#~ msgid "Ticket repartition by category"
+#~ msgstr "Répartition des tickets par catégorie"
+
+#~ msgid "Annuaire Infotel"
+#~ msgstr "Annuaire Infotel"
+
+#~ msgid "Display widgets from special plugins"
+#~ msgstr "Afficher les widgets des plugins spéciaux"
+
+#~ msgid "Toggle Full Screen"
+#~ msgstr "Passer en mode plein écran"
+
+#~ msgid "No defined type"
+#~ msgstr "Pas de type défini"
+
+#~ msgid "Unbilled"
+#~ msgstr "Non facturé"
+
+#~ msgid "Tasks in progress"
+#~ msgstr "Tâches en cours"
+
+#~ msgid "Responsible"
+#~ msgid_plural "Responsibles"
+#~ msgstr[0] "Responsable"
+#~ msgstr[1] "Responsables"

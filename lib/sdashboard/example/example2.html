@@ -1,0 +1,122 @@
+<html>
+	<head>
+
+		<!-- load jquery ui css theme -->
+		<link type="text/css" href="css/jquery-ui.css" rel="stylesheet" />
+
+		<!-- load the mydashboard css -->
+		<link href="../sDashboard.css" rel="stylesheet">
+		<link href="libs/jqPlot/jquery.jqplot.css" rel="stylesheet">
+
+		<!-- load jquery library -->
+		<script src="libs/jquery/jquery-1.8.2.js" type="text/javascript"></script>
+		<!-- load jquery ui library -->
+		<script src="libs/jquery/jquery-ui.js" type="text/javascript"></script>
+
+		<!-- load touch punch library to enable dragging on touch based devices -->
+		<script src="libs/touchpunch/jquery.ui.touch-punch.js" type="text/javascript"></script>
+
+		<!-- load jqplot charting library -->
+		<script src="libs/jqPlot/jquery.jqplot.js" type="text/javascript"></script>
+		<script src="libs/jqPlot/jqplot.pieRenderer.js" type="text/javascript"></script>
+
+		<!-- load dashboard library -->
+		<script src="../jquery-sDashboard.js" type="text/javascript"></script>
+
+		<!-- example code -->
+		<script type="text/javascript">
+			$(function() {
+				//jq plot data
+				var jqplotPieData = [['Heavy Industry', 12], ['Retail', 9], ['Light Industry', 14], ['Out of home', 16], ['Commuting', 7], ['Orientation', 9]];
+
+				//construct and render a jq plot chart
+				var plot1 = $.jqplot('chart1', [jqplotPieData], {
+					seriesDefaults : {
+						// Make this a pie chart.
+						renderer : jQuery.jqplot.PieRenderer,
+						rendererOptions : {
+							// Put data labels on the pie slices.
+							// By default, labels show the percentage of the slice.
+							showDataLabels : true
+						}
+					},
+					legend : {
+						show : true,
+						location : 'e'
+					}
+				});
+				
+				
+				//**********************************************//
+				//dashboard json data
+				//this is the data format that the mydashboard framework expects
+				//**********************************************//
+
+				var dashboardJSON = [{
+					widgetTitle : "jqPlot Example",
+					widgetId : "jqPlotExample123",
+					widgetContent : $("#chart1")
+				}];
+
+                //add an event listener for dashboard creation complete event
+				$("#myDashboard").bind("sdashboardcreationcomplete", function(e) {
+										
+					$('#chart1').height(190);
+					$('#chart1').width(350);
+
+					plot1.replot({
+						resetAxes : true
+					});
+				});
+				
+				//add an event listener for dashboard widget maximized event
+				$("#myDashboard").bind("sdashboardwidgetmaximized", function(e,data) {
+					
+                    var widgetDefinition = data.widgetDefinition;
+					widgetDefinition.widgetContent.height(600 * 0.96);
+					widgetDefinition.widgetContent.width(800 * 0.96);
+
+					plot1.replot({
+						resetAxes : true
+					});
+				});
+
+				//add an event listener for dashboard widget minimized event
+				$("#myDashboard").bind("sdashboardwidgetminimized", function(e,data) {
+					var widgetDefinition = data.widgetDefinition;
+					widgetDefinition.widgetContent.height(190);
+					widgetDefinition.widgetContent.width(350);
+
+					plot1.replot({
+						resetAxes : true
+					});
+				});
+
+
+				//render a dashboard
+				$("#myDashboard").sDashboard({
+					dashboardData : dashboardJSON
+				});
+
+				
+				
+
+			});
+
+		</script>
+	</head>
+
+	<body>
+
+		<fieldset>
+			<legend>
+				jqPlot Charts Example
+			</legend>
+			<div id="chart1"></div>
+			<ul id="myDashboard">
+
+			</ul>
+		</fieldset>
+
+	</body>
+</html>

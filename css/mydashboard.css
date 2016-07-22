@@ -1,0 +1,516 @@
+<?php
+/*
+ -------------------------------------------------------------------------
+ MyDashboard plugin for GLPI
+ Copyright (C) 2015 by the MyDashboard Development Team.
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of MyDashboard.
+
+ MyDashboard is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ MyDashboard is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------  
+ */
+
+.addItemTD{
+   width:150px;
+   text-align: center;
+}
+
+#fibnews-div{
+   text-align: left;
+   margin: 0px 30px 0px 30px;
+}
+
+.fib-margin{
+   margin-bottom: 5px;
+}
+
+.plugin_mydashboard_dashboard{
+    width:100%;
+    border: initial; 
+    background: initial;
+}
+/*
+div#tabcontent{
+    width:95%;
+}
+*/
+.plugin_mydashboard_discret{
+    color: #D4D7DA;
+    font-size:12px;
+   /* float:left; */
+}
+
+.plugin_mydashboard_header{
+   /* text-align: center;*/
+    padding-bottom: 0px !important ;
+    padding-top: 0px !important ;
+}
+
+.plugin_mydashboard_header_title{
+    font-size:20px;
+    font-weight:bold;
+   /* background-image: url('./pics/postit.png');*/
+    /*background-color: rgb(246,238,129);*/
+/*    background-color: white;
+    box-shadow: 1px 3px 10px -2px rgba(0, 0, 0, 1);
+    padding-top:2px;*/
+    margin-left: 46%;
+}
+
+.plugin_mydashboard_header_right{
+    margin-right: 25px;
+    /*margin-top: 5px;*/
+ /*   box-shadow: 1px 3px 10px -2px rgba(0, 0, 0, 1);
+    background-color: white;
+    padding-top:3px;*/
+    width:300px;
+    position: absolute;
+    right: 0px;
+}
+
+.plugin_mydashboard_header_info{
+    float:right;
+    margin-right: 5px;
+}
+
+.plugin_mydashboard_header_fullscreen{
+    cursor: pointer;
+    margin-right: 21px;
+    float:right;
+}
+
+#plugin_mydashboard_container{
+    width:100%;
+    height: 100%;
+    display: table;
+   /* background-color: white;*/
+/*    background-image: url('./pics/liege.jpg');
+    box-shadow: inset 0px 3px 10px -2px rgba(0, 0, 0, 1);
+    border-radius: 16px;*/
+}
+
+.plugin_mydashboard_interface_selector {
+    border: #CCC 1px solid;
+    font-weight: bold;
+    width : 18%;
+    margin-left: auto;
+    margin-right:auto;
+    margin-bottom: 10px;
+    padding: 5px;
+    box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 1);
+    border-radius: 5px;
+}
+/*STA==Profile config==============================*/
+.plugin_mydashboard_authorize_all:hover {
+    background-color: #F6E8B3;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    user-select:none;
+    cursor: pointer;
+}
+
+.plugin_mydashboard_authorized {
+    font-weight: bold;
+    background-color: rgb(205, 255, 205);
+}
+.plugin_mydashboard_unauthorized {
+/*    opacity :0.9;*/
+}
+
+/*END==Profile config==============================*/
+/*STA===plugin_mydashboard_menu============================*/
+.plugin_mydashboard_add_button {
+    padding-top: -5px;
+    margin-left: 10px;
+}
+
+.plugin_mydashboard_menuDashboard {
+    position: absolute;
+    right : 0px;
+    top:0px;
+    z-index: 0; 
+    display : none;
+}
+/*
+.plugin_mydashboard_menuDashboard {
+    position: fixed;
+    right : 0px;
+    width: 27px;
+    height:100%;
+    top:0px;
+    overflow: hidden;
+    z-index: 0; 
+    float: right
+    margin-bottom: 3%;
+    padding-bottom: 3%;
+}*/
+
+.plugin_mydashboard_menuSlider {
+   /* position: relative; */
+    /*background-color: #476E95;*/
+/*    background-color: #68BD80;
+    margin-right:-369px;
+    margin-top: -25px;
+    height:100%;
+    width:364px;
+    cursor:pointer;
+    border-left:2px solid black;
+    padding-bottom: 5%;
+    color:white;
+    text-align:left;
+    opacity:0.7;
+    -webkit-transition: opacity .15s ease-in-out;
+        -moz-transition: opacity .15s ease-in-out;
+        -ms-transition: opacity .15s ease-in-out;
+        -o-transition: opacity .15s ease-in-out;
+        transition: opacity .15s ease-in-out;*/
+        
+    background-color: white;
+    width:364px;
+    cursor:pointer;
+    border-left:2px solid black;
+    padding-bottom: 5%;
+    color:black;
+    text-align:left;
+    -webkit-transition: opacity .15s ease-in-out;
+        -moz-transition: opacity .15s ease-in-out;
+        -ms-transition: opacity .15s ease-in-out;
+        -o-transition: opacity .15s ease-in-out;
+        transition: opacity .15s ease-in-out;
+    border : lightgrey 1px solid;
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.5);
+}
+
+.plugin_mydashboard_menuDashboard:hover .plugin_mydashboard_menuSlider{
+    /*opacity:1;*/
+}
+
+.plugin_mydashboard_menuSlider:hover{
+    opacity:1;
+}
+
+.plugin_mydashboard_menuSliderButton {
+    position: absolute;
+    top: 284px;
+    right: -36px;
+    width:89px;
+    font-weight: bold;
+    font-size: 16px;
+    height: 25px;
+    cursor:pointer;
+    background-color: white;
+    background-position-y: -1px;
+    border:1.5px solid black;
+    padding:2px; 
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    display:table;
+    z-index: 10000;
+}
+
+/*.plugin_mydashboard_menuSliderHeader {
+    border-bottom: 2px black solid;
+    padding: 3px;
+    font-size: large;
+}*/
+
+.plugin_mydashboard_menuSliderContent {
+    height: 90%;
+}
+
+.plugin_mydashboard_menuSliderButton:hover {
+    background-image: url('../pics/left.png');
+    font-size: 0px;
+}
+
+.plugin_mydashboard_menuSliderButtonClose:hover {
+    background-image: url('../pics/right.png');
+    font-size: 0px;
+    
+}
+
+.plugin_mydashboard_menuDashboardListTitle1 {
+    font-size: 11px;
+    border-bottom: lightgray 1px solid; 
+    padding: 5px;
+    /*0.85*/
+    margin :0px;
+}
+
+.plugin_mydashboard_menuDashboardListTitle2 {
+    margin:0px;
+}
+
+.plugin_mydashboard_menuDashboardListTitle1:hover,
+.plugin_mydashboard_menuDashboardListTitle1Opened {
+    /*background-color: #D2E3F4;*/
+/*    background-color: #10A758;*/
+    background-color: #E2E2E2;
+    /*background-color: blue;*/
+    /*color: white;*/
+}
+
+.plugin_mydashboard_menuDashboardListTitle1:before {
+    content:url('../pics/closed.png');
+    margin-right: 5px;
+}
+
+.plugin_mydashboard_menuDashboardListTitle1.plugin_mydashboard_menuDashboardListTitle1Opened:before {
+    content:url('../pics/opened.png');
+}
+
+.plugin_mydashboard_menuDashboard li{
+    font-size: 11px;
+    /*background: #476E95;*/
+    padding-left:3px;
+}
+.plugin_mydashboard_menuDashboardListOfPlugin{
+   max-height: 90%;
+   /* overflow-y: auto;*/
+}
+.plugin_mydashboard_menuDashboardListContainer{
+   max-height: 600px;
+   overflow-y: auto;
+   border-bottom: white 1px solid;
+}
+
+li.plugin_mydashboard_menuDashboardList{
+    /*border: #476E95 1px solid;*/
+    border-bottom: 1px solid lightgray;
+}
+
+.plugin_mydashboard_html_content{
+  /*  position: absolute;*/
+    background-color: rgb(237, 246, 255);
+    z-index: 100;
+  /*  border:1px dotted white;*/
+}
+
+.plugin_mydashboard_html_content:hover{
+ /*   border:1px dotted gray;*/
+}
+
+.plugin_mydashboard_fullscreen_view {
+    overflow-y: auto;
+    background-color: white;
+}
+
+.plugin_mydashboard_header_info_logbox {
+    display: inline-block;
+    position: absolute;
+/*    right: 10px;*/
+    padding: 10px;
+    z-index: 9992;
+/*    top: 195px;*/
+    top: 25px;
+    background-color: white;
+    border : lightgrey 1px solid;
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.5);
+}
+
+.plugin_mydashboard_header_info_img {
+    width :14px;
+}
+
+.plugin_mydashboard_log {
+/*    max-height: 200px;
+    overflow-y: auto;*/
+}
+
+.plugin_mydashboard_log_item {
+    padding: 2px 0px 2px 0px;
+    border-bottom: 1px lightgrey dashed;
+}
+/*
+li.plugin_mydashboard_menuDashboardList:hover{
+    border: lightgray 1px solid; 
+}*/
+
+li.plugin_mydashboard_menuDashboardListItem:hover{
+    background-color: #E7E7E7; 
+}
+
+/*END===plugin_mydashboard_menu============================*/
+/*STA===sDashboard============================*/
+
+.sDashboard {
+    padding-left: 6px;
+    padding-top: 0px;
+}
+
+.sDashboardWidget {
+  /* height : 250px;*/
+    -webkit-border-radius: 4px 4px;
+    -moz-border-radius: 4px 4px;
+    -o-border-radius: 4px 4px;
+    -ms-border-radius: 4px 4px;
+    border-radius: 4px 4px;
+    box-shadow: 2px 3px 9px -3px rgba(0, 0, 0, 0.5); 
+    border:rgba(230, 230, 230) 1px solid;
+    height:300px;
+    width:100%;
+}
+/*
+.sDashboardWidget:hover .sDashboardWidgetHeader{
+    background-image: linear-gradient(#F7F7F7, #E6E6E6);
+}*/
+
+.sDashboard-clearfix:before, .sDashboard-clearfix:after {
+    display: none;
+}
+/*XACA
+.sDashboardWidgetHeader {
+    font-size: 12px;
+    margin :0px;
+    background-image: linear-gradient(#F6F3F3, #E0E0E0);
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: rgb(182, 182, 182) 1px solid;
+    height: 16px;
+}
+*/
+.sDashboardWidgetContent {
+    height: 249px;
+}
+
+.sDashboard li {
+    width: 33.2%;
+    height: 300px;
+    padding: 0px;
+    margin: 3px 12px 3px 0px;
+}
+
+.sDashboardWidgetContainerMaximized .sDashboard-circle-remove-icon{
+    display: none;
+}
+
+.sDashboardWidgetContainerMaximized .sDashboardWidgetContent {
+    height: 89%;
+}
+
+.sDashboardWidgetContainerMaximized .sDashboard-circle-minus-icon {
+    background-position: -2px -55px;
+}
+.sDashboardWidgetContainerMaximized {
+    min-width:75%;
+    min-height:75%;
+    max-height: 75%;
+    left: 13%;
+    top: 13%;
+    width: 73%;
+    z-index: 10500;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.sDashboard-overlay {
+    /*height :100% !important;*/
+}
+
+.ui-sortable-helper {
+    box-shadow: 10px 10px 9px -3px rgba(0, 0, 0, 0.3); 
+}
+
+.ui-sortable-placeholder {
+    border: 1px dotted black;
+    visibility: visible !important;
+    height: 300px !important;
+    border-radius: 4px 4px;
+    background-color: rgb(240,240,240) !important;
+    margin: 3px 10px 0px 0px !important;
+}
+
+.scaledContent {
+    height : 0px;
+    width : 0px;  
+    -webkit-transform: scale(0.55);
+    -moz-transform: scale(0.55);
+    -o-transform: scale(0.55);
+    -ms-transform: scale(0.55);
+}
+
+svg { 
+   /* font-size:15px; */
+   height: auto;
+}
+
+svg:hover {
+   /* -webkit-transform: none;*/
+   /* font-size:17px; */
+}
+
+.unscaledContent {
+    -webkit-transform: none;
+    -moz-transform: none;
+    -o-transform: none;
+    -ms-transform: none;
+}
+
+.flotr-datagrid
+{
+    width :100%
+}
+
+.flotr-datagrid-container
+{
+    background-color: white;
+}
+
+.flotr-tab {
+    border: 1px solid #666;
+    border-top: none;
+    margin: 0 3px;
+    padding: 1px 4px;
+    cursor: pointer;
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    -ms-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
+    opacity: .5;
+    -moz-opacity: .5;
+}
+
+.flotr-tab.selected {
+    background-color: #DDDDDD;
+    opacity: 1;
+}
+
+.dataTable th, .dataTable td{
+    border-right : 2px solid white;
+    border-bottom : 2px solid white;
+}
+/*END===sDashboard============================*/
+
+/*
+.ui-accordion-header plugin_mydashboard_menuAccordion-header {
+    border-top: thin solid white;
+    background: linear-gradient(#fddb6f, #ffb94b);
+    color: #8f5a0a;
+    padding: 1px;
+}
+
+.ui-accordion-header:hover {
+    background: linear-gradient(#ffb94b, #fddb6f);
+}
+
+.ui-accordion-content {
+    border:thin solid rgb(218, 242, 250);
+    color:red;
+}
+*/
