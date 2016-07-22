@@ -81,7 +81,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM{
     
     private function displayList($widgetlist, $category = '', $pluginname){
         $viewNames = $this->getViewNames();
-        foreach($widgetlist as $widgetId => $widgetTitle){                
+        foreach($widgetlist as $widgetId => $widgetTitle){
             
             if(!is_array($widgetTitle)) {
                 echo "<tr class='tab_bg_1 $pluginname'>";
@@ -108,12 +108,13 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM{
                 if($category != ''){
                     $newcategory .=  $category.' > ';
                 }
+
                 if(is_numeric($widgetId)) {
                     $widgetId = $viewNames[$widgetId];
                 }
                 $newcategory .= $widgetId;
                 $this->displaylist($widgetTitle,$newcategory,$pluginname);
-            }          
+            }
         }
     }
     
@@ -168,10 +169,13 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM{
      */
     private function getViewNames() {
        $names = array();
-       $names[1] = __('Personal View');
-       $names[2] = __('Group View');
-       $names[3] = __('Global View');
-       $names[4] = _n('RSS feed', 'RSS feeds', 2);
+      $names[1] = _n('Ticket','Tickets', 2);
+      $names[2] = _n('Problem','Problems', 2);
+      $names[3] = _n('Change','Changes', 2);
+      $names[4] = __('Group View');
+      $names[5] = __('Personal View');
+      $names[6] = __('Global View');
+      $names[7] = _n('RSS feed', 'RSS feeds', 2);
 
        return $names;
     }
