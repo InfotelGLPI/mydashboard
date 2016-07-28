@@ -1,6 +1,10 @@
 # mydashboard
 Plugin mydashboard for GLPI
 
+Ce plugin est sur Transifex - Aidez-nous à le traduire : https://www.transifex.com/tsmr/GLPI_mydashboard/
+
+This plugin is on Transifex - Help us to translate : https://www.transifex.com/tsmr/GLPI_mydashboard/
+
 Vous pouvez proposer de nouveaux widgets :
 http://blogglpi.infotel.com/liste-des-widgets-proposes/
 
