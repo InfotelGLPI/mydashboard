@@ -34,13 +34,14 @@ class PluginMydashboardInfotel extends CommonGLPI{
    
    public function getWidgetsForItem(){
       return array(
-         __('Infotel') => array($this->getType()."1" => __("Opened tickets backlog","mydashboard"),
+         __('Public') => array($this->getType()."1" => __("Opened tickets backlog","mydashboard"),
                                  $this->getType()."2" => __("Number of opened tickets by priority","mydashboard"),
                                  $this->getType()."3" => __("Internal annuary","mydashboard"),
                                  $this->getType()."4" => __("Mails collector","mydashboard"),
                                  //$this->getType()."5" => __("Logged users","mydashboard"),
                                  $this->getType()."6" => __("Tickets stock by month","mydashboard"),
                                  $this->getType()."7" => __("Top ten ticket authors of the previous month","mydashboard"),
+                                 $this->getType()."8" => __("Process time by tech by month","mydashboard"),
                                  $this->getType() . "11" => __("GLPI Status", "mydashboard"),
                                  $this->getType() . "12" => __("SLA Compliance", "mydashboard")
                         )
@@ -402,7 +403,51 @@ class PluginMydashboardInfotel extends CommonGLPI{
             return $widget;
          break;
 
+         case $this->getType()."8":
+            
+            $time_per_tech = self::getTimePerTech($this->options);
+            $months_t = Toolbox::getMonthsOfYearArray();
+            $months = array();
+            foreach($months_t as $key => $month){
+               $months[] = array($key,$month);
+            }
 
+            foreach($time_per_tech as $tech_id => $times){
+               unset($time_per_tech[$tech_id]);
+               $username = getUserName($tech_id);
+               $time_per_tech[$username] = $times;
+            }
+            $widget = new PluginMydashboardVBarChart();
+            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId,true).Entity::dropdown(array('name' => 'entities_id',
+                                                                                                'display' => false,
+                                                                                                'value' => isset($this->options['entities_id'])? $this->options['entities_id'] : $_SESSION['glpiactive_entity']))
+                        ."&nbsp;".__('Recursive')."&nbsp;<input type='checkbox' name='sons' value=1 ".(isset($this->options['sons'])? "checked" : "").">"
+                    . "<input type='submit' value='".__("Show", "mydashboard")."' class='submit' />"
+                    . "</form>";
+            
+            $widget->setOption("bars", array("stacked" => true,"fillOpacity" => 0.8,"shadowSize" => 0));  
+            $colors = array(
+               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
+            );
+            $widget->setOption('colors',$colors,true);
+            $widget->setTabDatas($time_per_tech);
+            $widget->setOption("xaxis", array("ticks" => $months));
+            $widget->setOption("xaxis", array("max" => 13, "min" => 0.5));
+            //$widget->setOption("markers", array("show" => true,"position" => "cb","stacked" => true, "stackingType" => 'a'));
+            $widget->setOption('legend', array(
+            'position' => 'no'
+            //'show' => false
+            ));
+            $widget->appendWidgetHtmlContent($dropdown);
+            $widget->toggleWidgetRefresh();
+            $widget->setWidgetTitle(__("Process time by tech by month","mydashboard"));
+                         
+            return $widget;
+            
+         break;
          case $this->getType() . "11":
             
             $widget = new PluginMydashboardHtml() ;
@@ -571,28 +616,13 @@ class PluginMydashboardInfotel extends CommonGLPI{
 
          foreach($techlist as $techid){
             $time_per_tech[$techid][$key] = 0;
-            //Gestion plateforme
-            $querym_at = "SELECT `glpi_plugin_activity_activities`.`plugin_activity_activitytypes_id` AS type, `glpi_plugin_activity_activities`.`actiontime` AS actiontime, `glpi_plugin_activity_activitytypes`.`completename` AS name 
-                        FROM `glpi_plugin_activity_activities` 
-                        INNER JOIN `glpi_plugin_activity_activitytypes` ON (`glpi_plugin_activity_activitytypes`.`id` = `glpi_plugin_activity_activities`.`plugin_activity_activitytypes_id`)
-                        WHERE (`glpi_plugin_activity_activities`.`begin_date` >= '$month_deb_datetime' AND `glpi_plugin_activity_activities`.`begin_date` <= '$month_end_datetime') 
-                        AND `glpi_plugin_activity_activities`.`users_id` = ".$techid." "
-                        .self::getSpecificEntityRestrict("glpi_plugin_activity_activities", $params)
-                        ."AND `glpi_plugin_activity_activities`.`plugin_activity_activitytypes_id` IN (11) 
-                        ORDER BY name";
 
-            $result_at_q = $DB->query($querym_at);
-            while($data = $DB->fetch_assoc($result_at_q)){
-               $time_per_tech[$techid][$key] += (PluginActivityReport::TotalTpsPassesArrondis($data['actiontime']/3600/8));
-            }
-            //Assistance interne TODO Voir le OR tache non planifi�es
             $querym_ai = "SELECT  DATE(`glpi_tickettasks`.`date`), SUM(`glpi_tickettasks`.`actiontime`) AS actiontime_date
                         FROM `glpi_tickettasks` 
                         INNER JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id` AND `glpi_tickets`.`is_deleted` = 0) 
-                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) 
-                        LEFT JOIN `glpi_plugin_activity_tickettasks` ON (`glpi_tickettasks`.`id` = `glpi_plugin_activity_tickettasks`.`tickettasks_id`) 
-                        WHERE `glpi_tickettasks`.`tickets_id` NOT IN (SELECT `tickets_id` FROM `glpi_plugin_manageentities_cridetails`) 
-                        AND (
+                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
+            $querym_ai .= "WHERE ";
+            $querym_ai .= "(
                            `glpi_tickettasks`.`begin` >= '$month_deb_datetime' 
                            AND `glpi_tickettasks`.`end` <= '$month_end_datetime'
                            AND `glpi_tickettasks`.`users_id_tech` = (".$techid.") "
@@ -605,12 +635,12 @@ class PluginMydashboardInfotel extends CommonGLPI{
                            AND `glpi_tickettasks`.`begin` IS NULL "
                            .self::getSpecificEntityRestrict("glpi_tickets", $params)  
                         .")
-                           AND `glpi_tickettasks`.`actiontime` != 0 AND `glpi_plugin_activity_tickettasks`.`is_oncra` = 1 
-                        GROUP BY DATE(`glpi_tickettasks`.`date`);
+                           AND `glpi_tickettasks`.`actiontime` != 0 ";
+            $querym_ai .= "GROUP BY DATE(`glpi_tickettasks`.`date`);
                         ";
             $result_ai_q = $DB->query($querym_ai);
             while($data = $DB->fetch_assoc($result_ai_q)){
-               $time_per_tech[$techid][$key] += (PluginActivityReport::TotalTpsPassesArrondis($data['actiontime_date']/3600/8));
+               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date']/3600/8));
             }
          }
 
@@ -619,6 +649,40 @@ class PluginMydashboardInfotel extends CommonGLPI{
          }
       }
       return $time_per_tech;
+   }
+   
+   static function TotalTpsPassesArrondis($a_arrondir) {
+       
+      $tranches_seuil   = 0.002;
+      $tranches_arrondi = array(0, 0.25, 0.5, 0.75, 1);
+      
+      $result = 0;
+
+      $partie_entiere = floor($a_arrondir);
+      $reste = $a_arrondir - $partie_entiere + 10; // Le + 10 permet de pallier é un probléme de comparaison (??) par la suite.
+      /* Initialisation des tranches majorées du seuil supplémentaire. */
+      $tranches_majorees = array();
+      for ($i = 0 ; $i < count($tranches_arrondi) ; $i++) {
+         // Le + 10 qui suit permet de pallier é un probléme de comparaison (??) par la suite.
+         $tranches_majorees[] = $tranches_arrondi[$i] + $tranches_seuil + 10;
+      }
+      if ($reste < $tranches_majorees[0]) {
+         $result = $partie_entiere;
+
+      } else if ($reste >= $tranches_majorees[0] && $reste < $tranches_majorees[1]) {
+         $result = $partie_entiere + $tranches_arrondi[1];
+
+      } else if ($reste >= $tranches_majorees[1] && $reste < $tranches_majorees[2]) {
+         $result = $partie_entiere + $tranches_arrondi[2];
+
+      } else if ($reste >= $tranches_majorees[2] && $reste < $tranches_majorees[3]) {
+         $result = $partie_entiere + $tranches_arrondi[3];
+
+      } else {
+         $result = $partie_entiere + $tranches_arrondi[4];
+      }
+
+      return $result;
    }
    
    static function cURLData($options){
