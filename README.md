@@ -1,6 +1,8 @@
 # mydashboard
 Plugin mydashboard for GLPI
 
+![Plugin mydashboard](https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/screenshots/mydashboard.png "Plugin mydashboard")
+
 Ce plugin est sur Transifex - Aidez-nous à le traduire : https://www.transifex.com/tsmr/GLPI_mydashboard/
 
 This plugin is on Transifex - Help us to translate : https://www.transifex.com/tsmr/GLPI_mydashboard/
