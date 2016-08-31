@@ -42,6 +42,7 @@ class PluginMydashboardInfotel extends CommonGLPI{
                                  $this->getType()."6" => __("Tickets stock by month","mydashboard"),
                                  $this->getType()."7" => __("Top ten ticket authors of the previous month","mydashboard"),
                                  $this->getType()."8" => __("Process time by tech by month","mydashboard"),
+                                 $this->getType()."9" => __('Automatic actions in error', 'mydashboard'),
                                  $this->getType() . "11" => __("GLPI Status", "mydashboard"),
                                  $this->getType() . "12" => __("SLA Compliance", "mydashboard")
                         )
@@ -448,6 +449,50 @@ class PluginMydashboardInfotel extends CommonGLPI{
             return $widget;
             
          break;
+         case $this->getType()."9":
+
+               $query = "SELECT *
+                FROM `glpi_crontasks`
+                WHERE `state` = '".Crontask::STATE_RUNNING."'
+                      AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
+                           OR (unix_timestamp(`lastrun`) + 2*".HOUR_TIMESTAMP." < unix_timestamp(now())))";
+               
+               $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('table',$query );
+               $headers = array(__('Last run'),__('Name'),__('Status'));
+               $widget->setTabNames($headers);
+               
+               $result = $DB->query($query);
+               $nb     = $DB->numrows($result);
+
+               $datas = array();
+               $i = 0;
+               if ($nb) {
+                  while ($data = $DB->fetch_assoc($result)) {
+                     
+                     
+                     $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
+                     
+                     $name = $data["name"];
+                     if ($isplug = isPluginItemType($data["itemtype"])) {
+                        $name = sprintf(__('%1$s - %2$s'), $isplug["plugin"], $name);
+                     }
+      
+                     $datas[$i]["name"] = $name;
+
+                     $datas[$i]["state"] = Crontask::getStateName($data["state"]);
+                     
+                     $i++;
+                  }
+                  
+               }
+
+               $widget->setTabDatas($datas);
+               
+               $widget->toggleWidgetRefresh();
+               $widget->setWidgetTitle(__('Automatic actions in error', 'mydashboard'));
+
+               return $widget;
+            break;
          case $this->getType() . "11":
             
             $widget = new PluginMydashboardHtml() ;
