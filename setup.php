@@ -97,7 +97,7 @@ function plugin_version_mydashboard() {
    return array (
       'name'           => __('My Dashboard', 'mydashboard'),
       'version'        => '1.2.1',
-      'author'         => "Infotel",
+      'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       =>'',
       'minGlpiVersion' => '0.90');// For compatibility / no install in version < 0.90
