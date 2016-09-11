@@ -16,6 +16,8 @@
    </description>
    <homepage>https://github.com/InfotelGLPI/mydashboard</homepage>
    <download>https://github.com/InfotelGLPI/mydashboard/releases</download>
+   <issues>https://github.com/InfotelGLPI/mydashboard/issues</issues>
+   <readme>https://github.com/InfotelGLPI/mydashboard/wiki</readme>
    <authors>
       <author>Xavier CAILLAUD</author>
       <author>Infotel</author>
