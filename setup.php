@@ -96,7 +96,7 @@ function plugin_version_mydashboard() {
    
    return array (
       'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => '1.2.1',
+      'version'        => '1.3.0',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       =>'',
@@ -107,7 +107,7 @@ function plugin_version_mydashboard() {
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_mydashboard_check_prerequisites() {
    //85
-   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'0.92','ge')) {
+   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'9.2','ge')) {
       _e('This plugin requires GLPI >= 0.90', 'mydashboard');
       return false;
    }
