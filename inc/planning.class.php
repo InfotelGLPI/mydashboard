@@ -97,6 +97,7 @@ class PluginMydashboardPlanning {
 
       $params = array('who'       => $who,
                       'who_group' => 0,
+                      'whogroup' => 0,
                       'begin'     => $begin,
                       'end'       => $end);
       $interv = array();
@@ -118,6 +119,7 @@ class PluginMydashboardPlanning {
             $output['body'][] = self::displayPlanningItem($val, $who, 'in');
          }
       }
+      
       $output['name'] = "planningwidget";
       
       if(!empty($output)) {
@@ -175,10 +177,12 @@ class PluginMydashboardPlanning {
       $output[$colnum] = "<div style=' margin:auto; text-align:left; border:1px dashed #cccccc;
              background-color: $color; font-size:9px; width:98%;'>";
 
+
       // Plugins case
-      if (isset($val['itemtype']) && !empty($val['itemtype'])) {
+      if (isset($val['itemtype']) 
+            && !empty($val['itemtype'])) {
          ob_start();
-         $val['itemtype']::displayPlanningItem($val, $who, $type, $complete);
+         echo $val['itemtype']::displayPlanningItem($val, $who, $type, $complete);
          $output[$colnum] .= ob_get_contents();
          ob_end_clean();
       }
