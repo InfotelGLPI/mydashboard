@@ -2,14 +2,13 @@
 # Copyright (C) YEAR Activity Development Team
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Mydashboard plugin 1.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-26 10:26+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2016-09-26 11:16+0200\n"
 "Last-Translator: Xavier CAILLAUD <tsmr@thetsmr.fr>, 2016\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/tsmr/teams/65490/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.9\n"
 
 #: setup.php:98 inc/menu.class.php:79 inc/menu.class.php:234
 #: inc/preference.class.php:44
@@ -200,8 +200,7 @@ msgstr "Este widget de ejemplo muestra el tiempo, se actualiza cada"
 
 #: inc/example.class.php:169
 msgid "This example widget display the time, it can be refreshed manually"
-msgstr ""
-"Este widget de ejemplo muestra el tiempo, se puede actualizar manualmente"
+msgstr "Este widget de ejemplo muestra el tiempo, se puede actualizar manualmente"
 
 #: inc/example.class.php:200
 msgid "Answer"
