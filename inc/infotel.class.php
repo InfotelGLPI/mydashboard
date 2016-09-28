@@ -44,7 +44,8 @@ class PluginMydashboardInfotel extends CommonGLPI{
                                  $this->getType()."8" => __("Process time by tech by month","mydashboard"),
                                  $this->getType()."9" => __('Automatic actions in error', 'mydashboard'),
                                  $this->getType() . "11" => __("GLPI Status", "mydashboard"),
-                                 $this->getType() . "12" => __("SLA Compliance", "mydashboard")
+                                 $this->getType() . "12" => __("TTR Compliance", "mydashboard"),
+                                 $this->getType() . "13" => __("TTO Compliance", "mydashboard")
                         )
       );
    }
@@ -534,18 +535,18 @@ class PluginMydashboardInfotel extends CommonGLPI{
 
                //toolbox::logdebug($total);
                
-               $query = "SELECT DISTINCT `glpi_tickets`.`slas_id`, 
+               $query = "SELECT DISTINCT `glpi_tickets`.`slts_ttr_id`, 
                         COUNT(`glpi_tickets`.`id`) as nb
                         FROM `glpi_tickets`
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`due_date` IS NOT NULL
-                        AND `glpi_tickets`.`slas_id` > 0
+                        AND `glpi_tickets`.`slts_ttr_id` > 0
                         AND `glpi_tickets`.`solvedate` > `glpi_tickets`.`due_date`";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
                         
                $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                         ." AND `status` IN (".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.") 
-                        GROUP BY slas_id";
+                        GROUP BY slts_ttr_id";
                //toolbox::logdebug($query);
                $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart',$query );
                $datas = $widget->getTabDatas();
@@ -557,11 +558,55 @@ class PluginMydashboardInfotel extends CommonGLPI{
                $data = array();
                $notrespected = $sum;
                $respected = $total['nb'] - $sum;
-               $data[__("Respected SLA", "mydashboard")] = $respected;
-               $data[__("Not respected SLA", "mydashboard")] = $notrespected;
+               $data[__("Respected TTR", "mydashboard")] = $respected;
+               $data[__("Not respected TTR", "mydashboard")] = $notrespected;
                $widget->setTabDatas($data);
                $widget->toggleWidgetRefresh();
-               $widget->setWidgetTitle(__("SLA Compliance", "mydashboard"));
+               $widget->setWidgetTitle(__("TTR Compliance", "mydashboard"));
+                            
+               return $widget;
+            break;
+         case $this->getType()."13":
+               
+               $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) as nb
+                        FROM `glpi_tickets`
+                        WHERE `glpi_tickets`.`is_deleted` = '0'
+                        AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
+                        AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
+               $all .= getEntitiesRestrictRequest("AND", Ticket::getTable());
+                        //." AND `status` IN (".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.") ";
+               
+               $result = $DB->query($all);
+               $total = $DB->fetch_assoc($result);
+               
+               $query = "SELECT DISTINCT `glpi_tickets`.`slts_tto_id`, 
+                        COUNT(`glpi_tickets`.`id`) as nb
+                        FROM `glpi_tickets`
+                        WHERE `glpi_tickets`.`is_deleted` = '0'
+                        AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
+                        AND `glpi_tickets`.`time_to_own` IS NOT NULL
+                        AND `glpi_tickets`.`slts_tto_id` > 0
+                        AND ((UNIX_TIMESTAMP(`glpi_tickets`.`time_to_own`) - `glpi_tickets`.`date`) < `glpi_tickets`.`takeintoaccount_delay_stat`) ";// AND ".getDateRequest("`$table`.`takeintoaccount_delay_stat`", $begin, $end)."
+                        
+               $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+                        //." AND `status` IN (".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.") 
+                       ."  GROUP BY slts_tto_id";
+                       
+               $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart',$query );
+               $datas = $widget->getTabDatas();
+               $sum = 0;
+               
+               foreach ($datas as $k =>$v) {
+                  $sum += $v;
+               }
+               $data = array();
+               $notrespected = $sum;
+               $respected = $total['nb'] - $sum;
+               $data[__("Respected TTO", "mydashboard")] = $respected;
+               $data[__("Not respected TTO", "mydashboard")] = $notrespected;
+               $widget->setTabDatas($data);
+               $widget->toggleWidgetRefresh();
+               $widget->setWidgetTitle(__("TTO Compliance", "mydashboard"));
                             
                return $widget;
             break;
