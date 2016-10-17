@@ -100,13 +100,13 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
          $tab[] = array(
              "<a ".($row['is_faq']?" class='pubfaq' ":" class='knowbase' ")." href=\"".
                   $CFG_GLPI["root_doc"]."/front/knowbaseitem.form.php?id=".$row["id"]."\">".
-                  Html::resume_text($row["name"],80)."</a>", $date
+                  Html::resume_text($row["name"],80)."</a>", Html::ConvDateTime($date)
          );
       }
       if ($widgetId == "knowbaseitemrecent") {
-         $headers = array(__('Name'),__('Publication date'));
+         $headers = array(__('Name'),__('Publication date', 'mydashboard'));
       } else {
-         $headers = array(__('Name'),__('Modification date'));
+         $headers = array(__('Name'),__('Modification date', 'mydashboard'));
       }
       
       $widget = new PluginMydashboardDatatable();
