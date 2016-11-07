@@ -1,7 +1,9 @@
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_alerts`;
 CREATE TABLE `glpi_plugin_mydashboard_alerts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reminders_id` int(11) NOT NULL,
-  `impact` tinyint(1) NOT NULL,
+  `id`           INT(11)    NOT NULL AUTO_INCREMENT,
+  `reminders_id` INT(11)    NOT NULL,
+  `impact`       TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+)
+  ENGINE = MyISAM
+  DEFAULT CHARSET = latin1;

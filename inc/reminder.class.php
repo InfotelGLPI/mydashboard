@@ -27,38 +27,47 @@
 /**
  * This class extends GLPI class reminder to add the functions to display widgets on Dashboard
  */
-class PluginMydashboardReminder {
-   
-   function getWidgetsForItem() {
-       global $CFG_GLPI;
-       $array = array();
-        if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
-            $array =  array(
-                         PluginMydashboardMenu::$MY_VIEW =>
-                         array(
-                             "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2)
-                         )
-                   );
-        }
-       if (Session::haveRight("reminder_public",READ)) {
-           $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2);
-       }
-       return $array;
+class PluginMydashboardReminder
+{
+
+   /**
+    * @return array
+    */
+   function getWidgetsForItem()
+   {
+      $array = array();
+      if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
+         $array = array(
+            PluginMydashboardMenu::$MY_VIEW =>
+               array(
+                  "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2)
+               )
+         );
+      }
+      if (Session::haveRight("reminder_public", READ)) {
+         $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2);
+      }
+      return $array;
    }
-   
-   function getWidgetContentForItem($widgetId) {
-       switch($widgetId) {
-           case "reminderpersonalwidget":
-                return PluginMydashboardReminder::showListForCentral();
-               break;
-           case "reminderpublicwidget":
-                if (Session::haveRight("reminder_public",READ)) {
-                    return PluginMydashboardReminder::showListForCentral(false);
-                }
-               break;
-       }
+
+   /**
+    * @param $widgetId
+    * @return Nothing
+    */
+   function getWidgetContentForItem($widgetId)
+   {
+      switch ($widgetId) {
+         case "reminderpersonalwidget":
+            return PluginMydashboardReminder::showListForCentral();
+            break;
+         case "reminderpublicwidget":
+            if (Session::haveRight("reminder_public", READ)) {
+               return PluginMydashboardReminder::showListForCentral(false);
+            }
+            break;
+      }
    }
-   
+
    /**
     * Show list for central view
     *
@@ -66,14 +75,15 @@ class PluginMydashboardReminder {
     *
     * @return Nothing (display function)
     **/
-   static function showListForCentral($personal=true) {
+   static function showListForCentral($personal = true)
+   {
       global $DB, $CFG_GLPI;
 
       $output = array();
-      
+
       $users_id = Session::getLoginUserID();
-      $today    = date('Y-m-d');
-      $now      = date('Y-m-d H:i:s');
+      $today = date('Y-m-d');
+      $now = date('Y-m-d H:i:s');
 
       $restrict_visibility = " AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -95,7 +105,7 @@ class PluginMydashboardReminder {
                          $restrict_visibility
                    ORDER BY `glpi_reminders`.`name`";
 
-         $titre = "<a href=\"".$CFG_GLPI["root_doc"]."/front/reminder.php\">"._n('Personal reminder', 'Personal reminders', 2)."</a>";
+         $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" . _n('Personal reminder', 'Personal reminders', 2) . "</a>";
 
       } else {
          // Show public reminders / not mines : need to have access to public reminders
@@ -110,63 +120,63 @@ class PluginMydashboardReminder {
          }
 
          $query = "SELECT `glpi_reminders`.*
-                   FROM `glpi_reminders` ".
-                   Reminder::addVisibilityJoins()."
+                   FROM `glpi_reminders` " .
+            Reminder::addVisibilityJoins() . "
                    WHERE $restrict_user
                          $restrict_visibility
-                         AND ".Reminder::addVisibilityRestrict()."
+                         AND " . Reminder::addVisibilityRestrict() . "
                    ORDER BY `glpi_reminders`.`name`";
 
          if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
-            $titre = "<a href=\"".$CFG_GLPI["root_doc"]."/front/reminder.php\">".
-                       _n('Public reminder', 'Public reminders', 2)."</a>";
+            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" .
+               _n('Public reminder', 'Public reminders', 2) . "</a>";
          } else {
             $titre = _n('Public reminder', 'Public reminders', 2);
          }
       }
 
       $result = $DB->query($query);
-      $nb     = $DB->numrows($result);
+      $nb = $DB->numrows($result);
 
       $output['title'] = "<span>$titre</span>";
 
       if (Reminder::canCreate()) {
          $output['title'] .= "&nbsp;<span>";
-         $output['title'] .= "<a href=\"".$CFG_GLPI["root_doc"]."/front/reminder.form.php\">";
-         $output['title'] .= "<img src=\"".$CFG_GLPI["root_doc"]."/pics/plus.png\" alt=\"".__s('Add')."\" title=\"". __s('Add')."\"></a></span>";
+         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php\">";
+         $output['title'] .= "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/plus.png\" alt=\"" . __s('Add') . "\" title=\"" . __s('Add') . "\"></a></span>";
       }
 
       $output['title'] .= "";
-      
-      $output['header'][]  = '';
-      
+
+      $output['header'][] = '';
+
       $output['body'] = array();
-      
+
       $count = 0;
-      
+
       if ($nb) {
          $rand = mt_rand();
-        
+
          while ($data = $DB->fetch_assoc($result)) {
             $output['body'][$count] = array();
             $output['body'][$count][0] = '';
             $output['body'][$count][0] .= "<div class=\"relative reminder_list\">";
-            $link = "<a id=\"content_reminder_".$data["id"].$rand."\"  href=\"".$CFG_GLPI["root_doc"]."/front/reminder.form.php?id=".$data["id"]."\">". $data["name"]."</a>";
+            $link = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
 
             $tooltip = Html::showToolTip(Toolbox::unclean_html_cross_side_scripting_deep($data["text"]),
-                                         array('applyto' => "content_reminder_".$data["id"].$rand,
-                                               'display' => false));
-            
-            $output['body'][$count][0] .= $link.' '.$tooltip;
+               array('applyto' => "content_reminder_" . $data["id"] . $rand,
+                  'display' => false));
+
+            $output['body'][$count][0] .= $link . ' ' . $tooltip;
 
             if ($data["is_planned"]) {
-               $tab      = explode(" ",$data["begin"]);
+               $tab = explode(" ", $data["begin"]);
                $date_url = $tab[0];
                $output['body'][$count][0] .= "<span class=\"reminder_right\">";
-               $output['body'][$count][0] .= "<a href=\"".$CFG_GLPI["root_doc"]."/front/planning.php?date=".$date_url."&amp;type=day\">";
-               $output['body'][$count][0] .= "<img src=\"".$CFG_GLPI["root_doc"]."/pics/rdv.png\" alt=\"". __s('Planning')."\" title=\"".sprintf(__s('From %1$s to %2$s'),
-                                           Html::convDateTime($data["begin"]),
-                                           Html::convDateTime($data["end"]))."\">";
+               $output['body'][$count][0] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?date=" . $date_url . "&amp;type=day\">";
+               $output['body'][$count][0] .= "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/rdv.png\" alt=\"" . __s('Planning') . "\" title=\"" . sprintf(__s('From %1$s to %2$s'),
+                     Html::convDateTime($data["begin"]),
+                     Html::convDateTime($data["end"])) . "\">";
                $output['body'][$count][0] .= "</a></span>";
             }
 
@@ -176,29 +186,29 @@ class PluginMydashboardReminder {
       } else {
          $output['body'][$count][0] = '';
       }
-      
+
       $publique = ($personal) ? "personal" : "public";
-      
+
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetTitle($output['title']);
-      $widget->setWidgetId("reminder".$publique."widget");
-      
+      $widget->setWidgetId("reminder" . $publique . "widget");
+
       $widget->setTabNames($output['header']);
       $widget->setTabDatas($output['body']);
-      
+
       return $widget;
    }
-   
+
    /**
     * Show list for central view
+    * @return Nothing
+    * @internal param bool $personal : display reminders created by me ?
     *
-    * @param $personal boolean : display reminders created by me ?
-    *
-    * @return Nothing (display function)
-    * */
-   static function showNewsList() {
+    */
+   static function showNewsList()
+   {
       global $DB;
-      
+
       $now = date('Y-m-d H:i:s');
 
       $restrict_visibility = " AND (`glpi_reminders`.`begin_view_date` IS NULL
@@ -216,27 +226,27 @@ class PluginMydashboardReminder {
 
       $query = "SELECT `glpi_reminders`.*
                 FROM `glpi_reminders`
-                ".Reminder::addVisibilityJoins()."
+                " . Reminder::addVisibilityJoins() . "
                 WHERE $restrict_user
                       $restrict_visibility
-                     AND ".Reminder::addVisibilityRestrict()."
+                     AND " . Reminder::addVisibilityRestrict() . "
                      ORDER BY `glpi_reminders`.`name`";
 
       $titre = _n('Public reminder', 'Public reminders', 2);
-  
+
       $result = $DB->query($query);
       $nb = $DB->numrows($result);
 
       if ($nb) {
          echo "<table class='treetable'>";
-         echo "<thead><tr><th class='title'>".$titre."</th></tr></thead>";
+         echo "<thead><tr><th class='title'>" . $titre . "</th></tr></thead>";
          echo "</table>";
          echo "<div id='wrap-treetable3'>";
          echo "<div id='fibnews-div'>";
          echo "<ul>";
          while ($data = $DB->fetch_array($result)) {
             echo "<li>";
-            echo '<h1>'.$data["name"].'</h1>';
+            echo '<h1>' . $data["name"] . '</h1>';
             echo Toolbox::unclean_html_cross_side_scripting_deep($data["text"]);
             echo "</li>";
          }
@@ -260,4 +270,3 @@ class PluginMydashboardReminder {
    }
 
 }
-?>

@@ -24,42 +24,55 @@
  --------------------------------------------------------------------------  
  */
 
-class PluginMydashboardKnowbaseItem extends CommonGLPI {
-   static $rightname   = 'knowbase';
-   
-   public function getWidgetsForItem(){
+/**
+ * Class PluginMydashboardKnowbaseItem
+ */
+class PluginMydashboardKnowbaseItem extends CommonGLPI
+{
+   static $rightname = 'knowbase';
+
+   /**
+    * @return array
+    */
+   public function getWidgetsForItem()
+   {
       return array(
          PluginMydashboardMenu::$GLOBAL_VIEW => array(
-             "knowbaseitempopular" =>  __('FAQ')." - ".__('Most popular questions'),
-             "knowbaseitemrecent" =>  __('FAQ')." - ".__('Recent entries'),
-             "knowbaseitemlastupdate" =>  __('FAQ')." - ".__('Last updated entries')
+            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions'),
+            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries'),
+            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries')
          )
-          
+
       );
    }
-   
-   public function getWidgetContentForItem($widgetId) {
+
+   /**
+    * @param $widgetId
+    * @return PluginMydashboardDatatable
+    */
+   public function getWidgetContentForItem($widgetId)
+   {
       global $DB, $CFG_GLPI;
 
       $faq = !Session::haveRight(self::$rightname, READ);
-      
+
       if ($widgetId == "knowbaseitemrecent") {
          $orderby = "ORDER BY `date` DESC";
-         $title   =  __('FAQ')." - ".__('Recent entries');
+         $title = __('FAQ') . " - " . __('Recent entries');
       } else if ($widgetId == 'knowbaseitemlastupdate') {
          $orderby = "ORDER BY `date_mod` DESC";
-         $title   =  __('FAQ')." - ".__('Last updated entries');
+         $title = __('FAQ') . " - " . __('Last updated entries');
       } else {
          $orderby = "ORDER BY `view` DESC";
-         $title   =  __('FAQ')." - ".__('Most popular questions');
+         $title = __('FAQ') . " - " . __('Most popular questions');
       }
-      
+
       $faq_limit = "";
       // Force all joins for not published to verify no visibility set
       $join = KnowbaseItem::addVisibilityJoins(true);
 
       if (Session::getLoginUserID()) {
-         $faq_limit .= "WHERE ".KnowbaseItem::addVisibilityRestrict();
+         $faq_limit .= "WHERE " . KnowbaseItem::addVisibilityRestrict();
       } else {
          // Anonymous access
          if (Session::isMultiEntitiesMode()) {
@@ -87,10 +100,10 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
                 $faq_limit
                 $orderby
                 LIMIT 10";
-      
+
       $result = $DB->query($query);
       $tab = array();
-      while($row = $DB->fetch_assoc($result)) {
+      while ($row = $DB->fetch_assoc($result)) {
          $date = "";
          if ($widgetId == "knowbaseitemrecent") {
             $date = $row["date"];
@@ -98,17 +111,17 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
             $date = $row["date_mod"];
          }
          $tab[] = array(
-             "<a ".($row['is_faq']?" class='pubfaq' ":" class='knowbase' ")." href=\"".
-                  $CFG_GLPI["root_doc"]."/front/knowbaseitem.form.php?id=".$row["id"]."\">".
-                  Html::resume_text($row["name"],80)."</a>", Html::ConvDateTime($date)
+            "<a " . ($row['is_faq'] ? " class='pubfaq' " : " class='knowbase' ") . " href=\"" .
+            $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
+            Html::resume_text($row["name"], 80) . "</a>", Html::convDateTime($date)
          );
       }
       if ($widgetId == "knowbaseitemrecent") {
-         $headers = array(__('Name'),__('Publication date', 'mydashboard'));
+         $headers = array(__('Name'), __('Publication date', 'mydashboard'));
       } else {
-         $headers = array(__('Name'),__('Modification date', 'mydashboard'));
+         $headers = array(__('Name'), __('Modification date', 'mydashboard'));
       }
-      
+
       $widget = new PluginMydashboardDatatable();
       $widget->setTabNames($headers);
       $widget->setTabDatas($tab);

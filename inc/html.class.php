@@ -27,21 +27,35 @@
 /**
  * This widget class is meant to display some html in a widget
  */
-class PluginMydashboardHtml extends PluginMydashboardModule {
-    
-    static $rightname = "plugin_mydashboard";
-    
-    function __construct() {
-        $this->setWidgetType("html");
-        $this->toggleOnlyHTML();
-    }
-    
-    static function getTypeName($nb = 0) {
+class PluginMydashboardHtml extends PluginMydashboardModule
+{
 
-        return __('Dashboard', 'mydashboard');
-    }
-    
-    public function getJSonDatas() {
-        return json_encode($this->getWidgetHtmlContent());   
-    }
+   static $rightname = "plugin_mydashboard";
+
+   /**
+    * PluginMydashboardHtml constructor.
+    */
+   function __construct()
+   {
+      $this->setWidgetType("html");
+      $this->toggleOnlyHTML();
+   }
+
+   /**
+    * @param int $nb
+    * @return translated
+    */
+   static function getTypeName($nb = 0)
+   {
+
+      return __('Dashboard', 'mydashboard');
+   }
+
+   /**
+    * @return string
+    */
+   public function getJSonDatas()
+   {
+      return json_encode($this->getWidgetHtmlContent());
+   }
 }

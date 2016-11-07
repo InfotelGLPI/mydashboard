@@ -31,50 +31,70 @@ if (!defined('GLPI_ROOT')) {
 /**
  * This class is used to display a dashboard in a tab in the central
  */
-class PluginMydashboardCentral extends CommonGLPI {
-   
+class PluginMydashboardCentral extends CommonGLPI
+{
+
    static $rightname = "plugin_mydashboard";
+
    /**
-   * Get name of this type
-   *
-   *@return text name of this type by language of the user connected
-   *
-   **/
-   static function getTypeName($nb=0) {
+    * Get name of this type
+    *
+    * @param int $nb
+    * @return text name of this type by language of the user connected
+    *
+    */
+   static function getTypeName($nb = 0)
+   {
       return __('Central', 'mydashboard');
    }
 
 
-   function defineTabs($options=array()){
-      
+   /**
+    * @param array $options
+    * @return array
+    */
+   function defineTabs($options = array())
+   {
+
       $ong = array();
       $this->addStandardTab('PluginMydashboardMenu', $ong, $options);
-     
+
       return $ong;
    }
 
-   
- 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+
+   /**
+    * @param CommonGLPI $item
+    * @param int $withtemplate
+    * @return array
+    */
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+   {
 
       $array_ret = array();
 
       if (Session::haveRight("plugin_mydashboard", UPDATE)) {
          $array_ret[12] = self::createTabEntry(
-                 __('Dashboard', 'mydashboard'));
+            __('Dashboard', 'mydashboard'));
       }
       return $array_ret;
    }
 
 
-
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   /**
+    * @param CommonGLPI $item
+    * @param int $tabnum
+    * @param int $withtemplate
+    * @return bool
+    */
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+   {
 
       if ($tabnum == 12) {
-          $menu = new PluginMydashboardMenu();
-          $menu->showMenu();
+         $menu = new PluginMydashboardMenu();
+         $menu->showMenu();
       }
-      
+
       return true;
    }
 }

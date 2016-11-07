@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------  
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
@@ -38,17 +38,15 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 if (isset($_POST["add_ticket"])) {
 
    Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
-   
+
 } else {
 
    $menu = new PluginMydashboardMenu();
    $menu->showMenu();
-   
+
 }
 if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();
 }
-
-?>

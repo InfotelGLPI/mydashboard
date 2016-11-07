@@ -24,16 +24,16 @@
  --------------------------------------------------------------------------  
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 //var_dump($_POST);
-if(isset($_POST['update'])) {
-   if(isset($_POST['id'])) {
+if (isset($_POST['update'])) {
+   if (isset($_POST['id'])) {
       $alert = new PluginMydashboardAlert();
-      if($_POST['id'] == -1) {
+      if ($_POST['id'] == -1) {
          unset($_POST['id']);
          $alert->add($_POST);
       } else {
-         if($_POST['impact'] == 0) {
+         if ($_POST['impact'] == 0) {
             $alert->getFromDB($_POST['id']);
             $alert->deleteFromDB();
          } else {

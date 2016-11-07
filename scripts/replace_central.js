@@ -1,4 +1,4 @@
-/** 
+/**
  *  Replace central by dashboard
  */
 (function ($) {
@@ -15,16 +15,16 @@
                 if (window.location.href.indexOf('plugins') > 0) {
                     url = window.location.href.replace(/plugins\/.*/, path);
                 }
-            
+
                 var hrefs = $("a[href$='/front/central.php'], a[href$='/front/helpdesk.public.php']");
-                hrefs.each(function(href, value){
-                    if(value['pathname'].indexOf('plugins') < 0){
-                        $("a[href='"+value['pathname']+"']").attr('href', url+'front/menu.php');
+                hrefs.each(function (href, value) {
+                    if (value['pathname'].indexOf('plugins') < 0) {
+                        $("a[href='" + value['pathname'] + "']").attr('href', url + 'front/menu.php');
                     }
                 });
             });
         }
-        
+
         return this;
     }
 }(jQuery));

@@ -28,12 +28,17 @@
  * Every Horizontal Bars charts classes must inherit of this class
  * It sets basical parameters to display an horizontal bar chart with Flotr2
  */
-class PluginMydashboardHBarChart  extends PluginMydashboardBarChart {
+class PluginMydashboardHBarChart extends PluginMydashboardBarChart
+{
 
-    function __construct() {
-        parent::__construct();
-        $this->setOption('bars', array('show' => true,'horizontal' => true));
-        $this->setOrientation("h");
-    }
-    
+   /**
+    * PluginMydashboardHBarChart constructor.
+    */
+   function __construct()
+   {
+      parent::__construct();
+      $this->setOption('bars', array('show' => true, 'horizontal' => true));
+      $this->setOrientation("h");
+   }
+
 }

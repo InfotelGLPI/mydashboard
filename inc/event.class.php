@@ -27,94 +27,116 @@
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
+
 /**
  * This class extends GLPI class event to add the functions to display widgets on Dashboard
  */
-class PluginMydashboardEvent extends Event {
+class PluginMydashboardEvent extends Event
+{
 
 
-   static function getTypeName($nb=0) {
+   /**
+    * @param int $nb
+    * @return translated
+    */
+   static function getTypeName($nb = 0)
+   {
       return _n('Log', 'Logs', $nb);
    }
 
-   function __construct($options=array()) {
-       parent::__construct();
+   /**
+    * PluginMydashboardEvent constructor.
+    * @param array $options
+    */
+   function __construct($options = array())
+   {
+      parent::__construct();
    }
 
 
-   
-   function getWidgetsForItem() {
-       global $CFG_GLPI;
-       $array = array();
-       if (Session::haveRight("logs",READ)) {
-            $array =  array(
-                         PluginMydashboardMenu::$MY_VIEW =>
-                         array(
-                             "eventwidgetpersonnal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
-                         ),
-                         PluginMydashboardMenu::$GLOBAL_VIEW =>
-                         array(
-                             "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
-                         )
-                   );
-       }
-       return $array;
+   /**
+    * @return array
+    */
+   function getWidgetsForItem()
+   {
+      $array = array();
+      if (Session::haveRight("logs", READ)) {
+         $array = array(
+            PluginMydashboardMenu::$MY_VIEW =>
+               array(
+                  "eventwidgetpersonnal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
+               ),
+            PluginMydashboardMenu::$GLOBAL_VIEW =>
+               array(
+                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
+               )
+         );
+      }
+      return $array;
    }
-   
-   function getWidgetContentForItem($widgetId) {
-       if (Session::haveRight("logs",READ)) {
-            switch($widgetId) {
-                case "eventwidgetpersonnal":
-                     return PluginMydashboardEvent::showForUser($_SESSION['glpiname']);
-                    break;
-                case "eventwidgetglobal":
-                     return PluginMydashboardEvent::showForUser();
-                    break;
-            }
-       }
+
+   /**
+    * @param $widgetId
+    * @return PluginMydashboardDatatable|void
+    */
+   function getWidgetContentForItem($widgetId)
+   {
+      if (Session::haveRight("logs", READ)) {
+         switch ($widgetId) {
+            case "eventwidgetpersonnal":
+               return PluginMydashboardEvent::showForUser($_SESSION['glpiname']);
+               break;
+            case "eventwidgetglobal":
+               return PluginMydashboardEvent::showForUser();
+               break;
+         }
+      }
    }
 
    /**
     * @param $type
     * @param $items_id
-   **/
-   static function displayItemLogID($type, $items_id) {
+    *
+    * @return string|void
+    */
+   static function displayItemLogID($type, $items_id)
+   {
       global $CFG_GLPI;
       $out = "";
       if (($items_id == "-1") || ($items_id == "0")) {
-         $out.= "&nbsp;";//$item;
+         $out .= "&nbsp;";//$item;
       } else {
          switch ($type) {
             case "rules" :
-               $out.= "<a href=\"".$CFG_GLPI["root_doc"]."/front/rule.generic.form.php?id=".
-                     $items_id."\">".$items_id."</a>";
+               $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rule.generic.form.php?id=" .
+                  $items_id . "\">" . $items_id . "</a>";
                break;
 
             case "infocom" :
-               $out.= "<a href='#' onClick=\"window.open('".$CFG_GLPI["root_doc"].
-                     "/front/infocom.form.php?id=".$items_id."','infocoms','location=infocoms,width=".
-                     "1000,height=400,scrollbars=no')\">".$items_id."</a>";
+               $out .= "<a href='#' onClick=\"window.open('" . $CFG_GLPI["root_doc"] .
+                  "/front/infocom.form.php?id=" . $items_id . "','infocoms','location=infocoms,width=" .
+                  "1000,height=400,scrollbars=no')\">" . $items_id . "</a>";
                break;
 
             case "devices" :
-               $out.= $items_id;
+               $out .= $items_id;
                break;
 
             case "reservationitem" :
-               $out.= "<a href=\"".$CFG_GLPI["root_doc"]."/front/reservation.php?reservationitems_id=".
-                     $items_id."\">".$items_id."</a>";
+               $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reservation.php?reservationitems_id=" .
+                  $items_id . "\">" . $items_id . "</a>";
                break;
 
             default :
                $type = getSingular($type);
-               $url  = '';
+               $url = '';
                if ($item = getItemForItemtype($type)) {
-                  $url  =  $item->getFormURL();
+                  $url = $item->getFormURL();
                }
                if (!empty($url)) {
-                  $out.= "<a href=\"".$url."?id=".$items_id."\">".$items_id."</a>";
+                  $out .= "<a href=\"" . $url . "?id=" . $items_id . "\">" . $items_id . "</a>";
                } else {
-                  $out.= $items_id;
+                  $out .= $items_id;
                }
                break;
          }
@@ -129,25 +151,28 @@ class PluginMydashboardEvent extends Event {
     * Print a great tab to present lasts events occured on glpi
     *
     * @param $user   string  name user to search on message (default '')
-    **/
-   static function showForUser($user="") {
+    *
+    * @return PluginMydashboardDatatable|void
+    */
+   static function showForUser($user = "")
+   {
       global $DB, $CFG_GLPI;
-      
+
       // Show events from $result in table form
       list($logItemtype, $logService) = self::logArray();
 
       // define default sorting
       $usersearch = "";
       if (!empty($user)) {
-         $usersearch = $user." ";
+         $usersearch = $user . " ";
       }
 
       // Query Database
       $query = "SELECT *
                 FROM `glpi_events`
-                WHERE `message` LIKE '".$usersearch."%'
+                WHERE `message` LIKE '" . $usersearch . "%'
                 ORDER BY `date` DESC
-                LIMIT 0,".intval($_SESSION['glpilist_limit']);
+                LIMIT 0," . intval($_SESSION['glpilist_limit']);
 
       // Get results
       $result = $DB->query($query);
@@ -157,7 +182,7 @@ class PluginMydashboardEvent extends Event {
       // No Events in database
       if ($number < 1) {
          $output['title'] = "<br><div class='spaced'><table class='tab_cadrehov'>";
-         $output['title'] .= "<tr><th>".__('No Event')."</th></tr>";
+         $output['title'] .= "<tr><th>" . __('No Event') . "</th></tr>";
          $output['title'] .= "</table></div>";
       }
 
@@ -167,8 +192,8 @@ class PluginMydashboardEvent extends Event {
       //$output['body'] =  "<br><div class='spaced'><table class='tab_cadrehov'>";
       //echo "<tr><th colspan='5'>";
       //TRANS: %d is the number of item to display
-      $output['title'] = "<a href=\"".$CFG_GLPI["root_doc"]."/front/event.php\">".
-             sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])."</a>";
+      $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
+         sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
       //echo "</th></tr>";
 
       $output['header'][] = __('Source');
@@ -178,14 +203,14 @@ class PluginMydashboardEvent extends Event {
       $output['header'][] = __('Message');
 
       $output['body'] = array();
-      
+
       while ($i < $number) {
-         $ID       = $DB->result($result, $i, "id");
+         $ID = $DB->result($result, $i, "id");
          $items_id = $DB->result($result, $i, "items_id");
-         $type     = $DB->result($result, $i, "type");
-         $date     = $DB->result($result, $i, "date");
-         $service  = $DB->result($result, $i, "service");
-         $message  = $DB->result($result, $i, "message");
+         $type = $DB->result($result, $i, "type");
+         $date = $DB->result($result, $i, "date");
+         $service = $DB->result($result, $i, "service");
+         $message = $DB->result($result, $i, "message");
 
          $itemtype = "&nbsp;";
          if (isset($logItemtype[$type])) {
@@ -205,25 +230,26 @@ class PluginMydashboardEvent extends Event {
 
          $i++;
       }
-        if(!empty($output)) {
-             $personnal = ($user == "") ? "global" : "personnal";
-             $widget = new PluginMydashboardDatatable();
-             $widget->setWidgetTitle($output['title']);
-             $widget->setWidgetId("eventwidget".$personnal);
-             //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
-             $widget->setTabNames($output['header']);  
-             $widget->setTabDatas($output['body']);
-              //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
-             $widget->setOption("bPaginate", false);
-             $widget->setOption("bFilter", false);
-             $widget->setOption("bInfo", false);
-             $widget->setOption("bSort", false);
-             
-             $widget->toggleWidgetRefresh();
-             return $widget;
-        }
+      if (!empty($output)) {
+         $personnal = ($user == "") ? "global" : "personnal";
+         $widget = new PluginMydashboardDatatable();
+         $widget->setWidgetTitle($output['title']);
+         $widget->setWidgetId("eventwidget" . $personnal);
+         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
+         $widget->setTabNames($output['header']);
+         $widget->setTabDatas($output['body']);
+         //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
+         $widget->setOption("bPaginate", false);
+         $widget->setOption("bFilter", false);
+         $widget->setOption("bInfo", false);
+         $widget->setOption("bSort", false);
+
+         $widget->toggleWidgetRefresh();
+         return $widget;
+      }
    }
 
 
 }
+
 ?>

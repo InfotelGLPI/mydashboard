@@ -24,22 +24,32 @@
  --------------------------------------------------------------------------  
  */
 
-class PluginMydashboardWidget extends CommonDBTM {
-    
-    static $rightname = "plugin_mydashboard";
-    
-    static function getTypeName($nb = 0) {
+/**
+ * Class PluginMydashboardWidget
+ */
+class PluginMydashboardWidget extends CommonDBTM
+{
 
-        return __('Widget management', 'mydashboard');
-    }
-    
-    /**
-     * Get the widget name with his id
-     * @global type $DB
-     * @param type $widgetId
-     * @return string, the widget 'name'
-     */
-    function getWidgetNameById($widgetId) {
+   static $rightname = "plugin_mydashboard";
+
+   /**
+    * @param int $nb
+    * @return translated
+    */
+   static function getTypeName($nb = 0)
+   {
+
+      return __('Widget management', 'mydashboard');
+   }
+
+   /**
+    * Get the widget name with his id
+    * @global type $DB
+    * @param type $widgetId
+    * @return string, the widget 'name'
+    */
+   function getWidgetNameById($widgetId)
+   {
 //        global $DB;
 //        $query = "SELECT name FROM `glpi_plugin_mydashboard_widgets` WHERE id = '".$widgetId."'";
 //        $result = $DB->query($query);
@@ -49,19 +59,20 @@ class PluginMydashboardWidget extends CommonDBTM {
 //        }
 //        else return NULL;
 //        
-        $query = "WHERE id = '".$widgetId."'";
-        $this->getFromDBByQuery($query);
-        
-        return isset($this->fields['name'])? $this->fields['name'] : null;
-    }
-    
-    /**
-     * Get the widgets_id by its 'name'
-     * @global type $DB
-     * @param string $widgetName
-     * @return the widgets_id if found, NULL otherwise
-     */
-    function getWidgetIdByName($widgetName) {
+      $query = "WHERE id = '" . $widgetId . "'";
+      $this->getFromDBByQuery($query);
+
+      return isset($this->fields['name']) ? $this->fields['name'] : null;
+   }
+
+   /**
+    * Get the widgets_id by its 'name'
+    * @global type $DB
+    * @param string $widgetName
+    * @return the widgets_id if found, NULL otherwise
+    */
+   function getWidgetIdByName($widgetName)
+   {
 //        global $DB;
 //        $query = "SELECT `id` FROM `glpi_plugin_mydashboard_widgets` WHERE name = '".$widgetName."'";
 //        
@@ -71,37 +82,37 @@ class PluginMydashboardWidget extends CommonDBTM {
 //            return $DB->result($result,0,'id');
 //        }
 //        else return NULL;
-        unset($this->fields);
-        $query = "WHERE name = '".$widgetName."'";
-        $this->getFromDBByQuery($query);
-        return isset($this->fields['id'])? $this->fields['id'] : null;
-    }
-    
-    /**
-     * Useful if you want to check if a widgetname is available
-     * @global type $DB
-     * @param string $widgetName, the name you want to check
-     * @return boolean, TRUE if it's available, FALSE otherwise
-     */
-    static function isWidgetNameAvailable($widgetName) {
-        global $DB;
-        $query = "SELECT `id` FROM `glpi_plugin_mydashboard_widgets` WHERE name = '".$widgetName."'";
-        
-        $result = $DB->query($query);
-        if($result && $DB->numrows($result)>0 )
-        {
-            return false;
-        }
-        else return true;
-    }
-    
-    /**
-     * Save a new widget Name
-     * @global type $DB
-     * @param string $widgetName
-     * @return TRUE if the new widget name has been added, FALSE otherwise
-     */
-    function saveWidget($widgetName) {
+      unset($this->fields);
+      $query = "WHERE name = '" . $widgetName . "'";
+      $this->getFromDBByQuery($query);
+      return isset($this->fields['id']) ? $this->fields['id'] : null;
+   }
+
+   /**
+    * Useful if you want to check if a widgetname is available
+    * @global type $DB
+    * @param string $widgetName , the name you want to check
+    * @return boolean, TRUE if it's available, FALSE otherwise
+    */
+   static function isWidgetNameAvailable($widgetName)
+   {
+      global $DB;
+      $query = "SELECT `id` FROM `glpi_plugin_mydashboard_widgets` WHERE name = '" . $widgetName . "'";
+
+      $result = $DB->query($query);
+      if ($result && $DB->numrows($result) > 0) {
+         return false;
+      } else return true;
+   }
+
+   /**
+    * Save a new widget Name
+    * @global type $DB
+    * @param string $widgetName
+    * @return TRUE if the new widget name has been added, FALSE otherwise
+    */
+   function saveWidget($widgetName)
+   {
 //        if(isset($widgetName) && $widgetName !== "")
 //        {
 ////            $widgetId = $this->getWidgetIdByName($widgetName);
@@ -116,32 +127,36 @@ class PluginMydashboardWidget extends CommonDBTM {
 //            else return false;
 //        }
 //        return false;
-        if(isset($widgetName) && $widgetName !== "") {
+      if (isset($widgetName) && $widgetName !== "") {
 //            $widgettmp = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
-            //Not really good regex
-            $widgettmp = preg_match('#[^.0-9a-z]+#i', $widgetName, $matches);
-            
-            if($widgettmp == 1) {
-                Toolbox::logDebug("'$widgetName' can't be used as a widget Name, '$matches[0]' is not a valid character ");
-                return false;
-            }
-            
-            $this->fields["id"] = null;
-            $id = $this->getWidgetIdByName($widgetName);
-            
-            if(!isset($id)) {
-                $this->add(array("name" => $widgetName));
-            }
-            return true;
-        }
-        else return false;
-    }
-    
-    function removeWidgetByName($widgetName) {
-        //$widgetName = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
-        $this->getFromDBByQuery("WHERE `glpi_plugin_mydashboard_widgets`.`name` = '".$widgetName."'");
-        return $this->deleteFromDB();
-    }
-    
-    
+         //Not really good regex
+         $widgettmp = preg_match('#[^.0-9a-z]+#i', $widgetName, $matches);
+
+         if ($widgettmp == 1) {
+            Toolbox::logDebug("'$widgetName' can't be used as a widget Name, '$matches[0]' is not a valid character ");
+            return false;
+         }
+
+         $this->fields["id"] = null;
+         $id = $this->getWidgetIdByName($widgetName);
+
+         if (!isset($id)) {
+            $this->add(array("name" => $widgetName));
+         }
+         return true;
+      } else return false;
+   }
+
+   /**
+    * @param $widgetName
+    * @return true
+    */
+   function removeWidgetByName($widgetName)
+   {
+      //$widgetName = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
+      $this->getFromDBByQuery("WHERE `glpi_plugin_mydashboard_widgets`.`name` = '" . $widgetName . "'");
+      return $this->deleteFromDB();
+   }
+
+
 }

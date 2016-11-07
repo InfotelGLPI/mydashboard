@@ -24,10 +24,18 @@
  --------------------------------------------------------------------------  
  */
 
-interface PluginMydashboardWidgetsContainer {
-    
-    public function __construct($options);
+/**
+ * Interface PluginMydashboardWidgetsContainer
+ */
+interface PluginMydashboardWidgetsContainer
+{
+
+   /**
+    * PluginMydashboardWidgetsContainer constructor.
+    * @param $options
+    */
+   public function __construct($options);
    /* public function getWidgets($widgetId = "_all",$empty = false);*/
-    
-    
+
+
 }

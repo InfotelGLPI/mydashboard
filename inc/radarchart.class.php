@@ -27,13 +27,18 @@
 /**
  * This widget class is meant to display data in a radar (spiderweb) chart
  */
-class PluginMydashboardRadarChart extends PluginMydashboardLineChart {
-    function __construct() {
-        parent::__construct();
-        $this->setOption('radar', array('show' => true,
-                                        'fillOpacity' => PluginMydashboardColor::getOpacity()-'0.2'));
-        $this->setOption('grid', array('circular' => true, 'minorHorizontalLines' => true));
-        $this->setOption('lines', array('show' => false));
-    }
-    
+class PluginMydashboardRadarChart extends PluginMydashboardLineChart
+{
+   /**
+    * PluginMydashboardRadarChart constructor.
+    */
+   function __construct()
+   {
+      parent::__construct();
+      $this->setOption('radar', array('show' => true,
+         'fillOpacity' => PluginMydashboardColor::getOpacity() - '0.2'));
+      $this->setOption('grid', array('circular' => true, 'minorHorizontalLines' => true));
+      $this->setOption('lines', array('show' => false));
+   }
+
 }

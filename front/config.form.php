@@ -23,12 +23,12 @@
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------  
  */
- 
-include ('../../../inc/includes.php');
+
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central'){
+if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu");
 } else {
    Html::helpHeader(PluginMydashboardMenu::getTypeName(2));
@@ -37,15 +37,14 @@ $plugin = new Plugin();
 
 if ($plugin->isActivated("mydashboard")) {
 
-    $config = new PluginMydashboardConfig();
+   $config = new PluginMydashboardConfig();
 
-    if(isset($_POST['update']))
-    {
+   if (isset($_POST['update'])) {
 
-        $config->update($_POST);
-    }
+      $config->update($_POST);
+   }
 
-    $config->showForm(Session::getLoginUserID());
+   $config->showForm(Session::getLoginUserID());
 
 }
 

@@ -33,7 +33,7 @@ $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
@@ -42,7 +42,7 @@ $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
 // Chech Memory_limit - sometine cli limit (php-cli.ini) != module limit (php.ini)
 $mem = Toolbox::getMemoryLimit();
 if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
-    die("PHP memory_limit = " . $mem . " - " . "A minimum of 64Mio is commonly required for GLPI.'\n\n");
+   die("PHP memory_limit = " . $mem . " - " . "A minimum of 64Mio is commonly required for GLPI.'\n\n");
 }
 
 //Check if plugin is installed
@@ -50,10 +50,10 @@ $plugin = new Plugin();
 //$config = PluginPrintercountersConfig::getInstance();
 
 if ($plugin->isActivated("mydashboard")) {
-    $record = new PluginMydashboardInfotel(array());
-    $record->cronMydashboardInfotelUpdateStockTicket();
+   $record = new PluginMydashboardInfotel(array());
+   $record->cronMydashboardInfotelUpdateStockTicket();
 } else {
-    echo __('Plugin disabled', 'mydashboard');
-    exit(1);
+   echo __('Plugin disabled', 'mydashboard');
+   exit(1);
 }
 ?>

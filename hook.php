@@ -24,16 +24,20 @@
  --------------------------------------------------------------------------  
  */
 
-function plugin_mydashboard_install() {
+/**
+ * @return bool
+ */
+function plugin_mydashboard_install()
+{
    global $DB;
 
-   include_once (GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
-   include_once (GLPI_ROOT . "/plugins/mydashboard/inc/helper.class.php");
-   include_once (GLPI_ROOT . "/plugins/mydashboard/inc/preference.class.php");
-   include_once (GLPI_ROOT . "/plugins/mydashboard/inc/config.class.php");
-   include_once (GLPI_ROOT . "/plugins/mydashboard/inc/menu.class.php");
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/helper.class.php");
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/preference.class.php");
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/config.class.php");
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/menu.class.php");
    //First install 1.0.0 (0.84)
-   if (!TableExists("glpi_plugin_mydashboard_widgets") ) {
+   if (!TableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.0.0.sql");
    }
@@ -45,45 +49,46 @@ function plugin_mydashboard_install() {
    }
    //end---------------------------------------------------------------------
    //From 1.0.1 (0.84) to 1.0.2 (0.84)------------------------------------
-   if(!TableExists("glpi_plugin_mydashboard_alerts")) {
+   if (!TableExists("glpi_plugin_mydashboard_alerts")) {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.0.2.sql");
    }
    //end---------------------------------------------------------------------
    //From 1.0.2 (0.84) to 1.0.3 (0.84)------------------------------------
-   if(FieldExists("glpi_plugin_mydashboard_configs","replace_central")
-           && !FieldExists("glpi_plugin_mydashboard_preferences","replace_central")) {
-       //Adding the new field to preferences
-       $mig = new Migration("1.0.3");     
-       
-       $configs = getAllDatasFromTable("glpi_plugin_mydashboard_configs");
-       $replace_central = 0;
-       //Basically there is only one config for Dashboard (this foreach may be useless)
-       foreach($configs as $config){
-          $replace_central = $config['replace_central'];
-       }
-       $mig->addField("glpi_plugin_mydashboard_preferences",
-                      "replace_central", 
-                      "bool",
-                      array(
-                          "update" => $replace_central,
-                          "value" => 0
-                      ));
-       
-       $mig->dropField("glpi_plugin_mydashboard_configs", "replace_central");
-       $mig->executeMigration();
+   if (FieldExists("glpi_plugin_mydashboard_configs", "replace_central")
+      && !FieldExists("glpi_plugin_mydashboard_preferences", "replace_central")
+   ) {
+      //Adding the new field to preferences
+      $mig = new Migration("1.0.3");
+
+      $configs = getAllDatasFromTable("glpi_plugin_mydashboard_configs");
+      $replace_central = 0;
+      //Basically there is only one config for Dashboard (this foreach may be useless)
+      foreach ($configs as $config) {
+         $replace_central = $config['replace_central'];
+      }
+      $mig->addField("glpi_plugin_mydashboard_preferences",
+         "replace_central",
+         "bool",
+         array(
+            "update" => $replace_central,
+            "value" => 0
+         ));
+
+      $mig->dropField("glpi_plugin_mydashboard_configs", "replace_central");
+      $mig->executeMigration();
    }
    //From 1.0.3 (0.84) to 1.0.4 (0.84)------------------------------------
-   if(!FieldExists("glpi_plugin_mydashboard_userwidgets","interface")) {
-       //Adding the new field to userwidgets to precise of which interface this dashboard is
-       $mig = new Migration("1.0.4");
-       
-       $mig->addField("glpi_plugin_mydashboard_userwidgets",
-                      "interface", 
-                      "bool",
-                      array(
-                          "update" => 1
-                      ));
-       $mig->executeMigration();
+   if (!FieldExists("glpi_plugin_mydashboard_userwidgets", "interface")) {
+      //Adding the new field to userwidgets to precise of which interface this dashboard is
+      $mig = new Migration("1.0.4");
+
+      $mig->addField("glpi_plugin_mydashboard_userwidgets",
+         "interface",
+         "bool",
+         array(
+            "update" => 1
+         ));
+      $mig->executeMigration();
    }
    //fix bug about widget
    if (!TableExists("glpi_plugin_mydashboard_stocktickets")) {
@@ -100,12 +105,12 @@ function plugin_mydashboard_install() {
    }
    //From 1.0.4 (0.84) to 1.1.0 (0.85)------------------------------------
    //Profile migration
-   if(TableExists("glpi_plugin_mydashboard_profiles")) {
+   if (TableExists("glpi_plugin_mydashboard_profiles")) {
       PluginMydashboardProfile::migrateRightsFrom84To85();
       $DB->query("DROP TABLE `glpi_plugin_mydashboard_profiles`;");
-   } 
+   }
    //end---------------------------------------------------------------------
-   if(!FieldExists("glpi_plugin_mydashboard_alerts","is_public")) {
+   if (!FieldExists("glpi_plugin_mydashboard_alerts", "is_public")) {
       $mig = new Migration("1.2.1");
 
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.2.1.sql");
@@ -117,17 +122,18 @@ function plugin_mydashboard_install() {
    return true;
 }
 
-function fillTableMydashboardStocktickets() {
+function fillTableMydashboardStocktickets()
+{
    global $DB;
    $currentmonth = date("m");
    $currentyear = date("Y");
    $previousyear = $currentyear - 1;
    $query = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id` "
-           . "FROM `glpi_tickets` "
-           . "WHERE `glpi_tickets`.`is_deleted`= 0 "
-           . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
-           . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
-           . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
+      . "FROM `glpi_tickets` "
+      . "WHERE `glpi_tickets`.`is_deleted`= 0 "
+      . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
+      . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
+      . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
    $results = $DB->query($query);
    while ($data = $DB->fetch_array($results)) {
       list($year, $month) = explode('-', $data['month']);
@@ -148,26 +154,30 @@ function fillTableMydashboardStocktickets() {
 }
 
 // Uninstall process for plugin : need to return true if succeeded
-function plugin_mydashboard_uninstall() {
+/**
+ * @return bool
+ */
+function plugin_mydashboard_uninstall()
+{
    global $DB;
 
    // Plugin tables deletion
    $tables = array(/*"glpi_plugin_mydashboard_profiles",*/
-                   "glpi_plugin_mydashboard_profileauthorizedwidgets",
-                   "glpi_plugin_mydashboard_widgets",
-                   "glpi_plugin_mydashboard_userwidgets",
-                   "glpi_plugin_mydashboard_configs",
-                   "glpi_plugin_mydashboard_preferences",
-                   "glpi_plugin_mydashboard_preferenceuserblacklists",
-                   "glpi_plugin_mydashboard_alerts",
-                  "glpi_plugin_mydashboard_stocktickets");
+      "glpi_plugin_mydashboard_profileauthorizedwidgets",
+      "glpi_plugin_mydashboard_widgets",
+      "glpi_plugin_mydashboard_userwidgets",
+      "glpi_plugin_mydashboard_configs",
+      "glpi_plugin_mydashboard_preferences",
+      "glpi_plugin_mydashboard_preferenceuserblacklists",
+      "glpi_plugin_mydashboard_alerts",
+      "glpi_plugin_mydashboard_stocktickets");
 
    foreach ($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
 
-   include_once (GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
-   
-      
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
+
+
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
 
@@ -175,20 +185,21 @@ function plugin_mydashboard_uninstall() {
       $profileRight->deleteByCriteria(array('name' => $right['field']));
    }
    PluginMydashboardProfile::removeRightsFromSession();
-   
+
    return true;
 }
 
-function plugin_mydashboard_postinit() {
-   global $PLUGIN_HOOKS,$CFG_GLPI;
-   
+function plugin_mydashboard_postinit()
+{
+   global $PLUGIN_HOOKS;
+
    $plugin = 'mydashboard';
    foreach (array('add_css', 'add_javascript') as $type) {
       foreach ($PLUGIN_HOOKS[$type][$plugin] as $data) {
          if (!empty($PLUGIN_HOOKS[$type])) {
             foreach ($PLUGIN_HOOKS[$type] as $key => $plugins_data) {
                if (is_array($plugins_data) && $key != $plugin) {
-                  foreach($plugins_data as $key2 => $values){
+                  foreach ($plugins_data as $key2 => $values) {
                      if ($values == $data) {
                         unset($PLUGIN_HOOKS[$type][$key][$key2]);
                      }
@@ -198,18 +209,21 @@ function plugin_mydashboard_postinit() {
          }
       }
    }
- 
+
 }
 
-function plugin_mydashboard_display_login() {
+function plugin_mydashboard_display_login()
+{
    $alerts = new PluginMydashboardAlert();
    echo $alerts->getList(1);
 }
 
 // Define dropdown relations
-function plugin_mydashboard_getDatabaseRelations() {
+/**
+ * @return array
+ */
+function plugin_mydashboard_getDatabaseRelations()
+{
 
    return array();
 }
-
-?>

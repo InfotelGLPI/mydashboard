@@ -23,16 +23,22 @@
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------  
  */
+
 /**
  * Every Vertical Bars charts classes must inherit of this class
  * It sets basical parameters to display an vertical bar chart with Flotr2
  */
-class PluginMydashboardVBarChart  extends PluginMydashboardBarChart {
-        
-    function __construct() {
-        parent::__construct();
-        $this->setOption('bars', array('show' => true,'horizontal' => false));
-        $this->setOrientation("v");
-    }
-    
+class PluginMydashboardVBarChart extends PluginMydashboardBarChart
+{
+
+   /**
+    * PluginMydashboardVBarChart constructor.
+    */
+   function __construct()
+   {
+      parent::__construct();
+      $this->setOption('bars', array('show' => true, 'horizontal' => false));
+      $this->setOrientation("v");
+   }
+
 }
