@@ -95,7 +95,7 @@ class PluginMydashboardInfotel extends CommonGLPI{
                   $query .= " AND `glpi_groups_tickets`.`groups_id` = ".$this->options['groups_id']." ";
                }
                $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
-                        ." AND `status` NOT IN (".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.")
+                        ." AND `status` NOT IN (".CommonITILObject::WAITING.",".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.")
                         GROUP BY period_name ORDER BY period ASC";
                
                $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('vbarchart',$query );
