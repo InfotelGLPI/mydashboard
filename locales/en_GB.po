@@ -1,21 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Mydashboard Development Team
+# Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - Mydashboard plugin 1.3.0\n"
+"Project-Id-Version: GLPI - MyDashboard plugin 1.3.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-04 19:12+0100\n"
-"PO-Revision-Date: 2016-11-04 19:12+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en_GB\n"
+"POT-Creation-Date: 2016-11-07 17:39+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Poedit 1.8.11\n"
 
 #: setup.php:98 inc/menu.class.php:79 inc/menu.class.php:234
@@ -230,85 +230,114 @@ msgstr "Initialized"
 msgid "Not a valid SQL SELECT query"
 msgstr "Not a valid SQL SELECT query"
 
-#: inc/infotel.class.php:37 inc/infotel.class.php:108
+#: inc/infotel.class.php:37 inc/infotel.class.php:109
 msgid "Opened tickets backlog"
 msgstr "Opened tickets backlog"
 
-#: inc/infotel.class.php:38 inc/infotel.class.php:140
+#: inc/infotel.class.php:38 inc/infotel.class.php:141
 msgid "Number of opened tickets by priority"
 msgstr "Number of opened tickets by priority"
 
-#: inc/infotel.class.php:39 inc/infotel.class.php:175
+#: inc/infotel.class.php:39 inc/infotel.class.php:176
 msgid "Internal annuary"
 msgstr "Internal annuary"
 
-#: inc/infotel.class.php:40 inc/infotel.class.php:214
+#: inc/infotel.class.php:40 inc/infotel.class.php:215
 msgid "Mails collector"
 msgstr "Mails collector"
 
-#: inc/infotel.class.php:42 inc/infotel.class.php:328
+#: inc/infotel.class.php:42 inc/infotel.class.php:329
 msgid "Tickets stock by month"
 msgstr "Tickets stock by month"
 
-#: inc/infotel.class.php:43 inc/infotel.class.php:402
+#: inc/infotel.class.php:43 inc/infotel.class.php:403
 msgid "Top ten ticket authors of the previous month"
 msgstr "Top ten ticket authors of the previous month"
 
-#: inc/infotel.class.php:44 inc/infotel.class.php:447
+#: inc/infotel.class.php:44 inc/infotel.class.php:448
+#: inc/infotelplus.class.php:37 inc/infotelplus.class.php:90
 msgid "Process time by tech by month"
 msgstr "Process time by tech by month"
 
-#: inc/infotel.class.php:45 inc/infotel.class.php:492
+#: inc/infotel.class.php:45 inc/infotel.class.php:493
 msgid "Automatic actions in error"
 msgstr "Automatic actions in error"
 
-#: inc/infotel.class.php:46 inc/infotel.class.php:517
+#: inc/infotel.class.php:46 inc/infotel.class.php:518
 msgid "GLPI Status"
 msgstr "GLPI Status"
 
-#: inc/infotel.class.php:47 inc/infotel.class.php:564
-msgid "SLA Compliance"
-msgstr "SLA Compliance"
+#: inc/infotel.class.php:47 inc/infotel.class.php:565
+msgid "TTR Compliance"
+msgstr "TTR Compliance"
 
-#: inc/infotel.class.php:249
+#: inc/infotel.class.php:48 inc/infotel.class.php:609
+msgid "TTO Compliance"
+msgstr "TTO Compliance"
+
+#: inc/infotel.class.php:250
 msgid "Logged users"
 msgstr "Logged users"
 
-#: inc/infotel.class.php:327
+#: inc/infotel.class.php:328
 msgid "Tickets stock"
 msgstr "Tickets stock"
 
-#: inc/infotel.class.php:426
+#: inc/infotel.class.php:427 inc/infotelplus.class.php:69
 msgid "Show"
 msgstr "Show"
 
-#: inc/infotel.class.php:560
-msgid "Respected SLA"
-msgstr "Respected SLA"
-
 #: inc/infotel.class.php:561
-msgid "Not respected SLA"
-msgstr "Not respected SLA"
+msgid "Respected TTR"
+msgstr "Respected TTR"
 
-#: inc/infotel.class.php:578
+#: inc/infotel.class.php:562
+msgid "Not respected TTR"
+msgstr "Not respected TTR"
+
+#: inc/infotel.class.php:605
+msgid "Respected TTO"
+msgstr "Respected TTO"
+
+#: inc/infotel.class.php:606
+msgid "Not respected TTO"
+msgstr "Not respected TTO"
+
+#: inc/infotel.class.php:623
 msgid "Problem with GLPI"
 msgstr "Problem with GLPI"
 
-#: inc/infotel.class.php:583
+#: inc/infotel.class.php:628
 msgid "GLPI is OK"
 msgstr "GLPI is OK"
 
-#: inc/infotel.class.php:585
+#: inc/infotel.class.php:630
 msgid "Alert is not properly configured"
 msgstr "Alert is not properly configured"
 
-#: inc/infotel.class.php:595
+#: inc/infotel.class.php:640 inc/infotelplus.class.php:319
 msgid "Show Profile"
 msgstr "Show Profile"
 
-#: inc/infotel.class.php:737
+#: inc/infotel.class.php:782
 msgid "Curl PHP package not installed"
 msgstr "Curl PHP package not installed"
+
+#: inc/infotelplus.class.php:38 inc/infotelplus.class.php:241
+msgid "User ticket alerts"
+msgstr "User ticket alerts"
+
+#: inc/infotelplus.class.php:225
+msgid "New document"
+msgstr "New document"
+
+#: inc/knowbaseitem.class.php:107
+msgid "Publication date"
+msgstr "Publication date"
+
+#: inc/knowbaseitem.class.php:109
+msgid "Modification date"
+msgstr "Modification date"
 
 #: inc/menu.class.php:833
 msgid "No data available in table"
