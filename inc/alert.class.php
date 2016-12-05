@@ -90,7 +90,7 @@ class PluginMydashboardAlert extends CommonDBTM
     * @param int $public
     * @return string
     */
-   function getList($public = 0)
+   function getList($public = 0, $force = 0)
    {
       global $DB;
 
@@ -164,7 +164,7 @@ class PluginMydashboardAlert extends CommonDBTM
             $wl .= $this->displayContent('sun');
          }
       }
-      if (!$nb && $public == 0) {
+      if (!$nb && ($public == 0 || $force == 1)) {
          $wl .= $this->displayContent('sun');
       }
 
