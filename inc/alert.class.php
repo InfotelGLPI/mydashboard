@@ -152,20 +152,20 @@ class PluginMydashboardAlert extends CommonDBTM
 
          if (!empty($storm)) {
             //display storm
-            $wl .= $this->displayContent('storm', array_merge($storm, $cloud), $public);
+            $wl .= $this->displayContent('storm', array_merge($storm, $cloud), $public, $force);
          } elseif (!empty($cloudy)) {
             //display cloudy
-            $wl .= $this->displayContent('cloudy', $cloudy, $public);
+            $wl .= $this->displayContent('cloudy', $cloudy, $public, $force);
          } elseif (!empty($cloud)) {
             //display cloud
-            $wl .= $this->displayContent('cloud', $cloud, $public);
+            $wl .= $this->displayContent('cloud', $cloud, $public, $force);
          } else {
             //display sun
-            $wl .= $this->displayContent('sun');
+            $wl .= $this->displayContent('sun', array(), 0, $force);
          }
       }
       if (!$nb && ($public == 0 || $force == 1)) {
-         $wl .= $this->displayContent('sun');
+         $wl .= $this->displayContent('sun', array(), 0, $force);
       }
 
 
@@ -181,11 +181,14 @@ class PluginMydashboardAlert extends CommonDBTM
     * @param int $public
     * @return string
     */
-   private function displayContent($type, $list = array(), $public = 0)
+   private function displayContent($type, $list = array(), $public = 0, $force = 0)
    {
       global $CFG_GLPI;
 
       $div = $this->getCSS();
+      if ($force == 1) {
+         $div .= $this->getPublicCSS();
+      }
       $div .= "<div class='weather_block'>";
       $div .= "<div class='weather_title center'><h3>" . __("Monitoring", "mydashboard") . "</h3></div>";
       $div .= "<div class='weather_img center'><img src='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/pics/{$type}.png' width='85%'/></div>";
@@ -388,6 +391,27 @@ class PluginMydashboardAlert extends CommonDBTM
               .weather_msg {
                   text-align: center;
               }
+              </style>";
+      return $css;
+   }
+   
+   /**
+    * @return string
+    */
+   private function getPublicCSS()
+   {
+      $css = "<style  type='text/css' media='screen'>
+               .weather_block {
+                  text-align: center;
+                  margin:0 auto;
+                  color:#000;
+                  font-size: 12px;
+                  border-radius: 5px 10px 0 5px;
+                  border-color: #CCC;
+                  border-style: dashed;
+                  background-color: #FFF;
+                  width: 100%;
+               }
               </style>";
       return $css;
    }
