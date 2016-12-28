@@ -164,8 +164,9 @@ class PluginMydashboardProfile extends CommonDBTM
       Html::showCheckbox(array('name' => '_plugin_mydashboard_config[6_0]',
          'checked' => $effective_rights["plugin_mydashboard_config"]));
       echo "</td>";
+      echo "<td></td>";
       echo "</tr>";
-      echo "</table>";
+
       $options['candel'] = false;
 //      echo "<input type='hidden' name='id' value=".$ID.">";
       $profile->showFormButtons($options);
