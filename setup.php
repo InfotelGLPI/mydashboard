@@ -60,11 +60,20 @@ function plugin_init_mydashboard()
             $PLUGIN_HOOKS['config_page']['mydashboard'] = 'front/config.form.php';
 //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
          }
-
+         
+         if (class_exists('PluginServicecatalogMain')) {
+            $PLUGIN_HOOKS['servicecatalog']['mydashboard'] = array ('PluginMydashboardServicecatalog');
+         }
+      
          if (Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))) {
+         
             $PLUGIN_HOOKS['menu_toadd']['mydashboard'] = array('tools' => 'PluginMydashboardMenu');
             $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = '/front/menu.php';
-
+            
+            if (class_exists('PluginServicecatalogMain') && Session::haveRight("plugin_servicecatalog", READ)) {
+               unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
+            }
+            
             if (isset($_SESSION["glpi_plugin_mydashboard_loaded"])
                && $_SESSION["glpi_plugin_mydashboard_loaded"] == 0
             ) {
@@ -74,6 +83,7 @@ function plugin_init_mydashboard()
 
             if (PluginMydashboardHelper::getReplaceCentral()
                && Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))
+               && (class_exists('PluginServicecatalogMain') && !Session::haveRight("plugin_servicecatalog", READ))
             ) {
                $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
             }

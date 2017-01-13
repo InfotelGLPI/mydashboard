@@ -145,7 +145,7 @@ class PluginMydashboardProfile extends CommonDBTM
 
       echo "<th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), self::getTypeName(1), $profile->fields["name"]) . "</th>";
       echo "</tr>";
-      echo "<tr><td></td><td>" . __("Full", "mydashboard") . "</td><td>" . __("Custom", "mydashboard") . "</td></tr>";
+      echo "<tr class='tab_bg_1'><td></td><td>" . __("Full", "mydashboard") . "</td><td>" . __("Custom", "mydashboard") . "</td></tr>";
       echo "<tr class='tab_bg_2'>";
       echo "<td>" . __("Dashboard Access", "mydashboard") . "</td><td>";
       $checked = ($effective_rights["plugin_mydashboard"] > 1) ? 1 : 0;
