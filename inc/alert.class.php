@@ -283,11 +283,14 @@ class PluginMydashboardAlert extends CommonDBTM
       Dropdown::showYesNo('is_public', $is_public);
 
       echo "</td>";
-      echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-      echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
-      echo "<input type='hidden' name='id' value=" . $id . ">";
-      echo "<input type='hidden' name='reminders_id' value=" . $reminders_id . ">";
-      echo "</td></tr></table>";
+      if (Session::haveRight("reminder_public", UPDATE)) {
+         echo "<tr class='tab_bg_1 center'><td colspan='2'>";
+         echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
+         echo "<input type='hidden' name='id' value=" . $id . ">";
+         echo "<input type='hidden' name='reminders_id' value=" . $reminders_id . ">";
+         echo "</td></tr>";
+      }
+      echo "</table>";
       Html::closeForm();
    }
 

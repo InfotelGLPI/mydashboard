@@ -58,7 +58,7 @@ class PluginMydashboardServicecatalog extends CommonGLPI
       global $CFG_GLPI;
 
       return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php' class='de-em'>
-      <span class='de-em'>" . __('Dashboard', 'mydashboard') . " </span><span class='em'>" . __('Access', 'mydashboard')."</span></a>";
+      <span class='de-em'>" . __('Access', 'mydashboard') . " </span><span class='em'>" . __('Dashboard', 'mydashboard')."</span></a>";
 
    }
 
