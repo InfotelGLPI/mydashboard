@@ -35,15 +35,19 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginMydashboardMenu::getTypeName(1));
 }
 
-if (isset($_POST["add_ticket"])) {
+if (Session::haveRightsOr("plugin_mydashboard", array(READ, UPDATE))) {
+   if (isset($_POST["add_ticket"])) {
 
-   Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
+      Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
 
+   } else {
+
+      $menu = new PluginMydashboardMenu();
+      $menu->showMenu();
+
+   }
 } else {
-
-   $menu = new PluginMydashboardMenu();
-   $menu->showMenu();
-
+   Html::displayRightError();
 }
 if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::footer();
