@@ -1,0 +1,492 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR MyDashboard Development Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - MyDashboard plugin 1.3.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-18 17:17+0100\n"
+"PO-Revision-Date: 2017-02-03 14:13+0100\n"
+"Last-Translator: Amandine Manceau <amandine.manceau@infotel.com>, 2017\n"
+"Language-Team: German (Germany) (https://www.transifex.com/tsmr/teams/65490/de_DE/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.5\n"
+
+#: setup.php:116 inc/menu.class.php:87 inc/menu.class.php:258
+#: inc/preference.class.php:66
+msgid "My Dashboard"
+msgstr ""
+
+#: setup.php:133
+msgid "This plugin requires GLPI >= 0.90"
+msgstr ""
+
+#: ajax/saveConfig.php:65
+msgid "Can't add this widget in Database"
+msgstr ""
+
+#: ajax/saveConfig.php:70
+msgid "Added"
+msgstr ""
+
+#: ajax/saveConfig.php:72
+msgid "Can't add this widget on users Dashboard"
+msgstr ""
+
+#: ajax/saveConfig.php:79
+msgid "Deleted"
+msgstr ""
+
+#: ajax/saveConfig.php:95
+msgid "Updated"
+msgstr ""
+
+#: ajax/saveConfig.php:97
+msgid "Can't save new order"
+msgstr ""
+
+#: ajax/saveConfig.php:117 inc/menu.class.php:905
+msgid "Dashboard not saved"
+msgstr ""
+
+#: ajax/saveConfig.php:117 inc/menu.class.php:904
+msgid "Dashboard saved"
+msgstr ""
+
+#: inc/alert.class.php:41 inc/alert.class.php:67 inc/alert.class.php:81
+#: inc/alert.class.php:275
+msgid "Alert"
+msgid_plural "Alerts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/alert.class.php:193
+msgid "Monitoring"
+msgstr "Überwachung"
+
+#: inc/alert.class.php:243
+msgid "No problem"
+msgstr "Kein Problem"
+
+#: inc/alert.class.php:269
+msgid "No impact"
+msgstr ""
+
+#: inc/alert.class.php:276
+msgid "Alert level"
+msgstr ""
+
+#: inc/central.class.php:48
+msgid "Central"
+msgstr ""
+
+#: inc/central.class.php:78 inc/change.class.php:39 inc/config.class.php:139
+#: inc/datatable.class.php:55 inc/html.class.php:51 inc/menu.class.php:903
+#: inc/module.class.php:54 inc/planning.class.php:41 inc/problem.class.php:39
+#: inc/servicecatalog.class.php:61
+msgid "Dashboard"
+msgstr ""
+
+#: inc/change.class.php:54 inc/change.class.php:59 inc/change.class.php:114
+#: inc/change.class.php:234 inc/change.class.php:285
+msgid "Changes to be processed"
+msgstr ""
+
+#: inc/change.class.php:55 inc/change.class.php:60 inc/change.class.php:216
+#: inc/change.class.php:269
+msgid "Changes on pending status"
+msgstr ""
+
+#: inc/change.class.php:65 inc/change.class.php:498
+msgid "Change followup"
+msgstr ""
+
+#: inc/chart.class.php:99 inc/datatable.class.php:215
+msgid "No data is given to the widget"
+msgstr ""
+
+#: inc/chart.class.php:115
+msgid "No data available"
+msgstr ""
+
+#: inc/chart.class.php:119 inc/datatable.class.php:125
+msgid "Not an array"
+msgstr ""
+
+#: inc/config.class.php:43
+msgid "Dashboard - Configuration"
+msgstr ""
+
+#: inc/config.class.php:101
+msgid "Enable the possibility to display Dashboard in full screen"
+msgstr ""
+
+#: inc/config.class.php:107
+msgid "Display the menu"
+msgstr ""
+
+#: inc/config.class.php:114
+msgid "Display widgets from plugins"
+msgstr ""
+
+#: inc/config.class.php:139
+msgid "By Default for"
+msgstr ""
+
+#: inc/datatable.class.php:244
+msgid "No column defined"
+msgstr ""
+
+#: inc/example.class.php:51 inc/example.class.php:218
+msgid "My first widget (HTML)"
+msgstr ""
+
+#: inc/example.class.php:52 inc/example.class.php:84
+msgid "My second widget (VBarChart)"
+msgstr ""
+
+#: inc/example.class.php:53 inc/example.class.php:104
+msgid "My third widget (HBarChart)"
+msgstr ""
+
+#: inc/example.class.php:54 inc/example.class.php:125
+msgid "My fourth widget (PieChart)"
+msgstr ""
+
+#: inc/example.class.php:55 inc/example.class.php:138
+msgid "My fifth widget (LineChart)"
+msgstr ""
+
+#: inc/example.class.php:56 inc/example.class.php:145
+msgid "My sixth widget (Datatable)"
+msgstr ""
+
+#: inc/example.class.php:58 inc/example.class.php:162
+msgid "My seventh widget (Clock)"
+msgstr ""
+
+#: inc/example.class.php:59 inc/example.class.php:195
+msgid "My eighth widget (RadarChart)"
+msgstr ""
+
+#: inc/example.class.php:60
+msgid "My nineth widget (Fake one)"
+msgstr ""
+
+#: inc/example.class.php:131
+msgid "Value"
+msgstr ""
+
+#: inc/example.class.php:131
+msgid "units"
+msgstr ""
+
+#: inc/example.class.php:166
+msgid "Minutes elapsed"
+msgstr ""
+
+#: inc/example.class.php:166
+msgid "Minutes left"
+msgstr ""
+
+#: inc/example.class.php:183
+msgid "This example widget display the time, it refreshes every "
+msgstr ""
+
+#: inc/example.class.php:188
+msgid "This example widget display the time, it can be refreshed manually"
+msgstr ""
+
+#: inc/example.class.php:221
+msgid "Answer"
+msgstr ""
+
+#: inc/example.class.php:230
+msgid "Examples widgets"
+msgstr ""
+
+#: inc/example.class.php:238
+msgid "In all example widgets the datas are the same :"
+msgstr ""
+
+#: inc/example.class.php:244
+msgid "Maximized"
+msgstr ""
+
+#: inc/example.class.php:245
+msgid "Minimized"
+msgstr ""
+
+#: inc/example.class.php:246
+msgid "Initialized"
+msgstr ""
+
+#: inc/helper.class.php:355
+msgid "Not a valid SQL SELECT query"
+msgstr ""
+
+#: inc/infotel.class.php:50 inc/infotel.class.php:128
+msgid "Opened tickets backlog"
+msgstr ""
+
+#: inc/infotel.class.php:51 inc/infotel.class.php:160
+msgid "Number of opened tickets by priority"
+msgstr ""
+
+#: inc/infotel.class.php:52 inc/infotel.class.php:195
+msgid "Internal annuary"
+msgstr ""
+
+#: inc/infotel.class.php:53 inc/infotel.class.php:234
+msgid "Mails collector"
+msgstr ""
+
+#: inc/infotel.class.php:55 inc/infotel.class.php:347
+msgid "Tickets stock by month"
+msgstr ""
+
+#: inc/infotel.class.php:56 inc/infotel.class.php:421
+msgid "Top ten ticket authors of the previous month"
+msgstr ""
+
+#: inc/infotel.class.php:57 inc/infotel.class.php:466
+msgid "Process time by tech by month"
+msgstr ""
+
+#: inc/infotel.class.php:58 inc/infotel.class.php:511
+msgid "Automatic actions in error"
+msgstr ""
+
+#: inc/infotel.class.php:59 inc/infotel.class.php:536
+msgid "GLPI Status"
+msgstr ""
+
+#: inc/infotel.class.php:60 inc/infotel.class.php:583
+msgid "TTR Compliance"
+msgstr ""
+
+#: inc/infotel.class.php:61 inc/infotel.class.php:627
+msgid "TTO Compliance"
+msgstr ""
+
+#: inc/infotel.class.php:269
+msgid "Logged users"
+msgstr ""
+
+#: inc/infotel.class.php:346
+msgid "Tickets stock"
+msgstr ""
+
+#: inc/infotel.class.php:445
+msgid "Show"
+msgstr ""
+
+#: inc/infotel.class.php:579
+msgid "Respected TTR"
+msgstr ""
+
+#: inc/infotel.class.php:580
+msgid "Not respected TTR"
+msgstr ""
+
+#: inc/infotel.class.php:623
+msgid "Respected TTO"
+msgstr ""
+
+#: inc/infotel.class.php:624
+msgid "Not respected TTO"
+msgstr ""
+
+#: inc/infotel.class.php:647
+msgid "Problem with GLPI"
+msgstr ""
+
+#: inc/infotel.class.php:652
+msgid "GLPI is OK"
+msgstr ""
+
+#: inc/infotel.class.php:654
+msgid "Alert is not properly configured"
+msgstr ""
+
+#: inc/infotel.class.php:669
+msgid "Show Profile"
+msgstr ""
+
+#: inc/infotel.class.php:832
+msgid "Curl PHP package not installed"
+msgstr ""
+
+#: inc/knowbaseitem.class.php:120
+msgid "Publication date"
+msgstr ""
+
+#: inc/knowbaseitem.class.php:122
+msgid "Modification date"
+msgstr ""
+
+#: inc/menu.class.php:875
+msgid "No data available in table"
+msgstr ""
+
+#: inc/menu.class.php:876
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr ""
+
+#: inc/menu.class.php:877
+msgid "Showing 0 to 0 of 0 entries"
+msgstr ""
+
+#: inc/menu.class.php:878
+msgid "(filtered from _MAX_ total entries)"
+msgstr ""
+
+#: inc/menu.class.php:881
+msgid "Show _MENU_ entries"
+msgstr ""
+
+#: inc/menu.class.php:885
+msgid "No matching records found"
+msgstr ""
+
+#: inc/menu.class.php:893
+msgid ": activate to sort column ascending"
+msgstr ""
+
+#: inc/menu.class.php:894
+msgid ": activate to sort column descending"
+msgstr ""
+
+#: inc/menu.class.php:896 inc/menu.class.php:902
+msgid "Close"
+msgstr ""
+
+#: inc/menu.class.php:897
+msgid "Maximize"
+msgstr ""
+
+#: inc/menu.class.php:898
+msgid "Minimize"
+msgstr ""
+
+#: inc/menu.class.php:899
+msgid "Refresh"
+msgstr ""
+
+#: inc/menu.class.php:906
+msgid "Data received for"
+msgstr ""
+
+#: inc/menu.class.php:907
+msgid "No data received for"
+msgstr ""
+
+#: inc/menu.class.php:908
+msgid "Updating all widgets"
+msgstr ""
+
+#: inc/menu.class.php:909
+msgid "Widget added on Dashboard"
+msgstr ""
+
+#: inc/module.class.php:134 inc/module.class.php:279
+msgid "notice"
+msgstr ""
+
+#: inc/module.class.php:134 inc/module.class.php:287
+msgid "warning"
+msgstr ""
+
+#: inc/module.class.php:134 inc/module.class.php:295
+msgid "error"
+msgstr ""
+
+#: inc/piechart.class.php:61
+msgid "You can't have more than one serie for a pie chart"
+msgstr ""
+
+#: inc/preference.class.php:106
+msgid "Automatic refreshing of the widgets that can be refreshed"
+msgstr ""
+
+#: inc/preference.class.php:111
+msgid "Refresh every "
+msgstr ""
+
+#: inc/preference.class.php:114
+msgid "minute(s)"
+msgstr ""
+
+#: inc/preference.class.php:116
+msgid "Number of widget in width"
+msgstr ""
+
+#: inc/preference.class.php:122
+msgid "Replace central interface"
+msgstr ""
+
+#: inc/preferenceuserblacklist.class.php:58
+msgid "From which plugins you want to display the widgets?"
+msgstr ""
+
+#: inc/profileauthorizedwidget.class.php:78
+msgid "Authorize/Unauthorize all"
+msgstr ""
+
+#: inc/profile.class.php:46
+msgid "Rights management"
+msgstr ""
+
+#: inc/profile.class.php:148
+msgid "Full"
+msgstr ""
+
+#: inc/profile.class.php:148
+msgid "Custom"
+msgstr ""
+
+#: inc/profile.class.php:150
+msgid "Dashboard Access"
+msgstr ""
+
+#: inc/profile.class.php:162
+msgid "Configuration Access"
+msgstr ""
+
+#: inc/profile.class.php:296
+msgid "See the dashboard"
+msgstr ""
+
+#: inc/profile.class.php:300
+msgid "See the configuration"
+msgstr ""
+
+#: inc/servicecatalog.class.php:61
+msgid "Access"
+msgstr ""
+
+#: inc/servicecatalog.class.php:69
+msgid "Dashboard access"
+msgstr ""
+
+#: inc/ticket.class.php:78 inc/ticket.class.php:866
+msgid "New tickets"
+msgstr ""
+
+#: inc/userwidget.class.php:65
+msgid "user_widget management"
+msgstr ""
+
+#: inc/widget.class.php:42
+msgid "Widget management"
+msgstr ""
+
+#: scripts/insert_stock_tickets.php:56
+msgid "Plugin disabled"
+msgstr ""
