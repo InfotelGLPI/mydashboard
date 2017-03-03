@@ -2,28 +2,28 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.3.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-18 17:17+0100\n"
-"PO-Revision-Date: 2017-01-18 17:20+0100\n"
+"POT-Creation-Date: 2017-03-03 15:09+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_GB\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"X-Generator: Poedit 1.8.5\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:116 inc/menu.class.php:87 inc/menu.class.php:258
+#: setup.php:124 inc/menu.class.php:87 inc/menu.class.php:258
 #: inc/preference.class.php:66
 msgid "My Dashboard"
 msgstr "My Dashboard"
 
-#: setup.php:133
+#: setup.php:141
 msgid "This plugin requires GLPI >= 0.90"
 msgstr "This plugin requires GLPI >= 0.90"
 
@@ -59,26 +59,42 @@ msgstr "Dashboard not saved"
 msgid "Dashboard saved"
 msgstr "Dashboard saved"
 
-#: inc/alert.class.php:41 inc/alert.class.php:67 inc/alert.class.php:81
-#: inc/alert.class.php:275
+#: inc/alert.class.php:42 inc/alert.class.php:68 inc/alert.class.php:434
+#: inc/alert.class.php:437
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Alert"
 msgstr[1] "Alerts"
 
-#: inc/alert.class.php:193
+#: inc/alert.class.php:69 inc/alert.class.php:112
+msgid "Network alert"
+msgid_plural "Network alerts"
+msgstr[0] "Network alert"
+msgstr[1] "Network alerts"
+
+#: inc/alert.class.php:70 inc/alert.class.php:124 inc/alert.class.php:438
+msgid "Scheduled maintenance"
+msgid_plural "Scheduled maintenances"
+msgstr[0] "Scheduled maintenance"
+msgstr[1] "Scheduled maintenances"
+
+#: inc/alert.class.php:242
+msgid "No scheduled maintenance"
+msgstr "No scheduled maintenance"
+
+#: inc/alert.class.php:356
 msgid "Monitoring"
 msgstr "Monitoring"
 
-#: inc/alert.class.php:243
+#: inc/alert.class.php:405
 msgid "No problem"
 msgstr "No problem"
 
-#: inc/alert.class.php:269
+#: inc/alert.class.php:448
 msgid "No impact"
 msgstr "No impact"
 
-#: inc/alert.class.php:276
+#: inc/alert.class.php:453
 msgid "Alert level"
 msgstr "Alert level"
 
@@ -89,9 +105,65 @@ msgstr "Central"
 #: inc/central.class.php:78 inc/change.class.php:39 inc/config.class.php:139
 #: inc/datatable.class.php:55 inc/html.class.php:51 inc/menu.class.php:903
 #: inc/module.class.php:54 inc/planning.class.php:41 inc/problem.class.php:39
-#: inc/servicecatalog.class.php:61
+#: inc/servicecatalog.class.php:52 inc/servicecatalog.class.php:61
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#: inc/chalon.class.php:51 inc/chalon.class.php:97 inc/infotel.class.php:50
+#: inc/infotel.class.php:129
+msgid "Opened tickets backlog"
+msgstr "Opened tickets backlog"
+
+#: inc/chalon.class.php:52 inc/chalon.class.php:129 inc/infotel.class.php:51
+#: inc/infotel.class.php:161
+msgid "Number of opened tickets by priority"
+msgstr "Number of opened tickets by priority"
+
+#: inc/chalon.class.php:53 inc/chalon.class.php:164 inc/infotel.class.php:52
+#: inc/infotel.class.php:196
+msgid "Internal annuary"
+msgstr "Internal annuary"
+
+#: inc/chalon.class.php:54 inc/chalon.class.php:203 inc/infotel.class.php:53
+#: inc/infotel.class.php:235
+msgid "Mails collector"
+msgstr "Mails collector"
+
+#: inc/chalon.class.php:55 inc/chalon.class.php:282 inc/infotel.class.php:55
+#: inc/infotel.class.php:348
+msgid "Tickets stock by month"
+msgstr "Tickets stock by month"
+
+#: inc/chalon.class.php:56 inc/chalon.class.php:356 inc/infotel.class.php:56
+#: inc/infotel.class.php:422
+msgid "Top ten ticket authors of the previous month"
+msgstr "Top ten ticket authors of the previous month"
+
+#: inc/chalon.class.php:57 inc/infotel.class.php:57 inc/infotel.class.php:467
+msgid "Process time by tech by month"
+msgstr "Process time by tech by month"
+
+#: inc/chalon.class.php:58 inc/chalon.class.php:401 inc/infotel.class.php:58
+#: inc/infotel.class.php:512
+msgid "Automatic actions in error"
+msgstr "Automatic actions in error"
+
+#: inc/chalon.class.php:59 inc/chalon.class.php:448 inc/infotel.class.php:60
+#: inc/infotel.class.php:584
+msgid "TTR Compliance"
+msgstr "TTR Compliance"
+
+#: inc/chalon.class.php:281 inc/infotel.class.php:347
+msgid "Tickets stock"
+msgstr "Tickets stock"
+
+#: inc/chalon.class.php:444 inc/infotel.class.php:580
+msgid "Respected TTR"
+msgstr "Respected TTR"
+
+#: inc/chalon.class.php:445 inc/infotel.class.php:581
+msgid "Not respected TTR"
+msgstr "Not respected TTR"
 
 #: inc/change.class.php:54 inc/change.class.php:59 inc/change.class.php:114
 #: inc/change.class.php:234 inc/change.class.php:285
@@ -231,95 +303,47 @@ msgstr "Initialized"
 msgid "Not a valid SQL SELECT query"
 msgstr "Not a valid SQL SELECT query"
 
-#: inc/infotel.class.php:50 inc/infotel.class.php:128
-msgid "Opened tickets backlog"
-msgstr "Opened tickets backlog"
-
-#: inc/infotel.class.php:51 inc/infotel.class.php:160
-msgid "Number of opened tickets by priority"
-msgstr "Number of opened tickets by priority"
-
-#: inc/infotel.class.php:52 inc/infotel.class.php:195
-msgid "Internal annuary"
-msgstr "Internal annuary"
-
-#: inc/infotel.class.php:53 inc/infotel.class.php:234
-msgid "Mails collector"
-msgstr "Mails collector"
-
-#: inc/infotel.class.php:55 inc/infotel.class.php:347
-msgid "Tickets stock by month"
-msgstr "Tickets stock by month"
-
-#: inc/infotel.class.php:56 inc/infotel.class.php:421
-msgid "Top ten ticket authors of the previous month"
-msgstr "Top ten ticket authors of the previous month"
-
-#: inc/infotel.class.php:57 inc/infotel.class.php:466
-msgid "Process time by tech by month"
-msgstr "Process time by tech by month"
-
-#: inc/infotel.class.php:58 inc/infotel.class.php:511
-msgid "Automatic actions in error"
-msgstr "Automatic actions in error"
-
-#: inc/infotel.class.php:59 inc/infotel.class.php:536
+#: inc/infotel.class.php:59 inc/infotel.class.php:537
 msgid "GLPI Status"
 msgstr "GLPI Status"
 
-#: inc/infotel.class.php:60 inc/infotel.class.php:583
-msgid "TTR Compliance"
-msgstr "TTR Compliance"
-
-#: inc/infotel.class.php:61 inc/infotel.class.php:627
+#: inc/infotel.class.php:61 inc/infotel.class.php:628
 msgid "TTO Compliance"
 msgstr "TTO Compliance"
 
-#: inc/infotel.class.php:269
+#: inc/infotel.class.php:270
 msgid "Logged users"
 msgstr "Logged users"
 
-#: inc/infotel.class.php:346
-msgid "Tickets stock"
-msgstr "Tickets stock"
-
-#: inc/infotel.class.php:445
+#: inc/infotel.class.php:446
 msgid "Show"
 msgstr "Show"
 
-#: inc/infotel.class.php:579
-msgid "Respected TTR"
-msgstr "Respected TTR"
-
-#: inc/infotel.class.php:580
-msgid "Not respected TTR"
-msgstr "Not respected TTR"
-
-#: inc/infotel.class.php:623
+#: inc/infotel.class.php:624
 msgid "Respected TTO"
 msgstr "Respected TTO"
 
-#: inc/infotel.class.php:624
+#: inc/infotel.class.php:625
 msgid "Not respected TTO"
 msgstr "Not respected TTO"
 
-#: inc/infotel.class.php:647
+#: inc/infotel.class.php:698
 msgid "Problem with GLPI"
 msgstr "Problem with GLPI"
 
-#: inc/infotel.class.php:652
+#: inc/infotel.class.php:703
 msgid "GLPI is OK"
 msgstr "GLPI is OK"
 
-#: inc/infotel.class.php:654
+#: inc/infotel.class.php:705
 msgid "Alert is not properly configured"
 msgstr "Alert is not properly configured"
 
-#: inc/infotel.class.php:669
+#: inc/infotel.class.php:720
 msgid "Show Profile"
 msgstr "Show Profile"
 
-#: inc/infotel.class.php:832
+#: inc/infotel.class.php:883
 msgid "Curl PHP package not installed"
 msgstr "Curl PHP package not installed"
 
@@ -479,7 +503,7 @@ msgstr "Dashboard access"
 msgid "New tickets"
 msgstr "New tickets"
 
-#: inc/userwidget.class.php:65
+#: inc/userwidget.class.php:66
 msgid "user_widget management"
 msgstr "user_widget management"
 
