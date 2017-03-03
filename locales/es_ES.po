@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.3.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 15:09+0100\n"
+"POT-Creation-Date: 2017-03-03 16:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2016\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/tsmr/teams/65490/es_ES/)\n"
@@ -59,42 +59,48 @@ msgstr "Dashboard no ahorrado"
 msgid "Dashboard saved"
 msgstr "Dashboard ahorrado"
 
-#: inc/alert.class.php:42 inc/alert.class.php:68 inc/alert.class.php:434
-#: inc/alert.class.php:437
+#: inc/alert.class.php:42 inc/alert.class.php:68 inc/alert.class.php:450
+#: inc/alert.class.php:453
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:69 inc/alert.class.php:112
+#: inc/alert.class.php:69 inc/alert.class.php:117
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:70 inc/alert.class.php:124 inc/alert.class.php:438
+#: inc/alert.class.php:70 inc/alert.class.php:129 inc/alert.class.php:454
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:242
+#: inc/alert.class.php:145
+msgid ""
+"There is at least on planned scheduled maintenance. Please log on to see "
+"more"
+msgstr ""
+
+#: inc/alert.class.php:258
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/alert.class.php:356
+#: inc/alert.class.php:372
 msgid "Monitoring"
 msgstr "Vigilencia"
 
-#: inc/alert.class.php:405
+#: inc/alert.class.php:421
 msgid "No problem"
 msgstr "Ningún problema"
 
-#: inc/alert.class.php:448
+#: inc/alert.class.php:464
 msgid "No impact"
 msgstr "Ningún efecto"
 
-#: inc/alert.class.php:453
+#: inc/alert.class.php:469
 msgid "Alert level"
 msgstr "Nivel de alerta"
 
