@@ -42,6 +42,7 @@ function plugin_init_mydashboard()
       "lib/sdashboard/lib/flotr2/flotr2.js",
       "lib/sdashboard/jquery-sDashboard.js",
       "scripts/mydashboard.js",
+      "lib/vticker/vticker.js"
    );
 
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;

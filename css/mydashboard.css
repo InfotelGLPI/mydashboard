@@ -29,13 +29,14 @@
    text-align: center;
 }
 
-#fibnews-div{
+#maint-div{
    text-align: left;
-   margin: 0px 30px 0px 30px;
+   margin: 10px 1px 30px 30px;
 }
 
-.fib-margin{
-   margin-bottom: 5px;
+.maint-color{
+   font-weight: bold;
+   color: #D4D7DA;
 }
 
 .plugin_mydashboard_dashboard{

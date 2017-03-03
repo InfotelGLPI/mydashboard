@@ -58,11 +58,11 @@ class PluginMydashboardReminder
    {
       switch ($widgetId) {
          case "reminderpersonalwidget":
-            return PluginMydashboardReminder::showListForCentral();
+            return self::showListForCentral();
             break;
          case "reminderpublicwidget":
             if (Session::haveRight("reminder_public", READ)) {
-               return PluginMydashboardReminder::showListForCentral(false);
+               return self::showListForCentral(false);
             }
             break;
       }

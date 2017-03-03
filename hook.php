@@ -117,6 +117,14 @@ function plugin_mydashboard_install()
 
       $mig->executeMigration();
    }
+   
+   if (!FieldExists("glpi_plugin_mydashboard_alerts", "type")) {
+      $mig = new Migration("1.3.3");
+
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.3.3.sql");
+
+      $mig->executeMigration();
+   }
    PluginMydashboardProfile::initProfile();
    PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    return true;
