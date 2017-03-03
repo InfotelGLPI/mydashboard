@@ -72,7 +72,7 @@ class PluginMydashboardAlert extends CommonDBTM
       );
    }
    
-   static function countForMaintenance()
+   static function countForMaintenance($public)
    {
       global $DB;
       
@@ -90,8 +90,13 @@ class PluginMydashboardAlert extends CommonDBTM
          . "ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
          . "WHERE `glpi_plugin_mydashboard_alerts`.`type` = 1
                          $restrict_visibility ";
+      
+      if ($public == 0) {
+         $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+      } else {
+         $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
+      }
 
-      $query .= "AND " . Reminder::addVisibilityRestrict() . "";
 
       $result = $DB->query($query);
       $ligne  = $DB->fetch_assoc($result);
@@ -129,6 +134,17 @@ class PluginMydashboardAlert extends CommonDBTM
       }
    }
    
+   
+   /**
+    * @param int $public
+    * @return string
+    */
+   static function getMaintenanceMessage($public = false)
+   {
+      if (self::countForMaintenance($public) > 0) {
+         echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'Scheduled maintenances', 2, 'mydashboard');
+      }
+   }
    /**
     * @param int $public
     * @return string
@@ -478,6 +494,12 @@ class PluginMydashboardAlert extends CommonDBTM
    {
       $css = "<style  type='text/css' media='screen'>
                #display-login {
+                  width: 40%;
+                  /*background-color: #006573;*/
+                  text-align:center;
+                  padding: 1px 1%;
+               }
+               #display-sc {
                   width: 100%;
                   /*background-color: #006573;*/
                   text-align:center;
