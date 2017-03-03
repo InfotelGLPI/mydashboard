@@ -142,7 +142,7 @@ class PluginMydashboardAlert extends CommonDBTM
    static function getMaintenanceMessage($public = false)
    {
       if (self::countForMaintenance($public) > 0) {
-         echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'Scheduled maintenances', 'mydashboard');
+         echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
       }
    }
    /**
