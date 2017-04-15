@@ -138,7 +138,7 @@ function plugin_mydashboard_check_prerequisites()
 {
    //85
    if (version_compare(GLPI_VERSION, '0.90', 'lt') || version_compare(GLPI_VERSION, '9.2', 'ge')) {
-      _e('This plugin requires GLPI >= 0.90', 'mydashboard');
+      echo __('This plugin requires GLPI >= 0.90', 'mydashboard');
       return false;
    }
    return true;

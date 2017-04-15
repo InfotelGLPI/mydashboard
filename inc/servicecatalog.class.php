@@ -66,7 +66,7 @@ class PluginMydashboardServicecatalog extends CommonGLPI
    static function getMenuComment()
    {
 
-      _e('Dashboard access', 'mydashboard');
+      echo __('Dashboard access', 'mydashboard');
    }
 
    static function getLinkList()
