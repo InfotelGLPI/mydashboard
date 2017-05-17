@@ -406,13 +406,14 @@ class PluginMydashboardAlert extends CommonDBTM
             }
 
 
-            $l .= "<span class='$classfont center'>" . $name . "</span>";
+            $l .= "<span class='$classfont center'>" . $name . "</span>&nbsp;";
 
             //if ($public == 0) {
             $l .= Html::showToolTip(
-               Html::resume_text(html_entity_decode($listitem['text']), 80),
+               nl2br(Html::Clean($listitem['text'])),
                array('display' => false,
-                  'applyto' => 'alert' . $rand)
+                  //'applyto' => 'alert' . $rand
+                  )
             );
             //}
             $l .= "</div>";

@@ -49,7 +49,7 @@ class PluginMydashboardServicecatalog extends CommonGLPI
       global $CFG_GLPI;
 
       return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'>
-      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/dashboard.png\" alt='".__('Dashboard', 'mydashboard')."' width=\"200\" height=\"110\"></a>";
+      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/dashboard.png\" alt='".__('Dashboard', 'mydashboard')."' width=\"190\" height=\"100\"></a>";
 
    }
 
