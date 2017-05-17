@@ -72,7 +72,7 @@ class PluginMydashboardAlert extends CommonDBTM
       );
    }
    
-   static function countForMaintenance($public)
+   static function countForAlerts($public, $type)
    {
       global $DB;
       
@@ -88,7 +88,7 @@ class PluginMydashboardAlert extends CommonDBTM
          . Reminder::addVisibilityJoins()
          . "LEFT JOIN `glpi_plugin_mydashboard_alerts`"
          . "ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
-         . "WHERE `glpi_plugin_mydashboard_alerts`.`type` = 1
+         . "WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
                          $restrict_visibility ";
       
       if ($public == 0) {
@@ -141,7 +141,7 @@ class PluginMydashboardAlert extends CommonDBTM
     */
    static function getMaintenanceMessage($public = false)
    {
-      if (self::countForMaintenance($public) > 0) {
+      if (self::countForAlerts($public, 1) > 0) {
          echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
       }
    }
@@ -263,6 +263,127 @@ class PluginMydashboardAlert extends CommonDBTM
       }
       return $wl;
    }
+   
+   
+   /**
+    * @param int $public
+    * @return string
+    */
+   function getInformationList($widget = false)
+   {
+      global $DB, $CFG_GLPI;
+
+      $now = date('Y-m-d H:i:s');
+      $wl = "";
+      $wl = $this->getPublicCSS();
+      
+      if (!$widget) {
+         $wl .= "<div class='weather_block'>";
+      }
+      $restrict_user = '1';
+      // Only personal on central so do not keep it
+//      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+//         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
+//      }
+
+      $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
+                                    OR `glpi_reminders`.`begin_view_date` < '$now')
+                              AND (`glpi_reminders`.`end_view_date` IS NULL
+                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
+
+      $query = "SELECT `glpi_reminders`.`id`,
+                       `glpi_reminders`.`name`,
+                       `glpi_reminders`.`text`,
+                       `glpi_reminders`.`date`,
+                       `glpi_reminders`.`begin_view_date`,
+                       `glpi_reminders`.`end_view_date`
+                   FROM `glpi_reminders` "
+         . Reminder::addVisibilityJoins()
+         . "LEFT JOIN `" . $this->getTable() . "`"
+         . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+         . "WHERE $restrict_user
+                         $restrict_visibility ";
+
+      $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+  
+      $query .= "AND `" . $this->getTable() . "`.`type` = 2
+                   ORDER BY `glpi_reminders`.`name`";
+
+      
+      $result = $DB->query($query);
+      $nb = $DB->numrows($result);
+      $list = array();
+      $width ="";
+      if ($nb) {
+         
+         if (!$widget) {
+            $wl .= "<div id='maint-div'>";
+            $wl .= "<ul>";
+         }
+         while ($row = $DB->fetch_array($result)) {
+            
+            if (!$widget) {
+               $wl .= "<li>";
+            }
+            if ($widget) {
+               $width = " width=55px";
+            }
+            $wl .= "<table width='100%'><tr>";
+            //$wl .= "<td rowspan='2' class='center' width='20%'>";
+            //$wl .= "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/pics/informations.png' $width />";
+            //$wl .= "</td>";
+            $wl .= "<td valign='top'>";
+            if (!$widget) {
+               $wl .= "<h3>";
+            } else {
+               $wl .= "<h2>";
+            }
+            $wl .= $row['name'];
+            
+            if (!$widget) {
+               $wl .= "</h3>";
+            } else {
+               $wl .= "</h2>";
+            }
+            
+            $wl .= "</td></tr>";
+            $wl .= "<tr><td valign='top'>";
+            $wl .= Toolbox::unclean_html_cross_side_scripting_deep($row["text"]);
+            $wl .= "</td></tr></table>";
+            if (!$widget) {
+               $wl .= "</li>";
+            }
+         }
+         if (!$widget) {
+            $wl .= "</ul>";
+            $wl .= "</div>";
+
+            $wl .= "<script type='text/javascript'>
+                  $(function() {
+                     $('#maint-div').vTicker({
+                        speed: 500,
+                        pause: 3000,
+                        showItems: 1,
+                        animation: 'fade',
+                        mousePause: true,
+                        height: 0,
+                        direction: 'up'
+                     });
+                  });
+               </script>";
+            }
+      } else {
+      
+         $wl .= "<div align='center'><h3><span class ='maint-color'>";
+         $wl .=  __("No informations founded", "mydashboard");
+         $wl .= "</span></h3></div>";
+      }
+      if (!$widget) {
+         $wl .= "</div>";
+      }
+      return $wl;
+   }
+   
    
    /**
     * @param int $public
@@ -453,7 +574,7 @@ class PluginMydashboardAlert extends CommonDBTM
       $types = array();
       $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
       $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
-      
+      $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
       echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
       Dropdown::showFromArray('type', $types, array(
             'value' => $type
