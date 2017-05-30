@@ -68,6 +68,7 @@ class PluginMydashboardAlert extends CommonDBTM
          _n('Alert', 'Alerts', 2, 'mydashboard') => array(
          $this->getType() . "1" => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
          $this->getType() . "2" => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
+         $this->getType() . "3" => _n('Information', 'Informations', 2, 'mydashboard'),
          )
       );
    }
@@ -113,7 +114,7 @@ class PluginMydashboardAlert extends CommonDBTM
       switch ($widgetId) {
          case $this->getType() . "1":
             $widget = new PluginMydashboardHtml();
-            $widget->setWidgetHtmlContent($this->getAlertList());
+            $widget->setWidgetHtmlContent($this->getAlertList(0,0,true));
             $widget->setWidgetTitle(_n('Network alert', 'Network alerts', 2, 'mydashboard'));
             $widget->toggleWidgetRefresh();
             //$widget->toggleWidgetMaximize();
@@ -127,6 +128,18 @@ class PluginMydashboardAlert extends CommonDBTM
                $datas
             );
             $widget->setWidgetTitle(_n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'));
+            $widget->toggleWidgetRefresh();
+            //$widget->toggleWidgetMaximize();
+            return $widget;
+            break;
+         
+         case $this->getType() . "3":
+            $widget = new PluginMydashboardHtml();
+            $datas = $this->getInformationList(true);
+            $widget->setWidgetHtmlContent(
+               $datas
+            );
+            $widget->setWidgetTitle(_n('Information', 'Informations', 2, 'mydashboard'));
             $widget->toggleWidgetRefresh();
             //$widget->toggleWidgetMaximize();
             return $widget;
@@ -206,7 +219,7 @@ class PluginMydashboardAlert extends CommonDBTM
                $wl .= "<li>";
             }
             if ($widget) {
-               $width = " width=55px";
+               $width = " width=75px";
             }
             $wl .= "<table width='100%'><tr>";
             $wl .= "<td rowspan='2' class='center' width='20%'>";
@@ -233,6 +246,9 @@ class PluginMydashboardAlert extends CommonDBTM
             if (!$widget) {
                $wl .= "</li>";
             }
+            if ($widget) {
+               $wl .= "<hr>";
+            }
          }
          if (!$widget) {
             $wl .= "</ul>";
@@ -244,14 +260,14 @@ class PluginMydashboardAlert extends CommonDBTM
                         speed: 500,
                         pause: 3000,
                         showItems: 1,
-                        animation: 'fade',
+                        animate: 'fade',
                         mousePause: true,
                         height: 0,
                         direction: 'up'
                      });
                   });
                </script>";
-            }
+         }
       } else {
       
          $wl .= "<div align='center'><h3><span class ='maint-color'>";
@@ -317,7 +333,7 @@ class PluginMydashboardAlert extends CommonDBTM
       if ($nb) {
          
          if (!$widget) {
-            $wl .= "<div id='maint-div'>";
+            $wl .= "<div id='info-div'>";
             $wl .= "<ul>";
          }
          while ($row = $DB->fetch_array($result)) {
@@ -353,6 +369,9 @@ class PluginMydashboardAlert extends CommonDBTM
             if (!$widget) {
                $wl .= "</li>";
             }
+            if ($widget) {
+               $wl .= "<hr>";
+            }
          }
          if (!$widget) {
             $wl .= "</ul>";
@@ -360,18 +379,18 @@ class PluginMydashboardAlert extends CommonDBTM
 
             $wl .= "<script type='text/javascript'>
                   $(function() {
-                     $('#maint-div').vTicker({
-                        speed: 500,
-                        pause: 3000,
+                     $('#info-div').vTicker({
+                        speed: 300,
+                        pause: 5000,
                         showItems: 1,
-                        animation: 'fade',
+                        animate: false,
                         mousePause: true,
                         height: 0,
-                        direction: 'up'
+                        direction: 'right'
                      });
                   });
                </script>";
-            }
+         }
       } else {
       
          $wl .= "<div align='center'><h3><span class ='maint-color'>";
@@ -389,7 +408,176 @@ class PluginMydashboardAlert extends CommonDBTM
     * @param int $public
     * @return string
     */
-   function getAlertList($public = 0, $force = 0)
+   function getAlertList($public = 0, $force = 0, $widget = false)
+   {
+      global $DB, $CFG_GLPI;
+
+      $now = date('Y-m-d H:i:s');
+
+      $wl = $this->getPublicCSS();
+      
+      if (!$widget) {
+         $wl .= "<div class='weather_block'>";
+      }
+
+      $restrict_user = '1';
+      // Only personal on central so do not keep it
+//      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+//         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
+//      }
+
+      $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
+                                    OR `glpi_reminders`.`begin_view_date` < '$now')
+                              AND (`glpi_reminders`.`end_view_date` IS NULL
+                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
+
+      $query = "SELECT `glpi_reminders`.`id`,
+                       `glpi_reminders`.`name`,
+                       `glpi_reminders`.`text`,
+                       `glpi_reminders`.`date`,
+                       `glpi_reminders`.`begin_view_date`,
+                       `glpi_reminders`.`end_view_date`,
+                       `" . $this->getTable() . "`.`impact`,
+                       `" . $this->getTable() . "`.`is_public`
+                   FROM `glpi_reminders` "
+         . Reminder::addVisibilityJoins()
+         . "LEFT JOIN `" . $this->getTable() . "`"
+         . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+         . "WHERE $restrict_user
+                         $restrict_visibility ";
+
+      if ($public == 0) {
+         $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+      } else {
+         $query .= "AND `" . $this->getTable() . "`.`is_public`";
+      }
+      $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL 
+                 AND `" . $this->getTable() . "`.`type` = 0
+                   ORDER BY `glpi_reminders`.`name`";
+
+      $cloud = array();
+      $cloudy = array();
+      $storm = array();
+
+      $result = $DB->query($query);
+      $nb = $DB->numrows($result);
+
+      $list = array();
+      $width ="";
+      if ($nb) {
+         
+         if (!$widget) {
+            $wl .= "<div id='alert-div'>";
+            $wl .= "<ul>";
+         }
+         while ($row = $DB->fetch_array($result)) {
+            
+            if ($nb < 2 && $row['impact'] < 3) {
+               $cloudy[] = $row;
+            }
+            if ($row['impact'] <= 3) {
+               $cloud[] = $row;
+            } else {
+               $storm[] = $row;
+            }
+            
+            if (!$widget) {
+               $wl .= "<li>";
+            }
+            //if ($widget) {
+            //   $width = " width=55px";
+            //}
+            $wl .= "<table width='100%'><tr>";
+            $wl .= "<td rowspan='2' class='center' width='30%'>";
+            
+            if (!empty($storm)) {
+               //display storm
+               $type = "storm";
+            } elseif (!empty($cloudy)) {
+               //display cloudy
+               $type = "cloudy";
+            } elseif (!empty($cloud)) {
+               //display cloud
+               $type = "cloud";
+            } else {
+               //display sun
+               $type = "sun";
+            }
+         
+            $wl .= "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/pics/{$type}.png' width='95%'/>";
+            $wl .= "</td>";
+            $wl .= "<td valign='top'>";
+            $wl .= "<h3>";
+
+            $class = (Html::convDate(date("Y-m-d")) == Html::convDate($row['date'])) ? 'alert_new' : '';
+            $class .= ' alert_impact' . $row['impact'];
+            $classfont = ' alert_fontimpact' . $row['impact'];
+            
+            $rand = mt_rand();
+            $name = (Session::haveRight("reminder_public", READ)) ?
+               "<a  href='" . Reminder::getFormURL() . "?id=" . $row['id'] . "'>" . $row['name'] . "</a>"
+               : $row['name'];
+            
+            $wl .= "<div id='alert$rand' class='alert_alert'>";
+            
+            
+            $wl .= "<span class='$classfont left'>" . $name . "</span>";
+            $wl .= "</div>";
+            //$wl .= $row['name'];
+            $wl .= "</h3>";
+            
+            $wl .= "</td></tr>";
+            $wl .= "<tr><td valign='top'>";
+            $wl .= "<span class='alert_impact $class'></span>";
+            if (isset($row['begin_view_date'])
+               && isset($row['end_view_date'])
+            ) {
+               $wl .= "<span class='alert_date'>" . Html::convDateTime($row['begin_view_date']) . " - " . Html::convDateTime($row['end_view_date']) . "</span><br>";
+            }
+            $wl .= Toolbox::unclean_html_cross_side_scripting_deep($row["text"]);
+            $wl .= "</td></tr></table>";
+            if (!$widget) {
+               $wl .= "</li>";
+            }
+            if ($widget) {
+               $wl .= "<hr>";
+            }
+         }
+         if (!$widget) {
+            $wl .= "</ul>";
+            $wl .= "</div>";
+
+            $wl .= "<script type='text/javascript'>
+                  $(function() {
+                     $('#alert-div').vTicker({
+                        speed: 500,
+                        pause: 3000,
+                        showItems: 1,
+                        animation: 'fade',
+                        mousePause: true,
+                        height: 0,
+                        direction: 'up'
+                     });
+                  });
+               </script>";
+         }
+      } else {
+      
+         $wl .= "<div align='center'><h3><span class ='alert-color'>";
+         $wl .=  __("No problem", "mydashboard");
+         $wl .= "</span></h3></div>";
+      }
+      if (!$widget) {
+         $wl .= "</div>";
+      }
+      return $wl;
+   }
+   
+   /**
+    * @param int $public
+    * @return string
+    */
+   function getAlertSummary($public = 0, $force = 0)
    {
       global $DB;
 
@@ -646,7 +834,7 @@ class PluginMydashboardAlert extends CommonDBTM
                   height: 14px;
                   border-radius:7px;
                   display: inline-block;
-                  float:center;
+                  float:top;
                   margin:1px 5px;
               }
 
