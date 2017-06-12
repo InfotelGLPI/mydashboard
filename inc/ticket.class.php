@@ -854,7 +854,7 @@ class PluginMydashboardTicket
 
          //TRANS: %d is the number of new tickets
          $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
-         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params($options, '&amp;') . "\">" . __('Show all') . "</a>";
+         $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params($options, '&amp;') . "\">" . __('Show all') . "</a>)";
 
          $output['header'] = self::commonListHeader();
 
@@ -880,7 +880,7 @@ class PluginMydashboardTicket
       $widget->setOption("bPaginate", false);
       $widget->setOption("bFilter", false);
       $widget->setOption("bInfo", false);
-
+      $widget->toggleWidgetRefresh();
       return $widget;
    }
 
@@ -894,10 +894,11 @@ class PluginMydashboardTicket
    {
       $items[] = '';
       $items[] = __('Date');
-      $items[] = __('Entity');
+      if (count($_SESSION["glpiactiveentities"]) > 1) {
+         $items[] = __('Entity');
+      }
       $items[] = __('Priority');
       $items[] = __('Requester');
-      $items[] = __('Assigned');
       $items[] = __('Associated element');
       $items[] = __('Title');
 
@@ -1038,45 +1039,6 @@ class PluginMydashboardTicket
 
          $colnum++;
          $output[$colnum] = $fourth_col;
-
-         // Assign
-         $fifth_col = "";
-         $userassign = $job->getUsers(CommonITILActor::ASSIGN);
-         if (isset($userassign)
-            && count($userassign)
-         ) {
-            foreach ($userassign as $d) {
-               $userdata = getUserName($d["users_id"], 2);
-               $fifth_col .= sprintf(__('%1$s %2$s'),
-                  "<span class='b'>" . $userdata['name'] . "</span>",
-                  Html::showToolTip($userdata["comment"],
-                     array('link' => $userdata["link"],
-                        'display' => false)));
-               $fifth_col .= "<br>";
-            }
-         }
-         $groupassign = $job->getGroups(CommonITILActor::ASSIGN);
-         if (isset($groupassign)
-            && count($groupassign)
-         ) {
-            foreach ($groupassign as $d) {
-               $fifth_col .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
-               $fifth_col .= "<br>";
-            }
-         }
-
-         $suppliersassign = $job->getSuppliers(CommonITILActor::ASSIGN);
-         if (isset($suppliersassign)
-            && count($suppliersassign)
-         ) {
-            foreach ($suppliersassign as $d) {
-               $fifth_col .= Dropdown::getDropdownName("glpi_suppliers", $d["suppliers_id"]);
-               $fifth_col .= "<br>";
-            }
-         }
-
-         $colnum++;
-         $output[$colnum] = $fifth_col;
 
          // Sixth Colum
          $sixth_col = "";
