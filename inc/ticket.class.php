@@ -893,15 +893,12 @@ class PluginMydashboardTicket
    static function commonListHeader($output_type = '', $mass_id = '')
    {
       $items[] = '';
-      $items[] = __('Status');
       $items[] = __('Date');
-      $items[] = __('Last update');
       $items[] = __('Entity');
       $items[] = __('Priority');
       $items[] = __('Requester');
       $items[] = __('Assigned');
       $items[] = __('Associated element');
-      $items[] = __('Category');
       $items[] = __('Title');
 
       return $items;
@@ -954,17 +951,17 @@ class PluginMydashboardTicket
          $item_num = 1;
          $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
-         $check_col = '';
-         if (($candelete || $canupdate)
-            && ($output_type == Search::HTML_OUTPUT)
-            && $id_for_massaction
-         ) {
-
-            $check_col = Html::getMassiveActionCheckBox(__CLASS__, $id_for_massaction);
-         }
-         $output[$colnum] = $check_col;
-
-         // First column
+//         $check_col = '';
+//         if (($candelete || $canupdate)
+//            && ($output_type == Search::HTML_OUTPUT)
+//            && $id_for_massaction
+//         ) {
+//
+//            $check_col = Html::getMassiveActionCheckBox(__CLASS__, $id_for_massaction);
+//         }
+//         $output[$colnum] = $check_col;
+//
+         // ID
          $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
          if ($output_type == Search::HTML_OUTPUT) {
             $first_col .= "<br><img src='" . Ticket::getStatusIconURL($job->fields["status"]) . "'
@@ -978,7 +975,7 @@ class PluginMydashboardTicket
          $colnum++;
          $output[$colnum] = $first_col;
 
-         // Second column
+         // Date
          $colnum++;
          if ($job->fields['status'] == Ticket::CLOSED) {
             $output[$colnum] = sprintf(__('Closed on %s'),
@@ -993,7 +990,7 @@ class PluginMydashboardTicket
                ($output_type == Search::HTML_OUTPUT ? '<br>' : '') .
                Html::convDateTime($job->fields['begin_waiting_date']));
          } else if ($job->fields['due_date']) {
-            $output[$colnum] = sprintf(__('%1$s: %2$s'), __('Due date'),
+            $output[$colnum] = sprintf(__('%1$s: %2$s'), __('Time to resolve'),
                ($output_type == Search::HTML_OUTPUT ? '<br>' : '') .
                Html::convDateTime($job->fields['due_date']));
          } else {
@@ -1002,21 +999,18 @@ class PluginMydashboardTicket
                Html::convDateTime($job->fields['date']));
          }
 
-         // Second BIS column
-         $colnum++;
-         $output[$colnum] = Html::convDateTime($job->fields["date_mod"]);
-
-         // Second TER column
+         // Entity
          if (count($_SESSION["glpiactiveentities"]) > 1) {
             $colnum++;
             $output[$colnum] = Dropdown::getDropdownName('glpi_entities', $job->fields['entities_id']);
          }
 
-         // Third Column
+         // Priority
          $colnum++;
-         $output[$colnum] = "<span class='b'>" . Ticket::getPriorityName($job->fields["priority"]) . "</span>";
+         $output[$colnum] = "<span class='b'><div class='center' style='background-color:$bgcolor; padding: 10px;'>"
+                            . Ticket::getPriorityName($job->fields["priority"]) . "</div></span>";
 
-         // Fourth Column
+         // Requester
          $fourth_col = "";
          $userrequesters = $job->getUsers(CommonITILActor::REQUESTER);
          if (isset($userrequesters)
@@ -1045,7 +1039,7 @@ class PluginMydashboardTicket
          $colnum++;
          $output[$colnum] = $fourth_col;
 
-         // Fifth column
+         // Assign
          $fifth_col = "";
          $userassign = $job->getUsers(CommonITILActor::ASSIGN);
          if (isset($userassign)
@@ -1112,14 +1106,7 @@ class PluginMydashboardTicket
          $colnum++;
          $output[$colnum] = $sixth_col;
 
-         // Seventh column
-         $colnum++;
-         $output[$colnum] = "<span class='b'>" .
-            Dropdown::getDropdownName('glpi_itilcategories',
-               $job->fields["itilcategories_id"]) .
-            "</span>";
-
-         // Eigth column
+         // Name ticket
          $eigth_column = "<span class='b'>" . $job->fields["name"] . "</span>&nbsp;";
 
          // Add link
