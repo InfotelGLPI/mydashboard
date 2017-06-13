@@ -74,7 +74,9 @@ function plugin_init_mydashboard()
             if (class_exists('PluginServicecatalogMain') && Session::haveRight("plugin_servicecatalog", READ)) {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
-            
+            if (strpos($_SERVER['REQUEST_URI'], 'redirect') !== false) {
+               $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
+            }
             if (isset($_SESSION["glpi_plugin_mydashboard_loaded"])
                && $_SESSION["glpi_plugin_mydashboard_loaded"] == 0) {
 
