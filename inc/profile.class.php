@@ -32,27 +32,26 @@ if (!defined('GLPI_ROOT')) {
  * This class handles the access rights on Dashboard by glpi_profiles
  * Administration->Profiles-> .. Dashboard
  */
-class PluginMydashboardProfile extends CommonDBTM
-{
+class PluginMydashboardProfile extends CommonDBTM {
 
    static $rightname = "profile";
 
    /**
     * @param int $nb
+    *
     * @return translated
     */
-   static function getTypeName($nb = 0)
-   {
+   static function getTypeName($nb = 0) {
       return __('Rights management', 'mydashboard');
    }
 
    /**
     * @param CommonGLPI $item
-    * @param int $withtemplate
+    * @param int        $withtemplate
+    *
     * @return string|translated
     */
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
          return PluginMydashboardMenu::getTypeName(2);
@@ -63,50 +62,48 @@ class PluginMydashboardProfile extends CommonDBTM
 
    /**
     * @param CommonGLPI $item
-    * @param int $tabnum
-    * @param int $withtemplate
+    * @param int        $tabnum
+    * @param int        $withtemplate
+    *
     * @return bool
     */
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
-         $ID = $item->getID();
+         $ID   = $item->getID();
          $prof = new self();
          //85
          self::addDefaultProfileInfos($ID,
-            array('plugin_mydashboard' => 0,
-               'plugin_mydashboard_config' => 0));
+                                      array('plugin_mydashboard'        => 0,
+                                            'plugin_mydashboard_config' => 0));
          $prof->showForm($ID);
       }
       return true;
    }
 
    /**
-    * @param $profiles_id
-    * @param $rights
+    * @param      $profiles_id
+    * @param      $rights
     * @param bool $drop_existing
+    *
     * @internal param $profile 85* 85
     */
-   static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false)
-   {
+   static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false) {
 
       $profileRight = new ProfileRight();
       foreach ($rights as $right => $value) {
          if (countElementsInTable('glpi_profilerights',
-               "`profiles_id`='$profiles_id' AND `name`='$right'") && $drop_existing
-         ) {
+                                  "`profiles_id`='$profiles_id' AND `name`='$right'") && $drop_existing) {
             $profileRight->deleteByCriteria(array('profiles_id' => $profiles_id, 'name' => $right));
          }
          if (!countElementsInTable('glpi_profilerights',
-            "`profiles_id`='$profiles_id' AND `name`='$right'")
-         ) {
+                                   "`profiles_id`='$profiles_id' AND `name`='$right'")) {
             $myright['profiles_id'] = $profiles_id;
-            $myright['name'] = $right;
-            $myright['rights'] = $value;
+            $myright['name']        = $right;
+            $myright['rights']      = $value;
             $profileRight->add($myright);
             //Add right to the current session
-//            $_SESSION['glpiactiveprofile'][$right] = $value;
+            //            $_SESSION['glpiactiveprofile'][$right] = $value;
          }
       }
    }
@@ -115,21 +112,19 @@ class PluginMydashboardProfile extends CommonDBTM
    /**
     * @param $ID
     */
-   static function createFirstAccess($ID)
-   {
+   static function createFirstAccess($ID) {
       //85
       self::addDefaultProfileInfos($ID,
-         array('plugin_mydashboard' => 6,
-            'plugin_mydashboard_config' => 6), true);
+                                   array('plugin_mydashboard'        => 6,
+                                         'plugin_mydashboard_config' => 6), true);
    }
 
    //profiles modification
    /**
-    * @param $ID
+    * @param       $ID
     * @param array $options
     */
-   function showForm($ID, $options = array())
-   {
+   function showForm($ID, $options = array()) {
       //85
       $profile = new Profile();
       $profile->getFromDB($ID);
@@ -139,7 +134,7 @@ class PluginMydashboardProfile extends CommonDBTM
 
       $effective_rights = ProfileRight::getProfileRights($ID, array('plugin_mydashboard', 'plugin_mydashboard_config'));
 
-//      Toolbox::logDebug($effective_rights);
+      //      Toolbox::logDebug($effective_rights);
       echo "<table class='tab_cadre_fixehov'>";
       echo "<tr class='tab_bg_2'>";
 
@@ -149,26 +144,26 @@ class PluginMydashboardProfile extends CommonDBTM
       echo "<tr class='tab_bg_2'>";
       echo "<td>" . __("Dashboard Access", "mydashboard") . "</td><td>";
       $checked = ($effective_rights["plugin_mydashboard"] > 1) ? 1 : 0;
-      Html::showCheckbox(array('name' => '_plugin_mydashboard[6_0]',
-         'checked' => $checked));
+      Html::showCheckbox(array('name'    => '_plugin_mydashboard[6_0]',
+                               'checked' => $checked));
       echo "</td>";
       echo "<td>";
       $checked = ($effective_rights["plugin_mydashboard"] == 1) ? 1 : 0;
-      Html::showCheckbox(array('name' => '_plugin_mydashboard[1_0]',
-         'checked' => $checked));
+      Html::showCheckbox(array('name'    => '_plugin_mydashboard[1_0]',
+                               'checked' => $checked));
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_2'>";
       echo "<td>" . __("Configuration Access", "mydashboard") . "</td><td>";
-//      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
-      Html::showCheckbox(array('name' => '_plugin_mydashboard_config[6_0]',
-         'checked' => $effective_rights["plugin_mydashboard_config"]));
+      //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
+      Html::showCheckbox(array('name'    => '_plugin_mydashboard_config[6_0]',
+                               'checked' => $effective_rights["plugin_mydashboard_config"]));
       echo "</td>";
       echo "<td></td>";
       echo "</tr>";
 
       $options['candel'] = false;
-//      echo "<input type='hidden' name='id' value=".$ID.">";
+      //      echo "<input type='hidden' name='id' value=".$ID.">";
       $profile->showFormButtons($options);
 
       if ($effective_rights["plugin_mydashboard"] == READ) {
@@ -181,11 +176,11 @@ class PluginMydashboardProfile extends CommonDBTM
     * Init profiles
     *
     * @param $old_right
+    *
     * @return int
     */
 
-   static function translateARight($old_right)
-   {
+   static function translateARight($old_right) {
       switch ($old_right) {
          case '':
             return 0;
@@ -205,22 +200,23 @@ class PluginMydashboardProfile extends CommonDBTM
    /**
     * @since 0.85
     * Migration rights from old system to the new one for one profile
+    *
     * @param $profiles_id the profile ID
+    *
     * @return bool
     */
-   private static function migrateOneProfile($profiles_id)
-   {
+   private static function migrateOneProfile($profiles_id) {
       global $DB;
       //Cannot launch migration if there's nothing to migrate...
-      if (!TableExists('glpi_plugin_mydashboard_profiles')) {
+      if (!$DB->tableExists('glpi_plugin_mydashboard_profiles')) {
          return true;
       }
 
       foreach ($DB->request('glpi_plugin_mydashboard_profiles',
-         "`profiles_id`='$profiles_id'") as $profile_data) {
+                            "`profiles_id`='$profiles_id'") as $profile_data) {
 
-         $matching = array('mydashboard' => 'plugin_mydashboard',
-            'config' => 'plugin_mydashboard_config');
+         $matching       = array('mydashboard' => 'plugin_mydashboard',
+                                 'config'      => 'plugin_mydashboard_config');
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
             if (!isset($current_rights[$old])) {
@@ -237,8 +233,7 @@ class PluginMydashboardProfile extends CommonDBTM
     * @since 0.85
     * Migration rights from old system to new one for all profiles
     */
-   public static function migrateRightsFrom84To85()
-   {
+   public static function migrateRightsFrom84To85() {
       global $DB;
       //Migration old rights in new ones
       foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
@@ -250,15 +245,13 @@ class PluginMydashboardProfile extends CommonDBTM
    /**
     * Initialize profiles
     */
-   static function initProfile()
-   {
+   static function initProfile() {
       global $DB;
       $profile = new self();
       //Add new rights in glpi_profilerights table
       foreach ($profile->getAllRights(true) as $data) {
          if (countElementsInTable("glpi_profilerights",
-               "`name` = '" . $data['field'] . "'") == 0
-         ) {
+                                  "`name` = '" . $data['field'] . "'") == 0) {
             ProfileRight::addProfileRights(array($data['field']));
          }
       }
@@ -273,9 +266,8 @@ class PluginMydashboardProfile extends CommonDBTM
       // When user connects or change profile he goes (when Mydashboard is configured) to the menu
       $pref = PluginMydashboardHelper::getReplaceCentral();
       if ($pref
-         && Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))
-         && !isset($_SESSION["glpi_plugin_mydashboard_activating"])
-      ) {
+          && Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))
+          && !isset($_SESSION["glpi_plugin_mydashboard_activating"])) {
          $_SESSION["glpi_plugin_mydashboard_loaded"] = 0;
       } else {
          unset($_SESSION["glpi_plugin_mydashboard_loaded"]);
@@ -285,28 +277,27 @@ class PluginMydashboardProfile extends CommonDBTM
 
    /**
     * @param bool $all
+    *
     * @return array
     */
-   static function getAllRights($all = true)
-   {
+   static function getAllRights($all = true) {
 
       $rights = array();
       if ($all) {
          $rights[] = array('itemtype' => 'PluginMydashboardMenu',
-            'label' => __('See the dashboard', 'mydashboard'),
-            'field' => 'plugin_mydashboard');
+                           'label'    => __('See the dashboard', 'mydashboard'),
+                           'field'    => 'plugin_mydashboard');
 
          $rights[] = array('itemtype' => 'PluginMydashboardConfig',
-            'label' => __('See the configuration', 'mydashboard'),
-            'field' => 'plugin_mydashboard_config');
+                           'label'    => __('See the configuration', 'mydashboard'),
+                           'field'    => 'plugin_mydashboard_config');
 
       }
 
       return $rights;
    }
 
-   static function removeRightsFromSession()
-   {
+   static function removeRightsFromSession() {
       foreach (self::getAllRights() as $right) {
          if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
             unset($_SESSION['glpiactiveprofile'][$right['field']]);
