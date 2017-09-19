@@ -142,6 +142,7 @@ class PluginMydashboardWidget extends CommonDBTM
 
          if (!isset($id)) {
             $this->add(array("name" => $widgetName));
+            $this->fields = [];
          }
          return true;
       } else return false;

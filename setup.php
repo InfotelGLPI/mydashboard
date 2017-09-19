@@ -44,6 +44,11 @@ function plugin_init_mydashboard() {
       "lib/vticker/vticker.js"
    );
 
+   $PLUGIN_HOOKS["javascript"]['mydashboard'] = array(
+      "/plugins/mydashboard/scripts/mydashboard.js",
+   );
+
+
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
    $PLUGIN_HOOKS['change_profile']['mydashboard'] = array('PluginMydashboardProfile', 'initProfile');
 

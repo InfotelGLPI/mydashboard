@@ -170,6 +170,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    public function showMenu($users_id = -1, $interface = -1) {
 
+      Html::requireJs('mydashboard');
       //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
       $this->interface = $interface;
 
@@ -286,11 +287,10 @@ class PluginMydashboardMenu extends CommonGLPI {
       //Automatic refreshing of the widgets (that wants to be refreshed -> see PluginMydashboardModule::toggleRefresh() )
       if (self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh']) {
          //We need some javascript, here are scripts (script which have to be dynamically called)
-         echo "<script type='text/javascript'>";
          $refreshIntervalMs = 60000 * self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh_delay'];
          //this js function call itself every $refreshIntervalMs ms, each execution result in the refreshing of all refreshable widgets
-         echo "mydashboard.automaticRefreshAll($refreshIntervalMs);";
-         echo "</script>";
+         echo Html::scriptBlock('$(document).ready(function() {mydashboard.automaticRefreshAll('.$refreshIntervalMs.')});');
+
       }
 
       //We display informations (Once everything is initialized)
@@ -378,11 +378,12 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function initWidgets() {
       //We init Database widget names
+
       $this->initDBWidgets();
       //Then we get the custom dashboard of the user, $dash is an array of widget names
       $this->dashboard = $this->getDashboardForUser($this->users_id);
       $classObjects    = array();
-      //echo "<script type='text/javascript'>";
+
       foreach ($this->widgets as $classname => $classwidgets) {
          //We start the timer for this class
          $start         = microtime(true);
@@ -642,36 +643,37 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function initDashboard() {
       global $CFG_GLPI;
+
       //This is the container where widgets will be placed as dom li s
       echo "<ul id='" . self::DASHBOARD_NAME . "'></ul>";
       //Initialization of sDashboard
-      echo "<script type='text/javascript'>";
-      echo " 
+
+      $script = " 
           mydashboard.setLanguageData(" . json_encode($this->getJsLanguages("mydashboard")) . ");
           mydashboard.setRootDoc('" . $CFG_GLPI['root_doc'] . "');";
 
       //CSRF
       //echo "plugin_mydashboard_csrf = '".Session::getNewCSRFToken()."';";
 
-      echo " 
+      $script .= " 
           $(function() {
             // Initialization 
              $('#" . self::DASHBOARD_NAME . "').sDashboard({";
       //Because of a "bug" in Firefox we need to set disableSelection to false to enable form (select ...) selection
 
-      echo "disableSelection : false,";
-      echo "dashboardLanguage : " . json_encode($this->getJsLanguages("sDashboard"))/*.","*/
+      $script .= "disableSelection : false,";
+      $script .= "dashboardLanguage : " . json_encode($this->getJsLanguages("sDashboard"))/*.","*/
       ;
-      echo "});\n";
+      $script .= "});\n";
 
       //We show personnal widgets BEFORE binding the 'added' event to prevent useless operation
       if (!empty($this->dashboard))
-         $this->showPersonnalWidgets();
+         $script .= $this->showPersonalWidgets();
       //Once all personnal widgets are shown, client must know what is on the mydashboard
-      echo "mydashboard.setOriginalDashboard(" . json_encode($this->dashboard) . ");";
+      $script .= "mydashboard.setOriginalDashboard(" . json_encode($this->dashboard) . ");";
       //Binding to update tab when MyDashboard is rearranged
       //Binding to update tab when a widget is added or deleted from dashboard
-      echo "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardstatechanged', function(e,data) { 
+      $script .= "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardstatechanged', function(e,data) { 
                     switch(data.triggerAction) {
                         case 'orderChanged' :
                             var sorted = data.sortedDefinitions;
@@ -694,7 +696,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       //if you want a custom behavior you can set a function in :
       // -> onMaximize[widgetId] = your maximize function
       // -> onMinimize[widgetId] = your minimize function
-      echo "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardwidgetmaximized', function(e,data) {
+      $script .= "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardwidgetmaximized', function(e,data) {
                     var widget = document.getElementById(data.widgetDefinition.widgetId+'content');
                     if(widget) widget.setAttribute('class','unscaledContent');
                     if (typeof onMaximize[data.widgetDefinition.widgetId] !== 'undefined') {
@@ -703,7 +705,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                     $('.plugin_mydashboard_menuDashboard').zIndex(9000);
                 });";
 
-      echo "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardwidgetminimized', function(e,data) {
+      $script .= "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardwidgetminimized', function(e,data) {
                     var widget = document.getElementById(data.widgetDefinition.widgetId+'content');
                     if(widget) widget.setAttribute('class','scaledContent');
                     if (typeof onMinimize[data.widgetDefinition.widgetId] !== 'undefined') {
@@ -711,8 +713,10 @@ class PluginMydashboardMenu extends CommonGLPI {
                     }
                     $('.plugin_mydashboard_menuDashboard').zIndex(10000);
                 });";
-      echo "});";
-      echo "</script>";
+      $script .= "});";
+
+      echo Html::scriptBlock('$(document).ready(function() {'.$script.'});');
+
    }
 
    /**
@@ -731,7 +735,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * This function echo all adding functions (js) of widgets on the users dashboard
     * previously stored in $this->addfunction
     */
-   private function showPersonnalWidgets() {
+   private function showPersonalWidgets() {
       $output       = array();
       $to_delete    = array();
       $countHidden  = 0;
@@ -759,15 +763,15 @@ class PluginMydashboardMenu extends CommonGLPI {
       }
       //We need to add widgets in the same order than it is stored on base
       ksort($output);
-
+      $script = '';
       //We echoes the adding functions in the order
       foreach ($output as $widget) {
-         echo $widget;
+         $script .= $widget;
       }
 
       //This two lines are here to adapt the canvas size to its container
-      echo "canvas = $('canvas');";
-      echo "$.each(canvas, function(index,value) { value.style.width = '100%'; });";
+      $script .= "canvas = $('canvas');";
+      $script .= "$.each(canvas, function(index,value) { value.style.width = '100%'; });";
 
       //countHidden is the number of widgets that can't be displayed
       //Few reasons possible :
@@ -791,6 +795,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       //dashboard now contains really added widgets, all non added (for any reason) are not in this var anymore
       $this->dashboard = array_values($tmpdashboard);
+      return  $script;
    }
 
    /**
