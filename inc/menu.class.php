@@ -535,7 +535,8 @@ class PluginMydashboardMenu extends CommonGLPI {
             $wl .= "<ul>";
             $wl .= "<h3 class='plugin_mydashboard_menuDashboardListTitle2'>" . $viewsNames[$view] . "</h3>";
             $wl .= $vContent;
-            $wl .= "</ul></li>";
+            $wl .= "</ul>";
+            $wl .= "</li>";
             $is_empty = false;
          }
       }
