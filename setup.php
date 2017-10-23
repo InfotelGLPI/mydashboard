@@ -40,14 +40,12 @@ function plugin_init_mydashboard() {
       "lib/sdashboard/lib/datatables/jquery.dataTables.js",
       "lib/sdashboard/lib/flotr2/flotr2.js",
       "lib/sdashboard/jquery-sDashboard.js",
-      "scripts/mydashboard.js",
       "lib/vticker/vticker.js"
    );
 
    $PLUGIN_HOOKS["javascript"]['mydashboard'] = array(
       "/plugins/mydashboard/scripts/mydashboard.js",
    );
-
 
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
    $PLUGIN_HOOKS['change_profile']['mydashboard'] = array('PluginMydashboardProfile', 'initProfile');

@@ -344,7 +344,7 @@ $(document).ready(function () {
         $('.plugin_mydashboard_menuDashboardListTitle1').removeClass("plugin_mydashboard_menuDashboardListTitle1Opened");
         if (!isOpened) $(this).addClass("plugin_mydashboard_menuDashboardListTitle1Opened");
         $('.plugin_mydashboard_menuDashboardListTitle1').not(this).next("div").slideUp('fast');
-        $(this).next("div").slideToggle('fast');
+        plugin_mydashboard_slideToggle_title1(this);
     });
 
     //This part is about lists of lists of widgets (when there are much widgets)
@@ -383,13 +383,20 @@ $(document).ready(function () {
     //===================Start:Log box=================================
     //Inner logs showing on click on the 'i', (added, removed ....)
     $('.plugin_mydashboard_header_info_logbox').slideUp();
-    $('.plugin_mydashboard_header_info_img').click(
-        function () {
-            $('.plugin_mydashboard_header_info_logbox').slideToggle('fast');
-        });
+    $(window).resize(plugin_mydashboard_logclose);
     //===================Stop:Log box=================================
 
     //Options for Datatables, colors of lines
     $.fn.dataTableExt.oStdClasses.sStripeOdd = 'tab_bg_2';
     $.fn.dataTableExt.oStdClasses.sStripeEven = 'tab_bg_2';
 });
+
+var plugin_mydashboard_logclose = function() {
+    $('.plugin_mydashboard_header_info_img').click(
+        function () {
+            $('.plugin_mydashboard_header_info_logbox').slideToggle('fast');
+        });
+};
+var plugin_mydashboard_slideToggle_title1 = function (element) {
+    $(element).next("div").slideToggle('fast');
+};
