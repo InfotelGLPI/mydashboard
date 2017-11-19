@@ -231,7 +231,7 @@ var mydashboard = {
                 console.error('Error message : ' + e);
                 if (typeof data != "undefined") {
                     if ((data.length) > 0) {
-                        console.error('Data recieved:');
+                        console.error('Data received:');
                         console.error(data);
                     } else {
                         console.error('Error : Empty data');

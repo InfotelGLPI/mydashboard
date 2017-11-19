@@ -199,12 +199,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "4":
 
-            $query = "SELECT `glpi_notimportedemails`.`date`,`glpi_notimportedemails`.`from`,`glpi_notimportedemails`.`reason`
+            $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
                         FROM `glpi_notimportedemails`
-                        ORDER BY `glpi_notimportedemails`.`date` ASC";
+                        ORDER BY `date` ASC";
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = array(__('Date'), __('From email header'), __('Reason of rejection'));
+            $headers = array(__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver'));
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
@@ -221,6 +221,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $datas[$i]["from"] = $data['from'];
 
                   $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
+                  
+                  $mail = new MailCollector();
+                  $mail->getFromDB($data['mailcollectors_id']);
+                  $datas[$i]["mailcollectors_id"] = $mail->getName();
 
                   $i++;
                }
