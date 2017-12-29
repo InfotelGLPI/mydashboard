@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-23 14:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: TecnoInfo Soluções em Informática <tecnoinfo2015@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/tsmr/teams/65490/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,243 +21,245 @@ msgstr ""
 #: setup.php:129 inc/menu.class.php:86 inc/menu.class.php:257
 #: inc/preference.class.php:66
 msgid "My Dashboard"
-msgstr ""
+msgstr "Meu Dashboard"
 
 #: ajax/saveConfig.php:65
 msgid "Can't add this widget in Database"
-msgstr ""
+msgstr "Não foi possível adicionar este widget no banco de dados "
 
 #: ajax/saveConfig.php:70
 msgid "Added"
-msgstr ""
+msgstr "Adicionado"
 
 #: ajax/saveConfig.php:72
 msgid "Can't add this widget on users Dashboard"
-msgstr ""
+msgstr "Não foi possível adicionar este widget no Dashboard dos usuários"
 
 #: ajax/saveConfig.php:79
 msgid "Deleted"
-msgstr ""
+msgstr "Deletado"
 
 #: ajax/saveConfig.php:95
 msgid "Updated"
-msgstr ""
+msgstr "Atualizado"
 
 #: ajax/saveConfig.php:97
 msgid "Can't save new order"
-msgstr ""
+msgstr "Não foi possivel salvar a nova ordem"
 
 #: ajax/saveConfig.php:117 inc/menu.class.php:908
 msgid "Dashboard not saved"
-msgstr ""
+msgstr "Dashboard não salvo"
 
 #: ajax/saveConfig.php:117 inc/menu.class.php:907
 msgid "Dashboard saved"
-msgstr ""
+msgstr "Dashboard salvo"
 
 #: inc/alert.class.php:42 inc/alert.class.php:68 inc/alert.class.php:760
 #: inc/alert.class.php:763
 msgid "Alert"
 msgid_plural "Alerts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Alerta"
+msgstr[1] "Alertas "
 
 #: inc/alert.class.php:69 inc/alert.class.php:118
 msgid "Network alert"
 msgid_plural "Network alerts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Alertas de rede"
+msgstr[1] "Alertas de rede"
 
 #: inc/alert.class.php:70 inc/alert.class.php:130 inc/alert.class.php:764
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Manutenção agendada"
+msgstr[1] "Manutenções agendadas"
 
 #: inc/alert.class.php:71 inc/alert.class.php:142 inc/alert.class.php:765
 msgid "Information"
 msgid_plural "Informations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Informação"
+msgstr[1] "Informações"
 
 #: inc/alert.class.php:158
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see "
 "more"
 msgstr ""
+"Há pelo menos uma manutenção planejada agendada . Faça o login para ver mais"
 
 #: inc/alert.class.php:274
 msgid "No scheduled maintenance"
-msgstr ""
+msgstr "Manutenção não agendada"
 
 #: inc/alert.class.php:397
 msgid "No informations founded"
-msgstr ""
+msgstr "Informações não encontradas"
 
 #: inc/alert.class.php:567 inc/alert.class.php:731
 msgid "No problem"
-msgstr ""
+msgstr "Sem prolemas"
 
 #: inc/alert.class.php:681
 msgid "Monitoring"
-msgstr ""
+msgstr "Monitoramento"
 
 #: inc/alert.class.php:774
 msgid "No impact"
-msgstr ""
+msgstr "Sem impacto"
 
 #: inc/alert.class.php:779
 msgid "Alert level"
-msgstr ""
+msgstr "Nível de Alerta"
 
 #: inc/central.class.php:48
 msgid "Central"
-msgstr ""
+msgstr "Central"
 
 #: inc/central.class.php:78 inc/change.class.php:39 inc/config.class.php:139
 #: inc/datatable.class.php:55 inc/html.class.php:51 inc/menu.class.php:906
 #: inc/module.class.php:54 inc/planning.class.php:41 inc/problem.class.php:39
 #: inc/servicecatalog.class.php:52 inc/servicecatalog.class.php:61
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #: inc/change.class.php:54 inc/change.class.php:59 inc/change.class.php:114
 #: inc/change.class.php:234 inc/change.class.php:285
 msgid "Changes to be processed"
-msgstr ""
+msgstr "Alterações a serem processadas"
 
 #: inc/change.class.php:55 inc/change.class.php:60 inc/change.class.php:216
 #: inc/change.class.php:269
 msgid "Changes on pending status"
-msgstr ""
+msgstr "Alterações com status pendente"
 
 #: inc/change.class.php:65 inc/change.class.php:498
 msgid "Change followup"
-msgstr ""
+msgstr "Alterar acompanhamento"
 
 #: inc/chart.class.php:99 inc/datatable.class.php:215
 msgid "No data is given to the widget"
-msgstr ""
+msgstr "Nenhum dado recebido pelo Widget"
 
 #: inc/chart.class.php:115
 msgid "No data available"
-msgstr ""
+msgstr "Dados não disponíveis"
 
 #: inc/chart.class.php:119 inc/datatable.class.php:125
 msgid "Not an array"
-msgstr ""
+msgstr "Não é uma matriz"
 
 #: inc/config.class.php:43
 msgid "Dashboard - Configuration"
-msgstr ""
+msgstr "Dashboard - Configuração"
 
 #: inc/config.class.php:101
 msgid "Enable the possibility to display Dashboard in full screen"
-msgstr ""
+msgstr "Habilitar a possibilidade do Dashboard ser exibido em tela cheia"
 
 #: inc/config.class.php:107
 msgid "Display the menu"
-msgstr ""
+msgstr "Exibir menu"
 
 #: inc/config.class.php:114
 msgid "Display widgets from plugins"
-msgstr ""
+msgstr "Exibir widgets dos plugins"
 
 #: inc/config.class.php:139
 msgid "By Default for"
-msgstr ""
+msgstr "Por padrão"
 
 #: inc/datatable.class.php:244
 msgid "No column defined"
-msgstr ""
+msgstr "Coluna não definida"
 
 #: inc/example.class.php:51 inc/example.class.php:218
 msgid "My first widget (HTML)"
-msgstr ""
+msgstr "Meu primeiro widget (HTML)"
 
 #: inc/example.class.php:52 inc/example.class.php:84
 msgid "My second widget (VBarChart)"
-msgstr ""
+msgstr "Meu segundo widget (VBarChart)"
 
 #: inc/example.class.php:53 inc/example.class.php:104
 msgid "My third widget (HBarChart)"
-msgstr ""
+msgstr "Meu terceiro widget (HBarChart)"
 
 #: inc/example.class.php:54 inc/example.class.php:125
 msgid "My fourth widget (PieChart)"
-msgstr ""
+msgstr "Meu quarto widget (PieChart)"
 
 #: inc/example.class.php:55 inc/example.class.php:138
 msgid "My fifth widget (LineChart)"
-msgstr ""
+msgstr "Meu quinto widget (LineChart)"
 
 #: inc/example.class.php:56 inc/example.class.php:145
 msgid "My sixth widget (Datatable)"
-msgstr ""
+msgstr "Meu sexto widget (Datatable)"
 
 #: inc/example.class.php:58 inc/example.class.php:162
 msgid "My seventh widget (Clock)"
-msgstr ""
+msgstr "Meu sétimo widget (relógio)"
 
 #: inc/example.class.php:59 inc/example.class.php:195
 msgid "My eighth widget (RadarChart)"
-msgstr ""
+msgstr "Meu oitavo widget (RadarChart)"
 
 #: inc/example.class.php:60
 msgid "My nineth widget (Fake one)"
-msgstr ""
+msgstr "Meu nono widget (Falso)"
 
 #: inc/example.class.php:131
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #: inc/example.class.php:131
 msgid "units"
-msgstr ""
+msgstr "unidades"
 
 #: inc/example.class.php:166
 msgid "Minutes elapsed"
-msgstr ""
+msgstr "Minutos decorridos"
 
 #: inc/example.class.php:166
 msgid "Minutes left"
-msgstr ""
+msgstr "Minutos restantes"
 
 #: inc/example.class.php:183
 msgid "This example widget display the time, it refreshes every "
-msgstr ""
+msgstr "Este exemplo de widget exibe o tempo. ele atualiza sempre"
 
 #: inc/example.class.php:188
 msgid "This example widget display the time, it can be refreshed manually"
 msgstr ""
+"Este exemplo de widget exibe o tempo, ele pode ser atualizado manualmente"
 
 #: inc/example.class.php:221
 msgid "Answer"
-msgstr ""
+msgstr "Resposta"
 
 #: inc/example.class.php:230
 msgid "Examples widgets"
-msgstr ""
+msgstr "Exemplos de Widgets"
 
 #: inc/example.class.php:238
 msgid "In all example widgets the datas are the same :"
-msgstr ""
+msgstr "Todos os widgets de exemplo possuem os mesmos dados:"
 
 #: inc/example.class.php:244
 msgid "Maximized"
-msgstr ""
+msgstr "Maximizado"
 
 #: inc/example.class.php:245
 msgid "Minimized"
-msgstr ""
+msgstr "Minimizado"
 
 #: inc/example.class.php:246
 msgid "Initialized"
-msgstr ""
+msgstr "Inicializado"
 
 #: inc/helper.class.php:355
 msgid "Not a valid SQL SELECT query"
-msgstr ""
+msgstr "Não é uma consulta SQL válida"
 
 #: inc/infotel.class.php:48 inc/infotel.class.php:127
 msgid "Opened tickets backlog"
@@ -272,7 +275,7 @@ msgstr ""
 
 #: inc/infotel.class.php:51 inc/infotel.class.php:233
 msgid "Mails collector"
-msgstr ""
+msgstr "Coletor de E-mail"
 
 #: inc/infotel.class.php:53 inc/infotel.class.php:355
 msgid "Tickets stock by month"
@@ -288,15 +291,15 @@ msgstr ""
 
 #: inc/infotel.class.php:56 inc/infotel.class.php:519
 msgid "Automatic actions in error"
-msgstr ""
+msgstr "Ações automáticas em erro"
 
 #: inc/infotel.class.php:57 inc/infotel.class.php:668
 msgid "User ticket alerts"
-msgstr ""
+msgstr "Alertas de ticket de usuários"
 
 #: inc/infotel.class.php:58 inc/infotel.class.php:693
 msgid "GLPI Status"
-msgstr ""
+msgstr "Status GLPI"
 
 #: inc/infotel.class.php:59 inc/infotel.class.php:740
 msgid "TTR Compliance"
@@ -308,7 +311,7 @@ msgstr ""
 
 #: inc/infotel.class.php:268
 msgid "Logged users"
-msgstr ""
+msgstr "Usuários logados"
 
 #: inc/infotel.class.php:354
 msgid "Tickets stock"
@@ -316,11 +319,11 @@ msgstr ""
 
 #: inc/infotel.class.php:453
 msgid "Show"
-msgstr ""
+msgstr "Mostrar"
 
 #: inc/infotel.class.php:652
 msgid "New document"
-msgstr ""
+msgstr "Novo documento"
 
 #: inc/infotel.class.php:736
 msgid "Respected TTR"
@@ -340,43 +343,43 @@ msgstr ""
 
 #: inc/infotel.class.php:854
 msgid "Problem with GLPI"
-msgstr ""
+msgstr "GLPI com problemas"
 
 #: inc/infotel.class.php:859
 msgid "GLPI is OK"
-msgstr ""
+msgstr "GLPI está OK"
 
 #: inc/infotel.class.php:861
 msgid "Alert is not properly configured"
-msgstr ""
+msgstr "O aleta não está configurado corretamente"
 
 #: inc/infotel.class.php:876
 msgid "Show Profile"
-msgstr ""
+msgstr "Visualizar Perfil"
 
 #: inc/infotel.class.php:1039
 msgid "Curl PHP package not installed"
-msgstr ""
+msgstr "O pacote Curl PHP não está instalado"
 
 #: inc/knowbaseitem.class.php:120
 msgid "Publication date"
-msgstr ""
+msgstr "Data de publicação"
 
 #: inc/knowbaseitem.class.php:122
 msgid "Modification date"
-msgstr ""
+msgstr "Data de modificação"
 
 #: inc/menu.class.php:878
 msgid "No data available in table"
-msgstr ""
+msgstr "Dados não disponíveis na tabela"
 
 #: inc/menu.class.php:879
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr ""
+msgstr "Exibindo_INICIO_para_FINAL_de_TOTAL_registros"
 
 #: inc/menu.class.php:880
 msgid "Showing 0 to 0 of 0 entries"
-msgstr ""
+msgstr "Exibindo 0 até 0 de 0 registros "
 
 #: inc/menu.class.php:881
 msgid "(filtered from _MAX_ total entries)"
@@ -388,7 +391,7 @@ msgstr ""
 
 #: inc/menu.class.php:888
 msgid "No matching records found"
-msgstr ""
+msgstr "Nenhum registro correspondente encontrado"
 
 #: inc/menu.class.php:896
 msgid ": activate to sort column ascending"
@@ -400,47 +403,47 @@ msgstr ""
 
 #: inc/menu.class.php:899 inc/menu.class.php:905
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #: inc/menu.class.php:900
 msgid "Maximize"
-msgstr ""
+msgstr "Maximizar "
 
 #: inc/menu.class.php:901
 msgid "Minimize"
-msgstr ""
+msgstr "Minimizar"
 
 #: inc/menu.class.php:902
 msgid "Refresh"
-msgstr ""
+msgstr "Atualizar"
 
 #: inc/menu.class.php:909
 msgid "Data received for"
-msgstr ""
+msgstr "Dados recebidos para"
 
 #: inc/menu.class.php:910
 msgid "No data received for"
-msgstr ""
+msgstr "Nenhum dado recebido para"
 
 #: inc/menu.class.php:911
 msgid "Updating all widgets"
-msgstr ""
+msgstr "Atualizando todos os widgets"
 
 #: inc/menu.class.php:912
 msgid "Widget added on Dashboard"
-msgstr ""
+msgstr "Widget adicionado no Dashboard"
 
 #: inc/module.class.php:134 inc/module.class.php:279
 msgid "notice"
-msgstr ""
+msgstr "Aviso"
 
 #: inc/module.class.php:134 inc/module.class.php:287
 msgid "warning"
-msgstr ""
+msgstr "Alerta"
 
 #: inc/module.class.php:134 inc/module.class.php:295
 msgid "error"
-msgstr ""
+msgstr "Erro"
 
 #: inc/piechart.class.php:61
 msgid "You can't have more than one serie for a pie chart"
@@ -452,15 +455,15 @@ msgstr ""
 
 #: inc/preference.class.php:111
 msgid "Refresh every "
-msgstr ""
+msgstr "Atualizar todo"
 
 #: inc/preference.class.php:114
 msgid "minute(s)"
-msgstr ""
+msgstr "minuto(s)"
 
 #: inc/preference.class.php:116
 msgid "Number of widget in width"
-msgstr ""
+msgstr "Numero de widgets largura"
 
 #: inc/preference.class.php:122
 msgid "Replace central interface"
@@ -472,7 +475,7 @@ msgstr ""
 
 #: inc/profileauthorizedwidget.class.php:78
 msgid "Authorize/Unauthorize all"
-msgstr ""
+msgstr "Autorizar/Desautorizar todos"
 
 #: inc/profile.class.php:45
 msgid "Rights management"
@@ -480,31 +483,31 @@ msgstr ""
 
 #: inc/profile.class.php:143
 msgid "Full"
-msgstr ""
+msgstr "Completo"
 
 #: inc/profile.class.php:143
 msgid "Custom"
-msgstr ""
+msgstr "Personalizar"
 
 #: inc/profile.class.php:145
 msgid "Dashboard Access"
-msgstr ""
+msgstr "Acesso ao Painel Dashboard"
 
 #: inc/profile.class.php:157
 msgid "Configuration Access"
-msgstr ""
+msgstr "Configuração de Acesso"
 
 #: inc/profile.class.php:288
 msgid "See the dashboard"
-msgstr ""
+msgstr "Veja o Painel Dashboard"
 
 #: inc/profile.class.php:292
 msgid "See the configuration"
-msgstr ""
+msgstr "Veja a configuração"
 
 #: inc/servicecatalog.class.php:61
 msgid "Access"
-msgstr ""
+msgstr "Acesso"
 
 #: inc/servicecatalog.class.php:69
 msgid "Dashboard access"
@@ -512,7 +515,7 @@ msgstr ""
 
 #: inc/ticket.class.php:78 inc/ticket.class.php:866
 msgid "New tickets"
-msgstr ""
+msgstr "Novos chamados"
 
 #: inc/userwidget.class.php:65
 msgid "user_widget management"
@@ -520,8 +523,8 @@ msgstr ""
 
 #: inc/widget.class.php:42
 msgid "Widget management"
-msgstr ""
+msgstr "Gerenciamento do Widget"
 
 #: scripts/insert_stock_tickets.php:56
 msgid "Plugin disabled"
-msgstr ""
+msgstr "Plugin desabilitado"
