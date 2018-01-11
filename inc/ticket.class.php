@@ -1157,10 +1157,10 @@ class PluginMydashboardTicket {
             $output[$colnum] = sprintf(__('Put on hold on %s'),
                                        ($output_type == Search::HTML_OUTPUT ? '<br>' : '') .
                                        Html::convDateTime($job->fields['begin_waiting_date']));
-         } else if ($job->fields['due_date']) {
+         } else if ($job->fields['time_to_resolve']) {
             $output[$colnum] = sprintf(__('%1$s: %2$s'), __('Time to resolve'),
                                        ($output_type == Search::HTML_OUTPUT ? '<br>' : '') .
-                                       Html::convDateTime($job->fields['due_date']));
+                                       Html::convDateTime($job->fields['time_to_resolve']));
          } else {
             $output[$colnum] = sprintf(__('Opened on %s'),
                                        ($output_type == Search::HTML_OUTPUT ? '<br>' : '') .

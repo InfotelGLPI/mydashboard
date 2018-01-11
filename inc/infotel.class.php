@@ -705,7 +705,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
-                        AND `glpi_tickets`.`due_date` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
+                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
             $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                     . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
@@ -719,9 +719,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
-                        AND `glpi_tickets`.`due_date` IS NOT NULL
+                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
                         AND `glpi_tickets`.`slts_ttr_id` > 0
-                        AND `glpi_tickets`.`solvedate` > `glpi_tickets`.`due_date`";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
+                        AND `glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
 
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
