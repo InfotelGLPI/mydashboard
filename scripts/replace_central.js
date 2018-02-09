@@ -8,22 +8,22 @@
         var object = this;
 
         // Start the plugin
-        function init() {
-            $(document).ready(function () {
-                var path = 'plugins/mydashboard/';
-                var url = window.location.href.replace(/front\/.*/, path);
-                if (window.location.href.indexOf('plugins') > 0) {
-                    url = window.location.href.replace(/plugins\/.*/, path);
-                }
+      function init() {
+          $(document).ready(function () {
+              var path = 'plugins/mydashboard/';
+              var url = window.location.href.replace(/front\/.*/, path);
+            if (window.location.href.indexOf('plugins') > 0) {
+                url = window.location.href.replace(/plugins\/.*/, path);
+            }
 
-                var hrefs = $("a[href$='/front/central.php'], a[href$='/front/helpdesk.public.php']");
-                hrefs.each(function (href, value) {
-                    if (value['pathname'].indexOf('plugins') < 0) {
-                        $("a[href='" + value['pathname'] + "']").attr('href', url + 'front/menu.php');
-                    }
-                });
-            });
-        }
+              var hrefs = $("a[href$='/front/central.php'], a[href$='/front/helpdesk.public.php']");
+              hrefs.each(function (href, value) {
+               if (value['pathname'].indexOf('plugins') < 0) {
+                   $("a[href='" + value['pathname'] + "']").attr('href', url + 'front/menu.php');
+               }
+              });
+          });
+      }
 
         return this;
     }

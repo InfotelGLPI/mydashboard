@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -30,21 +30,20 @@
 class PluginMydashboardLineChart extends PluginMydashboardChart
 {
 
-//    private $options;
+   //    private $options;
    //   private $tabDatas;
 
    /**
     * PluginMydashboardLineChart constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       parent::__construct();
-      $this->setOption('grid', array('verticalLines' => true, 'horizontalLines' => true));
-      $this->setOption('xaxis', array('showLabels' => true));
-      $this->setOption('yaxis', array('showLabels' => true));
-      $this->setOption('mouse', array('track' => true, 'relative' => true));
-      $this->setOption('legend', array('position' => 'se', 'backgroundColor' => '#D2E8FF'));
-      $this->setOption('lines', array('show' => true, 'fillOpacity' => PluginMydashboardColor::getOpacity()));
+      $this->setOption('grid', ['verticalLines' => true, 'horizontalLines' => true]);
+      $this->setOption('xaxis', ['showLabels' => true]);
+      $this->setOption('yaxis', ['showLabels' => true]);
+      $this->setOption('mouse', ['track' => true, 'relative' => true]);
+      $this->setOption('legend', ['position' => 'se', 'backgroundColor' => '#D2E8FF']);
+      $this->setOption('lines', ['show' => true, 'fillOpacity' => PluginMydashboardColor::getOpacity()]);
    }
 
    /**
@@ -52,11 +51,10 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
     * @param array $dataArray looks like [x1=>y1,x2=>y2, ...]
     * @return array coordinates looks like [[x1,y1],[x2,y2], ...]
     */
-   private function getData($dataArray)
-   {
-      $data = array();
+   private function getData($dataArray) {
+      $data = [];
       foreach ($dataArray as $dataX => $dataY) {
-         $data[] = array($dataX, $dataY);
+         $data[] = [$dataX, $dataY];
       }
       return $data;
    }
@@ -65,13 +63,12 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
     * Get data formatted in (pseudo) JSon representing the linechart and options for Flotr2
     * @return string A (pseudo) JSon formatted string for Flotr2
     */
-   function getJSonDatas()
-   {
-      $data = array();
+   function getJSonDatas() {
+      $data = [];
       $alone = false;
       foreach ($this->getTabDatas() as $legend => $dataY) {
          if (is_array($dataY)) {
-            $data[] = array('data' => $this->getData($dataY), 'label' => $legend);
+            $data[] = ['data' => $this->getData($dataY), 'label' => $legend];
          } else {
             $alone = true;
             $break;
@@ -79,7 +76,9 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
 
       }
 
-      if ($alone) $data[] = array('data' => $this->getData($this->getTabDatas()));
+      if ($alone) {
+         $data[] = ['data' => $this->getData($this->getTabDatas())];
+      }
 
       return PluginMydashboardHelper::safeJsonData($data, $this->getOptions());
    }
@@ -90,8 +89,7 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
     *      (default) : <value>
     * @return string, A JS function
     */
-   static function getTickFormatter($id = 0)
-   {
+   static function getTickFormatter($id = 0) {
       $funct = "";
       switch ($id) {
          default :
@@ -102,29 +100,29 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
       return $funct;
    }
 
-//    /**
-//     * 
-//     * @param type $datas
-//     * @return type
-//     */
-//    static function getTicksFromLabels($datas)
-//    {
-//        $cumul;
-//        $count = 0;
-//        foreach($datas as $key => $data)
-//        {
-//            if(is_numeric($key))
-//            {
-//                $cumul[] = [$key,$key];
-//            }
-//            else
-//            {
-//                $cumul[] = [$count,$key];
-//            }
-//            $count++;
-//        }
-//        Toolbox::logDebug($cumul);
-//        return $cumul;
-//    }
+   //    /**
+   //     *
+   //     * @param type $datas
+   //     * @return type
+   //     */
+   //    static function getTicksFromLabels($datas)
+   //    {
+   //        $cumul;
+   //        $count = 0;
+   //        foreach($datas as $key => $data)
+   //        {
+   //            if(is_numeric($key))
+   //            {
+   //                $cumul[] = [$key,$key];
+   //            }
+   //            else
+   //            {
+   //                $cumul[] = [$count,$key];
+   //            }
+   //            $count++;
+   //        }
+   //        Toolbox::logDebug($cumul);
+   //        return $cumul;
+   //    }
 
 }

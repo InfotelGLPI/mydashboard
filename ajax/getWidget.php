@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 include("../../../inc/includes.php");
@@ -41,7 +41,9 @@ if (/*Session::validateCSRF($_POST) && */
          $htmlContent = "";
          $htmlContent = $widget->getWidgetHtmlContent();
 
-         if ($widget->getWidgetIsOnlyHTML()) $htmlContent = "";
+         if ($widget->getWidgetIsOnlyHTML()) {
+            $htmlContent = "";
+         }
 
          //when we get jsondata some checkings and modification can be done by the widget class
          //For example Datatable add some scripts to adapt the table to the template
@@ -51,12 +53,12 @@ if (/*Session::validateCSRF($_POST) && */
          $scripts = $widget->getWidgetScripts();
          $scripts = implode($scripts, "");
 
-//            $jsondatas = $widget->getJSonDatas();
-//            $widgetContent = json_decode($jsondatas);
-//            if(!isset($widgetContent)) $widgetContent = $jsondatas;
+         //            $jsondatas = $widget->getJSonDatas();
+         //            $widgetContent = json_decode($jsondatas);
+         //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
          //We prepare a "JSon object" compatible with sDashboard
          $json =
-            array(
+            [
                "widgetTitle" => $widget->getWidgetTitle(),
                "widgetId" => $widget->getWidgetId(),
                "widgetType" => $widget->getWidgetType(),
@@ -65,8 +67,8 @@ if (/*Session::validateCSRF($_POST) && */
                "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . PluginMydashboardMenu::DASHBOARD_NAME . "','$classname', '" . $widget->getWidgetId() . "');}",
                "html" => $htmlContent,
                "scripts" => $scripts,
-//                        "_glpi_csrf_token" => Session::getNewCSRFToken()
-         );
+         //                        "_glpi_csrf_token" => Session::getNewCSRFToken()
+            ];
          //safeJson because refreshCallBack must be a javascript function not a string,
          // not a string, but a function in a json object is not valid
          $json = PluginMydashboardHelper::safeJson($json);

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 ini_set("memory_limit", "-1");
@@ -50,10 +50,9 @@ $plugin = new Plugin();
 //$config = PluginPrintercountersConfig::getInstance();
 
 if ($plugin->isActivated("mydashboard")) {
-   $record = new PluginMydashboardInfotel(array());
+   $record = new PluginMydashboardInfotel([]);
    $record->cronMydashboardInfotelUpdateStockTicket();
 } else {
    echo __('Plugin disabled', 'mydashboard');
    exit(1);
 }
-?>

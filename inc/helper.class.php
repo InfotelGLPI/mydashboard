@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -34,8 +34,7 @@ class PluginMydashboardHelper
     * get the delay between two automatic refreshing
     * @return int
     */
-   static function getAutomaticRefreshDelay()
-   {
+   static function getAutomaticRefreshDelay() {
       return self::getPreferenceField('automatic_refresh_delay');
    }
 
@@ -43,8 +42,7 @@ class PluginMydashboardHelper
     * Check if automatic refreshing is enable or not
     * @return boolean, TRUE if automatic refresh is enabled, FALSE otherwise
     */
-   static function getAutomaticRefresh()
-   {
+   static function getAutomaticRefresh() {
       return (self::getPreferenceField('automatic_refresh') == 1) ? true : false;
    }
 
@@ -52,8 +50,7 @@ class PluginMydashboardHelper
     * Get the number of widgets in width in the configuration
     * @return int
     */
-   static function getNumberOfWidgetsInWidth()
-   {
+   static function getNumberOfWidgetsInWidth() {
 
       return self::getPreferenceField('nb_widgets_width');
    }
@@ -62,24 +59,21 @@ class PluginMydashboardHelper
     * Check if user wants dashboard to replace central interface
     * @return boolean, TRUE if dashboard must replace, FALSE otherwise
     */
-   static function getReplaceCentral()
-   {
+   static function getReplaceCentral() {
       return self::getPreferenceField("replace_central");
    }
 
    /**
     * @return mixed
     */
-   static function getDisplayPlugins()
-   {
+   static function getDisplayPlugins() {
       return self::getConfigField("display_plugin_widget");
    }
 
    /**
     * @return mixed
     */
-   static function getDisplayMenu()
-   {
+   static function getDisplayMenu() {
       return self::getConfigField("display_menu");
    }
 
@@ -88,10 +82,11 @@ class PluginMydashboardHelper
     * @param string $fieldname
     * @return mixed
     */
-   private static function getConfigField($fieldname)
-   {
+   private static function getConfigField($fieldname) {
       $config = new PluginMydashboardConfig();
-      if (!$config->getFromDB(Session::getLoginUserID())) $config->initConfig();
+      if (!$config->getFromDB(Session::getLoginUserID())) {
+         $config->initConfig();
+      }
       $config->getFromDB("1");
 
       return (isset($config->fields[$fieldname])) ? $config->fields[$fieldname] : 0;
@@ -102,10 +97,11 @@ class PluginMydashboardHelper
     * @param string $fieldname
     * @return mixed
     */
-   private static function getPreferenceField($fieldname)
-   {
+   private static function getPreferenceField($fieldname) {
       $preference = new PluginMydashboardPreference();
-      if (!$preference->getFromDB(Session::getLoginUserID())) $preference->initPreferences(Session::getLoginUserID());
+      if (!$preference->getFromDB(Session::getLoginUserID())) {
+         $preference->initPreferences(Session::getLoginUserID());
+      }
       $preference->getFromDB(Session::getLoginUserID());
 
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
@@ -118,8 +114,7 @@ class PluginMydashboardHelper
     * @param bool $onsubmit
     * @return string , like '<form id=...>'
     */
-   static function getFormHeader($widgetId, $onsubmit = false)
-   {
+   static function getFormHeader($widgetId, $onsubmit = false) {
       $formId = uniqid('form');
       if ($onsubmit) {
          $form = "<form id='" . $formId . "' action='' "
@@ -138,8 +133,7 @@ class PluginMydashboardHelper
     * @param string $title
     * @return string
     */
-   static function getATag($pathfromrootdoc, $text, $title = "")
-   {
+   static function getATag($pathfromrootdoc, $text, $title = "") {
       global $CFG_GLPI;
       $title = ($title !== "") ? "title=$title" : "";
       return "<a href='" . $CFG_GLPI['root_doc'] . "/" . $pathfromrootdoc . "' $title target='_blank'>" . $text . "</a>";
@@ -153,8 +147,7 @@ class PluginMydashboardHelper
     *
     * @return string
     */
-   static function getUniqueWidgetId()
-   {
+   static function getUniqueWidgetId() {
       return uniqid("id_");
    }
 
@@ -164,13 +157,16 @@ class PluginMydashboardHelper
     * @param array 2D $arrayToEval
     * @return array of string (each string is a script line)
     */
-   static function extractScriptsFromArray($arrayToEval)
-   {
-      $scripts = array();
+   static function extractScriptsFromArray($arrayToEval) {
+      $scripts = [];
       if (is_array($arrayToEval)) {
-         if (!is_array($arrayToEval)) return $scripts;
+         if (!is_array($arrayToEval)) {
+            return $scripts;
+         }
          foreach ($arrayToEval as $array) {
-            if (!is_array($array)) break;
+            if (!is_array($array)) {
+               break;
+            }
             foreach ($array as $arrayLine) {
                $scripts = array_merge($scripts, self::extractScriptsFromString($arrayLine));
             }
@@ -184,17 +180,16 @@ class PluginMydashboardHelper
     * @param string $stringToEval , a HTML string with potentially script tags
     * @return array of string
     */
-   static function extractScriptsFromString($stringToEval)
-   {
-      $scripts = array();
+   static function extractScriptsFromString($stringToEval) {
+      $scripts = [];
       if (gettype($stringToEval) == "string") {
-         $stringToEval = str_replace(array("'", "//<![CDATA[", "//]]>"), array('"', "", ""), $stringToEval);
-//             $stringToEval = preg_replace('/\s+/', ' ', $stringToEval);
+         $stringToEval = str_replace(["'", "//<![CDATA[", "//]]>"], ['"', "", ""], $stringToEval);
+         //             $stringToEval = preg_replace('/\s+/', ' ', $stringToEval);
 
          if (preg_match_all("/<script[^>]*>([\s\S]+?)<\/script>/i", $stringToEval, $matches)) {
             foreach ($matches[1] as $match) {
-//                     $match = preg_replace('/(\/\/[[:alnum:]_ ]+)/', '', $match);
-//                     $match = preg_replace('#^\s*//.+$#m', "", $match);
+               //                     $match = preg_replace('/(\/\/[[:alnum:]_ ]+)/', '', $match);
+               //                     $match = preg_replace('#^\s*//.+$#m', "", $match);
                $scripts[] = $match;
             }
          }
@@ -208,8 +203,7 @@ class PluginMydashboardHelper
     * @param string $stringToEval , the string that you want without scripts
     * @return string with no scripts
     */
-   static function removeScriptsFromString($stringToEval)
-   {
+   static function removeScriptsFromString($stringToEval) {
       $stringWOScripts = "";
       if (gettype($stringToEval) == "string") {
          $stringWOScripts = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $stringToEval);
@@ -229,10 +223,9 @@ class PluginMydashboardHelper
     * @param type $options , a formatted array of options
     * @return a string formatted in JSon (most of the time, because in real JSon you can't have function)
     */
-   static function safeJsonData($datas, $options)
-   {
-      $value_arr = array();
-      $replace_keys = array();
+   static function safeJsonData($datas, $options) {
+      $value_arr = [];
+      $replace_keys = [];
       foreach ($options as & $option) {
          if (is_array($option)) {
             foreach ($option as $key => & $value) {
@@ -252,10 +245,10 @@ class PluginMydashboardHelper
 
       $json = str_replace($replace_keys,
          $value_arr,
-         json_encode(array(
+         json_encode([
             'data' => $datas,
             'options' => $options
-         )));
+         ]));
 
       return $json;
    }
@@ -269,10 +262,9 @@ class PluginMydashboardHelper
     * @param mixed $array , the array that needs to be cleaned and encoded in json
     * @return string a json encoded array
     */
-   static function safeJson($array)
-   {
-      $value_arr = array();
-      $replace_keys = array();
+   static function safeJson($array) {
+      $value_arr = [];
+      $replace_keys = [];
       foreach ($array as $key => & $value) {
 
          if (is_string($value) && strpos($value, 'function(') === 0) {
@@ -296,14 +288,13 @@ class PluginMydashboardHelper
     * @param $query
     * @return PluginMydashboardDatatable|PluginMydashboardHBarChart|PluginMydashboardHtml|PluginMydashboardLineChart|PluginMydashboardPieChart|PluginMydashboardVBarChart
     */
-   static function getWidgetsFromDBQuery($widgettype, $query/*$widgettype,$table,$fields,$condition,$groupby,$orderby*/)
-   {
+   static function getWidgetsFromDBQuery($widgettype, $query/*$widgettype,$table,$fields,$condition,$groupby,$orderby*/) {
       global $DB;
 
       if (stripos(trim($query), "SELECT") === 0) {
 
          $result = $DB->query($query);
-         $tab = array();
+         $tab = [];
          if ($result) {
             while ($row = $DB->fetch_assoc($result)) {
                $tab[] = $row;
@@ -335,14 +326,14 @@ class PluginMydashboardHelper
             //            $widget = new PluginMydashboardHBarChart();
             //        $widget->setTabNames(array('Category','Count'));
             if ($chart) {
-               $newtab = array();
+               $newtab = [];
                foreach ($tab as $key => $line) {
                   $line = array_values($line);
                   $newtab[$line[0]] = $line[1];
                   unset($tab[$key]);
                }
                $tab = $newtab;
-            } elseif ($linechart) {
+            } else if ($linechart) {
                //TODO format for linechart
             } else {
                //$widget->setTabNames(array('Category','Count'));

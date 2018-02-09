@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 include("../../../inc/includes.php");
@@ -40,23 +40,27 @@ if (isset($_POST['dashboard_plugin_classname']) && isset($_POST['dashboard_plugi
    if (isset($_POST['dashboard_plugin_widget_view'])) {
       $view = $_POST['dashboard_plugin_widget_view'];
       unset($_POST['dashboard_plugin_widget_view']);
-   } else $view = NULL;
+   } else {
+      $view = null;
+   }
 
    //To create the widget classname may need some options
-   $options = array();
-   if (isset($_POST['options'])) $options = $_POST['options'];
+   $options = [];
+   if (isset($_POST['options'])) {
+      $options = $_POST['options'];
+   }
 
    //This is the function name of the method that return the array of widgets
    $getWidgetContentForItem = "getWidgetContentForItem";
-//    $getWidgets = "getWidgets";
+   //    $getWidgets = "getWidgets";
    //Those three functions will be useful for gettin Datas,HtmlContent,Scripts of the widget
    $getJsonDatas = "getJsonDatas";
    $getHtmlContent = "getWidgetHtmlContent";
    $getWidgetScripts = "getWidgetScripts";
 
    //A bit of debug help
-//    $infoDebug = "getWidgetData.php :\n";
-//    $infoDebug .= "Class :".$classname."\nWidget :".$widgetIndex."\n";
+   //    $infoDebug = "getWidgetData.php :\n";
+   //    $infoDebug .= "Class :".$classname."\nWidget :".$widgetIndex."\n";
 
    //We instanciate the widget container with options found
    $instance = new $classname($options);
@@ -69,84 +73,87 @@ if (isset($_POST['dashboard_plugin_classname']) && isset($_POST['dashboard_plugi
    } else //We display a warning because it's 'deprecated' but for GLPI Core class getwidgets is still used (TODO)
    {
       $infoDebug .= "Warning : no method $getWidgetContentForItem found for the widget $widgetIndex in class " . $classname . "\n";
-//        $infoDebug .= "Trying with the method $getWidgets\n";
+      //        $infoDebug .= "Trying with the method $getWidgets\n";
    }
 
    //Compatibility (for GLPI Core classes)
    //For container classes which haven't a 'getWidgetContentForItem'
-//    if(!isset($widget) && method_exists($instance,"getWidgets"))
-//    {
-////                We get its widgets
-////STA: Idea 1.0.1 to not instanciate all widgets of the class
-//        if(isset($view)) //It's a GLPI core widget
-//        {
-//            $widgets = call_user_func_array( array( $instance, $getWidgets ),array($view,$widgetIndex));
-//            $widgets = $widgets[$view];
-//        }
-//        else //It's a tiers plugin
-//        {
-//            //We indicates which widget must be instanctiated, (we don't need others)
-//            $widgets = call_user_func_array( array( $instance, $getWidgets ),array($widgetIndex));
-//        }
-////END : Idea 1.0.1
-////        $widgets = call_user_func( array( $instance, $getWidgets ),$view);
-////        if(isset($view)) 
-////        {
-////            $widgets = $widgets[$view];
-////        }
-////        
-//        $widget = NULL;
-//        //We find the widget we need by its id
-//        foreach($widgets as $key => $w)
-//        {
-//            if(method_exists($w,"getWidgetId") && $w->getWidgetId() == $widgetIndex) $widget = $w;
-//        }
-//        $widget = find_widget_in_widgets_array($widgets, $widgetIndex);
-//    }
-//    else
-//    {
-//        if(!isset($widget))
-//        {
-//            $infoDebug .= "Warning : no method $getWidgets found for the widget $widgetIndex in class ".$classname."\n";
-//        }
-//    }
+   //    if(!isset($widget) && method_exists($instance,"getWidgets"))
+   //    {
+   ////                We get its widgets
+   ////STA: Idea 1.0.1 to not instanciate all widgets of the class
+   //        if(isset($view)) //It's a GLPI core widget
+   //        {
+   //            $widgets = call_user_func_array( array( $instance, $getWidgets ),array($view,$widgetIndex));
+   //            $widgets = $widgets[$view];
+   //        }
+   //        else //It's a tiers plugin
+   //        {
+   //            //We indicates which widget must be instanctiated, (we don't need others)
+   //            $widgets = call_user_func_array( array( $instance, $getWidgets ),array($widgetIndex));
+   //        }
+   ////END : Idea 1.0.1
+   ////        $widgets = call_user_func( array( $instance, $getWidgets ),$view);
+   ////        if(isset($view))
+   ////        {
+   ////            $widgets = $widgets[$view];
+   ////        }
+   ////
+   //        $widget = NULL;
+   //        //We find the widget we need by its id
+   //        foreach($widgets as $key => $w)
+   //        {
+   //            if(method_exists($w,"getWidgetId") && $w->getWidgetId() == $widgetIndex) $widget = $w;
+   //        }
+   //        $widget = find_widget_in_widgets_array($widgets, $widgetIndex);
+   //    }
+   //    else
+   //    {
+   //        if(!isset($widget))
+   //        {
+   //            $infoDebug .= "Warning : no method $getWidgets found for the widget $widgetIndex in class ".$classname."\n";
+   //        }
+   //    }
 
 
    //We check if it's a widget Object
    if (method_exists($widget, $getJsonDatas)) {
       //We assume that if getJsonData is callable on $widget then it's something from a known widget type
       //A bit of debug
-//        $infoDebug .= "WidgetType :".$widget->getType()."\n";
-//        $infoDebug .= "WidgetOptions :".json_encode($options)."\n";
-//        $infoDebug .= "Success\n";
+      //        $infoDebug .= "WidgetType :".$widget->getType()."\n";
+      //        $infoDebug .= "WidgetOptions :".json_encode($options)."\n";
+      //        $infoDebug .= "Success\n";
       $widget->setWidgetId($widgetIndex);
       //We first get its JSON data
-      $data = call_user_func(array($widget, $getJsonDatas));
+      $data = call_user_func([$widget, $getJsonDatas]);
 
       //Then its Html content
       $htmlContent = "";
-      $htmlContent = call_user_func(array($widget, $getHtmlContent));
+      $htmlContent = call_user_func([$widget, $getHtmlContent]);
 
       //Then its scripts (non evaluated, have to be evaluated client-side)
-      $scripts = call_user_func(array($widget, $getWidgetScripts));
+      $scripts = call_user_func([$widget, $getWidgetScripts]);
       //getWidgetScripts gives an array of script lines, we implode this array to have only one string
       $scripts = implode($scripts, "");
       //Then we send what we found
       //$data is alreaddy json_encoded, no need to re encode it
       $json = json_encode(
-         array(
+         [
             "data" => "%widgetdata%",
             "html" => $htmlContent,
             "scripts" => $scripts,
-//                 "_glpi_csrf_token" => Session::getNewCSRFToken()
-         )
+      //                 "_glpi_csrf_token" => Session::getNewCSRFToken()
+         ]
       );
 
       echo str_replace('"%widgetdata%"', $data, $json);
       //$infoDebug = "";
    } else {
-      if (isset($widget)) $infoDebug .= "Failure : no method $getJsonDatas found for the widget $widgetIndex of class " . $widget->getType() . "\n";
-      else $infoDebug .= "Failure : no method $getJsonDatas found for the widget $widgetIndex in class " . $classname . "\n";
+      if (isset($widget)) {
+         $infoDebug .= "Failure : no method $getJsonDatas found for the widget $widgetIndex of class " . $widget->getType() . "\n";
+      } else {
+         $infoDebug .= "Failure : no method $getJsonDatas found for the widget $widgetIndex in class " . $classname . "\n";
+      }
    }
 
 
@@ -164,10 +171,13 @@ if (isset($_POST['dashboard_plugin_classname']) && isset($_POST['dashboard_plugi
  * @param $needle
  * @return mixed
  */
-function find_widget_in_widgets_array($haystack, $needle)
-{
+function find_widget_in_widgets_array($haystack, $needle) {
    foreach ($haystack as $key => $w) {
-      if (is_array($w)) return find_widget_in_widgets_array($w, $needle);
-      if (method_exists($w, "getWidgetId") && $w->getWidgetId() == $needle) return $w;
+      if (is_array($w)) {
+         return find_widget_in_widgets_array($w, $needle);
+      }
+      if (method_exists($w, "getWidgetId") && $w->getWidgetId() == $needle) {
+         return $w;
+      }
    }
 }

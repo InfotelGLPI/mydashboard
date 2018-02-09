@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -33,16 +33,15 @@ class PluginMydashboardReminder
    /**
     * @return array
     */
-   function getWidgetsForItem()
-   {
-      $array = array();
+   function getWidgetsForItem() {
+      $array = [];
       if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
-         $array = array(
+         $array = [
             PluginMydashboardMenu::$MY_VIEW =>
-               array(
+               [
                   "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2)
-               )
-         );
+               ]
+         ];
       }
       if (Session::haveRight("reminder_public", READ)) {
          $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2);
@@ -54,8 +53,7 @@ class PluginMydashboardReminder
     * @param $widgetId
     * @return Nothing
     */
-   function getWidgetContentForItem($widgetId)
-   {
+   function getWidgetContentForItem($widgetId) {
       switch ($widgetId) {
          case "reminderpersonalwidget":
             return self::showListForCentral();
@@ -75,11 +73,10 @@ class PluginMydashboardReminder
     *
     * @return Nothing (display function)
     **/
-   static function showListForCentral($personal = true)
-   {
+   static function showListForCentral($personal = true) {
       global $DB, $CFG_GLPI;
 
-      $output = array();
+      $output = [];
 
       $users_id = Session::getLoginUserID();
       $today = date('Y-m-d');
@@ -150,7 +147,7 @@ class PluginMydashboardReminder
 
       $output['header'][] = '';
 
-      $output['body'] = array();
+      $output['body'] = [];
 
       $count = 0;
 
@@ -158,14 +155,14 @@ class PluginMydashboardReminder
          $rand = mt_rand();
 
          while ($data = $DB->fetch_assoc($result)) {
-            $output['body'][$count] = array();
+            $output['body'][$count] = [];
             $output['body'][$count][0] = '';
             $output['body'][$count][0] .= "<div class=\"relative reminder_list\">";
             $link = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
 
             $tooltip = Html::showToolTip(Toolbox::unclean_html_cross_side_scripting_deep($data["text"]),
-               array('applyto' => "content_reminder_" . $data["id"] . $rand,
-                  'display' => false));
+               ['applyto' => "content_reminder_" . $data["id"] . $rand,
+                  'display' => false]);
 
             $output['body'][$count][0] .= $link . ' ' . $tooltip;
 
@@ -205,8 +202,7 @@ class PluginMydashboardReminder
     * @internal param bool $personal : display reminders created by me ?
     *
     */
-   static function showNewsList()
-   {
+   static function showNewsList() {
       global $DB;
 
       $now = date('Y-m-d H:i:s');
@@ -215,7 +211,6 @@ class PluginMydashboardReminder
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
                                AND (`glpi_reminders`.`end_view_date` IS NULL
                                     OR `glpi_reminders`.`end_view_date` > '$now') ";
-
 
       // Show public reminders / not mines : need to have access to public reminders
       if (!Session::haveRight('reminder_public', READ)) {

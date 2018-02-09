@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -35,8 +35,7 @@ class PluginMydashboardPlanning
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0)
-   {
+   static function getTypeName($nb = 0) {
 
       return __('Dashboard', 'mydashboard');
    }
@@ -44,16 +43,14 @@ class PluginMydashboardPlanning
    /**
     * @return bool
     */
-   static function canCreate()
-   {
-      return Session::haveRightsOr('plugin_mydashboard', array(CREATE, UPDATE));
+   static function canCreate() {
+      return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE]);
    }
 
    /**
     * @return bool
     */
-   static function canView()
-   {
+   static function canView() {
       return Session::haveRight('plugin_mydashboard', READ);
    }
 
@@ -61,26 +58,24 @@ class PluginMydashboardPlanning
    /**
     * @return array
     */
-   function getWidgetsForItem()
-   {
+   function getWidgetsForItem() {
 
       if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
-         return array(
+         return [
             PluginMydashboardMenu::$MY_VIEW =>
-               array(
+               [
                   "planningwidget" => __('Your planning')
-               )
-         );
+               ]
+         ];
       }
-      return array();
+      return [];
    }
 
    /**
     * @param $widgetId
     * @return Nothing
     */
-   function getWidgetContentForItem($widgetId)
-   {
+   function getWidgetContentForItem($widgetId) {
       switch ($widgetId) {
          case "planningwidget":
             if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
@@ -97,8 +92,7 @@ class PluginMydashboardPlanning
     *
     * @return Nothing (display function)
     **/
-   static function showCentral($who)
-   {
+   static function showCentral($who) {
       global $CFG_GLPI;
 
       if (!Session::haveRight(Planning::$rightname, Planning::READMY)
@@ -107,7 +101,7 @@ class PluginMydashboardPlanning
          return false;
       }
 
-      $output = array();
+      $output = [];
 
       $when = strftime("%Y-%m-%d");
       $debut = $when;
@@ -120,12 +114,12 @@ class PluginMydashboardPlanning
       $begin = date("Y-m-d H:i:s", $begin);
       $end = date("Y-m-d H:i:s", $end);
 
-      $params = array('who' => $who,
+      $params = ['who' => $who,
          'who_group' => 0,
          'whogroup' => 0,
          'begin' => $begin,
-         'end' => $end);
-      $interv = array();
+         'end' => $end];
+      $interv = [];
       foreach ($CFG_GLPI['planning_types'] as $itemtype) {
          $interv = array_merge($interv, $itemtype::populatePlanning($params));
       }
@@ -153,8 +147,11 @@ class PluginMydashboardPlanning
          $widget->setWidgetId("planningwidget");
          //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
          $widget->setTabNames($output['header']);
-         if (isset($output['body'])) $widget->setTabDatas($output['body']);
-         else $widget->setTabDatas(array());
+         if (isset($output['body'])) {
+            $widget->setTabDatas($output['body']);
+         } else {
+            $widget->setTabDatas([]);
+         }
          //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
          $widget->setOption("bPaginate", false);
          $widget->setOption("bFilter", false);
@@ -176,11 +173,10 @@ class PluginMydashboardPlanning
     * @param complete|int $complete complete display (more details) (default 0)
     * @return Nothing
     */
-   static function displayPlanningItem(array $val, $who, $type = "", $complete = 0)
-   {
+   static function displayPlanningItem(array $val, $who, $type = "", $complete = 0) {
 
       $colnum = 0;
-      $output = array();
+      $output = [];
 
       $color = "#e4e4e4";
       if (isset($val["state"])) {
@@ -200,7 +196,6 @@ class PluginMydashboardPlanning
       }
       $output[$colnum] = "<div style=' margin:auto; text-align:left; border:1px dashed #cccccc;
              background-color: $color; font-size:9px; width:98%;'>";
-
 
       // Plugins case
       if (isset($val['itemtype'])

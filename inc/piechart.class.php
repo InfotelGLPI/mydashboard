@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -36,32 +36,30 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
    /**
     * PluginMydashboardPieChart constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       parent::__construct();
-      $this->setOption('grid', array('verticalLines' => false, 'horizontalLines' => false));
-      $this->setOption('xaxis', array('showLabels' => false));
-      $this->setOption('yaxis', array('showLabels' => false));
-      $this->setOption('mouse', array('track' => true, 'trackFormatter' => self::getTrackFormatter()));
-      $this->setOption('legend', array('position' => 'ne', 'backgroundColor' => '#D2E8FF'));
-      $this->setOption('pie', array('show' => true, 'explode' => 0,
-         'fillOpacity' => PluginMydashboardColor::getOpacity()));
+      $this->setOption('grid', ['verticalLines' => false, 'horizontalLines' => false]);
+      $this->setOption('xaxis', ['showLabels' => false]);
+      $this->setOption('yaxis', ['showLabels' => false]);
+      $this->setOption('mouse', ['track' => true, 'trackFormatter' => self::getTrackFormatter()]);
+      $this->setOption('legend', ['position' => 'ne', 'backgroundColor' => '#D2E8FF']);
+      $this->setOption('pie', ['show' => true, 'explode' => 0,
+         'fillOpacity' => PluginMydashboardColor::getOpacity()]);
    }
 
 
    /**
     * @return a JSon formatted string that can be used to add a widget in a dashboard (with sDashboard)
     */
-   function getJSonDatas()
-   {
-      $jsonDatasLabels = array();
+   function getJSonDatas() {
+      $jsonDatasLabels = [];
 
       foreach ($this->getTabDatas() as $sliceLabel => $sliceValue) {
          if (is_array($sliceValue)) {
             $this->debugError(__("You can't have more than one serie for a pie chart", 'mydashboard'));
             break;
          }
-         $jsonDatasLabels[] = array("data" => array(array(0, round($sliceValue, 2))), "label" => $sliceLabel);
+         $jsonDatasLabels[] = ["data" => [[0, round($sliceValue, 2)]], "label" => $sliceLabel];
       }
 
       return PluginMydashboardHelper::safeJsonData($jsonDatasLabels, $this->getOptions());
@@ -80,8 +78,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
     * @param int $minvalue
     * @return string
     */
-   static function getLabelFormatter($id = 0, $prefix = "", $suffix = "", $minvalue = 0)
-   {
+   static function getLabelFormatter($id = 0, $prefix = "", $suffix = "", $minvalue = 0) {
       $funct = "";
       $cond = "";
       if ($minvalue != 0) {

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -35,8 +35,7 @@ class PluginMydashboardHtml extends PluginMydashboardModule
    /**
     * PluginMydashboardHtml constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       $this->setWidgetType("html");
       $this->toggleOnlyHTML();
    }
@@ -45,8 +44,7 @@ class PluginMydashboardHtml extends PluginMydashboardModule
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0)
-   {
+   static function getTypeName($nb = 0) {
 
       return __('Dashboard', 'mydashboard');
    }
@@ -54,8 +52,7 @@ class PluginMydashboardHtml extends PluginMydashboardModule
    /**
     * @return string
     */
-   public function getJSonDatas()
-   {
+   public function getJSonDatas() {
       return json_encode($this->getWidgetHtmlContent());
    }
 }

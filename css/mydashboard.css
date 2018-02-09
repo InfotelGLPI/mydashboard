@@ -20,7 +20,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 .addItemTD{
@@ -50,7 +50,7 @@
 
 .plugin_mydashboard_dashboard{
     width:100%;
-    border: initial; 
+    border: initial;
     background: initial;
 }
 /*
@@ -152,7 +152,7 @@ div#tabcontent{
     position: absolute;
     right : 0px;
     top:0px;
-    z-index: 0; 
+    z-index: 0;
     display : none;
 }
 /*
@@ -163,7 +163,7 @@ div#tabcontent{
     height:100%;
     top:0px;
     overflow: hidden;
-    z-index: 0; 
+    z-index: 0;
     float: right
     margin-bottom: 3%;
     padding-bottom: 3%;
@@ -188,7 +188,7 @@ div#tabcontent{
         -ms-transition: opacity .15s ease-in-out;
         -o-transition: opacity .15s ease-in-out;
         transition: opacity .15s ease-in-out;*/
-        
+
     background-color: white;
     width:364px;
     cursor:pointer;
@@ -225,7 +225,7 @@ div#tabcontent{
     background-color: white;
     background-position-y: -1px;
     border:1.5px solid black;
-    padding:2px; 
+    padding:2px;
     -webkit-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
@@ -252,12 +252,12 @@ div#tabcontent{
 .plugin_mydashboard_menuSliderButtonClose:hover {
     background-image: url('../pics/right.png');
     font-size: 0px;
-    
+
 }
 
 .plugin_mydashboard_menuDashboardListTitle1 {
     font-size: 11px;
-    border-bottom: lightgray 1px solid; 
+    border-bottom: lightgray 1px solid;
     padding: 5px;
     /*0.85*/
     margin :0px;
@@ -349,11 +349,11 @@ li.plugin_mydashboard_menuDashboardList{
 }
 /*
 li.plugin_mydashboard_menuDashboardList:hover{
-    border: lightgray 1px solid; 
+    border: lightgray 1px solid;
 }*/
 
 li.plugin_mydashboard_menuDashboardListItem:hover{
-    background-color: #E7E7E7; 
+    background-color: #E7E7E7;
 }
 
 /*END===plugin_mydashboard_menu============================*/
@@ -371,7 +371,7 @@ li.plugin_mydashboard_menuDashboardListItem:hover{
     -o-border-radius: 4px 4px;
     -ms-border-radius: 4px 4px;
     border-radius: 4px 4px;
-    box-shadow: 2px 3px 9px -3px rgba(0, 0, 0, 0.5); 
+    box-shadow: 2px 3px 9px -3px rgba(0, 0, 0, 0.5);
     border:rgba(230, 230, 230) 1px solid;
     height:300px;
     width:100%;
@@ -433,7 +433,7 @@ li.plugin_mydashboard_menuDashboardListItem:hover{
 }
 
 .ui-sortable-helper {
-    box-shadow: 10px 10px 9px -3px rgba(0, 0, 0, 0.3); 
+    box-shadow: 10px 10px 9px -3px rgba(0, 0, 0, 0.3);
 }
 
 .ui-sortable-placeholder {
@@ -447,14 +447,14 @@ li.plugin_mydashboard_menuDashboardListItem:hover{
 
 .scaledContent {
     height : 0px;
-    width : 0px;  
+    width : 0px;
     -webkit-transform: scale(0.55);
     -moz-transform: scale(0.55);
     -o-transform: scale(0.55);
     -ms-transform: scale(0.55);
 }
 
-svg { 
+svg {
    /* font-size:15px; */
    height: auto;
 }

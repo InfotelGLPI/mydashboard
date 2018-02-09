@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -33,19 +33,19 @@ class PluginMydashboardTicket {
     * @return array
     */
    function getWidgetsForItem() {
-      $showticket   = Session::haveRightsOr("ticket", array(Ticket::READMY, Ticket::READALL, Ticket::READASSIGN));
+      $showticket   = Session::haveRightsOr("ticket", [Ticket::READMY, Ticket::READALL, Ticket::READASSIGN]);
       $createticket = Session::haveRight("ticket", CREATE);
 
-      $array = array();
+      $array = [];
 
       $array[PluginMydashboardMenu::$TICKET_VIEW] =
-         array(
+         [
             "ticketlisttoapprovewidget"     => __('Your tickets to close'),
             "ticketlistrejectedwidget"      => __('Your rejected tickets'),
             "ticketlistrequestbyselfwidget" => __('Your tickets in progress'),
             "ticketlistobservedwidget"      => __('Your observed tickets'),
             "ticketlistsurveywidget"        => __('Satisfaction survey'),
-         );
+         ];
 
       if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
          $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketlisttovalidatewidget"] = __('Your tickets to validate');
@@ -57,15 +57,14 @@ class PluginMydashboardTicket {
          $array[PluginMydashboardMenu::$TICKET_VIEW]["tickettaskstodowidget"]   = __("Ticket tasks to do");
       }
 
-
       if (Session::haveRight('ticket', Ticket::READGROUP)) {
          $array[PluginMydashboardMenu::$GROUP_VIEW] =
-            array(
+            [
                "ticketlistwaitingwidgetgroup"       => __('Tickets on pending status'),
                "ticketlisttoapprovewidgetgroup"     => __('Your tickets to close'),
                "ticketlistrequestbyselfwidgetgroup" => __('Your tickets in progress'),
                "ticketlistobservedwidgetgroup"      => __('Your observed tickets')
-            );
+            ];
       }
       if ($showticket) {
          $array[PluginMydashboardMenu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = __('Tickets to be processed');
@@ -87,7 +86,7 @@ class PluginMydashboardTicket {
     */
    function getWidgetContentForItem($widgetId) {
 
-      $showticket   = Session::haveRightsOr("ticket", array(Ticket::READMY, Ticket::READALL, Ticket::READASSIGN));
+      $showticket   = Session::haveRightsOr("ticket", [Ticket::READMY, Ticket::READALL, Ticket::READASSIGN]);
       $createticket = Session::haveRight("ticket", CREATE);
       switch ($widgetId) {
          //Personnal
@@ -112,38 +111,60 @@ class PluginMydashboardTicket {
             return self::showCentralList(0, "observed", false);;
             break;
          case "ticketlistprocesswidget":
-            if ($showticket) return self::showCentralList(0, "process", false);;
+            if ($showticket) {
+               return self::showCentralList(0, "process", false);
+            };
             break;
          case "ticketlistwaitingwidget":
-            if ($showticket) return self::showCentralList(0, "waiting", false);;
+            if ($showticket) {
+               return self::showCentralList(0, "waiting", false);
+            };
             break;
          //Group
          case "ticketlistwaitingwidgetgroup":
-            if (Session::haveRight('ticket', Ticket::READGROUP)) return self::showCentralList(0, "waiting", true);;
+            if (Session::haveRight('ticket', Ticket::READGROUP)) {
+               return self::showCentralList(0, "waiting", true);
+            };
             break;
          case "ticketlisttoapprovewidgetgroup":
-            if (Session::haveRight('ticket', Ticket::READGROUP)) return self::showCentralList(0, "toapprove", true);
+            if (Session::haveRight('ticket', Ticket::READGROUP)) {
+               return self::showCentralList(0, "toapprove", true);
+            }
             break;
          case "ticketlistrequestbyselfwidgetgroup":
-            if (Session::haveRight('ticket', Ticket::READGROUP)) return self::showCentralList(0, "requestbyself", true);
+            if (Session::haveRight('ticket', Ticket::READGROUP)) {
+               return self::showCentralList(0, "requestbyself", true);
+            }
             break;
          case "ticketlistobservedwidgetgroup":
-            if (Session::haveRight('ticket', Ticket::READGROUP)) return self::showCentralList(0, "observed", true);
+            if (Session::haveRight('ticket', Ticket::READGROUP)) {
+               return self::showCentralList(0, "observed", true);
+            }
             break;
          case "ticketlistprocesswidgetgroup":
-            if ($showticket) return self::showCentralList(0, "process", true);
+            if ($showticket) {
+               return self::showCentralList(0, "process", true);
+            }
             break;
          //Global
          case "ticketcountwidget":
-            if ($showticket || $createticket) return self::showCentralCount($createticket && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'));
+            if ($showticket || $createticket) {
+               return self::showCentralCount($createticket && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'));
+            }
             break;
          case "ticketcountwidget2":
-            if ($showticket) return self::showCentralNewList();
+            if ($showticket) {
+               return self::showCentralNewList();
+            }
             break;
          case "tickettaskstodowidget":
-            if ($showticket) return self::showCentralTaskList(0, "todo", false);
+            if ($showticket) {
+               return self::showCentralTaskList(0, "todo", false);
+            }
          case "tickettaskstodowidgetgroup":
-            if ($showticket) return self::showCentralTaskList(0, "todo", true);
+            if ($showticket) {
+               return self::showCentralTaskList(0, "todo", true);
+            }
             break;
       }
    }
@@ -158,9 +179,9 @@ class PluginMydashboardTicket {
    static function showCentralList($start, $status = "process", $showgrouptickets = true) {
       global $DB, $CFG_GLPI;
 
-      $output = array();
+      $output = [];
 
-      if (!Session::haveRightsOr(Ticket::$rightname, array(CREATE, Ticket::READALL, Ticket::READASSIGN))
+      if (!Session::haveRightsOr(Ticket::$rightname, [CREATE, Ticket::READALL, Ticket::READASSIGN])
           && !Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())
       ) {
 
@@ -174,7 +195,6 @@ class PluginMydashboardTicket {
       $search_observer = " (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_tickets_users`.`type` = '" . CommonITILActor::OBSERVER . "')";
       $is_deleted      = " `glpi_tickets`.`is_deleted` = 0 ";
-
 
       if ($showgrouptickets) {
          $search_users_id = " 0 = 1 ";
@@ -302,7 +322,7 @@ class PluginMydashboardTicket {
       $output['header'][] = __('Requester');
       $output['header'][] = __('Associated element');
       $output['header'][] = __('Description');
-      $output['body']     = array();
+      $output['body']     = [];
       $output['title']    = "default";
 
       //if ($numrows > 0) {
@@ -557,13 +577,11 @@ class PluginMydashboardTicket {
 
          //         if ($number) {
 
-
          //            $output['header'][] = '';
          //            $output['header'][] = __('Requester');
          //            $output['header'][] = __('Associated element');
          //            $output['header'][] = __('Description');
          //            $output['body'] = array();
-
 
          //         }
 
@@ -588,7 +606,7 @@ class PluginMydashboardTicket {
          $widget->setTabDatas($output['body']);
 
          //We sort by descending ticket ID
-         $widget->setOption("aaSorting", array(array(0, "desc")));
+         $widget->setOption("aaSorting", [[0, "desc"]]);
          $widget->toggleWidgetRefresh();
          return $widget;
       }
@@ -632,7 +650,7 @@ class PluginMydashboardTicket {
       $output['header'][] = __('ID');
       $output['header'][] = __('Title') . " (" . strtolower($type) . ")";
       $output['header'][] = __('Description');
-      $output['body']     = array();
+      $output['body']     = [];
       $output['title']    = "default";
 
       //if ($numrows > 0) {
@@ -696,7 +714,7 @@ class PluginMydashboardTicket {
          $widget->setTabDatas($output['body']);
 
          //We sort by descending ticket ID
-         $widget->setOption("aaSorting", array(array(0, "desc")));
+         $widget->setOption("aaSorting", [[0, "desc"]]);
          $widget->toggleWidgetRefresh();
          return $widget;
       }
@@ -714,7 +732,7 @@ class PluginMydashboardTicket {
       global $CFG_GLPI;
 
       $colnum = 0;
-      $output = array();
+      $output = [];
 
       // Prints a job in short form
       // Should be called in a <table>-segment
@@ -742,8 +760,8 @@ class PluginMydashboardTicket {
                   $name     = "<div class='b center'>" . $userdata['name'];
                   $name     = sprintf(__('%1$s %2$s'), $name,
                                       Html::showToolTip($userdata["comment"],
-                                                        array('link'    => $userdata["link"],
-                                                              'display' => false)));
+                                                        ['link'    => $userdata["link"],
+                                                              'display' => false]));
 
                   $output[$colnum] .= $name . "</div>";
                } else {
@@ -792,8 +810,8 @@ class PluginMydashboardTicket {
                                             $job->numberOfTasks($showprivate)));
          $link            = sprintf(__('%1$s %2$s'), $link,
                                     Html::showToolTip($job->fields['content'],
-                                                      array('applyto' => 'ticket' . $job->fields["id"] . $rand,
-                                                            'display' => false)));
+                                                      ['applyto' => 'ticket' . $job->fields["id"] . $rand,
+                                                            'display' => false]));
          $output[$colnum] = $link;
 
       }
@@ -815,7 +833,7 @@ class PluginMydashboardTicket {
       global $DB, $CFG_GLPI;
 
       $colnum = 0;
-      $output = array();
+      $output = [];
 
       $job  = new $itemtype();
       $rand = mt_rand();
@@ -876,7 +894,7 @@ class PluginMydashboardTicket {
          $foruser = true;
       }
 
-      $output = array();
+      $output = [];
 
       $query = "SELECT `status`,
                        COUNT(*) AS COUNT
@@ -920,7 +938,7 @@ class PluginMydashboardTicket {
       $result         = $DB->query($query);
       $result_deleted = $DB->query($query_deleted);
 
-      $status = array();
+      $status = [];
       foreach (Ticket::getAllStatusArray() as $key => $val) {
          $status[$key] = 0;
       }
@@ -971,7 +989,6 @@ class PluginMydashboardTicket {
                                          Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
       $output['body'][$count][1]       = $number_deleted;
 
-
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetTitle($output['title']);
       $widget->setWidgetId("ticketcountwidget");
@@ -998,7 +1015,7 @@ class PluginMydashboardTicket {
          return false;
       }
 
-      $output = array();
+      $output = [];
 
       $query  = "SELECT " . Ticket::getCommonSelect() . "
                 FROM `glpi_tickets` " . Ticket::getCommonLeftJoin() . "
@@ -1033,9 +1050,8 @@ class PluginMydashboardTicket {
       } else {
          $output['title']  = __('New tickets', 'mydashboard');
          $output['header'] = self::commonListHeader();
-         $output['body']   = array();
+         $output['body']   = [];
       }
-
 
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetTitle($output['title']);
@@ -1088,7 +1104,7 @@ class PluginMydashboardTicket {
                              $id_for_massaction = 0) {
       global $CFG_GLPI;
 
-      $output = array();
+      $output = [];
       $colnum = 0;
 
       $rand = mt_rand();
@@ -1189,8 +1205,8 @@ class PluginMydashboardTicket {
                $fourth_col .= sprintf(__('%1$s %2$s'),
                                       "<span class='b'>" . $userdata['name'] . "</span>",
                                       Html::showToolTip($userdata["comment"],
-                                                        array('link'    => $userdata["link"],
-                                                              'display' => false)));
+                                                        ['link'    => $userdata["link"],
+                                                              'display' => false]));
                $fourth_col .= "<br>";
             }
          }
@@ -1220,7 +1236,7 @@ class PluginMydashboardTicket {
                   $sixth_col .= $item->getTypeName();
                   $sixth_col .= "<br><span class='b'>";
                   if ($item->canView()) {
-                     $sixth_col .= $item->getLink(array('linkoption' => $output_type == Search::HTML_OUTPUT));
+                     $sixth_col .= $item->getLink(['linkoption' => $output_type == Search::HTML_OUTPUT]);
                   } else {
                      $sixth_col .= $item->getNameID();
                   }
@@ -1258,9 +1274,9 @@ class PluginMydashboardTicket {
          if ($output_type == Search::HTML_OUTPUT) {
             $eigth_column = sprintf(__('%1$s %2$s'), $eigth_column,
                                     Html::showToolTip($job->fields['content'],
-                                                      array('display' => false,
+                                                      ['display' => false,
                                                             'applyto' => "ticket" . $job->fields["id"] .
-                                                                         $rand)));
+                                                                         $rand]));
          }
 
          $colnum++;

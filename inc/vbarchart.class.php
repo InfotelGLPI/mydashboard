@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -34,10 +34,9 @@ class PluginMydashboardVBarChart extends PluginMydashboardBarChart
    /**
     * PluginMydashboardVBarChart constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       parent::__construct();
-      $this->setOption('bars', array('show' => true, 'horizontal' => false));
+      $this->setOption('bars', ['show' => true, 'horizontal' => false]);
       $this->setOrientation("v");
    }
 

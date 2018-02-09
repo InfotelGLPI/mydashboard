@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 include('../../../inc/includes.php');
@@ -30,13 +30,23 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 
 //Initialization
-if (isset($_POST["id"])) $userId = $_POST["id"];
-if (isset($_POST["interface"])) $interface = $_POST["interface"];
-if (isset($_POST["widgetId"])) $widgetName = $_POST["widgetId"];
-if (isset($_POST["order"])) $order = $_POST["order"];
-if (isset($_POST["sortedList"])) $sortedList = $_POST["sortedList"];
+if (isset($_POST["id"])) {
+   $userId = $_POST["id"];
+}
+if (isset($_POST["interface"])) {
+   $interface = $_POST["interface"];
+}
+if (isset($_POST["widgetId"])) {
+   $widgetName = $_POST["widgetId"];
+}
+if (isset($_POST["order"])) {
+   $order = $_POST["order"];
+}
+if (isset($_POST["sortedList"])) {
+   $sortedList = $_POST["sortedList"];
+}
 
-//I use validate rather than check because i want to handle errors 
+//I use validate rather than check because i want to handle errors
 //if(Session::validateCSRF($_POST)) {
 $widget = new PluginMydashboardWidget();
 $userwidget = new PluginMydashboardUserWidget($userId, $interface);
@@ -48,7 +58,7 @@ if (empty($userdashboard)) {
    //We must had the default widgets on his dashboard (in DB) before the first modification
    //default dashboard widgets that must'nt be added to users dashboard are stored in a SESSION
    $userwidget->setDefault(/*$_SESSION['not_to_be_added']*/);
-//        unset($_SESSION['not_to_be_added']);
+   //        unset($_SESSION['not_to_be_added']);
 }
 
 if (isset($userId) && isset($widgetName) && isset($order)) {
@@ -102,7 +112,7 @@ if (isset($userId) && isset($widgetName) && isset($order)) {
    }
 }
 //}
-//else //When CSRF is not valid 
+//else //When CSRF is not valid
 //{
 //    finnish(true);
 //}
@@ -111,15 +121,14 @@ if (isset($userId) && isset($widgetName) && isset($order)) {
  * @param bool $error
  * @param string $msg
  */
-function finnish($error = false, $msg = "")
-{
+function finnish($error = false, $msg = "") {
    //Two statuses are possible, whether there is an error or not
    $response_array['status'] = $error ? __("Dashboard not saved", "mydashboard") : __("Dashboard saved", "mydashboard");
    $response_array['message'] = $msg;
 
    //TODO Maybe not necessary to create a new one every updates of the mydashboard
-//    $response_array['_glpi_csrf_token'] = Session::getNewCSRFToken();
-//    Session::cleanCSRFTokens();
+   //    $response_array['_glpi_csrf_token'] = Session::getNewCSRFToken();
+   //    Session::cleanCSRFTokens();
    header('Content-type: application/json');
    echo json_encode($response_array);
 }

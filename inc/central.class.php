@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 if (!defined('GLPI_ROOT')) {
@@ -43,8 +43,7 @@ class PluginMydashboardCentral extends CommonGLPI
     * @return text name of this type by language of the user connected
     *
     */
-   static function getTypeName($nb = 0)
-   {
+   static function getTypeName($nb = 0) {
       return __('Central', 'mydashboard');
    }
 
@@ -53,10 +52,9 @@ class PluginMydashboardCentral extends CommonGLPI
     * @param array $options
     * @return array
     */
-   function defineTabs($options = array())
-   {
+   function defineTabs($options = []) {
 
-      $ong = array();
+      $ong = [];
       $this->addStandardTab('PluginMydashboardMenu', $ong, $options);
 
       return $ong;
@@ -68,10 +66,9 @@ class PluginMydashboardCentral extends CommonGLPI
     * @param int $withtemplate
     * @return array
     */
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-      $array_ret = array();
+      $array_ret = [];
 
       if (Session::haveRight("plugin_mydashboard", UPDATE)) {
          $array_ret[12] = self::createTabEntry(
@@ -87,8 +84,7 @@ class PluginMydashboardCentral extends CommonGLPI
     * @param int $withtemplate
     * @return bool
     */
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($tabnum == 12) {
          $menu = new PluginMydashboardMenu();

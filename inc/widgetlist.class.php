@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -53,18 +53,17 @@ class PluginMydashboardWidgetlist
     * @param boolean $filtered default true, if set to false all widgets found will be in the list
     * @return mixed array
     */
-   public function getList($filtered = true)
-   {
+   public function getList($filtered = true) {
       global $PLUGIN_HOOKS;
-      $widgets = array();
+      $widgets = [];
 
-//        We get hooked plugin widgets
+      //        We get hooked plugin widgets
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
          $widgets = $PLUGIN_HOOKS['mydashboard'];
       }
 
       //We add classes for GLPI core widgets
-      $widgets['GLPI'] = array("PluginMydashboardReminder",
+      $widgets['GLPI'] = ["PluginMydashboardReminder",
          "PluginMydashboardPlanning",
          "PluginMydashboardEvent",
          "PluginMydashboardProblem",
@@ -72,16 +71,18 @@ class PluginMydashboardWidgetlist
          "PluginMydashboardTicket",
          "PluginMydashboardRSSFeed",
          "PluginMydashboardContract",
-         "PluginMydashboardKnowbaseItem");
+         "PluginMydashboardKnowbaseItem"];
       //We run through the hook to get all widget IDs and Titles declared in all classes
       foreach ($widgets as $plugin => $pluginclasses) {
-         $widgets[$plugin] = array();
+         $widgets[$plugin] = [];
          foreach ($pluginclasses as $pluginclass) {
-            if (!class_exists($pluginclass)) continue;
-            $widgets[$plugin][$pluginclass] = array();
+            if (!class_exists($pluginclass)) {
+               continue;
+            }
+            $widgets[$plugin][$pluginclass] = [];
             $item = getItemForItemtype($pluginclass);
             //We try get the list of widgets for this class
-            if ($item && is_callable(array($item, 'getWidgetsForItem'))) {
+            if ($item && is_callable([$item, 'getWidgetsForItem'])) {
                $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
             }
          }
@@ -109,7 +110,7 @@ class PluginMydashboardWidgetlist
          if (is_array($filters['authorized'])) {
             //If nothing is authorized
             if (empty($filters['authorized'])) {
-               $widgets = array();
+               $widgets = [];
             } else {
                foreach ($widgets as $plugin => & $widgetclasses) {
                   foreach ($widgetclasses as $widgetclass => & $widgetlist) {
@@ -129,8 +130,7 @@ class PluginMydashboardWidgetlist
     * @param mixed $widgetlist , an array of widgets IDs or category
     * @return array, widgetlist cleaned
     */
-   private function cleanList($authorized, $widgetlist)
-   {
+   private function cleanList($authorized, $widgetlist) {
 
       foreach ($widgetlist as $widgetId => $widgetTitle) {
          if (is_array($widgetTitle)) {

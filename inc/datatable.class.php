@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -30,18 +30,17 @@
 class PluginMydashboardDatatable extends PluginMydashboardModule
 {
 
-   private $tabNames = array();
-   private $tabNamesHidden = array();
-   private $tabDatas = array();
+   private $tabNames = [];
+   private $tabNamesHidden = [];
+   private $tabDatas = [];
    private $tabDatasSet = false;
-   private $options = array();
+   private $options = [];
    static $rightname = "plugin_mydashboard";
 
    /**
     * PluginMydashboardDatatable constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       $this->setWidgetType("table");
    }
 
@@ -49,8 +48,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0)
-   {
+   static function getTypeName($nb = 0) {
 
       return __('Dashboard', 'mydashboard');
    }
@@ -59,24 +57,21 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * get an array representing the header of the datatable
     * @return array header,
     */
-   function getTabNames()
-   {
+   function getTabNames() {
       return $this->tabNames;
    }
 
    /**
     * @return array
     */
-   function getTabDatas()
-   {
+   function getTabDatas() {
       return $this->tabDatas;
    }
 
    /**
     * @return array
     */
-   function getTabNamesHidden()
-   {
+   function getTabNamesHidden() {
       return $this->tabNamesHidden;
    }
 
@@ -85,8 +80,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * @param array $_tabNames , array of header (corresponding to an html 'th' tag)<br>
     * for example array('header1','header2',...,'headern')
     */
-   function setTabNames($_tabNames)
-   {
+   function setTabNames($_tabNames) {
       if (is_array($_tabNames)) {
          $this->tabNames = $_tabNames;
 
@@ -96,8 +90,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
    /**
     * @param $_tabNamesHidden
     */
-   function setTabNamesHidden($_tabNamesHidden)
-   {
+   function setTabNamesHidden($_tabNamesHidden) {
       $this->tabNamesHidden = array_flip($_tabNamesHidden);
    }
 
@@ -106,8 +99,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * @param array $_tabDatas
     * should and must look like array( array(1,'foo','bar'), array(2,'bar',bar')) for a datatable of two lines
     */
-   function setTabDatas($_tabDatas)
-   {
+   function setTabDatas($_tabDatas) {
       if (is_array($_tabDatas)) {
          $this->tabNamesSet = !empty($this->tabNames);
          $this->tabDatasSet = true;
@@ -115,7 +107,9 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
          foreach ($_tabDatas as &$line) {
             //For future, maybe use those custom keys to match with order of the header and not use order of the array
             //Could be done like this :
-            if ($this->tabNamesSet) $line = $this->sortArrayByArray($line, $this->tabNames);
+            if ($this->tabNamesSet) {
+               $line = $this->sortArrayByArray($line, $this->tabNames);
+            }
             $line = array_values($line);
 
          }
@@ -131,15 +125,14 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * @param array $orderArray
     * @return array
     */
-   function sortArrayByArray(Array $array, Array $orderArray)
-   {
-      $ordered = array();
-//    foreach($orderArray as $key) {
-//        if(array_key_exists($key,$array)) {
-//            $ordered[$key] = $array[$key];
-//            unset($array[$key]);
-//        }
-//    }
+   function sortArrayByArray(Array $array, Array $orderArray) {
+      $ordered = [];
+      //    foreach($orderArray as $key) {
+      //        if(array_key_exists($key,$array)) {
+      //            $ordered[$key] = $array[$key];
+      //            unset($array[$key]);
+      //        }
+      //    }
       ksort($orderArray);
       foreach ($orderArray as $index => $key) {
          if (isset($array[$key])) {
@@ -148,13 +141,13 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
             $array = array_values($array);
             $ordered[$index] = $array[$index];
          }
-//            (isset($array[$key]))? $array[$key] : $array[$index];
+         //            (isset($array[$key]))? $array[$key] : $array[$index];
       }
-//      $inversed = array_flip($orderArray);
-//      foreach($array as $key => $value){
-//          $ordered[(isset($inversed[$key]))? $inversed[$key]:$key] = $value;
-//      }
-//    return $ordered + $array;
+      //      $inversed = array_flip($orderArray);
+      //      foreach($array as $key => $value){
+      //          $ordered[(isset($inversed[$key]))? $inversed[$key]:$key] = $value;
+      //      }
+      //    return $ordered + $array;
 
       return $ordered;
    }
@@ -163,8 +156,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     *
     * @return an array of all options
     */
-   function getOptions()
-   {
+   function getOptions() {
       return $this->options;
    }
 
@@ -176,8 +168,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * @param bool $force
     * @return bool
     */
-   function setOption($optionName, $optionValue, $force = false)
-   {
+   function setOption($optionName, $optionValue, $force = false) {
       if (isset($this->options[$optionName])) {
          if (is_array($optionValue)) {
             $this->options[$optionName] = array_merge($this->options[$optionName], $optionValue);
@@ -192,8 +183,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * Return a json encoded string ready to make a Datatable widget
     * @return string
     */
-   function getJSonDatas()
-   {
+   function getJSonDatas() {
       //Use template coloration for datatables widget
       $this->useTemplatesScript();
 
@@ -206,8 +196,10 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
       //Important attribute of the aoColumns is 'sTitle', the title of the column
       foreach ($jsonData['aoColumns'] as &$value) {
          $tmp = $value;
-         $tmp = array('sTitle' => str_replace(array("\r\n", "\r", "\n"/*, "'"*/), array("", "", ""/*, '"'*/), $tmp));
-         if (isset($this->tabNamesHidden[$value])) $tmp['bVisible'] = false;
+         $tmp = ['sTitle' => str_replace(["\r\n", "\r", "\n"/*, "'"*/], ["", "", ""/*, '"'*/], $tmp)];
+         if (isset($this->tabNamesHidden[$value])) {
+            $tmp['bVisible'] = false;
+         }
          $value = $tmp;
       }
       //Warning when setTabDatas haven't been called (it could have been called with an empty array, but that's not a problem)
@@ -222,7 +214,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
       //number of lines displayed
       $jsonData['iDisplayLength'] = 25;
       //nmbers available to select
-      $jsonData['aLengthMenu'] = array(array(1, 25, 50, -1), array(1, 25, 50, __("All")));
+      $jsonData['aLengthMenu'] = [[1, 25, 50, -1], [1, 25, 50, __("All")]];
       $jsonData['bAutoWidth'] = false;
 
       //Setting specific options
@@ -238,8 +230,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * Number of header is determined by the maximum number of element in lines
     * @return array of N empty strings, Nbeing the maximum number of element in lines
     */
-   function getDefaultColumns()
-   {
+   function getDefaultColumns() {
       $count = 0;
       $this->debugNotice(__("No column defined", 'mydashboard'));
       if (!empty($this->tabDatas)) {
@@ -251,16 +242,15 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
       } else {
          $count = 1;
       }
-      $columns = array();
+      $columns = [];
       for ($i = 0; $i < $count; $i++) {
          array_push($columns, "");
       }
       return $columns;
    }
 
-   function useTemplatesScript()
-   {
-      $scripts = array();
+   function useTemplatesScript() {
+      $scripts = [];
       $scripts[] = "var liwidget = $('#" . $this->getWidgetId() . "');";
       $scripts[] = "liwidget.find('table').removeClass('sDashboardTableView');";
       $scripts[] = "liwidget.find('table').addClass('tab_cadrehov');";

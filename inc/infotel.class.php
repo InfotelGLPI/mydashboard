@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -36,7 +36,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
     *
     * @param array $_options
     */
-   public function __construct($_options = array()) {
+   public function __construct($_options = []) {
       $this->options = $_options;
    }
 
@@ -44,8 +44,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
     * @return array
     */
    public function getWidgetsForItem() {
-      return array(
-         __('Public') => array($this->getType() . "1"  => __("Opened tickets backlog", "mydashboard"),
+      return [
+         __('Public') => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard"),
                                $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard"),
                                $this->getType() . "3"  => __("Internal annuary", "mydashboard"),
                                $this->getType() . "4"  => __("Mails collector", "mydashboard"),
@@ -59,8 +59,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                $this->getType() . "12" => __("TTR Compliance", "mydashboard"),
                                $this->getType() . "13" => __("TTO Compliance", "mydashboard"),
                                $this->getType() . "14" => __("All unpublished articles"),
-         )
-      );
+         ]
+      ];
    }
 
    public function cronMydashboardInfotelUpdateStockTicket() {
@@ -118,16 +118,16 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('vbarchart', $query);
 
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Group::dropdown(array('name'      => 'groups_id',
+            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Group::dropdown(['name'      => 'groups_id',
                                                                                                   'display'   => false,
                                                                                                   'value'     => isset($this->options['groups_id']) ? $this->options['groups_id'] : 0,
                                                                                                   'entity'    => $_SESSION['glpiactiveentities'],
-                                                                                                  'condition' => '`is_assign`'))
+                                                                                                  'condition' => '`is_assign`'])
                         . "</form>";
             $widget->setWidgetTitle(__("Opened tickets backlog", "mydashboard"));
-            $widget->setOption("xaxis", array("ticks" => PluginMydashboardBarChart::getTicksFromLabels($widget->getTabDatas())));
-            $widget->setOption("markers", array("show" => true, "position" => "ct", "labelFormatter" => PluginMydashboardBarChart::getLabelFormatter(2)));
-            $widget->setOption('legend', array('show' => false));
+            $widget->setOption("xaxis", ["ticks" => PluginMydashboardBarChart::getTicksFromLabels($widget->getTabDatas())]);
+            $widget->setOption("markers", ["show" => true, "position" => "ct", "labelFormatter" => PluginMydashboardBarChart::getLabelFormatter(2)]);
+            $widget->setOption('legend', ['show' => false]);
             $widget->appendWidgetHtmlContent($dropdown);
             $widget->toggleWidgetRefresh();
             return $widget;
@@ -146,7 +146,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
             $datas  = $widget->getTabDatas();
 
-            $colors = array();
+            $colors = [];
             foreach ($datas as $k => $v) {
                $name         = CommonITILObject::getPriorityName($k);
                $colors[]     = $_SESSION["glpipriority_" . $k];
@@ -164,7 +164,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
          case $this->getType() . "3":
             $profile_user = new Profile_User();
             $users        = $profile_user->find(getEntitiesRestrictRequest("", "glpi_profiles_users", "entities_id", '', true));
-            $filtredUsers = array();
+            $filtredUsers = [];
             foreach ($users as $user) {
                $filtredUsers[$user['users_id']] = $user['users_id'];
             }
@@ -186,8 +186,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ORDER BY `realname`, `firstname` ASC";
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = array(__('First name'), __('Name'), __('Login'), __('Phone'), __('Phone 2'), __('Mobile phone'));
-            $hidden  = array(__('Login'));
+            $headers = [__('First name'), __('Name'), __('Login'), __('Phone'), __('Phone 2'), __('Mobile phone')];
+            $hidden  = [__('Login')];
             $widget->setTabNames($headers);
             $widget->setTabNamesHidden($hidden);
             $widget->toggleWidgetRefresh();
@@ -196,7 +196,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             return $widget;
             break;
 
-
          case $this->getType() . "4":
 
             $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
@@ -204,24 +203,23 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ORDER BY `date` ASC";
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = array(__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver'));
+            $headers = [__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $datas = array();
+            $datas = [];
             $i     = 0;
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
-
 
                   $datas[$i]["date"] = Html::convDateTime($data['date']);
 
                   $datas[$i]["from"] = $data['from'];
 
                   $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
-                  
+
                   $mail = new MailCollector();
                   $mail->getFromDB($data['mailcollectors_id']);
                   $datas[$i]["mailcollectors_id"] = $mail->getName();
@@ -260,12 +258,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            }
                         }
                         fclose($dh);
-                     }   
+                     }
                   }
                }*/
 
             $widget  = new PluginMydashboardDatatable();
-            $headers = array(__('First name'), __('Name'), __('Login'), '');
+            $headers = [__('First name'), __('Name'), __('Login'), ''];
             $widget->setTabDatas($users);
             $widget->setTabNames($headers);
             $widget->toggleWidgetRefresh();
@@ -289,28 +287,25 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` = " . $_SESSION['glpiactive_entity'] . " ";
             }
 
-
             $currentmonth = date("m");
             $currentyear  = date("Y");
             $previousyear = $currentyear - 1;
             $query_2      = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month, DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname, SUM(nbStockTickets) as nbStockTickets FROM `glpi_plugin_mydashboard_stocktickets` WHERE " . $entities2 . " AND (`glpi_plugin_mydashboard_stocktickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') AND (`glpi_plugin_mydashboard_stocktickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')  GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-            $tabdata  = array();
-            $tabnames = array();
+            $tabdata  = [];
+            $tabnames = [];
             $results2 = $DB->query($query_2);
             $maxcount = 0;
             $i        = 0;
 
-
             while ($data = $DB->fetch_array($results2)) {
                $tabdata[$i] = $data["nbStockTickets"];
-               $tabnames[]  = array($i, $data['monthname']);
+               $tabnames[]  = [$i, $data['monthname']];
                if ($data["nbStockTickets"] > $maxcount) {
                   $maxcount = $data["nbStockTickets"];
                }
                $i++;
             }
-
 
             $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') AS month, 
                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') AS monthname, 
@@ -321,7 +316,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
                      AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
                      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
-
 
             $results = $DB->query($query);
             while ($data = $DB->fetch_array($results)) {
@@ -344,24 +338,24 @@ class PluginMydashboardInfotel extends CommonGLPI {
                if ($data_1['count'] > $maxcount) {
                   $maxcount = $data_1['count'];
                }
-               $tabnames[] = array($i, $data['monthname']);
+               $tabnames[] = [$i, $data['monthname']];
                $i++;
             }
 
             $widget = new PluginMydashboardLineChart();
 
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Entity::dropdown(array('name'    => 'entities_id',
+            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Entity::dropdown(['name'    => 'entities_id',
                                                                                                    'display' => false,
-                                                                                                   'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']))
+                                                                                                   'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']])
                         . "&nbsp;" . __('Recursive') . "&nbsp;<input type='checkbox' name='sons' value=1 " . (isset($this->options['sons']) ? "checked" : "") . "></form>";
 
             $widget->setWidgetTitle(__("Tickets stock", "mydashboard"));
-            $widget->setTabDatas(array(__("Tickets stock by month", "mydashboard") => $tabdata));
-            $widget->setOption("xaxis", array("ticks" => $tabnames));
-            $widget->setOption("yaxis", array("max" => $maxcount + 20, "min" => 0));
+            $widget->setTabDatas([__("Tickets stock by month", "mydashboard") => $tabdata]);
+            $widget->setOption("xaxis", ["ticks" => $tabnames]);
+            $widget->setOption("yaxis", ["max" => $maxcount + 20, "min" => 0]);
 
-            $widget->setOption("markers", array("show" => true, "position" => "lt", "labelFormatter" => PluginMydashboardBarChart::getLabelFormatter(2)));
-            $widget->setOption("lines", array("fillColor" => 'lightblue', "fill" => true));
+            $widget->setOption("markers", ["show" => true, "position" => "lt", "labelFormatter" => PluginMydashboardBarChart::getLabelFormatter(2)]);
+            $widget->setOption("lines", ["fillColor" => 'lightblue', "fill" => true]);
             $widget->appendWidgetHtmlContent($dropdown);
             $widget->toggleWidgetRefresh();
             //$widget->setOption("series", array("curvedLines" => array("active" => true)));
@@ -374,7 +368,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             //               $widget->setOption("crosshair", array("mode" => "xy"));
 
             return $widget;
-
 
             break;
          case $this->getType() . "7":
@@ -410,9 +403,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      ORDER BY count DESC
                      LIMIT 10";
             $widget   = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Entity::dropdown(array('name'    => 'entities_id',
+            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Entity::dropdown(['name'    => 'entities_id',
                                                                                                    'display' => false,
-                                                                                                   'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']))
+                                                                                                   'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']])
                         . "&nbsp;" . __('Recursive') . "&nbsp;<input type='checkbox' name='sons' value=1 " . (isset($this->options['sons']) ? "checked" : "") . "></form>";
 
             $datas = $widget->getTabDatas();
@@ -439,9 +432,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $time_per_tech = self::getTimePerTech($this->options);
             $months_t      = Toolbox::getMonthsOfYearArray();
-            $months        = array();
+            $months        = [];
             foreach ($months_t as $key => $month) {
-               $months[] = array($key, $month);
+               $months[] = [$key, $month];
             }
 
             foreach ($time_per_tech as $tech_id => $times) {
@@ -450,29 +443,29 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $time_per_tech[$username] = $times;
             }
             $widget   = new PluginMydashboardVBarChart();
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId, true) . Entity::dropdown(array('name'    => 'entities_id',
+            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId, true) . Entity::dropdown(['name'    => 'entities_id',
                                                                                                          'display' => false,
-                                                                                                         'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']))
+                                                                                                         'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']])
                         . "&nbsp;" . __('Recursive') . "&nbsp;<input type='checkbox' name='sons' value=1 " . (isset($this->options['sons']) ? "checked" : "") . ">"
                         . "<input type='submit' value='" . __("Show", "mydashboard") . "' class='submit' />"
                         . "</form>";
 
-            $widget->setOption("bars", array("stacked" => true, "fillOpacity" => 0.8, "shadowSize" => 0));
-            $colors = array(
+            $widget->setOption("bars", ["stacked" => true, "fillOpacity" => 0.8, "shadowSize" => 0]);
+            $colors = [
                "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
                "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
                "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
                "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
-            );
+            ];
             $widget->setOption('colors', $colors, true);
             $widget->setTabDatas($time_per_tech);
-            $widget->setOption("xaxis", array("ticks" => $months));
-            $widget->setOption("xaxis", array("max" => 13, "min" => 0.5));
+            $widget->setOption("xaxis", ["ticks" => $months]);
+            $widget->setOption("xaxis", ["max" => 13, "min" => 0.5]);
             //$widget->setOption("markers", array("show" => true,"position" => "cb","stacked" => true, "stackingType" => 'a'));
-            $widget->setOption('legend', array(
+            $widget->setOption('legend', [
                'position' => 'no'
                //'show' => false
-            ));
+            ]);
             $widget->appendWidgetHtmlContent($dropdown);
             $widget->toggleWidgetRefresh();
             $widget->setWidgetTitle(__("Process time by tech by month", "mydashboard"));
@@ -489,17 +482,16 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = array(__('Last run'), __('Name'), __('Status'));
+            $headers = [__('Last run'), __('Name'), __('Status')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $datas = array();
+            $datas = [];
             $i     = 0;
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
-
 
                   $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
 
@@ -530,7 +522,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
             $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
-            $groups   = array();
+            $groups   = [];
             foreach ($mygroups as $mygroup) {
                $groups[] = $mygroup["id"];
             }
@@ -548,13 +540,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = array(__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action'));
+            $headers = [__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $datas = array();
+            $datas = [];
 
             if ($nb) {
                $i = 0;
@@ -563,7 +555,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $ticket = new Ticket();
                   $ticket->getFromDB($data['tickets_id']);
 
-                  $users_requesters = array();
+                  $users_requesters = [];
                   $userdata         = '';
                   if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
 
@@ -574,7 +566,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         if ($k) {
                            $userdata .= getUserName($k);
                         }
-
 
                         if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
                            $userdata .= "<br>";
@@ -600,9 +591,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         $name_ticket .= "</a>";
                         $name_ticket .= "</div>";
 
-
                         $datas[$i]["tickets_id"] = $name_ticket;
-
 
                         $datas[$i]["users_id"] = $userdata;
 
@@ -619,7 +608,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                  $techdata .= getUserName($k);
                               }
 
-
                               if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
                                  $techdata .= "<br>";
                               }
@@ -634,7 +622,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                               if ($k) {
                                  $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
                               }
-
 
                               if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
                                  $techdata .= "<br>";
@@ -668,7 +655,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $widget->setOption("bSort", false);
             $widget->toggleWidgetRefresh();
 
-
             $widget->setWidgetTitle(__("User ticket alerts", "mydashboard"));
 
             return $widget;
@@ -678,7 +664,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $widget = new PluginMydashboardHtml();
             $url    = $CFG_GLPI['url_base'] . "/status.php";
             //$url = "http://localhost/glpi/status.php";
-            $options = array("url" => $url);
+            $options = ["url" => $url];
 
             $contents = self::cURLData($options);
             $contents = nl2br($contents);
@@ -734,7 +720,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             foreach ($datas as $k => $v) {
                $sum += $v;
             }
-            $data                                         = array();
+            $data                                         = [];
             $notrespected                                 = $sum;
             $respected                                    = $total['nb'] - $sum;
             $data[__("Respected TTR", "mydashboard")]     = $respected;
@@ -778,7 +764,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             foreach ($datas as $k => $v) {
                $sum += $v;
             }
-            $data                                         = array();
+            $data                                         = [];
             $notrespected                                 = $sum;
             $respected                                    = $total['nb'] - $sum;
             $data[__("Respected TTO", "mydashboard")]     = $respected;
@@ -806,13 +792,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
             $datas  = $widget->getTabDatas();
 
-            $headers = array(__('Subject'), __('Writer'), __('Category'));
+            $headers = [__('Subject'), __('Writer'), __('Category')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $datas = array();
+            $datas = [];
             $i     = 0;
 
             $knowbaseitem = new KnowbaseItem();
@@ -857,7 +843,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
          $alert .= "<img class='middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/warning.png'></style>&nbsp;";
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "&nbsp;<img class='middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/warning.png'>";
-      } elseif (preg_match('/OK/is', $message)) {
+      } else if (preg_match('/OK/is', $message)) {
          $alert .= "<style>img.middle {vertical-align:middle;}></style>";
          $alert .= "<img class='middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/ok.png'>&nbsp;";
          $alert .= __("GLPI is OK", "mydashboard");
@@ -908,7 +894,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
    private static function getTimePerTech($params) {
       global $DB;
 
-      $time_per_tech = array();
+      $time_per_tech = [];
       $months        = Toolbox::getMonthsOfYearArray();
 
       $mois = intval(strftime("%m") - 1);
@@ -918,7 +904,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
       }
 
       $groups             = implode(",", $_SESSION['glpigroups']);
-      $techlist           = array();
+      $techlist           = [];
       $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
                             . "FROM `glpi_groups_users` "
                             . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
@@ -934,15 +920,21 @@ class PluginMydashboardInfotel extends CommonGLPI {
       $current_month = date("m");
       foreach ($months as $key => $month) {
 
-         if ($key > $current_month && $year == date("Y")) break;
+         if ($key > $current_month && $year == date("Y")) {
+            break;
+         }
 
          $next = $key + 1;
 
          $month_tmp = $key;
          $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
 
-         if (strlen($key) == 1) $month_tmp = "0" . $month_tmp;
-         if (strlen($next) == 1) $next = "0" . $next;
+         if (strlen($key) == 1) {
+            $month_tmp = "0" . $month_tmp;
+         }
+         if (strlen($next) == 1) {
+            $next = "0" . $next;
+         }
 
          if ($key == 0) {
             $year      = $year - 1;
@@ -1000,14 +992,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
    static function TotalTpsPassesArrondis($a_arrondir) {
 
       $tranches_seuil   = 0.002;
-      $tranches_arrondi = array(0, 0.25, 0.5, 0.75, 1);
+      $tranches_arrondi = [0, 0.25, 0.5, 0.75, 1];
 
       $result = 0;
 
       $partie_entiere = floor($a_arrondir);
       $reste          = $a_arrondir - $partie_entiere + 10; // Le + 10 permet de pallier é un probléme de comparaison (??) par la suite.
       /* Initialisation des tranches majorées du seuil supplémentaire. */
-      $tranches_majorees = array();
+      $tranches_majorees = [];
       for ($i = 0; $i < count($tranches_arrondi); $i++) {
          // Le + 10 qui suit permet de pallier é un probléme de comparaison (??) par la suite.
          $tranches_majorees[] = $tranches_arrondi[$i] + $tranches_seuil + 10;
@@ -1061,13 +1053,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
       }
       curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_HEADER, 0);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
       curl_setopt($ch, CURLOPT_COOKIEFILE, "cookiefile");
-      curl_setopt($ch, CURLOPT_COOKIEJAR, "cookiefile"); # SAME cookiefile 
+      curl_setopt($ch, CURLOPT_COOKIEJAR, "cookiefile"); // SAME cookiefile
 
       //Do we have post field to send?
       if (!empty($options["post"])) {
@@ -1077,7 +1069,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $post .= $key . '=' . $value . '&';
          }
          rtrim($post, '&');
-         curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type:application/x-www-form-urlencoded"));
+         curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:application/x-www-form-urlencoded"]);
          curl_setopt($ch, CURLOPT_POST, true);
          curl_setopt($ch, CURLOPT_POSTREDIR, 2);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
@@ -1109,8 +1101,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
       $data = curl_exec($ch);
       //}
 
-      if (
-         //!$options["download"] &&
+      if (//!$options["download"] &&
       !$data
       ) {
          $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -1123,8 +1114,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
       //if ($options["download"]) {
       //fclose($fp);
       //}
-      if (
-         //!$options["download"] &&
+      if (//!$options["download"] &&
       $data
       ) {
          return $data;
