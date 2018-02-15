@@ -160,7 +160,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
       $now = date('Y-m-d H:i:s');
       $wl = "";
-      $wl = $this->getPublicCSS();
+      //$wl = $this->getPublicCSS();
 
       if (!$widget) {
          $wl .= "<div class='weather_block'>";
@@ -197,7 +197,7 @@ class PluginMydashboardAlert extends CommonDBTM
       $result = $DB->query($query);
       $nb = $DB->numrows($result);
       $list = [];
-      $width ="";
+      $width ="width=50%";
       if ($nb) {
 
          if (!$widget) {
@@ -207,7 +207,7 @@ class PluginMydashboardAlert extends CommonDBTM
          while ($row = $DB->fetch_array($result)) {
 
             if (!$widget) {
-               $wl .= "<li>";
+               $wl .= "<li style='min-height:150px;'>";
             }
             if ($widget) {
                $width = " width=75px";
@@ -281,7 +281,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
       $now = date('Y-m-d H:i:s');
       $wl = "";
-      $wl = $this->getPublicCSS();
+      //$wl = $this->getPublicCSS();
 
       if (!$widget) {
          $wl .= "<div class='weather_block'>";
@@ -328,7 +328,7 @@ class PluginMydashboardAlert extends CommonDBTM
          while ($row = $DB->fetch_array($result)) {
 
             if (!$widget) {
-               $wl .= "<li>";
+               $wl .= "<li style='min-height:150px;'>";
             }
             if ($widget) {
                $width = " width=55px";
@@ -402,7 +402,8 @@ class PluginMydashboardAlert extends CommonDBTM
 
       $now = date('Y-m-d H:i:s');
 
-      $wl = $this->getPublicCSS();
+      $wl = "";
+      //$wl = $this->getPublicCSS();
 
       if (!$widget) {
          $wl .= "<div class='weather_block'>";
@@ -470,7 +471,7 @@ class PluginMydashboardAlert extends CommonDBTM
             }
 
             if (!$widget) {
-               $wl .= "<li>";
+               $wl .= "<li style='min-height:150px;'>";
             }
             //if ($widget) {
             //   $width = " width=55px";
@@ -492,7 +493,7 @@ class PluginMydashboardAlert extends CommonDBTM
                $type = "sun";
             }
 
-            $wl .= "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/pics/{$type}.png' width='95%'/>";
+            $wl .= "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/pics/{$type}.png' width='50%'/>";
             $wl .= "</td>";
             $wl .= "<td valign='top'>";
             $wl .= "<h3>";
