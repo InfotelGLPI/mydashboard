@@ -365,14 +365,13 @@ li.plugin_mydashboard_menuDashboardListItem:hover{
 }
 
 .sDashboardWidget {
-  /* height : 250px;
-    -webkit-border-radius: 4px 4px;
+    /*-webkit-border-radius: 4px 4px;
     -moz-border-radius: 4px 4px;
     -o-border-radius: 4px 4px;
     -ms-border-radius: 4px 4px;
     border-radius: 4px 4px;
     box-shadow: 2px 3px 9px -3px rgba(0, 0, 0, 0.5);
-    border:rgba(230, 230, 230) 1px solid;
+    border:rgba(230, 230, 230) 1px solid;*/
     height:300px;
     width:100%;
 }
