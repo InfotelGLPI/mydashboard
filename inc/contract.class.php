@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -29,26 +29,31 @@
  */
 class PluginMydashboardContract
 {
+   static function getTypeName($nb=0) {
+      return __('Contract');
+   }
    /**
     * @return array
     */
-   function getWidgetsForItem() {
+   function getWidgetsForItem()
+   {
       if (Session::haveRight("contract", READ)) {
-         return [
+         return array(
             PluginMydashboardMenu::$GLOBAL_VIEW =>
-               [
-                  "contractwidget" => Contract::getTypeName(1)
-               ]
-         ];
+               array(
+                  "contractwidget" => Contract::getTypeName(1) . "&nbsp;<i class='fa fa-table'></i>"
+               )
+         );
       }
-      return [];
+      return array();
    }
 
    /**
     * @param $widgetId
     * @return Nothing
     */
-   function getWidgetContentForItem($widgetId) {
+   function getWidgetContentForItem($widgetId)
+   {
       switch ($widgetId) {
          case "contractwidget":
             return self::showCentral();
@@ -62,7 +67,8 @@ class PluginMydashboardContract
     *
     * @return Nothing (display)
     **/
-   static function showCentral() {
+   static function showCentral()
+   {
       global $DB, $CFG_GLPI;
 
       if (!Session::haveRight("contract", READ)) {
@@ -136,68 +142,69 @@ class PluginMydashboardContract
       $result = $DB->query($query);
       $contractpre30 = $DB->result($result, 0, 0);
 
-      //      echo "<table class='tab_cadrehov'>";
-      //      echo "<tr><th colspan='2'>";
-      //      echo "<a href=\"".$CFG_GLPI["root_doc"]."/front/contract.php?reset=reset\">".
-      //             self::getTypeName(1)."</a></th></tr>";
+//      echo "<table class='tab_cadrehov'>";
+//      echo "<tr><th colspan='2'>";
+//      echo "<a href=\"".$CFG_GLPI["root_doc"]."/front/contract.php?reset=reset\">".
+//             self::getTypeName(1)."</a></th></tr>";
 
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetId("contractwidget");
-      $widget->setWidgetTitle("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset\">" .
-         Contract::getTypeName(1) . "</a>");
+      $widget->setWidgetTitle("<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset\">" .
+         Contract::getTypeName(2) . "</a>");
 
-      $body = [];
+      $body = array();
 
       $options['reset'] = 'reset';
       $options['sort'] = 12;
       $options['order'] = 'DESC';
       $options['start'] = 0;
 
-      $options['criteria'][0] = ['field' => 12,
+      $options['criteria'][0] = array('field' => 12,
          'value' => '<0',
-         'searchtype' => 'contains'];
-      $options['criteria'][1] = ['field' => 12,
+         'searchtype' => 'contains');
+      $options['criteria'][1] = array('field' => 12,
          'link' => 'AND',
          'value' => '>-30',
-         'searchtype' => 'contains'];
+         'searchtype' => 'contains');
 
-      $body[] = ["<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
+
+      $body[] = array("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" .
          __('Contracts expired in the last 30 days') . "</a>",
          $contract0
-      ];
+      );
       $options['criteria'][0]['value'] = 0;
       $options['criteria'][1]['value'] = '<7';
-      $body[] = ["<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
+      $body[] = array("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" .
          __('Contracts expiring in less than 7 days') . "</a>",
          $contract7
-      ];
+      );
 
       $options['criteria'][0]['value'] = '>6';
       $options['criteria'][1]['value'] = '<30';
-      $body[] = ["<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
+      $body[] = array("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" .
          __('Contracts expiring in less than 30 days') . "</a>",
          $contract30
-      ];
+      );
       $options['criteria'][0]['field'] = 13;
       $options['criteria'][0]['value'] = '>0';
       $options['criteria'][1]['field'] = 13;
       $options['criteria'][1]['value'] = '<7';
-      $body[] = ["<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
+      $body[] = array("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" .
          __('Contracts where notice begins in less than 7 days') . "</a>",
          $contractpre7
-      ];
+      );
 
       $options['criteria'][0]['value'] = '>6';
       $options['criteria'][1]['value'] = '<30';
-      $body[] = ["<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
+      $body[] = array("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" .
          __('Contracts where notice begins in less than 30 days') . "</a>",
          $contractpre30
-      ];
+      );
 
       $widget->setTabDatas($body);
 

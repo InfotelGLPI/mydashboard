@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -34,35 +34,37 @@ class PluginMydashboardChange
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0) {
+   static function getTypeName($nb = 0)
+   {
       return __('Dashboard', 'mydashboard');
    }
 
    /**
     * @return array
     */
-   function getWidgetsForItem() {
-      $array = [];
-      $showchange = Session::haveRightsOr('change', [Change::READALL, Change::READMY]);
+   function getWidgetsForItem()
+   {
+      $array = array();
+      $showchange = Session::haveRightsOr('change', array(Change::READALL, Change::READMY));
 
       if ($showchange) {
-         $array = [
+         $array = array(
             PluginMydashboardMenu::$CHANGE_VIEW =>
-               [
-                  "changeprocesswidget" => __('Changes to be processed', 'mydashboard'),
-                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard')
-               ],
+               array(
+                  "changeprocesswidget" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+               ),
             PluginMydashboardMenu::$GROUP_VIEW =>
-               [
-                  "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard'),
-                  "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard')
+               array(
+                  "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                  "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
 
-               ],
+               ),
             PluginMydashboardMenu::$GLOBAL_VIEW =>
-               [
-                  "changecountwidget" => __('Change followup', 'mydashboard')
-               ]
-         ];
+               array(
+                  "changecountwidget" => __('Change followup', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+               )
+         );
       }
       return $array;
    }
@@ -71,8 +73,9 @@ class PluginMydashboardChange
     * @param $widgetId
     * @return PluginMydashboardDatatable
     */
-   function getWidgetContentForItem($widgetId) {
-      $showchange = Session::haveRightsOr('change', [Change::READALL, Change::READMY]);
+   function getWidgetContentForItem($widgetId)
+   {
+      $showchange = Session::haveRightsOr('change', array(Change::READALL, Change::READMY));
 
       if ($showchange) {
          switch ($widgetId) {
@@ -101,13 +104,18 @@ class PluginMydashboardChange
     * @param bool $showgroupchanges
     * @return PluginMydashboardDatatable
     */
-   static function showCentralList($start, $status = "process", $showgroupchanges = true) {
+   static function showCentralList($start, $status = "process", $showgroupchanges = true)
+   {
       global $DB, $CFG_GLPI;
 
-      $output = [];
+      $output = array();
       //We declare our new widget
       $widget = new PluginMydashboardDatatable();
-      $widget->setWidgetTitle(Html::makeTitle(__('Changes to be processed', 'mydashboard'), 0, 0));
+      if ($status == "waiting"){
+         $widget->setWidgetTitle(Html::makeTitle(__('Changes on pending status', 'mydashboard'), 0, 0));
+      } else {
+         $widget->setWidgetTitle(Html::makeTitle(__('Changes to be processed', 'mydashboard'), 0, 0));
+      }
       $group = ($showgroupchanges) ? "group" : "";
       $widget->setWidgetId("change" . $status . "widget" . $group);
       //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
@@ -115,7 +123,7 @@ class PluginMydashboardChange
       $widget->setOption("bFilter", false);
       $widget->setOption("bInfo", false);
 
-      if (!Session::haveRightsOr('change', [Change::READALL, Change::READMY])) {
+      if (!Session::haveRightsOr('change', array(Change::READALL, Change::READMY))) {
          return false;
       }
 
@@ -124,6 +132,7 @@ class PluginMydashboardChange
       $search_assign = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_changes_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
       $is_deleted = " `glpi_changes`.`is_deleted` = 0 ";
+
 
       if ($showgroupchanges) {
          $search_users_id = " 0 = 1 ";
@@ -162,6 +171,7 @@ class PluginMydashboardChange
                              AND (`status` IN ('" . implode("','", Change::getProcessStatusArray()) . "')) " .
                getEntitiesRestrictRequest("AND", "glpi_changes");
             break;
+
 
          default :
             $query .= "WHERE $is_deleted
@@ -296,6 +306,7 @@ class PluginMydashboardChange
             }
          }
 
+
          if ($number) {
             $output['header'][] = __('');
             $output['header'][] = __('Requester');
@@ -305,6 +316,7 @@ class PluginMydashboardChange
                $output['body'][] = self::showVeryShort($ID, $forcetab);
             }
          }
+
 
       }
 
@@ -317,9 +329,7 @@ class PluginMydashboardChange
       }
       if (isset($output['body'])) {
          $widget->setTabDatas($output['body']);
-      } else {
-         $widget->setTabDatas([]);
-      }
+      } else $widget->setTabDatas(array());
 
       return $widget;
 
@@ -330,11 +340,12 @@ class PluginMydashboardChange
     * @param string $forcetab
     * @return array
     */
-   static function showVeryShort($ID, $forcetab = '') {
+   static function showVeryShort($ID, $forcetab = '')
+   {
       global $CFG_GLPI;
 
       $colnum = 0;
-      $output = [];
+      $output = array();
 
       // Prints a job in short form
       // Should be called in a <table>-segment
@@ -364,8 +375,8 @@ class PluginMydashboardChange
                   if ($viewusers) {
                      $name = sprintf(__('%1$s %2$s'), $name,
                         Html::showToolTip($userdata["comment"],
-                           ['link' => $userdata["link"],
-                              'display' => false]));
+                           array('link' => $userdata["link"],
+                              'display' => false)));
                   }
                   $output[$colnum] .= $name . "</div>";
                } else {
@@ -396,8 +407,8 @@ class PluginMydashboardChange
 
          $link = sprintf(__('%1$s %2$s'), $link,
             Html::showToolTip($change->fields['content'],
-               ['applyto' => 'change' . $change->fields["id"] . $rand,
-                  'display' => false]));
+               array('applyto' => 'change' . $change->fields["id"] . $rand,
+                  'display' => false)));
          //echo $link;
          //$colnum++;
          $output[$colnum] = $link;
@@ -409,7 +420,8 @@ class PluginMydashboardChange
     * @param bool $foruser
     * @return PluginMydashboardDatatable
     */
-   static function showCentralCount($foruser = false) {
+   static function showCentralCount($foruser = false)
+   {
       global $DB, $CFG_GLPI;
 
       // show a tab with count of jobs in the central and give link
@@ -420,7 +432,7 @@ class PluginMydashboardChange
          $foruser = true;
       }
 
-      $output = [];
+      $output = array();
 
       $query = "SELECT `status`,
                        COUNT(*) AS COUNT
@@ -462,7 +474,7 @@ class PluginMydashboardChange
       $result = $DB->query($query);
       $result_deleted = $DB->query($query_deleted);
 
-      $status = [];
+      $status = array();
       foreach (Change::getAllStatusArray() as $key => $val) {
          $status[$key] = 0;
       }
@@ -485,7 +497,8 @@ class PluginMydashboardChange
       $options['link'][0] = 'AND';
       $options['reset'] = 'reset';
 
-      $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
+
+      $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
 
       $output['header'][] = _n('Change', 'Changes', 2);
@@ -505,6 +518,7 @@ class PluginMydashboardChange
       $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
       $output['body'][$count][1] = $number_deleted;
+
 
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetTitle($output['title']);

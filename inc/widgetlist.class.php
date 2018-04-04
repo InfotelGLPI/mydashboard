@@ -21,14 +21,13 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
  * Class PluginMydashboardWidgetlist
  */
-class PluginMydashboardWidgetlist
-{
+class PluginMydashboardWidgetlist {
    //put your code here
 
    /**
@@ -50,12 +49,14 @@ class PluginMydashboardWidgetlist
     *  'pluginN' => ...
     * )
     * By default it return a filtered array, filtered in two levels, profile and user preference.
+    *
     * @param boolean $filtered default true, if set to false all widgets found will be in the list
+    *
     * @return mixed array
     */
-   public function getList($filtered = true) {
+   public function getList($filtered = true, $active_profile = -1, $profile_interface = "central") {
       global $PLUGIN_HOOKS;
-      $widgets = [];
+      $widgets = array();
 
       //        We get hooked plugin widgets
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
@@ -63,28 +64,37 @@ class PluginMydashboardWidgetlist
       }
 
       //We add classes for GLPI core widgets
-      $widgets['GLPI'] = ["PluginMydashboardReminder",
-         "PluginMydashboardPlanning",
-         "PluginMydashboardEvent",
-         "PluginMydashboardProblem",
-         "PluginMydashboardChange",
-         "PluginMydashboardTicket",
-         "PluginMydashboardRSSFeed",
-         "PluginMydashboardContract",
-         "PluginMydashboardKnowbaseItem"];
+      $widgets['GLPI'] = array("PluginMydashboardReminder",
+                               "PluginMydashboardPlanning",
+                               "PluginMydashboardEvent",
+                               "PluginMydashboardProblem",
+                               "PluginMydashboardChange",
+                               "PluginMydashboardTicket",
+                               "PluginMydashboardRSSFeed",
+                               "PluginMydashboardContract",
+                               "PluginMydashboardKnowbaseItem");
       //We run through the hook to get all widget IDs and Titles declared in all classes
       foreach ($widgets as $plugin => $pluginclasses) {
-         $widgets[$plugin] = [];
+         $widgets[$plugin] = array();
          foreach ($pluginclasses as $pluginclass) {
-            if (!class_exists($pluginclass)) {
-               continue;
-            }
-            $widgets[$plugin][$pluginclass] = [];
+            if (!class_exists($pluginclass)) continue;
             $item = getItemForItemtype($pluginclass);
-            //We try get the list of widgets for this class
-            if ($item && is_callable([$item, 'getWidgetsForItem'])) {
-               $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
-            }
+
+//            if ($item->canview) {
+               $widgets[$plugin][$pluginclass] = array();
+               //We try get the list of widgets for this class
+               if ($item && is_callable(array($item, 'getWidgetsForItem'))) {
+                  if (isset($item->interfaces)) {
+                     if (is_array($item->interfaces) && in_array($profile_interface, $item->interfaces)) {
+                        $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
+                     } else {
+                        unset($widgets[$plugin]);
+                     }
+                  } else if (!isset($item->interfaces)) {
+                     $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
+                  }
+               }
+//            }
          }
       }
 
@@ -92,7 +102,7 @@ class PluginMydashboardWidgetlist
          //Plugin filtered by user (blacklist)
          //Blacklist
          //Used when user doesn't want to display widgets of a plugin
-         $ublacklist = new PluginMydashboardPreferenceUserBlacklist();
+         $ublacklist           = new PluginMydashboardPreferenceUserBlacklist();
          $filters['blacklist'] = $ublacklist->getBlacklistForUser(Session::getLoginUserID());
 
          foreach ($widgets as $plugin => $widgetclasses) {
@@ -103,14 +113,15 @@ class PluginMydashboardWidgetlist
          }
 
          //Widget filtered by profile (authorized list)
-         $pauthlist = new PluginMydashboardProfileAuthorizedWidget();
-         $filters['authorized'] = $pauthlist->getAuthorizedListForProfile($_SESSION['glpiactiveprofile']['id']);
+         $pauthlist             = new PluginMydashboardProfileAuthorizedWidget();
+         $profile               = ($active_profile != -1) ? $active_profile : $_SESSION['glpiactiveprofile']['id'];
+         $filters['authorized'] = $pauthlist->getAuthorizedListForProfile($profile);
 
          //getAuthorizedListForProfile() return false when the profile can see all the widgets
          if (is_array($filters['authorized'])) {
             //If nothing is authorized
             if (empty($filters['authorized'])) {
-               $widgets = [];
+               $widgets = array();
             } else {
                foreach ($widgets as $plugin => & $widgetclasses) {
                   foreach ($widgetclasses as $widgetclass => & $widgetlist) {
@@ -126,8 +137,10 @@ class PluginMydashboardWidgetlist
 
    /**
     * Removes all $widgetlist members that are not in $authorized, recursively
+    *
     * @param mixed $authorized , an array of authorized widgets IDs (names)
     * @param mixed $widgetlist , an array of widgets IDs or category
+    *
     * @return array, widgetlist cleaned
     */
    private function cleanList($authorized, $widgetlist) {

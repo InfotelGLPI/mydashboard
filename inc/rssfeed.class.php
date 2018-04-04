@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -30,23 +30,27 @@
 class PluginMydashboardRSSFeed
 {
 
+   static function getTypeName($nb=0) {
+      return __('RSS');
+   }
    /**
     * @return array
     */
-   function getWidgetsForItem() {
+   function getWidgetsForItem()
+   {
 
-      $array = [];
+      $array = array();
 
       if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
-         $array = [
+         $array = array(
             PluginMydashboardMenu::$RSS_VIEW =>
-               [
-                  "rssfeedpersonalwidget" => _n('Personal RSS feed', 'Personal RSS feeds', 2)
-               ]
-         ];
+               array(
+                  "rssfeedpersonalwidget" => _n('Personal RSS feed', 'Personal RSS feeds', 2) . "&nbsp;<i class='fa fa-table'></i>"
+               )
+         );
       }
       if (Session::haveRight("rssfeed_public", READ)) {
-         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = _n('Public RSS feed', 'Public RSS feeds', 2);
+         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = _n('Public RSS feed', 'Public RSS feeds', 2) . "&nbsp;<i class='fa fa-table'></i>";
       }
       return $array;
    }
@@ -55,7 +59,8 @@ class PluginMydashboardRSSFeed
     * @param $widgetId
     * @return Nothing
     */
-   function getWidgetContentForItem($widgetId) {
+   function getWidgetContentForItem($widgetId)
+   {
       switch ($widgetId) {
          case "rssfeedpersonalwidget":
             return PluginMydashboardRSSFeed::showListForCentral();
@@ -75,10 +80,11 @@ class PluginMydashboardRSSFeed
     *
     * @return Nothing (display function)
     **/
-   static function showListForCentral($personal = true) {
+   static function showListForCentral($personal = true)
+   {
       global $DB, $CFG_GLPI;
 
-      $output = [];
+      $output = array();
 
       $users_id = Session::getLoginUserID();
       $today = date('Y-m-d');
@@ -97,7 +103,7 @@ class PluginMydashboardRSSFeed
                          AND `glpi_rssfeeds`.`is_active` = '1'
                    ORDER BY `glpi_rssfeeds`.`name`";
 
-         $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Personal RSS feed', 'Personal RSS feeds', 2) . "</a>";
+         $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Personal RSS feed', 'Personal RSS feeds', 2) . "</a>";
 
       } else {
          // Show public rssfeeds / not mines : need to have access to public rssfeeds
@@ -119,14 +125,14 @@ class PluginMydashboardRSSFeed
                    ORDER BY `glpi_rssfeeds`.`name`";
 
          if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
-            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Public RSS feed', 'Public RSS feeds', 2) . "</a>";
+            $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Public RSS feed', 'Public RSS feeds', 2) . "</a>";
          } else {
             $titre = _n('Public RSS feed', 'Public RSS feeds', 2);
          }
       }
 
       $result = $DB->query($query);
-      $items = [];
+      $items = array();
       $rssfeed = new RSSFeed();
       if ($nb = $DB->numrows($result)) {
          while ($data = $DB->fetch_assoc($result)) {
@@ -148,17 +154,17 @@ class PluginMydashboardRSSFeed
       if (RSSFeed::canCreate()) {
          $output['title'] .= "<span class=\"rssfeed_right\">";
          $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.form.php\">";
-         $output['title'] .= "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/plus.png\" alt=\"" . __s('Add') . "\" title=\"" . __s('Add') . "\"></a></span>";
+         $output['title'] .= "<i class='fa fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a></span>";
       }
 
       $count = 0;
       $output['header'][0] = __('Date');
       $output['header'][1] = __('Title');
 
-      $output['body'] = [];
+      $output['body'] = array();
 
       if ($nb) {
-         usort($items, ['SimplePie', 'sort_items']);
+         usort($items, array('SimplePie', 'sort_items'));
          foreach ($items as $item) {
             $output['body'][$count][0] = Html::convDateTime($item->get_date('Y-m-d H:i:s'));
             $link = $item->feed->get_permalink();
@@ -179,8 +185,8 @@ class PluginMydashboardRSSFeed
             }
             $output['body'][$count][1] .= "</div>";
             $output['body'][$count][1] .= Html::showToolTip(Toolbox::unclean_html_cross_side_scripting_deep($item->get_content()),
-               ['applyto' => "rssitem$rand",
-                  'display' => false]);
+               array('applyto' => "rssitem$rand",
+                  'display' => false));
             $count++;
          }
       }

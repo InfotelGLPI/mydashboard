@@ -21,18 +21,18 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
  * This class extends GLPI class planning to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardPlanning
-{
+class PluginMydashboardPlanning {
 
    // Should return the localized name of the type
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -44,7 +44,7 @@ class PluginMydashboardPlanning
     * @return bool
     */
    static function canCreate() {
-      return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE]);
+      return Session::haveRightsOr('plugin_mydashboard', array(CREATE, UPDATE));
    }
 
    /**
@@ -61,18 +61,19 @@ class PluginMydashboardPlanning
    function getWidgetsForItem() {
 
       if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
-         return [
+         return array(
             PluginMydashboardMenu::$MY_VIEW =>
-               [
-                  "planningwidget" => __('Your planning')
-               ]
-         ];
+               array(
+                  "planningwidget" => __('Your planning') . "&nbsp;<i class='fa fa-calendar'></i>",
+               )
+         );
       }
-      return [];
+      return array();
    }
 
    /**
     * @param $widgetId
+    *
     * @return Nothing
     */
    function getWidgetContentForItem($widgetId) {
@@ -96,37 +97,38 @@ class PluginMydashboardPlanning
       global $CFG_GLPI;
 
       if (!Session::haveRight(Planning::$rightname, Planning::READMY)
-         || ($who <= 0)
+          || ($who <= 0)
       ) {
          return false;
       }
 
-      $output = [];
+      $output = array();
 
-      $when = strftime("%Y-%m-%d");
+      $when  = strftime("%Y-%m-%d");
       $debut = $when;
 
       // Get begin and duration
-      $date = explode("-", $when);
-      $time = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
+      $date  = explode("-", $when);
+      $time  = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
       $begin = $time;
-      $end = $begin + DAY_TIMESTAMP;
+      $end   = $begin + 5*DAY_TIMESTAMP;
       $begin = date("Y-m-d H:i:s", $begin);
-      $end = date("Y-m-d H:i:s", $end);
-
-      $params = ['who' => $who,
-         'who_group' => 0,
-         'whogroup' => 0,
-         'begin' => $begin,
-         'end' => $end];
-      $interv = [];
+      $end   = date("Y-m-d H:i:s", $end);
+      $params = array('who'       => $who,
+                      'who_group' => 0,
+                      'whogroup'  => 0,
+                      'begin'     => $begin,
+                      'end'       => $end);
+      $interv = array();
       foreach ($CFG_GLPI['planning_types'] as $itemtype) {
          $interv = array_merge($interv, $itemtype::populatePlanning($params));
       }
       ksort($interv);
 
-      $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?uID=$who\">" . __('Your planning') . "</a>";
-      $output['header'][] = '';
+      $title    = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?uID=$who\">" . __('Your planning') . "</a>";
+      $header = [__('Type'), __('Content'),__('Begin date'),__('End date')];
+      $content= [];
+      $i     = 0;
       if (count($interv) > 0) {
          foreach ($interv as $key => $val) {
             if ($val["begin"] < $begin) {
@@ -135,81 +137,21 @@ class PluginMydashboardPlanning
             if ($val["end"] > $end) {
                $val["end"] = $end;
             }
-            $output['body'][] = self::displayPlanningItem($val, $who, 'in');
+            $item = new $val['itemtype'];
+            $content[$i]["type"] = $item->getTypeName();
+            $content[$i]["content"] = Planning::displayPlanningItem($val, $who, 'in', false);
+            $content[$i]["begin"] = Html::convDateTime($val["begin"]);
+            $content[$i]["end"] = Html::convDateTime($val["end"]);
+            $i++;
          }
       }
 
-      $output['name'] = "planningwidget";
+      $widget = new PluginMydashboardDatatable();
+      $widget->setWidgetTitle($title);
+      $widget->setWidgetId("planningwidget");
+      $widget->setTabNames($header);
+      $widget->setTabDatas($content);
 
-      if (!empty($output)) {
-         $widget = new PluginMydashboardDatatable();
-         $widget->setWidgetTitle($output['title']);
-         $widget->setWidgetId("planningwidget");
-         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
-         $widget->setTabNames($output['header']);
-         if (isset($output['body'])) {
-            $widget->setTabDatas($output['body']);
-         } else {
-            $widget->setTabDatas([]);
-         }
-         //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
-         $widget->setOption("bPaginate", false);
-         $widget->setOption("bFilter", false);
-         $widget->setOption("bInfo", false);
-
-         return $widget;
-      }
-
-      return $output;
+      return $widget;
    }
-
-   /**
-    * Display a Planning Item
-    *
-    * @param $val       Array of the item to display
-    * @param $who             ID of the user (0 if all)
-    * @param position|string $type position of the item in the time block (in, through, begin or end)
-    *                         (default '')
-    * @param complete|int $complete complete display (more details) (default 0)
-    * @return Nothing
-    */
-   static function displayPlanningItem(array $val, $who, $type = "", $complete = 0) {
-
-      $colnum = 0;
-      $output = [];
-
-      $color = "#e4e4e4";
-      if (isset($val["state"])) {
-         switch ($val["state"]) {
-            case 0 :
-               $color = "#efefe7"; // Information
-               break;
-
-            case 1 :
-               $color = "#fbfbfb"; // To be done
-               break;
-
-            case 2 :
-               $color = "#e7e7e2"; // Done
-               break;
-         }
-      }
-      $output[$colnum] = "<div style=' margin:auto; text-align:left; border:1px dashed #cccccc;
-             background-color: $color; font-size:9px; width:98%;'>";
-
-      // Plugins case
-      if (isset($val['itemtype'])
-         && !empty($val['itemtype'])
-      ) {
-         ob_start();
-         echo $val['itemtype']::displayPlanningItem($val, $who, $type, $complete);
-         $output[$colnum] .= ob_get_contents();
-         ob_end_clean();
-      }
-
-      $output[$colnum] .= "</div>";
-
-      return $output;
-   }
-
 }

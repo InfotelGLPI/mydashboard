@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 if (!defined('GLPI_ROOT')) {
@@ -39,7 +39,8 @@ class PluginMydashboardEvent extends Event
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0) {
+   static function getTypeName($nb = 0)
+   {
       return _n('Log', 'Logs', $nb);
    }
 
@@ -47,7 +48,8 @@ class PluginMydashboardEvent extends Event
     * PluginMydashboardEvent constructor.
     * @param array $options
     */
-   function __construct($options = []) {
+   function __construct($options = array())
+   {
       parent::__construct();
    }
 
@@ -55,19 +57,20 @@ class PluginMydashboardEvent extends Event
    /**
     * @return array
     */
-   function getWidgetsForItem() {
-      $array = [];
+   function getWidgetsForItem()
+   {
+      $array = array();
       if (Session::haveRight("logs", READ)) {
-         $array = [
-            PluginMydashboardMenu::$MY_VIEW =>
-               [
-                  "eventwidgetpersonnal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
-               ],
+         $array = array(
+//            PluginMydashboardMenu::$MY_VIEW =>
+//               array(
+//                  "eventwidgetpersonnal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
+//               ),
             PluginMydashboardMenu::$GLOBAL_VIEW =>
-               [
-                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
-               ]
-         ];
+               array(
+                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "&nbsp;<i class='fa fa-table'></i>"
+               )
+         );
       }
       return $array;
    }
@@ -76,7 +79,8 @@ class PluginMydashboardEvent extends Event
     * @param $widgetId
     * @return PluginMydashboardDatatable|void
     */
-   function getWidgetContentForItem($widgetId) {
+   function getWidgetContentForItem($widgetId)
+   {
       if (Session::haveRight("logs", READ)) {
          switch ($widgetId) {
             case "eventwidgetpersonnal":
@@ -95,7 +99,8 @@ class PluginMydashboardEvent extends Event
     *
     * @return string|void
     */
-   static function displayItemLogID($type, $items_id) {
+   static function displayItemLogID($type, $items_id)
+   {
       global $CFG_GLPI;
       $out = "";
       if (($items_id == "-1") || ($items_id == "0")) {
@@ -149,7 +154,8 @@ class PluginMydashboardEvent extends Event
     *
     * @return PluginMydashboardDatatable|void
     */
-   static function showForUser($user = "") {
+   static function showForUser($user = "")
+   {
       global $DB, $CFG_GLPI;
 
       // Show events from $result in table form
@@ -186,17 +192,17 @@ class PluginMydashboardEvent extends Event
       //$output['body'] =  "<br><div class='spaced'><table class='tab_cadrehov'>";
       //echo "<tr><th colspan='5'>";
       //TRANS: %d is the number of item to display
-      $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
+      $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
          sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
       //echo "</th></tr>";
 
       $output['header'][] = __('Source');
-      $output['header'][] = '';
+      $output['header'][] = __('id');
       $output['header'][] = __('Date');
       $output['header'][] = __('Service');
       $output['header'][] = __('Message');
 
-      $output['body'] = [];
+      $output['body'] = array();
 
       while ($i < $number) {
          $ID = $DB->result($result, $i, "id");
@@ -245,4 +251,3 @@ class PluginMydashboardEvent extends Event
 
 
 }
-

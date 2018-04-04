@@ -21,10 +21,11 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
-function usage() {
+function usage()
+{
 
    echo "Usage:\n";
    echo "\t" . $_SERVER["argv"][0] . " [--args]\n";
@@ -55,8 +56,8 @@ $log = fopen($logfilename, "at");
 fwrite($log, date("r") . " " . $_SERVER["argv"][0] . " started\n");
 
 if (function_exists("pcntl_fork")) {
-   // Unix/Linux
-   $pids = [];
+   # Unix/Linux
+   $pids = array();
 
    $i++;
    $pid = pcntl_fork();
@@ -69,7 +70,7 @@ if (function_exists("pcntl_fork")) {
    } else {
       $cmd = "php -q -d -f insert_stock_tickets.php";
 
-      $out = [];
+      $out = array();
       exec($cmd, $out, $ret);
       foreach ($out as $line) {
          fwrite($log, $line . "\n");
@@ -89,9 +90,9 @@ if (function_exists("pcntl_fork")) {
       }
    }
 } else {
-   // Windows - No fork, so Only one process :(
+   # Windows - No fork, so Only one process :(
    $cmd = "php -q -d -f insert_stock_tickets.php";
-   $out = [];
+   $out = array();
    $test = exec($cmd, $out, $ret);
    foreach ($out as $line) {
       fwrite($log, $line . "\n");

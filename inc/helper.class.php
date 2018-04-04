@@ -21,14 +21,13 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
  * This helper class provides some static functions that are useful for widget class
  */
-class PluginMydashboardHelper
-{
+class PluginMydashboardHelper {
 
    /**
     * get the delay between two automatic refreshing
@@ -79,14 +78,14 @@ class PluginMydashboardHelper
 
    /**
     * Get a specific field of the config
+    *
     * @param string $fieldname
+    *
     * @return mixed
     */
    private static function getConfigField($fieldname) {
       $config = new PluginMydashboardConfig();
-      if (!$config->getFromDB(Session::getLoginUserID())) {
-         $config->initConfig();
-      }
+      if (!$config->getFromDB(Session::getLoginUserID())) $config->initConfig();
       $config->getFromDB("1");
 
       return (isset($config->fields[$fieldname])) ? $config->fields[$fieldname] : 0;
@@ -94,14 +93,14 @@ class PluginMydashboardHelper
 
    /**
     * Get a specific field of the config
+    *
     * @param string $fieldname
+    *
     * @return mixed
     */
    private static function getPreferenceField($fieldname) {
       $preference = new PluginMydashboardPreference();
-      if (!$preference->getFromDB(Session::getLoginUserID())) {
-         $preference->initPreferences(Session::getLoginUserID());
-      }
+      if (!$preference->getFromDB(Session::getLoginUserID())) $preference->initPreferences(Session::getLoginUserID());
       $preference->getFromDB(Session::getLoginUserID());
 
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
@@ -110,27 +109,31 @@ class PluginMydashboardHelper
    /**
     * Get a form header, this form header permit to update data of the widget
     * with parameters of this form
-    * @param int $widgetId
+    *
+    * @param int  $widgetId
     * @param bool $onsubmit
+    *
     * @return string , like '<form id=...>'
     */
-   static function getFormHeader($widgetId, $onsubmit = false) {
+   static function getFormHeader($widgetId, $gsid, $onsubmit = false) {
       $formId = uniqid('form');
       if ($onsubmit) {
          $form = "<form id='" . $formId . "' action='' "
-            . "onsubmit=\"mydashboard.updateOption('" . $widgetId . "','" . $formId . "'); return false;\">";
+                 . "onsubmit=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "'); return false;\">";
       } else {
          $form = "<form id='" . $formId . "' action='' onsubmit='return false;' ";
-         $form .= "onchange=\"mydashboard.updateOption('" . $widgetId . "','" . $formId . "');\">";
+         $form .= "onchange=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "');\">";
       }
       return $form;
    }
 
    /**
     * Get a link to be used as a widget title
-    * @param $pathfromrootdoc
-    * @param $text
+    *
+    * @param        $pathfromrootdoc
+    * @param        $text
     * @param string $title
+    *
     * @return string
     */
    static function getATag($pathfromrootdoc, $text, $title = "") {
@@ -154,19 +157,17 @@ class PluginMydashboardHelper
    /**
     * Extract the content of the HTML script tag in an array 2D (line, column),
     * Useful for datatables
+    *
     * @param array 2D $arrayToEval
+    *
     * @return array of string (each string is a script line)
     */
    static function extractScriptsFromArray($arrayToEval) {
-      $scripts = [];
+      $scripts = array();
       if (is_array($arrayToEval)) {
-         if (!is_array($arrayToEval)) {
-            return $scripts;
-         }
+         if (!is_array($arrayToEval)) return $scripts;
          foreach ($arrayToEval as $array) {
-            if (!is_array($array)) {
-               break;
-            }
+            if (!is_array($array)) break;
             foreach ($array as $arrayLine) {
                $scripts = array_merge($scripts, self::extractScriptsFromString($arrayLine));
             }
@@ -177,13 +178,15 @@ class PluginMydashboardHelper
 
    /**
     * Get an array of scripts found in a string
+    *
     * @param string $stringToEval , a HTML string with potentially script tags
+    *
     * @return array of string
     */
    static function extractScriptsFromString($stringToEval) {
-      $scripts = [];
+      $scripts = array();
       if (gettype($stringToEval) == "string") {
-         $stringToEval = str_replace(["'", "//<![CDATA[", "//]]>"], ['"', "", ""], $stringToEval);
+         $stringToEval = str_replace(array("'", "//<![CDATA[", "//]]>"), array('"', "", ""), $stringToEval);
          //             $stringToEval = preg_replace('/\s+/', ' ', $stringToEval);
 
          if (preg_match_all("/<script[^>]*>([\s\S]+?)<\/script>/i", $stringToEval, $matches)) {
@@ -200,15 +203,18 @@ class PluginMydashboardHelper
    /**
     * Get a string without scripts from stringToEval,
     * it strips script tags
+    *
     * @param string $stringToEval , the string that you want without scripts
+    *
     * @return string with no scripts
     */
    static function removeScriptsFromString($stringToEval) {
-      $stringWOScripts = "";
-      if (gettype($stringToEval) == "string") {
-         $stringWOScripts = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $stringToEval);
-      }
-      return $stringWOScripts;
+      //      $stringWOScripts = "";
+      //      if (gettype($stringToEval) == "string") {
+      //         $stringWOScripts = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $stringToEval);
+      //      }
+      //      return $stringWOScripts;
+      return $stringToEval;
    }
 
 
@@ -217,15 +223,17 @@ class PluginMydashboardHelper
     * It's used to clean Json data needed to fill a widget<br>
     * Things like "function_to_call" => "function(){...}"
     * are replaced to look like "function_to_call" => function(){}<br>
-    * This replacement cause the <b>return value</b> not being a valid Json object (<b>don't call json_decode on it</b>),
-    * but it's necessary because some jquery plugins need functions and not string of function
+    * This replacement cause the <b>return value</b> not being a valid Json object (<b>don't call json_decode on
+    * it</b>), but it's necessary because some jquery plugins need functions and not string of function
+    *
     * @param type $datas , a formatted array of datas
     * @param type $options , a formatted array of options
+    *
     * @return a string formatted in JSon (most of the time, because in real JSon you can't have function)
     */
    static function safeJsonData($datas, $options) {
-      $value_arr = [];
-      $replace_keys = [];
+      $value_arr    = array();
+      $replace_keys = array();
       foreach ($options as & $option) {
          if (is_array($option)) {
             foreach ($option as $key => & $value) {
@@ -244,11 +252,11 @@ class PluginMydashboardHelper
       }
 
       $json = str_replace($replace_keys,
-         $value_arr,
-         json_encode([
-            'data' => $datas,
-            'options' => $options
-         ]));
+                          $value_arr,
+                          json_encode(array(
+                                         'data'    => $datas,
+                                         'options' => $options
+                                      )));
 
       return $json;
    }
@@ -259,12 +267,14 @@ class PluginMydashboardHelper
     * are replaced to look like "function_to_call" => function(){}
     * This replacement cause the return not being a valid Json object (don't call json_decode on it),
     * but it's necessary because some jquery plugins need functions and not string of function
+    *
     * @param mixed $array , the array that needs to be cleaned and encoded in json
+    *
     * @return string a json encoded array
     */
    static function safeJson($array) {
-      $value_arr = [];
-      $replace_keys = [];
+      $value_arr    = array();
+      $replace_keys = array();
       foreach ($array as $key => & $value) {
 
          if (is_string($value) && strpos($value, 'function(') === 0) {
@@ -286,6 +296,7 @@ class PluginMydashboardHelper
    /**
     * @param $widgettype
     * @param $query
+    *
     * @return PluginMydashboardDatatable|PluginMydashboardHBarChart|PluginMydashboardHtml|PluginMydashboardLineChart|PluginMydashboardPieChart|PluginMydashboardVBarChart
     */
    static function getWidgetsFromDBQuery($widgettype, $query/*$widgettype,$table,$fields,$condition,$groupby,$orderby*/) {
@@ -294,46 +305,46 @@ class PluginMydashboardHelper
       if (stripos(trim($query), "SELECT") === 0) {
 
          $result = $DB->query($query);
-         $tab = [];
+         $tab    = array();
          if ($result) {
             while ($row = $DB->fetch_assoc($result)) {
                $tab[] = $row;
             }
             $linechart = false;
-            $chart = false;
+            $chart     = false;
             switch ($widgettype) {
                case 'datatable':
                case 'table' :
                   $widget = new PluginMydashboardDatatable();
                   break;
                case 'hbarchart':
-                  $chart = true;
+                  $chart  = true;
                   $widget = new PluginMydashboardHBarChart();
                   break;
                case 'vbarchart':
-                  $chart = true;
+                  $chart  = true;
                   $widget = new PluginMydashboardVBarChart();
                   break;
                case 'piechart':
-                  $chart = true;
+                  $chart  = true;
                   $widget = new PluginMydashboardPieChart();
                   break;
                case 'linechart':
                   $linechart = true;
-                  $widget = new PluginMydashboardLineChart();
+                  $widget    = new PluginMydashboardLineChart();
                   break;
             }
             //            $widget = new PluginMydashboardHBarChart();
             //        $widget->setTabNames(array('Category','Count'));
             if ($chart) {
-               $newtab = [];
+               $newtab = array();
                foreach ($tab as $key => $line) {
-                  $line = array_values($line);
+                  $line             = array_values($line);
                   $newtab[$line[0]] = $line[1];
                   unset($tab[$key]);
                }
                $tab = $newtab;
-            } else if ($linechart) {
+            } elseif ($linechart) {
                //TODO format for linechart
             } else {
                //$widget->setTabNames(array('Category','Count'));
@@ -348,5 +359,29 @@ class PluginMydashboardHelper
       }
 
       return $widget;
+   }
+
+   /*
+    * @Create an HTML drop down menu
+    *
+    * @param string $name The element name and ID
+    *
+    * @param int $selected The month to be selected
+    *
+    * @return string
+    *
+    */
+   static function YearDropdown($selected = null) {
+
+      $year = date("Y") - 3;
+      for ($i = 0; $i <= 3; $i++) {
+         $elements[$year] = $year;
+
+         $year++;
+      }
+      $opt = ['value'   => $selected,
+              'display' => false];
+
+      return Dropdown::showFromArray("year", $elements, $opt);
    }
 }

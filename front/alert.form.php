@@ -21,11 +21,11 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 include('../../../inc/includes.php');
-//var_dump($_POST);
+
 if (isset($_POST['update'])) {
    if (isset($_POST['id'])) {
       $alert = new PluginMydashboardAlert();

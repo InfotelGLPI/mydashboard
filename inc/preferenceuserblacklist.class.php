@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -36,7 +36,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * @param int $user_id , id of the user concerned
     * @return bool
     */
-   public function showForm($user_id) {
+   public function showForm($user_id)
+   {
       global $CFG_GLPI, $PLUGIN_HOOKS;
       $options['candel'] = false;
       $options['colspan'] = 1;
@@ -62,9 +63,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
                echo "<tr class='tab_bg_1'><td>" . $this->getLocalName($pluginname) . "</td>";
                echo "<td>";
                $yesno = 1;
-               if (isset($blacklist[$pluginname])) {
-                  $yesno = 0;
-               }
+               if (isset($blacklist[$pluginname])) $yesno = 0;
                Dropdown::showYesNo("pn" . $pluginname, $yesno);
                echo "</td>";
                echo "</tr>";
@@ -84,12 +83,13 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * Save a black list from the form
     * @param array $post , values
     */
-   public function save($post) {
+   public function save($post)
+   {
 
       if (isset($post) && isset($post['id'])) {
          $user_id = $post['id'];
          $currentblacklist = $this->getBlacklistForUser($user_id);
-         $newblacklist = [];
+         $newblacklist = array();
          foreach ($post as $key => $value) {
             if ($key == "id") {
                continue;
@@ -118,7 +118,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * @param int $user_id , id of user
     * @param string $plugin_name , name of the plugin
     */
-   private function saveItem($user_id, $plugin_name) {
+   private function saveItem($user_id, $plugin_name)
+   {
       global $DB;
       $query = "SELECT * "
          . "FROM `glpi_plugin_mydashboard_preferenceuserblacklists`"
@@ -138,7 +139,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * @param type $user_id
     * @param type $plugin_name
     */
-   private function deleteItem($user_id, $plugin_name) {
+   private function deleteItem($user_id, $plugin_name)
+   {
       global $DB;
       $query = "DELETE FROM `glpi_plugin_mydashboard_preferenceuserblacklists` "
          . "WHERE (`users_id` = " . $user_id . " && `plugin_name` = '" . $plugin_name . "')";
@@ -150,7 +152,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * @param int $user_id
     * @return array of string
     */
-   function getBlacklistForUser($user_id) {
+   function getBlacklistForUser($user_id)
+   {
       global $DB;
 
       $query = "SELECT `plugin_name` "
@@ -158,7 +161,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
          . "WHERE `users_id` = $user_id;";
       $result = $DB->query($query);
 
-      $tab = [];
+      $tab = array();
       while ($row = $DB->fetch_array($result)) {
          $tab[$row['plugin_name']] = $row['plugin_name'];
       }
@@ -170,7 +173,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * @param string $plugin_name
     * @return string
     */
-   private function getLocalName($plugin_name) {
+   private function getLocalName($plugin_name)
+   {
       $infos = Plugin::getInfo($plugin_name);
 
       return isset($infos['name']) ? $infos['name'] : $plugin_name;
@@ -182,7 +186,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
     * @param array $arrayAgainst
     * @return array, $arrayFrom - $arrayAgainst
     */
-   public static function arrayDiffEmulation($arrayFrom, $arrayAgainst) {
+   public static function arrayDiffEmulation($arrayFrom, $arrayAgainst)
+   {
       $arrayAgainst = array_flip($arrayAgainst);
 
       foreach ($arrayFrom as $key => $value) {

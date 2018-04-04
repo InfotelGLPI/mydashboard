@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 if (!defined('GLPI_ROOT')) {
@@ -74,8 +74,8 @@ class PluginMydashboardProfile extends CommonDBTM {
          $prof = new self();
          //85
          self::addDefaultProfileInfos($ID,
-                                      ['plugin_mydashboard'        => 0,
-                                            'plugin_mydashboard_config' => 0]);
+                                      array('plugin_mydashboard'        => 0,
+                                            'plugin_mydashboard_config' => 0));
          $prof->showForm($ID);
       }
       return true;
@@ -94,7 +94,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       foreach ($rights as $right => $value) {
          if (countElementsInTable('glpi_profilerights',
                                   "`profiles_id`='$profiles_id' AND `name`='$right'") && $drop_existing) {
-            $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
+            $profileRight->deleteByCriteria(array('profiles_id' => $profiles_id, 'name' => $right));
          }
          if (!countElementsInTable('glpi_profilerights',
                                    "`profiles_id`='$profiles_id' AND `name`='$right'")) {
@@ -115,8 +115,8 @@ class PluginMydashboardProfile extends CommonDBTM {
    static function createFirstAccess($ID) {
       //85
       self::addDefaultProfileInfos($ID,
-                                   ['plugin_mydashboard'        => 6,
-                                         'plugin_mydashboard_config' => 6], true);
+                                   array('plugin_mydashboard'        => 6,
+                                         'plugin_mydashboard_config' => 6), true);
    }
 
    //profiles modification
@@ -124,15 +124,15 @@ class PluginMydashboardProfile extends CommonDBTM {
     * @param       $ID
     * @param array $options
     */
-   function showForm($ID, $options = []) {
+   function showForm($ID, $options = array()) {
       //85
       $profile = new Profile();
       $profile->getFromDB($ID);
-      if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
+      if ($canedit = Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, PURGE))) {
          echo "<form method='post' action='" . $profile->getFormURL() . "'>";
       }
 
-      $effective_rights = ProfileRight::getProfileRights($ID, ['plugin_mydashboard', 'plugin_mydashboard_config']);
+      $effective_rights = ProfileRight::getProfileRights($ID, array('plugin_mydashboard', 'plugin_mydashboard_config'));
 
       //      Toolbox::logDebug($effective_rights);
       echo "<table class='tab_cadre_fixehov'>";
@@ -144,20 +144,20 @@ class PluginMydashboardProfile extends CommonDBTM {
       echo "<tr class='tab_bg_2'>";
       echo "<td>" . __("Dashboard Access", "mydashboard") . "</td><td>";
       $checked = ($effective_rights["plugin_mydashboard"] > 1) ? 1 : 0;
-      Html::showCheckbox(['name'    => '_plugin_mydashboard[6_0]',
-                               'checked' => $checked]);
+      Html::showCheckbox(array('name'    => '_plugin_mydashboard[6_0]',
+                               'checked' => $checked));
       echo "</td>";
       echo "<td>";
       $checked = ($effective_rights["plugin_mydashboard"] == 1) ? 1 : 0;
-      Html::showCheckbox(['name'    => '_plugin_mydashboard[1_0]',
-                               'checked' => $checked]);
+      Html::showCheckbox(array('name'    => '_plugin_mydashboard[1_0]',
+                               'checked' => $checked));
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_2'>";
       echo "<td>" . __("Configuration Access", "mydashboard") . "</td><td>";
       //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
-      Html::showCheckbox(['name'    => '_plugin_mydashboard_config[6_0]',
-                               'checked' => $effective_rights["plugin_mydashboard_config"]]);
+      Html::showCheckbox(array('name'    => '_plugin_mydashboard_config[6_0]',
+                               'checked' => $effective_rights["plugin_mydashboard_config"]));
       echo "</td>";
       echo "<td></td>";
       echo "</tr>";
@@ -168,7 +168,7 @@ class PluginMydashboardProfile extends CommonDBTM {
 
       if ($effective_rights["plugin_mydashboard"] == READ) {
          $authorizedform = new PluginMydashboardProfileAuthorizedWidget();
-         $authorizedform->showForm($ID);
+         $authorizedform->showForm($ID, ['interface' => $profile->fields["interface"]]);
       }
    }
 
@@ -215,8 +215,8 @@ class PluginMydashboardProfile extends CommonDBTM {
       foreach ($DB->request('glpi_plugin_mydashboard_profiles',
                             "`profiles_id`='$profiles_id'") as $profile_data) {
 
-         $matching       = ['mydashboard' => 'plugin_mydashboard',
-                                 'config'      => 'plugin_mydashboard_config'];
+         $matching       = array('mydashboard' => 'plugin_mydashboard',
+                                 'config'      => 'plugin_mydashboard_config');
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
             if (!isset($current_rights[$old])) {
@@ -252,7 +252,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       foreach ($profile->getAllRights(true) as $data) {
          if (countElementsInTable("glpi_profilerights",
                                   "`name` = '" . $data['field'] . "'") == 0) {
-            ProfileRight::addProfileRights([$data['field']]);
+            ProfileRight::addProfileRights(array($data['field']));
          }
       }
 
@@ -266,7 +266,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       // When user connects or change profile he goes (when Mydashboard is configured) to the menu
       $pref = PluginMydashboardHelper::getReplaceCentral();
       if ($pref
-          && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])
+          && Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))
           && !isset($_SESSION["glpi_plugin_mydashboard_activating"])) {
          $_SESSION["glpi_plugin_mydashboard_loaded"] = 0;
       } else {
@@ -282,15 +282,15 @@ class PluginMydashboardProfile extends CommonDBTM {
     */
    static function getAllRights($all = true) {
 
-      $rights = [];
+      $rights = array();
       if ($all) {
-         $rights[] = ['itemtype' => 'PluginMydashboardMenu',
+         $rights[] = array('itemtype' => 'PluginMydashboardMenu',
                            'label'    => __('See the dashboard', 'mydashboard'),
-                           'field'    => 'plugin_mydashboard'];
+                           'field'    => 'plugin_mydashboard');
 
-         $rights[] = ['itemtype' => 'PluginMydashboardConfig',
+         $rights[] = array('itemtype' => 'PluginMydashboardConfig',
                            'label'    => __('See the configuration', 'mydashboard'),
-                           'field'    => 'plugin_mydashboard_config'];
+                           'field'    => 'plugin_mydashboard_config');
 
       }
 

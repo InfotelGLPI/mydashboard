@@ -21,19 +21,19 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
  * Class PluginMydashboardWidget
  */
-class PluginMydashboardWidget extends CommonDBTM
-{
+class PluginMydashboardWidget extends CommonDBTM {
 
    static $rightname = "plugin_mydashboard";
 
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -44,7 +44,9 @@ class PluginMydashboardWidget extends CommonDBTM
    /**
     * Get the widget name with his id
     * @global type $DB
-    * @param type $widgetId
+    *
+    * @param type  $widgetId
+    *
     * @return string, the widget 'name'
     */
    function getWidgetNameById($widgetId) {
@@ -65,8 +67,10 @@ class PluginMydashboardWidget extends CommonDBTM
 
    /**
     * Get the widgets_id by its 'name'
-    * @global type $DB
+    * @global type  $DB
+    *
     * @param string $widgetName
+    *
     * @return the widgets_id if found, NULL otherwise
     */
    function getWidgetIdByName($widgetName) {
@@ -87,8 +91,10 @@ class PluginMydashboardWidget extends CommonDBTM
 
    /**
     * Useful if you want to check if a widgetname is available
-    * @global type $DB
+    * @global type  $DB
+    *
     * @param string $widgetName , the name you want to check
+    *
     * @return boolean, TRUE if it's available, FALSE otherwise
     */
    static function isWidgetNameAvailable($widgetName) {
@@ -98,15 +104,15 @@ class PluginMydashboardWidget extends CommonDBTM
       $result = $DB->query($query);
       if ($result && $DB->numrows($result) > 0) {
          return false;
-      } else {
-         return true;
-      }
+      } else return true;
    }
 
    /**
     * Save a new widget Name
-    * @global type $DB
+    * @global type  $DB
+    *
     * @param string $widgetName
+    *
     * @return TRUE if the new widget name has been added, FALSE otherwise
     */
    function saveWidget($widgetName) {
@@ -135,20 +141,19 @@ class PluginMydashboardWidget extends CommonDBTM
          }
 
          $this->fields["id"] = null;
-         $id = $this->getWidgetIdByName($widgetName);
+         $id                 = $this->getWidgetIdByName($widgetName);
 
          if (!isset($id)) {
             $this->fields = [];
-            $this->add(["name" => $widgetName]);
+            $this->add(array("name" => $widgetName));
          }
          return true;
-      } else {
-         return false;
-      }
+      } else return false;
    }
 
    /**
     * @param $widgetName
+    *
     * @return true
     */
    function removeWidgetByName($widgetName) {
@@ -157,5 +162,425 @@ class PluginMydashboardWidget extends CommonDBTM
       return $this->deleteFromDB();
    }
 
+   static function getWidgetList() {
 
+      $list       = new PluginMydashboardWidgetlist();
+      $widgetlist = $list->getList();
+      $i          = 1;
+      $self       = new self();
+      $widgets    = [];
+      foreach ($widgetlist as $plugin => $widgetclasses) {
+         foreach ($widgetclasses as $widgetclass => $list) {
+            //            Toolbox::logDebug($list);
+            if (is_array($list)) {
+               foreach ($list as $k => $namelist) {
+                  if (is_array($namelist)) {
+                     foreach ($namelist as $idl => $val) {
+                        $id                  = $self->getWidgetIdByName($idl);
+                        $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $idl, "parent" => $k];
+                        $i++;
+                     }
+                  } else {
+                     $id                  = $self->getWidgetIdByName($k);
+                     $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $k, "parent" => $widgetclass];
+                     $i++;
+                  }
+               }
+            } else {
+               $id                  = $self->getWidgetIdByName($widgetclass);
+               $widgets['gs' . $id] = ["class" => $widgetclasses, "id" => $widgetclass];
+               $i++;
+            }
+
+         }
+      }
+      return $widgets;
+   }
+
+   static function getWidget($id, $opt = []) {
+      $class   = "bt-col-md-11";
+      $widgets = self::getWidgetList();
+
+      if (isset($widgets[$id])) {
+         return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
+      }
+      return __('No data available', 'mydashboard') . " - " . $id;
+   }
+
+   static function getWidgetOptions($id) {
+      $widgets = self::getWidgetList();
+
+      if (isset($widgets[$id])) {
+         return self::getAllOptions($widgets[$id]["class"], $widgets[$id]["id"], []);
+      }
+      return __('No data available', 'mydashboard') . " - " . $id;
+   }
+
+   static function getGsID($id) {
+
+      $widgets = self::getWidgetList();
+
+      foreach ($widgets as $gs => $widgetclasses) {
+         $gslist[$widgetclasses['id']] = $gs;
+      }
+
+      if (isset($gslist[$id])) {
+         return $gslist[$id];
+      }
+      return false;
+   }
+
+
+   static function loadWidget($classname, $widgetindex, $parent, $class, $opt = []) {
+      global $CFG_GLPI;
+
+      if (isset($classname) && isset($widgetindex)) {
+
+         $classname   = $classname;
+         $classobject = getItemForItemtype($classname);
+         if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
+            $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
+            if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
+               $widget->setWidgetId($widgetindex);
+               //Then its Html content
+               $htmlContent = "";
+               $htmlContent = $widget->getWidgetHtmlContent();
+
+               if ($widget->getWidgetIsOnlyHTML()) $htmlContent = "";
+
+               //when we get jsondata some checkings and modification can be done by the widget class
+               //For example Datatable add some scripts to adapt the table to the template
+               $jsondata = $widget->getJSonDatas();
+
+               //Then its scripts (non evaluated, have to be evaluated client-side)
+               $scripts = $widget->getWidgetScripts();
+               $scripts = implode($scripts, "");
+
+               //            $jsondatas = $widget->getJSonDatas();
+               //            $widgetContent = json_decode($jsondatas);
+               //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
+               //We prepare a "JSon object" compatible with sDashboard
+               $json =
+                  array(
+                     "widgetTitle"     => $widget->getWidgetTitle(),
+                     "widgetComment"     => $widget->getWidgetComment(),
+                     "widgetId"        => $widget->getWidgetId(),
+                     "widgetType"      => $widget->getWidgetType(),
+                     "widgetContent"   => "%widgetContent%",
+                     "enableRefresh"   => json_decode($widget->getWidgetEnableRefresh()),
+                     "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . PluginMydashboardMenu::DASHBOARD_NAME . "','$classname', '" . $widget->getWidgetId() . "');}",
+                     "html"            => $htmlContent,
+                     "scripts"         => $scripts,
+                     //                        "_glpi_csrf_token" => Session::getNewCSRFToken()
+                  );
+               //safeJson because refreshCallBack must be a javascript function not a string,
+               // not a string, but a function in a json object is not valid
+               //               Toolbox::logDebug($json);
+               $menu  = new PluginMydashboardMenu();
+               $views = $menu->getViewNames();
+               $view  = -1;
+               if (is_numeric($parent)) {
+                  $view = $views[$parent];
+               }
+
+               $type    = $json['widgetType'];
+               $title   = $json['widgetTitle'];
+               $comment = $json['widgetComment'];
+               if (isset($view) && $view != -1) {
+                  $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
+               }
+
+               $json  = PluginMydashboardHelper::safeJson($json);
+               $datas = json_decode($jsondata, true);
+               //                              Toolbox::logDebug($datas);
+
+               //               str_replace('"%widgetContent%"', $jsondata, $json);
+               //getJSonDatas already gives a json_encoded string that's why we put it after the global encoding
+
+               //
+               if ($type == "table") {
+                  $opt = $widget->getOptions();
+                  //                  Toolbox::logDebug($opt);
+                  $order = json_encode([0, 'asc']);
+                  if (isset($opt['bSort'])) {
+                     $order = json_encode($opt['bSort']);
+                  }
+                  $defs = json_encode([]);
+                  if (isset($opt['bDef'])) {
+                     $defs = json_encode($opt['bDef']);
+                  }
+
+                  $dateformat = "D";
+                  $mask = 'MM-DD-YYYY';
+                  if (isset($opt['bDate'])) {
+                     $dateformat = $opt['bDate'][0];
+                  }
+
+                  if ($dateformat == "DHS") {
+                     if (!isset($_SESSION["glpidate_format"])) {
+                        $_SESSION["glpidate_format"] = 0;
+                     }
+                     $format = $_SESSION["glpidate_format"];
+                     switch ($format) {
+                        case 1 : // DD-MM-YYYY
+                           $mask = 'DD-MM-YYYY HH:mm:SS';
+                           break;
+                        case 2 : // MM-DD-YYYY
+                           $mask = 'MM-DD-YYYY HH:mm:SS';
+                           break;
+                     }
+
+                  } else if ($dateformat == "DH") {
+                     if (!isset($_SESSION["glpidate_format"])) {
+                        $_SESSION["glpidate_format"] = 0;
+                     }
+                     $format = $_SESSION["glpidate_format"];
+                     switch ($format) {
+                        case 1 : // DD-MM-YYYY
+                           $mask = 'DD-MM-YYYY HH:mm';
+                           break;
+                        case 2 : // MM-DD-YYYY
+                           $mask = 'MM-DD-YYYY HH:mm';
+                           break;
+                     }
+
+                  } else if ($dateformat == "D") {
+                     if (!isset($_SESSION["glpidate_format"])) {
+                        $_SESSION["glpidate_format"] = 0;
+                     }
+                     $format = $_SESSION["glpidate_format"];
+                     switch ($format) {
+                        case 1 : // DD-MM-YYYY
+                           $mask = 'DD-MM-YYYY';
+                           break;
+                        case 2 : // MM-DD-YYYY
+                           $mask = 'MM-DD-YYYY';
+                           break;
+                     }
+                  }
+                  $rand      = mt_rand();
+                  $languages = json_encode($menu->getJsLanguages("datatables"));
+
+                  $widgetdisplay = "<script type='text/javascript'>
+               //         setTimeout(function () {
+                           $.fn.dataTable.moment('$mask');
+                           $('#$widgetindex$rand').DataTable(
+                               {
+                               'order': $order,
+                               'columnDefs' :$defs,
+                               rowReorder: {
+                                 selector: 'td:nth-child(2)'
+                             },
+                               responsive: true,
+                           'language': $languages,
+                           dom: 'Bfrtip',
+                           select: true,
+                          buttons: [
+                              {
+                                  extend: 'collection',
+                                  text: 'Export',
+                                  buttons: [
+                                      'copy',
+                                      'excel',
+                                      'csv',
+                                      'pdf',
+                                      'print'
+                                  ]
+                              }
+                          ]
+                       }
+                       );
+
+                       </script>";
+               } else {
+                  $widgetdisplay = "";
+               }
+               $delclass = "";
+               //               if (Session::haveRight("plugin_servicecatalog_view", CREATE)
+               //                   || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
+               //                  $delclass = "delclass";
+               //               }
+
+               $widgetdisplay .= "<div id='$widgetindex'>";
+               $widgetdisplay .= "<div class=\"bt-row $delclass\">";
+               $widgetdisplay .= "<div class=\"bt-feature $class \">";
+               $widgetdisplay .= "<h5 class=\"bt-title-divider\">";
+               $widgetdisplay .= "<span>";
+               $widgetdisplay .= $title;
+               if ($comment != "") {
+                  $widgetdisplay .= "&nbsp;";
+                  $opt           =  ['awesome-class' => 'fa-info-circle',
+                                         'display' => false];
+                  $widgetdisplay .= Html::showToolTip($comment, $opt);
+               }
+               $widgetdisplay .= "</span>";
+               //         $widget .= "<small>" . __('A comment') . "</small>";
+               $widgetdisplay .= "</h5>";
+               $widgetdisplay .= "<div id=\"display-sc\">";
+
+               if ($type == "table") {
+                  $head    = $datas['aoColumns'];
+                  $data    = $datas['aaData'];
+                  $nb = 0;
+                  if(($nb_data = reset($data)) ==! false) {
+                     $nb      = count($nb_data);
+                  }
+
+
+                  $widgetdisplay .= '<table id="' . $widgetindex . $rand . '" class="display" cellspacing="0" width="100%">';
+                  $widgetdisplay .= '<thead>';
+                  $widgetdisplay .= '<tr>';
+                  foreach ($head as $k => $th) {
+                     $widgetdisplay .= '<th>' . $th['sTitle'] . '</th>';
+                  }
+                  $widgetdisplay .= '</tr>';
+                  $widgetdisplay .= '</thead><tfoot><tr>';
+                  foreach ($head as $k => $th) {
+                     $widgetdisplay .= '<th>' . $th['sTitle'] . '</th>';
+                  }
+                  $widgetdisplay .= '</tr></tfoot>';
+                  $widgetdisplay .= ' <tbody>';
+
+                  foreach ($data as $k => $v) {
+                     $widgetdisplay .= '<tr>';
+                     for ($i = 0; $i < $nb; $i++) {
+                        $widgetdisplay .= '<td>' . $v[$i] . '</td>';
+                     }
+                     $widgetdisplay .= '</tr>';
+                  }
+                  $widgetdisplay .= '</tbody></table>';
+
+                  $widgetdisplay .= $widget->getWidgetHtmlContent();
+               } else if ($type == "html") {
+                  $widgetdisplay .= $datas;
+               }
+
+               $widgetdisplay .= "</div>";
+               $widgetdisplay .= "</div>";
+               $widgetdisplay .= "</div>";
+               $widgetdisplay .= "</div>";
+               return $widgetdisplay;
+            } else {
+               $widgetdisplay = $widgetindex . " : " . __('No data available', 'mydashboard');
+               return $widgetdisplay;
+            }
+         }
+      }
+
+   }
+
+
+   static function getAllOptions($classname, $widgetindex, $opt = []) {
+
+      if (isset($classname) && isset($widgetindex)) {
+
+         $classname   = $classname;
+         $classobject = getItemForItemtype($classname);
+         if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
+            $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
+            if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
+               $json =
+                  array(
+                     "enableRefresh" => json_decode($widget->getWidgetEnableRefresh()),
+                     //                     "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . PluginMydashboardMenu::DASHBOARD_NAME . "','$classname', '" . $widget->getWidgetId() . "');}",
+                  );
+               return $json;
+            }
+         }
+      }
+   }
+
+   static function getWidgetMydashboardAlert($class) {
+
+      $delclass = "";
+      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
+      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
+      //         $delclass = "delclass";
+      //      }
+      $display = "<div id='gs4' class=\"bt-row $delclass\">";
+      $display .= "<div class=\"bt-feature $class \">";
+      $display .= "<h3 class=\"bt-title-divider\">";
+      $display .= "<span>";
+      $display .= __('Network Monitoring', 'mydashboard');
+      $display .= "</span>";
+      $display .= "<small>" . __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
+      $display .= "</h3>";
+      $display .= "<div id=\"display-sc\">";
+      if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
+         $alerts  = new PluginMydashboardAlert();
+         $display .= $alerts->getAlertList(0, 1);
+      } else {
+         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= __("No problem detected", "mydashboard");
+         $display .= "</span></h3></div>";
+      }
+      $display .= "</div>";
+      $display .= "</div>";
+      $display .= "</div>";
+
+      return $display;
+   }
+
+   static function getWidgetMydashboardMaintenance($class) {
+
+      $delclass = "";
+      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
+      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
+      //         $delclass = "delclass";
+      //      }
+      $display = "<div id='gs5' class=\"bt-row $delclass\">";
+      $display .= "<div class=\"bt-feature $class \">";
+      $display .= "<h3 class=\"bt-title-divider\">";
+      $display .= "<span>";
+      $display .= _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard');
+      $display .= "</span>";
+      //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
+      $display .= "</h3>";
+      $display .= "<div id=\"display-sc\">";
+      if (PluginMydashboardAlert::countForAlerts(0, 1) > 0) {
+         $alerts  = new PluginMydashboardAlert();
+         $display .= $alerts->getMaintenanceList();
+      } else {
+         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= __("No scheduled maintenance", "mydashboard");
+         $display .= "</span></h3></div>";
+      }
+      $display .= "</div>";
+      $display .= "</div>";
+      $display .= "</div>";
+
+      return $display;
+   }
+
+   static function getWidgetMydashboardInformation($class) {
+
+      $delclass = "";
+      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
+      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
+      //         $delclass = "delclass";
+      //      }
+      $display = "<div id='gs6' class=\"bt-row $delclass\">";
+      $display .= "<div class=\"bt-feature $class \">";
+      $display .= "<h3 class=\"bt-title-divider\">";
+      $display .= "<span>";
+      $display .= _n('Information', 'Informations', 2, 'mydashboard');
+      $display .= "</span>";
+      $display .= "</h3>";
+      $display .= "<div id='display-sc'>";
+      if (PluginMydashboardAlert::countForAlerts(0, 2) > 0) {
+
+         $alerts  = new PluginMydashboardAlert();
+         $display .= $alerts->getInformationList();
+
+      } else {
+         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= __("No informations founded", "mydashboard");
+         $display .= "</span></h3></div>";
+      }
+      $display .= "</div>";
+      $display .= "</div>";
+      $display .= "</div>";
+
+      return $display;
+   }
 }

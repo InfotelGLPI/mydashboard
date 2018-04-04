@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 if (!defined('GLPI_ROOT')) {
@@ -32,10 +32,10 @@ if (!defined('GLPI_ROOT')) {
  * This class handles the general configuration of mydashboard
  *
  */
-class PluginMydashboardConfig extends CommonDBTM
-{
+class PluginMydashboardConfig extends CommonDBTM {
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -53,7 +53,7 @@ class PluginMydashboardConfig extends CommonDBTM
     * @return bool
     */
    static function canCreate() {
-      return Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE]);
+      return Session::haveRightsOr("plugin_mydashboard_config", array(CREATE, UPDATE));
    }
 
    /**
@@ -65,10 +65,11 @@ class PluginMydashboardConfig extends CommonDBTM
 
 
    /**
-    * @param $ID
+    * @param       $ID
     * @param array $options
     */
-   function showForm($ID, $options = []) {
+   function showForm($ID, $options = array()) {
+      global $CFG_GLPI;
       //If default configuration is not loaded
       if (!$this->getFromDB("1")) {
          $this->initConfig();
@@ -81,7 +82,7 @@ class PluginMydashboardConfig extends CommonDBTM
       //        }
 
       //The configuration is not deletable
-      $options['candel'] = false;
+      $options['candel']  = false;
       $options['colspan'] = 1;
 
       $this->showFormHeader($options);
@@ -91,26 +92,20 @@ class PluginMydashboardConfig extends CommonDBTM
       $canCreate = true;
 
       //This array is for those who can't update, it's to display the value of a boolean parameter
-      $yesno = [__("No"), __("Yes")];
+      $yesno = array(__("No"), __("Yes"));
 
       echo "<tr class='tab_bg_1'><td>" . __("Enable the possibility to display Dashboard in full screen", "mydashboard") . "</td>";
       echo "<td>";
-      if ($canCreate) {
-         Dropdown::showYesNo("enable_fullscreen", $this->fields['enable_fullscreen']);
-      } else {
-         echo $yesno[$this->fields['enable_fullscreen']];
-      }
+      if ($canCreate) Dropdown::showYesNo("enable_fullscreen", $this->fields['enable_fullscreen']);
+      else echo $yesno[$this->fields['enable_fullscreen']];
       echo "</td>";
       echo "</tr>";
-      echo "<tr class='tab_bg_1'><td>" . __("Display the menu", "mydashboard") . "</td>";
-      echo "<td>";
-      if ($canCreate) {
-         Dropdown::showYesNo("display_menu", $this->fields['display_menu']);
-      } else {
-         echo $yesno[$this->fields['display_menu']];
-      }
-      echo "</td>";
-      echo "</tr>";
+//      echo "<tr class='tab_bg_1'><td>" . __("Display the menu", "mydashboard") . "</td>";
+//      echo "<td>";
+//      if ($canCreate) Dropdown::showYesNo("display_menu", $this->fields['display_menu']);
+//      else echo $yesno[$this->fields['display_menu']];
+//      echo "</td>";
+//      echo "</tr>";
 
       echo "<tr class='tab_bg_1'><td>" . __("Display widgets from plugins", "mydashboard") . "</td>";
       echo "<td>";
@@ -129,30 +124,16 @@ class PluginMydashboardConfig extends CommonDBTM
       $this->showFormButtons($options);
 
       //Now updating the default dashboard
-      if ($canCreate) {
-         //interface will be by default 1 if the activeprofile interface is central, 0 if helpdesk
-         //If user choosed to display for an other interface then there will be something in the post
-         $interface = (isset($_POST['interface'])) ?
-            $_POST['interface']
-            : ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
-         echo "<div class='center plugin_mydashboard_interface_selector'>";
-         echo "<form method='post' action='" . $this->getFormURL() . "' onsubmit='return true;'>";
-         echo "<label>" . __('Dashboard', 'mydashboard') . " " . __("By Default for", "mydashboard") . " ";
-         Dropdown::showFromArray('interface', [
-            0 => __('Simplified interface'),
-            1 => __('Standard interface')
-         ],
-            [
-               'value' => $interface,
-               'on_change' => 'this.form.submit()'
-            ]);
-         echo "</label>";
-         Html::closeForm();
-         echo "</div>";
-         $menu = new PluginMydashboardMenu();
-         //0 is the default dashboard
-         $menu->showMenu(0, $interface);
-      }
+//      echo "<br><div align='center'>";
+//      echo "<table class='tab_cadre_fixehov'>";
+//      echo "<tr class='tab_bg_2'>";
+//      echo "<td class='center'>";
+//      echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'>";
+//      echo __('Custom and save default grid', 'mydashboard');
+//      echo "</a>";
+//      echo "</td>";
+//      echo "<tr>";
+//      echo "</table></div>";
    }
 
    /*
@@ -167,10 +148,10 @@ class PluginMydashboardConfig extends CommonDBTM
       $result = $DB->query($query);
       if ($DB->numrows($result) == '0') {
 
-         $input = [];
-         $input['id'] = "1";
-         $input['enable_fullscreen'] = "1";
-         $input['display_menu'] = "1";
+         $input                          = array();
+         $input['id']                    = "1";
+         $input['enable_fullscreen']     = "1";
+         $input['display_menu']          = "1";
          $input['display_plugin_widget'] = "1";
          //Since 1.0.3 replace_central is now a preference
          //         $input['replace_central'] = "0";

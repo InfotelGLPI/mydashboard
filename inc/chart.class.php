@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -33,23 +33,25 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
 
    protected $tabDatas;
    private $tabDatasSet;
-   private $options = [];
+   private $options = array();
 
    /**
     * PluginMydashboardChart constructor.
     */
-   function __construct() {
+   function __construct()
+   {
       $this->initOptions();
       $this->setWidgetType("chart");
       $this->setOption('colors', PluginMydashboardColor::getColors());
-      $this->tabDatas = [];
+      $this->tabDatas = array();
       $this->tabDatasSet = false;
    }
 
    /**
     * This method is here to init options of every chart (pie, bar ...)
     */
-   function initOptions() {
+   function initOptions()
+   {
       $this->options['HtmlText'] = false;
    }
 
@@ -57,7 +59,8 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     *
     * @return an array of all options
     */
-   function getOptions() {
+   function getOptions()
+   {
       return $this->options;
    }
 
@@ -65,7 +68,8 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     * @param $optionName
     * @return mixed|string
     */
-   function getOption($optionName) {
+   function getOption($optionName)
+   {
       return (isset($this->options[$optionName])) ? $this->options[$optionName] : '';
    }
 
@@ -75,7 +79,8 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     * @param bool $force
     * @return bool
     */
-   function setOption($optionName, $optionValue, $force = false) {
+   function setOption($optionName, $optionValue, $force = false)
+   {
       if (isset($this->options[$optionName]) && !$force) {
          if (is_array($optionValue)) {
             $this->options[$optionName] = array_merge($this->options[$optionName], $optionValue);
@@ -89,10 +94,9 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
    /**
     * @return an array representing the horizontal bar chart
     */
-   function getTabDatas() {
-      if (empty($this->tabDatas) && !$this->tabDatasSet) {
-         $this->debugWarning(__("No data is given to the widget", 'mydashboard'));
-      }
+   function getTabDatas()
+   {
+      if (empty($this->tabDatas) && !$this->tabDatasSet) $this->debugWarning(__("No data is given to the widget", 'mydashboard'));
       return $this->tabDatas;
    }
 
@@ -106,16 +110,13 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     *  )
     * Example : array("2012" => 10, "2013" => 14,"2014" => 25)
     */
-   function setTabDatas($_tabDatas) {
-      if (empty($_tabDatas)) {
-         $this->debugNotice(__("No data available", 'mydashboard'));
-      }
+   function setTabDatas($_tabDatas)
+   {
+      if (empty($_tabDatas)) $this->debugNotice(__("No data available", 'mydashboard'));
       $this->tabDatasSet = true;
       if (is_array($_tabDatas)) {
          $this->tabDatas = $_tabDatas;
-      } else {
-         $this->debugError(__("Not an array", 'mydashboard'));
-      }
+      } else $this->debugError(__("Not an array", 'mydashboard'));
    }
 
    /**
@@ -123,20 +124,21 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     * Note : this is just a helper, you can use setOption to do the same, it will only be longer to write
     * @param int $_opacity in [0,1]
     */
-   function setFillOpacity($_opacity) {
+   function setFillOpacity($_opacity)
+   {
       //a dictionnary associating Dashboard class to Flotr2 types
-      $dic = [
+      $dic = array(
          "PluginMydashboardHBarChart" => "bars",
          "PluginMydashboardVBarChart" => "bars",
          "PluginMydashboardPieChart" => "pie",
          "PluginMydashboardLineChart" => "line"
-      ];
+      );
       //Opacity is only set when reasonable
       if (is_numeric($_opacity) && $_opacity >= 0 && $_opacity <= 1) {
          $classname = get_class($this);
          if (isset($dic[$classname])) {
             //We set the option,
-            $this->setOption($dic[$classname], ['fillOpacity' => $_opacity]);
+            $this->setOption($dic[$classname], array('fillOpacity' => $_opacity));
          }
       }
    }
@@ -152,7 +154,8 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     *      x:(default) <label> (<y_value>)
     * @return string
     */
-   static function getTrackFormatter($id = 0) {
+   static function getTrackFormatter($id = 0)
+   {
       $funct = "";
       switch ($id) {
          case 1 : //Display track as just its x axis value

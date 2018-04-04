@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -34,13 +34,14 @@ abstract class PluginMydashboardModule extends CommonGLPI
    private $widgetId;
    private $widgetType = "chart";
    private $widgetTitle;
+   private $widgetComment;
    private $widgetListTitle;
-   private $widgetScripts = [];
+   private $widgetScripts = array();
    private $widgetHtmlContent = "";
    private $widgetEnableRefresh = false;
    private $widgetEnableMaximize = true;
    private $widgetIsOnlyHTML = false;
-   private $widgetDebug = [];
+   private $widgetDebug = array();
    private $widgetColorTab;
    static $rightname = "plugin_mydashboard";
 
@@ -48,7 +49,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0) {
+   static function getTypeName($nb = 0)
+   {
 
       return __('Dashboard', 'mydashboard');
    }
@@ -58,11 +60,10 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Return the widgetId of the widget, default 'iddefault'
     * @return string
     */
-   function getWidgetId() {
+   function getWidgetId()
+   {
       if (!isset($this->widgetId)) {
-         if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-            Toolbox::logDebug("PluginMydashboardModule::getWidgetId() You probably want to get a widgetId, but this one is not set, by default its value is 'iddefault'");
-         }
+         if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) Toolbox::logDebug("PluginMydashboardModule::getWidgetId() You probably want to get a widgetId, but this one is not set, by default its value is 'iddefault'");
          $this->widgetId = "iddefault";
       }
       return $this->widgetId;
@@ -72,7 +73,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Return the widget type ('table','chart' ...)
     * @return string
     */
-   function getWidgetType() {
+   function getWidgetType()
+   {
       return $this->widgetType;
    }
 
@@ -80,24 +82,30 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Return the widget title, if not set it returns 'Default Title'
     * @return string of the title
     */
-   function getWidgetTitle() {
+   function getWidgetTitle()
+   {
       if (!isset($this->widgetTitle)) {
-         if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-            Toolbox::logDebug("PluginMydashboardModule::getWidgetTitle() You probably want to get a widgetTitle, but this one is not set, by default its value is 'Default Title'");
-         }
+         if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) Toolbox::logDebug("PluginMydashboardModule::getWidgetTitle() You probably want to get a widgetTitle, but this one is not set, by default its value is 'Default Title'");
          $this->widgetTitle = "Default Title";
       }
       return $this->widgetTitle;
+   }
+
+   function getWidgetComment()
+   {
+      if (!isset($this->widgetComment)) {
+         $this->widgetComment = "";
+      }
+      return $this->widgetComment;
    }
 
    /**
     * Return the widget title which will be displayed in the menu list, by default it is basically the text part of widgetTitle (strip_tag)
     * @return string of the widget list title
     */
-   function getWidgetListTitle() {
-      if (!isset($this->widgetListTitle)) {
-         $this->widgetListTitle = strip_tags($this->getWidgetTitle());
-      }
+   function getWidgetListTitle()
+   {
+      if (!isset($this->widgetListTitle)) $this->widgetListTitle = strip_tags($this->getWidgetTitle());
       $this->widgetListTitle = stripslashes($this->widgetListTitle);
       return $this->widgetListTitle;
    }
@@ -107,18 +115,19 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Adds some unremovable scripts executed after all
     * @return array of string
     */
-   function getWidgetScripts() {
+   function getWidgetScripts()
+   {
       foreach ($this->widgetScripts as &$script) {
-         $script = str_replace([/*"\r\n","\n","\r",*/
-            "'"], [/*"","","",*/
-            "\""], $script);
+         $script = str_replace(array(/*"\r\n","\n","\r",*/
+            "'"), array(/*"","","",*/
+            "\""), $script);
       }
       //If the lateral menu is not displayed, we hide the remove button
       if (!PluginMydashboardHelper::getDisplayMenu()) {
-         $this->appendWidgetScripts(["$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-remove-icon').remove();"]);
+         $this->appendWidgetScripts(array("$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-remove-icon').remove();"));
       }
       if (!$this->widgetEnableMaximize) {
-         $this->appendWidgetScripts(["$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-plus-icon').remove();"]);
+         $this->appendWidgetScripts(array("$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-plus-icon').remove();"));
       }
       return $this->widgetScripts;
    }
@@ -127,16 +136,15 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Get the HTML content of the widget
     * @return type
     */
-   function getWidgetHtmlContent() {
+   function getWidgetHtmlContent()
+   {
       //Internal debug is append to the widget as HTML content
       //Different colors depending on type of debug from white, information to red , error
-      $bgcolors = [__('notice', 'mydashboard') => 'white', __('warning', 'mydashboard') => 'orange', __('error', 'mydashboard') => 'red'];
+      $bgcolors = array(__('notice', 'mydashboard') => 'white', __('warning', 'mydashboard') => 'orange', __('error', 'mydashboard') => 'red');
       //Internal debug is only shown when GLPI is in debug mode
       if (($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) && !empty($this->widgetDebug)) {
          foreach ($this->widgetDebug as $type => $msg) {
-            if (strlen($msg) > 0) {
-               $this->appendWidgetHtmlContent("<span style='background-color:" . $bgcolors[$type] . ";'><b>" . ucfirst($type) . " : </b>" . $msg . "</span><br>");
-            }
+            if (strlen($msg) > 0) $this->appendWidgetHtmlContent("<span style='background-color:" . $bgcolors[$type] . ";'><b>" . ucfirst($type) . " : </b>" . $msg . "</span><br>");
          }
          //We empty debug stack in case getHtmlContent is called few times
          $this->widgetDebug = "";
@@ -148,7 +156,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Return the value of widgetEnableRefresh
     * @return string, 'true' if refresh is enabled, else 'false'
     */
-   function getWidgetEnableRefresh() {
+   function getWidgetEnableRefresh()
+   {
       $ret = $this->widgetEnableRefresh ? "true" : "false";
       return $ret;
    }
@@ -157,7 +166,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Check if the widget is declared as only HTML (meaning no charts by dashboard)
     * @return boolean TRUE if only Html, FALSE otherwise
     */
-   function getWidgetIsOnlyHTML() {
+   function getWidgetIsOnlyHTML()
+   {
       return $this->widgetIsOnlyHTML;
    }
 
@@ -165,15 +175,22 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set a new widget title
     * @param string $nTitle
     */
-   function setWidgetTitle($nTitle) {
-      //        $this->widgetTitle = addslashes($nTitle);
-      $this->widgetTitle = str_replace(["\""], ["'"], $nTitle);
+   function setWidgetTitle($nTitle)
+   {
+//        $this->widgetTitle = addslashes($nTitle);
+      return $this->widgetTitle = str_replace(array("\""), array("'"), $nTitle);
+   }
+
+   function setWidgetComment($nComment)
+   {
+      return $this->widgetComment = str_replace(array("\""), array("'"), $nComment);
    }
 
    /**
     * Toggles only HTML value
     */
-   function toggleOnlyHTML() {
+   function toggleOnlyHTML()
+   {
       $this->widgetIsOnlyHTML = !$this->widgetIsOnlyHTML;
    }
 
@@ -182,7 +199,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set a new HTML content for the widget
     * @param string $_html
     */
-   function setWidgetHtmlContent($_html) {
+   function setWidgetHtmlContent($_html)
+   {
       $this->widgetScripts = array_merge(PluginMydashboardHelper::extractScriptsFromString($_html), $this->widgetScripts);
 
       $this->widgetHtmlContent = PluginMydashboardHelper::removeScriptsFromString($_html);
@@ -192,7 +210,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Append new HTML content to the widget
     * @param string $_html
     */
-   function appendWidgetHtmlContent($_html) {
+   function appendWidgetHtmlContent($_html)
+   {
       $this->widgetScripts = array_merge(PluginMydashboardHelper::extractScriptsFromString($_html), $this->widgetScripts);
       $this->widgetHtmlContent = $this->widgetHtmlContent . PluginMydashboardHelper::removeScriptsFromString($_html);
    }
@@ -202,7 +221,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set a new widget list title
     * @param string $_widgetListTitle
     */
-   function setWidgetListTitle($_widgetListTitle) {
+   function setWidgetListTitle($_widgetListTitle)
+   {
       $this->widgetListTitle = strip_tags($_widgetListTitle);
    }
 
@@ -211,7 +231,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set a new widgetId
     * @param string $_widgetId
     */
-   function setWidgetId($_widgetId) {
+   function setWidgetId($_widgetId)
+   {
       $this->widgetId = $_widgetId;
    }
 
@@ -220,7 +241,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set the new widget type
     * @param string $_Type
     */
-   function setWidgetType($_Type) {
+   function setWidgetType($_Type)
+   {
       $this->widgetType = $_Type;
    }
 
@@ -229,7 +251,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set the new array of scripts of the widget
     * @param array of string $_scripts
     */
-   function setWidgetScripts($_scripts) {
+   function setWidgetScripts($_scripts)
+   {
       $this->widgetScripts = $_scripts;
    }
 
@@ -237,7 +260,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Set the new array of scripts of the widget
     * @param array of string $_scripts
     */
-   function appendWidgetScripts($_scripts) {
+   function appendWidgetScripts($_scripts)
+   {
       $this->widgetScripts = array_merge($this->widgetScripts, $_scripts);
    }
 
@@ -245,39 +269,43 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Toggle refresh button on the widget, useless if there are no callbacks
     * @param int $value
     */
-   function toggleWidgetRefresh($value = -1) {
-      if ($value == -1) {
+   function toggleWidgetRefresh($value = -1)
+   {
+      if ($value == -1)
          $this->widgetEnableRefresh = !$this->widgetEnableRefresh;
-      } else {
+      else
          $this->widgetEnableRefresh = $value;
-      }
    }
 
    /**
     * Toggle maximize button on the widget
     */
-   function toggleWidgetMaximize() {
+   function toggleWidgetMaximize()
+   {
       $this->widgetEnableMaximize = !$this->widgetEnableMaximize;
    }
 
    /**
     * @param $msg
     */
-   function debugNotice($msg) {
+   function debugNotice($msg)
+   {
       $this->widgetDebug[__("notice", 'mydashboard')] = $msg;
    }
 
    /**
     * @param $msg
     */
-   function debugWarning($msg) {
+   function debugWarning($msg)
+   {
       $this->widgetDebug[__("warning", 'mydashboard')] = $msg;
    }
 
    /**
     * @param $msg
     */
-   function debugError($msg) {
+   function debugError($msg)
+   {
       $this->widgetDebug[__("error", 'mydashboard')] = $msg;
    }
 
@@ -285,7 +313,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Get the color array
     * @return array like ['label1'=>color1,'label2'=>color2 ...]
     */
-   function getColorTab() {
+   function getColorTab()
+   {
       return $this->widgetColorTab;
    }
 
@@ -297,7 +326,8 @@ abstract class PluginMydashboardModule extends CommonGLPI
     *          ...
     *        ]
     */
-   function setColorTab($_widgetColorTab) {
+   function setColorTab($_widgetColorTab)
+   {
       $this->widgetColorTab = $_widgetColorTab;
    }
 
@@ -308,14 +338,16 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * @param $optionvalue
     * @param bool $force
     */
-   function setOption($optionname, $optionvalue, $force = false) {
+   function setOption($optionname, $optionvalue, $force = false)
+   {
    }
 
    /**
     * To be overwrited by children
     * Must give an array of datas
     */
-   function getTabDatas() {
+   function getTabDatas()
+   {
    }
 
    /**
@@ -323,6 +355,7 @@ abstract class PluginMydashboardModule extends CommonGLPI
     * Must set an array of datas
     * @param $_tabdatas
     */
-   function setTabDatas($_tabdatas) {
+   function setTabDatas($_tabdatas)
+   {
    }
 }

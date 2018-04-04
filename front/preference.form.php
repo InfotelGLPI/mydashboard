@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 include('../../../inc/includes.php');
@@ -31,7 +31,7 @@ Session::checkLoginUser();
 //Save user preferences
 if (isset ($_POST['update'])) {
    $pref = new PluginMydashboardPreference();
-   $pref->check(-1, "w", $_POST);
+   $pref->check(-1, UPDATE, $_POST);
    $pref->update($_POST);
    Html::back();
 }

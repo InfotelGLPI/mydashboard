@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -30,6 +30,7 @@
 class PluginMydashboardInfotel extends CommonGLPI {
 
    private $options;
+   private $pref;
 
    /**
     * PluginMydashboardInfotel constructor.
@@ -38,6 +39,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
     */
    public function __construct($_options = []) {
       $this->options = $_options;
+
+      $preference = new PluginMydashboardPreference();
+      if (!$preference->getFromDB(Session::getLoginUserID())) $preference->initPreferences(Session::getLoginUserID());
+      $preference->getFromDB(Session::getLoginUserID());
+      $this->preferences = $preference->fields;
    }
 
    /**
@@ -45,20 +51,30 @@ class PluginMydashboardInfotel extends CommonGLPI {
     */
    public function getWidgetsForItem() {
       return [
-         __('Public') => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard"),
-                               $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard"),
-                               $this->getType() . "3"  => __("Internal annuary", "mydashboard"),
-                               $this->getType() . "4"  => __("Mails collector", "mydashboard"),
-                               //$this->getType()."5" => __("Logged users","mydashboard"),
-                               $this->getType() . "6"  => __("Tickets stock by month", "mydashboard"),
-                               $this->getType() . "7"  => __("Top ten ticket authors of the previous month", "mydashboard"),
-                               $this->getType() . "8"  => __("Process time by tech by month", "mydashboard"),
-                               $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard'),
-                               $this->getType() . "10" => __("User ticket alerts", "mydashboard"),
-                               $this->getType() . "11" => __("GLPI Status", "mydashboard"),
-                               $this->getType() . "12" => __("TTR Compliance", "mydashboard"),
-                               $this->getType() . "13" => __("TTO Compliance", "mydashboard"),
-                               $this->getType() . "14" => __("All unpublished articles"),
+         __('Public')                => [$this->getType() . "3"  => __("Internal annuary", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+                                         $this->getType() . "5"  => __("Fields unicity") . "&nbsp;<i class='fa fa-table'></i>",
+                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+                                         //                                         $this->getType() . "11" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+                                         $this->getType() . "14" => __("All unpublished articles") . "&nbsp;<i class='fa fa-table'></i>",
+                                         //                                              $this->getType() . "19" => __("Tickets alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+         ],
+         __('Charts', "mydashboard") => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
+                                         $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "6"  => __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
+                                         $this->getType() . "7"  => __("Top ten ticket requesters of the previous month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "8"  => __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
+                                         $this->getType() . "12" => __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "13" => __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "15" => __("Top ten ticket categories of the previous month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "16" => __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "17" => __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "18" => __("Number of opened and closed tickets of the previous month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "20" => __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "21" => __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
+                                         $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
+                                         $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
          ]
       ];
    }
@@ -96,41 +112,204 @@ class PluginMydashboardInfotel extends CommonGLPI {
     *
     * @return PluginMydashboardDatatable|PluginMydashboardHBarChart|PluginMydashboardHtml|PluginMydashboardLineChart|PluginMydashboardPieChart|PluginMydashboardVBarChart
     */
-   public function getWidgetContentForItem($widgetId) {
+   public function getWidgetContentForItem($widgetId, $opt = []) {
       global $DB, $CFG_GLPI;
 
       switch ($widgetId) {
+
          case $this->getType() . "1":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+            if (isset($this->preferences['prefered_group'])
+                && $this->preferences['prefered_group'] > 0
+                && count($opt) < 1) {
+               $opt['groups_id'] = $this->preferences['prefered_group'];
+            }
             $query = "SELECT DISTINCT
                            DATE_FORMAT(`date`, '%b %Y') AS period_name,
                            COUNT(`glpi_tickets`.`id`) AS nb,
-                           DATE_FORMAT(`date`, '%y%m') AS period
+                           DATE_FORMAT(`date`, '%Y-%m') AS period
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE glpi_tickets.is_deleted = '0'";
-            if (isset($this->options['groups_id']) && ($this->options['groups_id'] != 0)) {
-               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $this->options['groups_id'] . " ";
+                        WHERE NOT `glpi_tickets`.`is_deleted` ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $opt['groups_id'];
             }
-            $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
-                      . " AND `status` NOT IN (" . CommonITILObject::WAITING . "," . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            $query .= " $entities AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY period_name ORDER BY period ASC";
 
-            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('vbarchart', $query);
+            $result   = $DB->query($query);
+            $nb       = $DB->numrows($result);
+            $tabdata  = [];
+            $tabnames = [];
+            $tabdates = [];
+            if ($nb) {
+               while ($data = $DB->fetch_assoc($result)) {
+                  $tabdata[]  = $data['nb'];
+                  $tabnames[] = $data['period_name'];
+                  $tabdates[] = $data['period'];
+               }
+            }
 
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Group::dropdown(['name'      => 'groups_id',
-                                                                                                  'display'   => false,
-                                                                                                  'value'     => isset($this->options['groups_id']) ? $this->options['groups_id'] : 0,
-                                                                                                  'entity'    => $_SESSION['glpiactiveentities'],
-                                                                                                  'condition' => '`is_assign`'])
-                        . "</form>";
+            $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("Opened tickets backlog", "mydashboard"));
-            $widget->setOption("xaxis", ["ticks" => PluginMydashboardBarChart::getTicksFromLabels($widget->getTabDatas())]);
-            $widget->setOption("markers", ["show" => true, "position" => "ct", "labelFormatter" => PluginMydashboardBarChart::getLabelFormatter(2)]);
-            $widget->setOption('legend', ['show' => false]);
-            $widget->appendWidgetHtmlContent($dropdown);
+            $widget->setWidgetComment(__("Display of opened tickets by month", "mydashboard"));
+            $databacklogset = json_encode($tabdata);
+            $labelsback  = json_encode($tabnames);
+            $tabdatesset = json_encode($tabdates);
+
+            $nbtickets = __('Tickets number', 'mydashboard');
+
+            $graph = "<script type='text/javascript'>
+                     var backlogData = {
+                             datasets: [{
+                               data: $databacklogset,
+                               label: '$nbtickets',
+                               backgroundColor: '#1f77b4',
+                             }],
+                           labels:
+                           $labelsback
+                           };
+                     var datesetbacklog = $tabdatesset;
+                     $(document).ready(
+                        function () {
+                            var isChartRendered = false;
+                            var canvasbacklog = document . getElementById('BacklogBarChart');
+                            var ctx = canvasbacklog . getContext('2d');
+                            var BacklogBarChart = new Chart(ctx, {
+                                  type: 'bar',
+                                  data: backlogData,
+                                  options: {
+                                      responsive:true,
+                                      title:{
+                                          display:false,
+                                          text:'BacklogBarChart'
+                                      },
+                                      tooltips: {
+                                          enabled: false,
+//                                          mode: 'index',
+//                                          intersect: false
+                                      },
+                                      scales: {
+                                          xAxes: [{
+                                              stacked: true,
+                                          }],
+                                          yAxes: [{
+                                              stacked: true
+                                          }]
+                                      },
+                                      animation: {
+                                       onComplete: function() {
+                                         var chartInstance = this.chart,
+                                          ctx = chartInstance.ctx;
+                                          ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                          ctx.textAlign = 'center';
+                                          ctx.textBaseline = 'bottom';
+                              
+                                          this.data.datasets.forEach(function (dataset, i) {
+                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                              meta.data.forEach(function (bar, index) {
+                                                  var data = dataset.data[index];                            
+                                                  ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                              });
+                                          });
+                                         isChartRendered = true;
+                                       }
+                                     },
+                                     hover: {
+                                        onHover: function(event,elements) {
+                                           $('#BacklogBarChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                                         }
+                                      }
+                                  }
+                              });
+                            canvasbacklog.onclick = function(evt) {
+                              var activePoints = BacklogBarChart.getElementsAtEvent(evt);
+                              if (activePoints[0]) {
+                                var chartData = activePoints[0]['_chart'].config.data;
+                                var idx = activePoints[0]['_index'];
+                                var label = chartData.labels[idx];
+                                var value = chartData.datasets[0].data[idx];
+                                var datetik = datesetbacklog[idx];
+                  //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                                $.ajax({
+                                   url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                                   type: 'POST',
+                                   data:{datetik:datetik, widget:'$widgetId'},
+                                   success:function(response) {
+                                           window.open(response);
+                                         }
+                                });
+                              }
+                            };
+                         }
+                      );
+                     
+                      </script>";
+
+            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
+            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'width'               => '100px',
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $gparams        = ['name'      => 'groups_id',
+                               'display'   => false,
+                               'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
+                               'entity'    => $_SESSION['glpiactiveentities'],
+                               'condition' => '`is_assign`'
+            ];
+            $graph          .= "<span class='md-widgetcrit'>";
+            $graph          .= __('Group');
+            $graph          .= "&nbsp;";
+            $graph          .= Group::dropdown($gparams);
+            $graph          .= "</span>";
+
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"BacklogBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<canvas id=\"BacklogBarChart\"></canvas>";
+            $graph .= "</div>";
+
             $widget->toggleWidgetRefresh();
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
             return $widget;
+
             break;
 
          case $this->getType() . "2":
@@ -143,20 +322,103 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `priority` ORDER BY `priority` ASC";
 
-            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            $datas  = $widget->getTabDatas();
+            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
+            //            $datas  = $widget->getTabDatas();
 
             $colors = [];
-            foreach ($datas as $k => $v) {
-               $name         = CommonITILObject::getPriorityName($k);
-               $colors[]     = $_SESSION["glpipriority_" . $k];
-               $datas[$name] = $v;
-               unset($datas[$k]);
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabpriority = [];
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]        = CommonITILObject::getPriorityName($data['priority']);
+                  $colors[]      = $_SESSION["glpipriority_" . $data['priority']];
+                  $datas[]       = $data['nb'];
+                  $tabpriority[] = $data['priority'];
+               }
             }
-            $widget->setOption('colors', $colors, true);
-            $widget->setTabDatas($datas);
-            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle(__("Number of opened tickets by priority", "mydashboard"));
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened tickets by priority", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $backgroundPieColor = json_encode($colors);
+            $labelsPie          = json_encode($name);
+            $tabpriorityset     = json_encode($tabpriority);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataPriorityPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var priorityset = $tabpriorityset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TicketsByPriorityPieChart');
+                var ctx = canvas.getContext('2d');
+                var TicketsByPriorityPieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataPriorityPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#TicketsByPriorityPieChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = TicketsByPriorityPieChart.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var priority_id = priorityset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{priority_id:priority_id, widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+
+            $graph .= "</div>";
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByPriorityPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph .= "<canvas id=\"TicketsByPriorityPieChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
 
             return $widget;
             break;
@@ -187,11 +449,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
             $headers = [__('First name'), __('Name'), __('Login'), __('Phone'), __('Phone 2'), __('Mobile phone')];
-            $hidden  = [__('Login')];
+            //            $hidden  = array(__('Login'));
             $widget->setTabNames($headers);
-            $widget->setTabNamesHidden($hidden);
+            //            $widget->setTabNamesHidden($hidden);
+            $hidden[] = ["targets" => 2, "visible" => false];
+            $widget->setOption("bDef", $hidden);
             $widget->toggleWidgetRefresh();
             $widget->setWidgetTitle(__("Internal annuary", "mydashboard"));
+            $widget->setWidgetComment(__("Search users of your organisation", "mydashboard"));
 
             return $widget;
             break;
@@ -214,6 +479,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
 
+
                   $datas[$i]["date"] = Html::convDateTime($data['date']);
 
                   $datas[$i]["from"] = $data['from'];
@@ -230,56 +496,120 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget->setTabDatas($datas);
-
-            $widget->toggleWidgetRefresh();
+            $widget->setOption("bDate", ["DH"]);
+            $widget->setOption("bSort", [0, 'desc']);
+            //            $widget->toggleWidgetRefresh();
             $widget->setWidgetTitle(__("Mails collector", "mydashboard"));
+            $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
             return $widget;
             break;
-            /*case $this->getType()."5":
-               $users = array();
-               $inactiveTime = 60; //seconds of inactivity
-               foreach (glob(GLPI_SESSION_DIR."/sess_*") as $filename) {
-                  if ((filemtime($filename) + $inactiveTime) > time()) {
-                     $dh = fopen($filename,'r');
-                     if($dh) {
-                        //We save current session, session_decode put values directly in $_SESSION
-                        $currentSess = $_SESSION;
-                        session_decode(file_get_contents($filename));
-                        $search = $_SESSION;
-                        //We restore current session
-                        $_SESSION = $currentSess;
-                        if (count($search) > 0) {
-                           if (isset($search["glpiID"])) {
-                              $users[$search["glpiID"]]= array($search["glpifirstname"],
-                                                               $search["glpirealname"],
-                                                               $search["glpiname"],
-                                                               $this->getSeeProfileButton($search["glpiID"])) ;
-                           }
-                        }
-                        fclose($dh);
-                     }
-                  }
-               }*/
 
-            $widget  = new PluginMydashboardDatatable();
-            $headers = [__('First name'), __('Name'), __('Login'), ''];
-            $widget->setTabDatas($users);
+         case $this->getType() . "5":
+
+            $query = "SELECT id
+                FROM `glpi_fieldunicities`
+                WHERE `is_active` = '1' " .
+                     getEntitiesRestrictRequest("AND", 'glpi_fieldunicities', "", $_SESSION['glpiactive_entity'],
+                                                true);
+            $query .= "ORDER BY `entities_id` DESC";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+            $headers = [__('Name'), __('Duplicates')];
             $widget->setTabNames($headers);
-            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle(__("Logged users", "mydashboard"));
 
+            $datas = [];
+            $i     = 0;
+            if ($nb) {
+               while ($data = $DB->fetch_assoc($result)) {
+
+                  $unicity = new FieldUnicity();
+                  $unicity->getFromDB($data["id"]);
+
+                  if (!$item = getItemForItemtype($unicity->fields['itemtype'])) {
+                     continue;
+                  }
+                  $datas[$i]["name"] = $unicity->fields["name"];
+
+                  $fields       = [];
+                  $where_fields = [];
+
+                  foreach (explode(',', $unicity->fields['fields']) as $field) {
+                     $fields[]       = $field;
+                     $where_fields[] = $field;
+                  }
+
+                  if (!empty($fields)) {
+
+                     $entities = [$unicity->fields['entities_id']];
+                     if ($unicity->fields['is_recursive']) {
+                        $entities = getSonsOf('glpi_entities', $unicity->fields['entities_id']);
+                     }
+                     $fields_string = implode(',', $fields);
+
+                     if ($item->maybeTemplate()) {
+                        $where_template = " AND `" . $item->getTable() . "`.`is_template` = '0'";
+                     } else {
+                        $where_template = "";
+                     }
+
+                     $where_fields_string = "";
+                     foreach ($where_fields as $where_field) {
+                        if (getTableNameForForeignKeyField($where_field)) {
+                           $where_fields_string .= " AND `$where_field` IS NOT NULL AND `$where_field` <> '0'";
+                        } else {
+                           $where_fields_string .= " AND `$where_field` IS NOT NULL AND `$where_field` <> ''";
+                        }
+                     }
+                     $query_field             = "SELECT COUNT(*) AS cpt
+                               FROM `" . $item->getTable() . "`
+                               WHERE `" . $item->getTable() . "`.`entities_id` IN (" . implode(',', $entities) . ")
+                                     $where_template
+                                     $where_fields_string
+                               GROUP BY $fields_string
+                               ORDER BY cpt DESC";
+                     $count                   = 0;
+                     $datas[$i]["duplicates"] = 0;
+                     foreach ($DB->request($query_field) as $uniq) {
+                        if ($uniq['cpt'] > 1) {
+                           $count++;
+                        }
+                     }
+                     $datas[$i]["duplicates"] = $count;
+                  } else {
+                     $datas[$i]["duplicates"] = __('No item found');
+                  }
+                  $i++;
+               }
+            }
+
+            $widget->setTabDatas($datas);
+            $widget->setWidgetTitle(__('Fields unicity'));
+            $widget->setWidgetComment(__("Display if you have duplicates into inventory", "mydashboard"));
             return $widget;
             break;
+
          case $this->getType() . "6":
 
-            if (isset($this->options['entities_id']) && ($this->options['entities_id'] != 0)) {
-               if (isset($this->options['sons']) && ($this->options['sons'] != 0)) {
-                  $entities  = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $this->options['entities_id'])) . ") ";
-                  $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $this->options['entities_id'])) . ") ";
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            if (isset($opt['entities_id']) && ($opt['entities_id'] != -1)) {
+               if ((isset($opt['sons']) && $opt['sons'] > 0) && ($opt['sons'] != 0)) {
+                  $entities  = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $opt['entities_id'])) . ") ";
+                  $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $opt['entities_id'])) . ") ";
                } else {
-                  $entities  = " AND `glpi_tickets`.`entities_id` = " . $this->options['entities_id'] . " ";
-                  $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` = " . $this->options['entities_id'] . " ";
+                  $entities  = " AND `glpi_tickets`.`entities_id` = " . $opt['entities_id'] . " ";
+                  $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` = " . $opt['entities_id'] . " ";
                }
             } else {
                //$entities =getEntitiesRestrictRequest();
@@ -287,10 +617,18 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` = " . $_SESSION['glpiactive_entity'] . " ";
             }
 
+
             $currentmonth = date("m");
             $currentyear  = date("Y");
             $previousyear = $currentyear - 1;
-            $query_2      = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month, DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname, SUM(nbStockTickets) as nbStockTickets FROM `glpi_plugin_mydashboard_stocktickets` WHERE " . $entities2 . " AND (`glpi_plugin_mydashboard_stocktickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') AND (`glpi_plugin_mydashboard_stocktickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')  GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+            $query_2      = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month, 
+                                    DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname, 
+                                    SUM(nbStockTickets) as nbStockTickets 
+                                    FROM `glpi_plugin_mydashboard_stocktickets` 
+                                    WHERE " . $entities2 . " 
+                                    AND (`glpi_plugin_mydashboard_stocktickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') 
+                                    AND (`glpi_plugin_mydashboard_stocktickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')  
+                                    GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $tabdata  = [];
             $tabnames = [];
@@ -298,9 +636,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $maxcount = 0;
             $i        = 0;
 
+
             while ($data = $DB->fetch_array($results2)) {
                $tabdata[$i] = $data["nbStockTickets"];
-               $tabnames[]  = [$i, $data['monthname']];
+               $tabnames[]  = $data['monthname'];
                if ($data["nbStockTickets"] > $maxcount) {
                   $maxcount = $data["nbStockTickets"];
                }
@@ -311,11 +650,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') AS monthname, 
                         DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = 0 "
-                     . $entities . " 
+                        WHERE NOT `glpi_tickets`.`is_deleted` " . $entities . " 
                      AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
                      AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
                      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+
 
             $results = $DB->query($query);
             while ($data = $DB->fetch_array($results)) {
@@ -338,50 +677,166 @@ class PluginMydashboardInfotel extends CommonGLPI {
                if ($data_1['count'] > $maxcount) {
                   $maxcount = $data_1['count'];
                }
-               $tabnames[] = [$i, $data['monthname']];
+               $tabnames[] = $data['monthname'];
                $i++;
             }
 
-            $widget = new PluginMydashboardLineChart();
-
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Entity::dropdown(['name'    => 'entities_id',
-                                                                                                   'display' => false,
-                                                                                                   'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']])
-                        . "&nbsp;" . __('Recursive') . "&nbsp;<input type='checkbox' name='sons' value=1 " . (isset($this->options['sons']) ? "checked" : "") . "></form>";
-
-            $widget->setWidgetTitle(__("Tickets stock", "mydashboard"));
-            $widget->setTabDatas([__("Tickets stock by month", "mydashboard") => $tabdata]);
-            $widget->setOption("xaxis", ["ticks" => $tabnames]);
-            $widget->setOption("yaxis", ["max" => $maxcount + 20, "min" => 0]);
-
-            $widget->setOption("markers", ["show" => true, "position" => "lt", "labelFormatter" => PluginMydashboardBarChart::getLabelFormatter(2)]);
-            $widget->setOption("lines", ["fillColor" => 'lightblue', "fill" => true]);
-            $widget->appendWidgetHtmlContent($dropdown);
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Tickets stock", "mydashboard");
+            $widget->setWidgetComment(__("Sum of not solved tickets by month", "mydashboard"));
+            $widget->setWidgetTitle($title);
             $widget->toggleWidgetRefresh();
-            //$widget->setOption("series", array("curvedLines" => array("active" => true)));
-            //               $widget->setOption("mouse", array("track" => true, "lineColor" => 'purple',
-            //                                    "relative" => true,
-            //                                    "position" =>'ne',
-            //                                    "sensibility" => 1,
-            //                                    "trackDecimals"  => 2,
-            //                                    "trackFormatter"  => "function (o) { return 'x = ' + o.x +', y = ' + o.y; }"));
-            //               $widget->setOption("crosshair", array("mode" => "xy"));
+
+            $dataLineset = json_encode($tabdata);
+            $labelsLine  = json_encode($tabnames);
+
+            $month     = _n('month', 'months', 2);
+            $nbtickets = __('Tickets number', 'mydashboard');
+
+            $graph = "<script type='text/javascript'>
+      
+
+            var dataStockLine = {
+                    datasets: [{
+                      data: $dataLineset,
+                      label: '$title',
+                      borderColor: '#1f77b4',
+            //          backgroundColor: '#FFF',
+                            fill: false,
+                            lineTension: '0.1',
+                    }],
+                  labels:
+                  $labelsLine
+                  };
+            
+//            $(document).ready(
+//               function () {
+                 var isChartRendered = false;
+                  var canvas = document . getElementById('TicketStockLineChart');
+                   var ctx = canvas . getContext('2d');
+                   var TicketStockLineChart = new Chart(ctx, {
+                  type:
+                  'line',
+                     data: dataStockLine,
+                     options: {
+                     responsive:
+                     true,
+                      title:{
+                          display: false,
+                          text:'Line Chart'
+                      },
+                      tooltips: {
+                     mode:
+                     'index',
+                          intersect: false,
+                      },
+                      hover: {
+                     mode:
+                     'nearest',
+                          intersect: true
+                      },
+                      scales: {
+                     xAxes:
+                     [{
+                        display:
+                        true,
+                              scaleLabel: {
+                           display:
+                           true,
+                                  labelString: '$month'
+                              }
+                          }],
+                          yAxes: [{
+                        display:
+                        true,
+                              scaleLabel: {
+                           display:
+                           true,
+                                  labelString: '$nbtickets'
+                              }
+                          }]
+                      },
+                       animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      }
+                   }
+                   });
+               
+         //          canvas . onclick = function (evt) {
+         //             var
+         //             activePoints = TicketStockLineChart . getElementsAtEvent(evt);
+         //             if (activePoints[0]) {
+         //                var
+         //                chartData = activePoints[0]['_chart'] . config . data;
+         //                var
+         //                idx = activePoints[0]['_index'];
+         //
+         //                var
+         //                label = chartData . labels[idx];
+         //                var
+         //                value = chartData . datasets[0] . data[idx];
+         //
+         //                var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+         //              console . log(url);
+         //              alert(url);
+         //            }
+         //          };
+//                 }
+//             );
+             </script>";
+
+
+            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
+            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph   .= "</form>";
+            $graph   .= "</div>";
+            $graph   .= "<div class='bt-col-md-2 center'>";
+            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStockLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph   .= "</div></div>";
+            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph   .= "<canvas id=\"TicketStockLineChart\"></canvas>";
+            $graph   .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
 
             return $widget;
 
             break;
          case $this->getType() . "7":
 
-            if (isset($this->options['entities_id']) && ($this->options['entities_id'] != 0)) {
-               if (isset($this->options['sons']) && ($this->options['sons'] != 0)) {
-                  $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $this->options['entities_id'])) . ") ";
-               } else {
-                  $entities = " AND `glpi_tickets`.`entities_id` = " . $this->options['entities_id'] . " ";
-               }
-            } else {
-               //$entities =getEntitiesRestrictRequest();
-               $entities = " AND `glpi_tickets`.`entities_id` = " . $_SESSION['glpiactive_entity'] . " ";
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
             }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
 
             $mois  = intval(strftime("%m") - 1);
             $annee = intval(strftime("%Y") - 1);
@@ -403,72 +858,285 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      ORDER BY count DESC
                      LIMIT 10";
             $widget   = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId) . Entity::dropdown(['name'    => 'entities_id',
-                                                                                                   'display' => false,
-                                                                                                   'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']])
-                        . "&nbsp;" . __('Recursive') . "&nbsp;<input type='checkbox' name='sons' value=1 " . (isset($this->options['sons']) ? "checked" : "") . "></form>";
+            $datas    = $widget->getTabDatas();
+            $dataspie = [];
+            $namespie = [];
+            $nb       = count($datas);
+            if ($nb > 0) {
+               foreach ($datas as $k => $v) {
 
-            $datas = $widget->getTabDatas();
-
-            foreach ($datas as $k => $v) {
-
-               if (!empty($k)) {
-                  $name = getUserName($k);
-               } else {
-                  $name = __('None');
+                  if (!empty($k)) {
+                     $name = getUserName($k);
+                  } else {
+                     $name = __('None');
+                  }
+                  $dataspie[] = $v;
+                  $namespie[] = $name;
+                  unset($datas[$k]);
                }
-               $datas[$name] = $v;
-               unset($datas[$k]);
             }
-            $widget->setTabDatas($datas);
-            $widget->appendWidgetHtmlContent($dropdown);
-            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle(__("Top ten ticket authors of the previous month", "mydashboard"));
+            //            $widget->setTabDatas($datas);
+            //            $widget->appendWidgetHtmlContent($dropdown);
+            //            $widget->toggleWidgetRefresh();
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Top ten ticket requesters of the previous month", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $palette = PluginMydashboardColor::getColors($nb);
+
+            $dataPieset         = json_encode($dataspie);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($namespie);
+
+            $graph  = "<script type='text/javascript'>
+         
+            var dataTopTenPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            
+//            $(document).ready(
+//              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TopTenTicketAuthorsPieChart');
+                var ctx = canvas.getContext('2d');
+                var TopTenTicketAuthorsPieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataTopTenPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                     onComplete: function() {
+                       isChartRendered = true
+                     }
+                   }
+                }
+                });
+            
+      //          canvas.onclick = function(evt) {
+      //            var activePoints = TopTenTicketAuthorsPieChart.getElementsAtEvent(evt);
+      //            if (activePoints[0]) {
+      //              var chartData = activePoints[0]['_chart'].config.data;
+      //              var idx = activePoints[0]['_index'];
+      //      
+      //              var label = chartData.labels[idx];
+      //              var value = chartData.datasets[0].data[idx];
+      //      
+      //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+      //              console.log(url);
+      //              alert(url);
+      //            }
+      //          };
+//              }
+//            );
+                
+             </script>";
+            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
+            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph   .= "</form>";
+            $graph   .= "</div>";
+            $graph   .= "<div class='bt-col-md-2 center'>";
+            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketAuthorsPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph   .= "</div></div>";
+            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph   .= "<canvas id=\"TopTenTicketAuthorsPieChart\"></canvas>";
+            $graph   .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
 
             return $widget;
             break;
 
          case $this->getType() . "8":
 
-            $time_per_tech = self::getTimePerTech($this->options);
-            $months_t      = Toolbox::getMonthsOfYearArray();
-            $months        = [];
-            foreach ($months_t as $key => $month) {
-               $months[] = [$key, $month];
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+            if (isset($this->preferences['prefered_group'])
+                && $this->preferences['prefered_group'] > 0
+                && !isset($opt['groups_id'])) {
+               $opt['groups_id'] = $this->preferences['prefered_group'];
             }
 
+            $time_per_tech = self::getTimePerTech($opt);
+
+            $months_t = Toolbox::getMonthsOfYearArray();
+            $months   = [];
+            foreach ($months_t as $key => $month) {
+               $months[] = $month;
+            }
+
+            $nb_bar = 0;
+            foreach ($time_per_tech as $tech_id => $tickets) {
+               $nb_bar++;
+            }
+            $palette = PluginMydashboardColor::getColors($nb_bar);
+
+            $i       = 0;
+            $dataset = [];
             foreach ($time_per_tech as $tech_id => $times) {
                unset($time_per_tech[$tech_id]);
-               $username                 = getUserName($tech_id);
-               $time_per_tech[$username] = $times;
+               $username = getUserName($tech_id);
+               $i++;
+               $dataset[] = [
+                  "label"           => $username,
+                  "data"            => array_values($times),
+                  "backgroundColor" => $palette[$i]];
             }
-            $widget   = new PluginMydashboardVBarChart();
-            $dropdown = PluginMydashboardHelper::getFormHeader($widgetId, true) . Entity::dropdown(['name'    => 'entities_id',
-                                                                                                         'display' => false,
-                                                                                                         'value'   => isset($this->options['entities_id']) ? $this->options['entities_id'] : $_SESSION['glpiactive_entity']])
-                        . "&nbsp;" . __('Recursive') . "&nbsp;<input type='checkbox' name='sons' value=1 " . (isset($this->options['sons']) ? "checked" : "") . ">"
-                        . "<input type='submit' value='" . __("Show", "mydashboard") . "' class='submit' />"
-                        . "</form>";
 
-            $widget->setOption("bars", ["stacked" => true, "fillOpacity" => 0.8, "shadowSize" => 0]);
-            $colors = [
-               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
-               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle(__("Process time by technicians by month", "mydashboard"));
+            $widget->setWidgetComment(__("Sum of ticket tasks duration by technicians", "mydashboard"));
+
+            $dataLineset = json_encode($dataset);
+            $labelsLine  = json_encode($months);
+
+            $graph = "<script type='text/javascript'>
+                     var TimeByTechChartData = {
+                             datasets: $dataLineset,
+                           labels:
+                           $labelsLine
+                           };
+                     
+//                     $(document).ready(
+//                        function () {
+                            var isChartRendered = false;
+                            var canvas = document . getElementById('TimeByTechChart');
+                            var ctx = canvas . getContext('2d');
+                            var TimeByTechChart = new Chart(ctx, {
+                                  type: 'bar',
+                                  data: TimeByTechChartData,
+                                  options: {
+                                      responsive:true,
+                                      title:{
+                                          display:false,
+                                          text:'TimeByTechChart'
+                                      },
+                                      tooltips: {
+                                          mode: 'index',
+                                          intersect: false
+                                      },
+                                      scales: {
+                                          xAxes: [{
+                                              stacked: true,
+                                          }],
+                                          yAxes: [{
+                                              stacked: true
+                                          }]
+                                      },
+                                      animation: {
+                                          onComplete: function() {
+                                            isChartRendered = true
+                                          }
+                                        }
+                                  }
+                              });
+                              
+//                               canvas . onclick = function (evt) {
+//                                  var
+//                                  activePoints = TimeByTechChart . getElementsAtEvent(evt);
+//                                  if (activePoints[0]) {
+//                                     var
+//                                     chartData = activePoints[0]['_chart'] . config . data;
+//                                     var
+//                                     idx = activePoints[0]['_index'];
+//                     
+//                                     var
+//                                     label = chartData . labels[idx];
+//                                     var
+//                                     value = chartData . datasets[0] . data[idx];
+//                     
+//                                     var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+//                                   console . log(url);
+//                                   alert(url);
+//                                 }
+//                               };
+//                          }
+//                      );
+                      </script>";
+
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph          .= "<span class='md-widgetcrit'>";
+            $gparams        = ['name'      => 'groups_id',
+                               'display'   => false,
+                               'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
+                               'entity'    => $_SESSION['glpiactiveentities'],
+                               'condition' => '`is_assign`'
             ];
-            $widget->setOption('colors', $colors, true);
-            $widget->setTabDatas($time_per_tech);
-            $widget->setOption("xaxis", ["ticks" => $months]);
-            $widget->setOption("xaxis", ["max" => 13, "min" => 0.5]);
-            //$widget->setOption("markers", array("show" => true,"position" => "cb","stacked" => true, "stackingType" => 'a'));
-            $widget->setOption('legend', [
-               'position' => 'no'
-               //'show' => false
-            ]);
-            $widget->appendWidgetHtmlContent($dropdown);
-            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle(__("Process time by tech by month", "mydashboard"));
+            $graph          .= __('Group');
+            $graph          .= "&nbsp;";
+            $graph          .= Group::dropdown($gparams);
+            $graph          .= "</span>";
+            $graph          .= "<span class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
+            $graph .= "</span>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TimeByTechChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<canvas id=\"TimeByTechChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
 
             return $widget;
 
@@ -493,6 +1161,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
 
+
                   $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
 
                   $name = $data["name"];
@@ -510,14 +1179,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget->setTabDatas($datas);
-
+            $widget->setOption("bDate", ["DH"]);
+            $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
             $widget->setWidgetTitle(__('Automatic actions in error', 'mydashboard'));
 
             return $widget;
             break;
          case $this->getType() . "10":
-            $widget = new PluginMydashboardHtml();
 
             $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
@@ -526,16 +1195,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
             foreach ($mygroups as $mygroup) {
                $groups[] = $mygroup["id"];
             }
-            //$entities = " AND `glpi_tickets`.`entities_id` = ".$_SESSION['glpiactive_entity']." ";
             $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
-            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id, 
-                                 `glpi_tickets`.`status` as status, 
-                                 `glpi_tickets`.`date_mod` as date_mod
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                        WHERE `glpi_tickets`.`is_deleted` = '0'
-                        AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
-                        AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
+            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
+                                          `glpi_tickets`.`status` as status,
+                                          `glpi_tickets`.`date_mod` as date_mod
+                                 FROM `glpi_tickets`
+                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+                                 WHERE `glpi_tickets`.`is_deleted` = '0'
+                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
+                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
 
             $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
 
@@ -567,6 +1235,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            $userdata .= getUserName($k);
                         }
 
+
                         if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
                            $userdata .= "<br>";
                         }
@@ -591,7 +1260,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         $name_ticket .= "</a>";
                         $name_ticket .= "</div>";
 
+
                         $datas[$i]["tickets_id"] = $name_ticket;
+
 
                         $datas[$i]["users_id"] = $userdata;
 
@@ -608,6 +1279,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                  $techdata .= getUserName($k);
                               }
 
+
                               if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
                                  $techdata .= "<br>";
                               }
@@ -622,6 +1294,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                               if ($k) {
                                  $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
                               }
+
 
                               if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
                                  $techdata .= "<br>";
@@ -652,37 +1325,40 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget->setTabDatas($datas);
-            $widget->setOption("bSort", false);
+            $widget->setOption("bSort", [3, 'desc']);
+            $widget->setOption("bDate", ["DH"]);
             $widget->toggleWidgetRefresh();
 
             $widget->setWidgetTitle(__("User ticket alerts", "mydashboard"));
+            $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
 
             return $widget;
             break;
          case $this->getType() . "11":
 
-            $widget = new PluginMydashboardHtml();
-            $url    = $CFG_GLPI['url_base'] . "/status.php";
-            //$url = "http://localhost/glpi/status.php";
-            $options = ["url" => $url];
-
-            $contents = self::cURLData($options);
-            $contents = nl2br($contents);
-
-            $table = "<table class='tab_cadre' width='100%'><tr><th>";
-            $table .= self::handleShellcommandResult($contents, $url);
-            $table .= "</th></tr>";
-            $table .= "<tr class='tab_bg_1'><td>";
-            $table .= $contents;
-            $table .= "</td></tr></table>";
-            $widget->setWidgetHtmlContent(
-               $table
-            );
-            $widget->toggleWidgetRefresh();
-
-            $widget->setWidgetTitle(__("GLPI Status", "mydashboard"));
-
-            return $widget;
+            //            $widget = new PluginMydashboardHtml();
+            //            $url    = $CFG_GLPI['url_base'] . "/status.php";
+            //            //            $url = "http://localhost/glpi/status.php";
+            //            $options = ["url" => $url];
+            //
+            //            $contents = self::cURLData($options);
+            //            $contents = nl2br($contents);
+            //
+            //            $table = self::handleShellcommandResult($contents, $url);
+            //            if (!empty($contents)) {
+            //               $table .= "<div class='md-status'>";
+            //               $table .= $contents;
+            //               $table .= "</div>";
+            //            }
+            //            $widget->setWidgetHtmlContent(
+            //               $table
+            //            );
+            //            //            $widget->toggleWidgetRefresh();
+            //
+            //            $widget->setWidgetTitle(__("GLPI Status", "mydashboard"));
+            //            $widget->setWidgetComment(__("Check if GLPI have no problem", "mydashboard"));
+            //
+            //            return $widget;
             break;
 
          case $this->getType() . "12":
@@ -691,45 +1367,102 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
+                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
             $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                     . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
             $total  = $DB->fetch_assoc($result);
 
-            //toolbox::logdebug($total);
-
-            $query = "SELECT DISTINCT `glpi_tickets`.`slts_ttr_id`, 
-                        COUNT(`glpi_tickets`.`id`) AS nb
+            $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-                        AND `glpi_tickets`.`slts_ttr_id` > 0
-                        AND `glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
-
+                                            AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
+                                                 OR (`glpi_tickets`.`solvedate` IS NULL
+                                                      AND `glpi_tickets`.`time_to_resolve` < NOW()))";
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
-                      . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
-                        GROUP BY slts_ttr_id";
-            //toolbox::logdebug($query);
-            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            $datas  = $widget->getTabDatas();
-            $sum    = 0;
+                      . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
-            foreach ($datas as $k => $v) {
-               $sum += $v;
-            }
-            $data                                         = [];
-            $notrespected                                 = $sum;
-            $respected                                    = $total['nb'] - $sum;
-            $data[__("Respected TTR", "mydashboard")]     = $respected;
-            $data[__("Not respected TTR", "mydashboard")] = $notrespected;
-            $widget->setTabDatas($data);
-            $widget->toggleWidgetRefresh();
+            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
+
+            $result = $DB->query($query);
+            $sum    = $DB->fetch_assoc($result);
+
+            $notrespected = $sum['nb'];
+            $respected    = $total['nb'] - $sum['nb'];
+
+            $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("TTR Compliance", "mydashboard"));
+            $widget->setWidgetComment(__("Display tickets where time to resolve is respected", "mydashboard"));
+
+            $dataPieset = json_encode([$respected, $notrespected]);
+
+            $palette            = PluginMydashboardColor::getColors(2);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode([__("Respected TTR", "mydashboard"), __("Not respected TTR", "mydashboard")]);
+
+            $graph = "<script type='text/javascript'>
+         
+            var dataTTRPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            
+//            $(document).ready(
+//              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TTRCompliance');
+                var ctx = canvas.getContext('2d');
+                var TTRCompliance = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataTTRPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      }
+                }
+                });
+            
+      //          canvas.onclick = function(evt) {
+      //            var activePoints = TTRCompliance.getElementsAtEvent(evt);
+      //            if (activePoints[0]) {
+      //              var chartData = activePoints[0]['_chart'].config.data;
+      //              var idx = activePoints[0]['_index'];
+      //      
+      //              var label = chartData.labels[idx];
+      //              var value = chartData.datasets[0].data[idx];
+      //      
+      //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+      //              console.log(url);
+      //              alert(url);
+      //            }
+      //          };
+//              }
+//            );
+                
+             </script>";
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TTRCompliance\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:30vh; width:30vw\">";
+            $graph .= "<canvas id=\"TTRCompliance\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
 
             return $widget;
+
             break;
          case $this->getType() . "13":
 
@@ -738,40 +1471,99 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
-            $all .= getEntitiesRestrictRequest("AND", Ticket::getTable());
-            //." AND `status` IN (".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.") ";
+            $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+                    . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
             $total  = $DB->fetch_assoc($result);
 
-            $query = "SELECT DISTINCT `glpi_tickets`.`slts_tto_id`, 
-                        COUNT(`glpi_tickets`.`id`) AS nb
+            $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         WHERE `glpi_tickets`.`is_deleted` = '0'
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL
-                        AND `glpi_tickets`.`slts_tto_id` > 0
-                        AND ((UNIX_TIMESTAMP(`glpi_tickets`.`time_to_own`) - `glpi_tickets`.`date`) < `glpi_tickets`.`takeintoaccount_delay_stat`) ";// AND ".getDateRequest("`$table`.`takeintoaccount_delay_stat`", $begin, $end)."
-
+                        AND (`glpi_tickets`.`takeintoaccount_delay_stat`
+                                                        > TIME_TO_SEC(TIMEDIFF(`glpi_tickets`.`time_to_own`,
+                                                                               `glpi_tickets`.`date`))
+                                                 OR (`glpi_tickets`.`takeintoaccount_delay_stat` = 0
+                                                      AND `glpi_tickets`.`time_to_own` < NOW()))";
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
-                      //." AND `status` IN (".CommonITILObject::SOLVED.",".CommonITILObject::CLOSED.")
-                      . "  GROUP BY slts_tto_id";
+                      . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
-            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            $datas  = $widget->getTabDatas();
-            $sum    = 0;
+            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
 
-            foreach ($datas as $k => $v) {
-               $sum += $v;
-            }
-            $data                                         = [];
-            $notrespected                                 = $sum;
-            $respected                                    = $total['nb'] - $sum;
-            $data[__("Respected TTO", "mydashboard")]     = $respected;
-            $data[__("Not respected TTO", "mydashboard")] = $notrespected;
-            $widget->setTabDatas($data);
-            $widget->toggleWidgetRefresh();
+            $result = $DB->query($query);
+            $sum    = $DB->fetch_assoc($result);
+
+            $notrespected = $sum['nb'];
+            $respected    = $total['nb'] - $sum['nb'];
+
+            $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("TTO Compliance", "mydashboard"));
+            $widget->setWidgetComment(__("Display tickets where time to own is respected", "mydashboard"));
+
+            $dataPieset         = json_encode([$respected, $notrespected]);
+            $palette            = PluginMydashboardColor::getColors(2);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode([__("Respected TTO", "mydashboard"), __("Not respected TTO", "mydashboard")]);
+
+            $graph = "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TTOCompliance\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:30vh; width:30vw\">";
+            $graph .= "<canvas id=\"TTOCompliance\"></canvas>";
+            $graph .= "</div>";
+            $graph .= "<script type='text/javascript'>
+         
+            var dataTTOPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            
+//            $(document).ready(
+//              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TTOCompliance');
+                var ctx = canvas.getContext('2d');
+                var TTOCompliance = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataTTOPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      }
+                }
+                });
+            
+      //          canvas.onclick = function(evt) {
+      //            var activePoints = TTOCompliance.getElementsAtEvent(evt);
+      //            if (activePoints[0]) {
+      //              var chartData = activePoints[0]['_chart'].config.data;
+      //              var idx = activePoints[0]['_index'];
+      //      
+      //              var label = chartData.labels[idx];
+      //              var value = chartData.datasets[0].data[idx];
+      //      
+      //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+      //              console.log(url);
+      //              alert(url);
+      //            }
+      //          };
+//              }
+//            );
+//                
+             </script>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
 
             return $widget;
             break;
@@ -825,34 +1617,1281 @@ class PluginMydashboardInfotel extends CommonGLPI {
             return $widget;
 
             break;
+         case $this->getType() . "15":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+            $mois  = intval(strftime("%m") - 1);
+            $annee = intval(strftime("%Y") - 1);
+
+            if ($mois > 0) {
+               $annee = strftime("%Y");
+            } else {
+               $mois = 12;
+            }
+            $nbjours  = date("t", mktime(0, 0, 0, $mois, 1, $annee));
+            $query    = "SELECT `glpi_itilcategories`.`name` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
+                     FROM `glpi_tickets`
+                     LEFT JOIN `glpi_itilcategories`
+                        ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
+                     WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
+                     " . $entities . "
+                     AND `glpi_tickets`.`is_deleted` = '0'
+                     GROUP BY `glpi_itilcategories`.`id`
+                     ORDER BY count DESC
+                     LIMIT 10";
+            $widget   = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
+            $datas    = $widget->getTabDatas();
+            $dataspie = [];
+            $namespie = [];
+            $nb       = count($datas);
+            if ($nb > 0) {
+               foreach ($datas as $k => $v) {
+
+                  if (!empty($k)) {
+                     $name = $k;
+                  } else {
+                     $name = __('None');
+                  }
+                  $dataspie[] = $v;
+                  $namespie[] = $name;
+                  unset($datas[$k]);
+               }
+            }
+            //            $widget->setTabDatas($datas);
+            //            $widget->appendWidgetHtmlContent($dropdown);
+            //            $widget->toggleWidgetRefresh();
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Top ten ticket categories of the previous month", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $dataPieset = json_encode($dataspie);
+
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($namespie);
+
+            $graph  = "<script type='text/javascript'>
+         
+            var dataTopTenCatPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            
+//            $(document).ready(
+//              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TopTenTicketCategoriessPieChart');
+                var ctx = canvas.getContext('2d');
+                var TopTenTicketCategoriessPieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataTopTenCatPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                     onComplete: function() {
+                       isChartRendered = true
+                     }
+                   }
+                }
+                });
+            
+      //          canvas.onclick = function(evt) {
+      //            var activePoints = TopTenTicketCategoriessPieChart.getElementsAtEvent(evt);
+      //            if (activePoints[0]) {
+      //              var chartData = activePoints[0]['_chart'].config.data;
+      //              var idx = activePoints[0]['_index'];
+      //      
+      //              var label = chartData.labels[idx];
+      //              var value = chartData.datasets[0].data[idx];
+      //      
+      //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+      //              console.log(url);
+      //              alert(url);
+      //            }
+      //          };
+//              }
+//            );
+                
+             </script>";
+            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
+            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph   .= "</form>";
+            $graph   .= "</div>";
+            $graph   .= "<div class='bt-col-md-2 center'>";
+            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketCategoriessPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph   .= "</div></div>";
+            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph   .= "<canvas id=\"TopTenTicketCategoriessPieChart\"></canvas>";
+            $graph   .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+         case $this->getType() . "16":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+            $query = "SELECT DISTINCT
+                           `glpi_itilcategories`.`name` AS name,
+                           `glpi_itilcategories`.`id` AS itilcategories_id,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_itilcategories`
+                        ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
+                        WHERE `glpi_tickets`.`is_deleted` = '0' AND  `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'";
+            $query .= $entities
+                      . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                        GROUP BY `glpi_itilcategories`.`id`";
+
+            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
+            //            $datas  = $widget->getTabDatas();
+
+            $colors = [];
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name                = [];
+            $datas               = [];
+            $tabincidentcategory = [];
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]                = $data['name'];
+                  $datas[]               = $data['nb'];
+                  $tabincidentcategory[] = $data['itilcategories_id'];
+               }
+            }
+            //            $widget->setOption('colors', $colors, true);
+            //            $widget->setTabDatas($datas);
+            //            $widget->toggleWidgetRefresh();
+
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened incidents by category", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $dataPieset             = json_encode($datas);
+            $palette                = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor     = json_encode($palette);
+            $labelsPie              = json_encode($name);
+            $tabincidentcategoryset = json_encode($tabincidentcategory);
+            $graph                  = "<script type='text/javascript'>
+         
+            var dataIncidentCatPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var incidentcategoryset = $tabincidentcategoryset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('IncidentsByCategoryPieChart');
+                var ctx = canvas.getContext('2d');
+                var IncidentsByCategoryPieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataIncidentCatPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#IncidentsByCategoryPieChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = IncidentsByCategoryPieChart.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var incidentcategory_id = incidentcategoryset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{category_id:incidentcategory_id, widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
+            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph   .= "</form>";
+            $graph   .= "</div>";
+            $graph   .= "<div class='bt-col-md-2 center'>";
+            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"IncidentsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph   .= "</div></div>";
+            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph   .= "<canvas id=\"IncidentsByCategoryPieChart\"></canvas>";
+            $graph   .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+         case $this->getType() . "17":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+            $query = "SELECT DISTINCT
+                           `glpi_itilcategories`.`name` AS name,
+                           `glpi_itilcategories`.`id` AS itilcategories_id,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_itilcategories`
+                        ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
+                        WHERE `glpi_tickets`.`is_deleted` = '0' AND  `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'";
+            $query .= $entities
+                      . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                        GROUP BY `glpi_itilcategories`.`id`";
+
+            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
+            //            $datas  = $widget->getTabDatas();
+
+            $colors = [];
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabcategory = [];
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]        = $data['name'];
+                  $datas[]       = $data['nb'];
+                  $tabcategory[] = $data['itilcategories_id'];
+               }
+            }
+            //            $widget->setOption('colors', $colors, true);
+            //            $widget->setTabDatas($datas);
+            //            $widget->toggleWidgetRefresh();
+
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened requests by category", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($name);
+            $tabcategoryset     = json_encode($tabcategory);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataRequestCatPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var categoryset = $tabcategoryset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('RequestsByCategoryPieChart');
+                var ctx = canvas.getContext('2d');
+                var RequestsByCategoryPieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataRequestCatPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#RequestsByCategoryPieChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = RequestsByCategoryPieChart.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var category_id = categoryset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{category_id:category_id, widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+            $graph              .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid               = PluginMydashboardWidget::getGsID($widgetId);
+            $graph              .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph              .= "</form>";
+            $graph              .= "</div>";
+            $graph              .= "<div class='bt-col-md-2 center'>";
+            $graph              .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"RequestsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph              .= "</div></div>";
+            $graph              .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph              .= "<canvas id=\"RequestsByCategoryPieChart\"></canvas>";
+            $graph              .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "18":
+
+            $entities = getEntitiesRestrictRequest("AND", Ticket::getTable());
+
+            $mois  = intval(strftime("%m") - 1);
+            $annee = intval(strftime("%Y") - 1);
+
+            if ($mois > 0) {
+               $annee = strftime("%Y");
+            } else {
+               $mois = 12;
+            }
+            $nbjours = date("t", mktime(0, 0, 0, $mois, 1, $annee));
+            $query   = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
+                     FROM `glpi_tickets`
+                     WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
+                     " . $entities . "
+                     AND `glpi_tickets`.`is_deleted` = '0'";
+
+            $result   = $DB->query($query);
+            $nb       = $DB->numrows($result);
+            $dataspie = [];
+            $namespie = [];
+            if ($nb) {
+               while ($data = $DB->fetch_assoc($result)) {
+                  $dataspie[] = $data['nb'];
+                  $namespie[] = __("Opened tickets", "mydashboard");
+               }
+            }
+
+            $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
+                     FROM `glpi_tickets`
+                     WHERE (`glpi_tickets`.`solvedate` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`solvedate` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
+                     " . $entities . "
+                     AND `glpi_tickets`.`is_deleted` = '0'";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            if ($nb) {
+               while ($data = $DB->fetch_assoc($result)) {
+                  $dataspie[] = $data['nb'];
+                  $namespie[] = __("Solved tickets", "mydashboard");
+               }
+            }
+
+            //            $widget->toggleWidgetRefresh();
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened and closed tickets of the previous month", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($dataspie);
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($namespie);
+
+            $graph = "<script type='text/javascript'>
+         
+            var dataTypePie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            
+//            $(document).ready(
+//              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TicketTypePieChart');
+                var ctx = canvas.getContext('2d');
+                var TicketTypePieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataTypePie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                     onComplete: function() {
+                       isChartRendered = true
+                     }
+                   }
+                }
+                });
+            
+      //          canvas.onclick = function(evt) {
+      //            var activePoints = TicketTypePieChart.getElementsAtEvent(evt);
+      //            if (activePoints[0]) {
+      //              var chartData = activePoints[0]['_chart'].config.data;
+      //              var idx = activePoints[0]['_index'];
+      //      
+      //              var label = chartData.labels[idx];
+      //              var value = chartData.datasets[0].data[idx];
+      //      
+      //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+      //              console.log(url);
+      //              alert(url);
+      //            }
+      //          };
+//              }
+//            );
+                
+             </script>";
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph .= "<canvas id=\"TicketTypePieChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "19":
+
+
+            break;
+
+         case $this->getType() . "20":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+
+            $query = "SELECT DISTINCT
+                           `glpi_solutiontypes`.`name` AS name,
+                           `glpi_solutiontypes`.`id` AS solutiontypes_id,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_solutiontypes`
+                        ON (`glpi_solutiontypes`.`id` = `glpi_tickets`.`solutiontypes_id`)
+                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
+            $query .= $entities
+                      . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                      AND `glpi_tickets`.`solutiontypes_id` > 0
+                      GROUP BY `glpi_solutiontypes`.`id`";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabsolution = [];
+
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  $name[] = $data['name'];
+                  //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
+                  $datas[]       = intval($data['nb']);
+                  $tabsolution[] = $data['solutiontypes_id'];
+               }
+            }
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Percent of use of solution types", "mydashboard");
+            $widget->setWidgetComment(__("Display percent of solution types for tickets", "mydashboard"));
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($name);
+            $tabsolutionset     = json_encode($tabsolution);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataSolutionTypePie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var solutionset = $tabsolutionset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('SolutionTypePieChart');
+                var ctx = canvas.getContext('2d');
+                var SolutionTypePieChart = new Chart(ctx, {
+                  type: 'doughnut',
+                  data: dataSolutionTypePie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: function(tooltipItem, data) {
+                           var dataset = data.datasets[tooltipItem.datasetIndex];
+                            var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                              return previousValue + currentValue;
+                            });
+                            var currentValue = dataset.data[tooltipItem.index];
+                            var percentage = Math.floor(((currentValue/total) * 100)+0.5);         
+                            return percentage + \"%\";
+                          }
+                        }
+                      }
+                   }
+                });
+              }
+            );
+                
+             </script>";
+            $graph              .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid               = PluginMydashboardWidget::getGsID($widgetId);
+            $graph              .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph   .= "</form>";
+            $graph   .= "</div>";
+            $graph   .= "<div class='bt-col-md-2 center'>";
+            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"SolutionTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph   .= "</div></div>";
+            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph   .= "<canvas id=\"SolutionTypePieChart\"></canvas>";
+            $graph   .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+         case $this->getType() . "21":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+            if (isset($this->preferences['prefered_group'])
+                && $this->preferences['prefered_group'] > 0
+                && !isset($opt['groups_id'])) {
+               $opt['groups_id'] = $this->preferences['prefered_group'];
+            }
+
+            $tickets_per_tech = self::getTicketsPerTech($opt);
+
+            $months_t = Toolbox::getMonthsOfYearArray();
+            $months   = [];
+            foreach ($months_t as $key => $month) {
+               $months[] = $month;
+            }
+
+            $nb_bar = 0;
+            foreach ($tickets_per_tech as $tech_id => $tickets) {
+               $nb_bar++;
+            }
+            $palette = PluginMydashboardColor::getColors($nb_bar);
+            $i       = 0;
+            $dataset = [];
+            foreach ($tickets_per_tech as $tech_id => $tickets) {
+               unset($tickets_per_tech[$tech_id]);
+               $username = getUserName($tech_id);
+               $i++;
+
+               $dataset[] = [
+                  "label"           => $username,
+                  "data"            => array_values($tickets),
+                  "backgroundColor" => $palette[$i]];
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle(__("Number of tickets affected by technicians by month", "mydashboard"));
+            $widget->setWidgetComment(__("Sum of ticket affected by technicians", "mydashboard"));
+
+            $dataLineset = json_encode($dataset);
+            $labelsLine  = json_encode($months);
+
+            $graph = "<script type='text/javascript'>
+                     var TicketsByTechData = {
+                             datasets: $dataLineset,
+                           labels:
+                           $labelsLine
+                           };
+                     
+//                     $(document).ready(
+//                        function () {
+                            var isChartRendered = false;
+                            var canvas = document . getElementById('TicketsByTechChart');
+                            var ctx = canvas . getContext('2d');
+                            var TicketsByTechChart = new Chart(ctx, {
+                                  type: 'bar',
+                                  data: TicketsByTechData,
+                                  options: {
+                                      responsive:true,
+                                      title:{
+                                          display:false,
+                                          text:'TimeByTechChart'
+                                      },
+                                      tooltips: {
+                                          mode: 'index',
+                                          intersect: false
+                                      },
+                                      scales: {
+                                          xAxes: [{
+                                              stacked: true,
+                                          }],
+                                          yAxes: [{
+                                              stacked: true
+                                          }]
+                                      },
+                                      animation: {
+                                          onComplete: function() {
+                                            isChartRendered = true
+                                          }
+                                        }
+                                  }
+                              });
+                              
+//                               canvas . onclick = function (evt) {
+//                                  var
+//                                  activePoints = TicketsByTechChart . getElementsAtEvent(evt);
+//                                  if (activePoints[0]) {
+//                                     var
+//                                     chartData = activePoints[0]['_chart'] . config . data;
+//                                     var
+//                                     idx = activePoints[0]['_index'];
+//                     
+//                                     var
+//                                     label = chartData . labels[idx];
+//                                     var
+//                                     value = chartData . datasets[0] . data[idx];
+//                     
+//                                     var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+//                                   console . log(url);
+//                                   alert(url);
+//                                 }
+//                               };
+//                          }
+//                      );
+                      </script>";
+
+
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'width'               => '100px',
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $gparams        = ['name'      => 'groups_id',
+                               'display'   => false,
+                               'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
+                               'entity'    => $_SESSION['glpiactiveentities'],
+                               'condition' => '`is_assign`'
+            ];
+            $graph          .= "<span class='md-widgetcrit'>";
+            $graph          .= __('Group');
+            $graph          .= "&nbsp;";
+            $graph          .= Group::dropdown($gparams);
+            $graph          .= "</span>";
+            $graph          .= "<span class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
+            $graph .= "</span>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByTechChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<canvas id=\"TicketsByTechChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+
+            break;
+
+         case $this->getType() . "22":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities   = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+            $mdentities = self::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
+
+            $currentyear = date("Y");
+
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $currentyear = $opt["year"];
+            }
+            $currentmonth = date("m");
+
+            $previousyear = $currentyear - 1;
+            $nextmonth    = $currentmonth + 1;
+            $tabopened    = [];
+            $tabsolved    = [];
+            $tabprogress  = [];
+            $tabnames     = [];
+            $query        = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                                    DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname
+                                    FROM `glpi_tickets`
+                                    WHERE NOT `glpi_tickets`.`is_deleted` AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                                    AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
+                                    " . $entities . "
+                                    GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+
+
+            $results = $DB->query($query);
+            $i       = 0;
+            while ($data = $DB->fetch_array($results)) {
+
+               list($year, $month) = explode('-', $data['month']);
+
+               $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
+               $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
+                     WHERE `glpi_tickets`.`is_deleted` = '0' " . $entities . "
+                     AND (`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+
+               $results_1 = $DB->query($query_1);
+               $data_1    = $DB->fetch_array($results_1);
+
+               $tabopened[] = $data_1['count'];
+
+               $query_2 = "SELECT COUNT(*) as count FROM `glpi_tickets`
+                     WHERE `glpi_tickets`.`is_deleted` = '0' " . $entities . "
+                     AND (`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+
+               $results_2 = $DB->query($query_2);
+               $data_2    = $DB->fetch_array($results_2);
+
+               $tabsolved[] = $data_2['count'];
+
+               $querym_t = "SELECT SUM(`nbstocktickets`) as count FROM glpi_plugin_mydashboard_stocktickets "
+                           . "WHERE date = '$year-$month-$nbdays 00:00:00'  " . $mdentities;
+               $result_t = $DB->fetch_array($DB->query($querym_t));
+               if (isset($result_t['count'])) {
+                  $tabprogress[] = $result_t['count'];
+               }
+
+               if ($month == date("m") && $year == date("Y")) {
+                  $query_3 = "SELECT COUNT(*) as count FROM `glpi_tickets`
+                     WHERE `glpi_tickets`.`is_deleted` = '0' " . $entities . "
+                     AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                     AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
+                     OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                     AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+
+                  $results_3 = $DB->query($query_3);
+                  $data_3    = $DB->fetch_array($results_3);
+
+                  $tabprogress[] = $data_3['count'];
+               }
+               $tabnames[] = $data['monthname'];
+               $i++;
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened and closed tickets by month", "mydashboard");
+            $widget->setWidgetTitle($title);
+            $widget->toggleWidgetRefresh();
+
+            $titleopened         = __("Opened tickets", "mydashboard");
+            $titlesolved         = __("Closed tickets", "mydashboard");
+            $titleprogress       = __("Number of opened tickets", "mydashboard");
+            $dataopenedBarset    = json_encode($tabopened);
+            $datasolvedBarset    = json_encode($tabsolved);
+            $dataprogressLineset = json_encode($tabprogress);
+            $labels              = json_encode($tabnames);
+
+            $graph = "<script type='text/javascript'>
+            var dataTicketStatusBar = {
+                    datasets: [
+                    {
+                      type: 'line',
+                      data: $dataprogressLineset,
+                      label: '$titleprogress',
+                      borderColor: '#ff7f0e',
+                            fill: false,
+                            lineTension: '0.1',
+                    }, {
+                      type: 'bar',
+                      data: $dataopenedBarset,
+                      label: '$titleopened',
+                      backgroundColor: '#1f77b4',
+                    }, {
+                      type: 'bar',
+                      data: $datasolvedBarset,
+                      label: '$titlesolved',
+                      backgroundColor: '#aec7e8',
+                    }],
+                  labels:
+                  $labels
+                  };
+            
+            $(document).ready(
+               function () {
+                   var isChartRendered = false;
+                   var canvas = document . getElementById('TicketStatusBarLineChart');
+                   var ctx = canvas . getContext('2d');
+                   var TicketStatusBarLineChart = new Chart(ctx, {
+                         type: 'bar',
+                         data: dataTicketStatusBar,
+                         options: {
+                             responsive:true,
+                             title:{
+                                 display:false,
+                                 text:'TicketStatusBarLineChart'
+                             },
+                             tooltips: {
+                                 enabled: false,
+//                                          mode: 'index',
+//                                          intersect: false
+                             },
+//                             scales: {
+//                                 xAxes: [{
+//                                     stacked: true,
+//                                 }],
+//                                 yAxes: [{
+//                                     stacked: true
+//                                 }]
+//                             },
+                             animation: {
+                              onComplete: function() {
+                                var ctx = this.chart.ctx;
+                               ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+                               ctx.fillStyle = '#595959';
+                               ctx.textAlign = 'center';
+                               ctx.textBaseline = 'bottom';
+                               this.data.datasets.forEach(function (dataset) {
+                                   for (var i = 0; i < dataset.data.length; i++) {
+                                       var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+                                       ctx.fillText(dataset.data[i], model.x, model.y - 5);
+                                   }
+                               });
+                                 
+                                isChartRendered = true;
+                              }
+                            },
+                         }
+                     });
+                  }
+             );
+             </script>";
+
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph  .= "<span class='md-widgetcrit'>";
+               $params = ['name'                => 'entities_id',
+                          'display'             => false,
+                          'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                          'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph          .= "<span class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
+            $graph .= "</span>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStatusBarLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<canvas id=\"TicketStatusBarLineChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+
+            break;
+
+         case $this->getType() . "23":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $currentyear = date("Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $currentyear = $opt["year"];
+            }
+
+            $currentmonth = date("m");
+
+            $previousyear = $currentyear - 1;
+            $nextmonth    = $currentmonth + 1;
+            $entities     = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+            $query = "SELECT 
+                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                              DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
+                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum
+                              FROM `glpi_tickets`
+                              WHERE NOT `glpi_tickets`.`is_deleted` AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                              AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
+                              " . $entities . "
+                              GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+
+
+            $results = $DB->query($query);
+            $i       = 0;
+
+            $tabduration = [];
+            $tabdates    = [];
+            $tabnames    = [];
+            while ($data = $DB->fetch_array($results)) {
+
+               list($year, $month) = explode('-', $data['month']);
+
+               $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
+               $query_1 = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nb_tickets, SUM(`glpi_tickettasks`.`actiontime`) AS count 
+                          FROM `glpi_tickettasks`
+                          LEFT JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
+                          WHERE NOT `glpi_tickets`.`is_deleted` " . $entities . "
+                           AND (`glpi_tickettasks`.`date` >= '$year-$month-01 00:00:01' 
+                           AND `glpi_tickettasks`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+
+               $results_1         = $DB->query($query_1);
+               $data_1            = $DB->fetch_array($results_1);
+               $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
+               $tabduration[]     = round($average_by_ticket, 2);
+               $tabnames[]        = $data['monthname'];
+               $tabdates[]        = $data['monthnum'];
+               $i++;
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle(__("Average real duration of treatment of the ticket", "mydashboard"));
+            $widget->setWidgetComment(__("Display of average real duration of treatment of tickets (actiontime of tasks)", "mydashboard"));
+            $dataLineset = json_encode($tabduration);
+            $labelsLine  = json_encode($tabnames);
+            $tabdatesset = json_encode($tabdates);
+
+            $taskduration = __('Tasks duration (minutes)', 'mydashboard');
+
+            $graph = "<script type='text/javascript'>
+                     var AverageData = {
+                             datasets: [{
+                               data: $dataLineset,
+                               label: '$taskduration',
+                               backgroundColor: '#1f77b4',
+                             }],
+                           labels:
+                           $labelsLine
+                           };
+                     var dateset = $tabdatesset;
+                     $(document).ready(
+                        function () {
+                            var isChartRendered = false;
+                            var canvas = document . getElementById('AverageBarChart');
+                            var ctx = canvas . getContext('2d');
+                            var AverageBarChart = new Chart(ctx, {
+                                  type: 'bar',
+                                  data: AverageData,
+                                  options: {
+                                      responsive:true,
+                                      title:{
+                                          display:false,
+                                          text:'AverageBarChart'
+                                      },
+                                      tooltips: {
+                                          enabled: false,
+//                                          mode: 'index',
+//                                          intersect: false
+                                      },
+                                      scales: {
+                                          xAxes: [{
+                                              stacked: true,
+                                          }],
+                                          yAxes: [{
+                                              stacked: true
+                                          }]
+                                      },
+                                      animation: {
+                                       onComplete: function() {
+                                         var chartInstance = this.chart,
+                                          ctx = chartInstance.ctx;
+                                          ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                          ctx.textAlign = 'center';
+                                          ctx.textBaseline = 'bottom';
+                              
+                                          this.data.datasets.forEach(function (dataset, i) {
+                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                              meta.data.forEach(function (bar, index) {
+                                                  var data = dataset.data[index];                            
+                                                  ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                              });
+                                          });
+                                         isChartRendered = true;
+                                       }
+                                     },
+                                  }
+                              });
+                           }
+                      );
+                     
+                      </script>";
+
+            $graph          .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid           = PluginMydashboardWidget::getGsID($widgetId);
+            $graph          .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'width'               => '100px',
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph          .= "<span class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
+            $graph .= "</span>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"AverageBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<canvas id=\"AverageBarChart\"></canvas>";
+            $graph .= "</div>";
+
+            //            $widget->toggleWidgetRefresh();
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+
+            break;
       }
-   }
-
-   /**
-    * @param $message
-    * @param $url
-    *
-    * @return string
-    */
-   static function handleShellcommandResult($message, $url) {
-      global $CFG_GLPI;
-
-      $alert = "";
-      if (preg_match('/PROBLEM/is', $message)) {
-         $alert .= "<style>img.middle {vertical-align:middle;}></style>";
-         $alert .= "<img class='middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/warning.png'></style>&nbsp;";
-         $alert .= __("Problem with GLPI", "mydashboard");
-         $alert .= "&nbsp;<img class='middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/warning.png'>";
-      } else if (preg_match('/OK/is', $message)) {
-         $alert .= "<style>img.middle {vertical-align:middle;}></style>";
-         $alert .= "<img class='middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/ok.png'>&nbsp;";
-         $alert .= __("GLPI is OK", "mydashboard");
-      } else {
-         $alert .= __("Alert is not properly configured", "mydashboard");
-         $alert .= "<br>" . $url;
-      }
-
-      return $alert;
    }
 
    /**
@@ -860,12 +2899,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
     *
     * @return string
     */
-   private function getSeeProfileButton($id) {
-      global $CFG_GLPI;
-      return "<a target='blank' href='" . $CFG_GLPI['root_doc'] . "/front/user.form.php?id=" . $id . "'>"
-             . "<input type='button' class='submit' value=' " . __("Show Profile", "mydashboard") . " '/>"
-             . "</a>";
-   }
+   //   private function getSeeProfilebutton class='btn btn-primary btn-sm'($id) {
+   //      global $CFG_GLPI;
+   //      return "<a target='blank' href='" . $CFG_GLPI['root_doc'] . "/front/user.form.php?id=" . $id . "'>"
+   //             . "<input type='button class='btn btn-primary btn-sm'' class='submit' value=' " . __("Show Profile", "mydashboard") . " '/>"
+   //             . "</a>";
+   //   }
 
    /**
     * @param $table
@@ -874,14 +2913,22 @@ class PluginMydashboardInfotel extends CommonGLPI {
     * @return string
     */
    private static function getSpecificEntityRestrict($table, $params) {
-      if (isset($params['entities_id']) /*&& ($params['entities_id'] != 0)*/) {
-         if (isset($params['sons']) && ($params['sons'] != 0)) {
+
+      if (isset($params['entities_id']) && $params['entities_id'] == "") {
+         $params['entities_id'] = $_SESSION['glpiactive_entity'];
+      }
+      if (isset($params['entities_id']) && ($params['entities_id'] != -1)) {
+         if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
             $entities = " AND `$table`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $params['entities_id'])) . ") ";
          } else {
             $entities = " AND `$table`.`entities_id` = " . $params['entities_id'] . " ";
          }
       } else {
-         $entities = getEntitiesRestrictRequest("AND", $table/*,'','',isset($params['sons']) && ($params['sons'] != 0),true*/);
+         if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
+            $entities = " AND `$table`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])) . ") ";
+         } else {
+            $entities = " AND `$table`.`entities_id` = " . $_SESSION['glpiactive_entity'] . " ";
+         }
       }
       return $entities;
    }
@@ -899,42 +2946,55 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
       $mois = intval(strftime("%m") - 1);
       $year = intval(strftime("%Y") - 1);
+
       if ($mois > 0) {
          $year = date("Y");
       }
 
-      $groups             = implode(",", $_SESSION['glpigroups']);
-      $techlist           = [];
-      $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
-                            . "FROM `glpi_groups_users` "
-                            . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
-                            . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
-                            . " GROUP BY `glpi_groups_users`.`users_id`";
-
-      $result_gu = $DB->query($query_group_member);
-
-      while ($data = $DB->fetch_assoc($result_gu)) {
-         $techlist[] = $data['users_id'];
+      if (isset($params["year"])
+          && $params["year"] > 0) {
+         $year = $params["year"];
       }
 
+      $selected_group = [];
+      if (isset($params["groups_id"])
+          && $params["groups_id"] > 0) {
+         $groups_id = $params['groups_id'];
+      }
+
+      if (isset($groups_id) && $groups_id > 0) {
+         $selected_group[] = $groups_id;
+      } else if (count($_SESSION['glpigroups']) > 0) {
+         $selected_group = $_SESSION['glpigroups'];
+      }
+
+      $techlist = [];
+      if (count($selected_group) > 0) {
+         $groups             = implode(",", $selected_group);
+         $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
+                               . "FROM `glpi_groups_users` "
+                               . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
+                               . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
+                               . " GROUP BY `glpi_groups_users`.`users_id`";
+
+         $result_gu = $DB->query($query_group_member);
+
+         while ($data = $DB->fetch_assoc($result_gu)) {
+            $techlist[] = $data['users_id'];
+         }
+      }
       $current_month = date("m");
       foreach ($months as $key => $month) {
 
-         if ($key > $current_month && $year == date("Y")) {
-            break;
-         }
+         if ($key > $current_month && $year == date("Y")) break;
 
          $next = $key + 1;
 
          $month_tmp = $key;
          $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
 
-         if (strlen($key) == 1) {
-            $month_tmp = "0" . $month_tmp;
-         }
-         if (strlen($next) == 1) {
-            $next = "0" . $next;
-         }
+         if (strlen($key) == 1) $month_tmp = "0" . $month_tmp;
+         if (strlen($next) == 1) $next = "0" . $next;
 
          if ($key == 0) {
             $year      = $year - 1;
@@ -973,7 +3033,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ";
             $result_ai_q = $DB->query($querym_ai);
             while ($data = $DB->fetch_assoc($result_ai_q)) {
-               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
+//               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
+               $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8), 2);
             }
          }
 
@@ -982,6 +3043,111 @@ class PluginMydashboardInfotel extends CommonGLPI {
          }
       }
       return $time_per_tech;
+   }
+
+
+   /**
+    * @param $params
+    *
+    * @return array
+    */
+   private static function getTicketsPerTech($params) {
+      global $DB;
+
+      $tickets_per_tech = [];
+      $months           = Toolbox::getMonthsOfYearArray();
+
+      $mois = intval(strftime("%m") - 1);
+      $year = intval(strftime("%Y") - 1);
+
+      if ($mois > 0) {
+         $year = date("Y");
+      }
+
+      if (isset($params["year"])
+          && $params["year"] > 0) {
+         $year = $params["year"];
+      }
+
+      $selected_group = [];
+      if (isset($params["groups_id"])
+          && $params["groups_id"] > 0) {
+         $groups_id = $params['groups_id'];
+      }
+
+      if (isset($groups_id) && $groups_id > 0) {
+         $selected_group[] = $groups_id;
+      } else if (count($_SESSION['glpigroups']) > 0) {
+         $selected_group = $_SESSION['glpigroups'];
+      }
+
+      $techlist = [];
+      if (count($selected_group) > 0) {
+         $groups             = implode(",", $selected_group);
+         $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
+                               . "FROM `glpi_groups_users` "
+                               . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
+                               . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
+                               . " GROUP BY `glpi_groups_users`.`users_id`";
+
+         $result_gu = $DB->query($query_group_member);
+
+         while ($data = $DB->fetch_assoc($result_gu)) {
+            $techlist[] = $data['users_id'];
+         }
+      }
+      $current_month = date("m");
+      foreach ($months as $key => $month) {
+
+         if ($key > $current_month && $year == date("Y")) break;
+
+         $next = $key + 1;
+
+         $month_tmp = $key;
+         $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
+
+         if (strlen($key) == 1) $month_tmp = "0" . $month_tmp;
+         if (strlen($next) == 1) $next = "0" . $next;
+
+         if ($key == 0) {
+            $year      = $year - 1;
+            $month_tmp = "12";
+            $nb_jours  = date("t", mktime(0, 0, 0, 12, 1, $year));
+         }
+
+         $month_deb_date     = "$year-$month_tmp-01";
+         $month_deb_datetime = $month_deb_date . " 00:00:00";
+         $month_end_date     = "$year-$month_tmp-$nb_jours";
+         $month_end_datetime = $month_end_date . " 23:59:59";
+
+         foreach ($techlist as $techid) {
+            $tickets_per_tech[$techid][$key] = 0;
+
+            $querym_ai   = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets
+                        FROM `glpi_tickets` 
+                        INNER JOIN `glpi_tickets_users` 
+                        ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0) 
+                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
+            $querym_ai   .= "WHERE ";
+            $querym_ai   .= "(
+                           `glpi_tickets`.`date` >= '$month_deb_datetime' 
+                           AND `glpi_tickets`.`date` <= '$month_end_datetime'
+                           AND `glpi_tickets_users`.`users_id` = (" . $techid . ") "
+                            . self::getSpecificEntityRestrict("glpi_tickets", $params)
+                            . ") ";
+            $querym_ai   .= "GROUP BY DATE(`glpi_tickets`.`date`);
+                        ";
+            $result_ai_q = $DB->query($querym_ai);
+            while ($data = $DB->fetch_assoc($result_ai_q)) {
+               $tickets_per_tech[$techid][$key] += $data['nbtickets'];
+            }
+         }
+
+         if ($key == 0) {
+            $year++;
+         }
+      }
+      return $tickets_per_tech;
    }
 
    /**
@@ -1021,103 +3187,5 @@ class PluginMydashboardInfotel extends CommonGLPI {
       }
 
       return $result;
-   }
-
-   /**
-    * @param $options
-    *
-    * @return mixed|string
-    */
-   static function cURLData($options) {
-      global $CFG_GLPI;
-
-      if (!function_exists('curl_init')) {
-         return __('Curl PHP package not installed', 'mydashboard') . "\n";
-      }
-      $data        = '';
-      $timeout     = 10;
-      $proxy_host  = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
-      $proxy_ident = $CFG_GLPI["proxy_user"] . ":" .
-                     Toolbox::decrypt($CFG_GLPI["proxy_passwd"], GLPIKEY); // username:password
-
-      $url = $options["url"];
-
-      $ch = curl_init();
-
-      curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-      curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-
-      if (preg_match('`^https://`i', $options["url"])) {
-         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-      }
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_HEADER, 0);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      curl_setopt($ch, CURLOPT_COOKIEFILE, "cookiefile");
-      curl_setopt($ch, CURLOPT_COOKIEJAR, "cookiefile"); // SAME cookiefile
-
-      //Do we have post field to send?
-      if (!empty($options["post"])) {
-         //curl_setopt($ch, CURLOPT_POST,true);
-         $post = '';
-         foreach ($options['post'] as $key => $value) {
-            $post .= $key . '=' . $value . '&';
-         }
-         rtrim($post, '&');
-         curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:application/x-www-form-urlencoded"]);
-         curl_setopt($ch, CURLOPT_POST, true);
-         curl_setopt($ch, CURLOPT_POSTREDIR, 2);
-         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-      }
-
-      //if (!$options["download"]) {
-      //curl_setopt($ch, CURLOPT_HEADER, 1);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-      //}
-
-      // Activation de l'utilisation d'un serveur proxy
-      if (!empty($CFG_GLPI["proxy_name"])) {
-         //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
-
-         // Définition de l'adresse du proxy
-         curl_setopt($ch, CURLOPT_PROXY, $proxy_host);
-
-         // Définition des identifiants si le proxy requiert une identification
-         if ($proxy_ident) {
-            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy_ident);
-         }
-      }
-      //if ($options["download"]) {
-      //   $fp = fopen($options["file"], "w");
-      //   curl_setopt($ch, CURLOPT_FILE, $fp);
-      //   curl_exec($ch);
-      //} else {
-      $data = curl_exec($ch);
-      //}
-
-      if (//!$options["download"] &&
-      !$data
-      ) {
-         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-         curl_close($ch); // make sure we closeany current curl sessions
-         //die($http_code.' Unable to connect to server. Please come back later.');
-      } else {
-         curl_close($ch);
-      }
-
-      //if ($options["download"]) {
-      //fclose($fp);
-      //}
-      if (//!$options["download"] &&
-      $data
-      ) {
-         return $data;
-      }
    }
 }

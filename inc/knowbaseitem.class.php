@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -31,25 +31,30 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
 {
    static $rightname = 'knowbase';
 
+   static function getTypeName($nb=0) {
+      return __('Knowledge base');
+   }
    /**
     * @return array
     */
-   public function getWidgetsForItem() {
-      return [
-         PluginMydashboardMenu::$GLOBAL_VIEW => [
-            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions'),
-            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries'),
-            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries')
-         ]
+   public function getWidgetsForItem()
+   {
+      return array(
+         PluginMydashboardMenu::$GLOBAL_VIEW => array(
+            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions') . "&nbsp;<i class='fa fa-table'></i>",
+            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries') . "&nbsp;<i class='fa fa-table'></i>",
+            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries') . "&nbsp;<i class='fa fa-table'></i>"
+         )
 
-      ];
+      );
    }
 
    /**
     * @param $widgetId
     * @return PluginMydashboardDatatable
     */
-   public function getWidgetContentForItem($widgetId) {
+   public function getWidgetContentForItem($widgetId)
+   {
       global $DB, $CFG_GLPI;
 
       $faq = !Session::haveRight(self::$rightname, READ);
@@ -81,6 +86,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
          }
       }
 
+
       // Only published
       $faq_limit .= " AND (`glpi_entities_knowbaseitems`.`entities_id` IS NOT NULL
                            OR `glpi_knowbaseitems_profiles`.`profiles_id` IS NOT NULL
@@ -99,7 +105,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
                 LIMIT 10";
 
       $result = $DB->query($query);
-      $tab = [];
+      $tab = array();
       while ($row = $DB->fetch_assoc($result)) {
          $date = "";
          if ($widgetId == "knowbaseitemrecent") {
@@ -107,22 +113,24 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
          } else {
             $date = $row["date_mod"];
          }
-         $tab[] = [
+         $tab[] = array(
             "<a " . ($row['is_faq'] ? " class='pubfaq' " : " class='knowbase' ") . " href=\"" .
             $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
             Html::resume_text($row["name"], 80) . "</a>", Html::convDateTime($date)
-         ];
+         );
       }
       if ($widgetId == "knowbaseitemrecent") {
-         $headers = [__('Name'), __('Publication date', 'mydashboard')];
+         $headers = array(__('Name'), __('Publication date', 'mydashboard'));
       } else {
-         $headers = [__('Name'), __('Modification date', 'mydashboard')];
+         $headers = array(__('Name'), __('Modification date', 'mydashboard'));
       }
 
       $widget = new PluginMydashboardDatatable();
       $widget->setTabNames($headers);
       $widget->setTabDatas($tab);
       $widget->setWidgetTitle($title);
+      $widget->setOption("bDate", ["DH"]);
+      $widget->setOption("bSort", [1, 'desc']);
       return $widget;
    }
 }

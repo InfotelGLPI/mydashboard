@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ --------------------------------------------------------------------------  
  */
 
 /**
@@ -36,28 +36,27 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param $profiles_id
     * @return array|bool
     */
-   public function getAuthorizedListForProfile($profiles_id) {
+   public function getAuthorizedListForProfile($profiles_id)
+   {
       $profileright = new ProfileRight();
       $profileright->getFromDBByQuery("WHERE `name`='plugin_mydashboard' AND `profiles_id` = '" . $profiles_id . "'");
 
       //If profile has right CREATE+UPDATE it means it can see every widgets
-      if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == (CREATE + UPDATE)) {
-         return false;
-      }
+      if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == (CREATE + UPDATE)) return false;
 
       //If profile has right READ it means it can see only authorized widgets
       if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == READ) {
          $table = getAllDatasFromTable($this->getTable(), "`profiles_id` = '" . $profiles_id . "'");
          $widget = new PluginMydashboardWidget();
 
-         $ret = [];
+         $ret = array();
          foreach ($table as $key => $line) {
             $widgetId = $widget->getWidgetNameById($line['widgets_id']);
             $ret[$widgetId] = $line['id'];
          }
          return $ret;
       } else {
-         return [];
+         return array();
       }
    }
 
@@ -65,20 +64,28 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param $ID
     * @param array $options
     */
-   public function showForm($ID, $options = []) {
+   public function showForm($ID, $options = array())
+   {
+
       $this->authorized = $this->getAuthorizedListForProfile($ID);
-      $test = new PluginMydashboardWidgetlist();
-      $widgetlist = $test->getList(false);
+      $list = new PluginMydashboardWidgetlist();
+      $widgetlist = $list->getList(false, -1, $options['interface']);
+
       echo "<form method='post' action='../plugins/mydashboard/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
       echo "<table class='tab_cadre_fixe'>";
       foreach ($widgetlist as $plugin => $widgetclasses) {
-         echo "<th>" . ucfirst($this->getLocalName($plugin)) . "</th>";
+         $fct = 'plugin_version_' . strtolower($plugin);
+         if (function_exists($fct)) {
+            echo "<th>" . ucfirst($this->getLocalName($plugin)) . "</th>";
+         } else {
+            echo "<th>" . ucfirst($plugin) . "</th>";
+         }
          echo "<th class='plugin_mydashboard_authorize_all' onclick=\""
-            . "$('.from_$plugin').find('select').val(($('.from_$plugin').find('select').val() === '0')?'1':'0');
+              . "$('.from_$plugin').find('select').val(($('.from_$plugin').find('select').val() === '0')?'1':'0');
                        $('.from_$plugin').find('select').trigger('change');\" >" . __('Authorize/Unauthorize all', 'mydashboard') . "&nbsp;"
-         //                     ."<input type='checkbox' value='all' />"
+              //                     ."<input type='checkbox' value='all' />"
 
-            . "</th>";
+              . "</th>";
          foreach ($widgetclasses as $widgetclass => $widgetlist) {
             $this->displayList($widgetlist, '', 'from_' . $plugin);
          }
@@ -89,6 +96,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
       echo "</tr>";
       echo "</table>";
 
+
       Html::closeForm();
    }
 
@@ -97,7 +105,8 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param string $category
     * @param $pluginname
     */
-   private function displayList($widgetlist, $category = '', $pluginname) {
+   private function displayList($widgetlist, $category = '', $pluginname)
+   {
       $viewNames = $this->getViewNames();
       foreach ($widgetlist as $widgetId => $widgetTitle) {
 
@@ -139,7 +148,8 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
    /**
     * @param $post
     */
-   public function save($post) {
+   public function save($post)
+   {
 
       if (isset($post['id']) && isset($post['update'])) {
          $profiles_id = $post['id'];
@@ -158,10 +168,10 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
             unset($this->fields['id']);
             $this->getFromDBByQuery("WHERE `profiles_id` = '$profiles_id' AND `widgets_id` ='$widgetId'");
             if (!isset($this->fields['id'])) {
-               $this->add([
+               $this->add(array(
                   'profiles_id' => $profiles_id,
                   'widgets_id' => $widgetId
-               ]);
+               ));
             }
          } else {
             if (isset($this->authorized[$widgetName])) {
@@ -178,7 +188,8 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param string $plugin_name
     * @return string
     */
-   private function getLocalName($plugin_name) {
+   private function getLocalName($plugin_name)
+   {
       $infos = Plugin::getInfo($plugin_name);
 
       return isset($infos['name']) ? $infos['name'] : $plugin_name;
@@ -188,8 +199,9 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * Get the names of each view
     * @return array of string
     */
-   private function getViewNames() {
-      $names = [];
+   private function getViewNames()
+   {
+      $names = array();
       $names[1] = _n('Ticket', 'Tickets', 2);
       $names[2] = _n('Problem', 'Problems', 2);
       $names[3] = _n('Change', 'Changes', 2);
