@@ -350,7 +350,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             if ($stats_tickets4 > 0) {
                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='".__('Opened tickets without assigned technicians', 'mydashboard')."'>";
             }
-            $table .= "<i style='color:$colorstats4;font-size:36px' class=\"fa fa-user-times fa-3x fa-border\"></i>
+            $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fa fa-user-times fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats_tickets4\"></span></h3>";
             $table .= "<p class=\"count-text \">" . __('Opened tickets without assigned technicians', 'mydashboard') . "</p>";
             if ($stats_tickets4 > 0) {
