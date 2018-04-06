@@ -1149,11 +1149,15 @@ class PluginMydashboardMenu extends CommonGLPI {
       if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !NULL) {
 
          foreach ($datagrid as $k => $v) {
-            $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"]);
+            if (isset($v["id"])) {
+               $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"]);
+            }
          }
 
          foreach ($datagrid as $k => $v) {
-            $optjson[$v["id"]] = PluginMydashboardWidget::getWidgetOptions($v["id"]);
+            if (isset($v["id"])) {
+               $optjson[$v["id"]] = PluginMydashboardWidget::getWidgetOptions($v["id"]);
+            }
          }
       } else {
          echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
