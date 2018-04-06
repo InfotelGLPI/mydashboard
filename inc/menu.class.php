@@ -238,7 +238,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       if ($edit > 0) {
          echo $this->getWidgetsList($selected_profile, $edit);
       }
-
+//      $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
       //      else {
       //         $this->getWidgetsList();
       //      }
@@ -259,7 +259,9 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo "<span class='plugin_mydashboard_header_right'> ";//(span.plugin_mydashboard_header_right)
       //If administator enabled fullscreen we display the button to toggle fullscreen
       //(maybe we could also only add the js when needed, but jquery is loaded so would be only foolproof)
-      if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen'] && $edit < 1) {
+      if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
+          && $edit < 1
+      && $this->interface == 1) {
          //         echo "<img class='plugin_mydashboard_header_fullscreen plugin_mydashboard_discret' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/fullscreen.png' width='20px' alt='" . __("Fullscreen") . "'/>";
          echo "<i class=\"fa fa-arrows-alt plugin_mydashboard_header_fullscreen header_fullscreen plugin_mydashboard_discret \" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
       }
