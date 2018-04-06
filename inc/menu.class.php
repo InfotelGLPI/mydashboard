@@ -1115,7 +1115,9 @@ class PluginMydashboardMenu extends CommonGLPI {
       if (count($list) > 0) {
          foreach ($list as $k => $v) {
             $id     = PluginMydashboardWidget::getGsID($v);
-            $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
+            if ($id) {
+               $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
+            }
          }
          $grid = json_encode($data);
       }
@@ -1180,7 +1182,6 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
       }
       $allwidgetjson = json_encode($allwidgetjson);
-      $msg_save      = __('Grid saved', 'mydashboard');
       $msg_delete    = __('Delete widget', 'mydashboard');
       $msg_error     = __('No data available', 'mydashboard');
       $msg_refresh   = __('Refresh widget', 'mydashboard');
@@ -1248,8 +1249,10 @@ class PluginMydashboardMenu extends CommonGLPI {
                          if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button pull-left refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-refresh\"></i></button>';
                          }
+                         if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
                             this.grid.addWidget(el, node.x, node.y, node.width, node.height, true, null, null, null, null, node.id);
+                            }
                     }, this);
                     return false;
                 }.bind(this);
@@ -1257,13 +1260,15 @@ class PluginMydashboardMenu extends CommonGLPI {
                     this.serializedData = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
                         el = $(el);
                         var node = el.data('_gridstack_node');
-                        return {
-                             id: node.id,
-                            x: node.x,
-                            y: node.y,
-                            width: node.width,
-                            height: node.height
-                        };
+                        if ( node.id !== undefined ) {
+                           return {
+                                id: node.id,
+                               x: node.x,
+                               y: node.y,
+                               width: node.width,
+                               height: node.height
+                           };
+                        }
                     }, this);
                     var sData = JSON.stringify(this.serializedData);
                     var profiles_id = -1;
