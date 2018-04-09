@@ -2769,7 +2769,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $results_1         = $DB->query($query_1);
                $data_1            = $DB->fetch_array($results_1);
+               $average_by_ticket = 0;
+
+               if ($data_1['nb_tickets'] > 0 
+                  && $data_1['count'] > 0) {
                $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
+               }
                $tabduration[]     = round($average_by_ticket, 2);
                $tabnames[]        = $data['monthname'];
                $tabdates[]        = $data['monthnum'];

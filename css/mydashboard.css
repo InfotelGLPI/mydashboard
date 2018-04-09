@@ -743,7 +743,7 @@ svg:hover {
 .md-button {
    position: relative;
    margin: 0;
-   float: left;
+   /*float: left;*/
    outline: none;
    cursor: pointer;
    border-radius: 0;
