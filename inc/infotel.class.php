@@ -52,10 +52,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
    public function getWidgetsForItem() {
       return [
          __('Public')                => [$this->getType() . "3"  => __("Internal annuary", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+//                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
                                          $this->getType() . "5"  => __("Fields unicity") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+//                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+//                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
                                          //                                         $this->getType() . "11" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
                                          $this->getType() . "14" => __("All unpublished articles") . "&nbsp;<i class='fa fa-table'></i>",
                                          //                                              $this->getType() . "19" => __("Tickets alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
@@ -463,46 +463,49 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "4":
 
-            $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
-                        FROM `glpi_notimportedemails`
-                        ORDER BY `date` ASC";
-
-            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver')];
-            $widget->setTabNames($headers);
-
-            $result = $DB->query($query);
-            $nb     = $DB->numrows($result);
-
-            $datas = [];
-            $i     = 0;
-            if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
-
-
-                  $datas[$i]["date"] = Html::convDateTime($data['date']);
-
-                  $datas[$i]["from"] = $data['from'];
-
-                  $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
-
-                  $mail = new MailCollector();
-                  $mail->getFromDB($data['mailcollectors_id']);
-                  $datas[$i]["mailcollectors_id"] = $mail->getName();
-
-                  $i++;
-               }
-
-            }
-
-            $widget->setTabDatas($datas);
-            $widget->setOption("bDate", ["DH"]);
-            $widget->setOption("bSort", [0, 'desc']);
-            //            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle(__("Mails collector", "mydashboard"));
-            $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
-
-            return $widget;
+//            $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
+//                        FROM `glpi_notimportedemails`
+//                        ORDER BY `date` ASC";
+//
+//            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+//            $headers = [__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver')];
+//            $widget->setTabNames($headers);
+//
+//            $result = $DB->query($query);
+//            $nb     = $DB->numrows($result);
+//
+//            $datas = [];
+//            $i     = 0;
+//            if ($nb) {
+//               while ($data = $DB->fetch_assoc($result)) {
+//
+//
+//                  $datas[$i]["date"] = Html::convDateTime($data['date']);
+//
+//                  $datas[$i]["from"] = $data['from'];
+//
+//                  $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
+//
+//                  $mail = new MailCollector();
+//                  $mail->getFromDB($data['mailcollectors_id']);
+//                  $datas[$i]["mailcollectors_id"] = $mail->getName();
+//
+//                  $i++;
+//               }
+//
+//            }
+//
+//            $widget->setTabDatas($datas);
+//            $widget->setOption("bDate", ["DH"]);
+//            $widget->setOption("bSort", [0, 'desc']);
+//            //            $widget->toggleWidgetRefresh();
+//            $widget->setWidgetTitle(__("Mails collector", "mydashboard"));
+//            $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
+//
+//            return $widget;
+//            break;
+            $alert = new PluginMydashboardAlert();
+            return $alert->getWidgetContentForItem("PluginMydashboardAlert9");
             break;
 
          case $this->getType() . "5":
@@ -1143,197 +1146,197 @@ class PluginMydashboardInfotel extends CommonGLPI {
             break;
          case $this->getType() . "9":
 
-            $query = "SELECT *
-                FROM `glpi_crontasks`
-                WHERE `state` = '" . CronTask::STATE_RUNNING . "'
-                      AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
-                           OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
-
-            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('Last run'), __('Name'), __('Status')];
-            $widget->setTabNames($headers);
-
-            $result = $DB->query($query);
-            $nb     = $DB->numrows($result);
-
-            $datas = [];
-            $i     = 0;
-            if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
-
-
-                  $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
-
-                  $name = $data["name"];
-                  if ($isplug = isPluginItemType($data["itemtype"])) {
-                     $name = sprintf(__('%1$s - %2$s'), $isplug["plugin"], $name);
-                  }
-
-                  $datas[$i]["name"] = $name;
-
-                  $datas[$i]["state"] = CronTask::getStateName($data["state"]);
-
-                  $i++;
-               }
-
-            }
-
-            $widget->setTabDatas($datas);
-            $widget->setOption("bDate", ["DH"]);
-            $widget->setOption("bSort", [1, 'desc']);
-            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle(__('Automatic actions in error', 'mydashboard'));
-
-            return $widget;
-            break;
+//            $query = "SELECT *
+//                FROM `glpi_crontasks`
+//                WHERE `state` = '" . CronTask::STATE_RUNNING . "'
+//                      AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
+//                           OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
+//
+//            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+//            $headers = [__('Last run'), __('Name'), __('Status')];
+//            $widget->setTabNames($headers);
+//
+//            $result = $DB->query($query);
+//            $nb     = $DB->numrows($result);
+//
+//            $datas = [];
+//            $i     = 0;
+//            if ($nb) {
+//               while ($data = $DB->fetch_assoc($result)) {
+//
+//
+//                  $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
+//
+//                  $name = $data["name"];
+//                  if ($isplug = isPluginItemType($data["itemtype"])) {
+//                     $name = sprintf(__('%1$s - %2$s'), $isplug["plugin"], $name);
+//                  }
+//
+//                  $datas[$i]["name"] = $name;
+//
+//                  $datas[$i]["state"] = CronTask::getStateName($data["state"]);
+//
+//                  $i++;
+//               }
+//
+//            }
+//
+//            $widget->setTabDatas($datas);
+//            $widget->setOption("bDate", ["DH"]);
+//            $widget->setOption("bSort", [1, 'desc']);
+//            $widget->toggleWidgetRefresh();
+//            $widget->setWidgetTitle(__('Automatic actions in error', 'mydashboard'));
+//
+//            return $widget;
+//            break;
          case $this->getType() . "10":
-
-            $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
-
-            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
-            $groups   = [];
-            foreach ($mygroups as $mygroup) {
-               $groups[] = $mygroup["id"];
-            }
-            $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
-            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
-                                          `glpi_tickets`.`status` as status,
-                                          `glpi_tickets`.`date_mod` as date_mod
-                                 FROM `glpi_tickets`
-                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                                 WHERE `glpi_tickets`.`is_deleted` = '0'
-                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
-                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
-
-            $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
-
-            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action')];
-            $widget->setTabNames($headers);
-
-            $result = $DB->query($query);
-            $nb     = $DB->numrows($result);
-
-            $datas = [];
-
-            if ($nb) {
-               $i = 0;
-               while ($data = $DB->fetch_assoc($result)) {
-
-                  $ticket = new Ticket();
-                  $ticket->getFromDB($data['tickets_id']);
-
-                  $users_requesters = [];
-                  $userdata         = '';
-                  if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
-
-                     foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
-                        $k                                = $u['users_id'];
-                        $users_requesters[$u['users_id']] = $u['users_id'];
-
-                        if ($k) {
-                           $userdata .= getUserName($k);
-                        }
-
-
-                        if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
-                           $userdata .= "<br>";
-                        }
-                     }
-                  }
-                  if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
-
-                     $ticketfollowup = new TicketFollowup();
-                     $followups      = $ticketfollowup->find("`tickets_id` = " . $ticket->fields['id'], 'date DESC');
-
-                     $ticketdocument = new Document();
-                     $documents      = $ticketdocument->find("`tickets_id` = " . $ticket->fields['id'], 'date_mod DESC');
-
-                     if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
-                         || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
-
-                        $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
-
-                        $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
-                        $name_ticket .= "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
-                        $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
-                        $name_ticket .= "</a>";
-                        $name_ticket .= "</div>";
-
-
-                        $datas[$i]["tickets_id"] = $name_ticket;
-
-
-                        $datas[$i]["users_id"] = $userdata;
-
-                        $datas[$i]["status"] = Ticket::getStatus($data['status']);
-
-                        $datas[$i]["date_mod"] = Html::convDateTime($data['date_mod']);
-
-                        $techdata = '';
-                        if ($ticket->countUsers(CommonITILActor::ASSIGN)) {
-
-                           foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
-                              $k = $u['users_id'];
-                              if ($k) {
-                                 $techdata .= getUserName($k);
-                              }
-
-
-                              if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
-                                 $techdata .= "<br>";
-                              }
-                           }
-                           $techdata .= "<br>";
-                        }
-
-                        if ($ticket->countGroups(CommonITILActor::ASSIGN)) {
-
-                           foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
-                              $k = $u['groups_id'];
-                              if ($k) {
-                                 $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
-                              }
-
-
-                              if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
-                                 $techdata .= "<br>";
-                              }
-                           }
-                        }
-                        $datas[$i]["techs_id"] = $techdata;
-
-                        $action = "";
-
-                        if (count($followups) > 0) {
-                           reset($followups);
-                           if (current($followups)['date'] >= $ticket->fields['date_mod']) {
-                              $action .= __('New followup');
-                           }
-                        }
-                        if (count($documents) > 0) {
-                           if (current($documents)['date_mod'] >= $ticket->fields['date_mod']) {
-                              $action .= __('New document', "mydashboard");
-                           }
-                        }
-                        $datas[$i]["action"] = $action;
-
-                        $i++;
-                     }
-                  }
-               }
-            }
-
-            $widget->setTabDatas($datas);
-            $widget->setOption("bSort", [3, 'desc']);
-            $widget->setOption("bDate", ["DH"]);
-            $widget->toggleWidgetRefresh();
-
-            $widget->setWidgetTitle(__("User ticket alerts", "mydashboard"));
-            $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
-
-            return $widget;
-            break;
+//
+//            $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
+//
+//            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
+//            $groups   = [];
+//            foreach ($mygroups as $mygroup) {
+//               $groups[] = $mygroup["id"];
+//            }
+//            $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
+//            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
+//                                          `glpi_tickets`.`status` as status,
+//                                          `glpi_tickets`.`date_mod` as date_mod
+//                                 FROM `glpi_tickets`
+//                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                                 WHERE `glpi_tickets`.`is_deleted` = '0'
+//                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
+//                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
+//
+//            $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
+//
+//            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+//            $headers = [__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action')];
+//            $widget->setTabNames($headers);
+//
+//            $result = $DB->query($query);
+//            $nb     = $DB->numrows($result);
+//
+//            $datas = [];
+//
+//            if ($nb) {
+//               $i = 0;
+//               while ($data = $DB->fetch_assoc($result)) {
+//
+//                  $ticket = new Ticket();
+//                  $ticket->getFromDB($data['tickets_id']);
+//
+//                  $users_requesters = [];
+//                  $userdata         = '';
+//                  if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
+//
+//                     foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
+//                        $k                                = $u['users_id'];
+//                        $users_requesters[$u['users_id']] = $u['users_id'];
+//
+//                        if ($k) {
+//                           $userdata .= getUserName($k);
+//                        }
+//
+//
+//                        if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
+//                           $userdata .= "<br>";
+//                        }
+//                     }
+//                  }
+//                  if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
+//
+//                     $ticketfollowup = new TicketFollowup();
+//                     $followups      = $ticketfollowup->find("`tickets_id` = " . $ticket->fields['id'], 'date DESC');
+//
+//                     $ticketdocument = new Document();
+//                     $documents      = $ticketdocument->find("`tickets_id` = " . $ticket->fields['id'], 'date_mod DESC');
+//
+//                     if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
+//                         || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
+//
+//                        $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
+//
+//                        $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
+//                        $name_ticket .= "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+//                        $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
+//                        $name_ticket .= "</a>";
+//                        $name_ticket .= "</div>";
+//
+//
+//                        $datas[$i]["tickets_id"] = $name_ticket;
+//
+//
+//                        $datas[$i]["users_id"] = $userdata;
+//
+//                        $datas[$i]["status"] = Ticket::getStatus($data['status']);
+//
+//                        $datas[$i]["date_mod"] = Html::convDateTime($data['date_mod']);
+//
+//                        $techdata = '';
+//                        if ($ticket->countUsers(CommonITILActor::ASSIGN)) {
+//
+//                           foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
+//                              $k = $u['users_id'];
+//                              if ($k) {
+//                                 $techdata .= getUserName($k);
+//                              }
+//
+//
+//                              if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
+//                                 $techdata .= "<br>";
+//                              }
+//                           }
+//                           $techdata .= "<br>";
+//                        }
+//
+//                        if ($ticket->countGroups(CommonITILActor::ASSIGN)) {
+//
+//                           foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
+//                              $k = $u['groups_id'];
+//                              if ($k) {
+//                                 $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
+//                              }
+//
+//
+//                              if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
+//                                 $techdata .= "<br>";
+//                              }
+//                           }
+//                        }
+//                        $datas[$i]["techs_id"] = $techdata;
+//
+//                        $action = "";
+//
+//                        if (count($followups) > 0) {
+//                           reset($followups);
+//                           if (current($followups)['date'] >= $ticket->fields['date_mod']) {
+//                              $action .= __('New followup');
+//                           }
+//                        }
+//                        if (count($documents) > 0) {
+//                           if (current($documents)['date_mod'] >= $ticket->fields['date_mod']) {
+//                              $action .= __('New document', "mydashboard");
+//                           }
+//                        }
+//                        $datas[$i]["action"] = $action;
+//
+//                        $i++;
+//                     }
+//                  }
+//               }
+//            }
+//
+//            $widget->setTabDatas($datas);
+//            $widget->setOption("bSort", [3, 'desc']);
+//            $widget->setOption("bDate", ["DH"]);
+//            $widget->toggleWidgetRefresh();
+//
+//            $widget->setWidgetTitle(__("User ticket alerts", "mydashboard"));
+//            $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
+//
+//            return $widget;
+//            break;
          case $this->getType() . "11":
 
             //            $widget = new PluginMydashboardHtml();
