@@ -1209,7 +1209,7 @@ class PluginMydashboardMenu extends CommonGLPI {
         $(function () {
             var options = {
                 cellHeight: 40,
-                verticalMargin: 1,
+                verticalMargin: 2,
                  disableResize: $disableResize,
                  disableDrag: $disableDrag,
                  resizable: {

@@ -52,17 +52,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
    public function getWidgetsForItem() {
       return [
          __('Public')                => [$this->getType() . "3"  => __("Internal annuary", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-//                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+                                         //                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
                                          $this->getType() . "5"  => __("Fields unicity") . "&nbsp;<i class='fa fa-table'></i>",
-//                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-//                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+                                         //                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                                         //                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
                                          //                                         $this->getType() . "11" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
                                          $this->getType() . "14" => __("All unpublished articles") . "&nbsp;<i class='fa fa-table'></i>",
                                          //                                              $this->getType() . "19" => __("Tickets alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
          ],
-         __('Charts', "mydashboard") => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
+         __('Charts', "mydashboard") => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
                                          $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "6"  => __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
+                                         $this->getType() . "6"  => __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
                                          $this->getType() . "7"  => __("Top ten ticket requesters of the previous month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "8"  => __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
                                          $this->getType() . "12" => __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
@@ -75,6 +75,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "21" => __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
                                          $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
                                          $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
+                                         $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
          ]
       ];
    }
@@ -166,8 +167,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $widget->setWidgetTitle(__("Opened tickets backlog", "mydashboard"));
             $widget->setWidgetComment(__("Display of opened tickets by month", "mydashboard"));
             $databacklogset = json_encode($tabdata);
-            $labelsback  = json_encode($tabnames);
-            $tabdatesset = json_encode($tabdates);
+            $labelsback     = json_encode($tabnames);
+            $tabdatesset    = json_encode($tabdates);
 
             $nbtickets = __('Tickets number', 'mydashboard');
 
@@ -187,11 +188,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             var isChartRendered = false;
                             var canvasbacklog = document . getElementById('BacklogBarChart');
                             var ctx = canvasbacklog . getContext('2d');
+                            ctx.canvas.width = 700;
+                            ctx.canvas.height = 400;
                             var BacklogBarChart = new Chart(ctx, {
                                   type: 'bar',
                                   data: backlogData,
                                   options: {
                                       responsive:true,
+                                      maintainAspectRatio: true,
                                       title:{
                                           display:false,
                                           text:'BacklogBarChart'
@@ -258,9 +262,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      
                       </script>";
 
-            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
 
             if (Session::isMultiEntitiesMode()) {
                $graph   .= "<span class='md-widgetcrit'>";
@@ -282,24 +286,24 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $gparams        = ['name'      => 'groups_id',
-                               'display'   => false,
-                               'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                               'entity'    => $_SESSION['glpiactiveentities'],
-                               'condition' => '`is_assign`'
+            $gparams = ['name'      => 'groups_id',
+                        'display'   => false,
+                        'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
+                        'entity'    => $_SESSION['glpiactiveentities'],
+                        'condition' => '`is_assign`'
             ];
-            $graph          .= "<span class='md-widgetcrit'>";
-            $graph          .= __('Group');
-            $graph          .= "&nbsp;";
-            $graph          .= Group::dropdown($gparams);
-            $graph          .= "</span>";
+            $graph   .= "<span class='md-widgetcrit'>";
+            $graph   .= __('Group');
+            $graph   .= "&nbsp;";
+            $graph   .= Group::dropdown($gparams);
+            $graph   .= "</span>";
 
             $graph .= "</form>";
             $graph .= "</div>";
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"BacklogBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
             $graph .= "<canvas id=\"BacklogBarChart\"></canvas>";
             $graph .= "</div>";
 
@@ -364,12 +368,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TicketsByPriorityPieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var TicketsByPriorityPieChart = new Chart(ctx, {
                   type: 'pie',
                   data: dataPriorityPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -412,7 +418,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByPriorityPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
             $graph .= "<canvas id=\"TicketsByPriorityPieChart\"></canvas>";
             $graph .= "</div>";
 
@@ -463,47 +469,47 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "4":
 
-//            $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
-//                        FROM `glpi_notimportedemails`
-//                        ORDER BY `date` ASC";
-//
-//            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-//            $headers = [__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver')];
-//            $widget->setTabNames($headers);
-//
-//            $result = $DB->query($query);
-//            $nb     = $DB->numrows($result);
-//
-//            $datas = [];
-//            $i     = 0;
-//            if ($nb) {
-//               while ($data = $DB->fetch_assoc($result)) {
-//
-//
-//                  $datas[$i]["date"] = Html::convDateTime($data['date']);
-//
-//                  $datas[$i]["from"] = $data['from'];
-//
-//                  $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
-//
-//                  $mail = new MailCollector();
-//                  $mail->getFromDB($data['mailcollectors_id']);
-//                  $datas[$i]["mailcollectors_id"] = $mail->getName();
-//
-//                  $i++;
-//               }
-//
-//            }
-//
-//            $widget->setTabDatas($datas);
-//            $widget->setOption("bDate", ["DH"]);
-//            $widget->setOption("bSort", [0, 'desc']);
-//            //            $widget->toggleWidgetRefresh();
-//            $widget->setWidgetTitle(__("Mails collector", "mydashboard"));
-//            $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
-//
-//            return $widget;
-//            break;
+            //            $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
+            //                        FROM `glpi_notimportedemails`
+            //                        ORDER BY `date` ASC";
+            //
+            //            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+            //            $headers = [__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver')];
+            //            $widget->setTabNames($headers);
+            //
+            //            $result = $DB->query($query);
+            //            $nb     = $DB->numrows($result);
+            //
+            //            $datas = [];
+            //            $i     = 0;
+            //            if ($nb) {
+            //               while ($data = $DB->fetch_assoc($result)) {
+            //
+            //
+            //                  $datas[$i]["date"] = Html::convDateTime($data['date']);
+            //
+            //                  $datas[$i]["from"] = $data['from'];
+            //
+            //                  $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
+            //
+            //                  $mail = new MailCollector();
+            //                  $mail->getFromDB($data['mailcollectors_id']);
+            //                  $datas[$i]["mailcollectors_id"] = $mail->getName();
+            //
+            //                  $i++;
+            //               }
+            //
+            //            }
+            //
+            //            $widget->setTabDatas($datas);
+            //            $widget->setOption("bDate", ["DH"]);
+            //            $widget->setOption("bSort", [0, 'desc']);
+            //            //            $widget->toggleWidgetRefresh();
+            //            $widget->setWidgetTitle(__("Mails collector", "mydashboard"));
+            //            $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
+            //
+            //            return $widget;
+            //            break;
             $alert = new PluginMydashboardAlert();
             return $alert->getWidgetContentForItem("PluginMydashboardAlert9");
             break;
@@ -717,13 +723,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
                  var isChartRendered = false;
                   var canvas = document . getElementById('TicketStockLineChart');
                    var ctx = canvas . getContext('2d');
+                   ctx.canvas.width = 700;
+                   ctx.canvas.height = 400;
                    var TicketStockLineChart = new Chart(ctx, {
                   type:
                   'line',
                      data: dataStockLine,
                      options: {
-                     responsive:
-                     true,
+                     responsive: true,
+                     maintainAspectRatio: true,
                       title:{
                           display: false,
                           text:'Line Chart'
@@ -791,9 +799,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
 
-            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
             if (Session::isMultiEntitiesMode()) {
                $graph   .= "<span class='md-widgetcrit'>";
                $params  = ['name'                => 'entities_id',
@@ -812,14 +820,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $graph   .= "</form>";
-            $graph   .= "</div>";
-            $graph   .= "<div class='bt-col-md-2 center'>";
-            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStockLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph   .= "</div></div>";
-            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
-            $graph   .= "<canvas id=\"TicketStockLineChart\"></canvas>";
-            $graph   .= "</div>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStockLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:45vh; width:45vw"
+            $graph .= "<canvas id=\"TicketStockLineChart\"></canvas>";
+            $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -891,7 +899,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
-            $graph  = "<script type='text/javascript'>
+            $graph = "<script type='text/javascript'>
          
             var dataTopTenPie = {
               datasets: [{
@@ -906,12 +914,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TopTenTicketAuthorsPieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var TopTenTicketAuthorsPieChart = new Chart(ctx, {
                   type: 'pie',
                   data: dataTopTenPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                      onComplete: function() {
                        isChartRendered = true
@@ -938,9 +948,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            );
                 
              </script>";
-            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
             if (Session::isMultiEntitiesMode()) {
                $graph   .= "<span class='md-widgetcrit'>";
                $params  = ['name'                => 'entities_id',
@@ -959,14 +969,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $graph   .= "</form>";
-            $graph   .= "</div>";
-            $graph   .= "<div class='bt-col-md-2 center'>";
-            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketAuthorsPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph   .= "</div></div>";
-            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
-            $graph   .= "<canvas id=\"TopTenTicketAuthorsPieChart\"></canvas>";
-            $graph   .= "</div>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketAuthorsPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
+            $graph .= "<canvas id=\"TopTenTicketAuthorsPieChart\"></canvas>";
+            $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1036,11 +1046,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             var isChartRendered = false;
                             var canvas = document . getElementById('TimeByTechChart');
                             var ctx = canvas . getContext('2d');
+                            ctx.canvas.width = 700;
+                            ctx.canvas.height = 400;
                             var TimeByTechChart = new Chart(ctx, {
                                   type: 'bar',
                                   data: TimeByTechChartData,
                                   options: {
                                       responsive:true,
+                                      maintainAspectRatio: true,
                                       title:{
                                           display:false,
                                           text:'TimeByTechChart'
@@ -1133,7 +1146,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TimeByTechChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:45vh; width:45vw"
             $graph .= "<canvas id=\"TimeByTechChart\"></canvas>";
             $graph .= "</div>";
 
@@ -1146,197 +1159,197 @@ class PluginMydashboardInfotel extends CommonGLPI {
             break;
          case $this->getType() . "9":
 
-//            $query = "SELECT *
-//                FROM `glpi_crontasks`
-//                WHERE `state` = '" . CronTask::STATE_RUNNING . "'
-//                      AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
-//                           OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
-//
-//            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-//            $headers = [__('Last run'), __('Name'), __('Status')];
-//            $widget->setTabNames($headers);
-//
-//            $result = $DB->query($query);
-//            $nb     = $DB->numrows($result);
-//
-//            $datas = [];
-//            $i     = 0;
-//            if ($nb) {
-//               while ($data = $DB->fetch_assoc($result)) {
-//
-//
-//                  $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
-//
-//                  $name = $data["name"];
-//                  if ($isplug = isPluginItemType($data["itemtype"])) {
-//                     $name = sprintf(__('%1$s - %2$s'), $isplug["plugin"], $name);
-//                  }
-//
-//                  $datas[$i]["name"] = $name;
-//
-//                  $datas[$i]["state"] = CronTask::getStateName($data["state"]);
-//
-//                  $i++;
-//               }
-//
-//            }
-//
-//            $widget->setTabDatas($datas);
-//            $widget->setOption("bDate", ["DH"]);
-//            $widget->setOption("bSort", [1, 'desc']);
-//            $widget->toggleWidgetRefresh();
-//            $widget->setWidgetTitle(__('Automatic actions in error', 'mydashboard'));
-//
-//            return $widget;
-//            break;
+            //            $query = "SELECT *
+            //                FROM `glpi_crontasks`
+            //                WHERE `state` = '" . CronTask::STATE_RUNNING . "'
+            //                      AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
+            //                           OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
+            //
+            //            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+            //            $headers = [__('Last run'), __('Name'), __('Status')];
+            //            $widget->setTabNames($headers);
+            //
+            //            $result = $DB->query($query);
+            //            $nb     = $DB->numrows($result);
+            //
+            //            $datas = [];
+            //            $i     = 0;
+            //            if ($nb) {
+            //               while ($data = $DB->fetch_assoc($result)) {
+            //
+            //
+            //                  $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
+            //
+            //                  $name = $data["name"];
+            //                  if ($isplug = isPluginItemType($data["itemtype"])) {
+            //                     $name = sprintf(__('%1$s - %2$s'), $isplug["plugin"], $name);
+            //                  }
+            //
+            //                  $datas[$i]["name"] = $name;
+            //
+            //                  $datas[$i]["state"] = CronTask::getStateName($data["state"]);
+            //
+            //                  $i++;
+            //               }
+            //
+            //            }
+            //
+            //            $widget->setTabDatas($datas);
+            //            $widget->setOption("bDate", ["DH"]);
+            //            $widget->setOption("bSort", [1, 'desc']);
+            //            $widget->toggleWidgetRefresh();
+            //            $widget->setWidgetTitle(__('Automatic actions in error', 'mydashboard'));
+            //
+            //            return $widget;
+            //            break;
          case $this->getType() . "10":
-//
-//            $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
-//
-//            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
-//            $groups   = [];
-//            foreach ($mygroups as $mygroup) {
-//               $groups[] = $mygroup["id"];
-//            }
-//            $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
-//            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
-//                                          `glpi_tickets`.`status` as status,
-//                                          `glpi_tickets`.`date_mod` as date_mod
-//                                 FROM `glpi_tickets`
-//                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                                 WHERE `glpi_tickets`.`is_deleted` = '0'
-//                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
-//                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
-//
-//            $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
-//
-//            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-//            $headers = [__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action')];
-//            $widget->setTabNames($headers);
-//
-//            $result = $DB->query($query);
-//            $nb     = $DB->numrows($result);
-//
-//            $datas = [];
-//
-//            if ($nb) {
-//               $i = 0;
-//               while ($data = $DB->fetch_assoc($result)) {
-//
-//                  $ticket = new Ticket();
-//                  $ticket->getFromDB($data['tickets_id']);
-//
-//                  $users_requesters = [];
-//                  $userdata         = '';
-//                  if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
-//
-//                     foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
-//                        $k                                = $u['users_id'];
-//                        $users_requesters[$u['users_id']] = $u['users_id'];
-//
-//                        if ($k) {
-//                           $userdata .= getUserName($k);
-//                        }
-//
-//
-//                        if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
-//                           $userdata .= "<br>";
-//                        }
-//                     }
-//                  }
-//                  if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
-//
-//                     $ticketfollowup = new TicketFollowup();
-//                     $followups      = $ticketfollowup->find("`tickets_id` = " . $ticket->fields['id'], 'date DESC');
-//
-//                     $ticketdocument = new Document();
-//                     $documents      = $ticketdocument->find("`tickets_id` = " . $ticket->fields['id'], 'date_mod DESC');
-//
-//                     if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
-//                         || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
-//
-//                        $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
-//
-//                        $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
-//                        $name_ticket .= "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
-//                        $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
-//                        $name_ticket .= "</a>";
-//                        $name_ticket .= "</div>";
-//
-//
-//                        $datas[$i]["tickets_id"] = $name_ticket;
-//
-//
-//                        $datas[$i]["users_id"] = $userdata;
-//
-//                        $datas[$i]["status"] = Ticket::getStatus($data['status']);
-//
-//                        $datas[$i]["date_mod"] = Html::convDateTime($data['date_mod']);
-//
-//                        $techdata = '';
-//                        if ($ticket->countUsers(CommonITILActor::ASSIGN)) {
-//
-//                           foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
-//                              $k = $u['users_id'];
-//                              if ($k) {
-//                                 $techdata .= getUserName($k);
-//                              }
-//
-//
-//                              if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
-//                                 $techdata .= "<br>";
-//                              }
-//                           }
-//                           $techdata .= "<br>";
-//                        }
-//
-//                        if ($ticket->countGroups(CommonITILActor::ASSIGN)) {
-//
-//                           foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
-//                              $k = $u['groups_id'];
-//                              if ($k) {
-//                                 $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
-//                              }
-//
-//
-//                              if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
-//                                 $techdata .= "<br>";
-//                              }
-//                           }
-//                        }
-//                        $datas[$i]["techs_id"] = $techdata;
-//
-//                        $action = "";
-//
-//                        if (count($followups) > 0) {
-//                           reset($followups);
-//                           if (current($followups)['date'] >= $ticket->fields['date_mod']) {
-//                              $action .= __('New followup');
-//                           }
-//                        }
-//                        if (count($documents) > 0) {
-//                           if (current($documents)['date_mod'] >= $ticket->fields['date_mod']) {
-//                              $action .= __('New document', "mydashboard");
-//                           }
-//                        }
-//                        $datas[$i]["action"] = $action;
-//
-//                        $i++;
-//                     }
-//                  }
-//               }
-//            }
-//
-//            $widget->setTabDatas($datas);
-//            $widget->setOption("bSort", [3, 'desc']);
-//            $widget->setOption("bDate", ["DH"]);
-//            $widget->toggleWidgetRefresh();
-//
-//            $widget->setWidgetTitle(__("User ticket alerts", "mydashboard"));
-//            $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
-//
-//            return $widget;
-//            break;
+            //
+            //            $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
+            //
+            //            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
+            //            $groups   = [];
+            //            foreach ($mygroups as $mygroup) {
+            //               $groups[] = $mygroup["id"];
+            //            }
+            //            $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
+            //            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
+            //                                          `glpi_tickets`.`status` as status,
+            //                                          `glpi_tickets`.`date_mod` as date_mod
+            //                                 FROM `glpi_tickets`
+            //                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+            //                                 WHERE `glpi_tickets`.`is_deleted` = '0'
+            //                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
+            //                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
+            //
+            //            $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
+            //
+            //            $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
+            //            $headers = [__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action')];
+            //            $widget->setTabNames($headers);
+            //
+            //            $result = $DB->query($query);
+            //            $nb     = $DB->numrows($result);
+            //
+            //            $datas = [];
+            //
+            //            if ($nb) {
+            //               $i = 0;
+            //               while ($data = $DB->fetch_assoc($result)) {
+            //
+            //                  $ticket = new Ticket();
+            //                  $ticket->getFromDB($data['tickets_id']);
+            //
+            //                  $users_requesters = [];
+            //                  $userdata         = '';
+            //                  if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
+            //
+            //                     foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
+            //                        $k                                = $u['users_id'];
+            //                        $users_requesters[$u['users_id']] = $u['users_id'];
+            //
+            //                        if ($k) {
+            //                           $userdata .= getUserName($k);
+            //                        }
+            //
+            //
+            //                        if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
+            //                           $userdata .= "<br>";
+            //                        }
+            //                     }
+            //                  }
+            //                  if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
+            //
+            //                     $ticketfollowup = new TicketFollowup();
+            //                     $followups      = $ticketfollowup->find("`tickets_id` = " . $ticket->fields['id'], 'date DESC');
+            //
+            //                     $ticketdocument = new Document();
+            //                     $documents      = $ticketdocument->find("`tickets_id` = " . $ticket->fields['id'], 'date_mod DESC');
+            //
+            //                     if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
+            //                         || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
+            //
+            //                        $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
+            //
+            //                        $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
+            //                        $name_ticket .= "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+            //                        $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
+            //                        $name_ticket .= "</a>";
+            //                        $name_ticket .= "</div>";
+            //
+            //
+            //                        $datas[$i]["tickets_id"] = $name_ticket;
+            //
+            //
+            //                        $datas[$i]["users_id"] = $userdata;
+            //
+            //                        $datas[$i]["status"] = Ticket::getStatus($data['status']);
+            //
+            //                        $datas[$i]["date_mod"] = Html::convDateTime($data['date_mod']);
+            //
+            //                        $techdata = '';
+            //                        if ($ticket->countUsers(CommonITILActor::ASSIGN)) {
+            //
+            //                           foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
+            //                              $k = $u['users_id'];
+            //                              if ($k) {
+            //                                 $techdata .= getUserName($k);
+            //                              }
+            //
+            //
+            //                              if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
+            //                                 $techdata .= "<br>";
+            //                              }
+            //                           }
+            //                           $techdata .= "<br>";
+            //                        }
+            //
+            //                        if ($ticket->countGroups(CommonITILActor::ASSIGN)) {
+            //
+            //                           foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
+            //                              $k = $u['groups_id'];
+            //                              if ($k) {
+            //                                 $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
+            //                              }
+            //
+            //
+            //                              if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
+            //                                 $techdata .= "<br>";
+            //                              }
+            //                           }
+            //                        }
+            //                        $datas[$i]["techs_id"] = $techdata;
+            //
+            //                        $action = "";
+            //
+            //                        if (count($followups) > 0) {
+            //                           reset($followups);
+            //                           if (current($followups)['date'] >= $ticket->fields['date_mod']) {
+            //                              $action .= __('New followup');
+            //                           }
+            //                        }
+            //                        if (count($documents) > 0) {
+            //                           if (current($documents)['date_mod'] >= $ticket->fields['date_mod']) {
+            //                              $action .= __('New document', "mydashboard");
+            //                           }
+            //                        }
+            //                        $datas[$i]["action"] = $action;
+            //
+            //                        $i++;
+            //                     }
+            //                  }
+            //               }
+            //            }
+            //
+            //            $widget->setTabDatas($datas);
+            //            $widget->setOption("bSort", [3, 'desc']);
+            //            $widget->setOption("bDate", ["DH"]);
+            //            $widget->toggleWidgetRefresh();
+            //
+            //            $widget->setWidgetTitle(__("User ticket alerts", "mydashboard"));
+            //            $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
+            //
+            //            return $widget;
+            //            break;
          case $this->getType() . "11":
 
             //            $widget = new PluginMydashboardHtml();
@@ -1421,12 +1434,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TTRCompliance');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var TTRCompliance = new Chart(ctx, {
                   type: 'pie',
                   data: dataTTRPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -1456,7 +1471,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TTRCompliance\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:30vh; width:30vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:30vh; width:30vw"
             $graph .= "<canvas id=\"TTRCompliance\"></canvas>";
             $graph .= "</div>";
 
@@ -1513,7 +1528,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph = "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TTOCompliance\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:30vh; width:30vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:30vh; width:30vw"
             $graph .= "<canvas id=\"TTOCompliance\"></canvas>";
             $graph .= "</div>";
             $graph .= "<script type='text/javascript'>
@@ -1531,12 +1546,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TTOCompliance');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var TTOCompliance = new Chart(ctx, {
                   type: 'pie',
                   data: dataTTOPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -1683,7 +1700,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
-            $graph  = "<script type='text/javascript'>
+            $graph = "<script type='text/javascript'>
          
             var dataTopTenCatPie = {
               datasets: [{
@@ -1698,12 +1715,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TopTenTicketCategoriessPieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var TopTenTicketCategoriessPieChart = new Chart(ctx, {
                   type: 'pie',
                   data: dataTopTenCatPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                      onComplete: function() {
                        isChartRendered = true
@@ -1730,9 +1749,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            );
                 
              </script>";
-            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
             if (Session::isMultiEntitiesMode()) {
                $graph   .= "<span class='md-widgetcrit'>";
                $params  = ['name'                => 'entities_id',
@@ -1751,14 +1770,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $graph   .= "</form>";
-            $graph   .= "</div>";
-            $graph   .= "<div class='bt-col-md-2 center'>";
-            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketCategoriessPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph   .= "</div></div>";
-            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
-            $graph   .= "<canvas id=\"TopTenTicketCategoriessPieChart\"></canvas>";
-            $graph   .= "</div>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketCategoriessPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
+            $graph .= "<canvas id=\"TopTenTicketCategoriessPieChart\"></canvas>";
+            $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1837,12 +1856,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('IncidentsByCategoryPieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var IncidentsByCategoryPieChart = new Chart(ctx, {
                   type: 'pie',
                   data: dataIncidentCatPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -1880,9 +1901,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 
              </script>";
 
-            $graph  .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $graph  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
             if (Session::isMultiEntitiesMode()) {
                $graph   .= "<span class='md-widgetcrit'>";
                $params  = ['name'                => 'entities_id',
@@ -1901,14 +1922,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $graph   .= "</form>";
-            $graph   .= "</div>";
-            $graph   .= "<div class='bt-col-md-2 center'>";
-            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"IncidentsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph   .= "</div></div>";
-            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
-            $graph   .= "<canvas id=\"IncidentsByCategoryPieChart\"></canvas>";
-            $graph   .= "</div>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"IncidentsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
+            $graph .= "<canvas id=\"IncidentsByCategoryPieChart\"></canvas>";
+            $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1987,12 +2008,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('RequestsByCategoryPieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var RequestsByCategoryPieChart = new Chart(ctx, {
                   type: 'pie',
                   data: dataRequestCatPie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -2050,14 +2073,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $graph              .= "</form>";
-            $graph              .= "</div>";
-            $graph              .= "<div class='bt-col-md-2 center'>";
-            $graph              .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"RequestsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph              .= "</div></div>";
-            $graph              .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
-            $graph              .= "<canvas id=\"RequestsByCategoryPieChart\"></canvas>";
-            $graph              .= "</div>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"RequestsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
+            $graph .= "<canvas id=\"RequestsByCategoryPieChart\"></canvas>";
+            $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2137,12 +2160,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TicketTypePieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var TicketTypePieChart = new Chart(ctx, {
                   type: 'pie',
                   data: dataTypePie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                      onComplete: function() {
                        isChartRendered = true
@@ -2172,7 +2197,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:35vh; width:35vw"
             $graph .= "<canvas id=\"TicketTypePieChart\"></canvas>";
             $graph .= "</div>";
 
@@ -2255,12 +2280,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 var isChartRendered = false;
                 var canvas = document.getElementById('SolutionTypePieChart');
                 var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
                 var SolutionTypePieChart = new Chart(ctx, {
                   type: 'doughnut',
                   data: dataSolutionTypePie,
                   options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -2306,14 +2333,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
-            $graph   .= "</form>";
-            $graph   .= "</div>";
-            $graph   .= "<div class='bt-col-md-2 center'>";
-            $graph   .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"SolutionTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph   .= "</div></div>";
-            $graph   .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:35vh; width:35vw\">";
-            $graph   .= "<canvas id=\"SolutionTypePieChart\"></canvas>";
-            $graph   .= "</div>";
+            $graph .= "</form>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"SolutionTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:35vh; width:35vw"
+            $graph .= "<canvas id=\"SolutionTypePieChart\"></canvas>";
+            $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2382,11 +2409,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             var isChartRendered = false;
                             var canvas = document . getElementById('TicketsByTechChart');
                             var ctx = canvas . getContext('2d');
+                            ctx.canvas.width = 700;
+                            ctx.canvas.height = 400;
                             var TicketsByTechChart = new Chart(ctx, {
                                   type: 'bar',
                                   data: TicketsByTechData,
                                   options: {
                                       responsive:true,
+                                      maintainAspectRatio: true,
                                       title:{
                                           display:false,
                                           text:'TimeByTechChart'
@@ -2482,7 +2512,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByTechChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
             $graph .= "<canvas id=\"TicketsByTechChart\"></canvas>";
             $graph .= "</div>";
 
@@ -2624,11 +2654,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                    var isChartRendered = false;
                    var canvas = document . getElementById('TicketStatusBarLineChart');
                    var ctx = canvas . getContext('2d');
+                   ctx.canvas.width = 700;
+                   ctx.canvas.height = 400;
                    var TicketStatusBarLineChart = new Chart(ctx, {
                          type: 'bar',
                          data: dataTicketStatusBar,
                          options: {
                              responsive:true,
+                             maintainAspectRatio: true,
                              title:{
                                  display:false,
                                  text:'TicketStatusBarLineChart'
@@ -2673,11 +2706,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $gsid  = PluginMydashboardWidget::getGsID($widgetId);
             $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
             if (Session::isMultiEntitiesMode()) {
-               $graph  .= "<span class='md-widgetcrit'>";
-               $params = ['name'                => 'entities_id',
-                          'display'             => false,
-                          'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                          'display_emptychoice' => true
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
                ];
                $graph   .= __('Entity');
                $graph   .= "&nbsp;";
@@ -2703,7 +2736,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStatusBarLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
             $graph .= "<canvas id=\"TicketStatusBarLineChart\"></canvas>";
             $graph .= "</div>";
 
@@ -2771,13 +2804,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $data_1            = $DB->fetch_array($results_1);
                $average_by_ticket = 0;
 
-               if ($data_1['nb_tickets'] > 0 
-                  && $data_1['count'] > 0) {
-               $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
+               if ($data_1['nb_tickets'] > 0
+                   && $data_1['count'] > 0) {
+                  $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
                }
-               $tabduration[]     = round($average_by_ticket, 2);
-               $tabnames[]        = $data['monthname'];
-               $tabdates[]        = $data['monthnum'];
+               $tabduration[] = round($average_by_ticket, 2);
+               $tabnames[]    = $data['monthname'];
+               $tabdates[]    = $data['monthnum'];
                $i++;
             }
 
@@ -2806,11 +2839,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             var isChartRendered = false;
                             var canvas = document . getElementById('AverageBarChart');
                             var ctx = canvas . getContext('2d');
+                            ctx.canvas.width = 700;
+                            ctx.canvas.height = 400;
                             var AverageBarChart = new Chart(ctx, {
                                   type: 'bar',
                                   data: AverageData,
                                   options: {
                                       responsive:true,
+                                      maintainAspectRatio: true,
                                       title:{
                                           display:false,
                                           text:'AverageBarChart'
@@ -2853,9 +2889,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      
                       </script>";
 
-            $graph          .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid           = PluginMydashboardWidget::getGsID($widgetId);
-            $graph          .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
             if (Session::isMultiEntitiesMode()) {
                $graph   .= "<span class='md-widgetcrit'>";
                $params  = ['name'                => 'entities_id',
@@ -2887,11 +2923,190 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"AverageBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\" style=\"position: relative; height:45vh; width:45vw\">";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
             $graph .= "<canvas id=\"AverageBarChart\"></canvas>";
             $graph .= "</div>";
 
             //            $widget->toggleWidgetRefresh();
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+
+            break;
+
+         case $this->getType() . "24":
+
+            if (isset($this->preferences['prefered_entity'])
+                && $this->preferences['prefered_entity'] > 0
+                && count($opt) < 1) {
+               $opt['entities_id'] = $this->preferences['prefered_entity'];
+            }
+            if (!isset($opt['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            }
+
+            $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+
+            $mois  = intval(strftime("%m") - 1);
+            $annee = intval(strftime("%Y"));
+
+            if ($mois > 0) {
+               $annee = strftime("%Y");
+            } else {
+               $mois = 12;
+            }
+
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee = $opt["year"];
+            }
+
+            $nbjours = date("t", mktime(0, 0, 0, $mois, 1, $annee));
+
+            $query   = "SELECT `glpi_tickets_users`.`users_id`, COUNT(`glpi_tickets`.`id`) as count
+                     FROM `glpi_tickets`
+                     INNER JOIN `glpi_tickets_users`
+                        ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 2)
+                     WHERE (`glpi_tickets`.`date` >= '$annee-01-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-31 00:00:00' , INTERVAL 1 DAY) )
+                     " . $entities . "
+                     AND `glpi_tickets`.`is_deleted` = '0'
+                     GROUP BY `glpi_tickets_users`.`users_id`
+                     ORDER BY count DESC
+                     LIMIT 10";
+            $results = $DB->query($query);
+
+            $tabtickets  = [];
+            $tabtech     = [];
+            $tabtechName = [];
+
+            while ($data = $DB->fetch_array($results)) {
+               $tabtickets[]  = $data['count'];
+               $tabtech[]     = $data['users_id'];
+               $tabtechName[] = getUserName($data['users_id']);
+            }
+
+            $palette = PluginMydashboardColor::getColors(10);
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle(__("Top ten technicians (by tickets number)", "mydashboard"));
+            $widget->setWidgetComment(__("Display of number of tickets by technicians", "mydashboard"));
+            $dataticketset = json_encode($tabtickets);
+
+            $backgroundColor = json_encode($palette);
+            $tabNamesset     = json_encode($tabtechName);
+
+            $ticketsnumber = __('Tickets number', 'mydashboard');
+
+            $graph = "<script type='text/javascript'>
+                     var TicketByTechsData = {
+                             datasets: [{
+                               data: $dataticketset,
+                               label: '$ticketsnumber',
+                               backgroundColor: $backgroundColor,
+                             }],
+                           labels: $tabNamesset
+                           };
+                     
+                     $(document).ready(
+                        function () {
+                            var isChartRendered = false;
+                            var canvas = document . getElementById('TicketByTechsBarChart');
+                            var ctx = canvas . getContext('2d');
+                            ctx.canvas.width = 700;
+                            ctx.canvas.height = 400;
+                            var AverageBarChart = new Chart(ctx, {
+                                  type: 'horizontalBar',
+                                  data: TicketByTechsData,
+                                  options: {
+                                      responsive:true,
+                                      maintainAspectRatio: true,
+                                      title:{
+                                          display:false,
+                                          text:'TicketByTechsBarChart'
+                                      },
+                                      legend: {
+                                          display:false,
+                                          position: 'right',
+                                      },
+                                      tooltips: {
+                                          enabled: true,
+//                                          mode: 'index',
+//                                          intersect: false
+                                      },
+//                                      scales: {
+//                                          xAxes: [{
+//                                              stacked: true,
+//                                          }],
+//                                          yAxes: [{
+//                                              stacked: true
+//                                          }]
+//                                      },
+                                      animation: {
+                                       onComplete: function() {
+//                                         var chartInstance = this.chart,
+//                                          ctx = chartInstance.ctx;
+//                                          ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+//                                          ctx.textAlign = 'center';
+//                                          ctx.textBaseline = 'bottom';
+//                              
+//                                          this.data.datasets.forEach(function (dataset, i) {
+//                                              var meta = chartInstance.controller.getDatasetMeta(i);
+//                                              meta.data.forEach(function (bar, index) {
+//                                                  var data = dataset.data[index];
+//                                                  ctx.fillText(data, bar._model.x, bar._model.y - 5);
+//                                              });
+//                                          });
+                                         isChartRendered = true;
+                                       }
+                                     },
+                                  }
+                              });
+                           }
+                      );
+                     
+                      </script>";
+
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
+            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
+            if (Session::isMultiEntitiesMode()) {
+               $graph   .= "<span class='md-widgetcrit'>";
+               $params  = ['name'                => 'entities_id',
+                           'display'             => false,
+                           'width'               => '100px',
+                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                           'display_emptychoice' => true
+               ];
+               $graph   .= __('Entity');
+               $graph   .= "&nbsp;";
+               $graph   .= Entity::dropdown($params);
+               $graph   .= "</span>";
+               $graph   .= "<span class='md-widgetcrit'>";
+               $graph   .= __('Recursive') . "&nbsp;";
+               $paramsy = [
+                  'display' => false];
+               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+               $graph   .= "</span>";
+            }
+            $graph          .= "<span class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
+            $graph .= "</span>";
+            $graph .= "</div>";
+            $graph .= "<div class='bt-col-md-2 center'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketByTechsBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:45vh; width:45vw"
+            $graph .= "<canvas id=\"TicketByTechsBarChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
                $graph
             );
@@ -3041,7 +3256,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ";
             $result_ai_q = $DB->query($querym_ai);
             while ($data = $DB->fetch_assoc($result_ai_q)) {
-//               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
+               //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8), 2);
             }
          }
