@@ -1405,10 +1405,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $result = $DB->query($query);
             $sum    = $DB->fetch_assoc($result);
-
-            $notrespected = $sum['nb'];
-            $respected    = $total['nb'] - $sum['nb'];
-
+            $nb     = $DB->numrows($result);
+            $notrespected = 0;
+            $respected    = 0;
+            if ($nb > 0) {
+               $notrespected = round(($sum['nb'])*100/($total['nb']), 2);
+               $respected    = round(($total['nb'] - $sum['nb'])*100/($total['nb']), 2);
+            }
             $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("TTR Compliance", "mydashboard"));
             $widget->setWidgetComment(__("Display tickets where time to resolve is respected", "mydashboard"));
@@ -1442,6 +1445,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    tooltips: {
+                         mode: 'label',
+                         callbacks: {
+                             label: function(tooltipItem, data) {
+                                 return data['datasets'][0]['data'][tooltipItem['index']] + ' %';
+                             }
+                         }
+                     },
                     animation: {
                         onComplete: function() {
                           isChartRendered = true
@@ -1512,10 +1523,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $result = $DB->query($query);
             $sum    = $DB->fetch_assoc($result);
-
-            $notrespected = $sum['nb'];
-            $respected    = $total['nb'] - $sum['nb'];
-
+            $nb     = $DB->numrows($result);
+            $notrespected = 0;
+            $respected    = 0;
+            if ($nb > 0) {
+               $notrespected = round(($sum['nb'])*100/($total['nb']), 2);
+               $respected    = round(($total['nb'] - $sum['nb'])*100/($total['nb']), 2);
+            }
             $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("TTO Compliance", "mydashboard"));
             $widget->setWidgetComment(__("Display tickets where time to own is respected", "mydashboard"));
@@ -1554,6 +1568,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    tooltips: {
+                         mode: 'label',
+                         callbacks: {
+                             label: function(tooltipItem, data) {
+                                 return data['datasets'][0]['data'][tooltipItem['index']] + ' %';
+                             }
+                         }
+                     },
                     animation: {
                         onComplete: function() {
                           isChartRendered = true

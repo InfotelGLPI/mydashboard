@@ -142,7 +142,6 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget = new PluginMydashboardHtml();
             $widget->setWidgetHtmlContent($this->getAlertList(0, 0, true));
             $widget->setWidgetTitle(__('Network Monitoring', 'mydashboard'));
-            //            $widget->toggleWidgetRefresh();
             return $widget;
             break;
 
@@ -153,7 +152,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                $datas
             );
             $widget->setWidgetTitle(_n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'));
-            //            $widget->toggleWidgetRefresh();
             return $widget;
             break;
 
@@ -164,7 +162,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                $datas
             );
             $widget->setWidgetTitle(_n('Information', 'Informations', 2, 'mydashboard'));
-            //            $widget->toggleWidgetRefresh();
             return $widget;
             break;
          case $this->getType() . "4":
@@ -1232,7 +1229,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                </script>";
       } else {
 
-         $wl .= "<div align='center'><h3><span class ='maint-color'>";
+         $wl .= "<div align='center'><br><br><h3><span class ='maint-color'>";
          $wl .= __("No scheduled maintenance", "mydashboard");
          $wl .= "</span></h3></div>";
       }
@@ -1322,7 +1319,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       } else {
 
-         $wl .= "<div align='center'><h3><span class ='maint-color'>";
+         $wl .= "<div align='center'><br><br><h3><span class ='maint-color'>";
          $wl .= __("No informations founded", "mydashboard");
          $wl .= "</span></h3></div>";
       }
@@ -1458,7 +1455,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                </script>";
       } else {
 
-         $wl .= "<div align='center'><h3><span class ='alert-color'>";
+         $wl .= "<div align='center'><br><br><h3><span class ='alert-color'>";
          $wl .= __("No problem detected", "mydashboard");
          $wl .= "</span></h3></div>";
       }
@@ -1629,7 +1626,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $l .= "</div>";
          }
       } else {
-         $l .= "<div align='center'><h3><span class ='alert-color'>";
+         $l .= "<div align='center'><br><br><h3><span class ='alert-color'>";
          $l .= __("No problem detected", "mydashboard");
          $l .= "</span></h3></div>";
       }

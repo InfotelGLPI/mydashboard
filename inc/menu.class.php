@@ -1388,7 +1388,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                          '<button class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + id + '\');\">' +
                           '<i class=\"fa fa-times\"></i></button>' + widget + '<div/><div/>');
                 var grid = $('.grid-stack').data('gridstack');
-                grid.addWidget(el, 0, 0, 6, 6, '', null, null, null, null, id);
+                grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);
              }
          };
         function refreshWidget (id) {
