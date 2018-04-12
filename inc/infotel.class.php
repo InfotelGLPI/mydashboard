@@ -891,7 +891,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              ctx.canvas.width = 700;
              ctx.canvas.height = 400;
              var TopTenTicketAuthorsPieChart = new Chart(ctx, {
-               type: 'pie',
+               type: 'polarArea',
                data: dataTopTenPie,
                options: {
                  responsive: true,
@@ -1669,12 +1669,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            $(document).ready(
 //              function() {
                 var isChartRendered = false;
-                var canvas = document.getElementById('TopTenTicketCategoriessPieChart');
+                var canvas = document.getElementById('TopTenTicketCategoriesPieChart');
                 var ctx = canvas.getContext('2d');
                 ctx.canvas.width = 700;
                 ctx.canvas.height = 400;
-                var TopTenTicketCategoriessPieChart = new Chart(ctx, {
-                  type: 'pie',
+                var TopTenTicketCategoriesPieChart = new Chart(ctx, {
+                  type: 'polarArea',
                   data: dataTopTenCatPie,
                   options: {
                     responsive: true,
@@ -1688,7 +1688,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 });
             
       //          canvas.onclick = function(evt) {
-      //            var activePoints = TopTenTicketCategoriessPieChart.getElementsAtEvent(evt);
+      //            var activePoints = TopTenTicketCategoriesPieChart.getElementsAtEvent(evt);
       //            if (activePoints[0]) {
       //              var chartData = activePoints[0]['_chart'].config.data;
       //              var idx = activePoints[0]['_index'];
@@ -1729,10 +1729,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "</form>";
             $graph .= "</div>";
             $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketCategoriessPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketCategoriesPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
             $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"TopTenTicketCategoriessPieChart\"></canvas>";
+            $graph .= "<canvas id=\"TopTenTicketCategoriesPieChart\"></canvas>";
             $graph .= "</div>";
 
             $widget->setWidgetHtmlContent(

@@ -55,7 +55,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if ($this->getFromDBByQuery($query) === false) {
          return null;
       } else {
-         return isset($this->fields['id']) ? $this->fields['id'] : null;
+         return isset($this->fields['name']) ? $this->fields['name'] : null;
       }
    }
 

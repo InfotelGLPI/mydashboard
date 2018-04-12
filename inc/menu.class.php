@@ -447,7 +447,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $list             = new PluginMydashboardWidgetlist();
       $widgetlist = $list->getList(true);
-Toolbox::logDebug($widgetlist);
+
       $widgetDB     = new PluginMydashboardWidget();
 
       $widgetclasses = $widgetlist['GLPI'];
