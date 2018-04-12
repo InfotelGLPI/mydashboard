@@ -367,11 +367,19 @@ class PluginMydashboardMenu extends CommonGLPI {
             Html::closeForm();
 
             echo "<div class='bt-alert bt-alert-success' id='success-alert'>
-                <strong>" . __('Success', 'mydashboard') . "</strong>
+                <strong>" . __('Success', 'mydashboard') . "</strong> - 
                 " . __('The widget was added to dashboard. Save the dashboard to see it.', 'mydashboard') . "
             </div>";
             echo Html::scriptBlock('
                $("#success-alert").hide();
+         ');
+
+            echo "<div class='bt-alert bt-alert-error' id='error-alert'>
+                <strong>" . __('Error', 'mydashboard') . "</strong>
+                " . __('Please reload your page.', 'mydashboard') . "
+            </div>";
+            echo Html::scriptBlock('
+               $("#error-alert").hide();
          ');
 
          } else {
@@ -396,46 +404,10 @@ class PluginMydashboardMenu extends CommonGLPI {
    }
 
    /**
-    * This message shows a preventive message when needed (example : default password of glpi profile)
-    * @global type $DB
-    * @global type $CFG_GLPI
-    */
-   //   private function showPreventiveMessage() {
-   //      global $DB, $CFG_GLPI;
-   //      if (Session::haveRightsOr("config", array(CREATE, UPDATE))) {
-   //         $logins = User::checkDefaultPasswords();
-   //         $user   = new User();
-   //         if (!empty($logins)) {
-   //            $accounts = array();
-   //            foreach ($logins as $login) {
-   //               $user->getFromDBbyName($login);
-   //               $accounts[] = $user->getLink();
-   //            }
-   //            $message = sprintf(__('For security reasons, please change the password for the default users: %s'), implode(" ", $accounts));
-   //
-   //            echo "<tr><th colspan='2'>";
-   //            Html::displayTitle($CFG_GLPI['root_doc'] . "/pics/warning.png", $message, $message);
-   //            echo "</th></tr>";
-   //         }
-   //         if (file_exists(GLPI_ROOT . "/install/install.php")) {
-   //            echo "<tr><th colspan='2'>";
-   //            $message = sprintf(__('For security reasons, please remove file: %s'), "install/install.php");
-   //            Html::displayTitle($CFG_GLPI['root_doc'] . "/pics/warning.png", $message, $message);
-   //            echo "</th></tr>";
-   //         }
-   //      }
-   //      if ($DB->isSlave() && !$DB->first_connection) {
-   //         echo "<tr><th colspan='2'>";
-   //         Html::displayTitle($CFG_GLPI['root_doc'] . "/pics/warning.png", __('MySQL replica: read only'), __('MySQL replica: read only'));
-   //         echo "</th></tr>";
-   //      }
-   //   }
-
-   /**
     * Get the HTML view of the widget list, the lateral menu
     * @return string, HTML
     */
-   private function getWidgetsList($profile, $edit) {
+   private function getWidgetsList($profile, $edit = 0) {
 
       $list             = new PluginMydashboardWidgetlist();
       $this->widgetlist = $list->getList(true, $profile);
@@ -496,101 +468,12 @@ class PluginMydashboardMenu extends CommonGLPI {
    }
 
    /**
-    * Initialize :
-    * - the bindings between the list and the adding on the mydashboard
-    * - the functions that will be called to add widgets that are on the custom dashboard
-    */
-   //   private function initWidgets() {
-   //      //We init Database widget names
-   //
-   //      $this->initDBWidgets();
-   //      //Then we get the custom dashboard of the user, $dash is an array of widget names
-   //      $this->dashboard = $this->getDashboardForUser($this->users_id);
-   //      $classObjects    = array();
-   //
-   //      foreach ($this->widgets as $classname => $classwidgets) {
-   //         //We start the timer for this class
-   //         $start         = microtime(true);
-   //         $memusagestart = memory_get_usage();
-   //         $empty         = true;
-   //         foreach ($classwidgets as $widgetId => $view) {
-   //            if ($this->isOnDash($widgetId)) {
-   //               if (!isset($classObjects[$classname])) $classObjects[$classname] = getItemForItemtype($classname);
-   //               if (method_exists($classObjects[$classname], "getWidgetContentForItem")) {
-   //                  $widget = $classObjects[$classname]->getWidgetContentForItem($widgetId);
-   //                  if (method_exists($widget, "getWidgetId")) {
-   //                     $widget->setWidgetId($widgetId);
-   //                     $addFunction = "mydashboard.addWidget('" . self::DASHBOARD_NAME . "',";
-   //                     //To add a widget we need its title
-   //                     $addFunction .= "\"" . $widget->getWidgetTitle();
-   //                     //This title maybe subtitled by a view name (example GLPI Core widgets precising the view)
-   //
-   //                     if (isset($view) && $view != -1) {
-   //                        $addFunction .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
-   //                     }
-   //                     //We also need its id, its type ('table','chart' ...)
-   //                     $addFunction .= "\",'" . $widgetId . "','" . $widget->getWidgetType() . "',";
-   //                     //We need its datas, formatted in json
-   //                     $addFunction .= $widget->getJsonDatas() . ",";         //        Toolbox::logDebug($widget->getJsonDatas());
-   //                     //$addFunction .= "{},";
-   //                     //We need to know if this widget will be refreshable
-   //                     $addFunction .= $widget->getWidgetEnableRefresh() . ",";
-   //                     //We need to know which class defines this widget
-   //                     $addFunction .= "'" . $classname . "'";
-   //                     $addFunction .= ");";
-   //
-   //                     //If this widget is not of PluginMydashboardHtml type, it means that its HTML is to be put after
-   //                     //Else it means that it's only HTML to display, and this HTML is encoded in PluginMydashboardHtml::getJsonDatas() which is already called
-   //                     if ($widget->getType() != "PluginMydashboardHtml") {
-   //                        $htmlContent = $widget->getWidgetHtmlContent();
-   //                        if (isset($htmlContent)) {
-   //                           $addFunction .= "mydashboard.addWidgetHtmlContent('" . $widgetId . "'" . "," . json_encode($htmlContent) . " );";
-   //                        }
-   //                        $addFunction .= "";
-   //                     }
-   //                     //This widget may have inner scripts, we need to force evaluation of those ones
-   //                     $scriptFunctions = $this->getEvalScriptArray($widget->getWidgetScripts());
-   //
-   //                     $this->addfunction[$widgetId] = $addFunction . "\n " . $scriptFunctions . "\n";
-   //                     $empty                        = false;
-   //                  }
-   //               }
-   //            } else {
-   //               /* Useless now, getWidget is called on click on a listItem, widgetId, classname and view are stored as an html5 custom attribute (prefixed by data-)*/
-   //               //                    $addFunction = "plugin_mydashboard_getWidget(";
-   //               //                    $addFunction .= "'".$classname."',";
-   //               //                    $addFunction .= "'".$widgetId."'";
-   //               //                    //The widget title maybe subtitled by a view name (example GLPI Core widgets precising the view)
-   //               //                    if(isset($view) && $view != -1) {
-   //               //                        $addFunction .= ",\"<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;".$view."</span>\"";
-   //               //    //                    $addFunction .= ",'".$view."'";
-   //               //                    }
-   //               //                    $addFunction .= ");";
-   //            }
-   //            //                echo "$('#btnAddWidget".$widgetId."' )
-   //            //                        .click(
-   //            //                            function( event ) {
-   //            //                                $addFunction;
-   //            //                                event.preventDefault();
-   //            //                            }
-   //            //                        );";
-   //         }
-   //         if (!$empty) {
-   //            $end                     = microtime(true);
-   //            $memusageend             = memory_get_usage();
-   //            $this->stats[$classname] = round($end - $start, 2) . " / " . (round(($memusageend - $memusagestart) / 1048576, 2));
-   //         }
-   //      }
-   //      //echo  "</script>";
-   //      unset($this->widgets);
-   //   }
-
-   /**
     * Stores every widgets in Database (see PluginMydashboardWidget)
     */
    private function initDBWidgets() {
       $widgetDB     = new PluginMydashboardWidget();
       $widgetsinDB  = getAllDatasFromTable(PluginMydashboardWidget::getTable());
+
       $widgetsnames = array();
       foreach ($widgetsinDB as $widget) {
          $widgetsnames[$widget['name']] = $widget['id'];
@@ -735,11 +618,6 @@ class PluginMydashboardMenu extends CommonGLPI {
       foreach ($widgetsarray as $widgetId => $widgetTitle) {
          //We check if this widget is a real widget
          if (!is_array($widgetTitle)) {
-            //We stock our widget in this->widgets
-            //               $this->widgets[$widget->getWidgetId()]['widget'] = $widget;
-            //               $this->widgets[$widget->getWidgetId()]['classname'] = $classname;
-
-            //               $this->widgets[$widget->getWidgetId()]['classname'] = $classname;
             //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
             if (is_numeric($widgetId)) $widgetId = $widgetTitle;
             $this->widgets[$classname][$widgetId] = -1;
@@ -1389,7 +1267,9 @@ class PluginMydashboardMenu extends CommonGLPI {
                           '<i class=\"fa fa-times\"></i></button>' + widget + '<div/><div/>');
                 var grid = $('.grid-stack').data('gridstack');
                 grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);
+                return true;
              }
+             return false;
          };
         function refreshWidget (id) {
             var widgetOptionsObject = [];

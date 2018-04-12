@@ -372,11 +372,17 @@ $(document).ready(function () {
         var attrview = $(this).attr('data-view');
         var view = "";
         if (typeof attrview != "undefined") view = "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" + attrview + "</span>";
-        addNewWidget(widgetId);
-        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
-            $("#success-alert").slideUp(500);
-        });
-        $('.plugin_mydashboard_menuDashboard').hide();
+        if(addNewWidget(widgetId) === true) {
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+            $('.plugin_mydashboard_menuDashboard').hide();
+        } else {
+            //error
+            $("#error-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#error-alert").slideUp(500);
+            });
+        }
     });
     //===================Start:Fullscreen mode=================================
     //handling click on the 'fullscreen' button                                                             

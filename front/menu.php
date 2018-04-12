@@ -42,8 +42,6 @@ if (Session::haveRightsOr("plugin_mydashboard", array(READ, UPDATE))) {
 
    } else {
 
-      //$menu = new PluginMydashboardMenu();
-      //$menu->showMenu();
       ?>
        <!--<!DOCTYPE html>-->
        <html>
@@ -66,7 +64,6 @@ if (Session::haveRightsOr("plugin_mydashboard", array(READ, UPDATE))) {
            <script src="../lib/moment.min.js"></script>
            <script src="../lib/datetime-moment.js"></script>
            <script src="../lib/chartjs/Chart.min.js"></script>
-<!--           <script src="../lib/chartjs/chartjs-plugin-datalabels.js"></script>-->
            <script src="../lib/circles/circles.min.js"></script>
            <script src="../lib/html2canvas.min.js"></script>
            <script src="../lib/datatables/js/dataTables.select.min.js"></script>

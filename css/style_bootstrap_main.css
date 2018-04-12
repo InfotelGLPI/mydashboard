@@ -1307,3 +1307,9 @@ tbody.collapse.in {
    background-color: #fcf8e3;
    border-color: #faebcc;
 }
+
+.bt-alert-error {
+   color: #ffffff;
+   background-color: #ff0600;
+   border-color: #bf0b00;
+}

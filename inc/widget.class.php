@@ -84,9 +84,12 @@ class PluginMydashboardWidget extends CommonDBTM {
       //        }
       //        else return NULL;
       unset($this->fields);
-      $query = "WHERE name = '" . $widgetName . "'";
-      $this->getFromDBByQuery($query);
-      return isset($this->fields['id']) ? $this->fields['id'] : null;
+      $query = "WHERE name LIKE '" . $widgetName . "'";
+      if ($this->getFromDBByQuery($query) === false) {
+         return NULL;
+      } else {
+         return isset($this->fields['id']) ? $this->fields['id'] : NULL;
+      }
    }
 
    /**
@@ -171,7 +174,6 @@ class PluginMydashboardWidget extends CommonDBTM {
       $widgets    = [];
       foreach ($widgetlist as $plugin => $widgetclasses) {
          foreach ($widgetclasses as $widgetclass => $list) {
-            //            Toolbox::logDebug($list);
             if (is_array($list)) {
                foreach ($list as $k => $namelist) {
                   if (is_array($namelist)) {
