@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -33,24 +33,21 @@ class PluginMydashboardPreference extends CommonDBTM
    /**
     * @return bool
     */
-   static function canCreate()
-   {
-      return Session::haveRightsOr('plugin_mydashboard', array(CREATE, UPDATE, READ));
+   static function canCreate() {
+      return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE, READ]);
    }
 
    /**
     * @return bool
     */
-   static function canView()
-   {
-      return Session::haveRightsOr('plugin_mydashboard', array(CREATE, UPDATE, READ));
+   static function canView() {
+      return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE, READ]);
    }
 
    /**
     * @return bool|booleen
     */
-   static function canUpdate()
-   {
+   static function canUpdate() {
       return self::canCreate();
    }
 
@@ -60,8 +57,7 @@ class PluginMydashboardPreference extends CommonDBTM
     * @param int $withtemplate
     * @return string|translated
     */
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item->getType() == 'Preference') {
          return __('My Dashboard', 'mydashboard');
       }
@@ -74,8 +70,7 @@ class PluginMydashboardPreference extends CommonDBTM
     * @param int $withtemplate
     * @return bool
     */
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       $pref = new PluginMydashboardPreference();
       $pref->showForm(Session::getLoginUserID());
       return true;
@@ -84,8 +79,7 @@ class PluginMydashboardPreference extends CommonDBTM
    /**
     * @param $user_id
     */
-   function showForm($user_id)
-   {
+   function showForm($user_id) {
       //If user has no preferences yet, we set default values
       if (!$this->getFromDB($user_id)) {
          $this->initPreferences($user_id);
@@ -98,10 +92,8 @@ class PluginMydashboardPreference extends CommonDBTM
 
       $this->showFormHeader($options);
 
-
       //This array is for those who can't update, it's to display the value of a boolean parameter
-      $yesno = array(__("No"), __("Yes"));
-
+      $yesno = [__("No"), __("Yes")];
 
       echo "<tr class='tab_bg_1'><td>" . __("Automatic refreshing of the widgets that can be refreshed", "mydashboard") . "</td>";
       echo "<td>";
@@ -111,15 +103,15 @@ class PluginMydashboardPreference extends CommonDBTM
 
       echo "<tr class='tab_bg_1'><td>" . __("Refresh every ", "mydashboard") . "</td>";
       echo "<td>";
-      Dropdown::showFromArray("automatic_refresh_delay", array(1 => 1, 2 => 2, 5 => 5, 10 => 10, 30 => 30, 60 => 60), array("value" => $this->fields['automatic_refresh_delay']));
+      Dropdown::showFromArray("automatic_refresh_delay", [1 => 1, 2 => 2, 5 => 5, 10 => 10, 30 => 30, 60 => 60], ["value" => $this->fields['automatic_refresh_delay']]);
       echo " " . __('minute(s)', "mydashboard");
       echo "</td>";
       echo "</tr>";
-//      echo "<tr class='tab_bg_1'><td>" . __("Number of widget in width", "mydashboard") . "</td>";
-//      echo "<td>";
-//      Dropdown::showFromArray("nb_widgets_width", array(1 => 1, 2 => 2, 3 => 3, 4 => 4), array("value" => $this->fields['nb_widgets_width']));
-//      echo "</td>";
-//      echo "</tr>";
+      //      echo "<tr class='tab_bg_1'><td>" . __("Number of widget in width", "mydashboard") . "</td>";
+      //      echo "<td>";
+      //      Dropdown::showFromArray("nb_widgets_width", array(1 => 1, 2 => 2, 3 => 3, 4 => 4), array("value" => $this->fields['nb_widgets_width']));
+      //      echo "</td>";
+      //      echo "</tr>";
       //Since 1.0.3 replace_central is now a preference
       echo "<tr class='tab_bg_1'><td>" . __("Replace central interface", "mydashboard") . "</td>";
       echo "<td>";
@@ -129,19 +121,19 @@ class PluginMydashboardPreference extends CommonDBTM
 
       echo "<tr class='tab_bg_1'><td>" . __("My prefered group for widget", "mydashboard") . "</td>";
       echo "<td>";
-      $params = array('name'      => 'prefered_group',
+      $params = ['name'      => 'prefered_group',
                       'value'     => $this->fields['prefered_group'],
                       'entity'    => $_SESSION['glpiactiveentities'],
-                      'condition' => '`is_assign`');
+                      'condition' => '`is_assign`'];
       Group::dropdown($params);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'><td>" . __("My prefered entity for widget", "mydashboard") . "</td>";
       echo "<td>";
-      $params = array('name'      => 'prefered_entity',
+      $params = ['name'      => 'prefered_entity',
                       'value'     => $this->fields['prefered_entity'],
-                      'entity'    => $_SESSION['glpiactiveentities']);
+                      'entity'    => $_SESSION['glpiactiveentities']];
       Entity::dropdown($params);
       echo "</td>";
       echo "</tr>";
@@ -157,10 +149,9 @@ class PluginMydashboardPreference extends CommonDBTM
    /**
     * @param $users_id
     */
-   public function initPreferences($users_id)
-   {
+   public function initPreferences($users_id) {
 
-      $input = array();
+      $input = [];
       $input['id'] = $users_id;
       $input['automatic_refresh'] = "0";
       $input['automatic_refresh_delay'] = "10";

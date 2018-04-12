@@ -38,24 +38,24 @@ if (isset($_POST['itemtype'])) {
       if (isset($_POST['items_id'])) {
          if ($item->getFromDB($_POST['items_id'])) {
             $reminder     = new Reminder();
-            $reminders_id = $reminder->add(array('name'     => addslashes($item->fields['name']),
+            $reminders_id = $reminder->add(['name'     => addslashes($item->fields['name']),
                                                  'text'     => addslashes($item->fields['comment']),
-                                                 'users_id' => $_SESSION['glpiID']));
+                                                 'users_id' => $_SESSION['glpiID']]);
 
-            $item->update(array('id'           => $_POST['items_id'],
-                                'reminders_id' => $reminders_id));
+            $item->update(['id'           => $_POST['items_id'],
+                                'reminders_id' => $reminders_id]);
          }
       }
-   } elseif ($class == 'Problem') {
+   } else if ($class == 'Problem') {
       if (isset($_POST['items_id'])) {
          if ($item->getFromDB($_POST['items_id'])) {
             $reminder     = new Reminder();
-            $reminders_id = $reminder->add(array('name'     => addslashes($item->fields['name']),
+            $reminders_id = $reminder->add(['name'     => addslashes($item->fields['name']),
                                                  'text'     => addslashes($item->fields['content']),
-                                                 'users_id' => $_SESSION['glpiID']));
+                                                 'users_id' => $_SESSION['glpiID']]);
             $alert        = new PluginMydashboardProblemAlert();
-            $alert->add(array('problems_id'  => $_POST['items_id'],
-                              'reminders_id' => $reminders_id));
+            $alert->add(['problems_id'  => $_POST['items_id'],
+                              'reminders_id' => $reminders_id]);
          }
       }
    }

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -56,7 +56,7 @@ class PluginMydashboardWidgetlist {
     */
    public function getList($filtered = true, $active_profile = -1, $profile_interface = "central") {
       global $PLUGIN_HOOKS;
-      $widgets = array();
+      $widgets = [];
 
       //        We get hooked plugin widgets
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
@@ -64,7 +64,7 @@ class PluginMydashboardWidgetlist {
       }
 
       //We add classes for GLPI core widgets
-      $widgets['GLPI'] = array("PluginMydashboardReminder",
+      $widgets['GLPI'] = ["PluginMydashboardReminder",
                                "PluginMydashboardPlanning",
                                "PluginMydashboardEvent",
                                "PluginMydashboardProblem",
@@ -72,29 +72,31 @@ class PluginMydashboardWidgetlist {
                                "PluginMydashboardTicket",
                                "PluginMydashboardRSSFeed",
                                "PluginMydashboardContract",
-                               "PluginMydashboardKnowbaseItem");
+                               "PluginMydashboardKnowbaseItem"];
       //We run through the hook to get all widget IDs and Titles declared in all classes
       foreach ($widgets as $plugin => $pluginclasses) {
-         $widgets[$plugin] = array();
+         $widgets[$plugin] = [];
          foreach ($pluginclasses as $pluginclass) {
-            if (!class_exists($pluginclass)) continue;
+            if (!class_exists($pluginclass)) {
+               continue;
+            }
             $item = getItemForItemtype($pluginclass);
 
-//            if ($item->canview) {
-               $widgets[$plugin][$pluginclass] = array();
+            //            if ($item->canview) {
+               $widgets[$plugin][$pluginclass] = [];
                //We try get the list of widgets for this class
-               if ($item && is_callable(array($item, 'getWidgetsForItem'))) {
-                  if (isset($item->interfaces)) {
-                     if (is_array($item->interfaces) && in_array($profile_interface, $item->interfaces)) {
-                        $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
-                     } else {
-                        unset($widgets[$plugin]);
-                     }
-                  } else if (!isset($item->interfaces)) {
+            if ($item && is_callable([$item, 'getWidgetsForItem'])) {
+               if (isset($item->interfaces)) {
+                  if (is_array($item->interfaces) && in_array($profile_interface, $item->interfaces)) {
                      $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
+                  } else {
+                     unset($widgets[$plugin]);
                   }
+               } else if (!isset($item->interfaces)) {
+                  $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
                }
-//            }
+            }
+            //            }
          }
       }
 
@@ -121,7 +123,7 @@ class PluginMydashboardWidgetlist {
          if (is_array($filters['authorized'])) {
             //If nothing is authorized
             if (empty($filters['authorized'])) {
-               $widgets = array();
+               $widgets = [];
             } else {
                foreach ($widgets as $plugin => & $widgetclasses) {
                   foreach ($widgetclasses as $widgetclass => & $widgetlist) {

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -41,7 +41,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
       $this->options = $_options;
 
       $preference = new PluginMydashboardPreference();
-      if (!$preference->getFromDB(Session::getLoginUserID())) $preference->initPreferences(Session::getLoginUserID());
+      if (!$preference->getFromDB(Session::getLoginUserID())) {
+         $preference->initPreferences(Session::getLoginUserID());
+      }
       $preference->getFromDB(Session::getLoginUserID());
       $this->preferences = $preference->fields;
    }
@@ -413,7 +415,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 
              </script>";
 
-
             $graph .= "</div>";
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByPriorityPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
@@ -626,7 +627,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $entities2 = " `glpi_plugin_mydashboard_stocktickets`.`entities_id` = " . $_SESSION['glpiactive_entity'] . " ";
             }
 
-
             $currentmonth = date("m");
             $currentyear  = date("Y");
             $previousyear = $currentyear - 1;
@@ -645,7 +645,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $maxcount = 0;
             $i        = 0;
 
-
             while ($data = $DB->fetch_array($results2)) {
                $tabdata[$i] = $data["nbStockTickets"];
                $tabnames[]  = $data['monthname'];
@@ -663,7 +662,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
                      AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
                      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
-
 
             $results = $DB->query($query);
             while ($data = $DB->fetch_array($results)) {
@@ -797,7 +795,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //                 }
 //             );
              </script>";
-
 
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $gsid  = PluginMydashboardWidget::getGsID($widgetId);
@@ -1853,7 +1850,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             //            $widget->setTabDatas($datas);
             //            $widget->toggleWidgetRefresh();
 
-
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened incidents by category", "mydashboard");
             $widget->setWidgetTitle($title);
@@ -2004,7 +2000,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             //            $widget->setOption('colors', $colors, true);
             //            $widget->setTabDatas($datas);
             //            $widget->toggleWidgetRefresh();
-
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened requests by category", "mydashboard");
@@ -2232,7 +2227,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "19":
 
-
             break;
 
          case $this->getType() . "20":
@@ -2247,7 +2241,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
-
 
             $query = "SELECT DISTINCT
                            `glpi_solutiontypes`.`name` AS name,
@@ -2486,7 +2479,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //                      );
                       </script>";
 
-
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $gsid  = PluginMydashboardWidget::getGsID($widgetId);
             $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
@@ -2582,7 +2574,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                     AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
                                     " . $entities . "
                                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
-
 
             $results = $DB->query($query);
             $i       = 0;
@@ -2802,7 +2793,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                               AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
                               " . $entities . "
                               GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
-
 
             $results = $DB->query($query);
             $i       = 0;
@@ -3231,15 +3221,21 @@ class PluginMydashboardInfotel extends CommonGLPI {
       $current_month = date("m");
       foreach ($months as $key => $month) {
 
-         if ($key > $current_month && $year == date("Y")) break;
+         if ($key > $current_month && $year == date("Y")) {
+            break;
+         }
 
          $next = $key + 1;
 
          $month_tmp = $key;
          $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
 
-         if (strlen($key) == 1) $month_tmp = "0" . $month_tmp;
-         if (strlen($next) == 1) $next = "0" . $next;
+         if (strlen($key) == 1) {
+            $month_tmp = "0" . $month_tmp;
+         }
+         if (strlen($next) == 1) {
+            $next = "0" . $next;
+         }
 
          if ($key == 0) {
             $year      = $year - 1;
@@ -3344,15 +3340,21 @@ class PluginMydashboardInfotel extends CommonGLPI {
       $current_month = date("m");
       foreach ($months as $key => $month) {
 
-         if ($key > $current_month && $year == date("Y")) break;
+         if ($key > $current_month && $year == date("Y")) {
+            break;
+         }
 
          $next = $key + 1;
 
          $month_tmp = $key;
          $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
 
-         if (strlen($key) == 1) $month_tmp = "0" . $month_tmp;
-         if (strlen($next) == 1) $next = "0" . $next;
+         if (strlen($key) == 1) {
+            $month_tmp = "0" . $month_tmp;
+         }
+         if (strlen($next) == 1) {
+            $next = "0" . $next;
+         }
 
          if ($key == 0) {
             $year      = $year - 1;

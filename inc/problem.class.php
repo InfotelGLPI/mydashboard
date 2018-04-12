@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -34,37 +34,35 @@ class PluginMydashboardProblem
     * @param int $nb
     * @return translated
     */
-   static function getTypeName($nb = 0)
-   {
+   static function getTypeName($nb = 0) {
       return __('Dashboard', 'mydashboard');
    }
 
    /**
     * @return array
     */
-   function getWidgetsForItem()
-   {
+   function getWidgetsForItem() {
 
-      $array = array();
-      $showproblem = Session::haveRightsOr('problem', array(Problem::READALL, Problem::READMY));
+      $array = [];
+      $showproblem = Session::haveRightsOr('problem', [Problem::READALL, Problem::READMY]);
 
       if ($showproblem) {
-         $array = array(
+         $array = [
             PluginMydashboardMenu::$PROBLEM_VIEW =>
-               array(
+               [
                   "problemprocesswidget" => __('Problems to be processed') . "&nbsp;<i class='fa fa-table'></i>",
                   "problemwaitingwidget" => __('Problems on pending status') . "&nbsp;<i class='fa fa-table'></i>"
-               ),
+               ],
             PluginMydashboardMenu::$GROUP_VIEW =>
-               array(
+               [
                   "problemprocesswidgetgroup" => __('Problems to be processed') . "&nbsp;<i class='fa fa-table'></i>",
                   "problemwaitingwidgetgroup" => __('Problems on pending status') . "&nbsp;<i class='fa fa-table'></i>"
-               ),
+               ],
             PluginMydashboardMenu::$GLOBAL_VIEW =>
-               array(
+               [
                   "problemcountwidget" => __('Problem followup') . "&nbsp;<i class='fa fa-table'></i>"
-               )
-         );
+               ]
+         ];
       }
       return $array;
    }
@@ -73,9 +71,8 @@ class PluginMydashboardProblem
     * @param $widgetId
     * @return PluginMydashboardDatatable
     */
-   function getWidgetContentForItem($widgetId)
-   {
-      $showproblem = Session::haveRightsOr('problem', array(Problem::READALL, Problem::READMY));
+   function getWidgetContentForItem($widgetId) {
+      $showproblem = Session::haveRightsOr('problem', [Problem::READALL, Problem::READMY]);
 
       if ($showproblem) {
          switch ($widgetId) {
@@ -104,14 +101,13 @@ class PluginMydashboardProblem
     * @param bool $showgroupproblems
     * @return PluginMydashboardDatatable
     */
-   static function showCentralList($start, $status = "process", $showgroupproblems = true)
-   {
+   static function showCentralList($start, $status = "process", $showgroupproblems = true) {
       global $DB, $CFG_GLPI;
 
-      $output = array();
+      $output = [];
       //We declare our new widget
       $widget = new PluginMydashboardDatatable();
-      if ($status == "waiting"){
+      if ($status == "waiting") {
          $widget->setWidgetTitle(Html::makeTitle(__('Problems on pending status'), 0, 0));
       } else {
          $widget->setWidgetTitle(Html::makeTitle(__('Problems to be processed'), 0, 0));
@@ -123,7 +119,7 @@ class PluginMydashboardProblem
       $widget->setOption("bFilter", false);
       $widget->setOption("bInfo", false);
 
-      if (!Session::haveRightsOr('problem', array(Problem::READALL, Problem::READMY))) {
+      if (!Session::haveRightsOr('problem', [Problem::READALL, Problem::READMY])) {
          return false;
       }
 
@@ -132,7 +128,6 @@ class PluginMydashboardProblem
       $search_assign = " (`glpi_problems_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_problems_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
       $is_deleted = " `glpi_problems`.`is_deleted` = 0 ";
-
 
       if ($showgroupproblems) {
          $search_users_id = " 0 = 1 ";
@@ -171,7 +166,6 @@ class PluginMydashboardProblem
                              AND (`status` IN ('" . Problem::PLANNED . "','" . Problem::ASSIGNED . "')) " .
                getEntitiesRestrictRequest("AND", "glpi_problems");
             break;
-
 
          default :
             $query .= "WHERE $is_deleted
@@ -309,7 +303,6 @@ class PluginMydashboardProblem
             }
          }
 
-
          if ($number) {
             $output['header'][] = __('');
             $output['header'][] = __('Requester');
@@ -319,7 +312,6 @@ class PluginMydashboardProblem
                $output['body'][] = self::showVeryShort($ID, $forcetab);
             }
          }
-
 
       }
 
@@ -332,7 +324,9 @@ class PluginMydashboardProblem
       }
       if (isset($output['body'])) {
          $widget->setTabDatas($output['body']);
-      } else $widget->setTabDatas(array());
+      } else {
+         $widget->setTabDatas([]);
+      }
 
       return $widget;
 
@@ -343,12 +337,11 @@ class PluginMydashboardProblem
     * @param string $forcetab
     * @return array
     */
-   static function showVeryShort($ID, $forcetab = '')
-   {
+   static function showVeryShort($ID, $forcetab = '') {
       global $CFG_GLPI;
 
       $colnum = 0;
-      $output = array();
+      $output = [];
 
       // Prints a job in short form
       // Should be called in a <table>-segment
@@ -378,8 +371,8 @@ class PluginMydashboardProblem
                   if ($viewusers) {
                      $name = sprintf(__('%1$s %2$s'), $name,
                         Html::showToolTip($userdata["comment"],
-                           array('link' => $userdata["link"],
-                              'display' => false)));
+                           ['link' => $userdata["link"],
+                              'display' => false]));
                   }
                   $output[$colnum] .= $name . "</div>";
                } else {
@@ -410,8 +403,8 @@ class PluginMydashboardProblem
 
          $link = sprintf(__('%1$s %2$s'), $link,
             Html::showToolTip($problem->fields['content'],
-               array('applyto' => 'problem' . $problem->fields["id"] . $rand,
-                  'display' => false)));
+               ['applyto' => 'problem' . $problem->fields["id"] . $rand,
+                  'display' => false]));
          //echo $link;
          //$colnum++;
          $output[$colnum] = $link;
@@ -423,8 +416,7 @@ class PluginMydashboardProblem
     * @param bool $foruser
     * @return PluginMydashboardDatatable
     */
-   static function showCentralCount($foruser = false)
-   {
+   static function showCentralCount($foruser = false) {
       global $DB, $CFG_GLPI;
 
       // show a tab with count of jobs in the central and give link
@@ -435,7 +427,7 @@ class PluginMydashboardProblem
          $foruser = true;
       }
 
-      $output = array();
+      $output = [];
 
       $query = "SELECT `status`,
                        COUNT(*) AS COUNT
@@ -477,7 +469,7 @@ class PluginMydashboardProblem
       $result = $DB->query($query);
       $result_deleted = $DB->query($query_deleted);
 
-      $status = array();
+      $status = [];
       foreach (Problem::getAllStatusArray() as $key => $val) {
          $status[$key] = 0;
       }
@@ -500,7 +492,6 @@ class PluginMydashboardProblem
       $options['link'][0] = 'AND';
       $options['reset'] = 'reset';
 
-
       $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" . __('Problem followup') . "</a>";
 
@@ -521,7 +512,6 @@ class PluginMydashboardProblem
       $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
       $output['body'][$count][1] = $number_deleted;
-
 
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetTitle($output['title']);

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -33,21 +33,20 @@ class PluginMydashboardColor
 
    //Colors for 5 series, if there is more series Flotr generates missing colors
    //Those colors are differents from the default colors of Flotr
-   private static $colors = array(
+   private static $colors = [
       '#28BEBD',//blue
       '#8ED8DB',//green
       '#F1AE29',//yellow
       '#F79637',//red
       '#EF5344'//magenta
-   );
+   ];
    private static $opacity = '0.7';
 
    /**
     * Get a color string "rgb(x,y,z)" randomly generated
     * @return string
     */
-   public static function getRandomColor()
-   {
+   public static function getRandomColor() {
       return "rgb(" . rand(0, 255) . "," . rand(0, 255) . "," . rand(0, 255) . ")";
    }
 
@@ -55,19 +54,18 @@ class PluginMydashboardColor
     * Get the fixed opacity
     * @return string
     */
-   public static function getOpacity()
-   {
+   public static function getOpacity() {
       return self::$opacity;
    }
 
    static function getColors($index = 20) {
 
-      $colors = array(
+      $colors = [
          "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
          "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
          "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
          "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
-      );
+      ];
 
       //fill colors on size index
       $tmp = $colors;

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 // Init the hooks of the plugins -Needed
@@ -30,45 +30,45 @@ function plugin_init_mydashboard() {
 
    $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
 
-   $PLUGIN_HOOKS['add_css']['mydashboard'] = array(
+   $PLUGIN_HOOKS['add_css']['mydashboard'] = [
       "lib/sdashboard/sDashboard.css",
       "css/mydashboard.css",
-   );
+   ];
 
-   $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = array(
+   $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
       //"lib/sdashboard/jquery-sDashboard.js",
       "lib/vticker/vticker.js"
-   );
+   ];
 
-   $PLUGIN_HOOKS["javascript"]['mydashboard'] = array(
+   $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
       "/plugins/mydashboard/scripts/mydashboard.js",
-   );
+   ];
 
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
-   $PLUGIN_HOOKS['change_profile']['mydashboard'] = array('PluginMydashboardProfile', 'initProfile');
+   $PLUGIN_HOOKS['change_profile']['mydashboard'] = ['PluginMydashboardProfile', 'initProfile'];
 
    if (Session::getLoginUserID()) {
-      Plugin::registerClass('PluginMydashboardProfile', array('addtabon' => 'Profile'));
+      Plugin::registerClass('PluginMydashboardProfile', ['addtabon' => 'Profile']);
 
       $plugin = new Plugin();
 
       if ($plugin->isActivated("mydashboard")) {
-         //If user has right to see configuration 
-         if (Session::haveRightsOr("plugin_mydashboard_config", array(CREATE, UPDATE))) {
+         //If user has right to see configuration
+         if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
             $PLUGIN_HOOKS['config_page']['mydashboard'] = 'front/config.form.php';
             //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
          }
 
          if (class_exists('PluginServicecatalogMain')) {
-            $PLUGIN_HOOKS['servicecatalog']['mydashboard'] = array('PluginMydashboardServicecatalog');
+            $PLUGIN_HOOKS['servicecatalog']['mydashboard'] = ['PluginMydashboardServicecatalog'];
          }
 
-         if (Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))) {
+         if (Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
 
-            $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = array('tools' => 'PluginMydashboardMenu');
+            $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => 'PluginMydashboardMenu'];
             $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = '/front/menu.php';
 
             if (class_exists('PluginServicecatalogMain') && Session::haveRight("plugin_servicecatalog", READ)) {
@@ -99,16 +99,16 @@ function plugin_init_mydashboard() {
             }
 
             if (PluginMydashboardHelper::getReplaceCentral()
-                && Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))) {
+                && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
                $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
             }
             Plugin::registerClass('PluginMydashboardPreference',
-                                  array('addtabon' => 'Preference'));
+                                  ['addtabon' => 'Preference']);
 
             Plugin::registerClass('PluginMydashboardAlert',
-                                  array('addtabon' => ['Reminder', 'Problem']));
+                                  ['addtabon' => ['Reminder', 'Problem']]);
 
-            $PLUGIN_HOOKS['mydashboard']['mydashboard'] = array('PluginMydashboardInfotel', 'PluginMydashboardAlert');
+            $PLUGIN_HOOKS['mydashboard']['mydashboard'] = ['PluginMydashboardInfotel', 'PluginMydashboardAlert'];
          }
 
       }
@@ -122,14 +122,13 @@ function plugin_init_mydashboard() {
  */
 function plugin_version_mydashboard() {
 
-
-   return array(
+   return [
       'name'           => __('My Dashboard', 'mydashboard'),
       'version'        => '1.5.0',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
-      'minGlpiVersion' => '9.2');
+      'minGlpiVersion' => '9.2'];
 }
 
 /**

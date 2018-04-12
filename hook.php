@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -67,10 +67,10 @@ function plugin_mydashboard_install() {
       $mig->addField("glpi_plugin_mydashboard_preferences",
                      "replace_central",
                      "bool",
-                     array(
+                     [
                         "update" => $replace_central,
                         "value"  => 0
-                     ));
+                     ]);
 
       $mig->dropField("glpi_plugin_mydashboard_configs", "replace_central");
       $mig->executeMigration();
@@ -83,9 +83,9 @@ function plugin_mydashboard_install() {
       $mig->addField("glpi_plugin_mydashboard_userwidgets",
                      "interface",
                      "bool",
-                     array(
+                     [
                         "update" => 1
-                     ));
+                     ]);
       $mig->executeMigration();
    }
    //fix bug about widget
@@ -97,7 +97,6 @@ function plugin_mydashboard_install() {
 
       //fill the new table with the data of previous month of this year
       fillTableMydashboardStocktickets();
-
 
       $mig->executeMigration();
    }
@@ -180,7 +179,7 @@ function plugin_mydashboard_uninstall() {
    global $DB;
 
    // Plugin tables deletion
-   $tables = array(/*"glpi_plugin_mydashboard_profiles",*/
+   $tables = [/*"glpi_plugin_mydashboard_profiles",*/
                    "glpi_plugin_mydashboard_profileauthorizedwidgets",
                    "glpi_plugin_mydashboard_widgets",
                    "glpi_plugin_mydashboard_userwidgets",
@@ -190,19 +189,19 @@ function plugin_mydashboard_uninstall() {
                    "glpi_plugin_mydashboard_alerts",
                    "glpi_plugin_mydashboard_stocktickets",
                    "glpi_plugin_mydashboard_problemalerts",
-                   "glpi_plugin_mydashboard_dashboards");
+                   "glpi_plugin_mydashboard_dashboards"];
 
-   foreach ($tables as $table)
+   foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
+   }
 
    include_once(GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
-
 
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
 
    foreach (PluginMydashboardProfile::getAllRights() as $right) {
-      $profileRight->deleteByCriteria(array('name' => $right['field']));
+      $profileRight->deleteByCriteria(['name' => $right['field']]);
    }
    PluginMydashboardProfile::removeRightsFromSession();
 
@@ -213,7 +212,7 @@ function plugin_mydashboard_postinit() {
    global $PLUGIN_HOOKS;
 
    $plugin = 'mydashboard';
-   foreach (array('add_css', 'add_javascript') as $type) {
+   foreach (['add_css', 'add_javascript'] as $type) {
       foreach ($PLUGIN_HOOKS[$type][$plugin] as $data) {
          if (!empty($PLUGIN_HOOKS[$type])) {
             foreach ($PLUGIN_HOOKS[$type] as $key => $plugins_data) {
@@ -246,5 +245,5 @@ function plugin_mydashboard_display_login() {
  */
 function plugin_mydashboard_getDatabaseRelations() {
 
-   return array();
+   return [];
 }

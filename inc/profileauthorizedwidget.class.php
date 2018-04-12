@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -36,27 +36,28 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param $profiles_id
     * @return array|bool
     */
-   public function getAuthorizedListForProfile($profiles_id)
-   {
+   public function getAuthorizedListForProfile($profiles_id) {
       $profileright = new ProfileRight();
       $profileright->getFromDBByQuery("WHERE `name`='plugin_mydashboard' AND `profiles_id` = '" . $profiles_id . "'");
 
       //If profile has right CREATE+UPDATE it means it can see every widgets
-      if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == (CREATE + UPDATE)) return false;
+      if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == (CREATE + UPDATE)) {
+         return false;
+      }
 
       //If profile has right READ it means it can see only authorized widgets
       if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == READ) {
          $table = getAllDatasFromTable($this->getTable(), "`profiles_id` = '" . $profiles_id . "'");
          $widget = new PluginMydashboardWidget();
 
-         $ret = array();
+         $ret = [];
          foreach ($table as $key => $line) {
             $widgetId = $widget->getWidgetNameById($line['widgets_id']);
             $ret[$widgetId] = $line['id'];
          }
          return $ret;
       } else {
-         return array();
+         return [];
       }
    }
 
@@ -64,8 +65,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param $ID
     * @param array $options
     */
-   public function showForm($ID, $options = array())
-   {
+   public function showForm($ID, $options = []) {
 
       $this->authorized = $this->getAuthorizedListForProfile($ID);
       $list = new PluginMydashboardWidgetlist();
@@ -96,7 +96,6 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
       echo "</tr>";
       echo "</table>";
 
-
       Html::closeForm();
    }
 
@@ -105,8 +104,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param string $category
     * @param $pluginname
     */
-   private function displayList($widgetlist, $category = '', $pluginname)
-   {
+   private function displayList($widgetlist, $category = '', $pluginname) {
       $viewNames = $this->getViewNames();
       foreach ($widgetlist as $widgetId => $widgetTitle) {
 
@@ -148,8 +146,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
    /**
     * @param $post
     */
-   public function save($post)
-   {
+   public function save($post) {
 
       if (isset($post['id']) && isset($post['update'])) {
          $profiles_id = $post['id'];
@@ -168,10 +165,10 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
             unset($this->fields['id']);
             $this->getFromDBByQuery("WHERE `profiles_id` = '$profiles_id' AND `widgets_id` ='$widgetId'");
             if (!isset($this->fields['id'])) {
-               $this->add(array(
+               $this->add([
                   'profiles_id' => $profiles_id,
                   'widgets_id' => $widgetId
-               ));
+               ]);
             }
          } else {
             if (isset($this->authorized[$widgetName])) {
@@ -188,8 +185,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param string $plugin_name
     * @return string
     */
-   private function getLocalName($plugin_name)
-   {
+   private function getLocalName($plugin_name) {
       $infos = Plugin::getInfo($plugin_name);
 
       return isset($infos['name']) ? $infos['name'] : $plugin_name;
@@ -199,9 +195,8 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * Get the names of each view
     * @return array of string
     */
-   private function getViewNames()
-   {
-      $names = array();
+   private function getViewNames() {
+      $names = [];
       $names[1] = _n('Ticket', 'Tickets', 2);
       $names[2] = _n('Problem', 'Problems', 2);
       $names[3] = _n('Change', 'Changes', 2);

@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -80,8 +80,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return array
     */
    function getWidgetsForItem() {
-      return array(
-         _n('Alert', 'Alerts', 2, 'mydashboard') => array(
+      return [
+         _n('Alert', 'Alerts', 2, 'mydashboard') => [
             $this->getType() . "1" => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
             $this->getType() . "2" => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
             $this->getType() . "3" => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
@@ -91,8 +91,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $this->getType() . "7" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
             $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
             $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-         )
-      );
+         ]
+      ];
    }
 
    static function countForAlerts($public, $type) {
@@ -118,7 +118,6 @@ class PluginMydashboardAlert extends CommonDBTM {
       } else {
          $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
       }
-
 
       $result = $DB->query($query);
       $ligne  = $DB->fetch_assoc($result);
@@ -277,7 +276,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
             $search_assign .= " AND `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` FROM `glpi_tickets_users` WHERE `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "') ";
-            
+
             $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         $left
@@ -328,7 +327,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $table .= "</a>";
             }
             $table .= "</div>";
-            
+
             //////////////////////////////////////////
 
             if ($stats_tickets4 > 0) {
@@ -730,7 +729,6 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $table .= "</div>";
 
-
             if ($stats4 > 0) {
                $options4['reset']                     = 'reset';
                $options4['criteria'][0]['field']      = 12; // status
@@ -942,7 +940,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                            $userdata .= getUserName($k);
                         }
 
-
                         if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
                            $userdata .= "<br>";
                         }
@@ -967,9 +964,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $name_ticket .= "</a>";
                         $name_ticket .= "</div>";
 
-
                         $datas[$i]["tickets_id"] = $name_ticket;
-
 
                         $datas[$i]["users_id"] = $userdata;
 
@@ -986,7 +981,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                                  $techdata .= getUserName($k);
                               }
 
-
                               if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
                                  $techdata .= "<br>";
                               }
@@ -1001,7 +995,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                               if ($k) {
                                  $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
                               }
-
 
                               if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
                                  $techdata .= "<br>";
@@ -1062,7 +1055,6 @@ class PluginMydashboardAlert extends CommonDBTM {
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
 
-
                   $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
 
                   $name = $data["name"];
@@ -1105,7 +1097,6 @@ class PluginMydashboardAlert extends CommonDBTM {
             $i     = 0;
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
-
 
                   $datas[$i]["date"] = Html::convDateTime($data['date']);
 
@@ -1186,7 +1177,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query .= "AND `" . $this->getTable() . "`.`type` = 1
                    ORDER BY `glpi_reminders`.`name`";
-
 
       $result = $DB->query($query);
       $nb     = $DB->numrows($result);
@@ -1278,7 +1268,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query .= "AND `" . $this->getTable() . "`.`type` = 2
                    ORDER BY `glpi_reminders`.`name`";
-
 
       $result = $DB->query($query);
       $nb     = $DB->numrows($result);
@@ -1539,18 +1528,18 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          if (!empty($f5)) {
             $wl .= $this->displayContent('5', $list, $public, $force);
-         } elseif (!empty($f4)) {
+         } else if (!empty($f4)) {
             $wl .= $this->displayContent('4', $list, $public, $force);
-         } elseif (!empty($f3)) {
+         } else if (!empty($f3)) {
             $wl .= $this->displayContent('3', $list, $public, $force);
-         } elseif (!empty($f2)) {
+         } else if (!empty($f2)) {
             $wl .= $this->displayContent('2', $list, $public, $force);
-         } elseif (!empty($f1)) {
+         } else if (!empty($f1)) {
             $wl .= $this->displayContent('1', $list, $public, $force);
          }
       }
       if (!$nb && ($public == 0 || $force == 1)) {
-         $wl .= $this->displayContent('1', array(), 0, $force);
+         $wl .= $this->displayContent('1', [], 0, $force);
       }
 
       return $wl;
@@ -1564,7 +1553,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string
     */
    private
-   function displayContent($impact, $list = array(), $public = 0, $force = 0) {
+   function displayContent($impact, $list = [], $public = 0, $force = 0) {
 
       $div = "";
 
@@ -1659,27 +1648,27 @@ class PluginMydashboardAlert extends CommonDBTM {
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
-      $types    = array();
+      $types    = [];
       $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
       $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
       $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
       echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-      Dropdown::showFromArray('type', $types, array(
+      Dropdown::showFromArray('type', $types, [
                                        'value' => $type
-                                    )
+                                    ]
       );
       echo "</td></tr>";
 
-      $impacts    = array();
+      $impacts    = [];
       $impacts[0] = __("No impact", "mydashboard");
       for ($i = 1; $i <= 5; $i++) {
          $impacts[$i] = CommonITILObject::getImpactName($i);
       }
 
       echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-      Dropdown::showFromArray('impact', $impacts, array(
+      Dropdown::showFromArray('impact', $impacts, [
                                          'value' => $impact
-                                      )
+                                      ]
       );
       echo "</td></tr>";
       echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
@@ -1736,7 +1725,6 @@ class PluginMydashboardAlert extends CommonDBTM {
          $reminders_id = $item->fields['reminders_id'];
       }
 
-
       if (isset($item->fields['reminders_id'])) {
          $reminder->getFromDB($reminders_id);
          echo "<table class='tab_cadre_fixe'>";
@@ -1774,28 +1762,28 @@ class PluginMydashboardAlert extends CommonDBTM {
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
-         $types    = array();
+         $types    = [];
          $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
          $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
          $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
 
          echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-         Dropdown::showFromArray('type', $types, array(
+         Dropdown::showFromArray('type', $types, [
                                           'value' => $type
-                                       )
+                                       ]
          );
          echo "</td></tr>";
 
-         $impacts    = array();
+         $impacts    = [];
          $impacts[0] = __("No impact", "mydashboard");
          for ($i = 1; $i <= 5; $i++) {
             $impacts[$i] = CommonITILObject::getImpactName($i);
          }
 
          echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-         Dropdown::showFromArray('impact', $impacts, array(
+         Dropdown::showFromArray('impact', $impacts, [
                                             'value' => $impact
-                                         )
+                                         ]
          );
          echo "</td></tr>";
          echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
@@ -1854,7 +1842,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $alert .= "<b>";
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "</b></div>";
-      } elseif (preg_match('/OK/is', $message)) {
+      } else if (preg_match('/OK/is', $message)) {
          $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fa fa-check-circle-o fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("GLPI is OK", "mydashboard");
@@ -1900,13 +1888,13 @@ class PluginMydashboardAlert extends CommonDBTM {
          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
       }
       curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_HEADER, 0);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
       curl_setopt($ch, CURLOPT_COOKIEFILE, "cookiefile");
-      curl_setopt($ch, CURLOPT_COOKIEJAR, "cookiefile"); # SAME cookiefile
+      curl_setopt($ch, CURLOPT_COOKIEJAR, "cookiefile"); // SAME cookiefile
 
       //Do we have post field to send?
       if (!empty($options["post"])) {
@@ -1916,7 +1904,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $post .= $key . '=' . $value . '&';
          }
          rtrim($post, '&');
-         curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type:application/x-www-form-urlencoded"));
+         curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:application/x-www-form-urlencoded"]);
          curl_setopt($ch, CURLOPT_POST, true);
          curl_setopt($ch, CURLOPT_POSTREDIR, 2);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
@@ -1948,8 +1936,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $data = curl_exec($ch);
       //}
 
-      if (
-         //!$options["download"] &&
+      if (//!$options["download"] &&
       !$data
       ) {
          $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -1962,8 +1949,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       //if ($options["download"]) {
       //fclose($fp);
       //}
-      if (
-         //!$options["download"] &&
+      if (//!$options["download"] &&
       $data
       ) {
          return $data;

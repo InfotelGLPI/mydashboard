@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 if (!defined('GLPI_ROOT')) {
@@ -53,7 +53,7 @@ class PluginMydashboardConfig extends CommonDBTM {
     * @return bool
     */
    static function canCreate() {
-      return Session::haveRightsOr("plugin_mydashboard_config", array(CREATE, UPDATE));
+      return Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE]);
    }
 
    /**
@@ -68,7 +68,7 @@ class PluginMydashboardConfig extends CommonDBTM {
     * @param       $ID
     * @param array $options
     */
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI;
       //If default configuration is not loaded
       if (!$this->getFromDB("1")) {
@@ -92,20 +92,23 @@ class PluginMydashboardConfig extends CommonDBTM {
       $canCreate = true;
 
       //This array is for those who can't update, it's to display the value of a boolean parameter
-      $yesno = array(__("No"), __("Yes"));
+      $yesno = [__("No"), __("Yes")];
 
       echo "<tr class='tab_bg_1'><td>" . __("Enable the possibility to display Dashboard in full screen", "mydashboard") . "</td>";
       echo "<td>";
-      if ($canCreate) Dropdown::showYesNo("enable_fullscreen", $this->fields['enable_fullscreen']);
-      else echo $yesno[$this->fields['enable_fullscreen']];
+      if ($canCreate) {
+         Dropdown::showYesNo("enable_fullscreen", $this->fields['enable_fullscreen']);
+      } else {
+         echo $yesno[$this->fields['enable_fullscreen']];
+      }
       echo "</td>";
       echo "</tr>";
-//      echo "<tr class='tab_bg_1'><td>" . __("Display the menu", "mydashboard") . "</td>";
-//      echo "<td>";
-//      if ($canCreate) Dropdown::showYesNo("display_menu", $this->fields['display_menu']);
-//      else echo $yesno[$this->fields['display_menu']];
-//      echo "</td>";
-//      echo "</tr>";
+      //      echo "<tr class='tab_bg_1'><td>" . __("Display the menu", "mydashboard") . "</td>";
+      //      echo "<td>";
+      //      if ($canCreate) Dropdown::showYesNo("display_menu", $this->fields['display_menu']);
+      //      else echo $yesno[$this->fields['display_menu']];
+      //      echo "</td>";
+      //      echo "</tr>";
 
       echo "<tr class='tab_bg_1'><td>" . __("Display widgets from plugins", "mydashboard") . "</td>";
       echo "<td>";
@@ -124,16 +127,16 @@ class PluginMydashboardConfig extends CommonDBTM {
       $this->showFormButtons($options);
 
       //Now updating the default dashboard
-//      echo "<br><div align='center'>";
-//      echo "<table class='tab_cadre_fixehov'>";
-//      echo "<tr class='tab_bg_2'>";
-//      echo "<td class='center'>";
-//      echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'>";
-//      echo __('Custom and save default grid', 'mydashboard');
-//      echo "</a>";
-//      echo "</td>";
-//      echo "<tr>";
-//      echo "</table></div>";
+      //      echo "<br><div align='center'>";
+      //      echo "<table class='tab_cadre_fixehov'>";
+      //      echo "<tr class='tab_bg_2'>";
+      //      echo "<td class='center'>";
+      //      echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'>";
+      //      echo __('Custom and save default grid', 'mydashboard');
+      //      echo "</a>";
+      //      echo "</td>";
+      //      echo "<tr>";
+      //      echo "</table></div>";
    }
 
    /*
@@ -148,7 +151,7 @@ class PluginMydashboardConfig extends CommonDBTM {
       $result = $DB->query($query);
       if ($DB->numrows($result) == '0') {
 
-         $input                          = array();
+         $input                          = [];
          $input['id']                    = "1";
          $input['enable_fullscreen']     = "1";
          $input['display_menu']          = "1";

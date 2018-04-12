@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 include('../../../inc/includes.php');
@@ -35,7 +35,7 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginMydashboardMenu::getTypeName(1));
 }
 
-if (Session::haveRightsOr("plugin_mydashboard", array(READ, UPDATE))) {
+if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
    if (isset($_POST["add_ticket"])) {
 
       Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
@@ -79,16 +79,16 @@ if (Session::haveRightsOr("plugin_mydashboard", array(READ, UPDATE))) {
        </head>
        <body>
 
-       <?php
+         <?php
 
-       $profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+         $profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
 
-       if (isset($_POST["profiles_id"])) {
-          $profile = $_POST["profiles_id"];
-       }
-       $dashboard = new PluginMydashboardMenu();
-       $dashboard->loadDashboard($profile);
-       ?>
+         if (isset($_POST["profiles_id"])) {
+            $profile = $_POST["profiles_id"];
+         }
+         $dashboard = new PluginMydashboardMenu();
+         $dashboard->loadDashboard($profile);
+         ?>
 
        </body>
        </html>

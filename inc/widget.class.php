@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -86,9 +86,9 @@ class PluginMydashboardWidget extends CommonDBTM {
       unset($this->fields);
       $query = "WHERE name LIKE '" . $widgetName . "'";
       if ($this->getFromDBByQuery($query) === false) {
-         return NULL;
+         return null;
       } else {
-         return isset($this->fields['id']) ? $this->fields['id'] : NULL;
+         return isset($this->fields['id']) ? $this->fields['id'] : null;
       }
    }
 
@@ -107,7 +107,9 @@ class PluginMydashboardWidget extends CommonDBTM {
       $result = $DB->query($query);
       if ($result && $DB->numrows($result) > 0) {
          return false;
-      } else return true;
+      } else {
+         return true;
+      }
    }
 
    /**
@@ -148,10 +150,12 @@ class PluginMydashboardWidget extends CommonDBTM {
 
          if (!isset($id)) {
             $this->fields = [];
-            $this->add(array("name" => $widgetName));
+            $this->add(["name" => $widgetName]);
          }
          return true;
-      } else return false;
+      } else {
+         return false;
+      }
    }
 
    /**
@@ -248,7 +252,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                $htmlContent = "";
                $htmlContent = $widget->getWidgetHtmlContent();
 
-               if ($widget->getWidgetIsOnlyHTML()) $htmlContent = "";
+               if ($widget->getWidgetIsOnlyHTML()) {
+                  $htmlContent = "";
+               }
 
                //when we get jsondata some checkings and modification can be done by the widget class
                //For example Datatable add some scripts to adapt the table to the template
@@ -263,7 +269,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
                //We prepare a "JSon object" compatible with sDashboard
                $json =
-                  array(
+                  [
                      "widgetTitle"     => $widget->getWidgetTitle(),
                      "widgetComment"     => $widget->getWidgetComment(),
                      "widgetId"        => $widget->getWidgetId(),
@@ -274,7 +280,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                      "html"            => $htmlContent,
                      "scripts"         => $scripts,
                      //                        "_glpi_csrf_token" => Session::getNewCSRFToken()
-                  );
+                  ];
                //safeJson because refreshCallBack must be a javascript function not a string,
                // not a string, but a function in a json object is not valid
                //               Toolbox::logDebug($json);
@@ -424,10 +430,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $head    = $datas['aoColumns'];
                   $data    = $datas['aaData'];
                   $nb = 0;
-                  if(($nb_data = reset($data)) ==! false) {
+                  if (($nb_data = reset($data)) ==! false) {
                      $nb      = count($nb_data);
                   }
-
 
                   $widgetdisplay .= '<table id="' . $widgetindex . $rand . '" class="display" cellspacing="0" width="100%">';
                   $widgetdisplay .= '<thead>';
@@ -482,10 +487,10 @@ class PluginMydashboardWidget extends CommonDBTM {
             $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
             if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
                $json =
-                  array(
+                  [
                      "enableRefresh" => json_decode($widget->getWidgetEnableRefresh()),
                      //                     "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . PluginMydashboardMenu::DASHBOARD_NAME . "','$classname', '" . $widget->getWidgetId() . "');}",
-                  );
+                  ];
                return $json;
             }
          }

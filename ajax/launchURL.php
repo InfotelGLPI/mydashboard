@@ -120,4 +120,3 @@ if (isset($_POST["widget"])
       echo $link;
    }
 }
-

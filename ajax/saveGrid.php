@@ -40,7 +40,7 @@ if (isset($_POST['users_id']) && $_POST['users_id'] == 0) {
    $options = ["users_id" => 0, "profiles_id" => $profile];
    $id = PluginMydashboardDashboard::checkIfPreferenceExists($options);
    $input['profiles_id'] = $profile;
-   if (Session::haveRightsOr("plugin_mydashboard_config", array(CREATE, UPDATE))) {
+   if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
       if ($id) {
          $input['id']   = $id;
          $input["grid"] = $data;

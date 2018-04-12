@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -36,16 +36,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
    /**
     * PluginMydashboardBarChart constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       parent::__construct();
-      $this->setOption('grid', array('verticalLines' => true, 'horizontalLines' => true));
-      $this->setOption('xaxis', array('showLabels' => true));
-      $this->setOption('yaxis', array('showLabels' => true));
-      $this->setOption('mouse', array('track' => true, 'relative' => true));
-      $this->setOption('legend', array('position' => 'se', 'backgroundColor' => '#D2E8FF'));
-      $this->setOption('bars', array('show' => true));
-      $this->setOption('bars', array('fillOpacity' => PluginMydashboardColor::getOpacity()));
+      $this->setOption('grid', ['verticalLines' => true, 'horizontalLines' => true]);
+      $this->setOption('xaxis', ['showLabels' => true]);
+      $this->setOption('yaxis', ['showLabels' => true]);
+      $this->setOption('mouse', ['track' => true, 'relative' => true]);
+      $this->setOption('legend', ['position' => 'se', 'backgroundColor' => '#D2E8FF']);
+      $this->setOption('bars', ['show' => true]);
+      $this->setOption('bars', ['fillOpacity' => PluginMydashboardColor::getOpacity()]);
    }
 
 
@@ -54,9 +53,8 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * @param string $_o , orientation
     *        $_o is only accepted within "h" or "v"
     */
-   function setOrientation($_o)
-   {
-      $possibleOrientations = array("h", "v");
+   function setOrientation($_o) {
+      $possibleOrientations = ["h", "v"];
       if (in_array($_o, $possibleOrientations)) {
          $this->orientation = $_o;
       }
@@ -68,13 +66,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * @param type $dataLabel , the X value
     * @return array like [X,Y] or [Y,X]
     */
-   private function getCouple($dataValue, $dataLabel)
-   {
+   private function getCouple($dataValue, $dataLabel) {
       switch ($this->orientation) {
          case "h" :
-            return array($dataValue * 1, $dataLabel);
+            return [$dataValue * 1, $dataLabel];
          case "v" :
-            return array($dataLabel, $dataValue * 1);
+            return [$dataLabel, $dataValue * 1];
       }
    }
 
@@ -83,16 +80,17 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * This method return a formatted array for few series
     * @return array
     */
-   private function getStackedFormat()
-   {
+   private function getStackedFormat() {
       //If we need stacked format we can guess that we want a stacked barchart
       $options = $this->getOptions();
-      if (!isset($options['bar']['stacked'])) $this->setOption('bars', array('stacked' => true));
-      $jsonDatasLabels = array();
+      if (!isset($options['bar']['stacked'])) {
+         $this->setOption('bars', ['stacked' => true]);
+      }
+      $jsonDatasLabels = [];
 
       //every item of tabDatas should be a serie for the stacked bar chart, it's labelled by its key
       foreach ($this->getTabDatas() as $serieLabel => $serie) {
-         $data = array();
+         $data = [];
          //each item of the serie is a couple X => Y
          //TODO handle when X is not numeric
          $count = 0;
@@ -106,10 +104,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
          }
 
          //By default, if not specifically labelled, in the legend the serie name will look like "Serie 1"
-         if (is_numeric($serieLabel)) $serieLabel = __("Serie") . " " . $serieLabel;
+         if (is_numeric($serieLabel)) {
+            $serieLabel = __("Serie") . " " . $serieLabel;
+         }
 
          //We ad this serie to the widget data
-         $jsonDatasLabels[] = array("data" => $data, "label" => $serieLabel);
+         $jsonDatasLabels[] = ["data" => $data, "label" => $serieLabel];
       }
       return $jsonDatasLabels;
    }
@@ -118,12 +118,11 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * Get a json formatted string representing data and options for the barchart Flotr2
     * @return string
     */
-   function getJSonDatas()
-   {
+   function getJSonDatas() {
       $stacked = false;
       $data = "";
       $count = 0;
-      $jsonDatasLabels = array();
+      $jsonDatasLabels = [];
 
       foreach ($this->getTabDatas() as $dataLabel => $dataValue) {
          //If dataValue is an array it means there are few Y-values for one X-values, by default we understand it as a stacked bar chart
@@ -133,9 +132,9 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
          } else {
             //We have to check if dataLabel is numeric because to place a point on a chart it must have numerical coordinate
             if (is_numeric($dataLabel)) {
-               $jsonDatasLabels[] = array("data" => array($this->getCouple($dataValue, $dataLabel)), "label" => $dataLabel);
+               $jsonDatasLabels[] = ["data" => [$this->getCouple($dataValue, $dataLabel)], "label" => $dataLabel];
             } else {   //If it's not numeric we have a counter to place values on every 1 step
-               $jsonDatasLabels[] = array("data" => array($this->getCouple($dataValue, $count)), "label" => $dataLabel);
+               $jsonDatasLabels[] = ["data" => [$this->getCouple($dataValue, $count)], "label" => $dataLabel];
             }
             //Here is our step
             $count += 1;
@@ -158,8 +157,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     *      1 : X value
     * @return string
     */
-   static function getLabelFormatter($id = 0)
-   {
+   static function getLabelFormatter($id = 0) {
       $funct = "";
       switch ($id) {
          case 1 :
@@ -180,8 +178,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     *      0 : value (default)
     * @return string, a tick formatter function
     */
-   static function getTickFormatter($id = 0)
-   {
+   static function getTickFormatter($id = 0) {
       $funct = "";
       switch ($id) {
          default :
@@ -198,9 +195,8 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * @param array $datas
     * @return an array of ticks as wanted by Flotr2
     */
-   static function getTicksFromLabels($datas)
-   {
-      $cumul = array();
+   static function getTicksFromLabels($datas) {
+      $cumul = [];
       $count = 0;
       $stacked = false;
       if (!empty($datas)) {
@@ -212,9 +208,9 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
             }
             //If X is numeric then its corresponding key is itself
             if (is_numeric($key)) {
-               $cumul[] = array($key, $key);
+               $cumul[] = [$key, $key];
             } else {   //If X is not numeric then its corresponding key is count (numeric)
-               $cumul[] = array($count, $key);
+               $cumul[] = [$count, $key];
             }
             $count++;
          }

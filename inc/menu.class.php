@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -34,13 +34,13 @@ class PluginMydashboardMenu extends CommonGLPI {
     * will be an array containing widgetId s
     * @var array of array of string
     */
-   private $widgets    = array();
-   private $widgetlist = array();
+   private $widgets    = [];
+   private $widgetlist = [];
    /**
     * Will contain an array of strings with js function needed to add a widget
     * @var array of string
     */
-   private $addfunction = array();
+   private $addfunction = [];
    /**
     * User id, most of the time it will correspond to currently connected user id,
     * but sometimes it will correspond to the DEFAULD_ID, for the default dashboard
@@ -51,12 +51,12 @@ class PluginMydashboardMenu extends CommonGLPI {
     * An array of string, each string is a widgetId of a widget that must be added on the mydashboard
     * @var array of string
     */
-   private $dashboard = array();
+   private $dashboard = [];
    /**
     * An array of string indexed by classnames, each string is a statistic (time /mem)
     * @var array of string
     */
-   private $stats = array();
+   private $stats = [];
    /**
     * A string to store infos, those infos are displayed in the top right corner of the mydashboard
     * @var string
@@ -72,7 +72,7 @@ class PluginMydashboardMenu extends CommonGLPI {
    public static  $GROUP_VIEW              = 4;
    public static  $MY_VIEW                 = 5;
    private static $DEFAULT_ID              = 0;
-   private static $_PLUGIN_MYDASHBOARD_CFG = array();
+   private static $_PLUGIN_MYDASHBOARD_CFG = [];
 
    static $rightname = "plugin_mydashboard";
 
@@ -118,7 +118,9 @@ class PluginMydashboardMenu extends CommonGLPI {
       //Configuration set by User (via My Preferences -> Dashboard tab)
       //General Settings
       $preference = new PluginMydashboardPreference();
-      if (!$preference->getFromDB(Session::getLoginUserID())) $preference->initPreferences(Session::getLoginUserID());
+      if (!$preference->getFromDB(Session::getLoginUserID())) {
+         $preference->initPreferences(Session::getLoginUserID());
+      }
       $preference->getFromDB(Session::getLoginUserID());
 
       self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh']       = $preference->fields['automatic_refresh'];  //Wether or not refreshable widget will be automatically refreshed by automaticRefreshDelay minutes
@@ -138,12 +140,12 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    static function getMenuContent() {
       $plugin_page = "/plugins/mydashboard/front/menu.php";
-      $menu        = array();
+      $menu        = [];
       //Menu entry in tools
       $menu['title']           = self::getTypeName();
       $menu['page']            = $plugin_page;
       $menu['links']['search'] = $plugin_page;
-      if (Session::haveRightsOr("plugin_mydashboard", array(CREATE, UPDATE))
+      if (Session::haveRightsOr("plugin_mydashboard", [CREATE, UPDATE])
           || Session::haveRight("config", UPDATE)
       ) {
          //Entry icon in breadcrumb
@@ -169,12 +171,14 @@ class PluginMydashboardMenu extends CommonGLPI {
       $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
 
       // validation des droits
-      if (!Session::haveRightsOr("plugin_mydashboard", array(CREATE, READ))) {
+      if (!Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
          return false;
       }
       // checking if no users_id is specified
       $this->users_id = Session::getLoginUserID();
-      if ($users_id != -1) $this->users_id = $users_id;
+      if ($users_id != -1) {
+         $this->users_id = $users_id;
+      }
 
       //Now the mydashboard
       $this->showDashboard($active_profile);
@@ -238,7 +242,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       if ($edit > 0) {
          echo $this->getWidgetsList($selected_profile, $edit);
       }
-//      $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
+      //      $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
       //      else {
       //         $this->getWidgetsList();
       //      }
@@ -432,7 +436,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
       }
 
-      if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !NULL) {
+      if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
          foreach ($datagrid as $k => $v) {
             $used[] = $v["id"];
          }
@@ -474,7 +478,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $widgetDB     = new PluginMydashboardWidget();
       $widgetsinDB  = getAllDatasFromTable(PluginMydashboardWidget::getTable());
 
-      $widgetsnames = array();
+      $widgetsnames = [];
       foreach ($widgetsinDB as $widget) {
          $widgetsnames[$widget['name']] = $widget['id'];
       }
@@ -499,29 +503,33 @@ class PluginMydashboardMenu extends CommonGLPI {
       $wl .= "<div class='plugin_mydashboard_menuDashboardListContainer'><ul class=''>";
 
       //GLPI core classes doesn't display the same thing in each view, we need to provide all views available
-      $views = array(self::$TICKET_VIEW,
+      $views = [self::$TICKET_VIEW,
                      self::$PROBLEM_VIEW,
                      self::$CHANGE_VIEW,
                      self::$GROUP_VIEW,
                      self::$MY_VIEW,
                      self::$GLOBAL_VIEW,
-                     self::$RSS_VIEW);
+                     self::$RSS_VIEW];
       //To ease navigation we display the name of the view
       $viewsNames = $this->getViewNames();
 
-      $viewContent = array();
+      $viewContent = [];
 
       foreach ($views as $view) {
          $viewContent[$view] = "";
       }
 
-      if (!isset($this->widgetlist['GLPI'])) return '';
+      if (!isset($this->widgetlist['GLPI'])) {
+         return '';
+      }
       $widgetclasses = $this->widgetlist['GLPI'];
 
       foreach ($widgetclasses as $widgetclass => $widgets) {
          foreach ($widgets as $widgetview => $widgetlist) {
             foreach ($widgetlist as $widgetId => $widgetTitle) {
-               if (is_numeric($widgetId)) $widgetId = $widgetTitle;
+               if (is_numeric($widgetId)) {
+                  $widgetId = $widgetTitle;
+               }
                $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
                $gsid                                   = PluginMydashboardWidget::getGsID($widgetId);
                if (!in_array($gsid, $used)) {
@@ -552,8 +560,11 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $wl .= "</ul></div>";
       $wl .= "</div>";
-      if ($is_empty) return '';
-      else return $wl;
+      if ($is_empty) {
+         return '';
+      } else {
+         return $wl;
+      }
    }
 
    /**
@@ -567,7 +578,9 @@ class PluginMydashboardMenu extends CommonGLPI {
       $is_empty     = true;
       $wl           = "";
       foreach ($this->widgetlist as $plugin => $widgetclasses) {
-         if ($plugin == "GLPI") continue;
+         if ($plugin == "GLPI") {
+            continue;
+         }
          $is_empty = true;
          $tmp      = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
          //
@@ -619,7 +632,9 @@ class PluginMydashboardMenu extends CommonGLPI {
          //We check if this widget is a real widget
          if (!is_array($widgetTitle)) {
             //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
-            if (is_numeric($widgetId)) $widgetId = $widgetTitle;
+            if (is_numeric($widgetId)) {
+               $widgetId = $widgetTitle;
+            }
             $this->widgets[$classname][$widgetId] = -1;
             $gsid                                 = PluginMydashboardWidget::getGsID($widgetId);
             if (!in_array($gsid, $used)) {
@@ -627,8 +642,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                       . " class='plugin_mydashboard_menuDashboardListItem' "
                       . " data-widgetid='" . $gsid . "'"
                       . " data-classname='" . $classname . "'>";
-               $wl .= $widgetTitle/*->getWidgetListTitle()*/
-               ;
+               $wl .= $widgetTitle;/*->getWidgetListTitle()*/
                $wl .= "</li>";
             }
          } else { //If it's not a real widget
@@ -637,9 +651,13 @@ class PluginMydashboardMenu extends CommonGLPI {
             $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
             $tmp .= "<ul class='plugin_mydashboard_menuDashboardList$depth'>";
             $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used);
-            if ($res != '') $tmp .= $res;
+            if ($res != '') {
+               $tmp .= $res;
+            }
             $tmp .= "</ul></li>";
-            if ($res != '') $wl .= $tmp;
+            if ($res != '') {
+               $wl .= $tmp;
+            }
          }
       }
       return $wl;
@@ -743,11 +761,11 @@ class PluginMydashboardMenu extends CommonGLPI {
     * previously stored in $this->addfunction
     */
    private function showPersonalWidgets() {
-      $output       = array();
-      $to_delete    = array();
+      $output       = [];
+      $to_delete    = [];
       $countHidden  = 0;
       $count        = 0;
-      $tmpdashboard = array(); //will store really added widgetIds
+      $tmpdashboard = []; //will store really added widgetIds
       //If there are widgets to add, $this->addfunction will contain javascript/jquery functions
       if (isset($this->addfunction)) {
          //For every widgets that is on dashboard
@@ -835,7 +853,7 @@ class PluginMydashboardMenu extends CommonGLPI {
    private function getPluginsNames() {
       global $PLUGIN_HOOKS;
       $plugins_hooked = $PLUGIN_HOOKS['mydashboard'];
-      $tab            = array();
+      $tab            = [];
       foreach ($plugins_hooked as $plugin_name => $x) {
          $tab[$plugin_name] = $this->getLocalName($plugin_name);
       }
@@ -878,7 +896,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    public function getJsLanguages($libraryname) {
 
-      $languages = array();
+      $languages = [];
       switch ($libraryname) {
          case "datatables" :
             $languages['sEmptyTable']     = __('No data available in table', 'mydashboard');
@@ -892,23 +910,23 @@ class PluginMydashboardMenu extends CommonGLPI {
             $languages['sProcessing']     = __('Processing') . "...";
             $languages['sSearch']         = __('Search') . ":";
             $languages['sZeroRecords']    = __('No matching records found', 'mydashboard');
-            $languages['oPaginate']       = array(
+            $languages['oPaginate']       = [
                'sFirst'    => __('First'),
                'sLast'     => __('Last'),
                'sNext'     => " " . __('Next'),
                'sPrevious' => __('Previous')
-            );
-            $languages['oAria']           = array(
+            ];
+            $languages['oAria']           = [
                'sSortAscending'  => __(': activate to sort column ascending', 'mydashboard'),
                'sSortDescending' => __(': activate to sort column descending', 'mydashboard')
-            );
-            $languages['select']          = array(
-               "rows" => array(
+            ];
+            $languages['select']          = [
+               "rows" => [
                   "_" => "",// __('You have selected %d rows', 'mydashboard')
                   //                  "0" => "Click a row to select",
                   "1" => __('1 row selected', 'mydashboard')
-               )
-            );
+               ]
+            ];
             $languages['close']           = __("Close", "mydashboard");
             $languages['maximize']        = __("Maximize", "mydashboard");
             $languages['minimize']        = __("Minimize", "mydashboard");
@@ -934,7 +952,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    public function getViewNames() {
 
-      $names = array();
+      $names = [];
 
       $names[self::$TICKET_VIEW]  = _n('Ticket', 'Tickets', 2);
       $names[self::$PROBLEM_VIEW] = _n('Problem', 'Problems', 2);
@@ -1024,7 +1042,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $datajson = [];
       $optjson  = [];
 
-      if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !NULL) {
+      if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
 
          foreach ($datagrid as $k => $v) {
             if (isset($v["id"])) {

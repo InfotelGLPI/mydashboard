@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -44,7 +44,7 @@ class PluginMydashboardPlanning {
     * @return bool
     */
    static function canCreate() {
-      return Session::haveRightsOr('plugin_mydashboard', array(CREATE, UPDATE));
+      return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE]);
    }
 
    /**
@@ -61,14 +61,14 @@ class PluginMydashboardPlanning {
    function getWidgetsForItem() {
 
       if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
-         return array(
+         return [
             PluginMydashboardMenu::$MY_VIEW =>
-               array(
+               [
                   "planningwidget" => __('Your planning') . "&nbsp;<i class='fa fa-calendar'></i>",
-               )
-         );
+               ]
+         ];
       }
-      return array();
+      return [];
    }
 
    /**
@@ -102,7 +102,7 @@ class PluginMydashboardPlanning {
          return false;
       }
 
-      $output = array();
+      $output = [];
 
       $when  = strftime("%Y-%m-%d");
       $debut = $when;
@@ -114,12 +114,12 @@ class PluginMydashboardPlanning {
       $end   = $begin + 5*DAY_TIMESTAMP;
       $begin = date("Y-m-d H:i:s", $begin);
       $end   = date("Y-m-d H:i:s", $end);
-      $params = array('who'       => $who,
+      $params = ['who'       => $who,
                       'who_group' => 0,
                       'whogroup'  => 0,
                       'begin'     => $begin,
-                      'end'       => $end);
-      $interv = array();
+                      'end'       => $end];
+      $interv = [];
       foreach ($CFG_GLPI['planning_types'] as $itemtype) {
          $interv = array_merge($interv, $itemtype::populatePlanning($params));
       }

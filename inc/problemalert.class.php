@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -68,7 +68,6 @@ class PluginMydashboardProblemalert extends CommonDBTM {
          $reminders_id = $this->fields['reminders_id'];
       }
 
-
       if (isset($this->fields['reminders_id'])) {
          $reminder->getFromDB($reminders_id);
          echo "<table class='tab_cadre_fixe'>";
@@ -107,28 +106,28 @@ class PluginMydashboardProblemalert extends CommonDBTM {
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
-         $types    = array();
+         $types    = [];
          $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
          $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
          $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
 
          echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-         Dropdown::showFromArray('type', $types, array(
+         Dropdown::showFromArray('type', $types, [
                                           'value' => $type
-                                       )
+                                       ]
          );
          echo "</td></tr>";
 
-         $impacts    = array();
+         $impacts    = [];
          $impacts[0] = __("No impact", "mydashboard");
          for ($i = 1; $i <= 5; $i++) {
             $impacts[$i] = CommonITILObject::getImpactName($i);
          }
 
          echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-         Dropdown::showFromArray('impact', $impacts, array(
+         Dropdown::showFromArray('impact', $impacts, [
                                             'value' => $impact
-                                         )
+                                         ]
          );
          echo "</td></tr>";
          echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";

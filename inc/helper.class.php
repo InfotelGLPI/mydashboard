@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -85,7 +85,9 @@ class PluginMydashboardHelper {
     */
    private static function getConfigField($fieldname) {
       $config = new PluginMydashboardConfig();
-      if (!$config->getFromDB(Session::getLoginUserID())) $config->initConfig();
+      if (!$config->getFromDB(Session::getLoginUserID())) {
+         $config->initConfig();
+      }
       $config->getFromDB("1");
 
       return (isset($config->fields[$fieldname])) ? $config->fields[$fieldname] : 0;
@@ -100,7 +102,9 @@ class PluginMydashboardHelper {
     */
    private static function getPreferenceField($fieldname) {
       $preference = new PluginMydashboardPreference();
-      if (!$preference->getFromDB(Session::getLoginUserID())) $preference->initPreferences(Session::getLoginUserID());
+      if (!$preference->getFromDB(Session::getLoginUserID())) {
+         $preference->initPreferences(Session::getLoginUserID());
+      }
       $preference->getFromDB(Session::getLoginUserID());
 
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
@@ -163,11 +167,15 @@ class PluginMydashboardHelper {
     * @return array of string (each string is a script line)
     */
    static function extractScriptsFromArray($arrayToEval) {
-      $scripts = array();
+      $scripts = [];
       if (is_array($arrayToEval)) {
-         if (!is_array($arrayToEval)) return $scripts;
+         if (!is_array($arrayToEval)) {
+            return $scripts;
+         }
          foreach ($arrayToEval as $array) {
-            if (!is_array($array)) break;
+            if (!is_array($array)) {
+               break;
+            }
             foreach ($array as $arrayLine) {
                $scripts = array_merge($scripts, self::extractScriptsFromString($arrayLine));
             }
@@ -184,9 +192,9 @@ class PluginMydashboardHelper {
     * @return array of string
     */
    static function extractScriptsFromString($stringToEval) {
-      $scripts = array();
+      $scripts = [];
       if (gettype($stringToEval) == "string") {
-         $stringToEval = str_replace(array("'", "//<![CDATA[", "//]]>"), array('"', "", ""), $stringToEval);
+         $stringToEval = str_replace(["'", "//<![CDATA[", "//]]>"], ['"', "", ""], $stringToEval);
          //             $stringToEval = preg_replace('/\s+/', ' ', $stringToEval);
 
          if (preg_match_all("/<script[^>]*>([\s\S]+?)<\/script>/i", $stringToEval, $matches)) {
@@ -232,8 +240,8 @@ class PluginMydashboardHelper {
     * @return a string formatted in JSon (most of the time, because in real JSon you can't have function)
     */
    static function safeJsonData($datas, $options) {
-      $value_arr    = array();
-      $replace_keys = array();
+      $value_arr    = [];
+      $replace_keys = [];
       foreach ($options as & $option) {
          if (is_array($option)) {
             foreach ($option as $key => & $value) {
@@ -253,10 +261,10 @@ class PluginMydashboardHelper {
 
       $json = str_replace($replace_keys,
                           $value_arr,
-                          json_encode(array(
+                          json_encode([
                                          'data'    => $datas,
                                          'options' => $options
-                                      )));
+                                      ]));
 
       return $json;
    }
@@ -273,8 +281,8 @@ class PluginMydashboardHelper {
     * @return string a json encoded array
     */
    static function safeJson($array) {
-      $value_arr    = array();
-      $replace_keys = array();
+      $value_arr    = [];
+      $replace_keys = [];
       foreach ($array as $key => & $value) {
 
          if (is_string($value) && strpos($value, 'function(') === 0) {
@@ -305,7 +313,7 @@ class PluginMydashboardHelper {
       if (stripos(trim($query), "SELECT") === 0) {
 
          $result = $DB->query($query);
-         $tab    = array();
+         $tab    = [];
          if ($result) {
             while ($row = $DB->fetch_assoc($result)) {
                $tab[] = $row;
@@ -337,14 +345,14 @@ class PluginMydashboardHelper {
             //            $widget = new PluginMydashboardHBarChart();
             //        $widget->setTabNames(array('Category','Count'));
             if ($chart) {
-               $newtab = array();
+               $newtab = [];
                foreach ($tab as $key => $line) {
                   $line             = array_values($line);
                   $newtab[$line[0]] = $line[1];
                   unset($tab[$key]);
                }
                $tab = $newtab;
-            } elseif ($linechart) {
+            } else if ($linechart) {
                //TODO format for linechart
             } else {
                //$widget->setTabNames(array('Category','Count'));

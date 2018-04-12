@@ -34,6 +34,3 @@ if (isset($_POST['edit_mode'])) {
    $input['id'] = Session::getLoginUserID();
    $pref->update($input);
 }
-
-
-

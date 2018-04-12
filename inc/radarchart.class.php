@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -32,13 +32,12 @@ class PluginMydashboardRadarChart extends PluginMydashboardLineChart
    /**
     * PluginMydashboardRadarChart constructor.
     */
-   function __construct()
-   {
+   function __construct() {
       parent::__construct();
-      $this->setOption('radar', array('show' => true,
-         'fillOpacity' => PluginMydashboardColor::getOpacity() - '0.2'));
-      $this->setOption('grid', array('circular' => true, 'minorHorizontalLines' => true));
-      $this->setOption('lines', array('show' => false));
+      $this->setOption('radar', ['show' => true,
+         'fillOpacity' => PluginMydashboardColor::getOpacity() - '0.2']);
+      $this->setOption('grid', ['circular' => true, 'minorHorizontalLines' => true]);
+      $this->setOption('lines', ['show' => false]);
    }
 
 }

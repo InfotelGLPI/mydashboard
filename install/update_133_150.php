@@ -21,7 +21,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 /**
@@ -35,48 +35,48 @@ function update133to150() {
    $migration = new Migration(150);
 
    //Assigning the right profile
-//   $query_userwidgets = "SELECT DISTINCT `users_id` FROM `glpi_plugin_mydashboard_userwidgets` WHERE `profiles_id` = 0 AND `users_id` != 0;";
-   
-//   if ($result_userwidgets = $DB->query($query_userwidgets)) {
-//      if ($DB->numrows($result_userwidgets) > 0) {
-//         while ($data_userwidgets = $DB->fetch_assoc($result_userwidgets)) {
-//
-//            $user_id        = $data_userwidgets['users_id'];
-//
-//            //Default profile search
-//            $query       = "SELECT *
-//                           FROM `glpi_users`
-//                           WHERE `id` = '" . $user_id."';";
-//            $result      = $DB->query($query);
-//            $profiles_id = $DB->result($result, 0, 'profiles_id');
-//
-//            //Check if profile has rights on the plugin
-//            $query       = "SELECT *
-//                           FROM `glpi_profilerights`
-//                           WHERE `profiles_id` = '" . $profiles_id."'
-//                           AND `name` LIKE 'plugin_mydashboard'
-//                           AND `rights` > 0;";
-//            $result      = $DB->query($query);
-//
-//            if ($DB->numrows($result) > 0) {
-//
-//               // update default profiles_id
-//               $query = "UPDATE `glpi_plugin_mydashboard_userwidgets` SET `profiles_id` = '$profiles_id' WHERE `glpi_plugin_mydashboard_userwidgets`.`users_id` = $user_id;";
-//               $DB->query($query);
-//            }
-//
-//         }
-//      }
-//   }
+   //   $query_userwidgets = "SELECT DISTINCT `users_id` FROM `glpi_plugin_mydashboard_userwidgets` WHERE `profiles_id` = 0 AND `users_id` != 0;";
+
+   //   if ($result_userwidgets = $DB->query($query_userwidgets)) {
+   //      if ($DB->numrows($result_userwidgets) > 0) {
+   //         while ($data_userwidgets = $DB->fetch_assoc($result_userwidgets)) {
+   //
+   //            $user_id        = $data_userwidgets['users_id'];
+   //
+   //            //Default profile search
+   //            $query       = "SELECT *
+   //                           FROM `glpi_users`
+   //                           WHERE `id` = '" . $user_id."';";
+   //            $result      = $DB->query($query);
+   //            $profiles_id = $DB->result($result, 0, 'profiles_id');
+   //
+   //            //Check if profile has rights on the plugin
+   //            $query       = "SELECT *
+   //                           FROM `glpi_profilerights`
+   //                           WHERE `profiles_id` = '" . $profiles_id."'
+   //                           AND `name` LIKE 'plugin_mydashboard'
+   //                           AND `rights` > 0;";
+   //            $result      = $DB->query($query);
+   //
+   //            if ($DB->numrows($result) > 0) {
+   //
+   //               // update default profiles_id
+   //               $query = "UPDATE `glpi_plugin_mydashboard_userwidgets` SET `profiles_id` = '$profiles_id' WHERE `glpi_plugin_mydashboard_userwidgets`.`users_id` = $user_id;";
+   //               $DB->query($query);
+   //            }
+   //
+   //         }
+   //      }
+   //   }
 
    //No default profile
    $query_userwidgets = "SELECT DISTINCT `users_id` FROM `glpi_plugin_mydashboard_userwidgets` 
                         WHERE `profiles_id` = 0 AND `users_id` != 0 AND `interface` != 0;";
-   
+
    if ($result_userwidgets = $DB->query($query_userwidgets)) {
       if ($DB->numrows($result_userwidgets) > 0) {
          while ($data_userwidgets = $DB->fetch_assoc($result_userwidgets)) {
-            
+
             $user_id        = $data_userwidgets['users_id'];
 
             //Search for user profiles

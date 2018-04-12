@@ -20,7 +20,7 @@
 
  You should have received a copy of the GNU General Public License
  along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------  
+ --------------------------------------------------------------------------
  */
 
 .addItemTD {
@@ -329,7 +329,7 @@ div#tabcontent{
     height:100%;
     top:0px;
     overflow: hidden;
-    z-index: 0; 
+    z-index: 0;
     float: right
     margin-bottom: 3%;
     padding-bottom: 3%;
@@ -521,7 +521,7 @@ li.plugin_mydashboard_menuDashboardList {
 
 /*
 li.plugin_mydashboard_menuDashboardList:hover{
-    border: lightgray 1px solid; 
+    border: lightgray 1px solid;
 }*/
 
 li.plugin_mydashboard_menuDashboardListItem:hover {
