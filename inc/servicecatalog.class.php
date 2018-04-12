@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-
+      
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -39,19 +39,22 @@ class PluginMydashboardServicecatalog extends CommonGLPI
 
    var $dohistory = false;
 
-   static function canUse() {
+   static function canUse()
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
-   static function getMenuLogo() {
+   static function getMenuLogo()
+   {
       global $CFG_GLPI;
 
-      return "<a class='bt-dashboard' href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'></a>";
+      return "<a class='bt-interface bt-dashboard' href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'></a>";
       //<img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/dashboard.png\" alt='".__('Dashboard', 'mydashboard')."' width=\"190\" height=\"100\">
 
    }
 
-   static function getMenuTitle() {
+   static function getMenuTitle()
+   {
       global $CFG_GLPI;
 
       return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php' class='de-em'>
@@ -60,16 +63,19 @@ class PluginMydashboardServicecatalog extends CommonGLPI
    }
 
 
-   static function getMenuComment() {
+   static function getMenuComment()
+   {
 
       return __('Dashboard access', 'mydashboard');
    }
 
-   static function getLinkList() {
+   static function getLinkList()
+   {
       return "";
    }
 
-   static function getList() {
+   static function getList()
+   {
       return "";
    }
 }
