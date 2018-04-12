@@ -76,34 +76,28 @@ class PluginMydashboardUserWidget extends CommonDBTM {
     * @internal param int $userId , id of the user
     */
    function getIdByUserIdWidgetId($widgetId) {
-      //        global $DB;
-      //        $query = "SELECT `id` FROM `glpi_plugin_mydashboard_users_widgets` WHERE (`users_id` = '".$userId."' && `widgets_id` = '".$widgetId."')";
-      //
-      //        $result = $DB->query($query);
-      //        if($result && $DB->numrows($result)>0 )
-      //        {
-      //            return $DB->result($result,0,'id');
-      //        }
-      //        else return NULL;
-      //
+
       if (!$this->checkWidgetId($widgetId)) {
          return null;
       }
-      $query = "WHERE (`users_id` = '" . $this->user_id . "' AND `widgets_id` = '" . $widgetId . "' AND `profiles_id` = '" . $this->profile_id . "' AND `interface` = $this->interface)";
-      $this->getFromDBByQuery($query);
-      return (isset($this->fields['id'])) ? $this->fields['id'] : null;
+
+      $query = "WHERE (`users_id` = '" . $this->user_id . "' AND `widgets_id` = '" . $widgetId . "' 
+               AND `profiles_id` = '" . $this->profile_id . "' AND `interface` = $this->interface)";
+      if ($this->getFromDBByQuery($query) === false) {
+         return null;
+      } else {
+         return isset($this->fields['id']) ? $this->fields['id'] : null;
+      }
    }
 
    /**
     * Get an array of widget 'name's for a user ($userId)
     *
-    * @param boolean $canbeempty , TRUE the mydashboard can be empty, FALSE it can't,<br>
-    *                             Used when the default MyDashboard is empty
+    * @param bool $canbeempty TRUE the mydashboard can be empty, FALSE it can't,<br>
+                                    Used when the default MyDashboard is empty
+    * @param null $user_id
     *
-    * @global type   $DB
     * @return array of widget 'name's
-    * @global type   $DB
-    * @global type   $DB
     */
    function getWidgets($canbeempty = false, $user_id = null) {
       global $DB;
@@ -123,263 +117,9 @@ class PluginMydashboardUserWidget extends CommonDBTM {
          array_push($tab, $row['name']);
       }
       if (!$canbeempty && count($tab) == 0) {
-         //Two choices :
-         // either SET a default Dashboard for the user
-         // $this->setDefault();
-         // or GET the default Dashboard
-
-         //in the case user_id = 0
-         //         $this->initDefault();
          return $this->getWidgets(true, 0);
       }
       return $tab;
-   }
-
-   /**
-    * Get the place of a widget by its id
-    *
-    * @param int $widgetId
-    *
-    * @return int place of the widget, null otherwise
-    */
-   public function getWidgetPlace($widgetId) {
-      unset($this->fields['place']);
-      $query = "WHERE (`" . $this->getTable() . "`.`users_id` = '" . $this->user_id . "' "
-               . "AND `" . $this->getTable() . "`.`widgets_id` = '" . $widgetId . "' "
-               . "AND `profiles_id` = $this->profile_id)";
-      $this->getFromDBByQuery($query);
-      $result = isset($this->fields['place']) ? $this->fields['place'] : null;
-      return $result;
-   }
-
-   /**
-    * Get an array of widgets_id for a user ($userId)
-    * @global type $DB
-    * @return array of widgets_id
-    */
-   private function getWidgetsIdPlace() {
-      //        global $DB;
-      //
-      //        $query = "SELECT `".$this->getTable()."`.`widgets_id`, `".$this->getTable()."`.`place` FROM `".$this->getTable()."` "
-      //                ."WHERE `".$this->getTable()."`.`users_id` = '".$this->user_id."' "
-      //                ."ORDER BY `place` ASC ";
-      //        $result = $DB->query($query);
-
-      $widgets = getAllDatasFromTable($this->getTable(), "`" . $this->getTable() . "`.`users_id` = '" . $this->user_id . "' "
-                                                         . "AND `interface` = $this->interface AND `profiles_id` = $this->profile_id ORDER BY `place` ASC ");
-
-      $tab = [];
-
-      foreach ($widgets as $widget) {
-         $tab[] = ['widgets_id' => $widget['widgets_id'], 'place' => $widget['place']];
-      }
-      //        while ($row = $DB->fetch_array($result)) {
-      //            $tab[] =array('widgets_id' => $row['widgets_id'], 'place' => $row['place']);
-      //        }
-      return $tab;
-   }
-
-   /**
-    * Saves a triplet (user_id, widget_id, place) representing User,Widget and the Place of the Widget on the User's
-    * dashboard
-    * @global type $DB
-    *
-    * @param int   $widgetId , id of the widget
-    * @param int   $place , place of the widget
-    *
-    * @return boolean
-    */
-   public function saveWidgetIdPlace($widgetId, $place) {
-      global $DB;
-      if ($this->checkWidgetId($widgetId)
-          && $this->checkPlace($place)
-      ) {
-         //            //We check if the place is not already taken
-         //            $query = "SELECT `glpi_plugin_mydashboard_users_widgets`.`widgets_id` FROM `glpi_plugin_mydashboard_users_widgets` "
-         //                      ."WHERE (`glpi_plugin_mydashboard_users_widgets`.`users_id` = '".$this->user_id."' AND `glpi_plugin_mydashboard_users_widgets`.`place` = '".$place."')"
-         //                ."ORDER BY `place` ASC ";
-         //
-         //            $result = $DB->query($query);
-         //            //Only if no widgets are here
-         //            if($DB->num_rows($result) == 0)
-         //            {
-
-         $nLine = [
-            "users_id"   => $this->user_id,
-            "profiles_id" => $this->profile_id,
-            "widgets_id" => $widgetId,
-            "place"      => $place,
-         ];
-
-         //Reset of the id
-         unset($this->fields["id"]);
-         $id = $this->getIdByUserIdWidgetId($widgetId);
-
-         if (isset($id)) {
-            $nLine["id"] = $id;
-            $this->update($nLine);
-         } else {
-            $this->add($nLine);
-         }
-         // var_dump($nLine);
-         return true;
-         //            }
-      }
-      return false;
-   }
-
-   /**
-    * Removes a widget ($widgetName) from the $this->user_id's Dashboard
-    * @global type  $DB
-    *
-    * @param string $widgetName , name of the widget
-    *
-    * @return boolean, true in normal case, false when the query went wrong
-    */
-   public function removeWidgetByWidgetName($widgetName) {
-      global $DB;
-      $widget   = new PluginMydashboardWidget();
-      $widgetId = $widget->getWidgetIdByName($widgetName);
-      return $this->removeWidgetByWidgetId($widgetId);
-   }
-
-   /**
-    * Removes a widget ($widgetId) from the $this->user_id 's Dashboard
-    * @global type $DB
-    *
-    * @param int   $widgetId , id of the widget
-    *
-    * @return boolean, true in normal case, false when the query went wrong
-    */
-   public function removeWidgetByWidgetId($widgetId) {
-      global $DB;
-      if ($this->checkWidgetId($widgetId)) {
-         $this->getFromDBByQuery("  WHERE (`users_id` = '" . $this->user_id . "' "
-                                 . "AND `widgets_id` = '" . $widgetId . "' "
-                                 . "AND `profiles_id` = '" . $this->profile_id . "' "
-                                 . ")");
-
-         $this->deleteFromDB();
-         //All later added widgets MUST be updated, their places are not the same anymore
-         $this->updateOthersPlaces($this->fields['place']);
-         //            $query = "DELETE FROM `".$this->getTable()."` WHERE (`users_id` = '".$this->user_id."' && `widgets_id` = '".$widgetId."')";
-         //            $result = $DB->query($query);
-         //
-         //            if($result) {
-         //                return true;
-         //            }
-         //            else return false;
-      }
-      return true;
-   }
-
-   /**
-    * Remove all widgets from the user's dashboard
-    * @global type $DB
-    */
-   public function removeWidgets() {
-      global $DB;
-      $query = "DELETE FROM `" . $this->getTable() . "` WHERE (`users_id` = '" . $this->user_id . "' AND `profiles_id` = $this->profile_id)";
-      $DB->query($query);
-   }
-
-   /**
-    * Set a default dashboard for $this->user_id,
-    *
-    * @param array $to_be_deleted
-    *
-    * @internal param int $userId ,
-    */
-   public function setDefault($to_be_deleted = []) {
-
-      //We make sure that there is a default configuration
-      $this->initDefault();
-
-      //We get this default configuration userId = 0
-      $defaultDashboard = new self(0);
-      $defaultTab       = $defaultDashboard->getWidgetsIdPlace();
-      //        $widget = new PluginMydashboardWidget();
-      //For each widget of the default dashboard we add it to userId 's dashboard
-      //We add only the widgets that can be used by user (by its profile)
-      $pauthwidget = new PluginMydashboardProfileAuthorizedWidget();
-      $authwidgets = $pauthwidget->getAuthorizedListForProfile($_SESSION['glpiactiveprofile']['id']);
-      //$authwidgets each items of authwidgets is "widgetid" => <widgets_i> and we want it as <widget_id> => "widgetid"
-      if (is_array($authwidgets)) {
-         array_flip($authwidgets);
-      }
-      foreach ($defaultTab as $defaultWidget) {
-         //            if(!in_array($widget->getWidgetNameById($defaultWidget['widgets_id']), $to_be_deleted)) {
-         if ((!empty($authwidgets)
-              && !isset($authwidgets[$defaultWidget['widgets_id']]))
-             || !$authwidgets
-         ) {
-            $this->saveWidgetIdPlace($defaultWidget['widgets_id'], $defaultWidget['place']);
-         }
-         //            }
-      }
-   }
-
-   /**
-    * Initialize the default dashboard
-    * @global type $DB
-    */
-   private function initDefault() {
-      global $DB;
-
-      $profiles_id = $_SESSION['glpiactiveprofile']['id'];
-      //Query to check if there is a default dashboard
-      $query  = "SELECT * FROM `" . $this->getTable() . "` WHERE (`users_id` = '0')";
-      $result = $DB->query($query);
-      //Init default central (1) :
-      //If there is no default dashboard
-      if ($result && ($DB->numrows($result) == 0)) {
-         //DONE : Those are widgets_id s, maybe a better way would be to get those id's from names, but by default no names is known
-         //Widgets are initialized before user_widgets is used, by this way we know widgets names
-         $default   = [];
-         $default[] = "planningwidget";
-         $default[] = "reminderpersonalwidget";
-         $default[] = "reminderpublicwidget";
-         $default[] = "ticketlistprocesswidget";
-         $default[] = "ticketlistrequestbyselfwidget";
-         $default[] = "problemprocesswidget";
-
-         //We replace names by ids
-         foreach ($default as $key => $d) {
-            $widget        = new PluginMydashboardWidget();
-            $default[$key] = $widget->getWidgetIdByName($d);
-         }
-         foreach ($default as $key => $d) {
-            if (isset($d) && !empty($d)) {
-               $query = "INSERT INTO `" . $this->getTable() . "` (`id`,`users_id`, `profiles_id`, `widgets_id`) VALUES (NULL,0,$profiles_id,$d)";
-               $DB->query($query);
-            }
-         }
-      }
-      //Init default helpdesk (0):
-      $query  = "SELECT * FROM `" . $this->getTable() . "` WHERE (`users_id` = '0')";
-      $result = $DB->query($query);
-
-      //If there is no default dashboard
-      if ($result && ($DB->numrows($result) == 0)) {
-         $default   = [];
-         $default[] = "rssfeedpublicwidget";
-         $default[] = "knowbaseitemrecent";
-         $default[] = "knowbaseitemlastupdate";
-         $default[] = "knowbaseitempopular";
-         $default[] = "ticketlistrequestbyselfwidget";
-         $default[] = "ticketcountwidget";
-         //We replace names by ids
-         foreach ($default as $key => $d) {
-            $widget        = new PluginMydashboardWidget();
-            $default[$key] = $widget->getWidgetIdByName($d);
-         }
-         foreach ($default as $key => $d) {
-            if (isset($d) && !empty($d)) {
-               $query = "INSERT INTO `" . $this->getTable() . "` (`id`,`users_id`, `profiles_id`, `widgets_id`) VALUES (NULL,0,$profiles_id,$d)";
-               $DB->query($query);
-            }
-         }
-      }
    }
 
    /**
@@ -390,53 +130,7 @@ class PluginMydashboardUserWidget extends CommonDBTM {
     * @return boolean, TRUE if valid, FALSE otherwise
     */
    private function checkWidgetId($widgetId) {
-      //$this->checkSpecificValues($datatype, $value);
       return is_numeric($widgetId) && $widgetId >= 0;
-   }
-
-   /**
-    * Check the validity of a place
-    *
-    * @param int $place
-    *
-    * @return boolean, TRUE if valid, FALSE otherwise
-    */
-   private function checkPlace($place) {
-      return is_numeric($place) && $place >= 0;
-   }
-
-   //    private function checktSpecificValues($datatype, $value) {
-   //       switch($datatype)
-   //       {
-   //          case "tinyint":
-   //             break;
-   //          case "int":
-   //             break;
-   //          case "char":
-   //             break;
-   //          case "varchar":
-   //             break;
-   //       }
-   //    }
-
-   /**
-    * Update all later added widgets for a user (when a widget is deleted)
-    * @global type $DB
-    *
-    * @param int   $place
-    *
-    * @return type
-    */
-   private function updateOthersPlaces($place) {
-      global $DB;
-      if (!$this->checkPlace($place)) {
-         return false;
-      }
-      //We must update places of other widgets (those which were added after the one that just have been deleted
-      $query = "UPDATE `" . $this->getTable() . "` SET `place` = `place`-1 ";
-      $query .= "WHERE (`users_id` = '" . $this->user_id . "' && `place` > " . $place . ") ;";
-      return $DB->query($query);
-
    }
 
 }

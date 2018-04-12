@@ -79,7 +79,6 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
     * @return string
     */
    static function getLabelFormatter($id = 0, $prefix = "", $suffix = "", $minvalue = 0) {
-      $funct = "";
       $cond = "";
       if ($minvalue != 0) {
          $cond = "if(parseInt(value) < $minvalue) { return ''; }";

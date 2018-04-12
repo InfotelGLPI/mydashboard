@@ -27,8 +27,7 @@
 /**
  * This class extends GLPI class problem to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardProblem
-{
+class PluginMydashboardProblem {
 
    /**
     * @param int $nb

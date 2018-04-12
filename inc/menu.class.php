@@ -76,8 +76,6 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    static $rightname = "plugin_mydashboard";
 
-   // Should return the localized name of the type
-
    /**
     * @param int $nb
     *
@@ -86,7 +84,6 @@ class PluginMydashboardMenu extends CommonGLPI {
    static function getTypeName($nb = 0) {
       return __('My Dashboard', 'mydashboard');
    }
-
 
    /**
     * PluginMydashboardMenu constructor.
@@ -126,13 +123,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh']       = $preference->fields['automatic_refresh'];  //Wether or not refreshable widget will be automatically refreshed by automaticRefreshDelay minutes
       self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh_delay'] = $preference->fields['automatic_refresh_delay']; //In minutes
       self::$_PLUGIN_MYDASHBOARD_CFG['replace_central']         = $preference->fields['replace_central']; // Replace central interface
-      //Blacklist
-      //Used when user doesn't want to display widgets of a plugin
-      //        $ublacklist = new PluginMydashboardPreferenceUserBlacklist();
-      //        if(!$show_all) self::$_PLUGIN_MYDASHBOARD_CFG['blacklist'] = $ublacklist->getBlacklistForUser(Session::getLoginUserID());
-      //        else {
-      //            self::$_PLUGIN_MYDASHBOARD_CFG['blacklist'] = array();
-      //        }
+
    }
 
    /**
@@ -146,8 +137,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $menu['page']            = $plugin_page;
       $menu['links']['search'] = $plugin_page;
       if (Session::haveRightsOr("plugin_mydashboard", [CREATE, UPDATE])
-          || Session::haveRight("config", UPDATE)
-      ) {
+          || Session::haveRight("config", UPDATE)) {
          //Entry icon in breadcrumb
          $menu['links']['config'] = PluginMydashboardConfig::getFormURL(false);
       }
@@ -159,7 +149,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * Show dashboard
     *
     * @param int $users_id
-    * @param int $interface
+    * @param int $active_profile
     *
     * @return FALSE if the user haven't the right to see Dashboard
     * @internal param type $user_id
@@ -232,9 +222,10 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    /**
     * This method shows the widget list (in the left part) AND the mydashboard
+    *
+    * @param int $selected_profile
     */
    private function showDashboard($selected_profile = -1) {
-      global $CFG_GLPI;
 
       //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
       //      $_SESSION['plugin_mydashboard_editmode'] = false;
@@ -242,15 +233,9 @@ class PluginMydashboardMenu extends CommonGLPI {
       if ($edit > 0) {
          echo $this->getWidgetsList($selected_profile, $edit);
       }
-      //      $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
-      //      else {
-      //         $this->getWidgetsList();
-      //      }
+
       //Now we have a widget list menu, but, it does nothing, we have to bind
       //list item click with the adding on the mydashboard, and we need to display
-      //the widgets that needs to be
-      //      $this->initWidgets();
-
       //this div contains the header and the content (basically the ul used by sDashboard)
 
       echo "<div class='plugin_mydashboard_dashboard' >";//(div.plugin_mydashboard_dashboard)
@@ -266,24 +251,14 @@ class PluginMydashboardMenu extends CommonGLPI {
       if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
           && $edit < 1
       && $this->interface == 1) {
-         //         echo "<img class='plugin_mydashboard_header_fullscreen plugin_mydashboard_discret' src='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/pics/fullscreen.png' width='20px' alt='" . __("Fullscreen") . "'/>";
          echo "<i class=\"fa fa-arrows-alt plugin_mydashboard_header_fullscreen header_fullscreen plugin_mydashboard_discret \" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
       }
-      //In debug mod we display a client side log display
-      //      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-      //         echo " <img class='plugin_mydashboard_header_info_img plugin_mydashboard_header_info plugin_mydashboard_discret' src='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/pics/info.png' alt='info' title='' />";
-      //         echo " <span class='plugin_mydashboard_header_info_logbox' style='display:none'><b>" . __("Logs :") . "</b></span>";
-      //      }
-      //place where infos are temporarly displayed (for exemple 'dashboard saved')
-      //      echo " <span class='plugin_mydashboard_header_info plugin_mydashboard_discret'></span>";
 
       echo "</span>";//end(span.plugin_mydashboard_header_right)
       echo "</div>";//end(div.plugin_mydashboard_header)
       //Now the content
       echo "<div class='plugin_mydashboard_content'>";//(div.plugin_mydashboard_content)
-      //Then we need to initialize the javascript/jquery concerning sDashboard
-      //      $this->initDashboard();
-      //        echo "</td></tr>";
+
       echo "</div>";//end(div.plugin_mydashboard_content)
       echo "</div>";//end(div.plugin_mydashboard_dashboard)
 
@@ -308,9 +283,6 @@ class PluginMydashboardMenu extends CommonGLPI {
          ');
 
       }
-      //We display informations (Once everything is initialized)
-      //Unused
-      //echo "$('.plugin_mydashboard_header_info').html('".$this->infos."');";
    }
 
    function displayEditMode($edit = 0, $selected_profile = -1) {
@@ -334,11 +306,10 @@ class PluginMydashboardMenu extends CommonGLPI {
             if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
                self::dropdownProfiles(['value' => $selected_profile]);
             } else {
-               echo "<input type='hidden' name='profiles_id' value='" . $_SESSION['glpiactiveprofile']['id'] . "'>";
+               echo Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
             }
 
             echo "&nbsp;<span class='plugin_mydashboard_add_button'><a id='add-widget' href='#'>" . __('Add a widget', 'mydashboard') . "</a></span>";//(span.plugin_mydashboard_header_title)
-            //        if($this->users_id == self::$DEFAULT_ID) echo " ".__("By Default",'mydashboard');
 
             echo "&nbsp;<i class=\"fa fa-caret-down\"></i></span>";
 
@@ -409,6 +380,10 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    /**
     * Get the HTML view of the widget list, the lateral menu
+    *
+    * @param     $profile
+    * @param int $edit
+    *
     * @return string, HTML
     */
    private function getWidgetsList($profile, $edit = 0) {
@@ -462,13 +437,32 @@ class PluginMydashboardMenu extends CommonGLPI {
       //-------------------------------------------------------
       $wl .= "</div>"; //end(div.plugin_mydashboard_menuSliderContent)
 
-      //This is the handle of the menu slider
-      //        $wl .= "<a class='plugin_mydashboard_menuSliderButton' style='' >".__("Dashboard",'mydashboard')."</a>";
-
       $wl .= "</div>"; //end(div.plugin_mydashboard_menuSlider)
       $wl .= "</div>"; //end(div.plugin_mydashboard_menuDashboard)
 
       return $wl;
+   }
+
+   static function installWidgets(){
+
+      $list             = new PluginMydashboardWidgetlist();
+      $widgetlist = $list->getList(true);
+Toolbox::logDebug($widgetlist);
+      $widgetDB     = new PluginMydashboardWidget();
+
+      $widgetclasses = $widgetlist['GLPI'];
+
+      foreach ($widgetclasses as $widgetclass => $widgets) {
+         foreach ($widgets as $widgetview => $widgetlist) {
+            foreach ($widgetlist as $widgetId => $widgetTitle) {
+               if (is_numeric($widgetId)) {
+                  $widgetId = $widgetTitle;
+               }
+               $widgetDB->saveWidget($widgetId);
+
+            }
+         }
+      }
    }
 
    /**
@@ -495,6 +489,9 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    /**
     * Get the HTML list of the GLPI core widgets available
+    *
+    * @param array $used
+    *
     * @return string, the HTML list
     */
    private function getWidgetsListFromGLPICore($used = []) {
@@ -569,9 +566,12 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    /**
     * Get the HTML list of the plugin widgets available
+    *
+    * @param array $used
+    *
+    * @return string|boolean
     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
-    * @return string|boolean
     */
    private function getWidgetsListFromPlugins($used = []) {
       $plugin_names = $this->getPluginsNames();
@@ -620,9 +620,11 @@ class PluginMydashboardMenu extends CommonGLPI {
     * Accordion is only available for level 2, (level 3 and more won't be folded (by default))
     * ATTENTION : it doesn't handle level 1 items (Plugin names, GLPI ...)
     *
-    * @param type $widgetsarray , an arry of widgets (or array of array ... of widgets)
-    * @param type $classname , name of the class containing the widget
-    * @param int  $depth
+    * @param type  $widgetsarray , an arry of widgets (or array of array ... of widgets)
+    * @param type  $classname , name of the class containing the widget
+    * @param int   $depth
+    *
+    * @param array $used
     *
     * @return string
     */
@@ -663,88 +665,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       return $wl;
    }
 
-   /**
-    * Initialize all things that are needed for sDashboard
-    */
-   //   private function initDashboard() {
-   //      global $CFG_GLPI;
-   //
-   //      //This is the container where widgets will be placed as dom li s
-   //      echo "<ul id='" . self::DASHBOARD_NAME . "'></ul>";
-   //      //Initialization of sDashboard
-   //
-   //      $script = "
-   //          mydashboard.setLanguageData(" . json_encode($this->getJsLanguages("mydashboard")) . ");
-   //          mydashboard.setRootDoc('" . $CFG_GLPI['root_doc'] . "');";
-   //
-   //      //CSRF
-   //      //echo "plugin_mydashboard_csrf = '".Session::getNewCSRFToken()."';";
-   //
-   //      $script .= "
-   //          $(function() {
-   //            // Initialization
-   //             $('#" . self::DASHBOARD_NAME . "').sDashboard({";
-   //      //Because of a "bug" in Firefox we need to set disableSelection to false to enable form (select ...) selection
-   //
-   //      $script          .= "disableSelection : false,";
-   //      $script          .= "dashboardLanguage : " . json_encode($this->getJsLanguages("sDashboard"))/*.","*/
-   //      ;
-   //      $script          .= "});\n";
-   //      $this->interface = 1;
-   //      //We show personnal widgets BEFORE binding the 'added' event to prevent useless operation
-   //      if (!empty($this->dashboard))
-   //         $script .= $this->showPersonalWidgets();
-   //      //Once all personnal widgets are shown, client must know what is on the mydashboard
-   //      $script .= "mydashboard.setOriginalDashboard(" . json_encode($this->dashboard) . ");";
-   //      //Binding to update tab when MyDashboard is rearranged
-   //      //Binding to update tab when a widget is added or deleted from dashboard
-   //      $script .= "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardstatechanged', function(e,data) {
-   //                    switch(data.triggerAction) {
-   //                        case 'orderChanged' :
-   //                            var sorted = data.sortedDefinitions;
-   //                            var tab = new Array(sorted.length);
-   //                            for(var i=0;i<sorted.length;i++) {
-   //                                tab[sorted.length-i] = data.sortedDefinitions[i]['widgetId'];
-   //                            }
-   //                            mydashboard.saveOrder(" . $this->users_id . "," . $this->interface . ",tab);
-   //                            break;
-   //                        case 'widgetAdded' :
-   //                            mydashboard.saveAdding(" . $this->users_id . "," . $this->interface . ",data.affectedWidget.widgetId);
-   //                            break;
-   //                        case 'widgetDeleted' :
-   //                            mydashboard.saveRemoval(" . $this->users_id . "," . $this->interface . ",data.affectedWidgetId);
-   //                            break;
-   //
-   //                    }
-   //                });";
-   //      //Binding when a widget is Maximized or Minimized,
-   //      //if you want a custom behavior you can set a function in :
-   //      // -> onMaximize[widgetId] = your maximize function
-   //      // -> onMinimize[widgetId] = your minimize function
-   //      $script .= "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardwidgetmaximized', function(e,data) {
-   //                    var widget = document.getElementById(data.widgetDefinition.widgetId+'content');
-   //                    if(widget) widget.setAttribute('class','unscaledContent');
-   //                    if (typeof onMaximize[data.widgetDefinition.widgetId] !== 'undefined') {
-   //                       setTimeout(function(){onMaximize[data.widgetDefinition.widgetId]();},1);
-   //                    }
-   //                    $('.plugin_mydashboard_menuDashboard').zIndex(9000);
-   //                });";
-   //
-   //      $script .= "$('#" . self::DASHBOARD_NAME . "').bind('sdashboardwidgetminimized', function(e,data) {
-   //                    var widget = document.getElementById(data.widgetDefinition.widgetId+'content');
-   //                    if(widget) widget.setAttribute('class','scaledContent');
-   //                    if (typeof onMinimize[data.widgetDefinition.widgetId] !== 'undefined') {
-   //                       setTimeout(function(){onMinimize[data.widgetDefinition.widgetId]();},1);
-   //                    }
-   //                    $('.plugin_mydashboard_menuDashboard').zIndex(10000);
-   //                });";
-   //      $script .= "});";
-   //
-   //      echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
-   //
-   //   }
-
-   /**
+     /**
     * Get an array of widgetNames as ["id1","id2"] for a specifid users_id
     *
     * @param int $id user id
@@ -754,84 +675,6 @@ class PluginMydashboardMenu extends CommonGLPI {
    private function getDashboardForUser($id) {
       $user_widget = new PluginMydashboardUserWidget($id, $this->interface);
       return $user_widget->getWidgets();
-   }
-
-   /**
-    * This function echo all adding functions (js) of widgets on the users dashboard
-    * previously stored in $this->addfunction
-    */
-   private function showPersonalWidgets() {
-      $output       = [];
-      $to_delete    = [];
-      $countHidden  = 0;
-      $count        = 0;
-      $tmpdashboard = []; //will store really added widgetIds
-      //If there are widgets to add, $this->addfunction will contain javascript/jquery functions
-      if (isset($this->addfunction)) {
-         //For every widgets that is on dashboard
-         foreach ($this->dashboard as &$widgetId) {
-            //We get the index of this widget in $this->dashboard
-            $index = $this->getIndexOnDash($widgetId);
-
-            //We check if the function exists,
-            // if not it probably means that the plugin is desactivated,
-            // or that widgets from plugin are not displayed anymore
-            if (isset($this->addfunction[$widgetId])) {
-               $output[$index]       = $this->addfunction[$widgetId];
-               $tmpdashboard[$index] = $widgetId;
-               $count++;
-            } else {
-               $to_delete[] = $widgetId;
-               $countHidden++;
-            }
-         }
-      }
-      //We need to add widgets in the same order than it is stored on base
-      ksort($output);
-      $script = '';
-      //We echoes the adding functions in the order
-      foreach ($output as $widget) {
-         $script .= $widget;
-      }
-
-      //This two lines are here to adapt the canvas size to its container
-      $script .= "canvas = $('canvas');";
-      $script .= "$.each(canvas, function(index,value) { value.style.width = '100%'; });";
-
-      //countHidden is the number of widgets that can't be displayed
-      //Few reasons possible :
-      //->This widget is from a blacklisted plugin
-      //->This widget is from a desactivated plugin
-      //->An error occured in the process
-      if ($countHidden != 0) {
-         //If a setDefault needs to be applied,
-         //it must know which widgets from the default dashboard must'nt be displayed in personnal dashboard (btw mustn't be stored)
-         //            unset($_SESSION['not_to_be_added']);
-         //We delete from the users dashboard all obsolete widgets
-         if (!empty($to_delete)) {
-            $user_widget = new PluginMydashboardUserWidget($this->users_id);
-            foreach ($to_delete as $widget_to_delete) {
-               $user_widget->removeWidgetByWidgetName($widget_to_delete);
-               //widgets not available for User are store in a SESSION variable, later usable in saveConfig
-               //                    $_SESSION['not_to_be_added'][] = $widget_to_delete;
-            }
-         }
-      }
-
-      //dashboard now contains really added widgets, all non added (for any reason) are not in this var anymore
-      $this->dashboard = array_values($tmpdashboard);
-      return $script;
-   }
-
-   /**
-    * Check if a widget is on the mydashboard stored in db by its widgetName
-    *
-    * @param string $name
-    *
-    * @return boolean, TRUE if $name is in the array self::dash, else FALSE
-    */
-   private function isOnDash($name) {
-      return in_array($name, $this->dashboard);
    }
 
    /**
@@ -966,28 +809,9 @@ class PluginMydashboardMenu extends CommonGLPI {
    }
 
    /**
-    * get a javascript string that evals all scripts stored in an array
-    *
-    * @param array of string $scripts
-    *
-    * @return string, a javascript string
-    */
-   private function getEvalScriptArray($scripts) {
-      $eval = "";
-      if (!empty($scripts)) {
-         //            $eval = 'eval(\' ';
-         foreach ($scripts as $script) {
-            $eval .= $script;
-         }
-         //          $eval .=  '\');';
-         return $eval;
-      }
-   }
-
-   /**
     * Log $msg only when DEBUG_MODE is set
     *
-    * @param type $msg
+    * @param int $active_profile
     */
    //   private function debug($msg) {
    //      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
@@ -998,6 +822,9 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    /***********************/
 
+   /**
+    * @param int $active_profile
+    */
    function loadDashboard($active_profile = -1) {
       global $CFG_GLPI;
 
@@ -1347,8 +1174,6 @@ class PluginMydashboardMenu extends CommonGLPI {
     </script>";
 
       echo "</div>";
-      //      echo "</div>";
-      //      echo "</div>";
    }
 }
 

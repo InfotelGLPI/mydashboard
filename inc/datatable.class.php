@@ -232,7 +232,6 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     * @return array of N empty strings, Nbeing the maximum number of element in lines
     */
    function getDefaultColumns() {
-      $count = 0;
       $this->debugNotice(__("No column defined", 'mydashboard'));
       if (!empty($this->tabDatas)) {
          $count = count($this->tabDatas[0]);

@@ -50,19 +50,13 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return string, the widget 'name'
     */
    function getWidgetNameById($widgetId) {
-      //        global $DB;
-      //        $query = "SELECT name FROM `glpi_plugin_mydashboard_widgets` WHERE id = '".$widgetId."'";
-      //        $result = $DB->query($query);
-      //        if($result && $DB->numrows($result)>0 )
-      //        {
-      //            return $DB->result($result,0,'name');
-      //        }
-      //        else return NULL;
-      //
-      $query = "WHERE id = '" . $widgetId . "'";
-      $this->getFromDBByQuery($query);
 
-      return isset($this->fields['name']) ? $this->fields['name'] : null;
+      $query = "WHERE id = '" . $widgetId . "'";
+      if ($this->getFromDBByQuery($query) === false) {
+         return null;
+      } else {
+         return isset($this->fields['id']) ? $this->fields['id'] : null;
+      }
    }
 
    /**
@@ -74,41 +68,13 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return the widgets_id if found, NULL otherwise
     */
    function getWidgetIdByName($widgetName) {
-      //        global $DB;
-      //        $query = "SELECT `id` FROM `glpi_plugin_mydashboard_widgets` WHERE name = '".$widgetName."'";
-      //
-      //        $result = $DB->query($query);
-      //        if($result && $DB->numrows($result)>0 )
-      //        {
-      //            return $DB->result($result,0,'id');
-      //        }
-      //        else return NULL;
+
       unset($this->fields);
       $query = "WHERE name LIKE '" . $widgetName . "'";
       if ($this->getFromDBByQuery($query) === false) {
          return null;
       } else {
          return isset($this->fields['id']) ? $this->fields['id'] : null;
-      }
-   }
-
-   /**
-    * Useful if you want to check if a widgetname is available
-    * @global type  $DB
-    *
-    * @param string $widgetName , the name you want to check
-    *
-    * @return boolean, TRUE if it's available, FALSE otherwise
-    */
-   static function isWidgetNameAvailable($widgetName) {
-      global $DB;
-      $query = "SELECT `id` FROM `glpi_plugin_mydashboard_widgets` WHERE name = '" . $widgetName . "'";
-
-      $result = $DB->query($query);
-      if ($result && $DB->numrows($result) > 0) {
-         return false;
-      } else {
-         return true;
       }
    }
 
@@ -121,20 +87,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return TRUE if the new widget name has been added, FALSE otherwise
     */
    function saveWidget($widgetName) {
-      //        if(isset($widgetName) && $widgetName !== "")
-      //        {
-      ////            $widgetId = $this->getWidgetIdByName($widgetName);
-      ////            if(isset($widgetId)) return true;
-      //            global $DB;
-      //            $query = "INSERT IGNORE INTO `glpi_plugin_mydashboard_widgets` (`id`, `name`) VALUES (NULL, '".$widgetName."')";
-      //            $result = $DB->query($query);
-      //            if($result && $DB->affected_rows()>0 )
-      //            {
-      //                return true;
-      //            }
-      //            else return false;
-      //        }
-      //        return false;
+
       if (isset($widgetName) && $widgetName !== "") {
          //            $widgettmp = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
          //Not really good regex
@@ -159,16 +112,8 @@ class PluginMydashboardWidget extends CommonDBTM {
    }
 
    /**
-    * @param $widgetName
-    *
-    * @return true
+    * @return array
     */
-   function removeWidgetByName($widgetName) {
-      //$widgetName = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
-      $this->getFromDBByQuery("WHERE `glpi_plugin_mydashboard_widgets`.`name` = '" . $widgetName . "'");
-      return $this->deleteFromDB();
-   }
-
    static function getWidgetList() {
 
       $list       = new PluginMydashboardWidgetlist();
@@ -203,6 +148,14 @@ class PluginMydashboardWidget extends CommonDBTM {
       return $widgets;
    }
 
+   /**
+    * Returns the widget with the ID
+    *
+    * @param       $id
+    * @param array $opt
+    *
+    * @return string
+    */
    static function getWidget($id, $opt = []) {
       $class   = "bt-col-md-11";
       $widgets = self::getWidgetList();
@@ -213,6 +166,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       return __('No data available', 'mydashboard') . " - " . $id;
    }
 
+   /**
+    * @param $id
+    *
+    * @return array|string
+    */
    static function getWidgetOptions($id) {
       $widgets = self::getWidgetList();
 
@@ -222,6 +180,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       return __('No data available', 'mydashboard') . " - " . $id;
    }
 
+   /**
+    * @param $id
+    *
+    * @return bool
+    */
    static function getGsID($id) {
 
       $widgets = self::getWidgetList();
@@ -237,8 +200,16 @@ class PluginMydashboardWidget extends CommonDBTM {
    }
 
 
+   /**
+    * @param       $classname
+    * @param       $widgetindex
+    * @param       $parent
+    * @param       $class
+    * @param array $opt
+    *
+    * @return string
+    */
    static function loadWidget($classname, $widgetindex, $parent, $class, $opt = []) {
-      global $CFG_GLPI;
 
       if (isset($classname) && isset($widgetindex)) {
 
@@ -249,7 +220,6 @@ class PluginMydashboardWidget extends CommonDBTM {
             if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
                $widget->setWidgetId($widgetindex);
                //Then its Html content
-               $htmlContent = "";
                $htmlContent = $widget->getWidgetHtmlContent();
 
                if ($widget->getWidgetIsOnlyHTML()) {
@@ -300,12 +270,7 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                $json  = PluginMydashboardHelper::safeJson($json);
                $datas = json_decode($jsondata, true);
-               //                              Toolbox::logDebug($datas);
 
-               //               str_replace('"%widgetContent%"', $jsondata, $json);
-               //getJSonDatas already gives a json_encoded string that's why we put it after the global encoding
-
-               //
                if ($type == "table") {
                   $opt = $widget->getOptions();
                   //                  Toolbox::logDebug($opt);
@@ -477,6 +442,13 @@ class PluginMydashboardWidget extends CommonDBTM {
    }
 
 
+   /**
+    * @param       $classname
+    * @param       $widgetindex
+    * @param array $opt
+    *
+    * @return array
+    */
    static function getAllOptions($classname, $widgetindex, $opt = []) {
 
       if (isset($classname) && isset($widgetindex)) {
@@ -489,7 +461,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                $json =
                   [
                      "enableRefresh" => json_decode($widget->getWidgetEnableRefresh()),
-                     //                     "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . PluginMydashboardMenu::DASHBOARD_NAME . "','$classname', '" . $widget->getWidgetId() . "');}",
                   ];
                return $json;
             }
@@ -497,6 +468,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $class
+    *
+    * @return string
+    */
    static function getWidgetMydashboardAlert($class) {
 
       $delclass = "";
@@ -515,7 +491,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display .= "<div id=\"display-sc\">";
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
          $alerts  = new PluginMydashboardAlert();
-         $display .= $alerts->getAlertList(0, 1);
+         $display .= $alerts->getAlertList(0);
       } else {
          $display .= "<div align='center'><h3><span class ='alert-color'>";
          $display .= __("No problem detected", "mydashboard");
@@ -528,6 +504,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       return $display;
    }
 
+   /**
+    * @param $class
+    *
+    * @return string
+    */
    static function getWidgetMydashboardMaintenance($class) {
 
       $delclass = "";
@@ -559,6 +540,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       return $display;
    }
 
+   /**
+    * @param $class
+    *
+    * @return string
+    */
    static function getWidgetMydashboardInformation($class) {
 
       $delclass = "";

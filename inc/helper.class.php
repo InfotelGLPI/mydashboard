@@ -115,6 +115,7 @@ class PluginMydashboardHelper {
     * with parameters of this form
     *
     * @param int  $widgetId
+    * @param      $gsid
     * @param bool $onsubmit
     *
     * @return string , like '<form id=...>'

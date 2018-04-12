@@ -55,21 +55,18 @@ var mydashboard = {
 
    log: function (msg) {
        var d = new Date();
-       var n = d.toLocaleString()
+       var n = d.toLocaleString();
        $('.plugin_mydashboard_header_info_logbox').append("<div class='plugin_mydashboard_log_item'>" + n + " " + msg + "</div>");
    },
     //Save an adding into dashboard
    saveAdding: function (id, interface, widgetId) {
        this.dashboard.push(widgetId);
-       //    plugin_mydashboard_saveConfig({ id : id , widgetId : widgetId, order : plugin_mydashboard_dashboard.indexOf(widgetId)+1});
-       this.saveConfig({id: id, interface: interface, widgetId: widgetId, order: this.dashboard.indexOf(widgetId)});
    },
     //Save a removal into dashboard
    saveRemoval: function (id, interface, widgetId) {
        var i = this.dashboard.indexOf(widgetId);
        this.dashboard.splice(i, 1);
 
-       this.saveConfig({id: id, interface: interface, widgetId: widgetId});
    },
     //Save an order change into dashboard
    saveOrder: function (id, interface, sortedList) {
@@ -78,17 +75,6 @@ var mydashboard = {
            mydashboard.dashboard.splice(i, 1);
            mydashboard.dashboard.push(entry);
        });
-       this.saveConfig({id: id, interface: interface, sortedList: this.dashboard});
-   },
-    //Save a dashboard modif
-   saveConfig: function (data) {
-       this.infoWait();
-       var request = $.ajax({
-            url: this.rootDoc + "/plugins/mydashboard/ajax/saveConfig.php",
-            type: "POST",
-            data: data
-         });
-       this.handleResponse(request);
    },
     //Handles the respons of saveConfig
    handleResponse: function (request) {
@@ -164,7 +150,7 @@ var mydashboard = {
             refreshCallBack: function () {
                 return mydashboard.getWidgetData(dashboardId, classname, widgetId, view);
             }
-      }
+      };
        return widget;
    },
     //Get a widget (basically by clicking a menu item link)

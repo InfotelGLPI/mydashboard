@@ -28,18 +28,38 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginMydashboardDashboard
+ */
 class PluginMydashboardDashboard extends CommonDBTM {
 
-   //   static $rightname = 'plugin_servicecatalog_defaultview';
-
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
       return __('Dashboard', 'mydashboard');
    }
 
+   /**
+    * @param $options
+    *
+    * @return int
+    */
    public static function checkIfPreferenceExists($options) {
       return self::checkPreferenceValue('id', $options);
    }
 
+   /**
+    * @param $field
+    * @param $options
+    *
+    * @return int
+    */
    public static function checkPreferenceValue($field, $options) {
       $data = getAllDatasFromTable(getTableForItemType(__CLASS__), "`users_id`='".$options["users_id"]."' AND `profiles_id`='".$options["profiles_id"]."'");
       if (!empty($data)) {

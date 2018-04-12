@@ -27,8 +27,7 @@
 /**
  * Class PluginMydashboardColor
  */
-class PluginMydashboardColor
-{
+class PluginMydashboardColor {
    private $red, $green, $blue;
 
    //Colors for 5 series, if there is more series Flotr generates missing colors
@@ -58,6 +57,11 @@ class PluginMydashboardColor
       return self::$opacity;
    }
 
+   /**
+    * @param int $index
+    *
+    * @return array
+    */
    static function getColors($index = 20) {
 
       $colors = [

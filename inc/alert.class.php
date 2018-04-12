@@ -29,6 +29,11 @@
  */
 class PluginMydashboardAlert extends CommonDBTM {
 
+   /**
+    * PluginMydashboardAlert constructor.
+    *
+    * @param array $_options
+    */
    public function __construct($_options = []) {
       $this->options = $_options;
 
@@ -77,6 +82,8 @@ class PluginMydashboardAlert extends CommonDBTM {
    }
 
    /**
+    * List widgets
+    *
     * @return array
     */
    function getWidgetsForItem() {
@@ -95,11 +102,18 @@ class PluginMydashboardAlert extends CommonDBTM {
       ];
    }
 
+   /**
+    * Alert counter
+    *
+    * @param $public
+    * @param $type
+    *
+    * @return int
+    */
    static function countForAlerts($public, $type) {
       global $DB;
 
       $now                 = date('Y-m-d H:i:s');
-      $nb                  = 0;
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
                               AND (`glpi_reminders`.`end_view_date` IS NULL
@@ -127,19 +141,19 @@ class PluginMydashboardAlert extends CommonDBTM {
    }
 
    /**
-    * @param $widgetId
+    * @param       $widgetId
+    *
+    * @param array $opt
     *
     * @return PluginMydashboardHtml
     */
-
-
    function getWidgetContentForItem($widgetId, $opt = []) {
       global $CFG_GLPI, $DB;
 
       switch ($widgetId) {
          case $this->getType() . "1":
             $widget = new PluginMydashboardHtml();
-            $widget->setWidgetHtmlContent($this->getAlertList(0, 0, true));
+            $widget->setWidgetHtmlContent($this->getAlertList(0));
             $widget->setWidgetTitle(__('Network Monitoring', 'mydashboard'));
             return $widget;
             break;
@@ -449,7 +463,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                        'entity'    => $_SESSION['glpiactiveentities'],
                        'condition' => '`is_assign`'
             ];
-            //            $params['on_change'] = "refreshWidget('$widgetId', '$gsid', this.value);";
             $table .= __('Group');
             $table .= "&nbsp;";
             $table .= Group::dropdown($params)
@@ -847,7 +860,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                        'entity'    => $_SESSION['glpiactiveentities'],
                        'condition' => '`is_assign`'
             ];
-            //            $params['on_change'] = "refreshWidget('$widgetId', '$gsid', this.value);";
             $table .= __('Group');
             $table .= "&nbsp;";
             $table .= Group::dropdown($params)
@@ -1127,7 +1139,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
 
    /**
-    * @param int $public
+    * @param bool $public
     *
     * @return string
     */
@@ -1138,12 +1150,10 @@ class PluginMydashboardAlert extends CommonDBTM {
    }
 
    /**
-    * @param int $public
-    *
     * @return string
     */
    function getMaintenanceList() {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       $now = date('Y-m-d H:i:s');
       $wl  = "";
@@ -1229,12 +1239,10 @@ class PluginMydashboardAlert extends CommonDBTM {
 
 
    /**
-    * @param int $public
-    *
     * @return string
     */
    function getInformationList() {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       $now = date('Y-m-d H:i:s');
       $wl  = "";
@@ -1323,7 +1331,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
-   function getAlertList($public = 0, $force = 0) {
+   function getAlertList($public = 0) {
       global $DB;
 
       $now = date('Y-m-d H:i:s');
@@ -1331,10 +1339,6 @@ class PluginMydashboardAlert extends CommonDBTM {
       $wl            = "";
       $wl            .= "<div class='weather_block'>";
       $restrict_user = '1';
-      // Only personal on central so do not keep it
-      //      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-      //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
-      //      }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -1401,19 +1405,11 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $classfont = ' alert_fontimpact' . $row['impact'];
             $rand      = mt_rand();
-            //            $name = (Session::haveRight("reminder_public", READ)) ?
-            //               "<a  href='" . Reminder::getFormURL() . "?id=" . $row['id'] . "'>" . $row['name'] . "</a>"
-            //               : $row['name'];
             $name = $row['name'];
             $wl   .= "<div id='alert$rand'>";
             $wl   .= "<span class='$classfont left'>" . $name . "</span>";
             $wl   .= "</div>";
             $wl   .= "</h3>";
-            //            if (isset($row['begin_view_date'])
-            //                && isset($row['end_view_date'])
-            //            ) {
-            //               $wl .= "<span class='alert_date'>" . Html::convDateTime($row['begin_view_date']) . "<br> " . Html::convDateTime($row['end_view_date']) . "</span><br>";
-            //            }
 
             $wl .= "</div>";
             $wl .= "</div>";
@@ -1455,6 +1451,8 @@ class PluginMydashboardAlert extends CommonDBTM {
 
    /**
     * @param int $public
+    *
+    * @param int $force
     *
     * @return string
     */
@@ -1527,33 +1525,32 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
 
          if (!empty($f5)) {
-            $wl .= $this->displayContent('5', $list, $public, $force);
+            $wl .= $this->displayContent('5', $list, $public);
          } else if (!empty($f4)) {
-            $wl .= $this->displayContent('4', $list, $public, $force);
+            $wl .= $this->displayContent('4', $list, $public);
          } else if (!empty($f3)) {
-            $wl .= $this->displayContent('3', $list, $public, $force);
+            $wl .= $this->displayContent('3', $list, $public);
          } else if (!empty($f2)) {
-            $wl .= $this->displayContent('2', $list, $public, $force);
+            $wl .= $this->displayContent('2', $list, $public);
          } else if (!empty($f1)) {
-            $wl .= $this->displayContent('1', $list, $public, $force);
+            $wl .= $this->displayContent('1', $list, $public);
          }
       }
       if (!$nb && ($public == 0 || $force == 1)) {
-         $wl .= $this->displayContent('1', [], 0, $force);
+         $wl .= $this->displayContent('1', [], 0);
       }
 
       return $wl;
    }
 
    /**
-    * @param       $type
+    * @param       $impact
     * @param array $list
     * @param int   $public
     *
     * @return string
     */
-   private
-   function displayContent($impact, $list = [], $public = 0, $force = 0) {
+   private function displayContent($impact, $list = [], $public = 0) {
 
       $div = "";
 
@@ -1589,8 +1586,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
-   private
-   function getMessage($list, $public) {
+   private function getMessage($list, $public) {
 
       $l = "";
       if (!empty($list)) {
@@ -1677,9 +1673,9 @@ class PluginMydashboardAlert extends CommonDBTM {
       echo "</td></tr>";
       if (Session::haveRight("reminder_public", UPDATE)) {
          echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-         echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
-         echo "<input type='hidden' name='id' value=" . $id . ">";
-         echo "<input type='hidden' name='reminders_id' value=" . $reminders_id . ">";
+         echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+         echo Html::hidden("id", ['value' => $id]);
+         echo Html::hidden("reminders_id", ['value' => $reminders_id]);
          echo "</td></tr>";
       }
       echo "</table>";
@@ -1687,8 +1683,10 @@ class PluginMydashboardAlert extends CommonDBTM {
    }
 
 
-   private
-   function showForItem($item) {
+   /**
+    * @param $item
+    */
+   private function showForItem($item) {
       global $CFG_GLPI;
 
       $items_id = $item->getID();
@@ -1792,9 +1790,9 @@ class PluginMydashboardAlert extends CommonDBTM {
          echo "</td></tr>";
          if (Session::haveRight("reminder_public", UPDATE)) {
             echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-            echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
-            echo "<input type='hidden' name='id' value=" . $id . ">";
-            echo "<input type='hidden' name='reminders_id' value=" . $reminders_id . ">";
+            echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+            echo Html::hidden("id", ['value' => $id]);
+            echo Html::hidden("reminders_id", ['value' => $reminders_id]);
             echo "</td></tr>";
          }
          echo "</table>";
@@ -1805,6 +1803,11 @@ class PluginMydashboardAlert extends CommonDBTM {
    }
 
 
+   /**
+    * @param $class
+    *
+    * @return bool|string
+    */
    static function getWidgetMydashboardAlert($class) {
 
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
@@ -1817,7 +1820,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $display .= "</h3>";
          $display .= "<div id=\"display-sc\">";
          $alerts  = new self();
-         $display .= $alerts->getAlertList(0, 1);
+         $display .= $alerts->getAlertList(0);
          $display .= "</div>";
          $display .= "</div>";
 
@@ -1834,7 +1837,6 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string
     */
    static function handleShellcommandResult($message, $url) {
-      global $CFG_GLPI;
 
       $alert = "";
       if (preg_match('/PROBLEM/is', $message)) {
@@ -1869,7 +1871,6 @@ class PluginMydashboardAlert extends CommonDBTM {
       if (!function_exists('curl_init')) {
          return __('Curl PHP package not installed', 'mydashboard') . "\n";
       }
-      $data        = '';
       $timeout     = 15;
       $proxy_host  = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
       $proxy_ident = $CFG_GLPI["proxy_user"] . ":" .
@@ -1939,7 +1940,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       if (//!$options["download"] &&
       !$data
       ) {
-         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+         curl_getinfo($ch, CURLINFO_HTTP_CODE);
          curl_close($ch); // make sure we closeany current curl sessions
          //die($http_code.' Unable to connect to server. Please come back later.');
       } else {

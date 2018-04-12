@@ -27,9 +27,13 @@
 /**
  * This class extends GLPI class rssfeed to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardRSSFeed
-{
+class PluginMydashboardRSSFeed {
 
+   /**
+    * @param int $nb
+    *
+    * @return string|\translated
+    */
    static function getTypeName($nb = 0) {
       return __('RSS');
    }
@@ -76,16 +80,14 @@ class PluginMydashboardRSSFeed
     *
     * @param $personal boolean   display rssfeeds created by me ? (true by default)
     *
-    * @return Nothing (display function)
-    **/
+    * @return \PluginMydashboardDatatable (display function)
+    */
    static function showListForCentral($personal = true) {
       global $DB, $CFG_GLPI;
 
       $output = [];
 
       $users_id = Session::getLoginUserID();
-      $today = date('Y-m-d');
-      $now = date('Y-m-d H:i:s');
 
       if ($personal) {
 

@@ -31,9 +31,7 @@ if (!defined('GLPI_ROOT')) {
 /**
  * This class extends GLPI class event to add the functions to display widgets on Dashboard
  */
-class PluginMydashboardEvent extends Event
-{
-
+class PluginMydashboardEvent extends Event {
 
    /**
     * @param int $nb
@@ -183,12 +181,9 @@ class PluginMydashboardEvent extends Event
       // Output events
       $i = 0;
 
-      //$output['body'] =  "<br><div class='spaced'><table class='tab_cadrehov'>";
-      //echo "<tr><th colspan='5'>";
       //TRANS: %d is the number of item to display
       $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
          sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
-      //echo "</th></tr>";
 
       $output['header'][] = __('Source');
       $output['header'][] = __('id');
@@ -199,7 +194,7 @@ class PluginMydashboardEvent extends Event
       $output['body'] = [];
 
       while ($i < $number) {
-         $ID = $DB->result($result, $i, "id");
+         $DB->result($result, $i, "id");
          $items_id = $DB->result($result, $i, "items_id");
          $type = $DB->result($result, $i, "type");
          $date = $DB->result($result, $i, "date");

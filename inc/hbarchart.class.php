@@ -28,8 +28,7 @@
  * Every Horizontal Bars charts classes must inherit of this class
  * It sets basical parameters to display an horizontal bar chart with Flotr2
  */
-class PluginMydashboardHBarChart extends PluginMydashboardBarChart
-{
+class PluginMydashboardHBarChart extends PluginMydashboardBarChart {
 
    /**
     * PluginMydashboardHBarChart constructor.

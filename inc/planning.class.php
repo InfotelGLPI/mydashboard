@@ -91,8 +91,8 @@ class PluginMydashboardPlanning {
     *
     * @param $who ID of the user
     *
-    * @return Nothing (display function)
-    **/
+    * @return \PluginMydashboardDatatable (display function)
+    */
    static function showCentral($who) {
       global $CFG_GLPI;
 
@@ -102,10 +102,7 @@ class PluginMydashboardPlanning {
          return false;
       }
 
-      $output = [];
-
       $when  = strftime("%Y-%m-%d");
-      $debut = $when;
 
       // Get begin and duration
       $date  = explode("-", $when);

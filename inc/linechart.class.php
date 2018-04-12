@@ -27,11 +27,7 @@
 /**
  * This widget class is meant to display data as a linechart
  */
-class PluginMydashboardLineChart extends PluginMydashboardChart
-{
-
-   //    private $options;
-   //   private $tabDatas;
+class PluginMydashboardLineChart extends PluginMydashboardChart {
 
    /**
     * PluginMydashboardLineChart constructor.
@@ -71,7 +67,7 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
             $data[] = ['data' => $this->getData($dataY), 'label' => $legend];
          } else {
             $alone = true;
-            $break;
+            break;
          }
 
       }
@@ -90,7 +86,6 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
     * @return string, A JS function
     */
    static function getTickFormatter($id = 0) {
-      $funct = "";
       switch ($id) {
          default :
             $funct = 'function(value){ console.log(value); return value; }';
@@ -99,30 +94,5 @@ class PluginMydashboardLineChart extends PluginMydashboardChart
 
       return $funct;
    }
-
-   //    /**
-   //     *
-   //     * @param type $datas
-   //     * @return type
-   //     */
-   //    static function getTicksFromLabels($datas)
-   //    {
-   //        $cumul;
-   //        $count = 0;
-   //        foreach($datas as $key => $data)
-   //        {
-   //            if(is_numeric($key))
-   //            {
-   //                $cumul[] = [$key,$key];
-   //            }
-   //            else
-   //            {
-   //                $cumul[] = [$count,$key];
-   //            }
-   //            $count++;
-   //        }
-   //        Toolbox::logDebug($cumul);
-   //        return $cumul;
-   //    }
 
 }

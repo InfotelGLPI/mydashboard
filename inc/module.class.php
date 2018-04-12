@@ -28,8 +28,7 @@
  * This class is the "mother" class of every widget class,
  * it contains all basic properties needed for a widget
  */
-abstract class PluginMydashboardModule extends CommonGLPI
-{
+abstract class PluginMydashboardModule extends CommonGLPI {
 
    private $widgetId;
    private $widgetType = "chart";
@@ -43,6 +42,7 @@ abstract class PluginMydashboardModule extends CommonGLPI
    private $widgetIsOnlyHTML = false;
    private $widgetDebug = [];
    private $widgetColorTab;
+
    static $rightname = "plugin_mydashboard";
 
    /**
@@ -91,6 +91,9 @@ abstract class PluginMydashboardModule extends CommonGLPI
       return $this->widgetTitle;
    }
 
+   /**
+    * @return string
+    */
    function getWidgetComment() {
       if (!isset($this->widgetComment)) {
          $this->widgetComment = "";
@@ -171,13 +174,21 @@ abstract class PluginMydashboardModule extends CommonGLPI
 
    /**
     * Set a new widget title
+    *
     * @param string $nTitle
+    *
+    * @return mixed
     */
    function setWidgetTitle($nTitle) {
       //        $this->widgetTitle = addslashes($nTitle);
       return $this->widgetTitle = str_replace(["\""], ["'"], $nTitle);
    }
 
+   /**
+    * @param $nComment
+    *
+    * @return mixed
+    */
    function setWidgetComment($nComment) {
       return $this->widgetComment = str_replace(["\""], ["'"], $nComment);
    }

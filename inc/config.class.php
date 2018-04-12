@@ -69,11 +69,9 @@ class PluginMydashboardConfig extends CommonDBTM {
     * @param array $options
     */
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
       //If default configuration is not loaded
       if (!$this->getFromDB("1")) {
          $this->initConfig();
-         //           $this->getFromDB("1");
       }
 
       //If user have no access
@@ -103,12 +101,6 @@ class PluginMydashboardConfig extends CommonDBTM {
       }
       echo "</td>";
       echo "</tr>";
-      //      echo "<tr class='tab_bg_1'><td>" . __("Display the menu", "mydashboard") . "</td>";
-      //      echo "<td>";
-      //      if ($canCreate) Dropdown::showYesNo("display_menu", $this->fields['display_menu']);
-      //      else echo $yesno[$this->fields['display_menu']];
-      //      echo "</td>";
-      //      echo "</tr>";
 
       echo "<tr class='tab_bg_1'><td>" . __("Display widgets from plugins", "mydashboard") . "</td>";
       echo "<td>";
@@ -116,27 +108,8 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
       echo "</tr>";
-      //Since 1.0.3 replace_central is now a preference
-      //        echo "<tr class='tab_bg_1'><td>".__("Replace central interface","mydashboard")."</td>";
-      //        echo "<td>";
-      //        Dropdown::showYesNo("replace_central",$this->fields['replace_central']);
-      //        echo "</td>";
-      //        echo "</tr>";
 
-      //echo "</table>";
       $this->showFormButtons($options);
-
-      //Now updating the default dashboard
-      //      echo "<br><div align='center'>";
-      //      echo "<table class='tab_cadre_fixehov'>";
-      //      echo "<tr class='tab_bg_2'>";
-      //      echo "<td class='center'>";
-      //      echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'>";
-      //      echo __('Custom and save default grid', 'mydashboard');
-      //      echo "</a>";
-      //      echo "</td>";
-      //      echo "<tr>";
-      //      echo "</table></div>";
    }
 
    /*
@@ -156,9 +129,6 @@ class PluginMydashboardConfig extends CommonDBTM {
          $input['enable_fullscreen']     = "1";
          $input['display_menu']          = "1";
          $input['display_plugin_widget'] = "1";
-         //Since 1.0.3 replace_central is now a preference
-         //         $input['replace_central'] = "0";
-
          $this->add($input);
       }
    }
@@ -167,9 +137,7 @@ class PluginMydashboardConfig extends CommonDBTM {
     * Get the original config
     */
    function getConfig() {
-      if ($this->getFromDB("1")) {
-
-      } else {
+      if (!$this->getFromDB("1")) {
          $this->initConfig();
          $this->getFromDB("1");
       }

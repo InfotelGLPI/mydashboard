@@ -28,7 +28,6 @@
  * Class PluginMydashboardWidgetlist
  */
 class PluginMydashboardWidgetlist {
-   //put your code here
 
    /**
     * Get the list of widget as an array :
@@ -51,6 +50,9 @@ class PluginMydashboardWidgetlist {
     * By default it return a filtered array, filtered in two levels, profile and user preference.
     *
     * @param boolean $filtered default true, if set to false all widgets found will be in the list
+    *
+    * @param int     $active_profile
+    * @param string  $profile_interface
     *
     * @return mixed array
     */

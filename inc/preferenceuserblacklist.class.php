@@ -28,8 +28,7 @@
  * Preference_User_Blacklist is the class that handles plugins blacklist for a User
  * An user can disable the display of widgets of some plugins (because it doesn't need widgets of this plugin for example)
  */
-class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
-{
+class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
 
    /**
     * Show a form to blacklist some plugins for Dashboard
@@ -72,8 +71,8 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM
          }
 
          echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-         echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
-         echo "<input type='hidden' name='id' value=" . Session::getLoginUserID() . ">";
+         echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+         echo Html::hidden("id", ['value' => Session::getLoginUserID()]);
          Html::closeForm();
 
          echo "</td></tr></table>";

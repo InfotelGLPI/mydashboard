@@ -55,7 +55,7 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
 
    /**
     *
-    * @return an array of all options
+    * @return array array of all options
     */
    function getOptions() {
       return $this->options;
@@ -153,7 +153,6 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
     * @return string
     */
    static function getTrackFormatter($id = 0) {
-      $funct = "";
       switch ($id) {
          case 1 : //Display track as just its x axis value
             $funct = 'function(obj){ return obj.series.data[0][0];  }';

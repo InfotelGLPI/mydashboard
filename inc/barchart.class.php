@@ -27,10 +27,8 @@
 /**
  * Class PluginMydashboardBarChart
  */
-abstract class PluginMydashboardBarChart extends PluginMydashboardChart
-{
+abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
 
-   //private $tabDatas;
    private $orientation = "v";
 
    /**
@@ -120,7 +118,6 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     */
    function getJSonDatas() {
       $stacked = false;
-      $data = "";
       $count = 0;
       $jsonDatasLabels = [];
 
@@ -158,7 +155,6 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * @return string
     */
    static function getLabelFormatter($id = 0) {
-      $funct = "";
       switch ($id) {
          case 1 :
             $funct = 'function(o){ return o.x; }';
@@ -179,7 +175,6 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
     * @return string, a tick formatter function
     */
    static function getTickFormatter($id = 0) {
-      $funct = "";
       switch ($id) {
          default :
             $funct = 'function(value){ return value; }';

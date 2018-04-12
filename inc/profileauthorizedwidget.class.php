@@ -27,8 +27,7 @@
 /**
  * Class PluginMydashboardProfileAuthorizedWidget
  */
-class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
-{
+class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
 
    private $authorized;
 
@@ -91,8 +90,8 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
          }
       }
       echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-      echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
-      echo "<input type='hidden' name='id' value=" . $ID . ">";
+      echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+      echo Html::hidden("id", ['value' => $ID]);
       echo "</tr>";
       echo "</table>";
 
@@ -104,7 +103,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     * @param string $category
     * @param $pluginname
     */
-   private function displayList($widgetlist, $category = '', $pluginname) {
+   private function displayList($widgetlist, $category, $pluginname) {
       $viewNames = $this->getViewNames();
       foreach ($widgetlist as $widgetId => $widgetTitle) {
 

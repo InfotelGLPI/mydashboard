@@ -27,8 +27,13 @@
 /**
  * This class extends GLPI class contract to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardContract
-{
+class PluginMydashboardContract {
+
+   /**
+    * @param int $nb
+    *
+    * @return string|\translated
+    */
    static function getTypeName($nb = 0) {
       return __('Contract');
    }
@@ -63,8 +68,8 @@ class PluginMydashboardContract
     * Show central contract resume
     * HTML array
     *
-    * @return Nothing (display)
-    **/
+    * @return \PluginMydashboardDatatable (display)
+    */
    static function showCentral() {
       global $DB, $CFG_GLPI;
 
@@ -138,11 +143,6 @@ class PluginMydashboardContract
                                            MONTH),CURDATE() )<'30'";
       $result = $DB->query($query);
       $contractpre30 = $DB->result($result, 0, 0);
-
-      //      echo "<table class='tab_cadrehov'>";
-      //      echo "<tr><th colspan='2'>";
-      //      echo "<a href=\"".$CFG_GLPI["root_doc"]."/front/contract.php?reset=reset\">".
-      //             self::getTypeName(1)."</a></th></tr>";
 
       $widget = new PluginMydashboardDatatable();
       $widget->setWidgetId("contractwidget");

@@ -93,7 +93,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
          $year  = $year - 1;
       }
       $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
-      $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stocktickets WHERE glpi_plugin_mydashboard_stocktickets.date = '$year-$month-$nbdays'";
+      $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stocktickets 
+                  WHERE glpi_plugin_mydashboard_stocktickets.date = '$year-$month-$nbdays'";
       $results = $DB->query($query);
       $data    = $DB->fetch_array($results);
       if ($data["count"] > 0) {
@@ -102,10 +103,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
       echo "fill table <glpi_plugin_mydashboard_stocktickets> with datas of $year-$month";
       $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
       $query   = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id` FROM `glpi_tickets`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
+                  WHERE `glpi_tickets`.`is_deleted` = '0' AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
       $results = $DB->query($query);
       while ($data = $DB->fetch_array($results)) {
-         $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ")";
+         $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) 
+                  VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ")";
          $DB->query($query);
       }
    }
@@ -144,7 +147,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            DATE_FORMAT(`date`, '%Y-%m') AS period
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_groups_tickets` 
-                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
+                        AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
                         WHERE NOT `glpi_tickets`.`is_deleted` ";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $opt['groups_id'];
@@ -219,7 +223,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                        onComplete: function() {
                                          var chartInstance = this.chart,
                                           ctx = chartInstance.ctx;
-                                          ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                          ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+                                          Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                                           ctx.textAlign = 'center';
                                           ctx.textBaseline = 'bottom';
                               
@@ -248,7 +253,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                 var label = chartData.labels[idx];
                                 var value = chartData.datasets[0].data[idx];
                                 var datetik = datesetbacklog[idx];
-                  //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
                                 $.ajax({
                                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
                                    type: 'POST',
@@ -327,9 +331,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `priority` ORDER BY `priority` ASC";
-
-            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            //            $datas  = $widget->getTabDatas();
 
             $colors = [];
             $result = $DB->query($query);
@@ -772,28 +773,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       }
                    }
                    });
-               
-         //          canvas . onclick = function (evt) {
-         //             var
-         //             activePoints = TicketStockLineChart . getElementsAtEvent(evt);
-         //             if (activePoints[0]) {
-         //                var
-         //                chartData = activePoints[0]['_chart'] . config . data;
-         //                var
-         //                idx = activePoints[0]['_index'];
-         //
-         //                var
-         //                label = chartData . labels[idx];
-         //                var
-         //                value = chartData . datasets[0] . data[idx];
-         //
-         //                var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
-         //              console . log(url);
-         //              alert(url);
-         //            }
-         //          };
-//                 }
-//             );
+
              </script>";
 
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
@@ -822,7 +802,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStockLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:45vh; width:45vw"
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";
             $graph .= "<canvas id=\"TicketStockLineChart\"></canvas>";
             $graph .= "</div>";
 
@@ -859,8 +839,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_tickets_users`
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 1)
-                     WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
-                     " . $entities . "
+                     WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' 
+                     AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
+                     $entities
                      AND `glpi_tickets`.`is_deleted` = '0'
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
@@ -883,9 +864,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   unset($datas[$k]);
                }
             }
-            //            $widget->setTabDatas($datas);
-            //            $widget->appendWidgetHtmlContent($dropdown);
-            //            $widget->toggleWidgetRefresh();
+
             $widget = new PluginMydashboardHtml();
             $title  = __("Top ten ticket requesters of the previous month", "mydashboard");
             $widget->setWidgetTitle($title);
@@ -906,44 +885,25 @@ class PluginMydashboardInfotel extends CommonGLPI {
               labels: $labelsPie
             };
             
-//            $(document).ready(
-//              function() {
-                var isChartRendered = false;
-                var canvas = document.getElementById('TopTenTicketAuthorsPieChart');
-                var ctx = canvas.getContext('2d');
-                ctx.canvas.width = 700;
-                ctx.canvas.height = 400;
-                var TopTenTicketAuthorsPieChart = new Chart(ctx, {
-                  type: 'pie',
-                  data: dataTopTenPie,
-                  options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    animation: {
-                     onComplete: function() {
-                       isChartRendered = true
-                     }
-                   }
+             var isChartRendered = false;
+             var canvas = document.getElementById('TopTenTicketAuthorsPieChart');
+             var ctx = canvas.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var TopTenTicketAuthorsPieChart = new Chart(ctx, {
+               type: 'pie',
+               data: dataTopTenPie,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 animation: {
+                  onComplete: function() {
+                    isChartRendered = true
+                  }
                 }
-                });
-            
-      //          canvas.onclick = function(evt) {
-      //            var activePoints = TopTenTicketAuthorsPieChart.getElementsAtEvent(evt);
-      //            if (activePoints[0]) {
-      //              var chartData = activePoints[0]['_chart'].config.data;
-      //              var idx = activePoints[0]['_index'];
-      //      
-      //              var label = chartData.labels[idx];
-      //              var value = chartData.datasets[0].data[idx];
-      //      
-      //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
-      //              console.log(url);
-      //              alert(url);
-      //            }
-      //          };
-//              }
-//            );
-                
+             }
+             });
+
              </script>";
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
             $gsid  = PluginMydashboardWidget::getGsID($widgetId);
@@ -971,7 +931,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div class='bt-col-md-2 center'>";
             $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketAuthorsPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
             $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";
             $graph .= "<canvas id=\"TopTenTicketAuthorsPieChart\"></canvas>";
             $graph .= "</div>";
 
@@ -1038,64 +998,41 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            $labelsLine
                            };
                      
-//                     $(document).ready(
-//                        function () {
-                            var isChartRendered = false;
-                            var canvas = document . getElementById('TimeByTechChart');
-                            var ctx = canvas . getContext('2d');
-                            ctx.canvas.width = 700;
-                            ctx.canvas.height = 400;
-                            var TimeByTechChart = new Chart(ctx, {
-                                  type: 'bar',
-                                  data: TimeByTechChartData,
-                                  options: {
-                                      responsive:true,
-                                      maintainAspectRatio: true,
-                                      title:{
-                                          display:false,
-                                          text:'TimeByTechChart'
-                                      },
-                                      tooltips: {
-                                          mode: 'index',
-                                          intersect: false
-                                      },
-                                      scales: {
-                                          xAxes: [{
-                                              stacked: true,
-                                          }],
-                                          yAxes: [{
-                                              stacked: true
-                                          }]
-                                      },
-                                      animation: {
-                                          onComplete: function() {
-                                            isChartRendered = true
-                                          }
-                                        }
+                      var isChartRendered = false;
+                      var canvas = document . getElementById('TimeByTechChart');
+                      var ctx = canvas . getContext('2d');
+                      ctx.canvas.width = 700;
+                      ctx.canvas.height = 400;
+                      var TimeByTechChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: TimeByTechChartData,
+                            options: {
+                                responsive:true,
+                                maintainAspectRatio: true,
+                                title:{
+                                    display:false,
+                                    text:'TimeByTechChart'
+                                },
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: false
+                                },
+                                scales: {
+                                    xAxes: [{
+                                        stacked: true,
+                                    }],
+                                    yAxes: [{
+                                        stacked: true
+                                    }]
+                                },
+                                animation: {
+                                    onComplete: function() {
+                                      isChartRendered = true
+                                    }
                                   }
-                              });
-                              
-//                               canvas . onclick = function (evt) {
-//                                  var
-//                                  activePoints = TimeByTechChart . getElementsAtEvent(evt);
-//                                  if (activePoints[0]) {
-//                                     var
-//                                     chartData = activePoints[0]['_chart'] . config . data;
-//                                     var
-//                                     idx = activePoints[0]['_index'];
-//                     
-//                                     var
-//                                     label = chartData . labels[idx];
-//                                     var
-//                                     value = chartData . datasets[0] . data[idx];
-//                     
-//                                     var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
-//                                   console . log(url);
-//                                   alert(url);
-//                                 }
-//                               };
-//                          }
-//                      );
+                            }
+                        });
+
                       </script>";
 
             $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
@@ -1621,7 +1558,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      AND `glpi_knowbaseitems_users`.`users_id` IS NULL)";
 
             $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $datas  = $widget->getTabDatas();
+            $widget->getTabDatas();
 
             $headers = [__('Subject'), __('Writer'), __('Category')];
             $widget->setTabNames($headers);
@@ -1829,10 +1766,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `glpi_itilcategories`.`id`";
 
-            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            //            $datas  = $widget->getTabDatas();
-
-            $colors = [];
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
@@ -1846,9 +1779,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $tabincidentcategory[] = $data['itilcategories_id'];
                }
             }
-            //            $widget->setOption('colors', $colors, true);
-            //            $widget->setTabDatas($datas);
-            //            $widget->toggleWidgetRefresh();
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened incidents by category", "mydashboard");
@@ -1980,10 +1910,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `glpi_itilcategories`.`id`";
 
-            //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
-            //            $datas  = $widget->getTabDatas();
-
-            $colors = [];
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
@@ -1997,9 +1923,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $tabcategory[] = $data['itilcategories_id'];
                }
             }
-            //            $widget->setOption('colors', $colors, true);
-            //            $widget->setTabDatas($datas);
-            //            $widget->toggleWidgetRefresh();
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened requests by category", "mydashboard");
@@ -2975,8 +2898,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $annee = $opt["year"];
             }
 
-            $nbjours = date("t", mktime(0, 0, 0, $mois, 1, $annee));
-
             $query   = "SELECT `glpi_tickets_users`.`users_id`, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
                      INNER JOIN `glpi_tickets_users`
@@ -3406,8 +3327,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
       $tranches_seuil   = 0.002;
       $tranches_arrondi = [0, 0.25, 0.5, 0.75, 1];
-
-      $result = 0;
 
       $partie_entiere = floor($a_arrondir);
       $reste          = $a_arrondir - $partie_entiere + 10; // Le + 10 permet de pallier é un probléme de comparaison (??) par la suite.

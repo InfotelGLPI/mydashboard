@@ -163,7 +163,6 @@ class PluginMydashboardProfile extends CommonDBTM {
       echo "</tr>";
 
       $options['candel'] = false;
-      //      echo "<input type='hidden' name='id' value=".$ID.">";
       $profile->showFormButtons($options);
 
       if ($effective_rights["plugin_mydashboard"] == READ) {

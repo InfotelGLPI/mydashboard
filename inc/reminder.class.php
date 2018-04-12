@@ -27,8 +27,7 @@
 /**
  * This class extends GLPI class reminder to add the functions to display widgets on Dashboard
  */
-class PluginMydashboardReminder
-{
+class PluginMydashboardReminder {
 
    static function getTypeName($nb = 0) {
       return __('Reminder');

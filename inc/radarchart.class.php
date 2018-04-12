@@ -27,8 +27,7 @@
 /**
  * This widget class is meant to display data in a radar (spiderweb) chart
  */
-class PluginMydashboardRadarChart extends PluginMydashboardLineChart
-{
+class PluginMydashboardRadarChart extends PluginMydashboardLineChart {
    /**
     * PluginMydashboardRadarChart constructor.
     */

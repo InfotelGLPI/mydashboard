@@ -31,6 +31,14 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
 {
    static $rightname = 'knowbase';
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
       return __('Knowledge base');
    }
@@ -104,7 +112,6 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
       $result = $DB->query($query);
       $tab = [];
       while ($row = $DB->fetch_assoc($result)) {
-         $date = "";
          if ($widgetId == "knowbaseitemrecent") {
             $date = $row["date"];
          } else {

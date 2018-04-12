@@ -29,6 +29,11 @@
  */
 class PluginMydashboardTicket {
 
+   /**
+    * @param int $nb
+    *
+    * @return string|\translated
+    */
    static function getTypeName($nb = 0) {
       return __('Tickets');
    }
@@ -185,8 +190,7 @@ class PluginMydashboardTicket {
       $output = [];
 
       if (!Session::haveRightsOr(Ticket::$rightname, [CREATE, Ticket::READALL, Ticket::READASSIGN])
-          && !Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())
-      ) {
+          && !Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
 
          return false;
       }
@@ -576,17 +580,6 @@ class PluginMydashboardTicket {
                                   Toolbox::append_params($options, '&amp;') . "\">" .
                                   Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
          }
-         //      }
-
-         //         if ($number) {
-
-         //            $output['header'][] = '';
-         //            $output['header'][] = __('Requester');
-         //            $output['header'][] = __('Associated element');
-         //            $output['header'][] = __('Description');
-         //            $output['body'] = array();
-
-         //         }
 
       }
 
@@ -626,7 +619,7 @@ class PluginMydashboardTicket {
     * @return PluginMydashboardDatatable|string
     */
    static function showCentralTaskList($start, $status = "todo", $showgrouptickets = true) {
-      global $DB, $CFG_GLPI;
+      global $CFG_GLPI;
 
       $req     = TicketTask::getTaskList($status, $showgrouptickets);
       $numrows = 0;
@@ -660,9 +653,7 @@ class PluginMydashboardTicket {
       $options['reset'] = 'reset';
       $forcetab         = '';
       $num              = 0;
-      //$itemtype = get_called_class();
 
-      $item     = new $itemtype;
       switch ($status) {
 
          case "todo" :
@@ -687,10 +678,8 @@ class PluginMydashboardTicket {
             $options['criteria'][2]['link']       = 'AND';
 
             if ($itemtype == "TicketTask") {
-               $forcetab = 'Ticket$1';
                $title    = __("Ticket tasks to do");
             } else if ($itemtype == "ProblemTask") {
-               $forcetab = 'ProblemTask$1';
                $title    = __("Problem tasks to do");
             }
             $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
@@ -1072,12 +1061,9 @@ class PluginMydashboardTicket {
 
 
    /**
-    * @param string    $output_type (default 'Search::HTML_OUTPUT')
-    * @param id|string $mass_id id of the form to check all (default '')
-    *
     * @return array
     */
-   static function commonListHeader($output_type = '', $mass_id = '') {
+   static function commonListHeader() {
       $items[] = '';
       $items[] = __('Date');
       if (count($_SESSION["glpiactiveentities"]) > 1) {
@@ -1102,8 +1088,7 @@ class PluginMydashboardTicket {
     *
     * @return array
     */
-   static function showShort($id, $followups, $output_type = Search::HTML_OUTPUT, $row_num = 0,
-                             $id_for_massaction = 0) {
+   static function showShort($id, $followups, $output_type = Search::HTML_OUTPUT) {
       global $CFG_GLPI;
 
       $output = [];
@@ -1119,34 +1104,11 @@ class PluginMydashboardTicket {
       // Make new job object and fill it from database, if success, print it
       $job = new Ticket();
 
-      $candelete   = Ticket::canDelete();
-      $canupdate   = Session::haveRight(Ticket::$rightname, UPDATE);
       $showprivate = Session::haveRight('followup', TicketFollowup::SEEPRIVATE);
-      $align       = "class='center";
-      $align_desc  = "class='left";
-
-      if ($followups) {
-         $align      .= " top'";
-         $align_desc .= " top'";
-      } else {
-         $align      .= "'";
-         $align_desc .= "'";
-      }
 
       if ($job->getFromDB($id)) {
-         $item_num = 1;
          $bgcolor  = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
-         //         $check_col = '';
-         //         if (($candelete || $canupdate)
-         //            && ($output_type == Search::HTML_OUTPUT)
-         //            && $id_for_massaction
-         //         ) {
-         //
-         //            $check_col = Html::getMassiveActionCheckBox(__CLASS__, $id_for_massaction);
-         //         }
-         //         $output[$colnum] = $check_col;
-         //
          // ID
          $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
          if ($output_type == Search::HTML_OUTPUT) {
