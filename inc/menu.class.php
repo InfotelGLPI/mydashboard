@@ -642,7 +642,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                $widgetId = $widgetTitle;
             }
             $this->widgets[$classname][$widgetId] = -1;
-            if ($gsid = PluginMydashboardWidget::getGsID($widgetId) !== false) {
+            $gsid = PluginMydashboardWidget::getGsID($widgetId);
                if (!in_array($gsid, $used)) {
                   $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
                          . " class='plugin_mydashboard_menuDashboardListItem' "
@@ -651,7 +651,6 @@ class PluginMydashboardMenu extends CommonGLPI {
                   $wl .= $widgetTitle;/*->getWidgetListTitle()*/
                   $wl .= "</li>";
                }
-            }
          } else { //If it's not a real widget
             //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
             $tmp = "<li class='plugin_mydashboard_menuDashboardList'>";
