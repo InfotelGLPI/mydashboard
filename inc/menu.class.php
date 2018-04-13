@@ -443,10 +443,13 @@ class PluginMydashboardMenu extends CommonGLPI {
       return $wl;
    }
 
+   /**
+    * Initialization of widgets at installation
+    */
    static function installWidgets(){
 
       $list             = new PluginMydashboardWidgetlist();
-      $widgetlist = $list->getList(true);
+      $widgetlist = $list->getList(false);
 
       $widgetDB     = new PluginMydashboardWidget();
 
@@ -630,6 +633,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = []) {
       $wl = "";
+
       foreach ($widgetsarray as $widgetId => $widgetTitle) {
          //We check if this widget is a real widget
          if (!is_array($widgetTitle)) {
@@ -638,14 +642,15 @@ class PluginMydashboardMenu extends CommonGLPI {
                $widgetId = $widgetTitle;
             }
             $this->widgets[$classname][$widgetId] = -1;
-            $gsid                                 = PluginMydashboardWidget::getGsID($widgetId);
-            if (!in_array($gsid, $used)) {
-               $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
-                      . " class='plugin_mydashboard_menuDashboardListItem' "
-                      . " data-widgetid='" . $gsid . "'"
-                      . " data-classname='" . $classname . "'>";
-               $wl .= $widgetTitle;/*->getWidgetListTitle()*/
-               $wl .= "</li>";
+            if ($gsid = PluginMydashboardWidget::getGsID($widgetId) !== false) {
+               if (!in_array($gsid, $used)) {
+                  $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
+                         . " class='plugin_mydashboard_menuDashboardListItem' "
+                         . " data-widgetid='" . $gsid . "'"
+                         . " data-classname='" . $classname . "'>";
+                  $wl .= $widgetTitle;/*->getWidgetListTitle()*/
+                  $wl .= "</li>";
+               }
             }
          } else { //If it's not a real widget
             //It may/must be an array of widget, in this case we need to go deeper (increase $depth)

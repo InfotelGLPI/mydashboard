@@ -67,14 +67,14 @@ class PluginMydashboardWidgetlist {
 
       //We add classes for GLPI core widgets
       $widgets['GLPI'] = ["PluginMydashboardReminder",
-                               "PluginMydashboardPlanning",
-                               "PluginMydashboardEvent",
-                               "PluginMydashboardProblem",
-                               "PluginMydashboardChange",
-                               "PluginMydashboardTicket",
-                               "PluginMydashboardRSSFeed",
-                               "PluginMydashboardContract",
-                               "PluginMydashboardKnowbaseItem"];
+                          "PluginMydashboardPlanning",
+                          "PluginMydashboardEvent",
+                          "PluginMydashboardProblem",
+                          "PluginMydashboardChange",
+                          "PluginMydashboardTicket",
+                          "PluginMydashboardRSSFeed",
+                          "PluginMydashboardContract",
+                          "PluginMydashboardKnowbaseItem"];
       //We run through the hook to get all widget IDs and Titles declared in all classes
       foreach ($widgets as $plugin => $pluginclasses) {
          $widgets[$plugin] = [];
