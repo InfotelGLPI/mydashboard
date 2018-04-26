@@ -1836,11 +1836,23 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
-   static function handleShellcommandResult($message, $url) {
+   static function handleShellcommandResult(&$message, $url) {
+      global $CFG_GLPI;
 
       $alert = "";
-      if (preg_match('/PROBLEM/is', $message)) {
-         $alert .= "<div class='md-title-status' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br";
+      if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
+         $alert .=  "<div class='center' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br>";
+         $alert .= "<b>";
+         $alert .= __('Service is down for maintenance. It will be back shortly.');
+         $alert .= "</b></div>";
+         if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
+            $alert .=  "<div class='md-status'>";
+            $alert .= "<p>".nl2br($CFG_GLPI["maintenance_text"])."</p>";
+            $alert .= "</div>";
+         }
+         $message = "";
+      } else if (preg_match('/PROBLEM/is', $message)) {
+         $alert .= "<div class='md-title-status' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "</b></div>";
