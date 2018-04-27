@@ -69,4 +69,39 @@ class PluginMydashboardDashboard extends CommonDBTM {
          return 0;
       }
    }
+
+   /**
+    * @param array|\datas $input
+    *
+    * @return array|\datas|\the
+    */
+   function prepareInputForAdd($input){
+      return self::prepareInputForUpdate($input);
+   }
+
+   /**
+    * @param array|\datas $input
+    *
+    * @return array|\datas|\the
+    */
+   function prepareInputForUpdate($input) {
+
+      //remove duplicate widgets
+      $ID_check = [];
+
+      $datagrid = json_decode($input['grid'], true);
+
+      foreach ($datagrid as $key => $data) {
+         //check if widget already present
+         if (in_array($data['id'], $ID_check)) {
+            //widget delete
+            unset($datagrid[$key]);
+         } else {
+            $ID_check[$data['id']] = $data['id'];
+         }
+      }
+      $input['grid'] = json_encode($datagrid);
+
+      return $input;
+   }
 }
