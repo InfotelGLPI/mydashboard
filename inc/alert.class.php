@@ -96,8 +96,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $this->getType() . "5" => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
             $this->getType() . "6" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
             $this->getType() . "7" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+            $this->getType() . "8" => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+            $this->getType() . "9" => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
          ]
       ];
    }
@@ -271,7 +271,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
             /*Stats4*/
-            $left = "";
+            $left          = "";
             $search_assign = "1=1";
             if (isset($opt)) {
                if (isset($this->preferences['prefered_group'])
@@ -332,7 +332,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $table .= "<div class=\"nb\" style=\"color:$colorstats3\">";
             if ($stats_tickets3 > 0) {
-               $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='".__('New incidents', 'mydashboard')."'>";
+               $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __('New incidents', 'mydashboard') . "'>";
             }
             $table .= "<i style='color:$colorstats3' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats_tickets3\"></span></h3>";
@@ -356,13 +356,23 @@ class PluginMydashboardAlert extends CommonDBTM {
                $options4['criteria'][1]['value']      = '^$';
                $options4['criteria'][1]['link']       = 'AND';
 
+               if (isset($opt['groups_id']) && $opt['groups_id'] > 0) {
+                  $group = $opt['groups_id'];
+
+                  $options4['criteria'][2]['field']      = 8; // groups_id_assign
+                  $options4['criteria'][2]['searchtype'] = 'equals';
+                  $options4['criteria'][2]['value']      = $group;
+                  $options4['criteria'][2]['link']       = 'AND';
+
+               }
+
                $stats4link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                              Toolbox::append_params($options4, "&");
             }
 
             $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
             if ($stats_tickets4 > 0) {
-               $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='".__('Opened tickets without assigned technicians', 'mydashboard')."'>";
+               $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __('Opened tickets without assigned technicians', 'mydashboard') . "'>";
             }
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fa fa-user-times fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats_tickets4\"></span></h3>";
@@ -391,13 +401,22 @@ class PluginMydashboardAlert extends CommonDBTM {
                $options1['criteria'][2]['value']      = Ticket::INCIDENT_TYPE;
                $options1['criteria'][2]['link']       = 'AND';
 
+               if (isset($opt['groups_id']) && $opt['groups_id'] > 0) {
+                  $group = $opt['groups_id'];
+
+                  $options1['criteria'][3]['field']      = 8; // groups_id_assign
+                  $options1['criteria'][3]['searchtype'] = 'equals';
+                  $options1['criteria'][3]['value']      = $group;
+                  $options1['criteria'][3]['link']       = 'AND';
+
+               }
                $stats1link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                              Toolbox::append_params($options1, "&");
             }
 
             $table .= "<div class=\"nb\" style=\"color:$colorstats1\">";
             if ($stats_tickets1 > 0) {
-               $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='".__('Incidents with very high or major priority', 'mydashboard')."'>";
+               $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Incidents with very high or major priority', 'mydashboard') . "'>";
             }
             $table .= "<i style='color:$colorstats1' class=\"fa fa-exclamation-triangle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats_tickets1\"></span></h3>";
@@ -427,7 +446,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
             if ($stats_tickets2 > 0) {
-               $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='".__('Problems with very high or major priority', 'mydashboard')."'>";
+               $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __('Problems with very high or major priority', 'mydashboard') . "'>";
             }
             $table .= "<i style='color:$colorstats2' class=\"fa fa-bug fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id=\"stats_tickets2\"></span></h3>";
@@ -463,17 +482,17 @@ class PluginMydashboardAlert extends CommonDBTM {
                        'entity'    => $_SESSION['glpiactiveentities'],
                        'condition' => '`is_assign`'
             ];
-            $table .= __('Group');
-            $table .= "&nbsp;";
-            $table .= Group::dropdown($params)
-                      . "</form>";
+            $table  .= __('Group');
+            $table  .= "&nbsp;";
+            $table  .= Group::dropdown($params)
+                       . "</form>";
 
             $widget->setWidgetHtmlContent(
                $table
             );
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;".__("Incidents alerts", "mydashboard")."</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Incidents alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display alerts for tickets and problems", "mydashboard"));
 
             return $widget;
@@ -860,17 +879,17 @@ class PluginMydashboardAlert extends CommonDBTM {
                        'entity'    => $_SESSION['glpiactiveentities'],
                        'condition' => '`is_assign`'
             ];
-            $table .= __('Group');
-            $table .= "&nbsp;";
-            $table .= Group::dropdown($params)
-                      . "</form>";
+            $table  .= __('Group');
+            $table  .= "&nbsp;";
+            $table  .= Group::dropdown($params)
+                       . "</form>";
 
             $widget->setWidgetHtmlContent(
                $table
             );
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;".__("SLA Incidents alerts", "mydashboard")."</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("SLA Incidents alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display alerts for SLA of tickets", "mydashboard"));
 
             return $widget;
@@ -1041,7 +1060,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-warning fa-1x'></i>&nbsp;".__("User ticket alerts", "mydashboard")."</span>");
+            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
 
             return $widget;
@@ -1087,7 +1106,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;".__('Automatic actions in error', 'mydashboard')."</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
 
             return $widget;
             break;
@@ -1129,7 +1148,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
             //            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;".__("Not imported mails in collectors", "mydashboard")."</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
             return $widget;
@@ -1405,11 +1424,11 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $classfont = ' alert_fontimpact' . $row['impact'];
             $rand      = mt_rand();
-            $name = $row['name'];
-            $wl   .= "<div id='alert$rand'>";
-            $wl   .= "<span class='$classfont left'>" . $name . "</span>";
-            $wl   .= "</div>";
-            $wl   .= "</h3>";
+            $name      = $row['name'];
+            $wl        .= "<div id='alert$rand'>";
+            $wl        .= "<span class='$classfont left'>" . $name . "</span>";
+            $wl        .= "</div>";
+            $wl        .= "</h3>";
 
             $wl .= "</div>";
             $wl .= "</div>";
@@ -1673,7 +1692,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       echo "</td></tr>";
       if (Session::haveRight("reminder_public", UPDATE)) {
          echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-         echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
          echo Html::hidden("id", ['value' => $id]);
          echo Html::hidden("reminders_id", ['value' => $reminders_id]);
          echo "</td></tr>";
@@ -1790,7 +1809,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          echo "</td></tr>";
          if (Session::haveRight("reminder_public", UPDATE)) {
             echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-            echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+            echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
             echo Html::hidden("id", ['value' => $id]);
             echo Html::hidden("reminders_id", ['value' => $reminders_id]);
             echo "</td></tr>";
@@ -1841,13 +1860,13 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $alert = "";
       if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
-         $alert .=  "<div class='center' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br>";
+         $alert .= "<div class='center' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __('Service is down for maintenance. It will be back shortly.');
          $alert .= "</b></div>";
          if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
-            $alert .=  "<div class='md-status'>";
-            $alert .= "<p>".nl2br($CFG_GLPI["maintenance_text"])."</p>";
+            $alert .= "<div class='md-status'>";
+            $alert .= "<p>" . nl2br($CFG_GLPI["maintenance_text"]) . "</p>";
             $alert .= "</div>";
          }
          $message = "";
