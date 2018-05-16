@@ -69,7 +69,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "8"  => __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
                                          $this->getType() . "12" => __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "13" => __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "15" => __("Top ten ticket categories of the previous month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "15" => __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "16" => __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "17" => __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "18" => __("Number of opened and closed tickets of the previous month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
@@ -1337,14 +1337,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
 
-            $result = $DB->query($query);
-            $sum    = $DB->fetch_assoc($result);
-            $nb     = $DB->numrows($result);
+            $result       = $DB->query($query);
+            $sum          = $DB->fetch_assoc($result);
+            $nb           = $DB->numrows($result);
             $notrespected = 0;
             $respected    = 0;
             if ($nb > 0 && $sum['nb'] > 0) {
-               $notrespected = round(($sum['nb'])*100/($total['nb']), 2);
-               $respected    = round(($total['nb'] - $sum['nb'])*100/($total['nb']), 2);
+               $notrespected = round(($sum['nb']) * 100 / ($total['nb']), 2);
+               $respected    = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
             }
             $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("TTR Compliance", "mydashboard"));
@@ -1455,14 +1455,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
 
-            $result = $DB->query($query);
-            $sum    = $DB->fetch_assoc($result);
-            $nb     = $DB->numrows($result);
+            $result       = $DB->query($query);
+            $sum          = $DB->fetch_assoc($result);
+            $nb           = $DB->numrows($result);
             $notrespected = 0;
             $respected    = 0;
             if ($nb > 0 && $sum['nb'] > 0) {
-               $notrespected = round(($sum['nb'])*100/($total['nb']), 2);
-               $respected    = round(($total['nb'] - $sum['nb'])*100/($total['nb']), 2);
+               $notrespected = round(($sum['nb']) * 100 / ($total['nb']), 2);
+               $respected    = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
             }
             $widget = new PluginMydashboardHtml();
             $widget->setWidgetTitle(__("TTO Compliance", "mydashboard"));
@@ -1603,6 +1603,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if (!isset($opt['sons'])) {
                $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
             }
+            $type_criteria = "1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = "`glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
 
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
 
@@ -1615,11 +1620,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $mois = 12;
             }
             $nbjours  = date("t", mktime(0, 0, 0, $mois, 1, $annee));
-            $query    = "SELECT `glpi_itilcategories`.`name` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
+            $date_criteria = "(`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )";
+            $date_criteria = "";
+            $query    = "SELECT `glpi_itilcategories`.`completename` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
-                     WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
+                     WHERE $type_criteria $date_criteria
                      " . $entities . "
                      AND `glpi_tickets`.`is_deleted` = '0'
                      GROUP BY `glpi_itilcategories`.`id`
@@ -1647,7 +1654,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             //            $widget->appendWidgetHtmlContent($dropdown);
             //            $widget->toggleWidgetRefresh();
             $widget = new PluginMydashboardHtml();
-            $title  = __("Top ten ticket categories of the previous month", "mydashboard");
+            $title  = __("Top ten ticket categories by type of ticket", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset = json_encode($dataspie);
@@ -1726,6 +1733,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
                $graph   .= "</span>";
             }
+            $graph          .= "<span class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            $type           = 0;
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type = $opt["type"];
+            }
+            $graph .= Ticket::dropdownType('type', ['value'   => $type,
+                                                    'display' => false,
+                                                    'display_emptychoice' => true]);
+            $graph .= "</span>";
             $graph .= "</form>";
             $graph .= "</div>";
             $graph .= "<div class='bt-col-md-2 center'>";
@@ -2897,12 +2915,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 && $opt["year"] > 0) {
                $annee = $opt["year"];
             }
+            $nbjours  = date("t", mktime(0, 0, 0, $mois, 1, $annee));
 
             $query   = "SELECT `glpi_tickets_users`.`users_id`, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
-                     INNER JOIN `glpi_tickets_users`
+                     LEFT JOIN `glpi_tickets_users`
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 2)
-                     WHERE (`glpi_tickets`.`date` >= '$annee-01-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-31 00:00:00' , INTERVAL 1 DAY) )
+                     WHERE (`glpi_tickets`.`date` >= '$annee-01-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
                      " . $entities . "
                      AND `glpi_tickets`.`is_deleted` = '0'
                      GROUP BY `glpi_tickets_users`.`users_id`
@@ -2917,7 +2936,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             while ($data = $DB->fetch_array($results)) {
                $tabtickets[]  = $data['count'];
                $tabtech[]     = $data['users_id'];
-               $tabtechName[] = getUserName($data['users_id']);
+               $users_id = getUserName($data['users_id']);
+               if (empty($data['users_id'])) {
+                  $users_id = __('None');
+               }
+               $tabtechName[] = $users_id;
             }
 
             $palette = PluginMydashboardColor::getColors(10);
