@@ -129,11 +129,16 @@ class PluginMydashboardDashboard extends CommonDBTM {
 
       $data = '';
       if ($id == self::$GLPI_VIEW) {
-         $data = '[{"id":"gs199","x":0,"y":0,"width":4,"height":8},
-         {"id":"gs200","x":4,"y":0,"width":4,"height":8},
-         {"id":"gs197","x":8,"y":0,"width":4,"height":8},
-         {"id":"gs5","x":0,"y":8,"width":4,"height":8},
-         {"id":"gs40","x":4,"y":8,"width":4,"height":8}]';
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert8");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert9");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert6");
+         $gs4 = PluginMydashboardWidget::getGsID("eventwidgetglobal");
+         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel3");
+         $data = '[{"id":"'.$gs1.'","x":0,"y":0,"width":4,"height":8},
+         {"id":"'.$gs2.'","x":4,"y":0,"width":4,"height":8},
+         {"id":"'.$gs3.'","x":8,"y":0,"width":4,"height":8},
+         {"id":"'.$gs4.'","x":0,"y":8,"width":4,"height":8},
+         {"id":"'.$gs5.'","x":4,"y":8,"width":4,"height":8}]';
       }
       if ($id == self::$INVENTORY_VIEW) {
          $plugin   = new Plugin();
@@ -142,7 +147,7 @@ class PluginMydashboardDashboard extends CommonDBTM {
 
             $gs4 = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard1");
             $gs5 = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard2");
-            $data_ocs = '{"id":"'.$gs4.'","x":0,"y":9,"width":5,"height":12},
+            $data_ocs = ',{"id":"'.$gs4.'","x":0,"y":9,"width":5,"height":12},
                         {"id":"'.$gs5.'","x":5,"y":9,"width":5,"height":12}';
          }
 
@@ -151,50 +156,84 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel3");
          $data = '[{"id":"'.$gs1.'","x":0,"y":0,"width":4,"height":9},
          {"id":"'.$gs2.'","x":4,"y":0,"width":4,"height":9},
-         {"id":"'.$gs3.'","x":8,"y":0,"width":4,"height":8},';
+         {"id":"'.$gs3.'","x":8,"y":0,"width":4,"height":8}';
          $data .= $data_ocs;
          $data .= ']';
       }
       if ($id == self::$HELPDESK_SUPERVISOR_VIEW) {
-         $data = '[{"id":"gs195","x":0,"y":0,"width":4,"height":8},
-         {"id":"gs194","x":0,"y":8,"width":4,"height":11},
-         {"id":"gs38","x":0,"y":19,"width":4,"height":12},
-         {"id":"gs192","x":0,"y":31,"width":5,"height":12},
-         {"id":"gs196","x":4,"y":0,"width":5,"height":8},
-         {"id":"gs110","x":4,"y":8,"width":4,"height":11},
-         {"id":"gs203","x":4,"y":19,"width":4,"height":12},
-         {"id":"gs150","x":5,"y":31,"width":3,"height":11},
-         {"id":"gs183","x":9,"y":0,"width":3,"height":8},
-         {"id":"gs182","x":8,"y":8,"width":4,"height":11},
-         {"id":"gs138","x":8,"y":19,"width":4,"height":12},
-         {"id":"gs169","x":8,"y":31,"width":4,"height":12}]';
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel24");
+         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel6");
+         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
+         $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
+         $gs8 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel25");
+         $gs9 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel7");
+         $gs10 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel22");
+         $gs11 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel12");
+         $gs12 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel18");
+
+         $data = '[{"id":"'.$gs1.'","x":0,"y":0,"width":4,"height":8},
+         {"id":"'.$gs2.'","x":0,"y":8,"width":4,"height":11},
+         {"id":"'.$gs3.'","x":0,"y":19,"width":4,"height":12},
+         {"id":"'.$gs4.'","x":0,"y":31,"width":5,"height":12},
+         {"id":"'.$gs5.'","x":4,"y":0,"width":5,"height":8},
+         {"id":"'.$gs6.'","x":4,"y":8,"width":4,"height":11},
+         {"id":"'.$gs7.'","x":4,"y":19,"width":4,"height":12},
+         {"id":"'.$gs8.'","x":5,"y":31,"width":3,"height":11},
+         {"id":"'.$gs9.'","x":9,"y":0,"width":3,"height":8},
+         {"id":"'.$gs10.'","x":8,"y":8,"width":4,"height":11},
+         {"id":"'.$gs11.'","x":8,"y":19,"width":4,"height":12},
+         {"id":"'.$gs12.'","x":8,"y":31,"width":4,"height":12}]';
       }
       if ($id == self::$INCIDENT_SUPERVISOR_VIEW) {
-         $data = '[{"id":"gs154","x":0,"y":8,"width":4,"height":11},
-         {"id":"gs196","x":8,"y":0,"width":4,"height":8},
-         {"id":"gs183","x":9,"y":19,"width":3,"height":8},
-         {"id":"gs182","x":9,"y":8,"width":3,"height":11},
-         {"id":"gs195","x":0,"y":0,"width":4,"height":8},
-         {"id":"gs38","x":4,"y":8,"width":5,"height":12},
-         {"id":"gs198","x":4,"y":0,"width":4,"height":8}]';
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
+         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel16");
+         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
+         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
+         $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+         $data = '[{"id":"'.$gs1.'","x":0,"y":8,"width":4,"height":11},
+         {"id":"'.$gs2.'","x":8,"y":0,"width":4,"height":8},
+         {"id":"'.$gs3.'","x":9,"y":19,"width":3,"height":8},
+         {"id":"'.$gs4.'","x":9,"y":8,"width":3,"height":11},
+         {"id":"'.$gs5.'","x":0,"y":0,"width":4,"height":8},
+         {"id":"'.$gs6.'","x":4,"y":8,"width":5,"height":12},
+         {"id":"'.$gs7.'","x":4,"y":0,"width":4,"height":8}]';
       }
       if ($id == self::$REQUEST_SUPERVISOR_VIEW) {
-         $data = '[{"id":"gs198","x":4,"y":0,"width":5,"height":11},
-         {"id":"gs157","x":0,"y":0,"width":4,"height":12},
-         {"id":"gs38","x":4,"y":11,"width":5,"height":12},
-         {"id":"gs182","x":9,"y":0,"width":3,"height":11},
-         {"id":"gs183","x":9,"y":11,"width":3,"height":8}]';
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel17");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert8");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
+         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
+         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+         $data = '[{"id":"'.$gs1.'","x":4,"y":0,"width":5,"height":11},
+         {"id":"'.$gs2.'","x":0,"y":0,"width":4,"height":12},
+         {"id":"'.$gs3.'","x":4,"y":11,"width":5,"height":12},
+         {"id":"'.$gs4.'","x":9,"y":0,"width":3,"height":11},
+         {"id":"'.$gs5.'","x":9,"y":11,"width":3,"height":8}]';
       }
       if ($id == self::$HELPDESK_TECHNICIAN_VIEW) {
-         $data = '[{"id":"gs195","x":0,"y":0,"width":4,"height":8},
-         {"id":"gs198","x":4,"y":0,"width":4,"height":8},
-         {"id":"gs196","x":8,"y":0,"width":4,"height":8},
-         {"id":"gs188","x":0,"y":8,"width":4,"height":9},
-         {"id":"gs16","x":4,"y":17,"width":4,"height":9},
-         {"id":"gs182","x":8,"y":8,"width":4,"height":11},
-         {"id":"gs14","x":4,"y":8,"width":4,"height":9},
-         {"id":"gs189","x":0,"y":17,"width":4,"height":9},
-         {"id":"gs183","x":8,"y":19,"width":4,"height":8}]';
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
+         $gs4 = PluginMydashboardWidget::getGsID("tickettaskstodowidget");
+         $gs5 = PluginMydashboardWidget::getGsID("ticketlistprocesswidget");
+         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
+         $gs7 = PluginMydashboardWidget::getGsID("tickettaskstodowidgetgroup");
+         $gs8 = PluginMydashboardWidget::getGsID("ticketlistprocesswidgetgroup");
+         $gs9 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+         $data = '[{"id":"'.$gs1.'","x":0,"y":0,"width":4,"height":8},
+         {"id":"'.$gs2.'","x":4,"y":0,"width":4,"height":8},
+         {"id":"'.$gs3.'","x":8,"y":0,"width":4,"height":8},
+         {"id":"'.$gs4.'","x":0,"y":8,"width":4,"height":9},
+         {"id":"'.$gs5.'","x":4,"y":17,"width":4,"height":9},
+         {"id":"'.$gs6.'","x":8,"y":8,"width":4,"height":11},
+         {"id":"'.$gs7.'","x":4,"y":8,"width":4,"height":9},
+         {"id":"'.$gs8.'","x":0,"y":17,"width":4,"height":9},
+         {"id":"'.$gs9.'","x":8,"y":19,"width":4,"height":8}]';
       }
 
       return $data;
