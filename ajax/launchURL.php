@@ -80,6 +80,31 @@ if (isset($_POST["widget"])
       echo $link;
    }
 } else if (isset($_POST["widget"])
+           && $_POST["widget"] == "PluginMydashboardInfotel25") {
+
+   if (isset($_POST["groups_id"])) {
+      $options['reset']                     = 'reset';
+      $options['criteria'][0]['field']      = 12; // status
+      $options['criteria'][0]['searchtype'] = 'equals';
+      $options['criteria'][0]['value']      = "notold";
+      $options['criteria'][0]['link']       = 'AND';
+
+      if (empty($_POST["groups_id"])) {
+         $options['criteria'][1]['field']      = 71; // requester group
+         $options['criteria'][1]['searchtype'] = 'contains';
+         $options['criteria'][1]['value']      = '^$';
+         $options['criteria'][1]['link']       = 'AND';
+      } else {
+         $options['criteria'][1]['field']      = 71; // requester group
+         $options['criteria'][1]['searchtype'] = 'equals';
+         $options['criteria'][1]['value']      = $_POST["groups_id"];
+         $options['criteria'][1]['link']       = 'AND';
+      }
+      $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+              Toolbox::append_params($options, "&");
+      echo $link;
+   }
+} else if (isset($_POST["widget"])
            && ($_POST["widget"] == "PluginMydashboardInfotel16"
                || $_POST["widget"] == "PluginMydashboardInfotel17")) {
 

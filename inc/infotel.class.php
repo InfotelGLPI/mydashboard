@@ -78,6 +78,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
                                          $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
                                          $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
+                                         $this->getType() . "25"  => __("Number of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
          ]
       ];
    }
@@ -3076,6 +3077,125 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             return $widget;
 
+            break;
+
+         case $this->getType() . "25":
+            $query = "SELECT DISTINCT
+                           `groups_id`,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_groups_tickets` 
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
+                        AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')
+                        WHERE `glpi_tickets`.`is_deleted` = '0'";
+            $query .= getEntitiesRestrictRequest("AND", Ticket::getTable());
+            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " GROUP BY `groups_id`";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabgroup = [];
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  if (!empty($data['groups_id'])) {
+                     $name[] = Dropdown::getDropdownName("glpi_groups", $data['groups_id']);
+                  } else {
+                     $name[] = __('None');
+                  }
+                  $datas[]       = $data['nb'];
+                  if (!empty($data['groups_id'])) {
+                  $tabgroup[] = $data['groups_id'];
+                  } else {
+                     $tabgroup[] = 0;
+                  }
+               }
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened tickets by requester groups", "mydashboard");
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($name);
+            $tabgroupset     = json_encode($tabgroup);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataGroupPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var groupset = $tabgroupset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TicketsByRequesterGroupPieChart');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var TicketsByRequesterGroupPieChart = new Chart(ctx, {
+                  type: 'polarArea',
+                  data: dataGroupPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#TicketsByRequesterGroupPieChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = TicketsByRequesterGroupPieChart.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var groups_id = groupset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{groups_id:groups_id, widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $graph .= "</div>";
+            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
+            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByRequesterGroupPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+            $graph .= "</div></div>";
+            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
+            $graph .= "<canvas id=\"TicketsByRequesterGroupPieChart\"></canvas>";
+            $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
             break;
       }
    }

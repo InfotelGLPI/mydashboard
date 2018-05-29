@@ -82,12 +82,16 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
          <?php
 
          $profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+         $predefined_grid = 0;
 
          if (isset($_POST["profiles_id"])) {
             $profile = $_POST["profiles_id"];
          }
+         if (isset($_POST["predefined_grid"])) {
+            $predefined_grid = $_POST["predefined_grid"];
+         }
          $dashboard = new PluginMydashboardMenu();
-         $dashboard->loadDashboard($profile);
+         $dashboard->loadDashboard($profile, $predefined_grid);
          ?>
 
        </body>
