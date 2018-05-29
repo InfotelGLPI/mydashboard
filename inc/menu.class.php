@@ -154,7 +154,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @return FALSE if the user haven't the right to see Dashboard
     * @internal param type $user_id
     */
-   public function showMenu($users_id = -1, $active_profile = -1) {
+   public function showMenu($users_id = -1, $active_profile = -1, $predefined_grid = 0) {
 
       Html::requireJs('mydashboard');
       //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
@@ -171,7 +171,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       }
 
       //Now the mydashboard
-      $this->showDashboard($active_profile);
+      $this->showDashboard($active_profile, $predefined_grid);
 
    }
 
@@ -225,7 +225,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     *
     * @param int $selected_profile
     */
-   private function showDashboard($selected_profile = -1) {
+   private function showDashboard($selected_profile = -1, $predefined_grid = 0) {
 
       //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
       //      $_SESSION['plugin_mydashboard_editmode'] = false;
@@ -243,7 +243,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       //This first div is the header of the mydashboard, basically it display a name, informations and a button to toggle full screen
       echo "<div class='plugin_mydashboard_header'>";//(div.plugin_mydashboard_header)
 
-      $this->displayEditMode($edit, $selected_profile);
+      $this->displayEditMode($edit, $selected_profile, $predefined_grid);
       //      echo "</span>";//end(span.plugin_mydashboard_header_title)
       echo "<span class='plugin_mydashboard_header_right'> ";//(span.plugin_mydashboard_header_right)
       //If administator enabled fullscreen we display the button to toggle fullscreen
@@ -285,7 +285,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       }
    }
 
-   function displayEditMode($edit = 0, $selected_profile = -1) {
+   function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0) {
 
       if ($this->interface == 1) {
          if ($edit > 0) {
@@ -321,8 +321,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             $elements = PluginMydashboardDashboard::getPredefinedDashboardName();
 
             Dropdown::showFromArray("predefined_grid", $elements, [
-               //               'value'               => $p['value'],
-               //                                                                    'rand'                => $p['rand'],
+               'value'               => $predefined_grid,
                'display_emptychoice' => true,
                'on_change'           => 'this.form.submit()']);
             echo "&nbsp;";
@@ -853,7 +852,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       global $CFG_GLPI;
 
       $this->users_id = Session::getLoginUserID();
-      $this->showMenu($this->users_id, $active_profile);
+      $this->showMenu($this->users_id, $active_profile, $predefined_grid);
 
       $this->initDBWidgets();
       $grid = [];
@@ -889,7 +888,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             $grid = stripslashes($dashboard->fields['grid']);
          }
       }
-
+      //LOAD PREDEFINED GRID
       if ($predefined_grid > 0) {
          $grid = PluginMydashboardDashboard::loadPredefinedDashboard($predefined_grid);
       }
