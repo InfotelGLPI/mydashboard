@@ -161,17 +161,18 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $data .= ']';
       }
       if ($id == self::$HELPDESK_SUPERVISOR_VIEW) {
+
          $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
-         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
-         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
-         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel24");
-         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel6");
-         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
-         $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
-         $gs8 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel25");
-         $gs9 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel7");
-         $gs10 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel22");
-         $gs11 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel12");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel24");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
+         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel22");
+         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
+         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel6");
+         $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel25");
+         $gs8 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel12");
+         $gs9 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+         $gs10 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
+         $gs11 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel7");
          $gs12 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel18");
 
          $data = '[{"id":"'.$gs1.'","x":0,"y":0,"width":4,"height":8},
@@ -188,13 +189,15 @@ class PluginMydashboardDashboard extends CommonDBTM {
          {"id":"'.$gs12.'","x":8,"y":31,"width":4,"height":12}]';
       }
       if ($id == self::$INCIDENT_SUPERVISOR_VIEW) {
-         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
-         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
-         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
-         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel16");
-         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
-         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
-         $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel16");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
+         $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
+         $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel6");
+         $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
+
          $data = '[{"id":"'.$gs1.'","x":0,"y":8,"width":4,"height":11},
          {"id":"'.$gs2.'","x":8,"y":0,"width":4,"height":8},
          {"id":"'.$gs3.'","x":9,"y":19,"width":3,"height":8},
@@ -204,11 +207,13 @@ class PluginMydashboardDashboard extends CommonDBTM {
          {"id":"'.$gs7.'","x":4,"y":0,"width":4,"height":8}]';
       }
       if ($id == self::$REQUEST_SUPERVISOR_VIEW) {
-         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel17");
-         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert8");
-         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
-         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
+
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
+         $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel17");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel1");
+         $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
          $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
+
          $data = '[{"id":"'.$gs1.'","x":4,"y":0,"width":5,"height":11},
          {"id":"'.$gs2.'","x":0,"y":0,"width":4,"height":12},
          {"id":"'.$gs3.'","x":4,"y":11,"width":5,"height":12},
@@ -216,6 +221,7 @@ class PluginMydashboardDashboard extends CommonDBTM {
          {"id":"'.$gs5.'","x":9,"y":11,"width":3,"height":8}]';
       }
       if ($id == self::$HELPDESK_TECHNICIAN_VIEW) {
+
          $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert4");
          $gs2 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
          $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert5");

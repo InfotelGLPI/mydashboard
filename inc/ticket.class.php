@@ -687,11 +687,11 @@ class PluginMydashboardTicket {
                                Html::makeTitle($title, $number, $numrows) . "</a>";
             break;
       }
-
-      foreach ($req as $id => $row) {
-         $output['body'][] = self::showVeryShortTask($id, $itemtype);
+      if ($req !== false) {
+         foreach ($req as $id => $row) {
+            $output['body'][] = self::showVeryShortTask($id, $itemtype);
+         }
       }
-
       if (!empty($output)) {
          $widget = new PluginMydashboardDatatable();
 
