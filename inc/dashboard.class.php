@@ -139,12 +139,19 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $plugin   = new Plugin();
          $data_ocs = '';
          if ($plugin->isActivated("ocsinventoryng")) {
-            $data_ocs = '{"id":"gs172","x":0,"y":9,"width":5,"height":12},
-         {"id":"gs173","x":5,"y":9,"width":5,"height":12}';
+
+            $gs4 = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard1");
+            $gs5 = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard2");
+            $data_ocs = '{"id":"'.$gs4.'","x":0,"y":9,"width":5,"height":12},
+                        {"id":"'.$gs5.'","x":5,"y":9,"width":5,"height":12}';
          }
-         $data = '[{"id":"gs109","x":0,"y":0,"width":4,"height":9},
-         {"id":"gs21","x":4,"y":0,"width":4,"height":9},
-         {"id":"gs40","x":8,"y":0,"width":4,"height":8},';
+
+         $gs1 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel5");
+         $gs2 = PluginMydashboardWidget::getGsID("contractwidget");
+         $gs3 = PluginMydashboardWidget::getGsID("PluginMydashboardInfotel3");
+         $data = '[{"id":"'.$gs1.'","x":0,"y":0,"width":4,"height":9},
+         {"id":"'.$gs2.'","x":4,"y":0,"width":4,"height":9},
+         {"id":"'.$gs3.'","x":8,"y":0,"width":4,"height":8},';
          $data .= $data_ocs;
          $data .= ']';
       }
