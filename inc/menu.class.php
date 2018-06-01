@@ -322,6 +322,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
             Dropdown::showFromArray("predefined_grid", $elements, [
                'value'               => $predefined_grid,
+               'width'               => '170px',
                'display_emptychoice' => true,
                'on_change'           => 'this.form.submit()']);
             echo "&nbsp;";
