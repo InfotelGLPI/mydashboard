@@ -78,7 +78,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
                                          $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
                                          $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "25"  => __("Number of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "25" => __("Number of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
          ]
       ];
    }
@@ -142,6 +142,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 && count($opt) < 1) {
                $opt['groups_id'] = $this->preferences['prefered_group'];
             }
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $query = "SELECT DISTINCT
                            DATE_FORMAT(`date`, '%b %Y') AS period_name,
                            COUNT(`glpi_tickets`.`id`) AS nb,
@@ -150,7 +156,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
                         AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE NOT `glpi_tickets`.`is_deleted` ";
+                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $opt['groups_id'];
             }
@@ -269,50 +275,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      
                       </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'width'               => '100px',
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $gparams = ['name'      => 'groups_id',
-                        'display'   => false,
-                        'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                        'entity'    => $_SESSION['glpiactiveentities'],
-                        'condition' => '`is_assign`'
-            ];
-            $graph   .= "<span class='md-widgetcrit'>";
-            $graph   .= __('Group');
-            $graph   .= "&nbsp;";
-            $graph   .= Group::dropdown($gparams);
-            $graph   .= "</span>";
-
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"BacklogBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"BacklogBarChart\"></canvas>";
-            $graph .= "</div>";
+            $gsid      = PluginMydashboardWidget::getGsID($widgetId);
+            $criterias = ['entities_id', 'is_recursive', 'groups_id', 'type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'BacklogBarChart', false, $opt, $criterias);
 
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
@@ -324,11 +289,18 @@ class PluginMydashboardInfotel extends CommonGLPI {
             break;
 
          case $this->getType() . "2":
+
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $query = "SELECT DISTINCT
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0'";
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria ";
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `priority` ORDER BY `priority` ASC";
@@ -417,13 +389,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 
              </script>";
 
-            $graph .= "</div>";
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByPriorityPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"TicketsByPriorityPieChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketsByPriorityPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -766,35 +733,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
              </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStockLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";
-            $graph .= "<canvas id=\"TicketStockLineChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketStockLineChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -813,7 +753,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if (!isset($opt['sons'])) {
                $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
             }
-
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
 
             $mois  = intval(strftime("%m") - 1);
@@ -831,7 +775,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 1)
                      WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' 
                      AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
-                     $entities
+                     $entities $type_criteria
                      AND `glpi_tickets`.`is_deleted` = '0'
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
@@ -865,7 +809,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
-            $graph = "<script type='text/javascript'>
+            $graph     = "<script type='text/javascript'>
          
             var dataTopTenPie = {
               datasets: [{
@@ -895,35 +839,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
              });
 
              </script>";
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketAuthorsPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";
-            $graph .= "<canvas id=\"TopTenTicketAuthorsPieChart\"></canvas>";
-            $graph .= "</div>";
+
+            $criterias = ['entities_id', 'is_recursive', 'type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TopTenTicketAuthorsPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1025,54 +943,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                       </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph          .= "<span class='md-widgetcrit'>";
-            $gparams        = ['name'      => 'groups_id',
-                               'display'   => false,
-                               'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                               'entity'    => $_SESSION['glpiactiveentities'],
-                               'condition' => '`is_assign`'
-            ];
-            $graph          .= __('Group');
-            $graph          .= "&nbsp;";
-            $graph          .= Group::dropdown($gparams);
-            $graph          .= "</span>";
-            $graph          .= "<span class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
-               $annee_courante = $opt["year"];
-            }
-            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
-            $graph .= "</span>";
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TimeByTechChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"TimeByTechChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive', 'groups_id', 'type', 'year'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TimeByTechChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1303,9 +1175,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "12":
 
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0'
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
             $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
@@ -1316,7 +1194,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0'
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
                                             AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
@@ -1346,7 +1224,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode([__("Respected TTR", "mydashboard"), __("Not respected TTR", "mydashboard")]);
 
-            $graph = "<script type='text/javascript'>
+            $graph     = "<script type='text/javascript'>
          
             var dataTTRPie = {
               datasets: [{
@@ -1403,12 +1281,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            );
                 
              </script>";
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TTRCompliance\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:30vh; width:30vw"
-            $graph .= "<canvas id=\"TTRCompliance\"></canvas>";
-            $graph .= "</div>";
+
+            $criterias = ['type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TTRCompliance', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1419,9 +1294,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
             break;
          case $this->getType() . "13":
 
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0'
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
             $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
@@ -1432,7 +1313,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0'
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL
                         AND (`glpi_tickets`.`takeintoaccount_delay_stat`
@@ -1463,13 +1344,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode([__("Respected TTO", "mydashboard"), __("Not respected TTO", "mydashboard")]);
 
-            $graph = "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TTOCompliance\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:30vh; width:30vw"
-            $graph .= "<canvas id=\"TTOCompliance\"></canvas>";
-            $graph .= "</div>";
-            $graph .= "<script type='text/javascript'>
+            $graph     = "<script type='text/javascript'>
          
             var dataTTOPie = {
               datasets: [{
@@ -1526,6 +1401,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            );
 //                
              </script>";
+
+            $criterias = ['type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TTOCompliance', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1602,21 +1480,27 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
 
             $mois  = intval(strftime("%m") - 1);
-            $annee = intval(strftime("%Y") - 1);
+            $annee = intval(strftime("%Y"));
 
             if ($mois > 0) {
                $annee = strftime("%Y");
             } else {
                $mois = 12;
             }
+
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee = $opt["year"];
+            }
+
             $nbjours       = date("t", mktime(0, 0, 0, $mois, 1, $annee));
             $date_criteria = "(`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )";
-            $date_criteria = "";
+//            $date_criteria = "";
             $query         = "SELECT `glpi_itilcategories`.`completename` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
-                     WHERE $type_criteria $date_criteria
+                     WHERE $type_criteria AND $date_criteria
                      " . $entities . "
                      AND `glpi_tickets`.`is_deleted` = '0'
                      GROUP BY `glpi_itilcategories`.`id`
@@ -1653,7 +1537,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
-            $graph = "<script type='text/javascript'>
+            $graph     = "<script type='text/javascript'>
          
             var dataTopTenCatPie = {
               datasets: [{
@@ -1702,46 +1586,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            );
                 
              </script>";
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph          .= "<span class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
-            $type           = 0;
-            if (isset($opt["type"])
-                && $opt["type"] > 0) {
-               $type = $opt["type"];
-            }
-            $graph .= Ticket::dropdownType('type', ['value'               => $type,
-                                                    'display'             => false,
-                                                    'display_emptychoice' => true]);
-            $graph .= "</span>";
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TopTenTicketCategoriesPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"TopTenTicketCategoriesPieChart\"></canvas>";
-            $graph .= "</div>";
+
+            $criterias = ['entities_id', 'is_recursive', 'type', 'year'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TopTenTicketCategoriesPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1857,35 +1704,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 
              </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"IncidentsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"IncidentsByCategoryPieChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'IncidentsByCategoryPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2000,35 +1820,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
             );
                 
              </script>";
-            $graph              .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid               = PluginMydashboardWidget::getGsID($widgetId);
-            $graph              .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"RequestsByCategoryPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"RequestsByCategoryPieChart\"></canvas>";
-            $graph .= "</div>";
+
+            $criterias = ['entities_id', 'is_recursive'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'RequestsByCategoryPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2044,6 +1838,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $mois  = intval(strftime("%m") - 1);
             $annee = intval(strftime("%Y") - 1);
 
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             if ($mois > 0) {
                $annee = strftime("%Y");
             } else {
@@ -2054,7 +1854,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      FROM `glpi_tickets`
                      WHERE (`glpi_tickets`.`date` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
                      " . $entities . "
-                     AND `glpi_tickets`.`is_deleted` = '0'";
+                     AND `glpi_tickets`.`is_deleted` = '0' $type_criteria";
 
             $result   = $DB->query($query);
             $nb       = $DB->numrows($result);
@@ -2071,7 +1871,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      FROM `glpi_tickets`
                      WHERE (`glpi_tickets`.`solvedate` >= '$annee-$mois-01 00:00:01' AND `glpi_tickets`.`solvedate` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
                      " . $entities . "
-                     AND `glpi_tickets`.`is_deleted` = '0'";
+                     AND `glpi_tickets`.`is_deleted` = '0' $type_criteria";
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
@@ -2093,7 +1893,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
-            $graph = "<script type='text/javascript'>
+            $graph     = "<script type='text/javascript'>
          
             var dataTypePie = {
               datasets: [{
@@ -2142,12 +1942,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //            );
                 
              </script>";
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"TicketTypePieChart\"></canvas>";
-            $graph .= "</div>";
+
+            $criterias = ['type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketTypePieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2173,6 +1970,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
 
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $query = "SELECT DISTINCT
                            `glpi_solutiontypes`.`name` AS name,
                            `glpi_solutiontypes`.`id` AS solutiontypes_id,
@@ -2180,7 +1983,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_solutiontypes`
                         ON (`glpi_solutiontypes`.`id` = `glpi_tickets`.`solutiontypes_id`)
-                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria ";
             $query .= $entities
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                       AND `glpi_tickets`.`solutiontypes_id` > 0
@@ -2258,35 +2061,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
             );
                 
              </script>";
-            $graph              .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid               = PluginMydashboardWidget::getGsID($widgetId);
-            $graph              .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"SolutionTypePieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"SolutionTypePieChart\"></canvas>";
-            $graph .= "</div>";
+
+            $criterias          = ['entities_id', 'is_recursive', 'type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'SolutionTypePieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2410,56 +2187,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
 //                      );
                       </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'width'               => '100px',
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $gparams        = ['name'      => 'groups_id',
-                               'display'   => false,
-                               'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                               'entity'    => $_SESSION['glpiactiveentities'],
-                               'condition' => '`is_assign`'
-            ];
-            $graph          .= "<span class='md-widgetcrit'>";
-            $graph          .= __('Group');
-            $graph          .= "&nbsp;";
-            $graph          .= Group::dropdown($gparams);
-            $graph          .= "</span>";
-            $graph          .= "<span class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
-               $annee_courante = $opt["year"];
-            }
-            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
-            $graph .= "</span>";
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByTechChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"TicketsByTechChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive', 'groups_id', 'year', 'type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketsByTechChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2567,7 +2296,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $data_3    = $DB->fetch_array($results_3);
 
                   $tabprogress[] = $data_3['count'];
-                  $tabnames[] = $data['monthname'];
+                  $tabnames[]    = $data['monthname'];
                }
 
                $i++;
@@ -2664,43 +2393,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
              );
              </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph          .= "<span class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
-               $annee_courante = $opt["year"];
-            }
-            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
-            $graph .= "</span>";
-            $graph .= "</form>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketStatusBarLineChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"TicketStatusBarLineChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive', 'year'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketStatusBarLineChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2727,6 +2421,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $currentyear = $opt["year"];
             }
 
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $currentmonth = date("m");
 
             $previousyear = $currentyear - 1;
@@ -2740,7 +2440,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                               FROM `glpi_tickets`
                               WHERE NOT `glpi_tickets`.`is_deleted` AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
                               AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
-                              " . $entities . "
+                              " . $entities . $type_criteria . "
                               GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
             $results = $DB->query($query);
@@ -2757,7 +2457,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $query_1 = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nb_tickets, SUM(`glpi_tickettasks`.`actiontime`) AS count 
                           FROM `glpi_tickettasks`
                           LEFT JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
-                          WHERE NOT `glpi_tickets`.`is_deleted` " . $entities . "
+                          WHERE NOT `glpi_tickets`.`is_deleted` " . $entities . $type_criteria . "
                            AND (`glpi_tickettasks`.`date` >= '$year-$month-01 00:00:01' 
                            AND `glpi_tickettasks`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
 
@@ -2850,43 +2550,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      
                       </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'width'               => '100px',
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph          .= "<span class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
-               $annee_courante = $opt["year"];
-            }
-            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
-            $graph .= "</span>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"AverageBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"AverageBarChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive', 'year', 'type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'AverageBarChart', false, $opt, $criterias);
 
             //            $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
@@ -2923,6 +2588,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 && $opt["year"] > 0) {
                $annee = $opt["year"];
             }
+
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $nbjours = date("t", mktime(0, 0, 0, $mois, 1, $annee));
 
             $query   = "SELECT `glpi_tickets_users`.`users_id`, COUNT(`glpi_tickets`.`id`) as count
@@ -2931,7 +2603,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 2)
                      WHERE (`glpi_tickets`.`date` >= '$annee-01-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$annee-$mois-$nbjours 00:00:00' , INTERVAL 1 DAY) )
                      " . $entities . "
-                     AND `glpi_tickets`.`is_deleted` = '0'
+                     AND `glpi_tickets`.`is_deleted` = '0' $type_criteria
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
                      LIMIT 10";
@@ -3032,43 +2704,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      
                       </script>";
 
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $gsid  = PluginMydashboardWidget::getGsID($widgetId);
-            $graph .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            if (Session::isMultiEntitiesMode()) {
-               $graph   .= "<span class='md-widgetcrit'>";
-               $params  = ['name'                => 'entities_id',
-                           'display'             => false,
-                           'width'               => '100px',
-                           'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
-                           'display_emptychoice' => true
-               ];
-               $graph   .= __('Entity');
-               $graph   .= "&nbsp;";
-               $graph   .= Entity::dropdown($params);
-               $graph   .= "</span>";
-               $graph   .= "<span class='md-widgetcrit'>";
-               $graph   .= __('Recursive') . "&nbsp;";
-               $paramsy = [
-                  'display' => false];
-               $graph   .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
-               $graph   .= "</span>";
-            }
-            $graph          .= "<span class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
-               $annee_courante = $opt["year"];
-            }
-            $graph .= PluginMydashboardHelper::YearDropdown($annee_courante);
-            $graph .= "</span>";
-            $graph .= "</div>";
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketByTechsBarChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"TicketByTechsBarChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['entities_id', 'is_recursive', 'year', 'type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketByTechsBarChart', false, $opt, $criterias);
 
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
@@ -3080,6 +2717,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             break;
 
          case $this->getType() . "25":
+
+            $type_criteria = "AND 1 = 1";
+            if (isset($opt["type"])
+                && $opt["type"] > 0) {
+               $type_criteria = " AND `glpi_tickets`.`type` = '" . $opt["type"] . "' ";
+            }
+
             $query = "SELECT DISTINCT
                            `groups_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
@@ -3087,7 +2731,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
                         AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')
-                        WHERE `glpi_tickets`.`is_deleted` = '0'";
+                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria";
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `groups_id`";
@@ -3095,8 +2739,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $name        = [];
-            $datas       = [];
+            $name     = [];
+            $datas    = [];
             $tabgroup = [];
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
@@ -3105,9 +2749,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   } else {
                      $name[] = __('None');
                   }
-                  $datas[]       = $data['nb'];
+                  $datas[] = $data['nb'];
                   if (!empty($data['groups_id'])) {
-                  $tabgroup[] = $data['groups_id'];
+                     $tabgroup[] = $data['groups_id'];
                   } else {
                      $tabgroup[] = 0;
                   }
@@ -3122,7 +2766,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $palette            = PluginMydashboardColor::getColors($nb);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($name);
-            $tabgroupset     = json_encode($tabgroup);
+            $tabgroupset        = json_encode($tabgroup);
             $graph              = "<script type='text/javascript'>
          
             var dataGroupPie = {
@@ -3183,13 +2827,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 
              </script>";
 
-            $graph .= "</div>";
-            $graph .= "<div class='bt-row'><div class='bt-col-md-9 left'>";
-            $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"TicketsByRequesterGroupPieChart\");'>" . __("Save as PNG", "mydashboard") . "</button>";
-            $graph .= "</div></div>";
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">";// style="position: relative; height:35vh; width:35vw"
-            $graph .= "<canvas id=\"TicketsByRequesterGroupPieChart\"></canvas>";
-            $graph .= "</div>";
+            $criterias = ['type'];
+            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketsByRequesterGroupPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -3260,6 +2899,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
       if (isset($params["year"])
           && $params["year"] > 0) {
          $year = $params["year"];
+      }
+
+      $type_criteria = "AND 1 = 1";
+      if (isset($params["type"])
+          && $params["type"] > 0) {
+         $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
       }
 
       $selected_group = [];
@@ -3340,7 +2985,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            AND `glpi_tickettasks`.`begin` IS NULL "
                             . self::getSpecificEntityRestrict("glpi_tickets", $params)
                             . ")
-                           AND `glpi_tickettasks`.`actiontime` != 0 ";
+                           AND `glpi_tickettasks`.`actiontime` != 0 $type_criteria ";
             $querym_ai   .= "GROUP BY DATE(`glpi_tickettasks`.`date`);
                         ";
             $result_ai_q = $DB->query($querym_ai);
@@ -3379,6 +3024,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
       if (isset($params["year"])
           && $params["year"] > 0) {
          $year = $params["year"];
+      }
+
+      $type_criteria = "AND 1 = 1";
+      if (isset($params["type"])
+          && $params["type"] > 0) {
+         $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
       }
 
       $selected_group = [];
@@ -3452,7 +3103,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            AND `glpi_tickets`.`date` <= '$month_end_datetime'
                            AND `glpi_tickets_users`.`users_id` = (" . $techid . ") "
                             . self::getSpecificEntityRestrict("glpi_tickets", $params)
-                            . ") ";
+                            . " $type_criteria ) ";
             $querym_ai   .= "GROUP BY DATE(`glpi_tickets`.`date`);
                         ";
             $result_ai_q = $DB->query($querym_ai);

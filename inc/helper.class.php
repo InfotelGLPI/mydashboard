@@ -110,6 +110,23 @@ class PluginMydashboardHelper {
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
    }
 
+   static function getGraphFooter($widgetId, $name, $onsubmit, $opt, $criterias) {
+
+      $graph = "<div class='bt-row'>";
+      $graph .= "<div class='bt-col-md-8 left'>";
+      $graph .= PluginMydashboardHelper::getForm($widgetId, $onsubmit, $opt, $criterias);
+      $graph .= "</div>";
+      $graph .= "<div class='bt-col-md-2 center'>";
+      $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+      $graph .= "</div>";
+      $graph .= "</div>";
+      $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
+      $graph .= "<canvas id=\"$name\"></canvas>";
+      $graph .= "</div>";
+
+      return $graph;
+   }
+
    /**
     * Get a form header, this form header permit to update data of the widget
     * with parameters of this form
@@ -122,13 +139,111 @@ class PluginMydashboardHelper {
     */
    static function getFormHeader($widgetId, $gsid, $onsubmit = false) {
       $formId = uniqid('form');
+      $rand   = mt_rand();
+      $form   = "<script type='text/javascript'>
+               $(document).ready(function () {
+                   $('#plugin_mydashboard_add_criteria$rand').on('click', function (e) {
+                       $('#plugin_mydashboard_see_criteria$rand').width(300);
+                       $('#plugin_mydashboard_see_criteria$rand').toggle();
+                   });
+                 });
+                </script>";
+
+      $form .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"fa fa-bars fa-2x\"></i></div>";
+      $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
       if ($onsubmit) {
-         $form = "<form id='" . $formId . "' action='' "
-                 . "onsubmit=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "'); return false;\">";
+         $form .= "<form id='" . $formId . "' action='' "
+                  . "onsubmit=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "'); return false;\">";
       } else {
-         $form = "<form id='" . $formId . "' action='' onsubmit='return false;' ";
+         $form .= "<form id='" . $formId . "' action='' onsubmit='return false;' ";
          $form .= "onchange=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "');\">";
       }
+      return $form;
+   }
+
+   static function getForm($widgetId, $onsubmit = false, $opt, $criterias) {
+
+      $gsid = PluginMydashboardWidget::getGsID($widgetId);
+
+      $form = self::getFormHeader($widgetId, $gsid, $onsubmit);
+
+      if (Session::isMultiEntitiesMode()) {
+         if (in_array("entities_id", $criterias)) {
+            $form   .= "<span class='md-widgetcrit'>";
+            $params = ['name'                => 'entities_id',
+                       'display'             => false,
+                       'width'               => '100px',
+                       'value'               => isset($opt['entities_id']) ? $opt['entities_id'] : $_SESSION['glpiactive_entity'],
+                       'display_emptychoice' => true
+
+            ];
+            $form   .= __('Entity');
+            $form   .= "&nbsp;";
+            $form   .= Entity::dropdown($params);
+            $form   .= "</span>";
+            $form   .= "</br></br>";
+         }
+         if (in_array("is_recursive", $criterias)) {
+            $form    .= "<span class='md-widgetcrit'>";
+            $form    .= __('Recursive') . "&nbsp;";
+            $paramsy = [
+               'display' => false];
+            $form    .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+            $form    .= "</span>";
+            $form    .= "</br></br>";
+         }
+      }
+      if (in_array("groups_id", $criterias)) {
+         $gparams = ['name'      => 'groups_id',
+                     'display'   => false,
+                     'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
+                     'entity'    => $_SESSION['glpiactiveentities'],
+                     'condition' => '`is_assign`'
+         ];
+         $form    .= "<span class='md-widgetcrit'>";
+         $form    .= __('Group');
+         $form    .= "&nbsp;";
+         $form    .= Group::dropdown($gparams);
+         $form    .= "</span>";
+         $form    .= "</br></br>";
+      }
+      if (in_array("type", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+         $type = 0;
+         if (isset($opt["type"])
+             && $opt["type"] > 0) {
+            $type = $opt["type"];
+         }
+         $form .= __('Type');
+         $form .= "&nbsp;";
+         $form .= Ticket::dropdownType('type', ['value'               => $type,
+                                                'display'             => false,
+                                                'display_emptychoice' => true]);
+         $form .= "</span>";
+         $form .= "</br></br>";
+      }
+      if (in_array("year", $criterias)) {
+         $form           .= "<span class='md-widgetcrit'>";
+         $annee_courante = strftime("%Y");
+         if (isset($opt["year"])
+             && $opt["year"] > 0) {
+            $annee_courante = $opt["year"];
+         }
+         $form .= __('Year', 'mydashboard');
+         $form .= "&nbsp;";
+         $form .= self::YearDropdown($annee_courante);
+         $form .= "</span>";
+      }
+      $form .= self::getFormFooter();
+
+      return $form;
+   }
+
+   static function getFormFooter() {
+
+      $form = "</form>";
+      $form .= "</div>";
+
       return $form;
    }
 

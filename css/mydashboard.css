@@ -248,7 +248,7 @@ div#tabcontent{
 
 .md-widgetcrit {
    /*border-radius: 5px;*/
-   border-left: 1px dashed #CCC;
+   /*border-left: 1px dashed #CCC;*/
    padding-top: 5px;
    padding-bottom: 5px;
    padding-left: 5px;
@@ -319,6 +319,19 @@ div#tabcontent{
    top: 0px;
    z-index: 0;
    display: none;
+}
+
+.plugin_mydashboard_menuWidget {
+   position: absolute;
+   display: none;
+   border: 1px solid lightgray;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   border-radius: 5px;
+   font-size: 12px;
+   background-color: #FFF;
+   padding: 10px;
+   z-index: 2;
 }
 
 /*
