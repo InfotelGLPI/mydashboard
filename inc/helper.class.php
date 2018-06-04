@@ -118,7 +118,9 @@ class PluginMydashboardHelper {
       } else {
          $graph .= "<div class='bt-col-md-12 left'>";
       }
-      $graph .= PluginMydashboardHelper::getForm($widgetId, $onsubmit, $opt, $criterias);
+      if (count($criterias) > 0){
+         $graph .= PluginMydashboardHelper::getForm($widgetId, $onsubmit, $opt, $criterias);
+      }
       $graph .= "</div>";
       if ($export == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
@@ -176,6 +178,7 @@ class PluginMydashboardHelper {
 
       $form = self::getFormHeader($widgetId, $gsid, $onsubmit);
 
+      $count = count($criterias);
       if (Session::isMultiEntitiesMode()) {
          if (in_array("entities_id", $criterias)) {
             $form   .= "<span class='md-widgetcrit'>";
@@ -190,7 +193,9 @@ class PluginMydashboardHelper {
             $form   .= "&nbsp;";
             $form   .= Entity::dropdown($params);
             $form   .= "</span>";
-            $form   .= "</br></br>";
+            if ($count > 1) {
+               $form .= "</br></br>";
+            }
          }
          if (in_array("is_recursive", $criterias)) {
             $form    .= "<span class='md-widgetcrit'>";
@@ -199,7 +204,10 @@ class PluginMydashboardHelper {
                'display' => false];
             $form    .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
             $form    .= "</span>";
-            $form    .= "</br></br>";
+            if ($count > 1) {
+               $form .= "</br></br>";
+            }
+
          }
       }
       if (in_array("groups_id", $criterias)) {
@@ -214,7 +222,9 @@ class PluginMydashboardHelper {
          $form    .= "&nbsp;";
          $form    .= Group::dropdown($gparams);
          $form    .= "</span>";
-         $form    .= "</br></br>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
       }
       if (in_array("type", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
@@ -229,7 +239,9 @@ class PluginMydashboardHelper {
                                                 'display'             => false,
                                                 'display_emptychoice' => true]);
          $form .= "</span>";
-         $form .= "</br></br>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
       }
       if (in_array("year", $criterias)) {
          $form           .= "<span class='md-widgetcrit'>";
@@ -242,7 +254,36 @@ class PluginMydashboardHelper {
          $form .= "&nbsp;";
          $form .= self::YearDropdown($annee_courante);
          $form .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
       }
+      if (in_array("month", $criterias)) {
+         $form .= __('Month', 'mydashboard');
+         $form .= "&nbsp;";
+         $form .= self::monthDropdown("month", $opt['month']);
+         $form .= "&nbsp;";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      if (in_array("users_id", $criterias)) {
+         $params = array('name'     => "users_id",
+                       'value'    => $opt['users_id'],
+                       'right'    => "interface",
+                       'comments' => 1,
+                       'entity'   => $_SESSION["glpiactiveentities"],
+                       'width'    => '50%',
+                       'display'  => false
+         );
+         $form .= __('User');
+         $form .= "&nbsp;";
+         $form .= User::dropdown($params);
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
       $form .= self::getFormFooter();
 
       return $form;
@@ -516,5 +557,42 @@ class PluginMydashboardHelper {
               'display' => false];
 
       return Dropdown::showFromArray("year", $elements, $opt);
+   }
+
+   /*
+    *
+    * @Create an HTML drop down menu
+    *
+    * @param string $name The element name and ID
+    *
+    * @param int $selected The month to be selected
+    *
+    * @return string
+    *
+    */
+   static function monthDropdown($name = "month", $selected = null) {
+
+//      $dd = "<select name='$name'>";
+
+      $monthsarray = Toolbox::getMonthsOfYearArray();
+
+//      foreach ($monthsarray as $k => $month) {
+//
+//         $label = $monthsarray[$k];
+//
+//         $dd .= '<option value="' . $k . '"';
+//         if ($k == $selected) {
+//            $dd .= ' selected';
+//         }
+//         /*** get the month ***/
+//         $dd .= '>' . $label . '</option>';
+//      }
+//
+//      $dd .= "</select>";
+//
+      $opt = ['value'   => $selected,
+              'display' => false];
+
+      return Dropdown::showFromArray($name, $monthsarray, $opt);
    }
 }
