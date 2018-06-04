@@ -274,10 +274,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       );
                      
                       </script>";
-
-            $gsid      = PluginMydashboardWidget::getGsID($widgetId);
+            
             $criterias = ['entities_id', 'is_recursive', 'groups_id', 'type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'BacklogBarChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'BacklogBarChart', false, $opt, $criterias);
 
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
@@ -390,7 +389,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketsByPriorityPieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketsByPriorityPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -734,7 +733,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['entities_id', 'is_recursive'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketStockLineChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketStockLineChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -841,7 +840,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TopTenTicketAuthorsPieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TopTenTicketAuthorsPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -944,7 +943,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'groups_id', 'type', 'year'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TimeByTechChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TimeByTechChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1283,7 +1282,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TTRCompliance', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TTRCompliance', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1403,7 +1402,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TTOCompliance', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TTOCompliance', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1588,7 +1587,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'type', 'year'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TopTenTicketCategoriesPieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TopTenTicketCategoriesPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1705,7 +1704,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['entities_id', 'is_recursive'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'IncidentsByCategoryPieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'IncidentsByCategoryPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1822,7 +1821,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['entities_id', 'is_recursive'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'RequestsByCategoryPieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'RequestsByCategoryPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -1944,7 +1943,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketTypePieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketTypePieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2063,7 +2062,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias          = ['entities_id', 'is_recursive', 'type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'SolutionTypePieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'SolutionTypePieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2188,7 +2187,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'groups_id', 'year', 'type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketsByTechChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketsByTechChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2394,7 +2393,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'year'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketStatusBarLineChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketStatusBarLineChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph
@@ -2551,7 +2550,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'year', 'type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'AverageBarChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'AverageBarChart', false, $opt, $criterias);
 
             //            $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
@@ -2705,7 +2704,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       </script>";
 
             $criterias = ['entities_id', 'is_recursive', 'year', 'type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketByTechsBarChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketByTechsBarChart', false, $opt, $criterias);
 
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
@@ -2828,7 +2827,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
              </script>";
 
             $criterias = ['type'];
-            $graph     .= PluginMydashboardHelper::getGraphFooter($widgetId, 'TicketsByRequesterGroupPieChart', false, $opt, $criterias);
+            $graph     .= PluginMydashboardHelper::getGraphHeader($widgetId, 'TicketsByRequesterGroupPieChart', false, $opt, $criterias);
 
             $widget->setWidgetHtmlContent(
                $graph

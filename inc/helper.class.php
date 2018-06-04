@@ -110,19 +110,28 @@ class PluginMydashboardHelper {
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
    }
 
-   static function getGraphFooter($widgetId, $name, $onsubmit, $opt, $criterias) {
+   static function getGraphHeader($widgetId, $name, $onsubmit, $opt, $criterias, $export = true, $canvas = true) {
 
       $graph = "<div class='bt-row'>";
-      $graph .= "<div class='bt-col-md-8 left'>";
+      if ($export == true) {
+         $graph .= "<div class='bt-col-md-8 left'>";
+      } else {
+         $graph .= "<div class='bt-col-md-12 left'>";
+      }
       $graph .= PluginMydashboardHelper::getForm($widgetId, $onsubmit, $opt, $criterias);
       $graph .= "</div>";
-      $graph .= "<div class='bt-col-md-2 center'>";
-      $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+      if ($export == true) {
+         $graph .= "<div class='bt-col-md-2 center'>";
+         $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>" . __("Save as PNG", "mydashboard") . "</button>";
+         $graph .= "</div>";
+      }
       $graph .= "</div>";
-      $graph .= "</div>";
-      $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-      $graph .= "<canvas id=\"$name\"></canvas>";
-      $graph .= "</div>";
+      if ($export == true) {
+         $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
+         $graph .= "<canvas id=\"$name\"></canvas>";
+         $graph .= "</div>";
+      }
+
 
       return $graph;
    }

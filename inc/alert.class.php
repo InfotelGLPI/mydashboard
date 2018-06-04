@@ -203,6 +203,16 @@ class PluginMydashboardAlert extends CommonDBTM {
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
                }
             }
+
+            if (isset($this->preferences['prefered_group'])
+                && $this->preferences['prefered_group'] > 0
+                && count($opt) < 1) {
+               $opt['groups_id'] = $this->preferences['prefered_group'];
+            }
+
+            $criterias = ['groups_id'];
+            $table     = PluginMydashboardHelper::getGraphHeader($widgetId, 'BacklogBarChart', false, $opt, $criterias, false, false);
+
             $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         $left
@@ -310,7 +320,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $colorstats4 = "indianred";
             }
 
-            $table = "<div class=\"tickets-stats\">";
+            $table .= "<div class=\"tickets-stats\">";
 
             //////////////////////////////////////////
 
@@ -469,24 +479,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $table .= "</div>";
 
-            if (isset($this->preferences['prefered_group'])
-                && $this->preferences['prefered_group'] > 0
-                && count($opt) < 1) {
-               $opt['groups_id'] = $this->preferences['prefered_group'];
-            }
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $table  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            $params = ['name'      => 'groups_id',
-                       'display'   => false,
-                       'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                       'entity'    => $_SESSION['glpiactiveentities'],
-                       'condition' => '`is_assign`'
-            ];
-            $table  .= __('Group');
-            $table  .= "&nbsp;";
-            $table  .= Group::dropdown($params)
-                       . "</form>";
-
             $widget->setWidgetHtmlContent(
                $table
             );
@@ -526,6 +518,17 @@ class PluginMydashboardAlert extends CommonDBTM {
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
                }
             }
+
+            if (isset($this->preferences['prefered_group'])
+                && $this->preferences['prefered_group'] > 0
+                && count($opt) < 1) {
+               $opt['groups_id'] = $this->preferences['prefered_group'];
+            }
+
+            $criterias = ['groups_id'];
+            $table     = PluginMydashboardHelper::getGraphHeader($widgetId, 'BacklogBarChart', false, $opt, $criterias, false, false);
+
+
             $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                            FROM `glpi_tickets`
                            $left
@@ -667,7 +670,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $colorstats5 = "indianred";
             }
 
-            $table = "<div class=\"tickets-stats\">";
+            $table .= "<div class=\"tickets-stats\">";
             if ($stats2 > 0) {
                $options2['reset']                     = 'reset';
                $options2['criteria'][0]['field']      = 12; // status
@@ -865,24 +868,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                   </script>";
 
             $table .= "</div>";
-
-            if (isset($this->preferences['prefered_group'])
-                && $this->preferences['prefered_group'] > 0
-                && count($opt) < 1) {
-               $opt['groups_id'] = $this->preferences['prefered_group'];
-            }
-            $gsid   = PluginMydashboardWidget::getGsID($widgetId);
-            $table  .= PluginMydashboardHelper::getFormHeader($widgetId, $gsid, false);
-            $params = ['name'      => 'groups_id',
-                       'display'   => false,
-                       'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                       'entity'    => $_SESSION['glpiactiveentities'],
-                       'condition' => '`is_assign`'
-            ];
-            $table  .= __('Group');
-            $table  .= "&nbsp;";
-            $table  .= Group::dropdown($params)
-                       . "</form>";
 
             $widget->setWidgetHtmlContent(
                $table
