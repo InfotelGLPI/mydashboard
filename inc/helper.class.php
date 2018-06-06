@@ -110,30 +110,35 @@ class PluginMydashboardHelper {
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
    }
 
-   static function getGraphHeader($widgetId, $name, $onsubmit, $opt, $criterias, $export = true, $canvas = true) {
+   static function getGraphHeader($params) {
 
       $graph = "<div class='bt-row'>";
-      if ($export == true) {
+      if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-8 left'>";
       } else {
          $graph .= "<div class='bt-col-md-12 left'>";
       }
-      if (count($criterias) > 0){
-         $graph .= PluginMydashboardHelper::getForm($widgetId, $onsubmit, $opt, $criterias);
+      if (count($params["criterias"]) > 0) {
+         $graph .= PluginMydashboardHelper::getForm($params["widgetId"], $params["onsubmit"], $params["opt"], $params["criterias"]);
       }
       $graph .= "</div>";
-      if ($export == true) {
+      if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
+         $name = $params['name'];
          $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>" . __("Save as PNG", "mydashboard") . "</button>";
          $graph .= "</div>";
       }
       $graph .= "</div>";
-      if ($export == true) {
+      if ($params["canvas"] == true) {
+         if ($params["nb"] < 1) {
+            $graph .= "<div align='center'><br><br><h3><span class ='maint-color'>";
+            $graph .= __("No item found");
+            $graph .= "</span></h3></div>";
+         }
          $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
          $graph .= "<canvas id=\"$name\"></canvas>";
          $graph .= "</div>";
       }
-
 
       return $graph;
    }
@@ -269,16 +274,16 @@ class PluginMydashboardHelper {
       }
       if (in_array("users_id", $criterias)) {
          $params = array('name'     => "users_id",
-                       'value'    => $opt['users_id'],
-                       'right'    => "interface",
-                       'comments' => 1,
-                       'entity'   => $_SESSION["glpiactiveentities"],
-                       'width'    => '50%',
-                       'display'  => false
+                         'value'    => $opt['users_id'],
+                         'right'    => "interface",
+                         'comments' => 1,
+                         'entity'   => $_SESSION["glpiactiveentities"],
+                         'width'    => '50%',
+                         'display'  => false
          );
-         $form .= __('User');
-         $form .= "&nbsp;";
-         $form .= User::dropdown($params);
+         $form   .= __('User');
+         $form   .= "&nbsp;";
+         $form   .= User::dropdown($params);
          if ($count > 1) {
             $form .= "</br></br>";
          }
@@ -572,24 +577,8 @@ class PluginMydashboardHelper {
     */
    static function monthDropdown($name = "month", $selected = null) {
 
-//      $dd = "<select name='$name'>";
-
       $monthsarray = Toolbox::getMonthsOfYearArray();
 
-//      foreach ($monthsarray as $k => $month) {
-//
-//         $label = $monthsarray[$k];
-//
-//         $dd .= '<option value="' . $k . '"';
-//         if ($k == $selected) {
-//            $dd .= ' selected';
-//         }
-//         /*** get the month ***/
-//         $dd .= '>' . $label . '</option>';
-//      }
-//
-//      $dd .= "</select>";
-//
       $opt = ['value'   => $selected,
               'display' => false];
 

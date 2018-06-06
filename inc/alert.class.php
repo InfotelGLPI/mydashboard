@@ -211,7 +211,15 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
             $criterias = ['groups_id'];
-            $table     = PluginMydashboardHelper::getGraphHeader($widgetId, 'BacklogBarChart', false, $opt, $criterias, false, false);
+            $params    = ["widgetId"  => $widgetId,
+                          "name"      => 'PluginMydashboardAlert4',
+                          "onsubmit"  => false,
+                          "opt"       => $opt,
+                          "criterias" => $criterias,
+                          "export"    => false,
+                          "canvas"    => false,
+                          "nb"        => 1];
+            $table     = PluginMydashboardHelper::getGraphHeader($params);
 
             $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
@@ -526,8 +534,15 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
             $criterias = ['groups_id'];
-            $table     = PluginMydashboardHelper::getGraphHeader($widgetId, 'BacklogBarChart', false, $opt, $criterias, false, false);
-
+            $params    = ["widgetId"  => $widgetId,
+                          "name"      => 'PluginMydashboardAlert5',
+                          "onsubmit"  => false,
+                          "opt"       => $opt,
+                          "criterias" => $criterias,
+                          "export"    => false,
+                          "canvas"    => false,
+                          "nb"        => 1];
+            $table     = PluginMydashboardHelper::getGraphHeader($params);
 
             $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                            FROM `glpi_tickets`

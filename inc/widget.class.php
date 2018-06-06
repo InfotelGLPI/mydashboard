@@ -210,7 +210,8 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return string
     */
    static function loadWidget($classname, $widgetindex, $parent, $class, $opt = []) {
-
+      global $CFG_GLPI;
+      
       if (isset($classname) && isset($widgetindex)) {
 
          $classname   = $classname;
@@ -238,9 +239,13 @@ class PluginMydashboardWidget extends CommonDBTM {
                //            $widgetContent = json_decode($jsondatas);
                //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
                //We prepare a "JSon object" compatible with sDashboard
+               $widgetTitle = $widget->getWidgetTitle();
+//               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+//                  $widgetTitle .= " (" . $widget->getWidgetId() . ")";
+//               }
                $json =
                   [
-                     "widgetTitle"     => $widget->getWidgetTitle(),
+                     "widgetTitle"     => $widgetTitle,
                      "widgetComment"     => $widget->getWidgetComment(),
                      "widgetId"        => $widget->getWidgetId(),
                      "widgetType"      => $widget->getWidgetType(),
@@ -333,12 +338,18 @@ class PluginMydashboardWidget extends CommonDBTM {
                   }
                   $rand      = mt_rand();
                   $languages = json_encode($menu->getJsLanguages("datatables"));
-
+                  $display_count_on_home = $CFG_GLPI['display_count_on_home'];
+                  $user = new User();
+                  if ($user->getFromDB(Session::getLoginUserID())) {
+                     $user->computePreferences();
+                     $display_count_on_home = $user->fields['display_count_on_home'];
+                  }
                   $widgetdisplay = "<script type='text/javascript'>
                //         setTimeout(function () {
                            $.fn.dataTable.moment('$mask');
                            $('#$widgetindex$rand').DataTable(
                                {
+                               'iDisplayLength' : $display_count_on_home,
                                'order': $order,
                                'columnDefs' :$defs,
                                rowReorder: {
