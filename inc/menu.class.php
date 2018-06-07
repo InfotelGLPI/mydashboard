@@ -859,6 +859,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $grid = [];
 
       $list = $this->getDashboardForUser($this->users_id);
+      $data = [];
       if (count($list) > 0) {
          foreach ($list as $k => $v) {
             $id = PluginMydashboardWidget::getGsID($v);
