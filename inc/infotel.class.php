@@ -137,6 +137,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
 
+            $groups_id = 0;
             if (isset($this->preferences['prefered_group'])
                 && $this->preferences['prefered_group'] > 0
                 && !isset($opt['groups_id'])) {
@@ -1672,7 +1673,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
-
+            
+            $groups_id = 0;
             if (isset($this->preferences['prefered_group'])
                 && $this->preferences['prefered_group'] > 0
                 && !isset($opt['groups_id'])) {
@@ -1816,6 +1818,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $entities = self::getSpecificEntityRestrict("glpi_tickets", $opt);
             
+            $groups_id = 0;
             if (isset($this->preferences['prefered_group'])
                 && $this->preferences['prefered_group'] > 0
                 && !isset($opt['groups_id'])) {
