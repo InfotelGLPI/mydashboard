@@ -77,6 +77,13 @@ class PluginMydashboardHelper {
    }
 
    /**
+    * @return mixed
+    */
+   static function getReplaceCentralConf() {
+      return self::getConfigField("replace_central");
+   }
+
+   /**
     * Get a specific field of the config
     *
     * @param string $fieldname

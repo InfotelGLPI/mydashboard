@@ -107,6 +107,11 @@ class PluginMydashboardConfig extends CommonDBTM {
       Dropdown::showYesNo("display_plugin_widget", $this->fields['display_plugin_widget']);
       echo "</td>";
       echo "</tr>";
+
+      echo "<tr class='tab_bg_1'><td>" . __("Replace central interface", "mydashboard") . "</td>";
+      echo "<td>";
+      Dropdown::showYesNo("replace_central", $this->fields['replace_central']);
+      echo "</td>";
       echo "</tr>";
 
       $this->showFormButtons($options);
@@ -129,6 +134,7 @@ class PluginMydashboardConfig extends CommonDBTM {
          $input['enable_fullscreen']     = "1";
          $input['display_menu']          = "1";
          $input['display_plugin_widget'] = "1";
+         $input['replace_central']       = "1";
          $this->add($input);
       }
    }

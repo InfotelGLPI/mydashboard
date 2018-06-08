@@ -61,7 +61,7 @@ function plugin_mydashboard_install() {
       $mig = new Migration("1.0.3");
 
       $configs         = getAllDatasFromTable("glpi_plugin_mydashboard_configs");
-      $replace_central = 0;
+      $replace_central = 1;
       //Basically there is only one config for Dashboard (this foreach may be useless)
       foreach ($configs as $config) {
          $replace_central = $config['replace_central'];
@@ -71,7 +71,7 @@ function plugin_mydashboard_install() {
                      "bool",
                      [
                         "update" => $replace_central,
-                        "value"  => 0
+                        "value"  => 1
                      ]);
 
       $mig->dropField("glpi_plugin_mydashboard_configs", "replace_central");
@@ -132,6 +132,13 @@ function plugin_mydashboard_install() {
       $mig->executeMigration();
       include_once(GLPI_ROOT . "/plugins/mydashboard/install/update_133_150.php");
       update133to150();
+   }
+
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","replace_central",false)) {
+      $mig = new Migration("1.5.1");
+      //new table to add global config for replace_central
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.5.1.sql");
+      $mig->executeMigration();
    }
 
    PluginMydashboardProfile::initProfile();
