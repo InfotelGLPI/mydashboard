@@ -149,7 +149,7 @@ class PluginMydashboardPreference extends CommonDBTM
       $input['automatic_refresh'] = "0";
       $input['automatic_refresh_delay'] = "10";
       $input['nb_widgets_width'] = "3";
-      $input['replace_central'] = "0";
+      $input['replace_central'] = "1";
       $input['prefered_group'] = "0";
       $input['prefered_entity'] = "0";
       $input['edit_mode'] = "0";

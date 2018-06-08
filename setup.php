@@ -81,27 +81,35 @@ function plugin_init_mydashboard() {
                 && $_SESSION["glpi_plugin_mydashboard_loaded"] == 0) {
 
                if (strpos($_SERVER['REQUEST_URI'], 'central.php?redirect') === false) {
-                  if ($_SESSION['glpiactiveprofile']['interface'] == 'central'
-                      && (!$_SESSION['glpiactiveprofile']['create_ticket_on_login'])) {
-                     $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                     Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
+                  if($_SESSION['glpiactiveprofile']['interface'] == 'central'){
+                     if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
+                        $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
+                        Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
 
-                  } else if (!$plugin->isActivated("servicecatalog")
-                             || Session::haveRight("plugin_servicecatalog", 1)) {
-                     $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                     Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
+                     } else if (!$plugin->isActivated("servicecatalog")
+                                || Session::haveRight("plugin_servicecatalog", 1)) {
+                        $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
+                        Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
 
-                  } else if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
-                     $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                     Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
+                     } else if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
+                        $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
+                        Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
+                     }
                   }
                }
             }
 
-            if (PluginMydashboardHelper::getReplaceCentral()
-                && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-               $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
+            if($_SESSION['glpiactiveprofile']['interface'] == 'central'){
+               if (PluginMydashboardHelper::getReplaceCentral()
+                   && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])){
+                  $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
+               } else if (PluginMydashboardHelper::getReplaceCentralConf()
+                          && PluginMydashboardHelper::getReplaceCentral()
+                          && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])){
+                  $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
+               }
             }
+
             Plugin::registerClass('PluginMydashboardPreference',
                                   ['addtabon' => 'Preference']);
 
@@ -124,7 +132,7 @@ function plugin_version_mydashboard() {
 
    return [
       'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => '1.5.0',
+      'version'        => '1.5.1',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
