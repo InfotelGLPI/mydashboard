@@ -158,7 +158,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       Html::requireJs('mydashboard');
       //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
-      $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
+      $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
 
       // validation des droits
       if (!Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {

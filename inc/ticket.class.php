@@ -157,7 +157,7 @@ class PluginMydashboardTicket {
          //Global
          case "ticketcountwidget":
             if ($showticket || $createticket) {
-               return self::showCentralCount($createticket && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'));
+               return self::showCentralCount($createticket && (Session::getCurrentInterface() == 'helpdesk'));
             }
             break;
          case "ticketcountwidget2":

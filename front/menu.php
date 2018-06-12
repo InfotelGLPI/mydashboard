@@ -29,7 +29,7 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginMydashboardMenu::getTypeName(1), '', "tools", "pluginmydashboardmenu");
 } else {
    Html::helpHeader(PluginMydashboardMenu::getTypeName(1));
@@ -103,7 +103,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 } else {
    Html::displayRightError();
 }
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

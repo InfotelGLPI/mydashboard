@@ -47,7 +47,7 @@ class PluginMydashboardUserWidget extends CommonDBTM {
       //1 for central
       //0 for interface
       if ($interface == -1) {
-         $this->interface = ($_SESSION['glpiactiveprofile']['interface'] == 'central') ? 1 : 0;
+         $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
       } else {
          $this->interface = $interface;
       }

@@ -28,7 +28,7 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu");
 } else {
    Html::helpHeader(PluginMydashboardMenu::getTypeName(2));

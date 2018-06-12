@@ -81,7 +81,7 @@ function plugin_init_mydashboard() {
                 && $_SESSION["glpi_plugin_mydashboard_loaded"] == 0) {
 
                if (strpos($_SERVER['REQUEST_URI'], 'central.php?redirect') === false) {
-                  if($_SESSION['glpiactiveprofile']['interface'] == 'central'){
+                  if(Session::getCurrentInterface() == 'central'){
                      if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
                         Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
@@ -99,7 +99,7 @@ function plugin_init_mydashboard() {
                }
             }
 
-            if($_SESSION['glpiactiveprofile']['interface'] == 'central'){
+            if(Session::getCurrentInterface() == 'central'){
                if (PluginMydashboardHelper::getReplaceCentral()
                    && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])){
                   $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
