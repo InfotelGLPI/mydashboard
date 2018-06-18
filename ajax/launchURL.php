@@ -238,7 +238,19 @@ if (isset($_POST["widget"])
       }
       $options['criteria'][3]['value']      = $_POST["entities_id"];
       $options['criteria'][3]['link']       = 'AND';
-      
+
+      if (empty($_POST["groups_id"])) {
+         $options['criteria'][4]['field']      = 8; // technician group
+         $options['criteria'][4]['searchtype'] = 'contains';
+         $options['criteria'][4]['value']      = '^$';
+         $options['criteria'][4]['link']       = 'AND';
+      } else {
+         $options['criteria'][4]['field']      = 8; // technician group
+         $options['criteria'][4]['searchtype'] = 'equals';
+         $options['criteria'][4]['value']      = $_POST["groups_id"];
+         $options['criteria'][4]['link']       = 'AND';
+      }
+
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
       echo $link;

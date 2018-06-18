@@ -3026,25 +3026,31 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "27":
 
-            $criterias = ['entities_id', 'is_recursive', 'type'];
+            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
             $options   = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
-
+            $opt                  = $options['opt'];
+            $crit                 = $options['crit'];
+            $type                 = $opt['type'];
             $type_criteria        = $crit['type'];
             $entities_criteria    = $crit['entities_id'];
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
-
-            $query = "SELECT DISTINCT
+            $groups_criteria      = $crit['groups_id'];
+            $query                = "SELECT DISTINCT
                            `glpi_tickets`.`locations_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
+                        LEFT JOIN `glpi_groups_tickets` 
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
                         WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
+            }
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `locations_id` LIMIT 10";
 
@@ -3127,7 +3133,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        $.ajax({
                           url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
                           type: 'POST',
-                          data:{locations_id:locations_id, entities_id:$entities_id_criteria, sons:$sons_criteria, widget:'$widgetId'},
+                          data:{locations_id:locations_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type, 
+                                groups_id:$groups_criteria, 
+                                widget:'$widgetId'},
                           success:function(response) {
                                   window.open(response);
                                 }
@@ -3156,7 +3167,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "28":
 
-            $criterias = ['entities_id', 'is_recursive', 'type'];
+            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
@@ -3165,11 +3176,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $opt  = $options['opt'];
             $crit = $options['crit'];
 
-            $type_criteria        = $crit['type'];
-            $entities_criteria    = $crit['entities_id'];
-
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Map - Opened tickets by location", "mydashboard");
+            $type_criteria     = $crit['type'];
+            $entities_criteria = $crit['entities_id'];
+            $groups_criteria   = $crit['groups_id'];
+            $widget            = new PluginMydashboardHtml();
+            $title             = __("Map - Opened tickets by location", "mydashboard");
             $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude). You must define a Google API Key and add it into setup", "mydashboard"));
             $widget->setWidgetTitle($title);
             $query = "SELECT DISTINCT
@@ -3181,7 +3192,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
                         LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+                        LEFT JOIN `glpi_groups_tickets` 
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
                         WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
+            }
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `glpi_tickets`.`locations_id`";
 
