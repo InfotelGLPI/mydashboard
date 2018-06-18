@@ -927,7 +927,7 @@ div.dt-button-background {
    position: static;
 }
 
-#map_canvas {
+#TicketsByLocationMap {
    width: 100%;
    height: 100%;
 }

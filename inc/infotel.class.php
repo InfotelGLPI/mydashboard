@@ -3044,7 +3044,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            `glpi_tickets`.`locations_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria $entities_criteria ";
+                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria ";
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `locations_id` LIMIT 10";
 
@@ -3156,6 +3156,18 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "28":
 
+            $criterias = ['entities_id', 'is_recursive', 'type'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt  = $options['opt'];
+            $crit = $options['crit'];
+
+            $type_criteria        = $crit['type'];
+            $entities_criteria    = $crit['entities_id'];
+
             $widget = new PluginMydashboardHtml();
             $title  = __("Map - Opened tickets by location", "mydashboard");
             $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude). You must define a Google API Key and add it into setup", "mydashboard"));
@@ -3169,8 +3181,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
                         LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                        WHERE NOT `glpi_tickets`.`is_deleted` "
-                     . getEntitiesRestrictRequest("AND", "glpi_tickets");
+                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria ";
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `glpi_tickets`.`locations_id`";
 
@@ -3193,7 +3204,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $locations .= "]";
             $infos     .= "]";
 
-            $graph = "<script>
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'TicketsByLocationMap',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => false,
+                       "canvas"    => false,
+                       "nb"        => $nb];
+            $graph  = PluginMydashboardHelper::getGraphHeader($params);
+
+            $graph .= "<script>
                function initialize() {
                    var map;
                    var bounds = new google.maps.LatLngBounds();
@@ -3207,7 +3228,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                    //http://chrisltd.com/blog/2013/08/google-map-random-color-pins/
                    //https://wrightshq.com/playground/placing-multiple-markers-on-a-google-map-using-api-3/
                    // Display a map on the page
-                   map = new google.maps.Map(document.getElementById(\"map_canvas\"), mapOptions);
+                   map = new google.maps.Map(document.getElementById(\"TicketsByLocationMap\"), mapOptions);
                    map.setTilt(45);
                        
                    // Multiple Markers
@@ -3279,8 +3300,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                    });
                    </script>";
             $graph .= "<div id=\"map_wrapper\">";
-            $graph .= "<div id=\"map_canvas\" class=\"mapping\"></div>";
+            $graph .= "<div id=\"TicketsByLocationMap\" class=\"mapping\"></div>";
             $graph .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
                $graph
