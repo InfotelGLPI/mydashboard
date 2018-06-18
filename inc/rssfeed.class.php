@@ -44,7 +44,7 @@ class PluginMydashboardRSSFeed {
 
       $array = [];
 
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
+      if (Session::getCurrentInterface() != 'helpdesk') {
          $array = [
             PluginMydashboardMenu::$RSS_VIEW =>
                [
@@ -92,7 +92,7 @@ class PluginMydashboardRSSFeed {
       if ($personal) {
 
          /// Personal notes only for central view
-         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+         if (Session::getCurrentInterface() == 'helpdesk') {
             return false;
          }
 
@@ -112,7 +112,7 @@ class PluginMydashboardRSSFeed {
 
          $restrict_user = '1';
          // Only personal on central so do not keep it
-         if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+         if (Session::getCurrentInterface() == 'central') {
             $restrict_user = "`glpi_rssfeeds`.`users_id` <> '$users_id'";
          }
 
@@ -123,7 +123,7 @@ class PluginMydashboardRSSFeed {
                          AND " . RSSFeed::addVisibilityRestrict() . "
                    ORDER BY `glpi_rssfeeds`.`name`";
 
-         if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
+         if (Session::getCurrentInterface() != 'helpdesk') {
             $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Public RSS feed', 'Public RSS feeds', 2) . "</a>";
          } else {
             $titre = _n('Public RSS feed', 'Public RSS feeds', 2);

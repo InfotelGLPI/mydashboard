@@ -37,7 +37,7 @@ class PluginMydashboardReminder {
     */
    function getWidgetsForItem() {
       $array = [];
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
+      if (Session::getCurrentInterface() != 'helpdesk') {
          $array = [
             PluginMydashboardMenu::$MY_VIEW =>
                [
@@ -92,7 +92,7 @@ class PluginMydashboardReminder {
       if ($personal) {
 
          /// Personal notes only for central view
-         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+         if (Session::getCurrentInterface() == 'helpdesk') {
             return false;
          }
 
@@ -114,7 +114,7 @@ class PluginMydashboardReminder {
 
          $restrict_user = '1';
          // Only personal on central so do not keep it
-         if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+         if (Session::getCurrentInterface() == 'central') {
             $restrict_user = "`glpi_reminders`.`users_id` <> '$users_id'";
          }
 
@@ -126,7 +126,7 @@ class PluginMydashboardReminder {
                          AND " . Reminder::addVisibilityRestrict() . "
                    ORDER BY `glpi_reminders`.`name`";
 
-         if ($_SESSION['glpiactiveprofile']['interface'] != 'helpdesk') {
+         if (Session::getCurrentInterface() != 'helpdesk') {
             $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" .
                _n('Public reminder', 'Public reminders', 2) . "</a>";
          } else {

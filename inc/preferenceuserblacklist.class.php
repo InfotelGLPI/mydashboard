@@ -41,7 +41,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
       $options['colspan'] = 1;
 
       //We don't display this form in helpdesk interface
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          return false;
       }
 

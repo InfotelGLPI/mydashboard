@@ -1180,7 +1180,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $wl            .= "<div class='weather_block'>";
       $restrict_user = '1';
       // Only personal on central so do not keep it
-      //      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
 
@@ -1269,7 +1269,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $wl            .= "<div class='weather_block'>";
       $restrict_user = '1';
       // Only personal on central so do not keep it
-      //      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
 
@@ -1485,7 +1485,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $restrict_user = '1';
       // Only personal on central so do not keep it
-      //      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
 
