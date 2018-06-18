@@ -153,12 +153,17 @@ class PluginMydashboardPreference extends CommonDBTM
       $input['prefered_group'] = "0";
       $input['prefered_entity'] = "0";
       $input['edit_mode'] = "0";
+      $input['drag_mode'] = "0";
       $this->add($input);
 
    }
 
-   public static function checkIfPreferenceExists($users_id) {
+   public static function checkEditMode($users_id) {
       return self::checkPreferenceValue('edit_mode', $users_id);
+   }
+
+   public static function checkDragMode($users_id) {
+      return self::checkPreferenceValue('drag_mode', $users_id);
    }
 
    public static function checkPreferenceValue($field, $users_id = 0) {

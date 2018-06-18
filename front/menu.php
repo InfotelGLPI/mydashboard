@@ -55,7 +55,6 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <link type="text/css" href="../lib/datatables/css/buttons.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../lib/gridstack/src/gridstack.css" rel="stylesheet">
            <link type="text/css" href="../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
-
            <script src="../lib/lodash.min.js"></script>
            <script src="../lib/gridstack/src/gridstack.js"></script>
            <script src="../lib/gridstack/src/gridstack.jQueryUI.js"></script>
@@ -76,23 +75,28 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/countUp.min.js"></script>
            <script src="../lib/countUp-jquery.js"></script>
 
+          <?php
+          $apikey = PluginMydashboardHelper::getGoogleApiKey();
+          echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";
+          ?>
+
        </head>
        <body>
 
-         <?php
+       <?php
 
-         $profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
-         $predefined_grid = 0;
+       $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+       $predefined_grid = 0;
 
-         if (isset($_POST["profiles_id"])) {
-            $profile = $_POST["profiles_id"];
-         }
-         if (isset($_POST["predefined_grid"])) {
-            $predefined_grid = $_POST["predefined_grid"];
-         }
-         $dashboard = new PluginMydashboardMenu();
-         $dashboard->loadDashboard($profile, $predefined_grid);
-         ?>
+       if (isset($_POST["profiles_id"])) {
+          $profile = $_POST["profiles_id"];
+       }
+       if (isset($_POST["predefined_grid"])) {
+          $predefined_grid = $_POST["predefined_grid"];
+       }
+       $dashboard = new PluginMydashboardMenu();
+       $dashboard->loadDashboard($profile, $predefined_grid);
+       ?>
 
        </body>
        </html>

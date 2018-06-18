@@ -229,7 +229,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
       //      $_SESSION['plugin_mydashboard_editmode'] = false;
-      $edit = PluginMydashboardPreference::checkIfPreferenceExists(Session::getLoginUserID());
+      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
       if ($edit > 0) {
          echo $this->getWidgetsList($selected_profile, $edit);
       }
@@ -288,6 +288,9 @@ class PluginMydashboardMenu extends CommonGLPI {
    function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0) {
 
       if ($this->interface == 1) {
+
+         $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
+
          if ($edit > 0) {
 
             echo "<form id=\"editmode\" class='plugin_mydashboard_header_title' method='post' 
@@ -377,11 +380,24 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
             echo "</a>";
 
-            echo "<a id='save-grid' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-floppy-o fa-2x'></i>";
-            echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
-            echo "</a>";
+            if ($drag < 1) {
+               echo "<a id='drag-grid' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
+            if ($drag > 0) {
 
+               echo "<a id='undrag-grid' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
+               echo "</a>";
+
+               echo "<a id='save-grid' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-floppy-o fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
             if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
                echo "<a id='edit-default-grid' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
                echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-cogs fa-2x'></i>";
@@ -595,7 +611,6 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function getWidgetsListFromPlugins($used = []) {
       $plugin_names = $this->getPluginsNames();
-      $is_empty     = true;
       $wl           = "";
       foreach ($this->widgetlist as $plugin => $widgetclasses) {
          if ($plugin == "GLPI") {
@@ -870,8 +885,8 @@ class PluginMydashboardMenu extends CommonGLPI {
          $grid = json_encode($data);
       }
       //LOAD WIDGETS
-      $edit = PluginMydashboardPreference::checkIfPreferenceExists(Session::getLoginUserID());
-
+      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+      $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
       //WITHOUTH PREFS
       $dashboard     = new PluginMydashboardDashboard();
       $options_users = ["users_id" => Session::getLoginUserID(), "profiles_id" => $active_profile];
@@ -941,16 +956,19 @@ class PluginMydashboardMenu extends CommonGLPI {
       $msg_delete    = __('Delete widget', 'mydashboard');
       $msg_error     = __('No data available', 'mydashboard');
       $msg_refresh   = __('Refresh widget', 'mydashboard');
-      $disableResize = 'false';
+      $disableResize = 'true';
       $disableDrag   = 'true';
       $delete_button = 'false';
 
       if ($this->interface == 1) {
-         $disableResize = 'false';
-         $disableDrag   = 'false';
-
+         if ($drag > 0) {
+            $disableResize = 'false';
+            $disableDrag   = 'false';
+         }
          if ($edit > 0) {
             $delete_button = 'true';
+            $disableResize = 'false';
+            $disableDrag   = 'false';
          }
       }
       echo "<div id='mygrid' class='mygrid'>";
@@ -1079,6 +1097,28 @@ class PluginMydashboardMenu extends CommonGLPI {
                        });
                     return false;
                 }.bind(this);
+                this.dragGrid = function () {
+                  $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
+                       type: 'POST',
+                       data:{drag_mode:1},
+                       success:function(data) {
+                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                          }
+                       });
+                    return false;
+                }.bind(this);
+                this.undragGrid = function () {
+                  $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
+                       type: 'POST',
+                       data:{drag_mode:0},
+                       success:function(data) {
+                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                          }
+                       });
+                    return false;
+                }.bind(this);
                 this.editGrid = function () {
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
@@ -1114,6 +1154,8 @@ class PluginMydashboardMenu extends CommonGLPI {
                 }.bind(this);
                 $('#save-grid').click(this.saveGrid);
                 $('#edit-grid').click(this.editGrid);
+                $('#drag-grid').click(this.dragGrid);
+                $('#undrag-grid').click(this.undragGrid);
                 $('#edit-default-grid').click(this.editDefaultGrid);
                 $('#close-edit').click(this.closeEdit);
                 $('#save-default-grid').click(this.saveDefaultGrid);

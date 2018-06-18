@@ -56,7 +56,7 @@
 }
 
 .alert_date {
-   font-style:italic;
+   font-style: italic;
 }
 
 .fa-alert-4 {
@@ -68,7 +68,7 @@
 }
 
 .fa-alert-green {
-   color:forestgreen;
+   color: forestgreen;
 }
 
 .fa-alert-yellow {
@@ -76,20 +76,20 @@
 }
 
 .fa-alert-orange {
-   color:orange;
+   color: orange;
 }
 
 .fa-alert-lightred {
-   color:indianred;
+   color: indianred;
 }
 
 .fa-alert-red {
-   color:darkred;
+   color: darkred;
 }
 
 #display-sc {
    /*width: 100%;*/
-   text-align:left;
+   text-align: left;
    padding-left: 1%;
 }
 
@@ -120,26 +120,31 @@
    display: inline-block;
    margin-right: 5px;
 }
+
 .alert_impact1 {
    background-color: forestgreen;
 }
+
 .alert_impact2 {
    background-color: #fff03a;
 }
+
 .alert_impact3 {
    background-color: orange;
 }
+
 .alert_impact4 {
    background-color: indianred;
 }
+
 .alert_impact5 {
    background-color: indianred;
 }
 
 .weather_block {
    text-align: center;
-   margin:0 auto;
-   color:#000;
+   margin: 0 auto;
+   color: #000;
    font-size: 12px;
    background-color: #FFF;
    width: 80%;
@@ -149,7 +154,7 @@
    text-align: left;
    padding-bottom: 10px;
    margin-bottom: 10px;
-   color:#000;
+   color: #000;
    font-size: 12px;
    border-radius: 5px 10px 0 5px;
    border: 1px solid #e6e6e6;
@@ -159,6 +164,7 @@
    background-color: #FFF;
    /*width: 50%;*/
 }
+
 .info-ul {
    position: relative !important;
 }
@@ -442,7 +448,6 @@ div#tabcontent{
    margin: 0px;
 }
 
-
 .plugin_mydashboard_menuDashboardListTitle2 {
    margin-left: 5px;
 }
@@ -464,7 +469,6 @@ div#tabcontent{
    content: "\f0d7";
    font-family: FontAwesome;
 }
-
 
 .plugin_mydashboard_menuDashboard li {
    font-size: 12px;
@@ -714,7 +718,7 @@ svg:hover {
 
 /*****Gridstack******/
 
-#mygrid{
+#mygrid {
    width: 98%;
    margin-left: 10px;
    margin-right: 5px;
@@ -819,31 +823,31 @@ div.dt-button-background {
 /*-=-=-=-=-=-=-=-=-=-=-=- */
 
 /*.col_half {*/
-   /*width: 49%;*/
+/*width: 49%;*/
 /*}*/
 
 /*.col_third {*/
-   /*width: 32%;*/
+/*width: 32%;*/
 /*}*/
 
 /*.col_fourth {*/
-   /*width: 23.5%;*/
+/*width: 23.5%;*/
 /*}*/
 
 /*.col_fifth {*/
-   /*width: 18.4%;*/
+/*width: 18.4%;*/
 /*}*/
 
 /*.col_sixth {*/
-   /*width: 15%;*/
+/*width: 15%;*/
 /*}*/
 
 /*.col_three_fourth {*/
-   /*width: 74.5%;*/
+/*width: 74.5%;*/
 /*}*/
 
 /*.col_twothird {*/
-   /*width: 66%;*/
+/*width: 66%;*/
 /*}*/
 
 /*.col_half,*/
@@ -852,14 +856,14 @@ div.dt-button-background {
 /*.col_fourth,*/
 /*.col_three_fourth,*/
 /*.col_fifth {*/
-   /*!*position: relative;*!*/
-   /*!*display: inline-block;*!*/
-   /*!*margin-right: 2%;*!*/
-   /*!*margin-bottom: 20px;*!*/
+/*!*position: relative;*!*/
+/*!*display: inline-block;*!*/
+/*!*margin-right: 2%;*!*/
+/*!*margin-bottom: 20px;*!*/
 /*}*/
 
 /*.end {*/
-   /*margin-right: 0 !important;*/
+/*margin-right: 0 !important;*/
 /*}*/
 
 /* Column Grids End */
@@ -884,6 +888,7 @@ div.dt-button-background {
 .count-number {
    font-size: 20px;
 }
+
 .count-title {
    font-size: 40px;
    font-weight: normal;
@@ -915,4 +920,14 @@ div.dt-button-background {
    padding: .2em .25em .15em;
    border: solid .08em indianred;
    border-radius: .1em;
+}
+
+#map_wrapper {
+   height: 600px;
+   position: static;
+}
+
+#map_canvas {
+   width: 100%;
+   height: 100%;
 }

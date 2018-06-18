@@ -113,6 +113,12 @@ class PluginMydashboardConfig extends CommonDBTM {
       Dropdown::showYesNo("replace_central", $this->fields['replace_central']);
       echo "</td>";
       echo "</tr>";
+      
+      echo "<tr class='tab_bg_1'><td>" . __("Google API Key", "mydashboard") . "</td>";
+      echo "<td>";
+      Html::autocompletionTextField($this, "google_api_key");
+      echo "</td>";
+      echo "</tr>";
 
       $this->showFormButtons($options);
    }
@@ -135,6 +141,7 @@ class PluginMydashboardConfig extends CommonDBTM {
          $input['display_menu']          = "1";
          $input['display_plugin_widget'] = "1";
          $input['replace_central']       = "1";
+         $input['google_api_key']        = "";
          $this->add($input);
       }
    }

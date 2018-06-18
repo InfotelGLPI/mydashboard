@@ -134,9 +134,8 @@ function plugin_mydashboard_install() {
       update133to150();
    }
 
-   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","replace_central",false)) {
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","google_api_key")) {
       $mig = new Migration("1.5.1");
-      //new table to add global config for replace_central
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.5.1.sql");
       $mig->executeMigration();
    }

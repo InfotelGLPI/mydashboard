@@ -84,6 +84,13 @@ class PluginMydashboardHelper {
    }
 
    /**
+    * @return mixed
+    */
+   static function getGoogleApiKey() {
+      return self::getConfigField("google_api_key");
+   }
+
+   /**
     * Get a specific field of the config
     *
     * @param string $fieldname
@@ -131,7 +138,7 @@ class PluginMydashboardHelper {
       $graph .= "</div>";
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
-         $name = $params['name'];
+         $name  = $params['name'];
          $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>" . __("Save as PNG", "mydashboard") . "</button>";
          $graph .= "</div>";
       }
@@ -148,6 +155,137 @@ class PluginMydashboardHelper {
       }
 
       return $graph;
+   }
+
+
+   /**
+    * @param $table
+    * @param $params
+    *
+    * @return string
+    */
+   private static function getSpecificEntityRestrict($table, $params) {
+
+      if (isset($params['entities_id']) && $params['entities_id'] == "") {
+         $params['entities_id'] = $_SESSION['glpiactive_entity'];
+      }
+      if (isset($params['entities_id']) && ($params['entities_id'] != -1)) {
+         if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
+            $entities = " AND `$table`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $params['entities_id'])) . ") ";
+         } else {
+            $entities = " AND `$table`.`entities_id` = " . $params['entities_id'] . " ";
+         }
+      } else {
+         if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
+            $entities = " AND `$table`.`entities_id` IN  (" . implode(",", getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])) . ") ";
+         } else {
+            $entities = " AND `$table`.`entities_id` = " . $_SESSION['glpiactive_entity'] . " ";
+         }
+      }
+      return $entities;
+   }
+
+   static function manageCriterias($params) {
+
+      $criterias = $params['criterias'];
+
+      if (Session::isMultiEntitiesMode()) {
+         if (in_array("entities_id", $criterias)) {
+            if (isset($params['preferences']['prefered_entity'])
+                && $params['preferences']['prefered_entity'] > 0
+                && count($params['opt']) < 1) {
+               $opt['entities_id'] = $params['preferences']['prefered_entity'];
+            } elseif (isset($params['opt']['entities_id'])
+                      && $params['opt']['entities_id'] > 0) {
+               $opt['entities_id'] = $params['opt']['entities_id'];
+            } else {
+               $opt['entities_id'] = $_SESSION['glpiactive_entity'];
+            }
+         }
+         $crit['crit']['sons'] = 0;
+         if (in_array("is_recursive", $criterias)) {
+            if (!isset($params['opt']['sons'])) {
+               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+            } else {
+               $opt['sons'] = $params['opt']['sons'];
+            }
+            $crit['crit']['sons'] = $opt['sons'];
+         }
+
+         if (isset($opt)) {
+            $crit['crit']['entities_id'] = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+            $crit['crit']['entity']      = $opt['entities_id'];
+         }
+      }
+      $crit['crit']['groups_id'] = 0;
+      if (in_array("groups_id", $criterias)) {
+         if (isset($params['preferences']['prefered_group'])
+             && $params['preferences']['prefered_group'] > 0
+             && !isset($params['opt']['groups_id'])) {
+            $opt['groups_id']          = $params['preferences']['prefered_group'];
+            $crit['crit']['groups_id'] = $params['preferences']['prefered_group'];
+         } else if (isset($params['opt']['groups_id'])
+                    && $params['opt']['groups_id'] > 0) {
+            $opt['groups_id']          = $params['opt']['groups_id'];
+            $crit['crit']['groups_id'] = $params['opt']['groups_id'];
+         }
+      }
+      $opt['type']          = 0;
+      $crit['crit']['type'] = "AND 1 = 1";
+      if (in_array("type", $criterias)) {
+         if (isset($params['opt']["type"])
+             && $params['opt']["type"] > 0) {
+            $opt['type']          = $params['opt']['type'];
+            $crit['crit']['type'] = " AND `glpi_tickets`.`type` = '" . $params['opt']["type"] . "' ";
+         }
+      }
+
+      $year  = intval(strftime("%Y"));
+      $month = intval(strftime("%m") - 1);
+
+      if (in_array("month", $criterias)) {
+         if ($month > 0) {
+            $year        = strftime("%Y");
+            $opt["year"] = $year;
+         } else {
+            $month = 12;
+         }
+         if (isset($params['opt']["month"])
+             && $params['opt']["month"] > 0) {
+            $month        = $params['opt']["month"];
+            $opt['month'] = $params['opt']['month'];
+         } else {
+            $opt["month"] = $month;
+         }
+      }
+
+      if (in_array("year", $criterias)) {
+         if (isset($params['opt']["year"])
+             && $params['opt']["year"] > 0) {
+            $year        = $params['opt']["year"];
+            $opt['year'] = $params['opt']['year'];
+         } else {
+            $opt["year"] = $year;
+         }
+      }
+
+      $nbdays                    = date("t", mktime(0, 0, 0, $month, 1, $year));
+      $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' 
+                              AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+      $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' 
+                              AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+
+      $opt["users_id"] = $_SESSION['glpiID'];
+      if (in_array("users_id", $criterias)) {
+         if (isset($params['opt']['users_id']) && Session::haveRight("plugin_activity_all_users", 1)) {
+            $opt["users_id"]          = $params['opt']['users_id'];
+            $crit['crit']['users_id'] = $params['opt']['users_id'];
+         }
+      }
+
+      $crit['opt'] = $opt;
+
+      return $crit;
    }
 
    /**
@@ -273,7 +411,7 @@ class PluginMydashboardHelper {
       if (in_array("month", $criterias)) {
          $form .= __('Month', 'mydashboard');
          $form .= "&nbsp;";
-         $form .= self::monthDropdown("month", $opt['month']);
+         $form .= self::monthDropdown("month", (isset($opt['month']) ? $opt['month'] : 0));
          $form .= "&nbsp;";
          if ($count > 1) {
             $form .= "</br></br>";

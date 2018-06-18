@@ -43,7 +43,7 @@ if (isset($_POST["widget"])
    }
 } else if (isset($_POST["widget"])
            && $_POST["widget"] == "PluginMydashboardInfotel1") {
-
+//$criterias = ['entities_id', 'is_recursive', 'groups_id', 'type'];
    if (isset($_POST["datetik"])) {
       $options['reset']                     = 'reset';
       $options['criteria'][0]['field']      = 12; // status
@@ -67,6 +67,19 @@ if (isset($_POST["widget"])
          $options['criteria'][2]['value']      = $_POST["groups_id"];
          $options['criteria'][2]['link']       = 'AND';
       }
+      if ($_POST["type"] > 0) {
+         $options['criteria'][3]['field']      = 14; // type
+         $options['criteria'][3]['searchtype'] = 'equals';
+         $options['criteria'][3]['value']      = $_POST["type"];
+         $options['criteria'][3]['link']       = 'AND';
+      }
+      $options['criteria'][4]['field']      = 80; // entities
+      $options['criteria'][4]['searchtype'] = 'equals';
+      if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
+         $options['criteria'][4]['searchtype'] = 'under';
+      }
+      $options['criteria'][4]['value']      = $_POST["entities_id"];
+      $options['criteria'][4]['link']       = 'AND';
       
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
@@ -74,7 +87,7 @@ if (isset($_POST["widget"])
    }
 } else if (isset($_POST["widget"])
            && $_POST["widget"] == "PluginMydashboardInfotel2") {
-
+//   $criterias = ['type'];
    if (isset($_POST["priority_id"])) {
       $options['reset']                     = 'reset';
       $options['criteria'][0]['field']      = 12; // status
@@ -86,14 +99,20 @@ if (isset($_POST["widget"])
       $options['criteria'][1]['searchtype'] = 'equals';
       $options['criteria'][1]['value']      = $_POST["priority_id"];
       $options['criteria'][1]['link']       = 'AND';
-
+      
+      if ($_POST["type"] > 0) {
+         $options['criteria'][2]['field']      = 14; // type
+         $options['criteria'][2]['searchtype'] = 'equals';
+         $options['criteria'][2]['value']      = $_POST["type"];
+         $options['criteria'][2]['link']       = 'AND';
+      }
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
       echo $link;
    }
 } else if (isset($_POST["widget"])
            && $_POST["widget"] == "PluginMydashboardInfotel25") {
-
+//    $criterias = ['type'];
    if (isset($_POST["groups_id"])) {
       $options['reset']                     = 'reset';
       $options['criteria'][0]['field']      = 12; // status
@@ -112,6 +131,12 @@ if (isset($_POST["widget"])
          $options['criteria'][1]['value']      = $_POST["groups_id"];
          $options['criteria'][1]['link']       = 'AND';
       }
+      if ($_POST["type"] > 0) {
+         $options['criteria'][2]['field']      = 14; // type
+         $options['criteria'][2]['searchtype'] = 'equals';
+         $options['criteria'][2]['value']      = $_POST["type"];
+         $options['criteria'][2]['link']       = 'AND';
+      }
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
       echo $link;
@@ -119,7 +144,7 @@ if (isset($_POST["widget"])
 } else if (isset($_POST["widget"])
            && ($_POST["widget"] == "PluginMydashboardInfotel16"
                || $_POST["widget"] == "PluginMydashboardInfotel17")) {
-
+//$criterias = ['entities_id', 'is_recursive', 'groups_id'];
    if (isset($_POST["category_id"])) {
       $options['reset']                     = 'reset';
       $options['criteria'][0]['field']      = 12; // status
@@ -164,6 +189,55 @@ if (isset($_POST["widget"])
          $options['criteria'][3]['value']      = $_POST["groups_id"];
          $options['criteria'][3]['link']       = 'AND';
       }
+      
+      $options['criteria'][4]['field']      = 80; // entities
+      $options['criteria'][4]['searchtype'] = 'equals';
+      if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
+         $options['criteria'][4]['searchtype'] = 'under';
+      }
+      $options['criteria'][4]['value']      = $_POST["entities_id"];
+      $options['criteria'][4]['link']       = 'AND';
+      
+      $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+              Toolbox::append_params($options, "&");
+      echo $link;
+   }
+} else if (isset($_POST["widget"])
+           && $_POST["widget"] == "PluginMydashboardInfotel27") {
+//   $criterias = ['entities_id', 'is_recursive','type'];
+   if (isset($_POST["locations_id"])) {
+      $options['reset']                     = 'reset';
+      $options['criteria'][0]['field']      = 12; // status
+      $options['criteria'][0]['searchtype'] = 'equals';
+      $options['criteria'][0]['value']      = "notold";
+      $options['criteria'][0]['link']       = 'AND';
+
+      if (empty($_POST["locations_id"])) {
+         $options['criteria'][1]['field']      = 83; // location
+         $options['criteria'][1]['searchtype'] = 'contains';
+         $options['criteria'][1]['value']      = '^$';
+         $options['criteria'][1]['link']       = 'AND';
+      } else {
+         $options['criteria'][1]['field']      = 83; // location
+         $options['criteria'][1]['searchtype'] = 'equals';
+         $options['criteria'][1]['value']      = $_POST["locations_id"];
+         $options['criteria'][1]['link']       = 'AND';
+      }
+      
+      if ($_POST["type"] > 0) {
+         $options['criteria'][2]['field']      = 14; // type
+         $options['criteria'][2]['searchtype'] = 'equals';
+         $options['criteria'][2]['value']      = $_POST["type"];
+         $options['criteria'][2]['link']       = 'AND';
+      }
+      
+      $options['criteria'][3]['field']      = 80; // entities
+      $options['criteria'][3]['searchtype'] = 'equals';
+      if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
+         $options['criteria'][3]['searchtype'] = 'under';
+      }
+      $options['criteria'][3]['value']      = $_POST["entities_id"];
+      $options['criteria'][3]['link']       = 'AND';
       
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
