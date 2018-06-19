@@ -139,7 +139,7 @@ class PluginMydashboardPlanning {
             $content[$i]["name"] = Html::resume_text($val['name'], 50);
             $content[$i]["begin"] = Html::convDateTime($val["begin"]);
             $content[$i]["end"] = Html::convDateTime($val["end"]);
-            $content[$i]["text"] = Html::resume_text($val['text'], 100);
+            $content[$i]["text"] = nl2br(Html::resume_text($val['text'], 100));
             $i++;
          }
       }
