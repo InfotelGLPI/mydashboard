@@ -3167,7 +3167,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "28":
 
-            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
+            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id', 'status'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
@@ -3177,6 +3177,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $crit = $options['crit'];
 
             $type_criteria     = $crit['type'];
+            $status_criteria     = $crit['status'];
             $entities_criteria = $crit['entities_id'];
             $groups_criteria   = $crit['groups_id'];
             $widget            = new PluginMydashboardHtml();
@@ -3199,7 +3200,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
-            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " AND `status` IN('".implode("', '", $status_criteria)."')";
+
             $query .= " GROUP BY `glpi_tickets`.`locations_id`";
 
             $result = $DB->query($query);
@@ -3269,13 +3271,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        
                    // Display multiple markers on a map
                    var infoWindow = new google.maps.InfoWindow(), marker, i;
-                   
-                   var iconCounter = 0;
-                   
+
                    // Loop through our array of markers & place each one on the map  
                    for( i = 0; i < markers.length; i++ ) {
                        var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
                        bounds.extend(position);
+                       var fontSize = '14px';
+                       if (markers[i][3] >= 100) {
+                         fontSize = '10px';
+                       }
                        marker = new google.maps.Marker({
                            position: position,
                            icon: {url:icons[0], scaledSize: new google.maps.Size(27, 43), labelOrigin: new google.maps.Point(14, 14),fillColor: '#FFF'},
@@ -3283,6 +3287,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            label: {
                               text: markers[i][3],
                               color: '#FFF',
+                              fontSize: fontSize,
                               //fontWeight: 'bold',
                             },
                            title: markers[i][0]
@@ -3298,11 +3303,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                
                        // Automatically center the map fitting all markers on the screen
                        map.fitBounds(bounds);
-                       
-                       iconCounter++;
-                       if(iconCounter >= iconsLength) {
-                          iconCounter = 0;
-                        }
                    }
                
                    // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
@@ -3320,9 +3320,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div id=\"TicketsByLocationMap\" class=\"mapping\"></div>";
             $graph .= "</div>";
 
-            $widget->setWidgetHtmlContent(
-               $graph
-            );
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
                $graph

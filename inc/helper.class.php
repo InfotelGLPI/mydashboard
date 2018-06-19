@@ -283,6 +283,45 @@ class PluginMydashboardHelper {
          }
       }
 
+      $default = array(CommonITILObject::INCOMING,
+                       CommonITILObject::ASSIGNED,
+                       CommonITILObject::PLANNED,
+                       CommonITILObject::WAITING);
+      $crit['crit']['status'] = $default;
+      $opt['status']          = $default;
+      if (in_array("status", $criterias)) {
+         $status = [];
+
+         if (isset($params['opt']["status_1"])
+                         && $params['opt']["status_1"] > 0) {
+            $status[] = CommonITILObject::INCOMING;
+         }
+         if (isset($params['opt']["status_2"])
+             && $params['opt']["status_2"] > 0) {
+            $status[] = CommonITILObject::ASSIGNED;
+         }
+         if (isset($params['opt']["status_3"])
+             && $params['opt']["status_3"] > 0) {
+            $status[] = CommonITILObject::PLANNED;
+         }
+         if (isset($params['opt']["status_4"])
+             && $params['opt']["status_4"] > 0) {
+            $status[] = CommonITILObject::WAITING;
+         }
+         if (isset($params['opt']["status_5"])
+             && $params['opt']["status_5"] > 0) {
+            $status[] = CommonITILObject::SOLVED;
+         }
+         if (isset($params['opt']["status_6"])
+             && $params['opt']["status_6"] > 0) {
+            $status[] = CommonITILObject::CLOSED;
+         }
+
+         if (count($status) > 0){
+            $opt['status']          = $status;
+            $crit['crit']['status'] = $status;
+         }
+      }
       $crit['opt'] = $opt;
 
       return $crit;
@@ -434,6 +473,38 @@ class PluginMydashboardHelper {
          }
       }
 
+      if (in_array("status", $criterias)) {
+         $form    .= _n('Status', 'Statuses', 2) . "&nbsp;";
+         $default = array(CommonITILObject::INCOMING,
+                          CommonITILObject::ASSIGNED,
+                          CommonITILObject::PLANNED,
+                          CommonITILObject::WAITING);
+
+         $i = 1;
+         foreach (Ticket::getAllStatusArray() as $svalue => $sname) {
+            $form .= '<input type="hidden" name="status_' . $svalue . '" value="0" /> ';
+            $form .= '<input type="checkbox" name="status_' . $svalue . '" value="1"';
+
+            if (in_array($svalue, $opt['status'])) {
+               $form .= ' checked="checked"';
+            }
+            if (count($opt['status']) < 1 && in_array($svalue, $default)){
+               $form .= ' checked="checked"';
+            }
+
+            $form .= ' /> ';
+            $form .= $sname;
+            if ($i % 2 == 0) {
+               $form .= "<br>";
+            } else {
+               $form .= "&nbsp;";
+            }
+            $i++;
+         }
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
       $form .= self::getFormFooter();
 
       return $form;
