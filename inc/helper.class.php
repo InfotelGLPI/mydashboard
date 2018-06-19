@@ -322,6 +322,24 @@ class PluginMydashboardHelper {
             $crit['crit']['status'] = $status;
          }
       }
+      if (in_array("begin", $criterias)) {
+         if (isset($params['opt']['begin'])
+             && $params['opt']["begin"] > 0) {
+            $opt["begin"]          = $params['opt']['begin'];
+            $crit['crit']['begin'] = $params['opt']['begin'];
+         } else {
+            $opt["begin"] = date("Y-m-d");
+         }
+      }
+      if (in_array("end", $criterias)) {
+         if (isset($params['opt']['end'])
+             && $params['opt']["end"] > 0) {
+            $opt["end"]          = $params['opt']['end'];
+            $crit['crit']['end'] = $params['opt']['end'];
+         } else {
+            $opt["end"] = date("Y-m-d");
+         }
+      }
       $crit['opt'] = $opt;
 
       return $crit;
@@ -501,6 +519,24 @@ class PluginMydashboardHelper {
             }
             $i++;
          }
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      if (in_array("begin", $criterias)) {
+         $form .= __('Start');
+         $form .= "&nbsp;";
+         $form .= Html::showDateField("begin", array('value' => $opt['begin'], 'maybeempty' => false, 'display' => false));
+         $form .= "&nbsp;";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      if (in_array("end", $criterias)) {
+         $form .= __('End');
+         $form .= "&nbsp;";
+         $form .= Html::showDateField("end", array('value' => $opt['end'], 'maybeempty' => false, 'display' => false));
+         $form .= "&nbsp;";
          if ($count > 1) {
             $form .= "</br></br>";
          }
