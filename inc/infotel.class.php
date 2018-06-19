@@ -128,7 +128,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
       switch ($widgetId) {
 
          case $this->getType() . "1":
-
+            //            __("Opened tickets backlog", "mydashboard")
             $criterias = ['entities_id', 'is_recursive', 'groups_id', 'type'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
@@ -259,7 +259,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                 $.ajax({
                                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
                                    type: 'POST',
-                                   data:{datetik:datetik,groups_id:$groups_criteria,type:$type, entities_id:$entities_id_criteria, sons:$sons_criteria, widget:'$widgetId'},
+                                   data:{datetik:datetik,
+                                        groups_id:$groups_criteria,
+                                        type:$type, 
+                                        entities_id:$entities_id_criteria, 
+                                        sons:$sons_criteria, 
+                                        widget:'$widgetId'},
                                    success:function(response) {
                                            window.open(response);
                                          }
@@ -292,25 +297,29 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "2":
 
-            $criterias = ['type'];
+            $criterias = ['entities_id', 'is_recursive', 'type'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
             $options   = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt           = $options['opt'];
-            $crit          = $options['crit'];
-            $type          = $opt['type'];
-            $type_criteria = $crit['type'];
-
-            $query = "SELECT DISTINCT
+            $opt                  = $options['opt'];
+            $crit                 = $options['crit'];
+            $type                 = $opt['type'];
+            $type_criteria        = $crit['type'];
+            //$status_criteria      = $crit['status'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            //$status_search        = json_encode($status_criteria);
+            $query                = "SELECT DISTINCT
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria ";
-            $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
-                      . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                        GROUP BY `priority` ORDER BY `priority` ASC";
+                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria";
+            //            $query                .= " AND `status` IN('" . implode("', '", $status_criteria) . "')";
+            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
 
             $colors = [];
             $result = $DB->query($query);
@@ -384,7 +393,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        $.ajax({
                           url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
                           type: 'POST',
-                          data:{priority_id:priority_id, type:$type,widget:'$widgetId'},
+                          data:{priority_id:priority_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type,
+                                widget:'$widgetId'},
                           success:function(response) {
                                   window.open(response);
                                 }
@@ -3167,7 +3180,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "28":
 
-            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id', 'status'];
+            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
@@ -3176,12 +3189,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $opt  = $options['opt'];
             $crit = $options['crit'];
 
-            $type_criteria     = $crit['type'];
-            $status_criteria     = $crit['status'];
-            $entities_criteria = $crit['entities_id'];
-            $groups_criteria   = $crit['groups_id'];
-            $widget            = new PluginMydashboardHtml();
-            $title             = __("Map - Opened tickets by location", "mydashboard");
+            $type                 = $opt['type'];
+            $type_criteria        = $crit['type'];
+            //$status_criteria      = $crit['status'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $groups_criteria      = $crit['groups_id'];
+            $widget               = new PluginMydashboardHtml();
+            $title                = __("Map - Opened tickets by location", "mydashboard");
             $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude). You must define a Google API Key and add it into setup", "mydashboard"));
             $widget->setWidgetTitle($title);
             $query = "SELECT DISTINCT
@@ -3189,6 +3205,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            `glpi_locations`.`latitude`, 
                            `glpi_locations`.`longitude`,
                            `glpi_locations`.`comment`,
+                            `glpi_locations`.`id`,
                            COUNT(`glpi_tickets`.`id`) AS `nb`
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
@@ -3200,8 +3217,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
-            $query .= " AND `status` IN('".implode("', '", $status_criteria)."')";
-
+            //            $query .= " AND `status` IN('" . implode("', '", $status_criteria) . "')";
+            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `glpi_tickets`.`locations_id`";
 
             $result = $DB->query($query);
@@ -3209,14 +3226,56 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $locations = "[";
             $infos     = "[";
+
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
                   if (!empty($data['latitude']) && !empty($data['longitude'])) {
                      $name      = addslashes($data['name']);
                      $locations .= "['" . $name . "'," . $data['latitude'] . "," . $data['longitude'] . ",'" . $data['nb'] . "'],";
                      $comment   = addslashes(str_replace("\r\n", "<br>", $data['comment']));
-                     $nb        = $data['nb'] . " " . _n('Ticket', 'Tickets', $data['nb']);
-                     $infos     .= "['<div class=\"info_content\">' + '<h5>$name</h5>'+ '<p>$comment</p>'+ '<p>$nb</p>'+'</div>'],";
+
+                     $options['reset']                     = 'reset';
+                     $options['criteria'][0]['field']      = 12; // status
+                     $options['criteria'][0]['searchtype'] = 'equals';
+                     $options['criteria'][0]['value']      = "notold";
+                     $options['criteria'][0]['link']       = 'AND';
+
+                     $options['criteria'][1]['field']      = 83; // location
+                     $options['criteria'][1]['searchtype'] = 'equals';
+                     $options['criteria'][1]['value']      = $data['id'];
+                     $options['criteria'][1]['link']       = 'AND';
+
+                     if ($type > 0) {
+                        $options['criteria'][2]['field']      = 14; // type
+                        $options['criteria'][2]['searchtype'] = 'equals';
+                        $options['criteria'][2]['value']      = $type;
+                        $options['criteria'][2]['link']       = 'AND';
+                     }
+
+                     $options['criteria'][3]['field']      = 80; // entities
+                     $options['criteria'][3]['searchtype'] = 'equals';
+                     if (isset($sons_criteria) && $sons_criteria > 0) {
+                        $options['criteria'][3]['searchtype'] = 'under';
+                     }
+                     $options['criteria'][3]['value'] = $entities_id_criteria;
+                     $options['criteria'][3]['link']  = 'AND';
+
+                     if (empty($groups_criteria)) {
+                        $options['criteria'][4]['field']      = 8; // technician group
+                        $options['criteria'][4]['searchtype'] = 'contains';
+                        $options['criteria'][4]['value']      = '^$';
+                        $options['criteria'][4]['link']       = 'AND';
+                     } else {
+                        $options['criteria'][4]['field']      = 8; // technician group
+                        $options['criteria'][4]['searchtype'] = 'equals';
+                        $options['criteria'][4]['value']      = $groups_criteria;
+                        $options['criteria'][4]['link']       = 'AND';
+                     }
+                     $link_ticket = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                                    Toolbox::append_params($options, "&");
+                     $nb          = "<a href=\"" . $link_ticket . "\" target=\"_blank\">" . $data['nb'] . " " . _n('Ticket', 'Tickets', $data['nb']) . "</a>";
+
+                     $infos .= "['<div class=\"info_content\">' + '<h5>$name</h5>'+ '<p>$comment</p>'+ '<p>$nb</p>'+'</div>'],";
                   }
                }
             }
@@ -3265,7 +3324,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         //iconURLPrefix + 'green.png',
                         //iconURLPrefix + 'orange.png',
                       ]
-                      var iconsLength = icons.length;
                    // Info Window Content
                    var infoWindowContent = $infos;
                        
@@ -3282,7 +3340,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        }
                        marker = new google.maps.Marker({
                            position: position,
-                           icon: {url:icons[0], scaledSize: new google.maps.Size(27, 43), labelOrigin: new google.maps.Point(14, 14),fillColor: '#FFF'},
+                           icon: {
+                                  url:icons[0], 
+                                  scaledSize: new google.maps.Size(27, 43), 
+                                  labelOrigin: new google.maps.Point(14, 14),
+                                  fillColor: '#FFF'
+                                  },
                            map: map,
                            label: {
                               text: markers[i][3],

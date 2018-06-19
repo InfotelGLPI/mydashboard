@@ -55,7 +55,7 @@ if (isset($_POST["widget"])
       $options['criteria'][1]['searchtype'] = 'contains';
       $options['criteria'][1]['value']      = $_POST["datetik"];
       $options['criteria'][1]['link']       = 'AND';
-      
+
       if (empty($_POST["groups_id"])) {
          $options['criteria'][2]['field']      = 8; // technician group
          $options['criteria'][2]['searchtype'] = 'contains';
@@ -80,7 +80,7 @@ if (isset($_POST["widget"])
       }
       $options['criteria'][4]['value']      = $_POST["entities_id"];
       $options['criteria'][4]['link']       = 'AND';
-      
+
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
       echo $link;
@@ -99,13 +99,24 @@ if (isset($_POST["widget"])
       $options['criteria'][1]['searchtype'] = 'equals';
       $options['criteria'][1]['value']      = $_POST["priority_id"];
       $options['criteria'][1]['link']       = 'AND';
-      
+
       if ($_POST["type"] > 0) {
          $options['criteria'][2]['field']      = 14; // type
          $options['criteria'][2]['searchtype'] = 'equals';
          $options['criteria'][2]['value']      = $_POST["type"];
          $options['criteria'][2]['link']       = 'AND';
       }
+
+      $options['criteria'][3]['field']      = 80; // entities
+      $options['criteria'][3]['searchtype'] = 'equals';
+      if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
+         $options['criteria'][3]['searchtype'] = 'under';
+      }
+      $options['criteria'][3]['value']      = $_POST["entities_id"];
+      $options['criteria'][3]['link']       = 'AND';
+
+
+
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
       echo $link;
@@ -177,7 +188,7 @@ if (isset($_POST["widget"])
          $options['criteria'][2]['value']      = $_POST["category_id"];
          $options['criteria'][2]['link']       = 'AND';
       }
-      
+
       if (empty($_POST["groups_id"])) {
          $options['criteria'][3]['field']      = 8; // technician group
          $options['criteria'][3]['searchtype'] = 'contains';
@@ -189,7 +200,7 @@ if (isset($_POST["widget"])
          $options['criteria'][3]['value']      = $_POST["groups_id"];
          $options['criteria'][3]['link']       = 'AND';
       }
-      
+
       $options['criteria'][4]['field']      = 80; // entities
       $options['criteria'][4]['searchtype'] = 'equals';
       if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
@@ -197,7 +208,7 @@ if (isset($_POST["widget"])
       }
       $options['criteria'][4]['value']      = $_POST["entities_id"];
       $options['criteria'][4]['link']       = 'AND';
-      
+
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
       echo $link;
@@ -223,14 +234,14 @@ if (isset($_POST["widget"])
          $options['criteria'][1]['value']      = $_POST["locations_id"];
          $options['criteria'][1]['link']       = 'AND';
       }
-      
+
       if ($_POST["type"] > 0) {
          $options['criteria'][2]['field']      = 14; // type
          $options['criteria'][2]['searchtype'] = 'equals';
          $options['criteria'][2]['value']      = $_POST["type"];
          $options['criteria'][2]['link']       = 'AND';
       }
-      
+
       $options['criteria'][3]['field']      = 80; // entities
       $options['criteria'][3]['searchtype'] = 'equals';
       if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
