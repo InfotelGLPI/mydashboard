@@ -947,6 +947,7 @@ div.dt-button-background {
    text-align: center;
    border: 1px solid #e6e6e6;
    width: 70px;
+   min-height: 70px;
 }
 
 .ind-widget-new {

@@ -123,7 +123,7 @@ class PluginMydashboardPlanning {
       ksort($interv);
 
       $title    = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?uID=$who\">" . __('Your planning') . "</a>";
-      $header = [__('Type'), __('Content'),__('Begin date'),__('End date')];
+      $header = [__('Type'), __('Name'),__('Begin date'),__('End date'), __('Content')];
       $content= [];
       $i     = 0;
       if (count($interv) > 0) {
@@ -136,9 +136,10 @@ class PluginMydashboardPlanning {
             }
             $item = new $val['itemtype'];
             $content[$i]["type"] = $item->getTypeName();
-            $content[$i]["content"] = Planning::displayPlanningItem($val, $who, 'in', false);
+            $content[$i]["name"] = Html::resume_text($val['name'], 50);
             $content[$i]["begin"] = Html::convDateTime($val["begin"]);
             $content[$i]["end"] = Html::convDateTime($val["end"]);
+            $content[$i]["text"] = Html::resume_text($val['text'], 100);
             $i++;
          }
       }
