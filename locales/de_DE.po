@@ -2,16 +2,16 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-18 11:00+0200\n"
-"PO-Revision-Date: 2018-06-18 11:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Amandine Manceau, 2017\n"
-"Language-Team: German (Germany) (https://www.transifex.com/tsmr/teams/65490/"
-"de_DE/)\n"
+"Language-Team: German (Germany) (https://www.transifex.com/tsmr/teams/65490/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -516,8 +516,8 @@ msgstr ""
 
 #: inc/infotel.class.php:3161
 msgid ""
-"Display Tickets by location (Latitude / Longitude). You must define a "
-"Google API Key and add it into setup"
+"Display Tickets by location (Latitude / Longitude). You must define a Google"
+" API Key and add it into setup"
 msgstr ""
 
 #: inc/knowbaseitem.class.php:127
