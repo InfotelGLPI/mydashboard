@@ -105,9 +105,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
          die("stock tickets of $year-$month is already filled");
       }
       echo "fill table <glpi_plugin_mydashboard_stocktickets> with datas of $year-$month";
-      $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
+      $nbdays     = date("t", mktime(0, 0, 0, $month, 1, $year));
+      $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+
       $query   = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id` FROM `glpi_tickets`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
       $results = $DB->query($query);
       while ($data = $DB->fetch_array($results)) {
@@ -143,8 +145,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
             $groups_criteria      = $crit['groups_id'];
-
-            $query = "SELECT DISTINCT
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $query                = "SELECT DISTINCT
                            DATE_FORMAT(`date`, '%b %Y') AS period_name,
                            COUNT(`glpi_tickets`.`id`) AS nb,
                            DATE_FORMAT(`date`, '%Y-%m') AS period
@@ -152,7 +154,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
                         AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria ";
+                        WHERE $is_deleted $type_criteria ";
             if (isset($groups_criteria) && ($groups_criteria != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -303,20 +305,21 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           "opt"         => $opt];
             $options   = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt                  = $options['opt'];
-            $crit                 = $options['crit'];
-            $type                 = $opt['type'];
-            $type_criteria        = $crit['type'];
+            $opt           = $options['opt'];
+            $crit          = $options['crit'];
+            $type          = $opt['type'];
+            $type_criteria = $crit['type'];
             //$status_criteria      = $crit['status'];
             $entities_criteria    = $crit['entities_id'];
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
             //$status_search        = json_encode($status_criteria);
-            $query                = "SELECT DISTINCT
+            $query = "SELECT DISTINCT
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria";
+                        WHERE $is_deleted $type_criteria $entities_criteria";
             //            $query                .= " AND `status` IN('" . implode("', '", $status_criteria) . "')";
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
@@ -624,12 +627,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                     " . $mdentities . "
                                     GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-            $tabdata  = [];
-            $tabnames = [];
-            $results2 = $DB->query($query_2);
-            $maxcount = 0;
-            $i        = 0;
-
+            $tabdata    = [];
+            $tabnames   = [];
+            $results2   = $DB->query($query_2);
+            $maxcount   = 0;
+            $i          = 0;
+            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
             while ($data = $DB->fetch_array($results2)) {
                $tabdata[$i] = $data["nbStockTickets"];
                $tabnames[]  = $data['monthname'];
@@ -643,7 +646,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') AS monthname, 
                         DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
                         FROM `glpi_tickets`
-                        WHERE NOT `glpi_tickets`.`is_deleted` ";
+                        WHERE $is_deleted ";
             $query .= $entities_criteria . " 
                      AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
                      AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
@@ -656,7 +659,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
                $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                     WHERE `glpi_tickets`.`is_deleted` = '0' " . $entities_criteria . "
+                     WHERE $is_deleted " . $entities_criteria . "
                      AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                      AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
                      OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
@@ -792,7 +795,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $type_criteria     = $crit['type'];
             $entities_criteria = $crit['entities_id'];
             $date_criteria     = $crit['date'];
-
+            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
 
             $query    = "SELECT `glpi_tickets_users`.`users_id` as users_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
@@ -800,7 +803,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 1)
                      WHERE $date_criteria
                      $entities_criteria $type_criteria
-                     AND NOT `glpi_tickets`.`is_deleted`
+                     AND $is_deleted
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
                      LIMIT 10";
@@ -1039,12 +1042,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             //               $groups[] = $mygroup["id"];
             //            }
             //            $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
+            //$is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
             //            $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
             //                                          `glpi_tickets`.`status` as status,
             //                                          `glpi_tickets`.`date_mod` as date_mod
             //                                 FROM `glpi_tickets`
             //                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-            //                                 WHERE `glpi_tickets`.`is_deleted` = '0'
+            //                                 WHERE $is_deleted
             //                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
             //                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
             //
@@ -1216,21 +1220,21 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $crit = $options['crit'];
 
             $type_criteria = $crit['type'];
-
-            $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+            $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
+            $all           = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
+                        WHERE $is_deleted $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
-            $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
-                    . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $all           .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+                              . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
             $total  = $DB->fetch_assoc($result);
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
+                        WHERE $is_deleted $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
                                             AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
@@ -1347,10 +1351,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $crit = $options['crit'];
 
             $type_criteria = $crit['type'];
+            $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
 
             $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
+                        WHERE $is_deleted $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
             $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
@@ -1361,7 +1366,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria
+                        WHERE $is_deleted $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL
                         AND (`glpi_tickets`.`takeintoaccount_delay_stat`
@@ -1529,6 +1534,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $type_criteria     = $crit['type'];
             $entities_criteria = $crit['entities_id'];
             $date_criteria     = $crit['date'];
+            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
 
             $query    = "SELECT `glpi_itilcategories`.`completename` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
@@ -1536,7 +1542,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
                      WHERE $date_criteria
                      $entities_criteria $type_criteria
-                     AND NOT `glpi_tickets`.`is_deleted`
+                     AND $is_deleted
                      GROUP BY `glpi_itilcategories`.`id`
                      ORDER BY count DESC
                      LIMIT 10";
@@ -1651,6 +1657,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
             $groups_criteria      = $crit['groups_id'];
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DISTINCT
                            `glpi_itilcategories`.`name` AS name,
@@ -1662,7 +1669,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
                         LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
-                        WHERE `glpi_tickets`.`is_deleted` = '0' AND  `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'";
+                        WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -1789,6 +1796,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
             $groups_criteria      = $crit['groups_id'];
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DISTINCT
                            `glpi_itilcategories`.`name` AS name,
@@ -1800,7 +1808,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
                         LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
-                        WHERE `glpi_tickets`.`is_deleted` = '0' AND  `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'";
+                        WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -1928,12 +1936,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria  = $crit['entities_id'];
             $date_criteria      = $crit['date'];
             $closedate_criteria = $crit['closedate'];
+            $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
                      FROM `glpi_tickets`
                      WHERE $date_criteria
                      $entities_criteria $type_criteria
-                     AND NOT `glpi_tickets`.`is_deleted`";
+                     AND $is_deleted";
 
             $result   = $DB->query($query);
             $nb       = $DB->numrows($result);
@@ -1950,7 +1959,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      FROM `glpi_tickets`
                      WHERE $closedate_criteria
                      $entities_criteria $type_criteria
-                     AND `glpi_tickets`.`is_deleted` = '0'";
+                     AND $is_deleted";
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
@@ -2055,6 +2064,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $type_criteria     = $crit['type'];
             $entities_criteria = $crit['entities_id'];
+            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DISTINCT
                            `glpi_solutiontypes`.`name` AS name,
@@ -2063,7 +2073,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_solutiontypes`
                         ON (`glpi_solutiontypes`.`id` = `glpi_tickets`.`solutiontypes_id`)
-                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria ";
+                        WHERE $is_deleted $type_criteria ";
             $query .= $entities_criteria
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                       AND `glpi_tickets`.`solutiontypes_id` > 0
@@ -2342,12 +2352,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                }
                $i++;
             }
+            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
                                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
                                     DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
                                     FROM `glpi_tickets`
-                                    WHERE NOT `glpi_tickets`.`is_deleted` AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                                    WHERE $is_deleted AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
                                     AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
                                     " . $entities_criteria . "
                                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
@@ -2364,7 +2375,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
                      WHERE $date_criteria
                      $entities_criteria
-                     AND NOT `glpi_tickets`.`is_deleted`";
+                     AND $is_deleted";
 
                $results_1 = $DB->query($query_1);
                $data_1    = $DB->fetch_array($results_1);
@@ -2375,7 +2386,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $query_2            = "SELECT COUNT(*) as count FROM `glpi_tickets`
                      WHERE $closedate_criteria
                      $entities_criteria
-                     AND NOT `glpi_tickets`.`is_deleted`";
+                     AND $is_deleted";
 
                $results_2 = $DB->query($query_2);
                $data_2    = $DB->fetch_array($results_2);
@@ -2384,7 +2395,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                if ($month == date("m") && $year == date("Y")) {
                   $query_3 = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                     WHERE `glpi_tickets`.`is_deleted` = '0' " . $entities_criteria . "
+                     WHERE $is_deleted " . $entities_criteria . "
                      AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                      AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
                      OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
@@ -2527,13 +2538,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $previousyear = $currentyear - 1;
             $nextmonth    = $currentmonth + 1;
+            $is_deleted   = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT 
                               DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
                               DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum
                               FROM `glpi_tickets`
-                              WHERE NOT `glpi_tickets`.`is_deleted` AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                              WHERE $is_deleted AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
                               AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
                               " . $entities_criteria . $type_criteria . "
                               GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
@@ -2552,7 +2564,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $query_1 = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nb_tickets, SUM(`glpi_tickettasks`.`actiontime`) AS count 
                           FROM `glpi_tickettasks`
                           LEFT JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
-                          WHERE NOT `glpi_tickets`.`is_deleted` " . $entities_criteria . $type_criteria . "
+                          WHERE $is_deleted " . $entities_criteria . $type_criteria . "
                            AND (`glpi_tickettasks`.`date` >= '$year-$month-01 00:00:01' 
                            AND `glpi_tickettasks`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
 
@@ -2676,6 +2688,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $type_criteria     = $crit['type'];
             $entities_criteria = $crit['entities_id'];
             $date_criteria     = $crit['date'];
+            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
 
             $query   = "SELECT `glpi_tickets_users`.`users_id`, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
@@ -2683,7 +2696,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 2)
                      WHERE $date_criteria
                      $entities_criteria $type_criteria
-                     AND `glpi_tickets`.`is_deleted` = '0'
+                     AND $is_deleted
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
                      LIMIT 10";
@@ -2814,6 +2827,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $crit          = $options['crit'];
             $type          = $opt['type'];
             $type_criteria = $crit['type'];
+            $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DISTINCT
                            `groups_id`,
@@ -2822,7 +2836,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
                         AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')
-                        WHERE `glpi_tickets`.`is_deleted` = '0' $type_criteria ";
+                        WHERE $is_deleted $type_criteria ";
             $query .= getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `groups_id`";
@@ -2947,6 +2961,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $entities_criteria  = $crit['entities_id'];
             $closedate_criteria = $crit['closedate'];
+            $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT AVG(`glpi_ticketsatisfactions`.`satisfaction`) AS satisfaction
                        FROM `glpi_tickets`
@@ -2955,7 +2970,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $query .= " WHERE $closedate_criteria
                       $entities_criteria 
-                        AND  `glpi_tickets`.`is_deleted` = '0' 
+                        AND $is_deleted
                         AND `glpi_tickets`.`status` IN (" . CommonITILObject::CLOSED . ")
                         AND `glpi_tickets`.`closedate` IS NOT NULL
                         AND `glpi_ticketsatisfactions`.`date_answered` IS NOT NULL ";
@@ -3053,14 +3068,16 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
             $groups_criteria      = $crit['groups_id'];
-            $query                = "SELECT DISTINCT
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+
+            $query = "SELECT DISTINCT
                            `glpi_tickets`.`locations_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
                             AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria ";
+                        WHERE $is_deleted $type_criteria $entities_criteria ";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -3189,15 +3206,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $opt  = $options['opt'];
             $crit = $options['crit'];
 
-            $type                 = $opt['type'];
-            $type_criteria        = $crit['type'];
+            $type          = $opt['type'];
+            $type_criteria = $crit['type'];
             //$status_criteria      = $crit['status'];
             $entities_criteria    = $crit['entities_id'];
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
             $groups_criteria      = $crit['groups_id'];
-            $widget               = new PluginMydashboardHtml();
-            $title                = __("Map - Opened tickets by location", "mydashboard");
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Map - Opened tickets by location", "mydashboard");
             $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude). You must define a Google API Key and add it into setup", "mydashboard"));
             $widget->setWidgetTitle($title);
             $query = "SELECT DISTINCT
@@ -3213,7 +3232,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
                             AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE NOT `glpi_tickets`.`is_deleted` $type_criteria $entities_criteria ";
+                        WHERE $is_deleted $type_criteria $entities_criteria ";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -3506,13 +3525,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
          $month_deb_datetime = $month_deb_date . " 00:00:00";
          $month_end_date     = "$year-$month_tmp-$nb_jours";
          $month_end_datetime = $month_end_date . " 23:59:59";
+         $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
          foreach ($techlist as $techid) {
             $time_per_tech[$techid][$key] = 0;
 
             $querym_ai   = "SELECT  DATE(`glpi_tickettasks`.`date`), SUM(`glpi_tickettasks`.`actiontime`) AS actiontime_date
                         FROM `glpi_tickettasks` 
-                        INNER JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id` AND `glpi_tickets`.`is_deleted` = 0) 
+                        INNER JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id` AND $is_deleted) 
                         LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
             $querym_ai   .= "WHERE ";
             $querym_ai   .= "(
@@ -3631,6 +3651,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
          $month_deb_datetime = $month_deb_date . " 00:00:00";
          $month_end_date     = "$year-$month_tmp-$nb_jours";
          $month_end_datetime = $month_end_date . " 23:59:59";
+         $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
          foreach ($techlist as $techid) {
             $tickets_per_tech[$techid][$key] = 0;
@@ -3638,7 +3659,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $querym_ai   = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets
                         FROM `glpi_tickets` 
                         INNER JOIN `glpi_tickets_users` 
-                        ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0) 
+                        ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND $is_deleted) 
                         LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
             $querym_ai   .= "WHERE ";
             $querym_ai   .= "(
