@@ -77,7 +77,9 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 
           <?php
           $apikey = PluginMydashboardHelper::getGoogleApiKey();
-          echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";
+          if ($apikey > 0) {
+             echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";
+          }
           ?>
 
        </head>
