@@ -1235,7 +1235,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 //             if (!isChartRendered) return; // return if chart not rendered
                 html2canvas(document.getElementById(id), {
                  onrendered: function(canvas) {
-                     var link = document.createElement('a');
+                     var link = $('#download').get(0);
                      link.href = canvas.toDataURL('image/png');
                      link.download = 'myChart.png';
                      link.click();
