@@ -37,6 +37,7 @@ function plugin_init_mydashboard() {
 
    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
+      "lib/fileSaver.min.js",
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
       //"lib/sdashboard/jquery-sDashboard.js",

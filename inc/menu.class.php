@@ -1236,11 +1236,33 @@ class PluginMydashboardMenu extends CommonGLPI {
                 html2canvas(document.getElementById(id), {
                  onrendered: function(canvas) {
                      var link = document.createElement('a');
-                     link.href = canvas.toDataURL('image/png');
-                     link.download = 'myChart.png';
-                     link.click();
-                 }
-             })
+                    link.href = canvas.toDataURL('image/png');
+                    
+                    if (!HTMLCanvasElement.prototype.toBlob) {
+                     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+                       value: function (callback, type, quality) {
+                         var canvas = this;
+                         setTimeout(function() {
+                           var binStr = atob( canvas.toDataURL(type, quality).split(',')[1] ),
+                           len = binStr.length,
+                           arr = new Uint8Array(len);
+                  
+                           for (var i = 0; i < len; i++ ) {
+                              arr[i] = binStr.charCodeAt(i);
+                           }
+                  
+                           callback( new Blob( [arr], {type: type || 'image/png'} ) );
+                         });
+                       }
+                    });
+                  }
+                       
+                  canvas.toBlob(function(blob){
+                   link.href = URL.createObjectURL(blob);
+                   saveAs(blob, 'myChart.png');
+                 },'image/png');                      
+              }
+            })
          }
     </script>";
 
