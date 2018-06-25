@@ -2,21 +2,21 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-18 11:00+0200\n"
-"PO-Revision-Date: 2018-06-18 11:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
-"Language-Team: Czech (Czech Republic) (https://www.transifex.com/tsmr/"
-"teams/65490/cs_CZ/)\n"
+"Language-Team: Czech (Czech Republic) (https://www.transifex.com/tsmr/teams/65490/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: cs_CZ\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 "X-Generator: Poedit 2.0.3\n"
 
 #: setup.php:134 inc/menu.class.php:85 inc/preference.class.php:62
@@ -33,6 +33,7 @@ msgid_plural "Alerts Dashboard"
 msgstr[0] "Nástěnka s výstrahou"
 msgstr[1] "Nástěnka s výstrahami"
 msgstr[2] "Nástěnka s výstrahami"
+msgstr[3] "Nástěnka s výstrahami"
 
 #: inc/alert.class - Copie.php:91 Copie.php:1667 Copie.php:1670 Copie.php:1783
 #: Copie.php:1786 inc/alert.class.php:91 inc/alert.class.php:1664
@@ -43,6 +44,7 @@ msgid_plural "Alerts"
 msgstr[0] "Výstraha"
 msgstr[1] "Výstrahy"
 msgstr[2] "Výstrah"
+msgstr[3] "Výstrahy"
 
 #: inc/alert.class - Copie.php:92 inc/alert.class.php:92
 msgid "Network alert"
@@ -50,6 +52,7 @@ msgid_plural "Network alerts"
 msgstr[0] "Výstraha sítě"
 msgstr[1] "Výstrahy sítě"
 msgstr[2] "Výstrah sítě"
+msgstr[3] "Výstrahy sítě"
 
 #: inc/alert.class - Copie.php:93 Copie.php:167 Copie.php:1671 Copie.php:1787
 #: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1668
@@ -60,6 +63,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] "Naplánovaná údržba"
 msgstr[1] "Naplánované údržby"
 msgstr[2] "Naplánovaných údržeb"
+msgstr[3] "Naplánované údržby"
 
 #: inc/alert.class - Copie.php:94 Copie.php:177 Copie.php:1672 Copie.php:1788
 #: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1669
@@ -70,6 +74,7 @@ msgid_plural "Informations"
 msgstr[0] "Informace"
 msgstr[1] "Informace"
 msgstr[2] "Informací"
+msgstr[3] "Informace"
 
 #: inc/alert.class - Copie.php:95 Copie.php:476 inc/alert.class.php:95
 #: inc/alert.class.php:495
@@ -288,7 +293,7 @@ msgstr "Nahradit ústřední rozhraní"
 
 #: inc/config.class.php:117
 msgid "Google API Key"
-msgstr ""
+msgstr "Klíč ke Google API"
 
 #: inc/dashboard.class.php:117
 msgid "GLPI admin grid"
@@ -356,7 +361,7 @@ msgstr "Množství požadavků dle měsíce"
 
 #: inc/infotel.class.php:68 inc/infotel.class.php:814
 msgid "Top ten ticket requesters by month"
-msgstr ""
+msgstr "Deset nejčastějších požadovatelů v měsíci"
 
 #: inc/infotel.class.php:69 inc/infotel.class.php:907
 msgid "Process time by technicians by month"
@@ -413,15 +418,15 @@ msgstr "Počet otevřených požadavků podle skupin žadatele"
 
 #: inc/infotel.class.php:82 inc/infotel.class.php:2962
 msgid "Global satisfaction level"
-msgstr ""
+msgstr "Celková úroveň spokojenosti"
 
 #: inc/infotel.class.php:83 inc/infotel.class.php:3074
 msgid "Top 10 of opened tickets by location"
-msgstr ""
+msgstr "10 nejčastějších otevřených požadavků podle umístění"
 
 #: inc/infotel.class.php:84 inc/infotel.class.php:3160
 msgid "Map - Opened tickets by location"
-msgstr ""
+msgstr "Mapa – otevřené požadavky podle umístění"
 
 #: inc/infotel.class.php:177
 msgid "Display of opened tickets by month"
@@ -518,17 +523,19 @@ msgstr "Zobrazit počty požadavků dle techniků"
 
 #: inc/infotel.class.php:2968
 msgid "Satisfy percent"
-msgstr ""
+msgstr "Procento spokojenosti"
 
 #: inc/infotel.class.php:2968
 msgid "Not satisfy percent"
-msgstr ""
+msgstr "Procento nespokojenosti"
 
 #: inc/infotel.class.php:3161
 msgid ""
-"Display Tickets by location (Latitude / Longitude). You must define a "
-"Google API Key and add it into setup"
+"Display Tickets by location (Latitude / Longitude). You must define a Google"
+" API Key and add it into setup"
 msgstr ""
+"Zobrazení požadavků podle umístění (zem. šířka / délka). Je třeba vytvořit "
+"klíč ke Google AP a přidat ho do nastavení"
 
 #: inc/knowbaseitem.class.php:127
 msgid "Publication date"
@@ -596,11 +603,11 @@ msgstr "Přepnout do režimu úprav"
 
 #: inc/menu.class.php:384 inc/menu.class.php:386
 msgid "Permit drag / resize widgets"
-msgstr ""
+msgstr "Umožnit přemisťování a změnu velikosti miniaplikací"
 
 #: inc/menu.class.php:391 inc/menu.class.php:393
 msgid "Block drag / resize widgets"
-msgstr ""
+msgstr "Znemožnit přemisťování a změnu velikosti miniaplikací"
 
 #: inc/menu.class.php:396 inc/menu.class.php:398
 msgid "Save positions"
