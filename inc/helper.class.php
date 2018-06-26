@@ -217,6 +217,10 @@ class PluginMydashboardHelper {
             $crit['crit']['entities_id'] = self::getSpecificEntityRestrict("glpi_tickets", $opt);
             $crit['crit']['entity']      = $opt['entities_id'];
          }
+      } else {
+         $crit['crit']['entities_id'] = null;
+         $crit['crit']['entity']      = null;
+         $crit['crit']['sons']      = null;
       }
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
