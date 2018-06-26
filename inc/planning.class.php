@@ -80,7 +80,7 @@ class PluginMydashboardPlanning {
       switch ($widgetId) {
          case "planningwidget":
             if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
-               return PluginMydashboardPlanning::showCentral(Session::getLoginUserID());
+               return self::showCentral(Session::getLoginUserID());
             }
             break;
       }
@@ -102,30 +102,37 @@ class PluginMydashboardPlanning {
          return false;
       }
 
-      $when  = strftime("%Y-%m-%d");
+      $widget = new PluginMydashboardHtml();
+      $title  = __("Your planning");
+      $widget->setWidgetTitle($title);
 
-      // Get begin and duration
-      $date  = explode("-", $when);
-      $time  = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
-      $begin = $time;
-      $end   = $begin + 5*DAY_TIMESTAMP;
-      $begin = date("Y-m-d H:i:s", $begin);
-      $end   = date("Y-m-d H:i:s", $end);
+      echo Html::css('lib/jqueryplugins/fullcalendar/fullcalendar.css',
+                     ['media' => '']);
+      echo Html::css('/lib/jqueryplugins/fullcalendar/fullcalendar.print.css',
+                     ['media' => 'print']);
+      Html::requireJs('fullcalendar');
+
+      $when = strftime("%Y-%m-%d");
+
+      //Get begin and duration
+      $date   = explode("-", $when);
+      $time   = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
+      $begin  = $time - 12 * MONTH_TIMESTAMP;
+      $end    = $begin + 13 * MONTH_TIMESTAMP;
+      $begin  = date("Y-m-d H:i:s", $begin);
+      $end    = date("Y-m-d H:i:s", $end);
       $params = ['who'       => $who,
-                      'who_group' => 0,
-                      'whogroup'  => 0,
-                      'begin'     => $begin,
-                      'end'       => $end];
+                 'who_group' => 0,
+                 'whogroup'  => 0,
+                 'begin'     => $begin,
+                 'end'       => $end];
       $interv = [];
       foreach ($CFG_GLPI['planning_types'] as $itemtype) {
          $interv = array_merge($interv, $itemtype::populatePlanning($params));
       }
       ksort($interv);
+      $events = [];
 
-      $title    = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?uID=$who\">" . __('Your planning') . "</a>";
-      $header = [__('Type'), __('Name'),__('Begin date'),__('End date'), __('Content')];
-      $content= [];
-      $i     = 0;
       if (count($interv) > 0) {
          foreach ($interv as $key => $val) {
             if ($val["begin"] < $begin) {
@@ -134,21 +141,64 @@ class PluginMydashboardPlanning {
             if ($val["end"] > $end) {
                $val["end"] = $end;
             }
-            $item = new $val['itemtype'];
-            $content[$i]["type"] = $item->getTypeName();
-            $content[$i]["name"] = Html::resume_text($val['name'], 50);
-            $content[$i]["begin"] = Html::convDateTime($val["begin"]);
-            $content[$i]["end"] = Html::convDateTime($val["end"]);
-            $content[$i]["text"] = nl2br(Html::resume_text($val['text'], 100));
-            $i++;
+            $title = $val['name'];
+            if (isset($val['entities_name'])) {
+               $title = $val['entities_name'] . " > " . $val['name'];
+            }
+            $events[] = ['title'   => $title,
+                         'tooltip' => Html::clean($val['content']),
+                         'start'   => $val["begin"],
+                         'end'     => $val["end"],
+                         'url'     => isset($val['url']) ? $val['url'] : "",
+                         'ajaxurl' => isset($val['ajaxurl']) ? $val['ajaxurl'] : "",
+            ];
          }
       }
+      $events    = json_encode($events);
+      $list_day  = __('List by day', 'myydashboard');
+      $list_week = __('List by week', 'myydashboard');
+      $today     = date("Y-m-d");
+      $graph     = "<script>
+            $(document).ready(function() {
+                $('#calendar').fullCalendar({
+                  height:      400,
+                  theme:       true,
+                  header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'listDay,listWeek,month'
+                  },
+                  views: {
+                    listDay: { buttonText: '$list_day' },
+                    listWeek: { buttonText: '$list_week' }
+                  },
 
-      $widget = new PluginMydashboardDatatable();
-      $widget->setWidgetTitle($title);
-      $widget->setWidgetId("planningwidget");
-      $widget->setTabNames($header);
-      $widget->setTabDatas($content);
+                  defaultView: 'listWeek',
+                  defaultDate: '$today',
+                  navLinks: true, // can click day/week names to navigate views
+                  editable: false,
+                  eventLimit: true, // allow 'more' link when too many events
+                  events: $events,
+                  eventClick: function(event) {
+                      if (event.url) {
+                          window.open(event.url, '_blank');
+                          return false;
+                      }
+                  },
+                  eventRender: function(event, element) {
+                       element.qtip({
+                           content: event.tooltip
+                       });
+                   }
+                });
+
+              });
+             </script>";
+      $graph     .= "<div id='calendar'></div>";
+      $widget->toggleWidgetRefresh();
+      $widget->setWidgetHtmlContent(
+         $graph
+      );
 
       return $widget;
    }

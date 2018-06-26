@@ -979,3 +979,8 @@ div.dt-button-background {
    background: #CCC;
    padding: 30px;
 }
+
+/* Planning widget */
+.fc-scroller {
+   height: auto !important;
+}
