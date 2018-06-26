@@ -218,9 +218,9 @@ class PluginMydashboardHelper {
             $crit['crit']['entity']      = $opt['entities_id'];
          }
       } else {
-         $crit['crit']['entities_id'] = null;
-         $crit['crit']['entity']      = null;
-         $crit['crit']['sons']      = null;
+         $crit['crit']['entities_id'] = '';
+         $crit['crit']['entity']      = 0;
+         $crit['crit']['sons']        = 0;
       }
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
