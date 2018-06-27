@@ -73,6 +73,8 @@ class PluginMydashboardWidgetlist {
                           "PluginMydashboardChange",
                           "PluginMydashboardTicket",
                           "PluginMydashboardRSSFeed",
+                          "PluginMydashboardProject",
+                          "PluginMydashboardProjecttask",
                           "PluginMydashboardContract",
                           "PluginMydashboardKnowbaseItem"];
       //We run through the hook to get all widget IDs and Titles declared in all classes
