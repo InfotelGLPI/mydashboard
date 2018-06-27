@@ -922,9 +922,9 @@ class PluginMydashboardTicket {
       }
       $query_deleted = $query;
 
-      $query         .= " AND NOT `glpi_tickets`.`is_deleted`
+      $query         .= " AND `glpi_tickets`.`is_deleted` = 0
                          GROUP BY `status`";
-      $query_deleted .= " AND `glpi_tickets`.`is_deleted`
+      $query_deleted .= " AND `glpi_tickets`.`is_deleted` = 1
                          GROUP BY `status`";
 
       $result         = $DB->query($query);

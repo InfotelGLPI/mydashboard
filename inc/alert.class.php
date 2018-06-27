@@ -312,7 +312,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         $left
-                        WHERE $search_assign AND NOT `glpi_tickets`.`is_deleted` ";
+                        WHERE $search_assign AND `glpi_tickets`.`is_deleted` = 0 ";
             $q4 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::CLOSED . ") ";
 
