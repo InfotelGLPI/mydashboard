@@ -133,7 +133,7 @@ class PluginMydashboardProject {
         case "process" : // on affiche les projets assignés au user
             $query .= " WHERE $is_deleted
                              AND ($search_assign)  
-                             AND glpi_projectstates.is_finished = 0";
+                             AND (glpi_projectstates.is_finished = 0 OR glpi_projects.projectstates_id = 0)";
                       getEntitiesRestrictRequest("AND", "glpi_projects");
             break;
       }

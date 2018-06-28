@@ -155,8 +155,8 @@ class PluginMydashboardPlanning {
          }
       }
       $events    = json_encode($events);
-      $list_day  = __('List by day', 'myydashboard');
-      $list_week = __('List by week', 'myydashboard');
+      $list_day  = __('List by day', 'mydashboard');
+      $list_week = __('List by week', 'mydashboard');
       $today     = date("Y-m-d");
       $graph     = "<script>
             $(document).ready(function() {
