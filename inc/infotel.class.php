@@ -797,7 +797,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $date_criteria     = $crit['date'];
             $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
 
-            $query    = "SELECT `glpi_tickets_users`.`users_id` as users_id, COUNT(`glpi_tickets`.`id`) as count
+            $query    = "SELECT IFNULL(`glpi_tickets_users`.`users_id`,-1) as users_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_tickets_users`
                         ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 1)
@@ -814,11 +814,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $nb       = count($datas);
             if ($nb > 0) {
                foreach ($datas as $k => $v) {
-
-                  if (!empty($k)) {
-                     $name = getUserName($k);
-                  } else {
+                  if ($k == 0) {
+                     $name = __('Email');
+                  } else if ($k == -1) {
                      $name = __('None');
+                  } else if ($k > 0) {
+                     $name = getUserName($k);
                   }
                   $dataspie[] = $v;
                   $namespie[] = $name;
