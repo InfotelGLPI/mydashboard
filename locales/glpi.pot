@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 15:15+0200\n"
+"POT-Creation-Date: 2018-07-03 17:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -325,44 +325,44 @@ msgstr ""
 msgid "Tickets stock by month"
 msgstr ""
 
-#: inc/infotel.class.php:68 inc/infotel.class.php:830
+#: inc/infotel.class.php:68 inc/infotel.class.php:831
 msgid "Top ten ticket requesters by month"
 msgstr ""
 
-#: inc/infotel.class.php:69 inc/infotel.class.php:923
+#: inc/infotel.class.php:69 inc/infotel.class.php:924
 msgid "Process time by technicians by month"
 msgstr ""
 
-#: inc/infotel.class.php:70 inc/infotel.class.php:1258
+#: inc/infotel.class.php:70 inc/infotel.class.php:1259
 msgid "TTR Compliance"
 msgstr ""
 
-#: inc/infotel.class.php:71 inc/infotel.class.php:1392
+#: inc/infotel.class.php:71 inc/infotel.class.php:1393
 msgid "TTO Compliance"
 msgstr ""
 
-#: inc/infotel.class.php:72 inc/infotel.class.php:1571
+#: inc/infotel.class.php:72 inc/infotel.class.php:1572
 msgid "Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: inc/infotel.class.php:73 inc/infotel.class.php:1700
+#: inc/infotel.class.php:73 inc/infotel.class.php:1701
 msgid "Number of opened incidents by category"
 msgstr ""
 
-#: inc/infotel.class.php:74 inc/infotel.class.php:1838
+#: inc/infotel.class.php:74 inc/infotel.class.php:1839
 msgid "Number of opened requests by category"
 msgstr ""
 
-#: inc/infotel.class.php:75 inc/infotel.class.php:1976
-#: inc/infotel.class.php:2415
+#: inc/infotel.class.php:75 inc/infotel.class.php:1977
+#: inc/infotel.class.php:2416
 msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:76 inc/infotel.class.php:2098
+#: inc/infotel.class.php:76 inc/infotel.class.php:2099
 msgid "Percent of use of solution types"
 msgstr ""
 
-#: inc/infotel.class.php:77 inc/infotel.class.php:2214
+#: inc/infotel.class.php:77 inc/infotel.class.php:2215
 msgid "Number of tickets affected by technicians by month"
 msgstr ""
 
@@ -370,27 +370,27 @@ msgstr ""
 msgid "Number of opened and solved tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:79 inc/infotel.class.php:2586
+#: inc/infotel.class.php:79 inc/infotel.class.php:2587
 msgid "Average real duration of treatment of the ticket"
 msgstr ""
 
-#: inc/infotel.class.php:80 inc/infotel.class.php:2722
+#: inc/infotel.class.php:80 inc/infotel.class.php:2726
 msgid "Top ten technicians (by tickets number)"
 msgstr ""
 
-#: inc/infotel.class.php:81 inc/infotel.class.php:2867
+#: inc/infotel.class.php:81 inc/infotel.class.php:2871
 msgid "Number of opened tickets by requester groups"
 msgstr ""
 
-#: inc/infotel.class.php:82 inc/infotel.class.php:2990
+#: inc/infotel.class.php:82 inc/infotel.class.php:2994
 msgid "Global satisfaction level"
 msgstr ""
 
-#: inc/infotel.class.php:83 inc/infotel.class.php:3110
+#: inc/infotel.class.php:83 inc/infotel.class.php:3114
 msgid "Top 10 of opened tickets by location"
 msgstr ""
 
-#: inc/infotel.class.php:84 inc/infotel.class.php:3219
+#: inc/infotel.class.php:84 inc/infotel.class.php:3223
 msgid "Map - Opened tickets by location"
 msgstr ""
 
@@ -399,7 +399,7 @@ msgid "Display of opened tickets by month"
 msgstr ""
 
 #: inc/infotel.class.php:184 inc/infotel.class.php:690
-#: inc/infotel.class.php:2729
+#: inc/infotel.class.php:2733
 msgid "Tickets number"
 msgstr ""
 
@@ -419,81 +419,81 @@ msgstr ""
 msgid "Sum of not solved tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:924
+#: inc/infotel.class.php:925
 msgid "Sum of ticket tasks duration by technicians"
 msgstr ""
 
-#: inc/infotel.class.php:1259
+#: inc/infotel.class.php:1260
 msgid "Display tickets where time to resolve is respected"
 msgstr ""
 
-#: inc/infotel.class.php:1265
+#: inc/infotel.class.php:1266
 msgid "Respected TTR"
 msgstr ""
 
-#: inc/infotel.class.php:1265
+#: inc/infotel.class.php:1266
 msgid "Not respected TTR"
 msgstr ""
 
-#: inc/infotel.class.php:1393
+#: inc/infotel.class.php:1394
 msgid "Display tickets where time to own is respected"
 msgstr ""
 
-#: inc/infotel.class.php:1398
+#: inc/infotel.class.php:1399
 msgid "Respected TTO"
 msgstr ""
 
-#: inc/infotel.class.php:1398
+#: inc/infotel.class.php:1399
 msgid "Not respected TTO"
 msgstr ""
 
-#: inc/infotel.class.php:1954 inc/infotel.class.php:2419
+#: inc/infotel.class.php:1955 inc/infotel.class.php:2420
 msgid "Opened tickets"
 msgstr ""
 
-#: inc/infotel.class.php:1970
+#: inc/infotel.class.php:1971
 msgid "Solved tickets"
 msgstr ""
 
-#: inc/infotel.class.php:2099
+#: inc/infotel.class.php:2100
 msgid "Display percent of solution types for tickets"
 msgstr ""
 
-#: inc/infotel.class.php:2215
+#: inc/infotel.class.php:2216
 msgid "Sum of ticket affected by technicians"
 msgstr ""
 
-#: inc/infotel.class.php:2420
+#: inc/infotel.class.php:2421
 msgid "Closed tickets"
 msgstr ""
 
-#: inc/infotel.class.php:2421
+#: inc/infotel.class.php:2422
 msgid "Number of opened tickets"
 msgstr ""
 
-#: inc/infotel.class.php:2587
+#: inc/infotel.class.php:2588
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
 msgstr ""
 
-#: inc/infotel.class.php:2592
+#: inc/infotel.class.php:2593
 msgid "Tasks duration (minutes)"
 msgstr ""
 
-#: inc/infotel.class.php:2723
+#: inc/infotel.class.php:2727
 msgid "Display of number of tickets by technicians"
 msgstr ""
 
-#: inc/infotel.class.php:2996
+#: inc/infotel.class.php:3000
 msgid "Satisfy percent"
 msgstr ""
 
-#: inc/infotel.class.php:2996
+#: inc/infotel.class.php:3000
 msgid "Not satisfy percent"
 msgstr ""
 
-#: inc/infotel.class.php:3220
+#: inc/infotel.class.php:3224
 msgid ""
 "Display Tickets by location (Latitude / Longitude). You must define a Google "
 "API Key and add it into setup"
@@ -756,13 +756,13 @@ msgid "See the configuration"
 msgstr ""
 
 #: inc/project.class.php:51 inc/project.class.php:55 inc/project.class.php:94
-#: inc/project.class.php:174 inc/project.class.php:193
+#: inc/project.class.php:176 inc/project.class.php:195
 msgid "projects to be processed"
 msgstr ""
 
 #: inc/projecttask.class.php:51 inc/projecttask.class.php:55
-#: inc/projecttask.class.php:95 inc/projecttask.class.php:169
-#: inc/projecttask.class.php:189
+#: inc/projecttask.class.php:95 inc/projecttask.class.php:171
+#: inc/projecttask.class.php:191
 msgid "projects tasks to be processed"
 msgstr ""
 
