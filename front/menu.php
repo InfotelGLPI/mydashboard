@@ -53,11 +53,11 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <link type="text/css" href="../lib/datatables/css/responsive.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../lib/datatables/css/select.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../lib/datatables/css/buttons.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/gridstack/src/gridstack.css" rel="stylesheet">
-           <link type="text/css" href="../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
+           <link type="text/css" href="../../../lib/gridstack/src/gridstack.css" rel="stylesheet">
+           <link type="text/css" href="../../../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
            <script src="../lib/lodash.min.js"></script>
-           <script src="../lib/gridstack/src/gridstack.js"></script>
-           <script src="../lib/gridstack/src/gridstack.jQueryUI.js"></script>
+           <script src="../../../lib/gridstack/src/gridstack.js"></script>
+           <script src="../../../lib/gridstack/src/gridstack.jQueryUI.js"></script>
            <script src="../lib/datatables/js/jquery.dataTables.min.js"></script>
            <script src="../lib/datatables/js/dataTables.responsive.min.js"></script>
            <script src="../lib/moment.min.js"></script>

@@ -51,8 +51,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     */
    function getWidgetNameById($widgetId) {
 
-      $query = "WHERE id = '" . $widgetId . "'";
-      if ($this->getFromDBByQuery($query) === false) {
+      if ($this->getFromDBByCrit(['id' => $widgetId]) === false) {
          return null;
       } else {
          return isset($this->fields['name']) ? $this->fields['name'] : null;
@@ -70,8 +69,7 @@ class PluginMydashboardWidget extends CommonDBTM {
    function getWidgetIdByName($widgetName) {
 
       unset($this->fields);
-      $query = "WHERE name LIKE '" . $widgetName . "'";
-      if ($this->getFromDBByQuery($query) === false) {
+      if ($this->getFromDBByCrit(['name' => $widgetName]) === false) {
          return null;
       } else {
          return isset($this->fields['id']) ? $this->fields['id'] : null;

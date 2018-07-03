@@ -80,10 +80,11 @@ class PluginMydashboardUserWidget extends CommonDBTM {
       if (!$this->checkWidgetId($widgetId)) {
          return null;
       }
-
-      $query = "WHERE (`users_id` = '" . $this->user_id . "' AND `widgets_id` = '" . $widgetId . "' 
-               AND `profiles_id` = '" . $this->profile_id . "' AND `interface` = $this->interface)";
-      if ($this->getFromDBByQuery($query) === false) {
+      
+      if ($this->getFromDBByCrit(['users_id' => $this->user_id,
+                                  'widgets_id' => $widgetId,
+                                  'profiles_id' => $this->profile_id,
+                                  'interface' => $this->interface]) === false) {
          return null;
       } else {
          return isset($this->fields['id']) ? $this->fields['id'] : null;

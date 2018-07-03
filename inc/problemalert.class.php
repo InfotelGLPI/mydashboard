@@ -37,7 +37,7 @@ class PluginMydashboardProblemalert extends CommonDBTM {
 
       $items_id = $item->getID();
       $item->getFromDB($items_id);
-      $this->getFromDBByQuery("WHERE `problems_id` = '" . $items_id . "'");
+      $this->getFromDBByCrit(['problems_id' => $items_id]);
       $itemtype = $item->getType();
 
       $reminder = new Reminder();
@@ -92,7 +92,7 @@ class PluginMydashboardProblemalert extends CommonDBTM {
          echo "</table>";
 
          $alert = new PluginMydashboardAlert();
-         $alert->getFromDBByQuery("WHERE `reminders_id` = '" . $reminders_id . "'");
+         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
          if (isset($alert->fields['id'])) {
             $id        = $alert->fields['id'];

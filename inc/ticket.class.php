@@ -954,7 +954,7 @@ class PluginMydashboardTicket {
       $options['criteria'][0]['link']       = 'AND';
       $options['reset']                     = 'reset';
 
-      if ($_SESSION["glpiactiveprofile"]["interface"] != "central") {
+      if (Session::getCurrentInterface() != "central") {
          $output['title'] = "<a href=\"".$CFG_GLPI["root_doc"]."/front/helpdesk.public.php?create_ticket=1\" class='pointer'>".
               __('Create a ticket')."&nbsp;<i class='fa fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a>";
       } else {

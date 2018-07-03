@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS glpi_plugin_mydashboard_stocktickets (
   nbstocktickets INT UNSIGNED NOT NULL,
   entities_id    INT UNSIGNED NOT NULL
 )
-  ENGINE = MyISAM
+  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;

@@ -1037,7 +1037,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             //
             //            $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
             //
-            //            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
+            //            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), ['glpi_groups.is_assign' => 1]);
             //            $groups   = [];
             //            foreach ($mygroups as $mygroup) {
             //               $groups[] = $mygroup["id"];

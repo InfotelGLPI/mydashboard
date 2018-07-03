@@ -20,6 +20,6 @@ CREATE TABLE `glpi_plugin_mydashboard_problemalerts` (
   `reminders_id` int(11) NOT NULL default '0',
   `problems_id` int(11) NOT NULL default '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
 ALTER TABLE `glpi_plugin_mydashboard_userwidgets` ADD `profiles_id` int(11) NOT NULL default '0' AFTER `users_id`;

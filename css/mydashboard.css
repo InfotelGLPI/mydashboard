@@ -323,7 +323,7 @@ div#tabcontent{
    position: absolute;
    right: 0px;
    top: 0px;
-   z-index: 0;
+   z-index: 10 !important;
    display: none;
 }
 
@@ -337,7 +337,7 @@ div#tabcontent{
    font-size: 12px;
    background-color: #FFF;
    padding: 10px;
-   z-index: 2;
+   z-index: 10 !important;
 }
 
 /*
@@ -716,41 +716,6 @@ svg:hover {
 }
 */
 
-/*****Gridstack******/
-
-#mygrid {
-   width: 98%;
-   margin-left: 10px;
-   margin-right: 5px;
-}
-
-.ui-state-disabled {
-   opacity: 1 !important;
-}
-
-.md-grid-stack {
-   background: #FFF;
-}
-
-.md-grid-stack-item {
-   background: white;
-   text-align: center;
-   margin-bottom: 16px;
-   min-height: 100px;
-   padding: 0 5px 0 5px !important;
-}
-
-.md-grid-stack-item-content {
-   border: 1px dashed lightgray;
-   /*border: 1px solid #e6e6e6;*/
-   -webkit-border-radius: 5px;
-   -moz-border-radius: 5px;
-   border-radius: 5px;
-   font-size: 12px;
-   background-color: #FFF;
-   padding: 5px 5px 5px 5px;
-}
-
 /*****Chartjs******/
 
 #chart-container {
@@ -760,7 +725,7 @@ svg:hover {
 .md-button {
    position: relative;
    margin: 0;
-   /*float: left;*/
+   float: left;
    outline: none;
    cursor: pointer;
    border-radius: 0;
@@ -983,4 +948,57 @@ div.dt-button-background {
 /* Planning widget */
 .fc-scroller {
    height: auto !important;
+}
+
+
+
+/*****Gridstack******/
+/* 9.3 */
+.grid-stack-item:not(.lock-bottom) .grid-stack-item-content {
+   font-size: 11px;
+   font-weight: normal !important;
+   text-align: center;
+   overflow: hidden;
+   cursor: move; /* fallback */
+   cursor: -webkit-grab;
+   cursor:    -moz-grab;
+   cursor:         grab;
+}
+
+#mygrid {
+   width: 98%;
+   margin-left: 10px;
+   margin-right: 5px;
+}
+
+.ui-state-disabled {
+   opacity: 1 !important;
+}
+
+.md-grid-stack {
+   background: #FFF;
+}
+
+.md-grid-stack-item {
+   background: white !important;
+   text-align: center;
+   margin-bottom: 16px;
+   min-height: 100px;
+   padding: 0 5px 0 5px !important;
+}
+
+.md-grid-stack-item-content {
+   border: 1px dashed lightgray;
+   /*border: 1px solid #e6e6e6;*/
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   border-radius: 5px;
+   font-size: 12px;
+   background-color: #FFF !important;
+   padding: 5px 5px 5px 5px;
+}
+
+.grid-stack .grid-stack-placeholder > .placeholder-content {
+   border: 1px dashed #000 !important;
+   background-color: #FFF !important;
 }

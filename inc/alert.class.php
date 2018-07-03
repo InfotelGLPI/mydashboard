@@ -926,7 +926,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
-            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), "`is_assign`");
+            $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), ['glpi_groups.is_assign' => 1]);
             $groups   = [];
             foreach ($mygroups as $mygroup) {
                $groups[] = $mygroup["id"];
@@ -1646,7 +1646,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function showForm(Reminder $item) {
       $reminders_id = $item->getID();
 
-      $this->getFromDBByQuery("WHERE `reminders_id` = '" . $reminders_id . "'");
+      $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
       if (isset($this->fields['id'])) {
          $id        = $this->fields['id'];

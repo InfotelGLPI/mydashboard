@@ -11,6 +11,6 @@ CREATE TABLE `glpi_plugin_mydashboard_profileauthorizedwidgets` (
   COMMENT 'RELATION to glpi_mydashboard_widgets (id)',
   PRIMARY KEY (`id`)
 )
-  ENGINE = MyISAM
+  ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_unicode_ci;

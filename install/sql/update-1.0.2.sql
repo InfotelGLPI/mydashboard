@@ -5,5 +5,5 @@ CREATE TABLE `glpi_plugin_mydashboard_alerts` (
   `impact`       TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`)
 )
-  ENGINE = MyISAM
+  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
