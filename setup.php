@@ -133,7 +133,7 @@ function plugin_version_mydashboard() {
 
    return [
       'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => '1.5.1',
+      'version'        => '1.5.2',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
