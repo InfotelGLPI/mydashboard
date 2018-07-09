@@ -37,7 +37,6 @@ function plugin_init_mydashboard() {
 
    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
-      "lib/fileSaver.min.js",
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
       //"lib/sdashboard/jquery-sDashboard.js",
@@ -75,7 +74,8 @@ function plugin_init_mydashboard() {
             if (class_exists('PluginServicecatalogMain') && Session::haveRight("plugin_servicecatalog", READ)) {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
-            if (strpos($_SERVER['REQUEST_URI'], 'redirect') !== false) {
+            //if (strpos($_SERVER['REQUEST_URI'], 'redirect') !== false) {
+            if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'redirect') !== false) {
                $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
             }
             if (isset($_SESSION["glpi_plugin_mydashboard_loaded"])
@@ -133,7 +133,7 @@ function plugin_version_mydashboard() {
 
    return [
       'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => '1.5.2',
+      'version'        => '1.5.1',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',

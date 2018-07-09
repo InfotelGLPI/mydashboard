@@ -51,8 +51,10 @@
 
 .alert-content-div {
    margin-left: 5px;
-   margin-top: 5px;
+   margin-top: 15px;
+   margin-bottom: 15px;
    width: 95% !important;
+   min-height: 100px !important;
 }
 
 .alert_date {
