@@ -247,7 +247,7 @@ class PluginMydashboardHelper {
 
       $year  = intval(strftime("%Y"));
       $month = intval(strftime("%m") - 1);
-
+      $crit['crit']['year'] = $year;
       if (in_array("month", $criterias)) {
          if ($month > 0) {
             $year        = strftime("%Y");
@@ -272,6 +272,7 @@ class PluginMydashboardHelper {
          } else {
             $opt["year"] = $year;
          }
+         $crit['crit']['year'] = $opt['year'];
       }
 
       $nbdays                    = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -280,6 +281,12 @@ class PluginMydashboardHelper {
       $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' 
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
 
+      if (!in_array("month", $criterias)) {
+         $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01' 
+                              AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
+         $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
+                              AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
+      }
       $opt["users_id"] = $_SESSION['glpiID'];
       if (in_array("users_id", $criterias)) {
          if (isset($params['opt']['users_id']) && Session::haveRight("plugin_activity_all_users", 1)) {

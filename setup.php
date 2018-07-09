@@ -72,10 +72,12 @@ function plugin_init_mydashboard() {
             $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => 'PluginMydashboardMenu'];
             $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = '/front/menu.php';
 
-            if (class_exists('PluginServicecatalogMain') && Session::haveRight("plugin_servicecatalog", READ)) {
+            if (class_exists('PluginServicecatalogMain')
+                && Session::haveRight("plugin_servicecatalog", READ)) {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
-            if (strpos($_SERVER['REQUEST_URI'], 'redirect') !== false) {
+            if (isset($_SERVER['HTTP_REFERER'])
+                && strpos($_SERVER['HTTP_REFERER'], 'redirect') !== false) {
                $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
             }
             if (isset($_SESSION["glpi_plugin_mydashboard_loaded"])
@@ -146,7 +148,8 @@ function plugin_version_mydashboard() {
  * @return bool
  */
 function plugin_mydashboard_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.3', 'lt') || version_compare(GLPI_VERSION, '9.4', 'ge')) {
+   if (version_compare(GLPI_VERSION, '9.3', 'lt')
+         || version_compare(GLPI_VERSION, '9.4', 'ge')) {
       echo __('This plugin requires GLPI >= 9.3');
       return false;
    }

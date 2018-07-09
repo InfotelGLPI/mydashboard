@@ -2686,10 +2686,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $opt  = $options['opt'];
             $crit = $options['crit'];
 
-            $type_criteria     = $crit['type'];
-            $entities_criteria = $crit['entities_id'];
-            $date_criteria     = $crit['date'];
-            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
+            $type                 = $opt['type'];
+            $type_criteria        = $crit['type'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $date_criteria        = $crit['date'];
+            $year_criteria        = $crit['year'];
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
 
             $query   = "SELECT IFNULL(`glpi_tickets_users`.`users_id`,-1) as users_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
@@ -2706,7 +2710,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabtickets  = [];
             $tabtech     = [];
             $tabtechName = [];
-
+            $tabtechid = [];
             while ($data = $DB->fetch_array($results)) {
                $tabtickets[] = $data['count'];
                $tabtech[]    = $data['users_id'];
@@ -2718,6 +2722,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $users_id = __('Email');
                }
                $tabtechName[] = $users_id;
+               $tabtechid[] = $data['users_id'];
             }
 
             $palette = PluginMydashboardColor::getColors(10);
@@ -2729,7 +2734,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $backgroundColor = json_encode($palette);
             $tabNamesset     = json_encode($tabtechName);
-
+            $tabIdTechset     = json_encode($tabtechid);
             $ticketsnumber = __('Tickets number', 'mydashboard');
 
             $graph = "<script type='text/javascript'>
@@ -2741,7 +2746,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                              }],
                            labels: $tabNamesset
                            };
-                     
+                     var techidset = $tabIdTechset;
                      $(document).ready(
                         function () {
                             var isChartRendered = false;
@@ -2749,7 +2754,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             var ctx = canvas . getContext('2d');
                             ctx.canvas.width = 700;
                             ctx.canvas.height = 400;
-                            var AverageBarChart = new Chart(ctx, {
+                            var TicketByTechsBarChart = new Chart(ctx, {
                                   type: 'horizontalBar',
                                   data: TicketByTechsData,
                                   options: {
@@ -2794,8 +2799,36 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          isChartRendered = true;
                                        }
                                      },
+                                     hover: {
+                                        onHover: function(event,elements) {
+                                           $('#TicketByTechsBarChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                                         }
+                                      }
                                   }
                               });
+                                canvas.onclick = function(evt) {
+                                 var activePoints = TicketByTechsBarChart.getElementsAtEvent(evt);
+                                 if (activePoints[0]) {
+                                   var chartData = activePoints[0]['_chart'].config.data;
+                                   var idx = activePoints[0]['_index'];
+                                   var label = chartData.labels[idx];
+                                   var value = chartData.datasets[0].data[idx];
+                                   var techtik = techidset[idx];
+                                   $.ajax({
+                                      url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                                      type: 'POST',
+                                      data:{techtik:techtik,
+                                           year:$year_criteria,
+                                           type:$type, 
+                                           entities_id:$entities_id_criteria, 
+                                           sons:$sons_criteria, 
+                                           widget:'$widgetId'},
+                                      success:function(response) {
+                                              window.open(response);
+                                            }
+                                   });
+                                 }
+                               };
                            }
                       );
                      
