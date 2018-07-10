@@ -1762,7 +1762,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          echo "</tr>";
          echo "</table>";
 
-         $this->getFromDBByQuery("WHERE `reminders_id` = '" . $reminders_id . "'");
+         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
          if (isset($this->fields['id'])) {
             $id        = $this->fields['id'];
