@@ -146,7 +146,7 @@ class PluginMydashboardPlanning {
                $title = $val['entities_name'] . " > " . $val['name'];
             }
             $events[] = ['title'   => $title,
-                         'tooltip' => Html::clean($val['content']),
+                         'tooltip' => isset($val['content']) ? Html::clean($val['content']) : "",
                          'start'   => $val["begin"],
                          'end'     => $val["end"],
                          'url'     => isset($val['url']) ? $val['url'] : "",
