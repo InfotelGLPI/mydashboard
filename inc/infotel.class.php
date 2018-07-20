@@ -3552,28 +3552,42 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $target   = $data['search']['target'];
                $criteria = $data['search']['criteria'];
                array_pop($criteria);
+
+               if (isset($sons_criteria) && $sons_criteria > 0) {
+                  $criteria[] = [
+                     'field'      => 80,
+                     'searchtype' => 'under',
+                     'value'      => $entities_id_criteria
+                  ];
+               } else {
+                  $criteria[] = [
+                     'field'      => 80,
+                     'searchtype' => 'equals',
+                     'value'      => $entities_id_criteria
+                  ];
+               }
+               if ($type > 0) {
+                  $criteria[] = [
+                     'link'       => 'AND',
+                     'field'      => 14,
+                     'searchtype' => 'equals',
+                     'value'      => $type
+                  ];
+               }
+               if ($groups_criteria > 0) {
+                  $criteria[] = [
+                     'link'       => 'AND',
+                     'field'      => 8,
+                     'searchtype' => 'equals',
+                     'value'      => $groups_criteria
+                  ];
+               }
                $criteria[] = [
                   'link'       => 'AND',
                   'field'      => 83,
                   'searchtype' => 'equals',
                   'value'      => 'CURLOCATION'
                ];
-//               if ($type > 0) {
-//                  $criteria[] = [
-//                     'link'       => 'AND',
-//                     'field'      => 14,
-//                     'searchtype' => 'equals',
-//                     'value'      => $type
-//                  ];
-//               }
-//               if ($groups_criteria > 0) {
-//                  $criteria[] = [
-//                     'link'       => 'AND',
-//                     'field'      => 8,
-//                     'searchtype' => 'equals',
-//                     'value'      => $groups_criteria
-//                  ];
-//               }
                $globallinkto = Toolbox::append_params(
                   [
                      'criteria'     => Toolbox::stripslashes_deep($criteria),
