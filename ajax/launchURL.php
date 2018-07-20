@@ -56,12 +56,7 @@ if (isset($_POST["widget"])
       $options['criteria'][1]['value']      = $_POST["datetik"];
       $options['criteria'][1]['link']       = 'AND';
 
-      if (empty($_POST["groups_id"])) {
-         $options['criteria'][2]['field']      = 8; // technician group
-         $options['criteria'][2]['searchtype'] = 'contains';
-         $options['criteria'][2]['value']      = '^$';
-         $options['criteria'][2]['link']       = 'AND';
-      } else {
+      if (!empty($_POST["groups_id"])) {
          $options['criteria'][2]['field']      = 8; // technician group
          $options['criteria'][2]['searchtype'] = 'equals';
          $options['criteria'][2]['value']      = $_POST["groups_id"];
@@ -130,12 +125,7 @@ if (isset($_POST["widget"])
       $options['criteria'][0]['value']      = "notold";
       $options['criteria'][0]['link']       = 'AND';
 
-      if (empty($_POST["groups_id"])) {
-         $options['criteria'][1]['field']      = 71; // requester group
-         $options['criteria'][1]['searchtype'] = 'contains';
-         $options['criteria'][1]['value']      = '^$';
-         $options['criteria'][1]['link']       = 'AND';
-      } else {
+      if (!empty($_POST["groups_id"])) {
          $options['criteria'][1]['field']      = 71; // requester group
          $options['criteria'][1]['searchtype'] = 'equals';
          $options['criteria'][1]['value']      = $_POST["groups_id"];
@@ -188,12 +178,7 @@ if (isset($_POST["widget"])
          $options['criteria'][2]['link']       = 'AND';
       }
 
-      if (empty($_POST["groups_id"])) {
-         $options['criteria'][3]['field']      = 8; // technician group
-         $options['criteria'][3]['searchtype'] = 'contains';
-         $options['criteria'][3]['value']      = '^$';
-         $options['criteria'][3]['link']       = 'AND';
-      } else {
+      if (!empty($_POST["groups_id"])) {
          $options['criteria'][3]['field']      = 8; // technician group
          $options['criteria'][3]['searchtype'] = 'equals';
          $options['criteria'][3]['value']      = $_POST["groups_id"];
@@ -289,12 +274,7 @@ if (isset($_POST["widget"])
       $options['criteria'][3]['value'] = $_POST["entities_id"];
       $options['criteria'][3]['link']  = 'AND';
 
-      if (empty($_POST["groups_id"])) {
-         $options['criteria'][4]['field']      = 8; // technician group
-         $options['criteria'][4]['searchtype'] = 'contains';
-         $options['criteria'][4]['value']      = '^$';
-         $options['criteria'][4]['link']       = 'AND';
-      } else {
+      if (!empty($_POST["groups_id"])) {
          $options['criteria'][4]['field']      = 8; // technician group
          $options['criteria'][4]['searchtype'] = 'equals';
          $options['criteria'][4]['value']      = $_POST["groups_id"];

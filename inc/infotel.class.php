@@ -82,6 +82,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "26" => __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "27" => __("Top 10 of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
+                                         $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
          ]
       ];
    }
@@ -150,11 +151,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            DATE_FORMAT(`date`, '%b %Y') AS period_name,
                            COUNT(`glpi_tickets`.`id`) AS nb,
                            DATE_FORMAT(`date`, '%Y-%m') AS period
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_groups_tickets` 
+                        FROM `glpi_tickets` ";
+            if (isset($groups_criteria) && ($groups_criteria != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
-                        AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE $is_deleted $type_criteria ";
+                        AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+            }
+            $query .= " WHERE $is_deleted $type_criteria ";
             if (isset($groups_criteria) && ($groups_criteria != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -1664,11 +1667,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            `glpi_itilcategories`.`name` AS name,
                            `glpi_itilcategories`.`id` AS itilcategories_id,
                            COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_groups_tickets` 
+                        FROM `glpi_tickets` ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
-                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        LEFT JOIN `glpi_itilcategories`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+            }
+            $query .= "LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
                         WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
@@ -1803,11 +1808,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            `glpi_itilcategories`.`name` AS name,
                            `glpi_itilcategories`.`id` AS itilcategories_id,
                            COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_groups_tickets` 
+                        FROM `glpi_tickets` ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
-                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        LEFT JOIN `glpi_itilcategories`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "') ";
+            }
+            $query .= " LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
                         WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
@@ -2710,7 +2717,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabtickets  = [];
             $tabtech     = [];
             $tabtechName = [];
-            $tabtechid = [];
+            $tabtechid   = [];
             while ($data = $DB->fetch_array($results)) {
                $tabtickets[] = $data['count'];
                $tabtech[]    = $data['users_id'];
@@ -2722,7 +2729,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $users_id = __('Email');
                }
                $tabtechName[] = $users_id;
-               $tabtechid[] = $data['users_id'];
+               $tabtechid[]   = $data['users_id'];
             }
 
             $palette = PluginMydashboardColor::getColors(10);
@@ -2734,8 +2741,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $backgroundColor = json_encode($palette);
             $tabNamesset     = json_encode($tabtechName);
-            $tabIdTechset     = json_encode($tabtechid);
-            $ticketsnumber = __('Tickets number', 'mydashboard');
+            $tabIdTechset    = json_encode($tabtechid);
+            $ticketsnumber   = __('Tickets number', 'mydashboard');
 
             $graph = "<script type='text/javascript'>
                      var TicketByTechsData = {
@@ -3110,11 +3117,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query = "SELECT DISTINCT
                            `glpi_tickets`.`locations_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_groups_tickets` 
+                        FROM `glpi_tickets` ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
-                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
-                        WHERE $is_deleted $type_criteria $entities_criteria ";
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "') ";
+            }
+            $query .= " WHERE $is_deleted $type_criteria $entities_criteria ";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
             }
@@ -3263,12 +3272,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            `glpi_locations`.`comment`,
                             `glpi_locations`.`id`,
                            COUNT(`glpi_tickets`.`id`) AS `nb`
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
-                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                        LEFT JOIN `glpi_groups_tickets` 
+                        FROM `glpi_tickets` ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
-                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "') 
+                            LEFT JOIN `glpi_groups`  ON (`glpi_groups_tickets`.`groups_id` = `glpi_groups`.`id` ) ";
+            }
+            $query .= " LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
+                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
                         WHERE $is_deleted $type_criteria $entities_criteria ";
             if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
@@ -3316,12 +3328,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      $options['criteria'][3]['value'] = $entities_id_criteria;
                      $options['criteria'][3]['link']  = 'AND';
 
-                     if (empty($groups_criteria)) {
-                        $options['criteria'][4]['field']      = 8; // technician group
-                        $options['criteria'][4]['searchtype'] = 'contains';
-                        $options['criteria'][4]['value']      = '^$';
-                        $options['criteria'][4]['link']       = 'AND';
-                     } else {
+                     if (!empty($groups_criteria)) {
                         $options['criteria'][4]['field']      = 8; // technician group
                         $options['criteria'][4]['searchtype'] = 'equals';
                         $options['criteria'][4]['value']      = $groups_criteria;
@@ -3439,6 +3446,287 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph .= "<div id=\"TicketsByLocationMap\" class=\"mapping\"></div>";
             $graph .= "</div>";
 
+            $widget->toggleWidgetRefresh();
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+
+            break;
+
+         case $this->getType() . "29":
+
+            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
+            $paramsc   = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($paramsc);
+
+            $opt  = $options['opt'];
+            $crit = $options['crit'];
+
+            $type                 = $opt['type'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $groups_criteria      = $crit['groups_id'];
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("OpenStreetMap - Opened tickets by location", "mydashboard");
+            $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude)", "mydashboard"));
+            $widget->setWidgetTitle($title);
+
+            $params['as_map']     = 1;
+            $params['is_deleted'] = 0;
+            $params['order']      = 'DESC';
+            $params['sort']       = 19;
+            $params['start']      = 0;
+            $params['list_limit'] = 999999;
+            $itemtype             = 'Ticket';
+
+            if (isset($sons_criteria) && $sons_criteria > 0) {
+               $params['criteria'][] = [
+                  'field'      => 80,
+                  'searchtype' => 'under',
+                  'value'      => $entities_id_criteria
+               ];
+            } else {
+               $params['criteria'][] = [
+                  'field'      => 80,
+                  'searchtype' => 'equals',
+                  'value'      => $entities_id_criteria
+               ];
+            }
+            $params['criteria'][] = [
+               'link'       => 'AND',
+               'field'      => 12,
+               'searchtype' => 'equals',
+               'value'      => 'notold'
+            ];
+            $params['criteria'][] = [
+               'link'       => 'AND NOT',
+               'field'      => 998,
+               'searchtype' => 'contains',
+               'value'      => 'NULL'
+            ];
+            $params['criteria'][] = [
+               'link'       => 'AND NOT',
+               'field'      => 999,
+               'searchtype' => 'contains',
+               'value'      => 'NULL'
+            ];
+
+            if ($type > 0) {
+               $params['criteria'][] = [
+                  'link'       => 'AND',
+                  'field'      => 14,
+                  'searchtype' => 'equals',
+                  'value'      => $type
+               ];
+            }
+
+            if ($groups_criteria > 0) {
+               $params['criteria'][] = [
+                  'link'       => 'AND',
+                  'field'      => 8,
+                  'searchtype' => 'equals',
+                  'value'      => $groups_criteria
+               ];
+            }
+            $data = Search::prepareDatasForSearch('Ticket', $params);
+            Search::constructSQL($data);
+            Search::constructData($data);
+
+            $paramsh = ["widgetId"  => $widgetId,
+                        "name"      => 'TicketsByLocationOpenStreetMap',
+                        "onsubmit"  => false,
+                        "opt"       => $opt,
+                        "criterias" => $criterias,
+                        "export"    => false,
+                        "canvas"    => false,
+                        "nb"        => 1];
+            $graph   = PluginMydashboardHelper::getGraphHeader($paramsh);
+
+            if ($data['data']['totalcount'] > 0) {
+
+               $target   = $data['search']['target'];
+               $criteria = $data['search']['criteria'];
+               array_pop($criteria);
+               $criteria[] = [
+                  'link'       => 'AND',
+                  'field'      => 83,
+                  'searchtype' => 'equals',
+                  'value'      => 'CURLOCATION'
+               ];
+//               if ($type > 0) {
+//                  $criteria[] = [
+//                     'link'       => 'AND',
+//                     'field'      => 14,
+//                     'searchtype' => 'equals',
+//                     'value'      => $type
+//                  ];
+//               }
+//               if ($groups_criteria > 0) {
+//                  $criteria[] = [
+//                     'link'       => 'AND',
+//                     'field'      => 8,
+//                     'searchtype' => 'equals',
+//                     'value'      => $groups_criteria
+//                  ];
+//               }
+               $globallinkto = Toolbox::append_params(
+                  [
+                     'criteria'     => Toolbox::stripslashes_deep($criteria),
+                     'metacriteria' => Toolbox::stripslashes_deep($data['search']['metacriteria'])
+                  ],
+                  '&amp;'
+               );
+               $parameters   = "as_map=0&amp;sort=" . $data['search']['sort'] . "&amp;order=" . $data['search']['order'] . '&amp;' .
+                               $globallinkto;
+
+               $typename = $itemtype::getTypeName(2);
+
+               if (strpos($target, '?') == false) {
+                  $fulltarget = $target . "?" . $parameters;
+               } else {
+                  $fulltarget = $target . "&" . $parameters;
+               }
+
+               $graph .= "<script>
+                    $(function() {
+                       var map = initMap($('#TicketsByLocationOpenStreetMap'), 'map', '500px');
+                         _loadMap(map, 'Ticket');
+                   });
+
+                var _loadMap = function(map_elt, itemtype) {
+                  L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
+                  var _micon = 'circle';
+      
+                  var stdMarker = L.AwesomeMarkers.icon({
+                     icon: _micon,
+                     markerColor: 'blue'
+                  });
+      
+                  var aMarker = L.AwesomeMarkers.icon({
+                     icon: _micon,
+                     markerColor: 'cadetblue'
+                  });
+      
+                  var bMarker = L.AwesomeMarkers.icon({
+                     icon: _micon,
+                     markerColor: 'purple'
+                  });
+      
+                  var cMarker = L.AwesomeMarkers.icon({
+                     icon: _micon,
+                     markerColor: 'darkpurple'
+                  });
+      
+                  var dMarker = L.AwesomeMarkers.icon({
+                     icon: _micon,
+                     markerColor: 'red'
+                  });
+      
+                  var eMarker = L.AwesomeMarkers.icon({
+                     icon: _micon,
+                     markerColor: 'darkred'
+                  });
+      
+      
+                  //retrieve geojson data
+                  map_elt.spin(true);
+                  $.ajax({
+                     dataType: 'json',
+                     method: 'POST',
+                     url: '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/map.php',
+                     data: {
+                        itemtype: itemtype,
+                        params: " . json_encode($params) . "
+                     }
+                  }).done(function(data) {
+                     var _points = data.points;
+                     var _markers = L.markerClusterGroup({
+                        iconCreateFunction: function(cluster) {
+                           var childCount = cluster.getChildCount();
+      
+                           var markers = cluster.getAllChildMarkers();
+                           var n = 0;
+                           for (var i = 0; i < markers.length; i++) {
+                              n += markers[i].count;
+                           }
+      
+                           var c = ' marker-cluster-';
+                           if (n < 10) {
+                              c += 'small';
+                           } else if (n < 100) {
+                              c += 'medium';
+                           } else {
+                              c += 'large';
+                           }
+      
+                           return new L.DivIcon({ html: '<div><span>' + n + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+                        }
+                     });
+      
+                     $.each(_points, function(index, point) {
+                        var _title = '<strong>' + point.title + '</strong><br/><a target=\'_blank\' href=\''+'$fulltarget'.replace(/CURLOCATION/, point.loc_id)+'\'>" . sprintf(__('%1$s %2$s'), 'COUNT', $typename) . "'.replace(/COUNT/, point.count)+'</a>';
+                        if (point.types) {
+                           $.each(point.types, function(tindex, type) {
+                              _title += '<br/>" . sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE') . "'.replace(/COUNT/, type.count).replace(/TYPE/, type.name);
+                           });
+                        }
+                        var _icon = stdMarker;
+                        if (point.count < 10) {
+                           _icon = stdMarker;
+                        } else if (point.count < 100) {
+                           _icon = aMarker;
+                        } else if (point.count < 1000) {
+                           _icon = bMarker;
+                        } else if (point.count < 5000) {
+                           _icon = cMarker;
+                        } else if (point.count < 10000) {
+                           _icon = dMarker;
+                        } else {
+                           _icon = eMarker;
+                        }
+                        var _marker = L.marker([point.lat, point.lng], { icon: _icon, title: point.title });
+                        _marker.count = point.count;
+                        _marker.bindPopup(_title);
+                        _markers.addLayer(_marker);
+                     });
+      
+                     map_elt.addLayer(_markers);
+                     map_elt.fitBounds(
+                        _markers.getBounds(), {
+                           padding: [50, 50],
+                           maxZoom: 12
+                        }
+                     );
+                  }).fail(function (response) {
+                     var _data = response.responseJSON;
+                     var _message = '" . __s('An error occured loading data :(') . "';
+                     if (_data.message) {
+                        _message = _data.message;
+                     }
+                     var fail_info = L.control();
+                     fail_info.onAdd = function (map) {
+                        this._div = L.DomUtil.create('div', 'fail_info');
+                        this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'fa fa-refresh\'></i> " . __s('Reload') . "</span>';
+                        return this._div;
+                     };
+                     fail_info.addTo(map_elt);
+                     $('#reload_data').on('click', function() {
+                        $('.fail_info').remove();
+                        _loadMap(map_elt);
+                     });
+                  }).always(function() {
+                     //hide spinner
+                     map_elt.spin(false);
+                  });
+               }";
+               $graph .= "</script>";
+            }
+            $graph .= "<div id=\"TicketsByLocationOpenStreetMap\" class=\"mapping\"></div>";
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHtmlContent(
                $graph

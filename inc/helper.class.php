@@ -190,7 +190,10 @@ class PluginMydashboardHelper {
 
       $criterias = $params['criterias'];
 
+
       if (Session::isMultiEntitiesMode()) {
+
+         $opt['entities_id'] = $_SESSION['glpiactive_entity'];
          if (in_array("entities_id", $criterias)) {
             if (isset($params['preferences']['prefered_entity'])
                 && $params['preferences']['prefered_entity'] > 0
@@ -203,6 +206,7 @@ class PluginMydashboardHelper {
                $opt['entities_id'] = $_SESSION['glpiactive_entity'];
             }
          }
+         $opt['sons'] = 0;
          $crit['crit']['sons'] = 0;
          if (in_array("is_recursive", $criterias)) {
             if (!isset($params['opt']['sons'])) {
@@ -222,6 +226,7 @@ class PluginMydashboardHelper {
          $crit['crit']['entity']      = 0;
          $crit['crit']['sons']        = 0;
       }
+      $opt['groups_id'] = 0;
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
          if (isset($params['preferences']['prefered_group'])
@@ -421,7 +426,8 @@ class PluginMydashboardHelper {
             $form    .= __('Recursive') . "&nbsp;";
             $paramsy = [
                'display' => false];
-            $form    .= Dropdown::showYesNo('sons', $opt['sons'], -1, $paramsy);
+            $sons = isset($opt['sons']) ? $opt['sons'] : 0;
+            $form    .= Dropdown::showYesNo('sons', $sons, -1, $paramsy);
             $form    .= "</span>";
             if ($count > 1) {
                $form .= "</br></br>";

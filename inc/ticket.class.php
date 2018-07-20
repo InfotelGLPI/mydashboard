@@ -60,6 +60,7 @@ class PluginMydashboardTicket {
       }
 
       if ($showticket) {
+         $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketcountwidget2"] = __('New tickets', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>";
          $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketlistprocesswidget"] = __('Tickets to be processed') . "&nbsp;<i class='fa fa-table'></i>";
          $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketlistwaitingwidget"] = __('Tickets on pending status') . "&nbsp;<i class='fa fa-table'></i>";
          $array[PluginMydashboardMenu::$TICKET_VIEW]["tickettaskstodowidget"]   = __("Ticket tasks to do") . "&nbsp;<i class='fa fa-table'></i>";
@@ -81,9 +82,7 @@ class PluginMydashboardTicket {
       if ($showticket || $createticket) {
          $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = __('Ticket followup') . "&nbsp;<i class='fa fa-table'></i>";
       }
-      if ($_SESSION["glpishow_jobs_at_login"] && $showticket) {
-         $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget2"] = __('New tickets', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>";
-      }
+
       return $array;
    }
 
@@ -117,6 +116,11 @@ class PluginMydashboardTicket {
             break;
          case "ticketlistobservedwidget":
             return self::showCentralList(0, "observed", false);;
+            break;
+         case "ticketcountwidget2":
+            if ($showticket) {
+               return self::showCentralNewList();
+            }
             break;
          case "ticketlistprocesswidget":
             if ($showticket) {
@@ -158,11 +162,6 @@ class PluginMydashboardTicket {
          case "ticketcountwidget":
             if ($showticket || $createticket) {
                return self::showCentralCount($createticket && (Session::getCurrentInterface() == 'helpdesk'));
-            }
-            break;
-         case "ticketcountwidget2":
-            if ($showticket) {
-               return self::showCentralNewList();
             }
             break;
          case "tickettaskstodowidget":
