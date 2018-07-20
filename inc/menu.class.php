@@ -64,13 +64,13 @@ class PluginMydashboardMenu extends CommonGLPI {
    //Unused
    //private $infos = "";
    public static  $ALL_VIEW                = -1;
-   public static  $CHANGE_VIEW             = 3;
-   public static  $PROBLEM_VIEW            = 2;
    public static  $TICKET_VIEW             = 1;
-   public static  $RSS_VIEW                = 7;
-   public static  $GLOBAL_VIEW             = 6;
+   public static  $PROBLEM_VIEW            = 2;
+   public static  $CHANGE_VIEW             = 3;
    public static  $GROUP_VIEW              = 4;
    public static  $MY_VIEW                 = 5;
+   public static  $GLOBAL_VIEW             = 6;
+   public static  $RSS_VIEW                = 7;
    public static  $PROJECT_VIEW            = 8;
    private static $DEFAULT_ID              = 0;
    private static $_PLUGIN_MYDASHBOARD_CFG = [];
@@ -537,11 +537,11 @@ class PluginMydashboardMenu extends CommonGLPI {
       $views = [self::$TICKET_VIEW,
                 self::$PROBLEM_VIEW,
                 self::$CHANGE_VIEW,
+                self::$PROJECT_VIEW,
                 self::$GROUP_VIEW,
                 self::$MY_VIEW,
                 self::$GLOBAL_VIEW,
-                self::$RSS_VIEW,
-                self::$PROJECT_VIEW];
+                self::$RSS_VIEW];
       //To ease navigation we display the name of the view
       $viewsNames = $this->getViewNames();
 
@@ -844,7 +844,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $names[self::$MY_VIEW]      = __('Personal View');
       $names[self::$GLOBAL_VIEW]  = __('Global View');
       $names[self::$RSS_VIEW]     = _n('RSS feed', 'RSS feeds', 2);
-      $names[self::$PROJECT_VIEW]     = _n('Project', 'Projects', 2);
+      $names[self::$PROJECT_VIEW] = _n('Project', 'Projects', 2);
 
       return $names;
    }

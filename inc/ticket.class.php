@@ -1111,7 +1111,7 @@ class PluginMydashboardTicket {
          // ID
          $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
          if ($output_type == Search::HTML_OUTPUT) {
-            $first_col .= "<br><img src='" . Ticket::getStatusIconURL($job->fields["status"]) . "'
+            $first_col .= "<br><img src='" . CommonITILObject::getStatusIcon($job->fields["status"]) . "'
                                 alt=\"" . Ticket::getStatus($job->fields["status"]) . "\" title=\"" .
                           Ticket::getStatus($job->fields["status"]) . "\">";
          } else {
