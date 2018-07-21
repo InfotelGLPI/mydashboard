@@ -83,6 +83,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "27" => __("Top 10 of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
+                                         $this->getType() . "30" => __("Number of use of request types", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
          ]
       ];
    }
@@ -3582,7 +3583,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      'value'      => $groups_criteria
                   ];
                }
-               $criteria[] = [
+               $criteria[]   = [
                   'link'       => 'AND',
                   'field'      => 83,
                   'searchtype' => 'equals',
@@ -3748,6 +3749,124 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             return $widget;
 
+            break;
+
+         case $this->getType() . "30":
+
+            $criterias = ['entities_id', 'is_recursive', 'type'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt  = $options['opt'];
+            $crit = $options['crit'];
+
+            $type_criteria     = $crit['type'];
+            $entities_criteria = $crit['entities_id'];
+            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
+
+            $query = "SELECT DISTINCT
+                           `glpi_requesttypes`.`name` AS name,
+                           `glpi_requesttypes`.`id` AS requesttypes_id,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_requesttypes`
+                        ON (`glpi_requesttypes`.`id` = `glpi_tickets`.`requesttypes_id`)
+                        WHERE $is_deleted $type_criteria ";
+            $query .= $entities_criteria
+                      . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                      AND `glpi_tickets`.`requesttypes_id` > 0
+                      GROUP BY `glpi_requesttypes`.`id`";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabrequest = [];
+
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  $name[] = $data['name'];
+                  //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
+                  $datas[]       = intval($data['nb']);
+                  $tabrequest[] = $data['requesttypes_id'];
+               }
+            }
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of use of request types", "mydashboard");
+            $widget->setWidgetComment(__("Display number of request types for closed tickets", "mydashboard"));
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($name);
+            $tabrequestset     = json_encode($tabrequest);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataRequestTypePie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var requestset = $tabrequestset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('RequestTypePieChart');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var RequestTypePieChart = new Chart(ctx, {
+                  type: 'doughnut',
+                  data: dataRequestTypePie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+//                      tooltips: {
+//                        callbacks: {
+//                          label: function(tooltipItem, data) {
+//                           var dataset = data.datasets[tooltipItem.datasetIndex];
+//                            var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+//                              return previousValue + currentValue;
+//                            });
+//                            var currentValue = dataset.data[tooltipItem.index];
+//                            var percentage = Math.floor(((currentValue/total) * 100)+0.5);         
+//                            return percentage + \"%\";
+//                          }
+//                        }
+//                      }
+                   }
+                });
+              }
+            );
+                
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'RequestTypePieChart',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => $nb];
+            $graph  .= PluginMydashboardHelper::getGraphHeader($params);
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
             break;
       }
    }
