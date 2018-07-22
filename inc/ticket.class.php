@@ -46,23 +46,24 @@ class PluginMydashboardTicket {
 
       $array = [];
 
-      $array[PluginMydashboardMenu::$TICKET_VIEW] =
+      $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW] =
          [
-            "ticketlisttoapprovewidget"     => __('Your tickets to close') . "&nbsp;<i class='fa fa-table'></i>",
-            "ticketlistrejectedwidget"      => __('Your rejected tickets') . "&nbsp;<i class='fa fa-table'></i>",
             "ticketlistrequestbyselfwidget" => __('Your tickets in progress') . "&nbsp;<i class='fa fa-table'></i>",
             "ticketlistobservedwidget"      => __('Your observed tickets') . "&nbsp;<i class='fa fa-table'></i>",
+            "ticketlistrejectedwidget"      => __('Your rejected tickets') . "&nbsp;<i class='fa fa-table'></i>",
+            "ticketlisttoapprovewidget"     => __('Your tickets to close') . "&nbsp;<i class='fa fa-table'></i>",
             "ticketlistsurveywidget"        => __('Satisfaction survey') . "&nbsp;<i class='fa fa-table'></i>",
          ];
 
       if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
-         $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketlisttovalidatewidget"] = __('Your tickets to validate') . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = __('Your tickets to validate') . "&nbsp;<i class='fa fa-table'></i>";
       }
 
       if ($showticket) {
-         $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketlistprocesswidget"] = __('Tickets to be processed') . "&nbsp;<i class='fa fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_VIEW]["ticketlistwaitingwidget"] = __('Tickets on pending status') . "&nbsp;<i class='fa fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_VIEW]["tickettaskstodowidget"]   = __("Ticket tasks to do") . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketcountwidget2"] = __('New tickets', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = __('Tickets to be processed') . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = __('Tickets on pending status') . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["tickettaskstodowidget"]   = __("Ticket tasks to do") . "&nbsp;<i class='fa fa-table'></i>";
       }
 
       if (Session::haveRight('ticket', Ticket::READGROUP)) {
@@ -81,9 +82,7 @@ class PluginMydashboardTicket {
       if ($showticket || $createticket) {
          $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = __('Ticket followup') . "&nbsp;<i class='fa fa-table'></i>";
       }
-      if ($_SESSION["glpishow_jobs_at_login"] && $showticket) {
-         $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget2"] = __('New tickets', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>";
-      }
+
       return $array;
    }
 

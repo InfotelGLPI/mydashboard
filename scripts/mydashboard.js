@@ -300,106 +300,106 @@ var mydashboard = {
    }
 };
 
-$(document).ready(function () {
-    //===================Start:Showing Menu=====================================
-    //Showing the menu on click
-    $('.plugin_mydashboard_add_button').on('click', function (e) {
-        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
-        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
-        $('.plugin_mydashboard_menuDashboard').width(400);
-        $('.plugin_mydashboard_menuDashboard').zIndex(3);
-        $('.plugin_mydashboard_menuDashboard').show();
-    });
-    //Hiding the menu when clicking outside the menu
-    var menu = false;
-    $("#success-alert").hide();
-    $('.plugin_mydashboard_add_button,.plugin_mydashboard_menuDashboard').click(function (e) {
-        menu = true;
-    });
-    $(document).click(function () {
-      if (!menu) {
-          $('.plugin_mydashboard_menuDashboard').hide();
-      } else {
-          menu = false
-      }
-    });
-
-    //===================Stop:Showing Menu=====================================
-    //===================Start:AccordionEffect=================================
-    //Now the accordion effect w/o jQuery Accordion (wasn't really customizable, and css from other plugin can override dashboard one)
-    //at the beginning every lists of widgets are folded
-    $('.plugin_mydashboard_menuDashboardListContainer,.plugin_mydashboard_menuDashboardList2').slideUp('fast');
-
-    //binding when user wants to unfold/fold a list of widget
-    $('.plugin_mydashboard_menuDashboardListTitle1').click(function () {
-        var isOpened = $(this).hasClass('plugin_mydashboard_menuDashboardListTitle1Opened');
-        $('.plugin_mydashboard_menuDashboardListTitle1').removeClass("plugin_mydashboard_menuDashboardListTitle1Opened");
-      if (!isOpened) {
-         $(this).addClass("plugin_mydashboard_menuDashboardListTitle1Opened");
-      }
-        $('.plugin_mydashboard_menuDashboardListTitle1').not(this).next("div").slideUp('fast');
-        plugin_mydashboard_slideToggle_title1(this);
-    });
-
-    //This part is about lists of lists of widgets (when there are much widgets)
-    //Every list of list are closed at the beginning
-   //   $('.plugin_mydashboard_menuDashboardList2').slideUp('fast');
-    //Binding when user want to unfold/fold a list of widget
-    $('.plugin_mydashboard_menuDashboardListTitle2').click(function () {
-        var isOpened = $(this).hasClass('plugin_mydashboard_menuDashboardListTitle1Opened');
-        $('.plugin_mydashboard_menuDashboardListTitle2').removeClass("plugin_mydashboard_menuDashboardListTitle1Opened");
-      if (!isOpened) {
-         $(this).addClass("plugin_mydashboard_menuDashboardListTitle1Opened");
-      }
-        $('.plugin_mydashboard_menuDashboardListTitle2').not(this).next("ul").slideUp('fast');
-        $(this).next("ul").slideToggle('fast');
-    });
-    //===================Stop:AccordionEffect=================================
-    //===================Start:ListItem click=================================
-    //handling click on all listitem (button to add a specific widget), -> getWidget with data stored in a custom attribute (html5 prefixed as data-*)
-    //XACA
-    $('.plugin_mydashboard_menuDashboardListItem').click(function () {
-
-        var dashboardId = $(this).parents('.plugin_mydashboard_menuDashboard').attr('data-dashboardid');
-        var widgetId = $(this).attr('data-widgetid');
-        var classname = $(this).attr('data-classname');
-        var attrview = $(this).attr('data-view');
-        var view = "";
-      if (typeof attrview != "undefined") {
-         view = "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" + attrview + "</span>";
-      }
-      if (addNewWidget(widgetId) === true) {
-          $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
-              $("#success-alert").slideUp(500);
-          });
-          $('.plugin_mydashboard_menuDashboard').hide();
-      } else {
-          //error
-          $("#error-alert").fadeTo(2000, 500).slideUp(500, function () {
-              $("#error-alert").slideUp(500);
-          });
-      }
-    });
-    //===================Start:Fullscreen mode=================================
-    //handling click on the 'fullscreen' button
-    $('.plugin_mydashboard_header_fullscreen').click(
-         function () {
-            $('#plugin_mydashboard_container').toggleFullScreen();
-            var overlay = $('.sDashboard-overlay');
-            $('#plugin_mydashboard_container').append(overlay);
-            $('#plugin_mydashboard_container').toggleClass('plugin_mydashboard_fullscreen_view');
-         });
-    //===================Stop:Fullscreen mode=================================
-    //===================Start:Log box=================================
-    //Inner logs showing on click on the 'i', (added, removed ....)
-    $('.plugin_mydashboard_header_info_logbox').slideUp();
-    $(window).resize(plugin_mydashboard_logclose);
-    //===================Stop:Log box=================================
-
-    //Options for Datatables, colors of lines
-    $.fn.dataTableExt.oStdClasses.sStripeOdd = 'tab_bg_2';
-    $.fn.dataTableExt.oStdClasses.sStripeEven = 'tab_bg_2';
-});
+// $(document).ready(function () {
+//     //===================Start:Showing Menu=====================================
+//     //Showing the menu on click
+//     $('.plugin_mydashboard_add_button').on('click', function (e) {
+//         $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
+//         $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
+//         $('.plugin_mydashboard_menuDashboard').width(400);
+//         $('.plugin_mydashboard_menuDashboard').zIndex(3);
+//         $('.plugin_mydashboard_menuDashboard').show();
+//     });
+//     //Hiding the menu when clicking outside the menu
+//     var menu = false;
+//     $("#success-alert").hide();
+//     $('.plugin_mydashboard_add_button,.plugin_mydashboard_menuDashboard').click(function (e) {
+//         menu = true;
+//     });
+//     $(document).click(function () {
+//       if (!menu) {
+//           $('.plugin_mydashboard_menuDashboard').hide();
+//       } else {
+//           menu = false
+//       }
+//     });
+//
+//     //===================Stop:Showing Menu=====================================
+//     //===================Start:AccordionEffect=================================
+//     //Now the accordion effect w/o jQuery Accordion (wasn't really customizable, and css from other plugin can override dashboard one)
+//     //at the beginning every lists of widgets are folded
+//     $('.plugin_mydashboard_menuDashboardListContainer,.plugin_mydashboard_menuDashboardList2').slideUp('fast');
+//
+//     //binding when user wants to unfold/fold a list of widget
+//     $('.plugin_mydashboard_menuDashboardListTitle1').click(function () {
+//         var isOpened = $(this).hasClass('plugin_mydashboard_menuDashboardListTitle1Opened');
+//         $('.plugin_mydashboard_menuDashboardListTitle1').removeClass("plugin_mydashboard_menuDashboardListTitle1Opened");
+//       if (!isOpened) {
+//          $(this).addClass("plugin_mydashboard_menuDashboardListTitle1Opened");
+//       }
+//         $('.plugin_mydashboard_menuDashboardListTitle1').not(this).next("div").slideUp('fast');
+//         plugin_mydashboard_slideToggle_title1(this);
+//     });
+//
+//     //This part is about lists of lists of widgets (when there are much widgets)
+//     //Every list of list are closed at the beginning
+//    //   $('.plugin_mydashboard_menuDashboardList2').slideUp('fast');
+//     //Binding when user want to unfold/fold a list of widget
+//     $('.plugin_mydashboard_menuDashboardListTitle2').click(function () {
+//         var isOpened = $(this).hasClass('plugin_mydashboard_menuDashboardListTitle1Opened');
+//         $('.plugin_mydashboard_menuDashboardListTitle2').removeClass("plugin_mydashboard_menuDashboardListTitle1Opened");
+//       if (!isOpened) {
+//          $(this).addClass("plugin_mydashboard_menuDashboardListTitle1Opened");
+//       }
+//         $('.plugin_mydashboard_menuDashboardListTitle2').not(this).next("ul").slideUp('fast');
+//         $(this).next("ul").slideToggle('fast');
+//     });
+//     //===================Stop:AccordionEffect=================================
+//     //===================Start:ListItem click=================================
+//     //handling click on all listitem (button to add a specific widget), -> getWidget with data stored in a custom attribute (html5 prefixed as data-*)
+//     //XACA
+//     $('.plugin_mydashboard_menuDashboardListItem').click(function () {
+//
+//         var dashboardId = $(this).parents('.plugin_mydashboard_menuDashboard').attr('data-dashboardid');
+//         var widgetId = $(this).attr('data-widgetid');
+//         var classname = $(this).attr('data-classname');
+//         var attrview = $(this).attr('data-view');
+//         var view = "";
+//       if (typeof attrview != "undefined") {
+//          view = "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" + attrview + "</span>";
+//       }
+//       if (addNewWidget(widgetId) === true) {
+//           $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+//               $("#success-alert").slideUp(500);
+//           });
+//           $('.plugin_mydashboard_menuDashboard').hide();
+//       } else {
+//           //error
+//           $("#error-alert").fadeTo(2000, 500).slideUp(500, function () {
+//               $("#error-alert").slideUp(500);
+//           });
+//       }
+//     });
+//     //===================Start:Fullscreen mode=================================
+//     //handling click on the 'fullscreen' button
+//     $('.plugin_mydashboard_header_fullscreen').click(
+//          function () {
+//             $('#plugin_mydashboard_container').toggleFullScreen();
+//             var overlay = $('.sDashboard-overlay');
+//             $('#plugin_mydashboard_container').append(overlay);
+//             $('#plugin_mydashboard_container').toggleClass('plugin_mydashboard_fullscreen_view');
+//          });
+//     //===================Stop:Fullscreen mode=================================
+//     //===================Start:Log box=================================
+//     //Inner logs showing on click on the 'i', (added, removed ....)
+//     $('.plugin_mydashboard_header_info_logbox').slideUp();
+//     $(window).resize(plugin_mydashboard_logclose);
+//     //===================Stop:Log box=================================
+//
+//     //Options for Datatables, colors of lines
+//     $.fn.dataTableExt.oStdClasses.sStripeOdd = 'tab_bg_2';
+//     $.fn.dataTableExt.oStdClasses.sStripeEven = 'tab_bg_2';
+// });
 
 var plugin_mydashboard_logclose = function() {
     $('.plugin_mydashboard_header_info_img').click(
@@ -407,9 +407,9 @@ var plugin_mydashboard_logclose = function() {
             $('.plugin_mydashboard_header_info_logbox').slideToggle('fast');
          });
 };
-var plugin_mydashboard_slideToggle_title1 = function (element) {
-    $(element).next("div").slideToggle('fast');
-};
+// var plugin_mydashboard_slideToggle_title1 = function (element) {
+//     $(element).next("div").slideToggle('fast');
+// };
 
 //NEW
 

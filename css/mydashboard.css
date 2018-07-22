@@ -194,7 +194,7 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_header {
-   /* text-align: center;*/
+   text-align: left;
    padding-bottom: 0px !important;
    padding-top: 0px !important;
 
@@ -956,6 +956,20 @@ div.dt-button-background {
 
 /*****Gridstack******/
 /* 9.3 */
+/*  If used tabs
+.ui-tabs {
+   background: #FFF repeat-x top left;
+   box-shadow: 0px 1px 1px #7F7979;
+   width: 100% !important;
+}
+
+.ui-tabs .ui-tabs-panel {
+   display: block;
+   border-width: 0;
+   padding: 0em !important;
+   background: none;
+}
+*/
 .grid-stack-item:not(.lock-bottom) .grid-stack-item-content {
    font-size: 11px;
    font-weight: normal !important;

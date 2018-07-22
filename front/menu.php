@@ -98,6 +98,9 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
        }
        $dashboard = new PluginMydashboardMenu();
        $dashboard->loadDashboard($profile, $predefined_grid);
+//       $options=[];
+//       $dashboard->display($options);
+       
        ?>
 
        </body>

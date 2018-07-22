@@ -62,7 +62,7 @@ class PluginMydashboardPlanning {
 
       if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
          return [
-            PluginMydashboardMenu::$MY_VIEW =>
+            PluginMydashboardMenu::$TICKET_TECHVIEW =>
                [
                   "planningwidget" => __('Your planning') . "&nbsp;<i class='fa fa-calendar'></i>",
                ]
