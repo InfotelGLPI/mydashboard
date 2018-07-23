@@ -2,21 +2,21 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-23 14:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2018-07-23 15:57+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.9\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
 
 #: setup.php:137 inc/menu.class.php:87 inc/preference.class.php:62
 msgid "My Dashboard"
@@ -524,11 +524,11 @@ msgstr "Not satisfy percent"
 
 #: inc/infotel.class.php:3267
 msgid ""
-"Display Tickets by location (Latitude / Longitude). You must define a Google"
-" API Key and add it into setup"
+"Display Tickets by location (Latitude / Longitude). You must define a "
+"Google API Key and add it into setup"
 msgstr ""
-"Display Tickets by location (Latitude / Longitude). You must define a Google"
-" API Key and add it into setup"
+"Display Tickets by location (Latitude / Longitude). You must define a "
+"Google API Key and add it into setup"
 
 #: inc/infotel.class.php:3477
 msgid "Display Tickets by location (Latitude / Longitude)"
