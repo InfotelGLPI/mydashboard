@@ -3554,35 +3554,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $criteria = $data['search']['criteria'];
                array_pop($criteria);
 
-               if (isset($sons_criteria) && $sons_criteria > 0) {
-                  $criteria[] = [
-                     'field'      => 80,
-                     'searchtype' => 'under',
-                     'value'      => $entities_id_criteria
-                  ];
-               } else {
-                  $criteria[] = [
-                     'field'      => 80,
-                     'searchtype' => 'equals',
-                     'value'      => $entities_id_criteria
-                  ];
-               }
-               if ($type > 0) {
-                  $criteria[] = [
-                     'link'       => 'AND',
-                     'field'      => 14,
-                     'searchtype' => 'equals',
-                     'value'      => $type
-                  ];
-               }
-               if ($groups_criteria > 0) {
-                  $criteria[] = [
-                     'link'       => 'AND',
-                     'field'      => 8,
-                     'searchtype' => 'equals',
-                     'value'      => $groups_criteria
-                  ];
-               }
                $criteria[]   = [
                   'link'       => 'AND',
                   'field'      => 83,

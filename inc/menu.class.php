@@ -226,7 +226,6 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    public function showMenu($users_id = -1, $active_profile = -1, $predefined_grid = 0, $rand) {
 
-      Html::requireJs('mydashboard');
       //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
       $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
 
