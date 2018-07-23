@@ -3607,12 +3607,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $fulltarget = $target . "&" . $parameters;
                }
 
-               $graph .= "<script>
-                    $(function() {
-                       var map = initMap($('#TicketsByLocationOpenStreetMap'), 'map', '500px');
-                         _loadMap(map, 'Ticket');
-                   });
-
+               $graph .= "<script>                    
                 var _loadMap = function(map_elt, itemtype) {
                   L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
                   var _micon = 'circle';
@@ -3738,7 +3733,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      //hide spinner
                      map_elt.spin(false);
                   });
-               }";
+               }
+               
+               $(function() {
+                       var map = initMap($('#TicketsByLocationOpenStreetMap'), 'map', '500px');
+                         _loadMap(map, 'Ticket');
+                   });
+               ";
                $graph .= "</script>";
             }
             $graph .= "<div id=\"TicketsByLocationOpenStreetMap\" class=\"mapping\"></div>";
