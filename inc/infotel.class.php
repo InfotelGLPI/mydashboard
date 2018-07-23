@@ -3552,7 +3552,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $target   = $data['search']['target'];
                $criteria = $data['search']['criteria'];
-               array_pop($criteria);
 
                $criteria[]   = [
                   'link'       => 'AND',
