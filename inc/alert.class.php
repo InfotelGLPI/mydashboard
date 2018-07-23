@@ -1219,7 +1219,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "<div class=\"bt-col-xs-4 center alert-title-div \">";
             $wl .= "<i class='fa fa-exclamation-triangle fa-alert-7 fa-alert-orange' aria-hidden='true'></i>";
             $wl .= "</div>";
-            $wl .= "<div class=\"bt-col-xs-8 left \">";
+            $wl .= "<div class=\"bt-col-xs-8 alert-title-div \">";
             $wl .= "<h3>";
             $wl .= $row['name'];
             $wl .= "</h3>";

@@ -30,7 +30,7 @@
 
 #maint-div {
    text-align: left;
-   margin: 10px 1px 30px 30px;
+   /*margin: 10px 1px 30px 30px;*/
    min-height: 150px;
 }
 
@@ -149,7 +149,7 @@
    color: #000;
    font-size: 12px;
    background-color: #FFF;
-   width: 80%;
+   /*width: 80%;*/
 }
 
 .weather_public_block {
