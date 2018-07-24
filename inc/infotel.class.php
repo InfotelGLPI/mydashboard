@@ -83,7 +83,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "27" => __("Top 10 of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
-                                         $this->getType() . "30" => __("Number of use of request types", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
          ]
       ];
    }
@@ -3753,28 +3754,28 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $name        = [];
-            $datas       = [];
+            $name       = [];
+            $datas      = [];
             $tabrequest = [];
 
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
                   $name[] = $data['name'];
                   //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
-                  $datas[]       = intval($data['nb']);
+                  $datas[]      = intval($data['nb']);
                   $tabrequest[] = $data['requesttypes_id'];
                }
             }
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of use of request types", "mydashboard");
-            $widget->setWidgetComment(__("Display number of request types for closed tickets", "mydashboard"));
+            $title  = __("Number of use of request sources", "mydashboard");
+            $widget->setWidgetComment(__("Display number of request sources for closed tickets", "mydashboard"));
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($datas);
             $palette            = PluginMydashboardColor::getColors($nb);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($name);
-            $tabrequestset     = json_encode($tabrequest);
+            $tabrequestset      = json_encode($tabrequest);
             $graph              = "<script type='text/javascript'>
          
             var dataRequestTypePie = {
@@ -3838,6 +3839,190 @@ class PluginMydashboardInfotel extends CommonGLPI {
             );
 
             return $widget;
+            break;
+
+         case $this->getType() . "31":
+
+            $criterias = ['entities_id', 'is_recursive'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt  = $options['opt'];
+            $crit = $options['crit'];
+
+            $entities_criteria = $crit['entities_id'];
+            $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
+
+            $tabdata  = [];
+            $tabnames = [];
+            $tabyears = [];
+            $i        = 0;
+
+            $total = 0;
+
+
+            $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y') AS year, 
+                        DATE_FORMAT(`glpi_tickets`.`date`, '%Y') AS yearname
+                        FROM `glpi_tickets`
+                        WHERE $is_deleted ";
+            $query .= $entities_criteria . " 
+                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y')";
+
+            $results = $DB->query($query);
+
+            while ($data = $DB->fetch_array($results)) {
+
+               $year = $data['year'];
+
+               $query_0 = "SELECT COUNT(`requesttypes_id`) as count
+                     FROM `glpi_tickets`
+                     WHERE $is_deleted " . $entities_criteria . "
+                     AND (`glpi_tickets`.`date` <= '$year-12-31 23:59:59') 
+                     AND (`glpi_tickets`.`date` > ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY))";
+
+               $results_0 = $DB->query($query_0);
+
+               while ($data_0 = $DB->fetch_array($results_0)) {
+                  $total = $data_0['count'];
+               }
+
+               $query_1 = "SELECT COUNT(`requesttypes_id`) as count,
+                                 `glpi_requesttypes`.`name`as namerequest,
+                                 `glpi_tickets`.`requesttypes_id`
+                     FROM `glpi_tickets`
+                     LEFT JOIN `glpi_requesttypes` ON (`glpi_tickets`.`requesttypes_id` = `glpi_requesttypes`.`id`)
+                     WHERE $is_deleted " . $entities_criteria . "
+                     AND (`glpi_tickets`.`date` <= '$year-12-31 23:59:59') 
+                     AND (`glpi_tickets`.`date` > ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY))
+                     GROUP BY `requesttypes_id`";
+
+               $results_1 = $DB->query($query_1);
+
+               while ($data_1 = $DB->fetch_array($results_1)) {
+                  $percent = round(($data_1['count']*100)/$total, 2);
+                  $tabdata[$data_1['requesttypes_id']][$year] = $data_1['count'];
+                  $tabnames[$data_1['requesttypes_id']]       = $data_1['namerequest'];
+               }
+
+               $tabyears[] = $data['yearname'];
+
+               $i++;
+            }
+
+            if (isset($tabdata)) {
+               foreach ($tabdata as $key => $val) {
+                  foreach ($tabyears as $year) {
+                     if (!isset($val[$year])) {
+                        $tabdata[$key][$year] = 0;
+                     }
+                  }
+                  ksort($tabdata[$key]);
+               }
+            }
+
+            $labelsLine = json_encode($tabyears);
+            $palette    = PluginMydashboardColor::getColors($i);
+            $datasets   = [];
+
+            foreach ($tabdata as $k => $v) {
+               $datasets[] =
+                  ['data'        => array_values($v),
+                   'label'       => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
+                   'backgroundColor' => $palette[$k],
+                  ];
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Tickets request sources evolution", "mydashboard");
+            $widget->setWidgetComment(__("Evolution of tickets sources types by year", "mydashboard"));
+            $widget->setWidgetTitle($title);
+            $widget->toggleWidgetRefresh();
+
+            $years      = __('Year', 'mydashboard');
+            $nbrequests = _n('Request source', 'Request sources', 2);
+
+            $jsonsets  = json_encode($datasets);
+            $graph     = "<script type='text/javascript'>
+      
+
+            var RequestTypeEvolutionLine = {
+                    datasets: $jsonsets,
+                  labels:
+                  $labelsLine
+                  };
+            
+//            $(document).ready(
+//               function () {
+                 var isChartRendered = false;
+                  var canvas = document . getElementById('RequestTypeEvolutionLineChart');
+                   var ctx = canvas . getContext('2d');
+                   ctx.canvas.width = 700;
+                   ctx.canvas.height = 400;
+                   var RequestTypeEvolutionLineChart = new Chart(ctx, {
+                     type:
+                     'bar',
+                     data: RequestTypeEvolutionLine,
+                     options: {
+                     responsive: true,
+                     maintainAspectRatio: true,
+                      title:{
+                          display: false,
+                          text:'RequestTypeEvolutionLineChart'
+                      },
+                      tooltips: {
+                     mode:
+                     'index',
+                          intersect: false,
+                      },
+                      hover: {
+                     mode:
+                     'nearest',
+                          intersect: true
+                      },
+                      scales: {
+                           xAxes: [{
+                               stacked: true,
+                               scaleLabel: {
+                                  display: true,
+                                  labelString: '$years'
+                                 }
+                           }],
+                           yAxes: [{
+                               stacked: true,
+                               scaleLabel: {
+                                  display: true,
+                                  labelString: '$nbrequests'
+                                 }
+                           }]
+                       },
+                       animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      }
+                   }
+                   });
+
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'RequestTypeEvolutionLineChart',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => 1];
+            $graph  .= PluginMydashboardHelper::getGraphHeader($params);
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+
             break;
       }
    }
