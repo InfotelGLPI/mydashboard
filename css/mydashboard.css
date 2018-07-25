@@ -915,36 +915,59 @@ div.dt-button-background {
    border: 1px solid #e6e6e6;
    width: 70px;
    min-height: 70px;
+   font-size: 12px;
+}
+
+.ind-link {
+   font-size: 32px;
 }
 
 .ind-widget-new {
    background: #FFF;
-   padding: 30px;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
 }
 
 .ind-widget-late {
    background: #D9534F;
-   padding: 30px;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
 }
 
 .ind-widget-process {
    background: #49BF8F;
-   padding: 30px;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
 }
 
 .ind-widget-pending {
    background: #FFA830;
-   padding: 30px;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
 }
 
 .dem-widget-process {
    background: #337AB7;
-   padding: 30px;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
 }
 
 .ind-widget-solved {
    background: #CCC;
-   padding: 30px;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
 }
 
 /* Planning widget */
