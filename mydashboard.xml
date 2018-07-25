@@ -7,13 +7,11 @@
     <description>
         <short>
             <fr><![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard]]></fr>
-            <en><![CDATA[This plugin enables you to replace GLPI central by a dashboard.]]></en>
+            <en><![CDATA[This plugin enables you to replace GLPI central by a dashboard]]></en>
         </short>
         <long>
-            <fr>
-                <![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard<br />https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/README.md]]></fr>
-            <en>
-                <![CDATA[This plugin enables you to replace GLPI central by a dashboard<br />https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/README.md]]></en>
+            <fr><![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard<br />https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/README.md]]></fr>
+            <en><![CDATA[This plugin enables you to replace GLPI central by a dashboard<br />https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/README.md]]></en>
         </long>
     </description>
     <homepage>https://github.com/InfotelGLPI/mydashboard</homepage>
