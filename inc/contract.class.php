@@ -73,6 +73,7 @@ class PluginMydashboardContract {
    static function showCentral() {
       global $DB, $CFG_GLPI;
 
+      $dbu = new DbUtils();
       if (!Session::haveRight("contract", READ)) {
          return false;
       }
