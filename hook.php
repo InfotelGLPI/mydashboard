@@ -59,8 +59,8 @@ function plugin_mydashboard_install() {
        && !$DB->fieldExists("glpi_plugin_mydashboard_preferences", "replace_central")) {
       //Adding the new field to preferences
       $mig = new Migration("1.0.3");
-
-      $configs         = getAllDatasFromTable("glpi_plugin_mydashboard_configs");
+      $dbu        = new DbUtils();
+      $configs         = $dbu->getAllDataFromTable("glpi_plugin_mydashboard_configs");
       $replace_central = 1;
       //Basically there is only one config for Dashboard (this foreach may be useless)
       foreach ($configs as $config) {

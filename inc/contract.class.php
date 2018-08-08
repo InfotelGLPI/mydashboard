@@ -82,19 +82,19 @@ class PluginMydashboardContract {
       $query = "SELECT COUNT(*)
                 FROM `glpi_contracts`
                 WHERE `glpi_contracts`.`is_deleted`='0' " .
-         getEntitiesRestrictRequest("AND", "glpi_contracts") . "
+               $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )>-30
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )<'0'";
       $result = $DB->query($query);
       $contract0 = $DB->result($result, 0, 0);
-
+      $dbu        = new DbUtils();
       // contrats  echeance j-7
       $query = "SELECT COUNT(*)
                 FROM `glpi_contracts`
                 WHERE `glpi_contracts`.`is_deleted`='0' " .
-         getEntitiesRestrictRequest("AND", "glpi_contracts") . "
+               $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )>'0'
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
@@ -106,7 +106,7 @@ class PluginMydashboardContract {
       $query = "SELECT COUNT(*)
                 FROM `glpi_contracts`
                 WHERE `glpi_contracts`.`is_deleted`='0' " .
-         getEntitiesRestrictRequest("AND", "glpi_contracts") . "
+               $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )>'7'
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
@@ -118,7 +118,7 @@ class PluginMydashboardContract {
       $query = "SELECT COUNT(*)
                 FROM `glpi_contracts`
                 WHERE `glpi_contracts`.`is_deleted`='0' " .
-         getEntitiesRestrictRequest("AND", "glpi_contracts") . "
+               $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
                       AND `glpi_contracts`.`notice`<>'0'
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
@@ -133,7 +133,7 @@ class PluginMydashboardContract {
       $query = "SELECT COUNT(*)
                 FROM `glpi_contracts`
                 WHERE `glpi_contracts`.`is_deleted`='0'" .
-         getEntitiesRestrictRequest("AND", "glpi_contracts") . "
+               $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
                       AND `glpi_contracts`.`notice`<>'0'
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)

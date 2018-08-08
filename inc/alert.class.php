@@ -149,7 +149,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    function getWidgetContentForItem($widgetId, $opt = []) {
       global $CFG_GLPI, $DB;
-
+      $dbu        = new DbUtils();
       switch ($widgetId) {
          case $this->getType() . "1":
             $widget = new PluginMydashboardHtml();
@@ -225,7 +225,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         FROM `glpi_tickets`
                         $left
                         WHERE `glpi_tickets`.`is_deleted` = '0' ";
-            $q1 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q1 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
             AND `glpi_tickets`.`priority` > 4 AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "' AND $search_assign";
 
@@ -249,7 +249,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         FROM `glpi_problems`
                         $left
                         WHERE `glpi_problems`.`is_deleted` = '0' ";
-            $q2 .= getEntitiesRestrictRequest("AND", Problem::getTable())
+            $q2 .= $dbu->getEntitiesRestrictRequest("AND", Problem::getTable())
                    . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
             AND `glpi_problems`.`priority` > 4 AND $search_assign";
 
@@ -272,7 +272,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         FROM `glpi_tickets`
                         $left
                         WHERE `glpi_tickets`.`is_deleted` = '0' ";
-            $q3 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q3 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ") 
             AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "' ";
 
@@ -313,7 +313,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         FROM `glpi_tickets`
                         $left
                         WHERE $search_assign AND `glpi_tickets`.`is_deleted` = 0 ";
-            $q4 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::CLOSED . ") ";
 
             $r4             = $DB->query($q4);
@@ -548,7 +548,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                            FROM `glpi_tickets`
                            $left
                            WHERE `glpi_tickets`.`is_deleted` = '0' ";
-            $q2 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q2 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
                          AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                          AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
@@ -587,7 +587,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                            FROM `glpi_tickets`
                            $left
                            WHERE `glpi_tickets`.`is_deleted` = '0' ";
-            $q3 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q3 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
                          AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                          AND (`glpi_tickets`.`solve_delay_stat` = '0'
@@ -628,7 +628,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                        FROM `glpi_tickets`
                                        $left
                                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
-            $q4 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
                          AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                          AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
@@ -668,7 +668,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                        FROM `glpi_tickets`
                                        $left
                                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
-            $q5 .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $q5 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
                          AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                          AND (`glpi_tickets`.`solve_delay_stat` = '0'

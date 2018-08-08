@@ -117,6 +117,7 @@ class PluginMydashboardProjecttask {
                                      AND `glpi_projecttaskteams`.`itemtype` = 'Group') ";
          }
       }
+      $dbu        = new DbUtils();
       $query = "SELECT DISTINCT `glpi_projecttasks`.`id`
                 FROM `glpi_projecttasks`
                 LEFT JOIN `glpi_projecttaskteams`
@@ -128,7 +129,7 @@ class PluginMydashboardProjecttask {
         case "process" : // on affiche les projets assignés au user
            $query .= " WHERE ($search_assign) 
                       AND (glpi_projectstates.is_finished = 0  OR glpi_projecttasks.projectstates_id = 0)";
-            getEntitiesRestrictRequest("AND", "glpi_projects");
+           $dbu->getEntitiesRestrictRequest("AND", "glpi_projects");
             break;
       }
 

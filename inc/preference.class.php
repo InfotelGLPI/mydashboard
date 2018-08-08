@@ -167,7 +167,8 @@ class PluginMydashboardPreference extends CommonDBTM
    }
 
    public static function checkPreferenceValue($field, $users_id = 0) {
-      $data = getAllDatasFromTable(getTableForItemType(__CLASS__), "`id`='$users_id'");
+      $dbu        = new DbUtils();
+      $data = $dbu->getAllDataFromTable($dbu->getTableForItemType(__CLASS__), ["id" => $users_id]);
       if (!empty($data)) {
          $first = array_pop($data);
          return $first[$field];

@@ -121,7 +121,7 @@ class PluginMydashboardProject {
                                   AND `glpi_projectteams`.`itemtype` = 'Group') ";
          }
       }
-
+      $dbu        = new DbUtils();
       $query = "SELECT DISTINCT `glpi_projects`.`id`
                 FROM `glpi_projects`
                 LEFT JOIN `glpi_projectteams`
@@ -134,7 +134,7 @@ class PluginMydashboardProject {
             $query .= " WHERE $is_deleted
                              AND ($search_assign)  
                              AND (glpi_projectstates.is_finished = 0 OR glpi_projects.projectstates_id = 0)";
-                      getEntitiesRestrictRequest("AND", "glpi_projects");
+           $dbu->getEntitiesRestrictRequest("AND", "glpi_projects");
             break;
       }
 

@@ -349,6 +349,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                                {
                                'iDisplayLength' : $display_count_on_home,
                                'order': $order,
+                               'colReorder': true,
                                'columnDefs' :$defs,
                                rowReorder: {
                                  selector: 'td:nth-child(2)'
@@ -358,6 +359,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                            dom: 'Bfrtip',
                            select: true,
                           buttons: [
+                              'colvis',
                               {
                                   extend: 'collection',
                                   text: 'Export',
@@ -366,7 +368,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                                       'excel',
                                       'csv',
                                       'pdf',
-                                      'print'
+                                      'print',
                                   ]
                               }
                           ]

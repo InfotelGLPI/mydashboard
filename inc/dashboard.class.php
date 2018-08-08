@@ -68,7 +68,8 @@ class PluginMydashboardDashboard extends CommonDBTM {
     * @return int
     */
    public static function checkPreferenceValue($field, $options) {
-      $data = getAllDatasFromTable(getTableForItemType(__CLASS__), "`users_id`='" . $options["users_id"] . "' AND `profiles_id`='" . $options["profiles_id"] . "'");
+      $dbu        = new DbUtils();
+      $data = $dbu->getAllDataFromTable(getTableForItemType(__CLASS__), ["users_id" => $options["users_id"], "profiles_id" => $options["profiles_id"]]);
       if (!empty($data)) {
          $first = array_pop($data);
          return $first[$field];

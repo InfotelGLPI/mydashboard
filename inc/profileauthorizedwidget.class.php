@@ -47,7 +47,8 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
 
       //If profile has right READ it means it can see only authorized widgets
       if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == READ) {
-         $table  = getAllDatasFromTable($this->getTable(), "`profiles_id` = '" . $profiles_id . "'");
+         $dbu        = new DbUtils();
+         $table  = $dbu->getAllDataFromTable($this->getTable(), ["profiles_id" => $profiles_id]);
          $widget = new PluginMydashboardWidget();
 
          $ret = [];

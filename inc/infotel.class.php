@@ -129,7 +129,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
     */
    public function getWidgetContentForItem($widgetId, $opt = []) {
       global $DB, $CFG_GLPI;
-
+      $dbu        = new DbUtils();
       switch ($widgetId) {
 
          case $this->getType() . "1":
@@ -436,7 +436,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "3":
             $profile_user = new Profile_User();
-            $users        = $profile_user->find(getEntitiesRestrictRequest("", "glpi_profiles_users", "entities_id", '', true));
+            $users        = $profile_user->find($dbu->getEntitiesRestrictRequest("", "glpi_profiles_users", "entities_id", '', true));
             $filtredUsers = [];
             foreach ($users as $user) {
                $filtredUsers[$user['users_id']] = $user['users_id'];
@@ -524,7 +524,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query = "SELECT id
                 FROM `glpi_fieldunicities`
                 WHERE `is_active` = '1' " .
-                     getEntitiesRestrictRequest("AND", 'glpi_fieldunicities', "", $_SESSION['glpiactive_entity'],
+                     $dbu->getEntitiesRestrictRequest("AND", 'glpi_fieldunicities', "", $_SESSION['glpiactive_entity'],
                                                 true);
             $query .= "ORDER BY `entities_id` DESC";
 
@@ -1232,7 +1232,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         WHERE $is_deleted $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
-            $all           .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $all           .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                               . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
@@ -1246,7 +1246,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                             AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
                                                  OR (`glpi_tickets`.`solvedate` IS NULL
                                                       AND `glpi_tickets`.`time_to_resolve` < NOW()))";
-            $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
             //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
@@ -1364,7 +1364,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         WHERE $is_deleted $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
-            $all .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $all .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                     . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
@@ -1380,7 +1380,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                                                                `glpi_tickets`.`date`))
                                                  OR (`glpi_tickets`.`takeintoaccount_delay_stat` = 0
                                                       AND `glpi_tickets`.`time_to_own` < NOW()))";
-            $query .= getEntitiesRestrictRequest("AND", Ticket::getTable())
+            $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
             //            $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
@@ -2883,7 +2883,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
                         AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')
                         WHERE $is_deleted $type_criteria ";
-            $query .= getEntitiesRestrictRequest("AND", Ticket::getTable());
+            $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `groups_id`";
 
@@ -4236,6 +4236,18 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $techlist[] = $data['users_id'];
          }
       }
+//      else {
+//         $query = "SELECT `glpi_tickets_users`.`users_id`"
+//                  . "FROM `glpi_tickets_users` "
+//                  . "WHERE  `glpi_tickets_users`.`type` = ".CommonITILActor::ASSIGN."
+//         GROUP BY `glpi_tickets_users`.`users_id`";
+//
+//         $result_gu = $DB->query($query);
+//
+//         while ($data = $DB->fetch_assoc($result_gu)) {
+//            $techlist[] = $data['users_id'];
+//         }
+//      }
       $current_month = date("m");
       foreach ($months as $key => $month) {
 

@@ -53,6 +53,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <link type="text/css" href="../lib/datatables/css/responsive.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../lib/datatables/css/select.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../lib/datatables/css/buttons.dataTables.min.css" rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/css/colReorder.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../../../lib/gridstack/src/gridstack.css" rel="stylesheet">
            <link type="text/css" href="../../../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
            <script src="../lib/lodash.min.js"></script>
@@ -67,6 +68,8 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/html2canvas.min.js"></script>
            <script src="../lib/datatables/js/dataTables.select.min.js"></script>
            <script src="../lib/datatables/js/dataTables.buttons.min.js"></script>
+           <script src="../lib/datatables/js/buttons.colVis.min.js"></script>
+           <script src="../lib/datatables/js/dataTables.colReorder.min.js"></script>
            <script src="../lib/jszip/js/jszip.min.js"></script>
            <script src="../lib/pdfmake/js/pdfmake.min.js"></script>
            <script src="../lib/pdfmake/js/vfs_fonts.js"></script>
@@ -76,10 +79,10 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/countUp-jquery.js"></script>
 
           <?php
-          $apikey = PluginMydashboardHelper::getGoogleApiKey();
-          if (!empty($apikey)) {
-             echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";
-          }
+          //$apikey = PluginMydashboardHelper::getGoogleApiKey();
+          //if (!empty($apikey)) {
+          //   echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";
+          //}
           ?>
 
        </head>

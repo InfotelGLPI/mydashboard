@@ -671,7 +671,8 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function initDBWidgets() {
       $widgetDB    = new PluginMydashboardWidget();
-      $widgetsinDB = getAllDatasFromTable(PluginMydashboardWidget::getTable());
+      $dbu        = new DbUtils();
+      $widgetsinDB = $dbu->getAllDataFromTable(PluginMydashboardWidget::getTable());
 
       $widgetsnames = [];
       foreach ($widgetsinDB as $widget) {
@@ -982,6 +983,9 @@ class PluginMydashboardMenu extends CommonGLPI {
             $languages['maximize']        = __("Maximize", "mydashboard");
             $languages['minimize']        = __("Minimize", "mydashboard");
             $languages['refresh']         = __("Refresh", "mydashboard");
+            $languages['buttons']           = [
+               'colvis'  => __('Column visibility', 'mydashboard'),
+            ];
             break;
          case "mydashboard" :
             $languages["dashboardsliderClose"]   = __("Close", "mydashboard");

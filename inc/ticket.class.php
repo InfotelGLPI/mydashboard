@@ -223,7 +223,7 @@ class PluginMydashboardTicket {
             }
          }
       }
-
+      $dbu        = new DbUtils();
       $query = "SELECT DISTINCT `glpi_tickets`.`id`
                 FROM `glpi_tickets`
                 LEFT JOIN `glpi_tickets_users`
@@ -236,14 +236,14 @@ class PluginMydashboardTicket {
             $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND `status` = '" . Ticket::WAITING . "' " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "process" : // on affiche les tickets planifiés ou assignés au user
             $query .= "WHERE $is_deleted
                              AND ( $search_assign )
                              AND (`status` IN ('" . implode("','", Ticket::getProcessStatusArray()) . "')) " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "toapprove" : // on affiche les tickets planifiés ou assignés au user
@@ -254,7 +254,7 @@ class PluginMydashboardTicket {
                $query .= " OR `glpi_tickets`.users_id_recipient = '" . Session::getLoginUserID() . "' ";
             }
             $query .= ")" .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "tovalidate" : // on affiche les tickets à valider
@@ -264,7 +264,7 @@ class PluginMydashboardTicket {
                               AND `glpi_ticketvalidations`.`status` = '" . CommonITILValidation::WAITING . "'
                               AND (`glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "',
                                                                    '" . Ticket::SOLVED . "')) " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "rejected" : // on affiche les tickets rejetés
@@ -272,7 +272,7 @@ class PluginMydashboardTicket {
                              AND ($search_assign)
                              AND `status` <> '" . Ticket::CLOSED . "'
                              AND `global_validation` = '" . CommonITILValidation::REFUSED . "' " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "observed" :
@@ -284,7 +284,7 @@ class PluginMydashboardTicket {
                                                '" . Ticket::WAITING . "'))
                              AND NOT ( $search_assign )
                              AND NOT ( $search_users_id ) " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "survey" : // on affiche les tickets dont l'enquête de satisfaction n'est pas remplie
@@ -295,7 +295,7 @@ class PluginMydashboardTicket {
                                    OR `glpi_tickets`.`users_id_recipient` = '" . Session::getLoginUserID() . "')
                               AND `glpi_tickets`.`status` = '" . Ticket::CLOSED . "'
                               AND `glpi_ticketsatisfactions`.`date_answered` IS NULL " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
             break;
 
          case "requestbyself" : // on affiche les tickets demandés le user qui sont planifiés ou assignés
@@ -309,7 +309,7 @@ class PluginMydashboardTicket {
                                                '" . Ticket::ASSIGNED . "',
                                                '" . Ticket::WAITING . "'))
                              AND NOT ( $search_assign ) " .
-                      getEntitiesRestrictRequest("AND", "glpi_tickets");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
       }
 
       $query   .= " ORDER BY date_mod DESC";
@@ -324,7 +324,7 @@ class PluginMydashboardTicket {
          $number = 0;
       }
 
-      $output['header'][] = '';
+      $output['header'][] = __('ID');
       $output['header'][] = __('Requester');
       $output['header'][] = __('Associated element');
       $output['header'][] = __('Description');
@@ -905,7 +905,8 @@ class PluginMydashboardTicket {
                                AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')";
          }
       }
-      $query .= getEntitiesRestrictRequest("WHERE", "glpi_tickets");
+      $dbu        = new DbUtils();
+      $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_tickets");
 
       if ($foruser) {
          $query .= " AND (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "' ";
@@ -1006,11 +1007,11 @@ class PluginMydashboardTicket {
       }
 
       $output = [];
-
+      $dbu        = new DbUtils();
       $query  = "SELECT " . Ticket::getCommonSelect() . "
                 FROM `glpi_tickets` " . Ticket::getCommonLeftJoin() . "
                 WHERE `status` = '" . Ticket::INCOMING . "' " .
-                getEntitiesRestrictRequest("AND", "glpi_tickets") . "
+                $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets") . "
                       AND NOT `is_deleted`
                 ORDER BY `glpi_tickets`.`date_mod` DESC
                 LIMIT " . intval($_SESSION['glpilist_limit']);
@@ -1063,7 +1064,7 @@ class PluginMydashboardTicket {
     * @return array
     */
    static function commonListHeader() {
-      $items[] = '';
+      $items[] = __('ID');
       $items[] = __('Date');
       if (count($_SESSION["glpiactiveentities"]) > 1) {
          $items[] = __('Entity');

@@ -143,7 +143,7 @@ class PluginMydashboardChange {
                                         = '" . CommonITILActor::REQUESTER . "') ";
          }
       }
-
+      $dbu        = new DbUtils();
       $query = "SELECT DISTINCT `glpi_changes`.`id`
                 FROM `glpi_changes`
                 LEFT JOIN `glpi_changes_users`
@@ -156,14 +156,14 @@ class PluginMydashboardChange {
             $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND `status` = '" . Change::WAITING . "' " .
-               getEntitiesRestrictRequest("AND", "glpi_changes");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
             break;
 
          case "process" : // on affiche les changements planifiés ou assignés au user
             $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND (`status` IN ('" . implode("','", Change::getProcessStatusArray()) . "')) " .
-               getEntitiesRestrictRequest("AND", "glpi_changes");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
             break;
 
          default :
@@ -172,7 +172,7 @@ class PluginMydashboardChange {
                              AND (`status` IN ('" . implode("','", Change::getNewStatusArray()) . "','" . implode("','", Change::getProcessStatusArray()) . "',
                                                '" . Change::WAITING . "'))
                              AND NOT ($search_assign) " .
-               getEntitiesRestrictRequest("AND", "glpi_changes");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
       }
 
       $query .= " ORDER BY date_mod DESC";
@@ -442,7 +442,8 @@ class PluginMydashboardChange {
                                AND `glpi_changes_groups`.`type` = '" . CommonITILActor::REQUESTER . "')";
          }
       }
-      $query .= getEntitiesRestrictRequest("WHERE", "glpi_changes");
+      $dbu        = new DbUtils();
+      $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_changes");
 
       if ($foruser) {
          $query .= " AND (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "' ";

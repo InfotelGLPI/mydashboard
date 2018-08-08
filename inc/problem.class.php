@@ -143,7 +143,7 @@ class PluginMydashboardProblem {
                                         = '" . CommonITILActor::REQUESTER . "') ";
          }
       }
-
+      $dbu        = new DbUtils();
       $query = "SELECT DISTINCT `glpi_problems`.`id`
                 FROM `glpi_problems`
                 LEFT JOIN `glpi_problems_users`
@@ -156,14 +156,14 @@ class PluginMydashboardProblem {
             $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND `status` = '" . Problem::WAITING . "' " .
-               getEntitiesRestrictRequest("AND", "glpi_problems");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_problems");
             break;
 
          case "process" : // on affiche les problemes planifiés ou assignés au user
             $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND (`status` IN ('" . Problem::PLANNED . "','" . Problem::ASSIGNED . "')) " .
-               getEntitiesRestrictRequest("AND", "glpi_problems");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_problems");
             break;
 
          default :
@@ -175,7 +175,7 @@ class PluginMydashboardProblem {
                                                '" . Problem::ASSIGNED . "',
                                                '" . Problem::WAITING . "'))
                              AND NOT ($search_assign) " .
-               getEntitiesRestrictRequest("AND", "glpi_problems");
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_problems");
       }
 
       $query .= " ORDER BY date_mod DESC";
