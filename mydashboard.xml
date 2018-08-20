@@ -6,12 +6,14 @@
     <logo>https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/mydashboard.png</logo>
     <description>
         <short>
-            <fr><![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard]]></fr>
             <en><![CDATA[This plugin enables you to replace GLPI central by a dashboard.]]></en>
+            <cs><![CDATA[Tento zásuvný modul umožňuje nahradit ústřední stránku GLPI za nástěnku.]]></cs>
+            <fr><![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard]]></fr>
         </short>
         <long>
-            <fr><![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard<br />- Redimensionnement des widgets<br />- Mode édition pour charger de nouveaux widgets<br />- Utilisation de Font Awesome<br />- Nouveaux widgets graphiques basés aussi sur une nouvelle librairie graphique : ChartJs (http://www.chartjs.org/)<br />- Affichage responsive du Dashboard<br />- Génération d’alertes sur le Dashboard à partir d’un problème]]></fr>
             <en><![CDATA[This plugin enables you to replace GLPI central by a dashboard<br />- Scaling widgets<br />- Editing mode to load new widgets<br />- Using Awesome Font <br />- New graphic widgets also based on a new graphic library: ChartJs (http: //www.chartjs .org /)<br />- Responsive display of the Dashboard<br />Generation of alerts on the Dashboard from a problem]]></en>
+            <cs><![CDATA[Tento zásuvný modul umožňuje nahradit ústřední stránku GLPI za nástěnku.<br />- Měnění velikosti widgetů<br />- Režim upravování pro načtení nových widgetů<br />- Použivá písmo Awesome <br />- Nové grafické widgets jsou také založené na nové grafické knihovně: ChartJs (http: //www.chartjs .org /)<br />- Responzivní zobrazení nástěnky<br />Vytváření upozornění na nástěnce z problému]]></cs>
+            <fr><![CDATA[Ce plugin permet de remplacer le central GLPI par un dashboard<br />- Redimensionnement des widgets<br />- Mode édition pour charger de nouveaux widgets<br />- Utilisation de Font Awesome<br />- Nouveaux widgets graphiques basés aussi sur une nouvelle librairie graphique : ChartJs (http://www.chartjs.org/)<br />- Affichage responsive du Dashboard<br />- Génération d’alertes sur le Dashboard à partir d’un problème]]></fr>
         </long>
     </description>
     <homepage>https://github.com/InfotelGLPI/mydashboard</homepage>
@@ -61,26 +63,31 @@
         </version>
     </versions>
     <langs>
-        <lang>fr_FR</lang>
-        <lang>en_GB</lang>
         <lang>cs_CZ</lang>
+        <lang>en_GB</lang>
+        <lang>es_ES</lang>
+        <lang>fr_FR</lang>
         <lang>he_IL</lang>
         <lang>pt_BR</lang>
         <lang>ru_RU</lang>
-        <lang>es_ES</lang>
     </langs>
     <license><![CDATA[GPL v2+]]></license>
     <tags>
-        <fr>
-            <tag>Central</tag>
-            <tag>Dashboard</tag>
-            <tag>Widget</tag>
-        </fr>
         <en>
             <tag>Central</tag>
             <tag>Dashboard</tag>
             <tag>Widget</tag>
         </en>
+        <cs>
+            <tag>Centrální</tag>
+            <tag>Nástěnka</tag>
+            <tag>Widget</tag>
+        </cs>
+        <fr>
+            <tag>Central</tag>
+            <tag>Dashboard</tag>
+            <tag>Widget</tag>
+        </fr>
     </tags>
     <screenshots>
         <screenshot>https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/screenshots/mydashboard.png
