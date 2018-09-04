@@ -390,7 +390,9 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
             }
 
-            echo "&nbsp;<span class='plugin_mydashboard_add_button'><a id='add-widget$rand' href='#'>" . __('Add a widget', 'mydashboard') . "</a></span>";//(span.plugin_mydashboard_header_title)
+            echo "&nbsp;<span class='plugin_mydashboard_add_button'>
+                <a id='add-widget$rand' href='#'>" . __('Add a widget', 'mydashboard') . "</a>
+                </span>";//(span.plugin_mydashboard_header_title)
 
             echo "&nbsp;<i class=\"fa fa-caret-down\"></i></span>";
 
@@ -635,11 +637,20 @@ class PluginMydashboardMenu extends CommonGLPI {
       //menuSliderContent contains the lists of widgets
       $wl .= "<div class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
 
+      $empty = false;
       //1) we 'display' GLPI core widgets in the list
-      $wl .= $this->getWidgetsListFromGLPICore($used);
+      if ($this->getWidgetsListFromGLPICore($used, $wl)) {
+         $empty = true;
+      }
       //2) we 'display' Plugin widgets
       if (self::$_PLUGIN_MYDASHBOARD_CFG['display_plugin_widget']) {
-         $wl .= $this->getWidgetsListFromPlugins($used);
+         if ($this->getWidgetsListFromPlugins($used, $wl)) {
+            $empty = true;
+         }
+      }
+
+      if ($empty) {
+         $wl .= __('No data available', 'mydashboard');
       }
       //-------------------------------------------------------
       $wl .= "</div>"; //end(div.plugin_mydashboard_menuSliderContent)
@@ -701,11 +712,12 @@ class PluginMydashboardMenu extends CommonGLPI {
    /**
     * Get the HTML list of the GLPI core widgets available
     *
-    * @param array $used
+    * @param array  $used
+    * @param string $html the HTML list
     *
-    * @return string, the HTML list
+    * @return bool|string is empty ?
     */
-   private function getWidgetsListFromGLPICore($used = []) {
+   private function getWidgetsListFromGLPICore($used = [], &$html = "") {
       $wl = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
       $wl .= "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
       $wl .= "<div class='plugin_mydashboard_menuDashboardListContainer'><ul class=''>";
@@ -773,9 +785,10 @@ class PluginMydashboardMenu extends CommonGLPI {
       $wl .= "</ul></div>";
       $wl .= "</div>";
       if ($is_empty) {
-         return '';
+         return true;
       } else {
-         return $wl;
+         $html .= $wl;
+         return false;
       }
    }
 

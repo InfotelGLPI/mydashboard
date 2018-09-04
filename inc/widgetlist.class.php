@@ -77,6 +77,8 @@ class PluginMydashboardWidgetlist {
                           "PluginMydashboardProjecttask",
                           "PluginMydashboardContract",
                           "PluginMydashboardKnowbaseItem"];
+      $dbu = new DbUtils();
+
       //We run through the hook to get all widget IDs and Titles declared in all classes
       foreach ($widgets as $plugin => $pluginclasses) {
          $widgets[$plugin] = [];
@@ -84,7 +86,7 @@ class PluginMydashboardWidgetlist {
             if (!class_exists($pluginclass)) {
                continue;
             }
-            $item = getItemForItemtype($pluginclass);
+            $item = $dbu->getItemForItemtype($pluginclass);
 
             //            if ($item->canview) {
                $widgets[$plugin][$pluginclass] = [];
@@ -121,10 +123,10 @@ class PluginMydashboardWidgetlist {
          //Widget filtered by profile (authorized list)
          $pauthlist             = new PluginMydashboardProfileAuthorizedWidget();
          $profile               = ($active_profile != -1) ? $active_profile : $_SESSION['glpiactiveprofile']['id'];
-         $filters['authorized'] = $pauthlist->getAuthorizedListForProfile($profile);
 
-         //getAuthorizedListForProfile() return false when the profile can see all the widgets
-         if (is_array($filters['authorized'])) {
+         if ($filters['authorized'] = $pauthlist->getAuthorizedListForProfile($profile) !== false) {
+            //getAuthorizedListForProfile() return false when the profile can see all the widgets
+
             //If nothing is authorized
             if (empty($filters['authorized'])) {
                $widgets = [];

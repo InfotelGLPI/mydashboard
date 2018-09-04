@@ -38,10 +38,12 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
     */
    public function getAuthorizedListForProfile($profiles_id) {
       $profileright = new ProfileRight();
-      $profileright->getFromDBByCrit(['name' => 'plugin_mydashboard', 'profiles_id' => $profiles_id]);
+      $profileright->getFromDBByCrit(['name'        => 'plugin_mydashboard',
+                                      'profiles_id' => $profiles_id]);
 
       //If profile has right CREATE+UPDATE it means it can see every widgets
-      if (isset($profileright->fields['rights']) && $profileright->fields['rights'] == (CREATE + UPDATE)) {
+      if (isset($profileright->fields['rights'])
+          && $profileright->fields['rights'] == (CREATE + UPDATE)) {
          return false;
       }
 
