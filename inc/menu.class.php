@@ -645,7 +645,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       //2) we 'display' Plugin widgets
       if (self::$_PLUGIN_MYDASHBOARD_CFG['display_plugin_widget']) {
          if ($this->getWidgetsListFromPlugins($used, $wl)) {
-            $empty = true;
+            $empty = ($empty) ? $empty : false;
          }
       }
 
