@@ -646,6 +646,8 @@ class PluginMydashboardMenu extends CommonGLPI {
       if (self::$_PLUGIN_MYDASHBOARD_CFG['display_plugin_widget']) {
          if ($this->getWidgetsListFromPlugins($used, $wl)) {
             $empty = ($empty) ? $empty : false;
+         } else {
+            $empty = false;
          }
       }
 
@@ -801,14 +803,14 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
     */
-   private function getWidgetsListFromPlugins($used = []) {
+   private function getWidgetsListFromPlugins($used = [], &$html = "") {
       $plugin_names = $this->getPluginsNames();
-      $wl           = "";
+      $plugins_is_empty = true;
       foreach ($this->widgetlist as $plugin => $widgetclasses) {
          if ($plugin == "GLPI") {
             continue;
          }
-         $is_empty = true;
+         $is_empty     = true;
          $tmp      = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
          //
          $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h6>";
@@ -827,11 +829,13 @@ class PluginMydashboardMenu extends CommonGLPI {
          $tmp .= "</div>";
          //If there is now widgets available from this plugins we don't display menu entry
          if (!$is_empty) {
-            $wl .= $tmp;
+            $html .= $tmp;
+            if ($plugins_is_empty) {
+               $plugins_is_empty = false;
+            }
          }
       }
-
-      return $wl;
+      return $plugins_is_empty;
    }
 
 

@@ -124,15 +124,15 @@ class PluginMydashboardWidgetlist {
          $pauthlist             = new PluginMydashboardProfileAuthorizedWidget();
          $profile               = ($active_profile != -1) ? $active_profile : $_SESSION['glpiactiveprofile']['id'];
 
-         if ($filters['authorized'] = $pauthlist->getAuthorizedListForProfile($profile) !== false) {
+         if (($filters['authorized'] = $pauthlist->getAuthorizedListForProfile($profile)) !== false) {
             //getAuthorizedListForProfile() return false when the profile can see all the widgets
 
             //If nothing is authorized
-            if (empty($filters['authorized'])) {
+            if (count($filters['authorized']) < 0) {
                $widgets = [];
             } else {
-               foreach ($widgets as $plugin => & $widgetclasses) {
-                  foreach ($widgetclasses as $widgetclass => & $widgetlist) {
+               foreach ($widgets as $plugin => &$widgetclasses) {
+                  foreach ($widgetclasses as $widgetclass => &$widgetlist) {
                      $widgetlist = $this->cleanList($filters['authorized'], $widgetlist);
                   }
                }
