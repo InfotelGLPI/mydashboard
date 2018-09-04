@@ -101,11 +101,11 @@ class PluginMydashboardMenu extends CommonGLPI {
       if ($item->getType() == __CLASS__) {
          $tabs[1] = __('My view', 'mydashboard');
          $tabs[2] = __('GLPI admin grid', 'mydashboard');
-//         $tabs[3] = __('Inventory admin grid', 'mydashboard');
-//         $tabs[4] = __('Helpdesk supervisor grid', 'mydashboard');
-//         $tabs[5] = __('Incident supervisor grid', 'mydashboard');
-//         $tabs[6] = __('Request supervisor grid', 'mydashboard');
-//         $tabs[7] = __('Helpdesk technician grid', 'mydashboard');
+         //         $tabs[3] = __('Inventory admin grid', 'mydashboard');
+         //         $tabs[4] = __('Helpdesk supervisor grid', 'mydashboard');
+         //         $tabs[5] = __('Incident supervisor grid', 'mydashboard');
+         //         $tabs[6] = __('Request supervisor grid', 'mydashboard');
+         //         $tabs[7] = __('Helpdesk technician grid', 'mydashboard');
          return $tabs;
       }
       return '';
@@ -133,21 +133,21 @@ class PluginMydashboardMenu extends CommonGLPI {
             case 2 :
                $self->loadDashboard($profile, 1);
                break;
-//            case 3 :
-//               $self->loadDashboard($profile, 2);
-//               break;
-//            case 4 :
-//               $self->loadDashboard($profile, 3);
-//               break;
-//            case 5 :
-//               $self->loadDashboard($profile, 4);
-//               break;
-//            case 6 :
-//               $self->loadDashboard($profile, 5);
-//               break;
-//            case 7 :
-//               $self->loadDashboard($profile, 6);
-//               break;
+            //            case 3 :
+            //               $self->loadDashboard($profile, 2);
+            //               break;
+            //            case 4 :
+            //               $self->loadDashboard($profile, 3);
+            //               break;
+            //            case 5 :
+            //               $self->loadDashboard($profile, 4);
+            //               break;
+            //            case 6 :
+            //               $self->loadDashboard($profile, 5);
+            //               break;
+            //            case 7 :
+            //               $self->loadDashboard($profile, 6);
+            //               break;
             default :
                break;
          }
@@ -265,23 +265,32 @@ class PluginMydashboardMenu extends CommonGLPI {
             $p[$key] = $val;
          }
       }
-
-      $query = "SELECT `glpi_profiles`.`name`, `glpi_profiles`.`id`
-                FROM `glpi_profiles` 
-                LEFT JOIN `glpi_profilerights` ON (`glpi_profilerights`.`profiles_id` = `glpi_profiles`.`id`)" .
-               Profile::getUnderActiveProfileRestrictRequest("WHERE") . "
-                AND `glpi_profilerights`.`name` = 'plugin_mydashboard'
-                AND `glpi_profilerights`.`rights` > 0
-                ORDER BY `glpi_profiles`.`name`";
-
-      $res = $DB->query($query);
+      $iterator = $DB->request(
+         ['SELECT'    => [
+            'glpi_profiles.name',
+            'glpi_profiles.id'
+         ],
+          'FROM'      => Profile::getTable(),
+          'LEFT JOIN' => [
+             'glpi_profilerights' => [
+                'FKEY' => [
+                   'glpi_profilerights' => 'profiles_id',
+                   'glpi_profiles'      => 'id'
+                ]
+             ]
+          ],
+          'WHERE'     => [Profile::getUnderActiveProfileRestrictCriteria(),
+                          'glpi_profilerights.name'   => 'plugin_mydashboard',
+                          'glpi_profilerights.rights' => ['>', 0],
+          ],
+          'ORDER'     => 'glpi_profilerights.name'
+         ]);
 
       //New rule -> get the next free ranking
-      if ($DB->numrows($res)) {
-         while ($data = $DB->fetch_assoc($res)) {
-            $profiles[$data['id']] = $data['name'];
-         }
+      while ($data = $iterator->next()) {
+         $profiles[$data['id']] = $data['name'];
       }
+
       Dropdown::showFromArray($p['name'], $profiles,
                               ['value'               => $p['value'],
                                'rand'                => $p['rand'],
@@ -671,7 +680,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function initDBWidgets() {
       $widgetDB    = new PluginMydashboardWidget();
-      $dbu        = new DbUtils();
+      $dbu         = new DbUtils();
       $widgetsinDB = $dbu->getAllDataFromTable(PluginMydashboardWidget::getTable());
 
       $widgetsnames = [];
@@ -983,8 +992,8 @@ class PluginMydashboardMenu extends CommonGLPI {
             $languages['maximize']        = __("Maximize", "mydashboard");
             $languages['minimize']        = __("Minimize", "mydashboard");
             $languages['refresh']         = __("Refresh", "mydashboard");
-            $languages['buttons']           = [
-               'colvis'  => __('Column visibility', 'mydashboard'),
+            $languages['buttons']         = [
+               'colvis' => __('Column visibility', 'mydashboard'),
             ];
             break;
          case "mydashboard" :
@@ -1009,15 +1018,15 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $names = [];
 
-      $names[self::$TICKET_REQUESTERVIEW]  = _n('Ticket', 'Tickets', 2)." (".__("Requester").")";
-      $names[self::$TICKET_TECHVIEW]  = _n('Ticket', 'Tickets', 2)." (".__("Technician").")";
-      $names[self::$PROBLEM_VIEW] = _n('Problem', 'Problems', 2);
-      $names[self::$CHANGE_VIEW]  = _n('Change', 'Changes', 2);
-      $names[self::$GROUP_VIEW]   = __('Group View');
-      $names[self::$MY_VIEW]      = __('Personal View');
-      $names[self::$GLOBAL_VIEW]  = __('Global View');
-      $names[self::$RSS_VIEW]     = _n('RSS feed', 'RSS feeds', 2);
-      $names[self::$PROJECT_VIEW] = _n('Project', 'Projects', 2);
+      $names[self::$TICKET_REQUESTERVIEW] = _n('Ticket', 'Tickets', 2) . " (" . __("Requester") . ")";
+      $names[self::$TICKET_TECHVIEW]      = _n('Ticket', 'Tickets', 2) . " (" . __("Technician") . ")";
+      $names[self::$PROBLEM_VIEW]         = _n('Problem', 'Problems', 2);
+      $names[self::$CHANGE_VIEW]          = _n('Change', 'Changes', 2);
+      $names[self::$GROUP_VIEW]           = __('Group View');
+      $names[self::$MY_VIEW]              = __('Personal View');
+      $names[self::$GLOBAL_VIEW]          = __('Global View');
+      $names[self::$RSS_VIEW]             = _n('RSS feed', 'RSS feeds', 2);
+      $names[self::$PROJECT_VIEW]         = _n('Project', 'Projects', 2);
 
       return $names;
    }
@@ -1042,7 +1051,7 @@ class PluginMydashboardMenu extends CommonGLPI {
    function loadDashboard($active_profile = -1, $predefined_grid = 0) {
       global $CFG_GLPI;
 
-      $rand = mt_rand();
+      $rand           = mt_rand();
       $this->users_id = Session::getLoginUserID();
       $this->showMenu($this->users_id, $active_profile, $predefined_grid, $rand);
 
