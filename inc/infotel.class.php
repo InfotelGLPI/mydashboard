@@ -3936,7 +3936,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Tickets request sources evolution", "mydashboard");
-            $widget->setWidgetComment(__("Evolution of tickets sources types by year", "mydashboard"));
+            $widget->setWidgetComment(__("Evolution of tickets request sources types by year", "mydashboard"));
             $widget->setWidgetTitle($title);
             $widget->toggleWidgetRefresh();
 
