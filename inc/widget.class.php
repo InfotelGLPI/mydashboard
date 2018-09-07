@@ -155,13 +155,22 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return string
     */
    static function getWidget($id, $opt = []) {
+      global $CFG_GLPI;
       $class   = "bt-col-md-11";
       $widgets = self::getWidgetList();
 
       if (isset($widgets[$id])) {
          return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
       }
-      return __('No data available', 'mydashboard') . " - " . $id;
+      $message = __('No data available', 'mydashboard');
+      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+         $message .= " - " . $id;
+      }
+      $msg = "<div class='center'><br><br>";
+      $msg .= Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+      $msg .= "<br><br><span class='b'>$message</span></div>";
+
+      return $msg;
    }
 
    /**
@@ -170,12 +179,21 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return array|string
     */
    static function getWidgetOptions($id) {
+      global $CFG_GLPI;
       $widgets = self::getWidgetList();
 
       if (isset($widgets[$id])) {
          return self::getAllOptions($widgets[$id]["class"], $widgets[$id]["id"], []);
       }
-      return __('No data available', 'mydashboard') . " - " . $id;
+      $message = __('No data available', 'mydashboard');
+      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+         $message .= " - " . $id;
+      }
+      $msg = "<div class='center'><br><br>";
+      $msg .= Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+      $msg .= "<br><br><span class='b'>$message</span></div>";
+
+      return $msg;
    }
 
    /**
@@ -209,7 +227,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     */
    static function loadWidget($classname, $widgetindex, $parent, $class, $opt = []) {
       global $CFG_GLPI;
-      
+
       if (isset($classname) && isset($widgetindex)) {
 
          $classname   = $classname;
@@ -238,13 +256,13 @@ class PluginMydashboardWidget extends CommonDBTM {
                //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
                //We prepare a "JSon object" compatible with sDashboard
                $widgetTitle = $widget->getWidgetTitle();
-//               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-//                  $widgetTitle .= " (" . $widget->getWidgetId() . ")";
-//               }
+               //               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+               //                  $widgetTitle .= " (" . $widget->getWidgetId() . ")";
+               //               }
                $json =
                   [
                      "widgetTitle"     => $widgetTitle,
-                     "widgetComment"     => $widget->getWidgetComment(),
+                     "widgetComment"   => $widget->getWidgetComment(),
                      "widgetId"        => $widget->getWidgetId(),
                      "widgetType"      => $widget->getWidgetType(),
                      "widgetContent"   => "%widgetContent%",
@@ -287,7 +305,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                   }
 
                   $dateformat = "D";
-                  $mask = 'MM-DD-YYYY';
+                  $mask       = 'MM-DD-YYYY';
                   if (isset($opt['bDate'])) {
                      $dateformat = $opt['bDate'][0];
                   }
@@ -334,10 +352,10 @@ class PluginMydashboardWidget extends CommonDBTM {
                            break;
                      }
                   }
-                  $rand      = mt_rand();
-                  $languages = json_encode($menu->getJsLanguages("datatables"));
+                  $rand                  = mt_rand();
+                  $languages             = json_encode($menu->getJsLanguages("datatables"));
                   $display_count_on_home = $CFG_GLPI['display_count_on_home'];
-                  $user = new User();
+                  $user                  = new User();
                   if ($user->getFromDB(Session::getLoginUserID())) {
                      $user->computePreferences();
                      $display_count_on_home = $user->fields['display_count_on_home'];
@@ -393,8 +411,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= $title;
                if ($comment != "") {
                   $widgetdisplay .= "&nbsp;";
-                  $opt           =  ['awesome-class' => 'fa-info-circle',
-                                         'display' => false];
+                  $opt           = ['awesome-class' => 'fa-info-circle',
+                                    'display'       => false];
                   $widgetdisplay .= Html::showToolTip($comment, $opt);
                }
                $widgetdisplay .= "</span>";
@@ -403,11 +421,11 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= "<div id=\"display-sc\">";
 
                if ($type == "table") {
-                  $head    = $datas['aoColumns'];
-                  $data    = $datas['aaData'];
-                  $nb = 0;
-                  if (($nb_data = reset($data)) ==! false) {
-                     $nb      = count($nb_data);
+                  $head = $datas['aoColumns'];
+                  $data = $datas['aaData'];
+                  $nb   = 0;
+                  if (($nb_data = reset($data)) == !false) {
+                     $nb = count($nb_data);
                   }
 
                   $widgetdisplay .= '<table id="' . $widgetindex . $rand . '" class="display" cellspacing="0" width="100%">';

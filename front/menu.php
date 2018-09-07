@@ -48,33 +48,46 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
        <head>
            <link type="text/css" href="../css/style_bootstrap_main.css" rel="stylesheet">
            <link type="text/css" href="../css/style_bootstrap_ticket.css" rel="stylesheet">
+           <!--DATATABLES CSS-->
+           <link type="text/css" href="../lib/datatables/datatables.min.css" rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/Responsive-2.2.2/css/responsive.dataTables.min.css"
+                 rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/Select-1.2.6/css/select.dataTables.min.css" rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/Buttons-1.5.2/css/buttons.dataTables.min.css" rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/ColReorder-1.5.0/css/colReorder.dataTables.min.css"
+                 rel="stylesheet">
+
+           <!--GLPI-->
            <link type="text/css" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/css/responsive.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/css/select.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/css/buttons.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/css/colReorder.dataTables.min.css" rel="stylesheet">
            <link type="text/css" href="../../../lib/gridstack/src/gridstack.css" rel="stylesheet">
            <link type="text/css" href="../../../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
-           <script src="../lib/lodash.min.js"></script>
+           <script src="../../../lib/lodash.min.js"></script>
            <script src="../../../lib/gridstack/src/gridstack.js"></script>
            <script src="../../../lib/gridstack/src/gridstack.jQueryUI.js"></script>
-           <script src="../lib/datatables/js/jquery.dataTables.min.js"></script>
-           <script src="../lib/datatables/js/dataTables.responsive.min.js"></script>
+
+           <!--DATATABLES-->
+           <script src="../lib/datatables/datatables.min.js"></script>
+           <script src="../lib/datatables/Responsive-2.2.2/js/dataTables.responsive.min.js"></script>
+           <script src="../lib/datatables/Select-1.2.6/js/dataTables.select.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.5.2/js/dataTables.buttons.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.5.2/js/buttons.html5.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.5.2/js/buttons.print.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.5.2/js/buttons.colVis.min.js"></script>
+           <script src="../lib/datatables/ColReorder-1.5.0/js/dataTables.colReorder.min.js"></script>
+           <script src="../lib/datatables/JSZip-2.5.0/jszip.min.js"></script>
+           <script src="../lib/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
+           <script src="../lib/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
+           <!--MOMENT FOR DATATABLES-->
            <script src="../lib/moment.min.js"></script>
            <script src="../lib/datetime-moment.js"></script>
+           <!--CHARTJS-->
            <script src="../lib/chartjs/Chart.min.js"></script>
-           <script src="../lib/circles/circles.min.js"></script>
+           <!--EXPORT CHARTJS-->
            <script src="../lib/html2canvas.min.js"></script>
-           <script src="../lib/datatables/js/dataTables.select.min.js"></script>
-           <script src="../lib/datatables/js/dataTables.buttons.min.js"></script>
-           <script src="../lib/datatables/js/buttons.colVis.min.js"></script>
-           <script src="../lib/datatables/js/dataTables.colReorder.min.js"></script>
-           <script src="../lib/jszip/js/jszip.min.js"></script>
-           <script src="../lib/pdfmake/js/pdfmake.min.js"></script>
-           <script src="../lib/pdfmake/js/vfs_fonts.js"></script>
-           <script src="../lib/datatables/js/buttons.html5.min.js"></script>
-           <script src="../lib/datatables/js/buttons.print.min.js"></script>
+           <script src="../lib/fileSaver.min.js"></script>
+           <!--CIRCLES STATS-->
+           <script src="../lib/circles/circles.min.js"></script>
+           <!--COUNTS-->
            <script src="../lib/countUp.min.js"></script>
            <script src="../lib/countUp-jquery.js"></script>
 
@@ -101,9 +114,9 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
        }
        $dashboard = new PluginMydashboardMenu();
        $dashboard->loadDashboard($profile, $predefined_grid);
-//       $options=[];
-//       $dashboard->display($options);
-       
+       //       $options=[];
+       //       $dashboard->display($options);
+
        ?>
 
        </body>
