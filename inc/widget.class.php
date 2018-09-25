@@ -502,8 +502,12 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardAlert($class) {
+   static function getWidgetMydashboardAlert($class, $hidewidget = false) {
 
+      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 0) < 1) {
+         $display = false;
+         return $display;
+      }
       $delclass = "";
       //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
       //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
@@ -538,7 +542,12 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardMaintenance($class) {
+   static function getWidgetMydashboardMaintenance($class, $hidewidget = false) {
+
+      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 1) < 1) {
+         $display = false;
+         return $display;
+      }
 
       $delclass = "";
       //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
@@ -574,7 +583,12 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardInformation($class) {
+   static function getWidgetMydashboardInformation($class, $hidewidget = false) {
+
+      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 2) < 1) {
+         $display = false;
+         return $display;
+      }
 
       $delclass = "";
       //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
