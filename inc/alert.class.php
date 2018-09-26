@@ -1353,6 +1353,8 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getAlertList($public = 0) {
       global $DB;
 
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
       $now = date('Y-m-d H:i:s');
 
       $wl            = "";
@@ -1402,31 +1404,18 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-4 center \">";
-
-            if ($row['impact'] == 5) {
-               $class = "fa-thermometer-4 fa-alert-red";
-            } else if ($row['impact'] == 4) {
-               $class = "fa-thermometer-3 fa-alert-lightred";
-            } else if ($row['impact'] == 3) {
-               $class = "fa-thermometer-2 fa-alert-orange";
-            } else if ($row['impact'] == 2) {
-               $class = "fa-thermometer-1 fa-alert-yellow";
-            } else if ($row['impact'] == 1) {
-               $class = "fa-thermometer-0 fa-alert-green";
-            }
-
-            $wl .= "<i class='fa $class fa-alert-7'></i>";
+            $style = "color:".$config->getField('priority_'.$row['impact']);
+            $wl .= "<i style='$style' class='fa fa-thermometer fa-alert-7'></i>";
 
             $wl .= "</div>";
 
             $wl .= "<div class=\"bt-col-xs-8 alert-title-div\">";
             $wl .= "<h3>";
 
-            $classfont = ' alert_fontimpact' . $row['impact'];
             $rand      = mt_rand();
             $name      = $row['name'];
             $wl        .= "<div id='alert$rand'>";
-            $wl        .= "<span class='$classfont left'>" . $name . "</span>";
+            $wl        .= "<span style='$style' class='left'>" . $name . "</span>";
             $wl        .= "</div>";
             $wl        .= "</h3>";
 
@@ -1572,23 +1561,15 @@ class PluginMydashboardAlert extends CommonDBTM {
    private function displayContent($impact, $list = [], $public = 0) {
 
       $div = "";
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
 
-      if ($impact == '5') {
-         $class = "fa-thermometer-4 fa-alert-red";
-      } else if ($impact == '4') {
-         $class = "fa-thermometer-3 fa-alert-lightred";
-      } else if ($impact == '3') {
-         $class = "fa-thermometer-2 fa-alert-orange";
-      } else if ($impact == '2') {
-         $class = "fa-thermometer-1 fa-alert-yellow";
-      } else if ($impact == '1') {
-         $class = "fa-thermometer-0 fa-alert-green";
-      }
+      $style = "color:".$config->getField('priority_'.$impact);
 
       $div .= "<div class='bt-row weather_public_block'>";
       $div .= "<div class='center'><h3>" . __("Monitoring", "mydashboard") . "</h3></div>";
       $div .= "<div class=\"bt-col-xs-4 right \">";
-      $div .= "<i class='fa $class fa-alert-4'></i>";
+      $div .= "<i style='$style' class='fa fa-thermometer fa-alert-4'></i>";
       $div .= "</div>";
       $div .= "<div class=\"bt-col-xs-8 alert-title-div\">";
       $div .= "<div class='weather_msg'>";
@@ -1608,25 +1589,30 @@ class PluginMydashboardAlert extends CommonDBTM {
    private function getMessage($list, $public) {
 
       $l = "";
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
       if (!empty($list)) {
          foreach ($list as $listitem) {
 
+            $configColor = $config->getField("priority_".$listitem['impact']);
             //            $class     = (Html::convDate(date("Y-m-d")) == Html::convDate($listitem['date'])) ? 'alert_new' : '';
-            $class     = ' alert_impact' . $listitem['impact'];
-            $classfont = ' alert_fontimpact' . $listitem['impact'];
+//            $class     = ' alert_impact' . $listitem['impact'];
+            $style     = "background-color : " . $configColor;
+//            $classfont = ' alert_fontimpact' . $listitem['impact'];
+            $styleFont = 'color : ' . $configColor;
             $rand      = mt_rand();
             $name      = (Session::haveRight("reminder_public", READ)) ?
                "<a  href='" . Reminder::getFormURL() . "?id=" . $listitem['id'] . "'>" . $listitem['name'] . "</a>"
                : $listitem['name'];
 
             $l .= "<div id='alert$rand'>";
-            $l .= "<span class='alert_impact $class'></span>";
+            $l .= "<span style='$style' class='alert_impact'></span>";
             //            if (isset($listitem['begin_view_date'])
             //                && isset($listitem['end_view_date'])
             //            ) {
             //               $l .= "<span class='alert_date'>" . Html::convDateTime($listitem['begin_view_date']) . " - " . Html::convDateTime($listitem['end_view_date']) . "</span><br>";
             //            }
-            $l .= "<span class='$classfont'>" . $name . "</span>";
+            $l .= "<span style='$styleFont'>" . $name . "</span>";
             $l .= "</div>";
          }
       } else {

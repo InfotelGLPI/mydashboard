@@ -69,50 +69,10 @@
    font-size: 7em !important;;
 }
 
-.fa-alert-green {
-   color: forestgreen;
-}
-
-.fa-alert-yellow {
-   color: #fff03a;
-}
-
-.fa-alert-orange {
-   color: orange;
-}
-
-.fa-alert-lightred {
-   color: indianred;
-}
-
-.fa-alert-red {
-   color: darkred;
-}
-
 #display-sc {
    /*width: 100%;*/
    text-align: left;
    padding-left: 1%;
-}
-
-.alert_fontimpact1 {
-   color: forestgreen;
-}
-
-.alert_fontimpact2 {
-   color: #fff03a;
-}
-
-.alert_fontimpact3 {
-   color: orange;
-}
-
-.alert_fontimpact4 {
-   color: indianred;
-}
-
-.alert_fontimpact5 {
-   color: darkred;
 }
 
 .alert_impact {
@@ -121,26 +81,6 @@
    border-radius: 7px;
    display: inline-block;
    margin-right: 5px;
-}
-
-.alert_impact1 {
-   background-color: forestgreen;
-}
-
-.alert_impact2 {
-   background-color: #fff03a;
-}
-
-.alert_impact3 {
-   background-color: orange;
-}
-
-.alert_impact4 {
-   background-color: indianred;
-}
-
-.alert_impact5 {
-   background-color: indianred;
 }
 
 .weather_block {
