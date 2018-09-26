@@ -122,7 +122,7 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_2'>";
-      echo "<td>" . __('Impact colors') . "</td>";
+      echo "<td>" . __('Impact colors','mydashboard') . "</td>";
       echo "<td colspan='3'>";
 
       echo "<table><tr>";

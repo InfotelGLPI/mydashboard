@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-04 16:31+0200\n"
+"POT-Creation-Date: 2018-09-26 11:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/tsmr/teams/65490/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: setup.php:137 inc/menu.class.php:87 inc/preference.class.php:62
+#: setup.php:139 inc/menu.class.php:87 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
 
@@ -30,8 +30,8 @@ msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] ""
 
-#: inc/alert.class.php:91 inc/alert.class.php:1664 inc/alert.class.php:1667
-#: inc/alert.class.php:1780 inc/alert.class.php:1783
+#: inc/alert.class.php:91 inc/alert.class.php:1652 inc/alert.class.php:1655
+#: inc/alert.class.php:1768 inc/alert.class.php:1771
 #: inc/problemalert.class.php:110 inc/problemalert.class.php:113
 msgid "Alert"
 msgid_plural "Alerts"
@@ -42,16 +42,16 @@ msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 
-#: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1668
-#: inc/alert.class.php:1784 inc/problemalert.class.php:114
-#: inc/widget.class.php:534
+#: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1656
+#: inc/alert.class.php:1772 inc/problemalert.class.php:114
+#: inc/widget.class.php:561
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 
-#: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1669
-#: inc/alert.class.php:1785 inc/problemalert.class.php:115
-#: inc/widget.class.php:570
+#: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1657
+#: inc/alert.class.php:1773 inc/problemalert.class.php:115
+#: inc/widget.class.php:602
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
@@ -80,7 +80,7 @@ msgstr ""
 msgid "Not imported mails in collectors"
 msgstr ""
 
-#: inc/alert.class.php:157 inc/alert.class.php:1836 inc/widget.class.php:498
+#: inc/alert.class.php:157 inc/alert.class.php:1824 inc/widget.class.php:520
 msgid "Network Monitoring"
 msgstr ""
 
@@ -146,58 +146,58 @@ msgid ""
 "more"
 msgstr ""
 
-#: inc/alert.class.php:1252 inc/widget.class.php:544
+#: inc/alert.class.php:1252 inc/widget.class.php:571
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/alert.class.php:1339 inc/widget.class.php:581
+#: inc/alert.class.php:1339 inc/widget.class.php:613
 msgid "No informations founded"
 msgstr ""
 
-#: inc/alert.class.php:1463 inc/alert.class.php:1634 inc/widget.class.php:508
+#: inc/alert.class.php:1453 inc/alert.class.php:1622 inc/widget.class.php:530
 msgid "No problem detected"
 msgstr ""
 
-#: inc/alert.class.php:1589
+#: inc/alert.class.php:1572
 msgid "Monitoring"
 msgstr ""
 
-#: inc/alert.class.php:1678 inc/alert.class.php:1795
+#: inc/alert.class.php:1666 inc/alert.class.php:1783
 #: inc/problemalert.class.php:125
 msgid "No impact"
 msgstr ""
 
-#: inc/alert.class.php:1683 inc/alert.class.php:1800
+#: inc/alert.class.php:1671 inc/alert.class.php:1788
 #: inc/problemalert.class.php:130
 msgid "Alert level"
 msgstr ""
 
-#: inc/alert.class.php:1721 inc/alert.class.php:1724
+#: inc/alert.class.php:1709 inc/alert.class.php:1712
 #: inc/problemalert.class.php:50 inc/problemalert.class.php:53
 msgid "Create a new alert"
 msgstr ""
 
-#: inc/alert.class.php:1749 inc/problemalert.class.php:78
+#: inc/alert.class.php:1737 inc/problemalert.class.php:78
 msgid "Linked reminder"
 msgstr ""
 
-#: inc/alert.class.php:1838 inc/widget.class.php:500
+#: inc/alert.class.php:1826 inc/widget.class.php:522
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
-#: inc/alert.class.php:1876
+#: inc/alert.class.php:1864
 msgid "Problem with GLPI"
 msgstr ""
 
-#: inc/alert.class.php:1881
+#: inc/alert.class.php:1869
 msgid "GLPI is OK"
 msgstr ""
 
-#: inc/alert.class.php:1886
+#: inc/alert.class.php:1874
 msgid "Alert is not properly configured or is not reachable"
 msgstr ""
 
-#: inc/alert.class.php:1903
+#: inc/alert.class.php:1891
 msgid "Curl PHP package not installed"
 msgstr ""
 
@@ -228,7 +228,7 @@ msgid "No data is given to the widget"
 msgstr ""
 
 #: inc/chart.class.php:111 inc/menu.class.php:655 inc/menu.class.php:1159
-#: inc/widget.class.php:164 inc/widget.class.php:178 inc/widget.class.php:447
+#: inc/widget.class.php:165 inc/widget.class.php:188 inc/widget.class.php:465
 msgid "No data available"
 msgstr ""
 
@@ -240,20 +240,24 @@ msgstr ""
 msgid "Dashboard - Configuration"
 msgstr ""
 
-#: inc/config.class.php:95
+#: inc/config.class.php:96
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: inc/config.class.php:105
+#: inc/config.class.php:106
 msgid "Display widgets from plugins"
 msgstr ""
 
-#: inc/config.class.php:111 inc/preference.class.php:109
+#: inc/config.class.php:112 inc/preference.class.php:109
 msgid "Replace central interface"
 msgstr ""
 
-#: inc/config.class.php:117
+#: inc/config.class.php:118
 msgid "Google API Key"
+msgstr ""
+
+#: inc/config.class.php:125
+msgid "Impact colors"
 msgstr ""
 
 #: inc/dashboard.class.php:118 inc/menu.class.php:103
@@ -746,10 +750,6 @@ msgstr ""
 msgid "From which plugins you want to display the widgets?"
 msgstr ""
 
-#: inc/profileauthorizedwidget.class.php:88
-msgid "Authorize/Unauthorize all"
-msgstr ""
-
 #: inc/profile.class.php:45
 msgid "Rights management"
 msgstr ""
@@ -776,6 +776,10 @@ msgstr ""
 
 #: inc/profile.class.php:293
 msgid "See the configuration"
+msgstr ""
+
+#: inc/profileauthorizedwidget.class.php:88
+msgid "Authorize/Unauthorize all"
 msgstr ""
 
 #: inc/project.class.php:51 inc/project.class.php:55 inc/project.class.php:94
