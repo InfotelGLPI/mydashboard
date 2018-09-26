@@ -122,24 +122,24 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_2'>";
-      echo "<td>" . __('Priority colors') . "</td>";
+      echo "<td>" . __('Impact colors') . "</td>";
       echo "<td colspan='3'>";
 
       echo "<table><tr>";
       echo "<td><label for='dropdown_priority_1$rand'>1</label>&nbsp;";
-      Html::showColorField('priority_1', ['value' => $this->fields["priority_1"], 'rand' => $rand]);
+      Html::showColorField('impact_1', ['value' => $this->fields["impact_1"], 'rand' => $rand]);
       echo "</td>";
       echo "<td><label for='dropdown_priority_2$rand'>2</label>&nbsp;";
-      Html::showColorField('priority_2', ['value' => $this->fields["priority_2"], 'rand' => $rand]);
+      Html::showColorField('impact_2', ['value' => $this->fields["impact_2"], 'rand' => $rand]);
       echo "</td>";
       echo "<td><label for='dropdown_priority_3$rand'>3</label>&nbsp;";
-      Html::showColorField('priority_3', ['value' => $this->fields["priority_3"], 'rand' => $rand]);
+      Html::showColorField('impact_3', ['value' => $this->fields["impact_3"], 'rand' => $rand]);
       echo "</td>";
       echo "<td><label for='dropdown_priority_4$rand'>4</label>&nbsp;";
-      Html::showColorField('priority_4', ['value' => $this->fields["priority_4"], 'rand' => $rand]);
+      Html::showColorField('impact_4', ['value' => $this->fields["impact_4"], 'rand' => $rand]);
       echo "</td>";
       echo "<td><label for='dropdown_priority_5$rand'>5</label>&nbsp;";
-      Html::showColorField('priority_5', ['value' => $this->fields["priority_5"], 'rand' => $rand]);
+      Html::showColorField('impact_5', ['value' => $this->fields["impact_5"], 'rand' => $rand]);
       echo "</td>";
       echo "</tr></table>";
 

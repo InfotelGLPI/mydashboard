@@ -66,11 +66,11 @@ CREATE TABLE `glpi_plugin_mydashboard_configs` (
   `display_menu`          TINYINT(1) NOT NULL DEFAULT '1',
   `display_plugin_widget` TINYINT(1) NOT NULL DEFAULT '1',
   `replace_central`       TINYINT(1) NOT NULL DEFAULT '0',
-  `priority_1`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `priority_2`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `priority_3`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `priority_4`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `priority_5`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `impact_1`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `impact_2`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `impact_3`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `impact_4`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `impact_5`            char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
@@ -111,4 +111,4 @@ CREATE TABLE `glpi_plugin_mydashboard_preferenceuserblacklists` (
   DEFAULT CHARSET = utf8
   COLLATE = utf8_unicode_ci;
 
-  INSERT INTO `glpi_plugin_mydashboard_configs`(`priority_1`,`priority_2`,`priority_3`,`priority_4`,`priority_5`) VALUES ('#228b22','#fff03a','#ffa500','#cd5c5c','#8b0000');
+  INSERT INTO `glpi_plugin_mydashboard_configs`(`impact_1`,`impact_2`,`impact_3`,`impact_4`,`impact_5`) VALUES ('#228b22','#fff03a','#ffa500','#cd5c5c','#8b0000');

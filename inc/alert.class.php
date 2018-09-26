@@ -1404,8 +1404,9 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-4 center \">";
-            $style = "color:".$config->getField('priority_'.$row['impact']);
-            $wl .= "<i style='$style' class='fa fa-thermometer fa-alert-7'></i>";
+            $class = "fa-thermometer-" . ($row['impact']-1);
+            $style = "color:".$config->getField('impact_'.$row['impact']);
+            $wl .= "<i style='$style' class='fa $class fa-alert-7'></i>";
 
             $wl .= "</div>";
 
@@ -1564,12 +1565,13 @@ class PluginMydashboardAlert extends CommonDBTM {
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
 
-      $style = "color:".$config->getField('priority_'.$impact);
+      $class = "fa-thermometer-" . ($impact-1);
+      $style = "color:".$config->getField('impact_'.$impact);
 
       $div .= "<div class='bt-row weather_public_block'>";
       $div .= "<div class='center'><h3>" . __("Monitoring", "mydashboard") . "</h3></div>";
       $div .= "<div class=\"bt-col-xs-4 right \">";
-      $div .= "<i style='$style' class='fa fa-thermometer fa-alert-4'></i>";
+      $div .= "<i style='$style' class='fa $class fa-alert-4'></i>";
       $div .= "</div>";
       $div .= "<div class=\"bt-col-xs-8 alert-title-div\">";
       $div .= "<div class='weather_msg'>";
@@ -1594,7 +1596,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       if (!empty($list)) {
          foreach ($list as $listitem) {
 
-            $configColor = $config->getField("priority_".$listitem['impact']);
+            $configColor = $config->getField("impact_".$listitem['impact']);
             //            $class     = (Html::convDate(date("Y-m-d")) == Html::convDate($listitem['date'])) ? 'alert_new' : '';
 //            $class     = ' alert_impact' . $listitem['impact'];
             $style     = "background-color : " . $configColor;
