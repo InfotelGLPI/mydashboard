@@ -61,6 +61,10 @@
    font-style: italic;
 }
 
+.fa-alert-orange {
+   color: orange;
+}
+
 .fa-alert-4 {
    font-size: 4em !important;;
 }
