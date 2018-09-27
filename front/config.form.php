@@ -29,7 +29,7 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu");
+   Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'PluginMydashboardConfig');
 } else {
    Html::helpHeader(PluginMydashboardMenu::getTypeName(2));
 }

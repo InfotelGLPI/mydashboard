@@ -88,6 +88,7 @@ class PluginMydashboardConfig extends CommonDBTM {
       //canCreate means that user can update the configuration
       //        $canCreate = self::canCreate();
       $canCreate = true;
+      $rand      = mt_rand();
 
       //This array is for those who can't update, it's to display the value of a boolean parameter
       $yesno = [__("No"), __("Yes")];
@@ -119,6 +120,30 @@ class PluginMydashboardConfig extends CommonDBTM {
       Html::autocompletionTextField($this, "google_api_key");
       echo "</td>";
       echo "</tr>";
+
+      echo "<tr class='tab_bg_2'>";
+      echo "<td>" . __('Impact colors','mydashboard') . "</td>";
+      echo "<td colspan='3'>";
+
+      echo "<table><tr>";
+      echo "<td><label for='dropdown_priority_1$rand'>1</label>&nbsp;";
+      Html::showColorField('impact_1', ['value' => $this->fields["impact_1"], 'rand' => $rand]);
+      echo "</td>";
+      echo "<td><label for='dropdown_priority_2$rand'>2</label>&nbsp;";
+      Html::showColorField('impact_2', ['value' => $this->fields["impact_2"], 'rand' => $rand]);
+      echo "</td>";
+      echo "<td><label for='dropdown_priority_3$rand'>3</label>&nbsp;";
+      Html::showColorField('impact_3', ['value' => $this->fields["impact_3"], 'rand' => $rand]);
+      echo "</td>";
+      echo "<td><label for='dropdown_priority_4$rand'>4</label>&nbsp;";
+      Html::showColorField('impact_4', ['value' => $this->fields["impact_4"], 'rand' => $rand]);
+      echo "</td>";
+      echo "<td><label for='dropdown_priority_5$rand'>5</label>&nbsp;";
+      Html::showColorField('impact_5', ['value' => $this->fields["impact_5"], 'rand' => $rand]);
+      echo "</td>";
+      echo "</tr></table>";
+
+      echo "</td></tr>";
 
       $this->showFormButtons($options);
    }

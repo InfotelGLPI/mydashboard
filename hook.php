@@ -38,7 +38,7 @@ function plugin_mydashboard_install() {
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.0.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.2.sql");
 
       PluginMydashboardMenu::installWidgets();
    }
@@ -139,6 +139,14 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.5.1.sql");
       $mig->executeMigration();
    }
+
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","priority_1")) {
+      $mig = new Migration("1.6.2");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.2.sql");
+      $mig->executeMigration();
+   }
+
+
 
    PluginMydashboardProfile::initProfile();
    PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
