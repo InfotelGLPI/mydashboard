@@ -267,7 +267,7 @@ msgstr "Clé API Google"
 
 #: inc/config.class.php:125
 msgid "Impact colors"
-msgstr "Couleurs des impactes"
+msgstr "Couleurs des impacts"
 
 #: inc/dashboard.class.php:118 inc/menu.class.php:103
 msgid "GLPI admin grid"
