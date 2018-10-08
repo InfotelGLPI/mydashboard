@@ -41,7 +41,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
       $this->options = $_options;
 
       $preference = new PluginMydashboardPreference();
-      if (!$preference->getFromDB(Session::getLoginUserID())) {
+      if (Session::getLoginUserID() !== false
+          && !$preference->getFromDB(Session::getLoginUserID())) {
          $preference->initPreferences(Session::getLoginUserID());
       }
       $preference->getFromDB(Session::getLoginUserID());
@@ -1983,7 +1984,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             //            $widget->toggleWidgetRefresh();
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened and closed tickets by month", "mydashboard");
+            $title  = __("Number of opened and solved tickets by month", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($dataspie);

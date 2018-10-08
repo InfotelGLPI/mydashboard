@@ -31,7 +31,7 @@ if (!defined('GLPI_ROOT')) {
 /**
  * This class extends GLPI class event to add the functions to display widgets on Dashboard
  */
-class PluginMydashboardEvent extends Event {
+class PluginMydashboardEvent extends Glpi\Event {
 
    /**
     * @param int $nb

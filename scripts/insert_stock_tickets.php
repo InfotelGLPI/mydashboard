@@ -50,7 +50,7 @@ $plugin = new Plugin();
 //$config = PluginPrintercountersConfig::getInstance();
 
 if ($plugin->isActivated("mydashboard")) {
-   $record = new PluginMydashboardInfotel([]);
+   $record = new PluginMydashboardInfotel();
    $record->cronMydashboardInfotelUpdateStockTicket();
 } else {
    echo __('Plugin disabled', 'mydashboard');
