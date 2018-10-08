@@ -78,6 +78,10 @@ function plugin_init_mydashboard() {
                 && Session::haveRight("plugin_servicecatalog", READ)) {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
+            if(strpos($_SERVER['REQUEST_URI'],  "active_entity=all") !== false){
+               Session::changeActiveEntities("all");
+               $_SESSION["glpi_plugin_mydashboard_loaded"] = 0;
+            }
             if (isset($_SERVER['HTTP_REFERER'])
                 && strpos($_SERVER['HTTP_REFERER'], 'redirect') !== false) {
                $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
