@@ -37,7 +37,6 @@ include('../../../inc/includes.php');
 
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
-$_SESSION['glpi_use_mode'] = Session::DEBUG_MODE;
 
 // Chech Memory_limit - sometine cli limit (php-cli.ini) != module limit (php.ini)
 $mem = Toolbox::getMemoryLimit();
@@ -61,7 +60,7 @@ if ($plugin->isActivated("mydashboard")) {
                    . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
                    . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
                    . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
-//   die($query);
+
    $results      = $DB->query($query);
    while ($data = $DB->fetch_array($results)) {
       list($year, $month) = explode('-', $data['month']);
