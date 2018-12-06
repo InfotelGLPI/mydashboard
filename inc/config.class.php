@@ -143,6 +143,20 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "</td>";
       echo "</tr></table>";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Level of categories to show', 'mydashboard') . "</td>";
+      echo "<td>";
+      $itilCat = new ITILCategory();
+      $itilCategories = $itilCat->find("1=1");
+      $levelsCat = [];
+      foreach ($itilCategories as $categorie){
+         $levelsCat[$categorie['level']] = $categorie['level'];
+      }
+      ksort($levelsCat);
+      Dropdown::showFromArray('levelCat', $levelsCat, ['value' => $this->fields["levelCat"]]);
+      echo "</td>";
+      echo "</tr>";
+
       echo "</td></tr>";
 
       $this->showFormButtons($options);

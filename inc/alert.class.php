@@ -944,7 +944,9 @@ class PluginMydashboardAlert extends CommonDBTM {
             $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('ID'), _n('Requester', 'Requesters', 2), __('Status'), __('Last update'), __('Assigned to'), __('Action')];
+            $headers = [__('ID and priority','mydashboard'), _n('Requester', 'Requesters', 2), __('Status'),
+                        __('Last update'), __('Assigned to'), __('Action'),
+                        __('ID'), __('Priority'), __('Category')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
@@ -1048,6 +1050,42 @@ class PluginMydashboardAlert extends CommonDBTM {
                            }
                         }
                         $datas[$i]["action"] = $action;
+
+                        $ticketId = "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+                        $ticketId .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
+                        $ticketId .= "</a>";
+                        $datas[$i]["id"] = $ticketId;
+
+                        $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>";
+                        $priority .= "<span class='b'>".Ticket::getPriorityName($ticket->fields["priority"])."</span>";
+                        $priority .= "</div>";
+                        $datas[$i]["priority"] = $priority;
+
+
+
+
+                        /***/
+                        $config = new PluginMydashboardConfig();
+                        $config->getFromDB(1);
+                        $itilCategory = new ITILCategory();
+                        $itilCategory->getFromDB($ticket->fields["itilcategories_id"]);
+
+                        $haystack = $itilCategory->getField('completename');
+                        $needle = '>';
+                        $offset = 0;
+                        $allpos = [];
+
+                        while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
+                           $offset   = $pos + 1;
+                           $allpos[] = $pos;
+                        }
+
+                        if(isset($allpos[$config->getField('levelCat')-1])){
+                           $pos = $allpos[$config->getField('levelCat')-1];
+                        } else{
+                           $pos = strlen($haystack);
+                        }
+                        $datas[$i]["category"] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
 
                         $i++;
                      }

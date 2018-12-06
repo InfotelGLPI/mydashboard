@@ -169,7 +169,9 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
             $widgetId = $widget->getWidgetIdByName($widgetName);
             unset($this->fields['id']);
             $this->getFromDBByCrit(['widgets_id' => $widgetId, 'profiles_id' => $profiles_id]);
-            if (!isset($this->fields['id'])) {
+            if (!isset($this->fields['id'])
+                && $widgetId != null
+                && !empty($widgetId)) {
                $this->add([
                              'profiles_id' => $profiles_id,
                              'widgets_id'  => $widgetId

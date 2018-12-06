@@ -295,9 +295,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                if ($type == "table") {
                   $opt = $widget->getOptions();
                   //                  Toolbox::logDebug($opt);
-                  $order = json_encode([0, 'asc']);
+                  $order = json_encode([[0, 'asc']]);
                   if (isset($opt['bSort'])) {
-                     $order = json_encode($opt['bSort']);
+                     $order = json_encode([$opt['bSort']]);
                   }
                   $defs = json_encode([]);
                   if (isset($opt['bDef'])) {
@@ -365,6 +365,36 @@ class PluginMydashboardWidget extends CommonDBTM {
                            $.fn.dataTable.moment('$mask');
                            $('#$widgetindex$rand').DataTable(
                                {
+                               stateSave: true,
+                                'stateSaveParams': function (settings, data) {
+                                  data.gsId = '$widgetindex';
+                                }, 
+                                'stateSaveCallback': function (settings, data) {
+                                    // Send an Ajax request to the server with the state object
+                                    
+                                    $.ajax({
+                                       'url': '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/state_save.php',
+                                       'data': data,
+                                       'dataType': 'json',
+                                       'type': 'POST',
+                                       'success': function(response) {},
+                                       'error': function(response) {}
+                                    });
+                               },       
+                               'stateLoadCallback': function (settings, callback) {
+                                $.ajax({
+                                    url: '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/state_load.php?gsId={$widgetindex}',
+                                    dataType: 'json',
+                                    success: function (json) {                               
+                                      //JSON parse the saved filter and set the time equal to now.          
+                                      json.time = +new Date();                                         
+                                      callback(json);
+                                    },
+                                    error: function () {
+                                        callback(null);
+                                    }
+                                })
+                               },                  
                                'iDisplayLength' : $display_count_on_home,
                                'order': $order,
                                'colReorder': true,

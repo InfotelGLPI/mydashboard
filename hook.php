@@ -140,9 +140,14 @@ function plugin_mydashboard_install() {
       $mig->executeMigration();
    }
 
-   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","priority_1")) {
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","impact_1")) {
       $mig = new Migration("1.6.2");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.2.sql");
+      $mig->executeMigration();
+   }
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_dashboards","grid_statesave")) {
+      $mig = new Migration("1.6.3");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
 
