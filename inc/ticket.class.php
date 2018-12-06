@@ -211,12 +211,12 @@ class PluginMydashboardTicket {
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN ('$groups')
                                 AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
 
-            if (Session::haveRight("show_group_ticket", 1)) {
+            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
                $search_users_id = " (`glpi_groups_tickets`.`groups_id` IN ('$groups')
                                      AND `glpi_groups_tickets`.`type`
                                            = '" . CommonITILActor::REQUESTER . "') ";
             }
-            if (Session::haveRight("show_group_ticket", 1)) {
+            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
                $search_observer = " (`glpi_groups_tickets`.`groups_id` IN ('$groups')
                                      AND `glpi_groups_tickets`.`type`
                                            = '" . CommonITILActor::OBSERVER . "') ";
