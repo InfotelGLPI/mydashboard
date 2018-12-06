@@ -69,10 +69,7 @@ class PluginMydashboardConfig extends CommonDBTM {
     * @param array $options
     */
    function showForm($ID, $options = []) {
-      //If default configuration is not loaded
-      if (!$this->getFromDB("1")) {
-         $this->initConfig();
-      }
+      $this->getFromDB("1");
 
       //If user have no access
       //        if(!plugin_dashboard_haveRight('config', READ)){

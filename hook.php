@@ -152,7 +152,11 @@ function plugin_mydashboard_install() {
    }
 
 
-
+   //If default configuration is not loaded
+   $config = new PluginMydashboardConfig();
+   if (!$config->getFromDB("1")) {
+      $config->initConfig();
+   }
    PluginMydashboardProfile::initProfile();
    PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    return true;
