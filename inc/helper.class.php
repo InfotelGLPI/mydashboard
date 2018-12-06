@@ -210,7 +210,12 @@ class PluginMydashboardHelper {
          $crit['crit']['sons'] = 0;
          if (in_array("is_recursive", $criterias)) {
             if (!isset($params['opt']['sons'])) {
-               $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+               //TODO : Add conf for recursiv 
+               if(isset($_SESSION['glpiactive_entity_recursive']) && $_SESSION['glpiactive_entity_recursive'] != false){
+                  $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+               } else{
+                  $opt['sons'] = 0;
+               }
             } else {
                $opt['sons'] = $params['opt']['sons'];
             }
