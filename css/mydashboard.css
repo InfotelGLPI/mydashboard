@@ -375,12 +375,14 @@ div#tabcontent{
 
 .plugin_mydashboard_menuSliderButton:hover {
    content: "\f0da";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
 }
 
 .plugin_mydashboard_menuSliderButtonClose:hover {
    content: "\f0d9";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
 
 }
 
@@ -406,14 +408,16 @@ div#tabcontent{
 .plugin_mydashboard_menuDashboardListTitle1:before,
 .plugin_mydashboard_menuDashboardListTitle2:before {
    content: "\f0da";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
    margin-right: 5px;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1.plugin_mydashboard_menuDashboardListTitle1Opened:before,
 .plugin_mydashboard_menuDashboardListTitle2.plugin_mydashboard_menuDashboardListTitle1Opened:before {
    content: "\f0d7";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
 }
 
 .plugin_mydashboard_menuDashboard li {
@@ -679,6 +683,10 @@ svg:hover {
    border-style: none;
 }
 
+.pull-right {
+   float: right;
+}
+
 /*****datatable export******/
 
 a.buttons-collection {
@@ -817,7 +825,6 @@ div.dt-button-background {
 .fa-2x {
    margin: 0 auto;
    float: none;
-   display: table;
    color: #000;
 }
 

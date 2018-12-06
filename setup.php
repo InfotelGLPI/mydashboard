@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+define('PLUGIN_MYDASHBOARD_VERSION', '1.7.0');
+
 // Init the hooks of the plugins -Needed
 function plugin_init_mydashboard() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
@@ -137,11 +139,16 @@ function plugin_version_mydashboard() {
 
    return [
       'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => '1.6.3',
+      'version'        => PLUGIN_MYDASHBOARD_VERSION,
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
-      'minGlpiVersion' => '9.3'];
+      'requirements'   => [
+         'glpi' => [
+            'min' => '9.4',
+            'dev' => false
+         ]
+      ]];
 }
 
 /**
@@ -150,13 +157,17 @@ function plugin_version_mydashboard() {
  * @return bool
  */
 function plugin_mydashboard_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.3', 'lt')
-         || version_compare(GLPI_VERSION, '9.4', 'ge')) {
-      echo __('This plugin requires GLPI >= 9.3');
+   if (version_compare(GLPI_VERSION, '9.4', 'lt') 
+         || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+      if (method_exists('Plugin', 'messageIncompatible')) {
+         echo Plugin::messageIncompatible('core', '9.4');
+      }
       return false;
    }
+
    return true;
 }
+
 
 /**
  * Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect

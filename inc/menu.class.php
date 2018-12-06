@@ -413,27 +413,27 @@ class PluginMydashboardMenu extends CommonGLPI {
             if ($edit == 1) {
                echo "&nbsp;";
                echo "<a id='save-grid$rand' href='#' title=\"" . __('Save grid', 'mydashboard') . "\">";
-               echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='fa fa-floppy-o fa-1x'></i>";
+               echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-save fa-1x'></i>";
                echo "<span class='sr-only'>" . __('Save grid', 'mydashboard') . "</span>";
                echo "&nbsp;";
             }
             if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
                echo "&nbsp;";
                echo "<a id='save-default-grid$rand' href='#' title=\"" . __('Save default grid', 'mydashboard') . "\">";
-               echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='fa fa-hdd-o fa-1x'></i>";
+               echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-hdd fa-1x'></i>";
                echo "<span class='sr-only'>" . __('Save default grid', 'mydashboard') . "</span>";
                echo "&nbsp;";
             }
 
             echo "&nbsp;";
             echo "<a id='clear-grid$rand' href='#' title=\"" . __('Clear grid', 'mydashboard') . "\">";
-            echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='fa fa-window-restore  fa-1x'></i>";
+            echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-window-restore  fa-1x'></i>";
             echo "<span class='sr-only'>" . __('Clear grid', 'mydashboard') . "</span>";
             echo "&nbsp;";
 
             echo "&nbsp;";
             echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
-            echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='fa fa-times-circle-o fa-1x'></i>";
+            echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='far fa-times-circle fa-1x'></i>";
             echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
             echo "&nbsp;";
             Html::closeForm();
@@ -456,7 +456,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          } else {
             echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-pencil-square-o fa-2x'></i>";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit fa-2x'></i>";
             echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
             echo "</a>";
 
@@ -474,7 +474,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo "</a>";
 
                echo "<a id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-floppy-o fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
                echo "</a>";
             }
@@ -1224,7 +1224,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                             var delbutton = '&nbsp;<button title=\"$msg_delete\" class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
                          }
                          if (refreshopt == 1) {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-refresh\"></i></button>';
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-sync-alt\"></i></button>';
                          }
                          if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');

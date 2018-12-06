@@ -1506,7 +1506,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getAlertSummary($public = 0, $force = 0) {
       global $DB;
 
-      echo Html::css("/lib/font-awesome-4.7.0/css/font-awesome.min.css");
+      echo Html::css("/lib/font-awesome-5.2.0/css/all.min.css");
       echo Html::css("/plugins/mydashboard/css/mydashboard.css");
       echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
       $now = date('Y-m-d H:i:s');
@@ -1902,7 +1902,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "</b></div>";
       } else if (preg_match('/OK/is', $message)) {
-         $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fa fa-check-circle-o fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='far fa-check-circle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("GLPI is OK", "mydashboard");
          $alert .= "</b></div>";
