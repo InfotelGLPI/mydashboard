@@ -980,11 +980,11 @@ class PluginMydashboardAlert extends CommonDBTM {
                   }
                   if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
 
-                     $ticketfollowup = new TicketFollowup();
-                     $followups      = $ticketfollowup->find("`tickets_id` = " . $ticket->fields['id'], 'date DESC');
+                     $itilfollowup = new ItilFollowup();
+                     $followups      = $itilfollowup->find(['tickets_id' => $ticket->fields['id']] , 'date DESC');
 
                      $ticketdocument = new Document();
-                     $documents      = $ticketdocument->find("`tickets_id` = " . $ticket->fields['id'], 'date_mod DESC');
+                     $documents      = $ticketdocument->find(['tickets_id' => $ticket->fields['id']], 'date_mod DESC');
 
                      if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
                          || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {

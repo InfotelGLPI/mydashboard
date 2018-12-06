@@ -1191,7 +1191,7 @@ class PluginMydashboardTicket {
       // Make new job object and fill it from database, if success, print it
       $job = new Ticket();
 
-      $showprivate = Session::haveRight('followup', TicketFollowup::SEEPRIVATE);
+      $showprivate = Session::haveRight('followup', ItilFollowup::SEEPRIVATE);
 
       if ($job->getFromDB($id)) {
          $bgcolor  = $_SESSION["glpipriority_" . $job->fields["priority"]];
@@ -1315,7 +1315,7 @@ class PluginMydashboardTicket {
             if ($followups
                 && ($output_type == Search::HTML_OUTPUT)
             ) {
-               $eigth_column .= TicketFollowup::showShortForTicket($job->fields["id"]);
+               $eigth_column .= ItilFollowup::showShortForTicket($job->fields["id"]);
             } else {
                $eigth_column = sprintf(__('%1$s (%2$s)'), $eigth_column,
                                        sprintf(__('%1$s - %2$s'),
