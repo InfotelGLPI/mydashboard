@@ -1442,7 +1442,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-4 center \">";
-            $class = "fa-thermometer-" . ($row['impact']-1);
+            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact']-1);
             $style = "color:".$config->getField('impact_'.$row['impact']);
             $wl .= "<i style='$style' class='fa $class fa-alert-7'></i>";
 
@@ -1603,7 +1603,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
 
-      $class = "fa-thermometer-" . ($impact-1);
+      $class = "plugin_mydashboard_fa-thermometer-" . ($impact-1);
       $style = "color:".$config->getField('impact_'.$impact);
 
       $div .= "<div class='bt-row weather_public_block'>";
