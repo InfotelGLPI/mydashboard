@@ -981,7 +981,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                   if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
 
                      $itilfollowup = new ItilFollowup();
-                     $followups      = $itilfollowup->find(['tickets_id' => $ticket->fields['id']] , 'date DESC');
+                     $followups      = $itilfollowup->find(['items_id' => $ticket->fields['id'],
+                                                            'itemtype' => 'Ticket'] , 'date DESC');
 
                      $ticketdocument = new Document();
                      $documents      = $ticketdocument->find(['tickets_id' => $ticket->fields['id']], 'date_mod DESC');
@@ -1079,12 +1080,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                            $offset   = $pos + 1;
                            $allpos[] = $pos;
                         }
-
-                        if(isset($allpos[$config->getField('levelCat')-1])){
-                           $pos = $allpos[$config->getField('levelCat')-1];
-                        } else{
+//TODO ?
+//                        if(isset($allpos[$config->getField('levelCat')-1])){
+//                           $pos = $allpos[$config->getField('levelCat')-1];
+//                        } else{
                            $pos = strlen($haystack);
-                        }
+//                        }
                         $datas[$i]["category"] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
 
                         $i++;
@@ -1506,7 +1507,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getAlertSummary($public = 0, $force = 0) {
       global $DB;
 
-      echo Html::css("/lib/font-awesome-5.2.0/css/all.min.css");
+      echo Html::css("/lib/font-awesome/css/all.min.css");
       echo Html::css("/plugins/mydashboard/css/mydashboard.css");
       echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
       $now = date('Y-m-d H:i:s');

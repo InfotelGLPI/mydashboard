@@ -445,7 +445,7 @@ class PluginMydashboardHelper {
                      'display'   => false,
                      'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
                      'entity'    => $_SESSION['glpiactiveentities'],
-                     'condition' => '`is_assign`'
+                     'condition' => ['is_assign' => 1]
          ];
          $form    .= "<span class='md-widgetcrit'>";
          $form    .= __('Group');

@@ -437,7 +437,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "3":
             $profile_user = new Profile_User();
-            $users        = $profile_user->find($dbu->getEntitiesRestrictRequest("", "glpi_profiles_users", "entities_id", '', true));
+            $condition  = $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', 'entities_id', '', true);
+            $users        = $profile_user->find($condition);
             $filtredUsers = [];
             foreach ($users as $user) {
                $filtredUsers[$user['users_id']] = $user['users_id'];
