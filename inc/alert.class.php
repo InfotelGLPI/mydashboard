@@ -121,10 +121,10 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
-               . "LEFT JOIN `glpi_plugin_mydashboard_alerts`"
-               . "ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
-               . "WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
+               . self::addVisibilityJoins()
+               . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
+               . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
+               . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
                          $restrict_visibility ";
 
       if ($public == 0) {
@@ -1235,7 +1235,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `glpi_reminders`.`begin_view_date`,
                        `glpi_reminders`.`end_view_date`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
+               . self::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1324,7 +1324,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `glpi_reminders`.`begin_view_date`,
                        `glpi_reminders`.`end_view_date`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
+               . self::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1414,7 +1414,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
+               . self::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1504,6 +1504,42 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
+
+   static function addVisibilityJoins($forceall = false) {
+
+      if (!Session::haveRight(Reminder::$rightname, READ)) {
+         return '';
+      }
+      // Users
+      $join = " LEFT JOIN `glpi_reminders_users`
+                     ON (`glpi_reminders_users`.`reminders_id` = `glpi_reminders`.`id`) ";
+
+      // Groups
+      if ($forceall
+          || (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"]))) {
+         $join .= " LEFT JOIN `glpi_groups_reminders`
+                        ON (`glpi_groups_reminders`.`reminders_id` = `glpi_reminders`.`id`) ";
+      }
+
+      // Profiles
+      if ($forceall
+          || (isset($_SESSION["glpiactiveprofile"])
+              && isset($_SESSION["glpiactiveprofile"]['id']))) {
+         $join .= " LEFT JOIN `glpi_profiles_reminders`
+                        ON (`glpi_profiles_reminders`.`reminders_id` = `glpi_reminders`.`id`) ";
+      }
+
+      // Entities
+      if ($forceall
+          || (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"]))) {
+         $join .= " LEFT JOIN `glpi_entities_reminders`
+                        ON (`glpi_entities_reminders`.`reminders_id` = `glpi_reminders`.`id`) ";
+      }
+
+      return $join;
+
+   }
+
    function getAlertSummary($public = 0, $force = 0) {
       global $DB;
 
@@ -1532,10 +1568,10 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
-               . "LEFT JOIN `" . $this->getTable() . "`"
-               . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-               . "WHERE $restrict_user
+               . self::addVisibilityJoins()
+               . " LEFT JOIN `" . $this->getTable() . "`"
+               . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+               . " WHERE $restrict_user
                          $restrict_visibility ";
 
       if ($public == 0) {
