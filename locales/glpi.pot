@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 10:35+0100\n"
+"POT-Creation-Date: 2018-12-17 10:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:139 inc/menu.class.php:87 inc/preference.class.php:62
+#: setup.php:141 inc/menu.class.php:87 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
 
@@ -32,8 +32,8 @@ msgid_plural "Alerts Dashboard"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:91 inc/alert.class.php:1690 inc/alert.class.php:1693
-#: inc/alert.class.php:1806 inc/alert.class.php:1809
+#: inc/alert.class.php:91 inc/alert.class.php:1653 inc/alert.class.php:1656
+#: inc/alert.class.php:1769 inc/alert.class.php:1772
 #: inc/problemalert.class.php:110 inc/problemalert.class.php:113
 msgid "Alert"
 msgid_plural "Alerts"
@@ -46,167 +46,167 @@ msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1694
-#: inc/alert.class.php:1810 inc/problemalert.class.php:114
+#: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1657
+#: inc/alert.class.php:1773 inc/problemalert.class.php:114
 #: inc/widget.class.php:591
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1695
-#: inc/alert.class.php:1811 inc/problemalert.class.php:115
+#: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1658
+#: inc/alert.class.php:1774 inc/problemalert.class.php:115
 #: inc/widget.class.php:632
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/alert.class.php:95 inc/alert.class.php:495
+#: inc/alert.class.php:95 inc/alert.class.php:479
 msgid "Incidents alerts"
 msgstr ""
 
-#: inc/alert.class.php:96 inc/alert.class.php:892
+#: inc/alert.class.php:96 inc/alert.class.php:854
 msgid "SLA Incidents alerts"
 msgstr ""
 
-#: inc/alert.class.php:97 inc/alert.class.php:919
+#: inc/alert.class.php:97 inc/alert.class.php:881
 msgid "GLPI Status"
 msgstr ""
 
-#: inc/alert.class.php:98 inc/alert.class.php:1101
+#: inc/alert.class.php:98 inc/alert.class.php:1064
 msgid "User ticket alerts"
 msgstr ""
 
-#: inc/alert.class.php:99 inc/alert.class.php:1147
+#: inc/alert.class.php:99 inc/alert.class.php:1110
 msgid "Automatic actions in error"
 msgstr ""
 
-#: inc/alert.class.php:100 inc/alert.class.php:1189
+#: inc/alert.class.php:100 inc/alert.class.php:1152
 msgid "Not imported mails in collectors"
 msgstr ""
 
-#: inc/alert.class.php:157 inc/alert.class.php:1862 inc/widget.class.php:550
+#: inc/alert.class.php:157 inc/alert.class.php:1825 inc/widget.class.php:550
 msgid "Network Monitoring"
 msgstr ""
 
-#: inc/alert.class.php:353 inc/alert.class.php:357
+#: inc/alert.class.php:337 inc/alert.class.php:341
 msgid "New incidents"
 msgstr ""
 
-#: inc/alert.class.php:393 inc/alert.class.php:397
+#: inc/alert.class.php:377 inc/alert.class.php:381
 msgid "Opened tickets without assigned technicians"
 msgstr ""
 
-#: inc/alert.class.php:437 inc/alert.class.php:441
+#: inc/alert.class.php:421 inc/alert.class.php:425
 msgid "Incidents with very high or major priority"
 msgstr ""
 
-#: inc/alert.class.php:467 inc/alert.class.php:471
+#: inc/alert.class.php:451 inc/alert.class.php:455
 msgid "Problems with very high or major priority"
 msgstr ""
 
-#: inc/alert.class.php:496
+#: inc/alert.class.php:480
 msgid "Display alerts for tickets and problems"
 msgstr ""
 
-#: inc/alert.class.php:730
+#: inc/alert.class.php:692
 msgid "Incidents where time to own will be exceeded"
 msgstr ""
 
-#: inc/alert.class.php:776
+#: inc/alert.class.php:738
 msgid "Incidents where time to resolve will be exceeded"
 msgstr ""
 
-#: inc/alert.class.php:823
+#: inc/alert.class.php:785
 msgid "Incidents where time to own is exceeded"
 msgstr ""
 
-#: inc/alert.class.php:870
+#: inc/alert.class.php:832
 msgid "Incidents where time to resolve is exceeded"
 msgstr ""
 
-#: inc/alert.class.php:893
+#: inc/alert.class.php:855
 msgid "Display alerts for SLA of tickets"
 msgstr ""
 
-#: inc/alert.class.php:920
+#: inc/alert.class.php:882
 msgid "Check if GLPI have no problem"
 msgstr ""
 
-#: inc/alert.class.php:947 inc/ticket.class.php:327 inc/ticket.class.php:648
+#: inc/alert.class.php:909 inc/ticket.class.php:327 inc/ticket.class.php:649
 msgid "ID and priority"
 msgstr ""
 
-#: inc/alert.class.php:1049
+#: inc/alert.class.php:1012
 msgid "New document"
 msgstr ""
 
-#: inc/alert.class.php:1102
+#: inc/alert.class.php:1065
 msgid "Display tickets where last modification is a user action"
 msgstr ""
 
-#: inc/alert.class.php:1190
+#: inc/alert.class.php:1153
 msgid "Display of mails which are not imported"
 msgstr ""
 
-#: inc/alert.class.php:1205
+#: inc/alert.class.php:1168
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: inc/alert.class.php:1290 inc/widget.class.php:601
+#: inc/alert.class.php:1253 inc/widget.class.php:601
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/alert.class.php:1377 inc/widget.class.php:643
+#: inc/alert.class.php:1340 inc/widget.class.php:643
 msgid "No informations founded"
 msgstr ""
 
-#: inc/alert.class.php:1491 inc/alert.class.php:1660 inc/widget.class.php:560
+#: inc/alert.class.php:1454 inc/alert.class.php:1623 inc/widget.class.php:560
 msgid "No problem detected"
 msgstr ""
 
-#: inc/alert.class.php:1610
+#: inc/alert.class.php:1573
 msgid "Monitoring"
 msgstr ""
 
-#: inc/alert.class.php:1704 inc/alert.class.php:1821
+#: inc/alert.class.php:1667 inc/alert.class.php:1784
 #: inc/problemalert.class.php:125
 msgid "No impact"
 msgstr ""
 
-#: inc/alert.class.php:1709 inc/alert.class.php:1826
+#: inc/alert.class.php:1672 inc/alert.class.php:1789
 #: inc/problemalert.class.php:130
 msgid "Alert level"
 msgstr ""
 
-#: inc/alert.class.php:1747 inc/alert.class.php:1750
+#: inc/alert.class.php:1710 inc/alert.class.php:1713
 #: inc/problemalert.class.php:50 inc/problemalert.class.php:53
 msgid "Create a new alert"
 msgstr ""
 
-#: inc/alert.class.php:1775 inc/problemalert.class.php:78
+#: inc/alert.class.php:1738 inc/problemalert.class.php:78
 msgid "Linked reminder"
 msgstr ""
 
-#: inc/alert.class.php:1864 inc/widget.class.php:552
+#: inc/alert.class.php:1827 inc/widget.class.php:552
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
-#: inc/alert.class.php:1902
+#: inc/alert.class.php:1865
 msgid "Problem with GLPI"
 msgstr ""
 
-#: inc/alert.class.php:1907
+#: inc/alert.class.php:1870
 msgid "GLPI is OK"
 msgstr ""
 
-#: inc/alert.class.php:1912
+#: inc/alert.class.php:1875
 msgid "Alert is not properly configured or is not reachable"
 msgstr ""
 
-#: inc/alert.class.php:1929
+#: inc/alert.class.php:1892
 msgid "Curl PHP package not installed"
 msgstr ""
 
@@ -249,27 +249,27 @@ msgstr ""
 msgid "Dashboard - Configuration"
 msgstr ""
 
-#: inc/config.class.php:96
+#: inc/config.class.php:93
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: inc/config.class.php:106
+#: inc/config.class.php:103
 msgid "Display widgets from plugins"
 msgstr ""
 
-#: inc/config.class.php:112 inc/preference.class.php:109
+#: inc/config.class.php:109 inc/preference.class.php:109
 msgid "Replace central interface"
 msgstr ""
 
-#: inc/config.class.php:118
+#: inc/config.class.php:115
 msgid "Google API Key"
 msgstr ""
 
-#: inc/config.class.php:125
+#: inc/config.class.php:122
 msgid "Impact colors"
 msgstr ""
 
-#: inc/config.class.php:147
+#: inc/config.class.php:144
 msgid "Level of categories to show"
 msgstr ""
 
@@ -301,19 +301,23 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: inc/helper.class.php:478 inc/infotel.class.php:3944
+#: inc/groupprofile.class.php:56
+msgid "Default profile dashboard group"
+msgstr ""
+
+#: inc/helper.class.php:475 inc/infotel.class.php:3944
 msgid "Year"
 msgstr ""
 
-#: inc/helper.class.php:487
+#: inc/helper.class.php:484
 msgid "Month"
 msgstr ""
 
-#: inc/helper.class.php:806
+#: inc/helper.class.php:803
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
-#: inc/infotel.class.php:57 inc/infotel.class.php:470
+#: inc/infotel.class.php:57 inc/infotel.class.php:471
 msgid "Internal annuary"
 msgstr ""
 
@@ -333,31 +337,31 @@ msgstr ""
 msgid "Tickets stock by month"
 msgstr ""
 
-#: inc/infotel.class.php:69 inc/infotel.class.php:837
+#: inc/infotel.class.php:69 inc/infotel.class.php:838
 msgid "Top ten ticket requesters by month"
 msgstr ""
 
-#: inc/infotel.class.php:70 inc/infotel.class.php:930
+#: inc/infotel.class.php:70 inc/infotel.class.php:931
 msgid "Process time by technicians by month"
 msgstr ""
 
-#: inc/infotel.class.php:71 inc/infotel.class.php:1265
+#: inc/infotel.class.php:71 inc/infotel.class.php:1266
 msgid "TTR Compliance"
 msgstr ""
 
-#: inc/infotel.class.php:72 inc/infotel.class.php:1399
+#: inc/infotel.class.php:72 inc/infotel.class.php:1400
 msgid "TTO Compliance"
 msgstr ""
 
-#: inc/infotel.class.php:73 inc/infotel.class.php:1578
+#: inc/infotel.class.php:73 inc/infotel.class.php:1579
 msgid "Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: inc/infotel.class.php:74 inc/infotel.class.php:1709
+#: inc/infotel.class.php:74 inc/infotel.class.php:1710
 msgid "Number of opened incidents by category"
 msgstr ""
 
-#: inc/infotel.class.php:75 inc/infotel.class.php:1849
+#: inc/infotel.class.php:75 inc/infotel.class.php:1850
 msgid "Number of opened requests by category"
 msgstr ""
 
@@ -365,7 +369,7 @@ msgstr ""
 msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:77 inc/infotel.class.php:2109
+#: inc/infotel.class.php:77 inc/infotel.class.php:2113
 msgid "Percent of use of solution types"
 msgstr ""
 
@@ -373,7 +377,7 @@ msgstr ""
 msgid "Number of tickets affected by technicians by month"
 msgstr ""
 
-#: inc/infotel.class.php:79 inc/infotel.class.php:1987
+#: inc/infotel.class.php:79 inc/infotel.class.php:1988
 msgid "Number of opened and solved tickets by month"
 msgstr ""
 
@@ -397,10 +401,6 @@ msgstr ""
 msgid "Top 10 of opened tickets by location"
 msgstr ""
 
-#: inc/infotel.class.php:85 inc/infotel.class.php:3268
-msgid "Map - Opened tickets by location"
-msgstr ""
-
 #: inc/infotel.class.php:86 inc/infotel.class.php:3478
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr ""
@@ -417,64 +417,64 @@ msgstr ""
 msgid "Display of opened tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:190 inc/infotel.class.php:696
+#: inc/infotel.class.php:190 inc/infotel.class.php:697
 #: inc/infotel.class.php:2748
 msgid "Tickets number"
 msgstr ""
 
-#: inc/infotel.class.php:471
+#: inc/infotel.class.php:472
 msgid "Search users of your organisation"
 msgstr ""
 
-#: inc/infotel.class.php:606
+#: inc/infotel.class.php:607
 msgid "Display if you have duplicates into inventory"
 msgstr ""
 
-#: inc/infotel.class.php:687
+#: inc/infotel.class.php:688
 msgid "Tickets stock"
 msgstr ""
 
-#: inc/infotel.class.php:688
+#: inc/infotel.class.php:689
 msgid "Sum of not solved tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:931
+#: inc/infotel.class.php:932
 msgid "Sum of ticket tasks duration by technicians"
 msgstr ""
 
-#: inc/infotel.class.php:1266
+#: inc/infotel.class.php:1267
 msgid "Display tickets where time to resolve is respected"
 msgstr ""
 
-#: inc/infotel.class.php:1272
+#: inc/infotel.class.php:1273
 msgid "Respected TTR"
 msgstr ""
 
-#: inc/infotel.class.php:1272
+#: inc/infotel.class.php:1273
 msgid "Not respected TTR"
 msgstr ""
 
-#: inc/infotel.class.php:1400
+#: inc/infotel.class.php:1401
 msgid "Display tickets where time to own is respected"
 msgstr ""
 
-#: inc/infotel.class.php:1405
+#: inc/infotel.class.php:1406
 msgid "Respected TTO"
 msgstr ""
 
-#: inc/infotel.class.php:1405
+#: inc/infotel.class.php:1406
 msgid "Not respected TTO"
 msgstr ""
 
-#: inc/infotel.class.php:1965 inc/infotel.class.php:2430
+#: inc/infotel.class.php:1966 inc/infotel.class.php:2430
 msgid "Opened tickets"
 msgstr ""
 
-#: inc/infotel.class.php:1981
+#: inc/infotel.class.php:1982
 msgid "Solved tickets"
 msgstr ""
 
-#: inc/infotel.class.php:2110
+#: inc/infotel.class.php:2114
 msgid "Display percent of solution types for tickets"
 msgstr ""
 
@@ -510,12 +510,6 @@ msgstr ""
 
 #: inc/infotel.class.php:3043
 msgid "Not satisfy percent"
-msgstr ""
-
-#: inc/infotel.class.php:3269
-msgid ""
-"Display Tickets by location (Latitude / Longitude). You must define a Google "
-"API Key and add it into setup"
 msgstr ""
 
 #: inc/infotel.class.php:3479
@@ -782,11 +776,11 @@ msgstr ""
 msgid "Configuration Access"
 msgstr ""
 
-#: inc/profile.class.php:289
+#: inc/profile.class.php:297
 msgid "See the dashboard"
 msgstr ""
 
-#: inc/profile.class.php:293
+#: inc/profile.class.php:301
 msgid "See the configuration"
 msgstr ""
 
@@ -813,7 +807,7 @@ msgstr ""
 msgid "Dashboard access"
 msgstr ""
 
-#: inc/ticket.class.php:63 inc/ticket.class.php:1129
+#: inc/ticket.class.php:63 inc/ticket.class.php:1135
 msgid "New tickets"
 msgstr ""
 
