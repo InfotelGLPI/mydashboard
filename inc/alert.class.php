@@ -189,13 +189,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             if (isset($opt)) {
-               if (isset($this->preferences['prefered_group'])
-                   && $this->preferences['prefered_group'] > 0
-                   && count($opt) < 1) {
-                  $left             = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $opt['groups_id'] = $this->preferences['prefered_group'];
-               }
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -204,12 +198,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                }
             }
 
-            if (isset($this->preferences['prefered_group'])
-                && $this->preferences['prefered_group'] > 0
-                && count($opt) < 1) {
-               $opt['groups_id'] = $this->preferences['prefered_group'];
-            }
-
+            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
             $criterias = ['groups_id'];
             $params    = ["widgetId"  => $widgetId,
                           "name"      => 'PluginMydashboardAlert4',
@@ -292,13 +281,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $left          = "";
             $search_assign = "1=1";
             if (isset($opt)) {
-               if (isset($this->preferences['prefered_group'])
-                   && $this->preferences['prefered_group'] > 0
-                   && count($opt) < 1) {
-                  $left             = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $opt['groups_id'] = $this->preferences['prefered_group'];
-               }
+
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -512,13 +496,9 @@ class PluginMydashboardAlert extends CommonDBTM {
             $left          = "";
             $stats2        = 0;
             if (isset($opt)) {
-               if (isset($this->preferences['prefered_group'])
-                   && $this->preferences['prefered_group'] > 0
-                   && count($opt) < 1) {
-                  $left             = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $opt['groups_id'] = $this->preferences['prefered_group'];
-               }
+
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
+
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -527,11 +507,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                }
             }
 
-            if (isset($this->preferences['prefered_group'])
-                && $this->preferences['prefered_group'] > 0
-                && count($opt) < 1) {
-               $opt['groups_id'] = $this->preferences['prefered_group'];
-            }
+
+            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
 
             $criterias = ['groups_id'];
             $params    = ["widgetId"  => $widgetId,
@@ -569,13 +546,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $left          = "";
             $stats3        = 0;
             if (isset($opt)) {
-               if (isset($this->preferences['prefered_group'])
-                   && $this->preferences['prefered_group'] > 0
-                   && count($opt) < 1) {
-                  $left             = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $opt['groups_id'] = $this->preferences['prefered_group'];
-               }
+
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -610,13 +582,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $left          = "";
             $stats4        = 0;
             if (isset($opt)) {
-               if (isset($this->preferences['prefered_group'])
-                   && $this->preferences['prefered_group'] > 0
-                   && count($opt) < 1) {
-                  $left             = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $opt['groups_id'] = $this->preferences['prefered_group'];
-               }
+
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -650,13 +617,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $left          = "";
             $stats5        = 0;
             if (isset($opt)) {
-               if (isset($this->preferences['prefered_group'])
-                   && $this->preferences['prefered_group'] > 0
-                   && count($opt) < 1) {
-                  $left             = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $opt['groups_id'] = $this->preferences['prefered_group'];
-               }
+
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";

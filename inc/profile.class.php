@@ -170,6 +170,14 @@ class PluginMydashboardProfile extends CommonDBTM {
          $authorizedform = new PluginMydashboardProfileAuthorizedWidget();
          $authorizedform->showForm($ID, ['interface' => $profile->fields["interface"]]);
       }
+
+      echo "</table>";
+      Html::closeForm();
+
+      PluginMydashboardGroupprofile::addGroup($ID, $canedit);
+
+
+
    }
 
    /**
