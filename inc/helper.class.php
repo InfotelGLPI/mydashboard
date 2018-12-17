@@ -234,16 +234,8 @@ class PluginMydashboardHelper {
       $opt['groups_id'] = 0;
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
-         if (isset($params['preferences']['prefered_group'])
-             && $params['preferences']['prefered_group'] > 0
-             && !isset($params['opt']['groups_id'])) {
-            $opt['groups_id']          = $params['preferences']['prefered_group'];
-            $crit['crit']['groups_id'] = $params['preferences']['prefered_group'];
-         } else if (isset($params['opt']['groups_id'])
-                    && $params['opt']['groups_id'] > 0) {
-            $opt['groups_id']          = $params['opt']['groups_id'];
-            $crit['crit']['groups_id'] = $params['opt']['groups_id'];
-         }
+         $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
+         $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
       }
       $opt['type']          = 0;
       $crit['crit']['type'] = "AND 1 = 1";
@@ -858,5 +850,59 @@ class PluginMydashboardHelper {
               'display' => false];
 
       return Dropdown::showFromArray($name, $monthsarray, $opt);
+   }
+
+   /*
+    *
+    * @Create an HTML drop down menu
+    *
+    * @param string $name The element name and ID
+    *
+    * @param int $selected The month to be selected
+    *
+    * @return string
+    *
+    */
+   static function getGroup($prefered_group, $opt,$params=false) {
+      $groupprofiles = new PluginMydashboardGroupprofile();
+      $res = 0;
+      if(!$params){
+         if (isset($prefered_group)
+             && $prefered_group > 0
+             && count($opt) < 1) {
+            if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])){
+               $res = $group;
+            } else{
+               $res = $prefered_group;
+            }
+         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+                   && count($opt) < 1){
+            $res = $group;
+         }
+         else{
+            $res = $opt['groups_id'];
+         }
+      }else{
+         if (isset($params['preferences']['prefered_group'])
+             && $params['preferences']['prefered_group'] > 0
+             && !isset($params['opt']['groups_id'])) {
+            if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])){
+               $res = $group;
+            } else{
+               $res = $params['preferences']['prefered_group'];
+            }
+         } else if (isset($params['opt']['groups_id'])
+             && $params['opt']['groups_id'] > 0) {
+            $res = $params['opt']['groups_id'];
+         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+             && !isset($params['opt']['groups_id'])){
+            $res = $group;
+         }
+
+
+      }
+
+
+      return $res;
    }
 }

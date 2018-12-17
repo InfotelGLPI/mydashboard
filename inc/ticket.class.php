@@ -331,6 +331,7 @@ class PluginMydashboardTicket {
       $output['header'][] = __('ID');
       $output['header'][] = __('Priority');
       $output['header'][] = __('Category');
+      $output['header'][] = __('Status');
       $output['body']     = [];
       $output['title']    = "default";
 
@@ -852,6 +853,11 @@ class PluginMydashboardTicket {
          }
          $output[$colnum] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
 
+         //status
+         $colnum++;
+         $statusId = $job->fields["status"];
+         $statusArray = Ticket::getAllowedStatusArray($statusId);
+         $output[$colnum] = $statusArray[$statusId];
       }
       return $output;
    }

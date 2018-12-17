@@ -2077,18 +2077,21 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $type_criteria     = $crit['type'];
             $entities_criteria = $crit['entities_id'];
             $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
+            $is_ticket        = " AND `glpi_itilsolutions`.`itemtype` = 'Ticket'";
 
             $query = "SELECT DISTINCT
                            `glpi_solutiontypes`.`name` AS name,
                            `glpi_solutiontypes`.`id` AS solutiontypes_id,
                            COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
+                        LEFT JOIN `glpi_itilsolutions`
+                        ON (`glpi_itilsolutions`.`items_id` = `glpi_tickets`.`id`)
                         LEFT JOIN `glpi_solutiontypes`
-                        ON (`glpi_solutiontypes`.`id` = `glpi_tickets`.`solutiontypes_id`)
-                        WHERE $is_deleted $type_criteria ";
+                        ON (`glpi_solutiontypes`.`id` = `glpi_itilsolutions`.`solutiontypes_id`)
+                        WHERE $is_deleted $is_ticket $type_criteria ";
             $query .= $entities_criteria
-                      . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                      AND `glpi_tickets`.`solutiontypes_id` > 0
+                      . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                      AND `glpi_itilsolutions`.`solutiontypes_id` > 0
                       GROUP BY `glpi_solutiontypes`.`id`";
 
             $result = $DB->query($query);
@@ -2190,11 +2193,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if (!isset($opt['sons'])) {
                $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
             }
-            if (isset($this->preferences['prefered_group'])
-                && $this->preferences['prefered_group'] > 0
-                && !isset($opt['groups_id'])) {
-               $opt['groups_id'] = $this->preferences['prefered_group'];
-            }
+            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
 
             $tickets_per_tech = self::getTicketsPerTech($opt);
 
