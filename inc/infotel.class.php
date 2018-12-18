@@ -2335,7 +2335,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $currentmonth = date("m");
 
             $previousyear = $currentyear - 1;
-            $nextmonth    = $currentmonth + 1;
             $tabopened    = [];
             $tabsolved    = [];
             $tabprogress  = [];
@@ -2369,7 +2368,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                     DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
                                     FROM `glpi_tickets`
                                     WHERE $is_deleted AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
-                                    AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
+                                    AND (`glpi_tickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')
                                     " . $entities_criteria . "
                                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
