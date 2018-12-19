@@ -214,7 +214,8 @@ function plugin_mydashboard_uninstall() {
                    "glpi_plugin_mydashboard_alerts",
                    "glpi_plugin_mydashboard_stocktickets",
                    "glpi_plugin_mydashboard_problemalerts",
-                   "glpi_plugin_mydashboard_dashboards"];
+                   "glpi_plugin_mydashboard_dashboards",
+                   "glpi_plugin_mydashboard_groupprofiles"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
