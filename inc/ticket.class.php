@@ -741,10 +741,17 @@ class PluginMydashboardTicket {
       $job  = new Ticket();
       $rand = mt_rand();
       if ($job->getFromDBwithData($ID, 0)) {
-         $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
+         $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
+             "/front/ticket.form.php?id=" . $job->fields["id"];
+         if ($forcetab != '') {
+            $link .= "&amp;forcetab=" . $forcetab;
+         }
+         $link            .= "'>";
 
+         $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" .
-                            sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</div>";
+                            $link.
+                            sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</a></div>";
 
          $colnum++;
          $output[$colnum] = '';
@@ -796,12 +803,7 @@ class PluginMydashboardTicket {
          }
 
          $colnum++;
-         $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-                 "/front/ticket.form.php?id=" . $job->fields["id"];
-         if ($forcetab != '') {
-            $link .= "&amp;forcetab=" . $forcetab;
-         }
-         $link            .= "'>";
+
          $link            .= "<span class='b'>" . $job->getNameID() . "</span></a>";
          $link            = sprintf(__('%1$s (%2$s)'), $link,
                                     sprintf(__('%1$s - %2$s'), $job->numberOfFollowups($showprivate),
@@ -827,31 +829,34 @@ class PluginMydashboardTicket {
          $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>
-                                <span class='b'>".Ticket::getPriorityName($job->fields["priority"])."</span>
+                                <span>".$job->fields["priority"] . " - " . Ticket::getPriorityName($job->fields["priority"])."</span>
                              </div>";
          //Categories
          $colnum++;
-         $config = new PluginServicecatalogConfig();
+         $config = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $itilCategory = new ITILCategory();
-         $itilCategory->getFromDB($job->fields['itilcategories_id']);
+         if($itilCategory->getFromDB($job->fields['itilcategories_id'])){
+            $haystack = $itilCategory->getField('completename');
+            $needle = '>';
+            $offset = 0;
+            $allpos = [];
 
-         $haystack = $itilCategory->getField('completename');
-         $needle = '>';
-         $offset = 0;
-         $allpos = [];
+            while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
+               $offset   = $pos + 1;
+               $allpos[] = $pos;
+            }
 
-         while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
-            $offset   = $pos + 1;
-            $allpos[] = $pos;
-         }
-
-         if(isset($allpos[$config->getField('levelCat')-1])){
-            $pos = $allpos[$config->getField('levelCat')-1];
+            if(isset($allpos[$config->getField('levelCat')-1])){
+               $pos = $allpos[$config->getField('levelCat')-1];
+            } else{
+               $pos = strlen($haystack);
+            }
+            $output[$colnum] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
          } else{
-            $pos = strlen($haystack);
+            $output[$colnum] = "<span></span>";
          }
-         $output[$colnum] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
+
 
          //status
          $colnum++;

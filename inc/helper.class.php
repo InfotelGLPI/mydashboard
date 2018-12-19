@@ -879,7 +879,7 @@ class PluginMydashboardHelper {
                    && count($opt) < 1){
             $res = $group;
          }
-         else{
+         else if(isset($opt['groups_id'])){
             $res = $opt['groups_id'];
          }
       }else{
