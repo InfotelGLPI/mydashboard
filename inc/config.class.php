@@ -144,7 +144,7 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "<td>" . __('Level of categories to show', 'mydashboard') . "</td>";
       echo "<td>";
       $itilCat = new ITILCategory();
-      $itilCategories = $itilCat->find([1 => 1]);
+      $itilCategories = $itilCat->find();
       $levelsCat = [];
       foreach ($itilCategories as $categorie){
          $levelsCat[$categorie['level']] = $categorie['level'];

@@ -947,7 +947,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                                             'itemtype' => 'Ticket'] , 'date DESC');
 
                      $ticketdocument = new Document();
-                     $documents      = $ticketdocument->find(['tickets_id' => $ticket->fields['id']], 'date_mod DESC');
+                     $documents      = $ticketdocument->find(['tickets_id' => $ticket->fields['id']], ['date_mod DESC']);
 
                      if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
                          || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
