@@ -51,9 +51,9 @@ if (!isset($_POST['itemtype']) || !isset($_POST['params'])) {
    Search::constructSQL($data);
    Search::constructData($data);
 
-   $lat_field  = array_search(998, $data['toview']);
-   $lng_field  = array_search(999, $data['toview']);
-   $name_field = array_search(83, $data['toview']);
+   $lat_field = $itemtype . '_998';
+   $lng_field = $itemtype . '_999';
+   $name_field = $itemtype . '_3';
 
    $rows   = $data['data']['rows'];
    $points = [];

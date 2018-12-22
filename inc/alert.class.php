@@ -121,7 +121,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
-               . self::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
                . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
                . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
@@ -1195,7 +1195,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `glpi_reminders`.`begin_view_date`,
                        `glpi_reminders`.`end_view_date`
                    FROM `glpi_reminders` "
-               . self::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1284,7 +1284,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `glpi_reminders`.`begin_view_date`,
                        `glpi_reminders`.`end_view_date`
                    FROM `glpi_reminders` "
-               . self::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1374,7 +1374,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-               . self::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1492,7 +1492,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-               . self::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . " LEFT JOIN `" . $this->getTable() . "`"
                . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . " WHERE $restrict_user
