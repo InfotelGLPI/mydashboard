@@ -952,9 +952,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                          || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
 
                         $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
-
+                        $textColor = "color:black!important;";
+                        if ($bgcolor=='#000000') {
+                           $textColor =  "color:white!important;";
+                        }
                         $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
-                        $name_ticket .= "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+                        $name_ticket .= "<a style='$textColor' href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
                         $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
                         $name_ticket .= "</a>";
                         $name_ticket .= "</div>";
@@ -1020,7 +1023,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $datas[$i]["id"] = $ticketId;
 
                         // Priorities
-                        $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>";
+                        $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
                         $priority .= "<span class='b'>". $ticket->fields["priority"] . " - " .Ticket::getPriorityName($ticket->fields["priority"])."</span>";
                         $priority .= "</div>";
                         $datas[$i]["priority"] = $priority;
