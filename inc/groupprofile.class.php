@@ -53,7 +53,7 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='4'>";
-         echo __('Default profile dashboard group', 'mydashboard');
+         echo __('Default dashboard group', 'mydashboard');
          echo "</th></tr>";
          $checked = '';
          $profilerights = new ProfileRight();
@@ -63,9 +63,9 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
          }
          echo "<tr><td>";
          Html::showCheckbox(['name' => 'use_group_profile','checked' => $checked]);
-         echo " " . __('Use profile group instead of preferences group');
+         echo " " . __('Use first user group as prefered group','mydashboard');
          echo "</td><td>";
-         echo __('Group');
+         echo __('If user has no group use :', 'mydashboard');
          echo "</td><td>";
          $groupprofile = new PluginMydashboardGroupprofile();
          $groups_id = 0;
@@ -87,11 +87,23 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
    }
 
    function getProfilGroup($profiles_id){
+      $group = 0;
       $profilerights = new ProfileRight();
       if($profilerights->getFromDBByCrit(['profiles_id' => $profiles_id,
                                           'name'        => 'plugin_mydashboard_groupprofile'])){
-         if($profilerights->fields['rights'] == 1 && $this->getFromDBByCrit(['profiles_id' => $profiles_id])){
-            return $this->fields['groups_id'];
+         if($profilerights->fields['rights'] == 1){
+            $groupUsr = new Group_User();
+            $results = $groupUsr->find('`users_id`='. Session::getLoginUserID(),"id",1);
+            if (count($results) > 0) {
+               foreach ($results as $result) {
+                  $group = $result['groups_id'];
+               }
+            } else{
+               if($this->getFromDBByCrit(['profiles_id' => $profiles_id])){
+                  $group = $this->fields['groups_id'];
+               }
+            }
+            return $group;
          }
       }
       return false;

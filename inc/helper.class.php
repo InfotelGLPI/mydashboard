@@ -291,7 +291,7 @@ class PluginMydashboardHelper {
       }
       $opt["users_id"] = $_SESSION['glpiID'];
       if (in_array("users_id", $criterias)) {
-         if (isset($params['opt']['users_id']) && Session::haveRight("plugin_activity_all_users", 1)) {
+         if (isset($params['opt']['users_id'])) {
             $opt["users_id"]          = $params['opt']['users_id'];
             $crit['crit']['users_id'] = $params['opt']['users_id'];
          }
@@ -875,14 +875,16 @@ class PluginMydashboardHelper {
             } else{
                $res = $prefered_group;
             }
-         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+         } else if(($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
                    && count($opt) < 1){
             $res = $group;
          }
-         else{
+         else if(isset($opt['groups_id'])){
             $res = $opt['groups_id'];
+         } else{
+            $res = 0;
          }
-      }else{
+      } else{
          if (isset($params['preferences']['prefered_group'])
              && $params['preferences']['prefered_group'] > 0
              && !isset($params['opt']['groups_id'])) {
@@ -894,15 +896,11 @@ class PluginMydashboardHelper {
          } else if (isset($params['opt']['groups_id'])
              && $params['opt']['groups_id'] > 0) {
             $res = $params['opt']['groups_id'];
-         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+         } else if(($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
              && !isset($params['opt']['groups_id'])){
             $res = $group;
          }
-
-
       }
-
-
       return $res;
    }
 }
