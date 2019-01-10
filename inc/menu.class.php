@@ -212,6 +212,15 @@ class PluginMydashboardMenu extends CommonGLPI {
          $menu['links']['config'] = PluginMydashboardConfig::getFormURL(false);
       }
 
+      $menu['options']['pluginmydashboardstockwidget'] = [
+         'title' => PluginMydashboardStockWidget::getTypeName(2),
+         'page'  => PluginMydashboardStockWidget::getSearchURL(false),
+         'links' => [
+            'search' => PluginMydashboardStockWidget::getSearchURL(false),
+            'add' => PluginMydashboardStockWidget::getFormURL(false)
+         ]
+      ];
+
       return $menu;
    }
 

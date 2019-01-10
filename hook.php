@@ -150,7 +150,11 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
-
+   if (!$DB->tableExists("glpi_plugin_mydashboard_stockwidgets")) {
+      $mig = new Migration("1.7.0");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.0.sql");
+      $mig->executeMigration();
+   }
 
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
@@ -212,6 +216,7 @@ function plugin_mydashboard_uninstall() {
                    "glpi_plugin_mydashboard_preferences",
                    "glpi_plugin_mydashboard_preferenceuserblacklists",
                    "glpi_plugin_mydashboard_alerts",
+                   "glpi_plugin_mydashboard_stockwidgets",
                    "glpi_plugin_mydashboard_stocktickets",
                    "glpi_plugin_mydashboard_problemalerts",
                    "glpi_plugin_mydashboard_dashboards",

@@ -829,6 +829,15 @@ div.dt-button-background {
    width: 95px;
 }
 
+.tickets-stats .nbstock {
+   display: inline-block;
+   margin: 0 30px 0 10px;
+   position: relative;
+   vertical-align: top;
+   text-align: center;
+   /*width: 80px;*/
+}
+
 .count-number {
    font-size: 20px;
 }
