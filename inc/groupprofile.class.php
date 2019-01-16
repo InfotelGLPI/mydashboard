@@ -52,7 +52,7 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
          echo "<input type='hidden' name='profiles_id' value='".$profiles_id."' >";
 
          echo "<table class='tab_cadre_fixe'>";
-         echo "<tr><th colspan='4'>";
+         echo "<tr class='tab_bg_1'><th colspan='4'>";
          echo __('Default profile dashboard group', 'mydashboard');
          echo "</th></tr>";
          $checked = '';
@@ -61,7 +61,7 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
                                           'name'        => 'plugin_mydashboard_groupprofile'])){
             $checked = $profilerights->fields['rights'] ? 'checked' : '';
          }
-         echo "<tr><td>";
+         echo "<tr class='tab_bg_1'><td>";
          Html::showCheckbox(['name' => 'use_group_profile','checked' => $checked]);
          echo " " . __('Use profile group instead of preferences group');
          echo "</td><td>";
@@ -77,7 +77,7 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
                           'value'  => $groups_id]);
          echo "</td></tr>";
 
-         echo "<tr><td colspan='4' style='text-align:center'>";
+         echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
          echo Html::submit(_sx('button', 'Save'), ['name' => 'addGroup']);
          echo "</td></tr>";
 
