@@ -217,7 +217,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          'page'  => PluginMydashboardStockWidget::getSearchURL(false),
          'links' => [
             'search' => PluginMydashboardStockWidget::getSearchURL(false),
-            'add' => PluginMydashboardStockWidget::getFormURL(false)
+            'add'    => PluginMydashboardStockWidget::getFormURL(false)
          ]
       ];
 
@@ -647,13 +647,18 @@ class PluginMydashboardMenu extends CommonGLPI {
       $wl .= "<div class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
 
       $empty = false;
+
+      $widgetslist = PluginMydashboardWidget::getWidgetList();
+      foreach ($widgetslist as $gs => $widgetclasses) {
+         $gslist[$widgetclasses['id']] = $gs;
+      }
       //1) we 'display' GLPI core widgets in the list
-      if ($this->getWidgetsListFromGLPICore($used, $wl)) {
+      if ($this->getWidgetsListFromGLPICore($used, $wl, $gslist)) {
          $empty = true;
       }
       //2) we 'display' Plugin widgets
       if (self::$_PLUGIN_MYDASHBOARD_CFG['display_plugin_widget']) {
-         if ($this->getWidgetsListFromPlugins($used, $wl)) {
+         if ($this->getWidgetsListFromPlugins($used, $wl, $gslist)) {
             $empty = ($empty) ? $empty : false;
          } else {
             $empty = false;
@@ -728,7 +733,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     *
     * @return bool|string is empty ?
     */
-   private function getWidgetsListFromGLPICore($used = [], &$html = "") {
+   private function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = []) {
       $wl = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
       $wl .= "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
       $wl .= "<div class='plugin_mydashboard_menuDashboardListContainer'><ul class=''>";
@@ -763,7 +768,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                   $widgetId = $widgetTitle;
                }
                $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
-               $gsid                                   = PluginMydashboardWidget::getGsID($widgetId);
+               $gsid                                   = $gslist[$widgetId];
                if (!in_array($gsid, $used)) {
                   $viewContent[$widgetview] .= "<li "/*."id='btnAddWidgete".$widgetId."'"*/
                                                . " class='plugin_mydashboard_menuDashboardListItem'"
@@ -812,14 +817,15 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
     */
-   private function getWidgetsListFromPlugins($used = [], &$html = "") {
-      $plugin_names = $this->getPluginsNames();
-      $plugins_is_empty = true;
+   private function getWidgetsListFromPlugins($used = [], &$html = "", $gslist) {
+      $plugin_names                = $this->getPluginsNames();
+      $plugin_names["mydashboard"] = __('My Dashboard', 'mydashboard');
+      $plugins_is_empty            = true;
       foreach ($this->widgetlist as $plugin => $widgetclasses) {
          if ($plugin == "GLPI") {
             continue;
          }
-         $is_empty     = true;
+         $is_empty = true;
          $tmp      = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
          //
          $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h6>";
@@ -827,7 +833,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          $tmp .= "<div class='plugin_mydashboard_menuDashboardListContainer'>";
          $tmp .= "<ul>";
          foreach ($widgetclasses as $widgetclass => $widgetlist) {
-            $res = $this->getWidgetsListFromWidgetsArray($widgetlist, $widgetclass, 2, $used);
+            $res = $this->getWidgetsListFromWidgetsArray($widgetlist, $widgetclass, 2, $used, $gslist);
             if (!empty($widgetlist) && $res != '') {
                $tmp      .= $res;
                $is_empty = false;
@@ -868,7 +874,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     *
     * @return string
     */
-   private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = []) {
+   private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = []) {
       $wl = "";
 
       foreach ($widgetsarray as $widgetId => $widgetTitle) {
@@ -879,7 +885,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                $widgetId = $widgetTitle;
             }
             $this->widgets[$classname][$widgetId] = -1;
-            $gsid                                 = PluginMydashboardWidget::getGsID($widgetId);
+            $gsid = $gslist[$widgetId];
             if (!in_array($gsid, $used)) {
                $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
                       . " class='plugin_mydashboard_menuDashboardListItem' "
@@ -896,7 +902,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             $tmp = "<li class='plugin_mydashboard_menuDashboardList'>";
             $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
             $tmp .= "<ul class='plugin_mydashboard_menuDashboardList$depth'>";
-            $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used);
+            $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
             if ($res != '') {
                $tmp .= $res;
             }
@@ -921,16 +927,16 @@ class PluginMydashboardMenu extends CommonGLPI {
       return $user_widget->getWidgets();
    }
 
-   /**
-    * Get the widget index on dash, to add it in the correct order
-    *
-    * @param type $name
-    *
-    * @return int if $name is in self::dash, FALSE otherwise
-    */
-   private function getIndexOnDash($name) {
-      return array_search($name, $this->dashboard);
-   }
+   //   /**
+   //    * Get the widget index on dash, to add it in the correct order
+   //    *
+   //    * @param type $name
+   //    *
+   //    * @return int if $name is in self::dash, FALSE otherwise
+   //    */
+   //   private function getIndexOnDash($name) {
+   //      return array_search($name, $this->dashboard);
+   //   }
 
    /**
     * Get all plugin names of plugin hooked with mydashboard
@@ -1126,17 +1132,23 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
 
-         foreach ($datagrid as $k => $v) {
-            if (isset($v["id"])) {
-               $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"]);
-            }
-         }
+         $widgets = PluginMydashboardWidget::getWidgetList();
 
          foreach ($datagrid as $k => $v) {
             if (isset($v["id"])) {
-               $optjson[$v["id"]] = PluginMydashboardWidget::getWidgetOptions($v["id"]);
+               $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+
+               if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+                  foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+                     if ($widgets[$v["id"]]["id"] == $w) {
+                        $optjson[$v["id"]]["enableRefresh"] = $r;
+                     }
+                  }
+               }
             }
          }
+
+
       } else {
          echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
@@ -1155,8 +1167,10 @@ class PluginMydashboardMenu extends CommonGLPI {
       $allwidgetjson = [];
 
       if ($edit > 0) {
-         $widgets = PluginMydashboardWidget::getWidgetList();
 
+         if (empty($grid)) {
+            $widgets = PluginMydashboardWidget::getWidgetList();
+         }
          foreach ($widgets as $k => $val) {
             $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
             //NOT LOAD ALL WIDGETS FOR PERF

@@ -65,8 +65,15 @@ class PluginMydashboardWidgetlist {
          $widgets = $PLUGIN_HOOKS['mydashboard'];
       }
 
+      //We add classes from mydashboard
+      $widgets['mydashboard'] = [
+         'PluginMydashboardInfotel',
+         'PluginMydashboardAlert'
+      ];
+
       //We add classes for GLPI core widgets
-      $widgets['GLPI'] = ["PluginMydashboardReminder",
+      $widgets['GLPI'] = [
+                          "PluginMydashboardReminder",
                           "PluginMydashboardPlanning",
                           "PluginMydashboardEvent",
                           "PluginMydashboardProblem",
@@ -76,12 +83,14 @@ class PluginMydashboardWidgetlist {
                           "PluginMydashboardProject",
                           "PluginMydashboardProjecttask",
                           "PluginMydashboardContract",
-                          "PluginMydashboardKnowbaseItem"];
-      $dbu = new DbUtils();
+                          "PluginMydashboardKnowbaseItem"
+      ];
+      $dbu             = new DbUtils();
 
       //We run through the hook to get all widget IDs and Titles declared in all classes
       foreach ($widgets as $plugin => $pluginclasses) {
          $widgets[$plugin] = [];
+
          foreach ($pluginclasses as $pluginclass) {
             if (!class_exists($pluginclass)) {
                continue;
@@ -89,8 +98,8 @@ class PluginMydashboardWidgetlist {
             $item = $dbu->getItemForItemtype($pluginclass);
 
             //            if ($item->canview) {
-               $widgets[$plugin][$pluginclass] = [];
-               //We try get the list of widgets for this class
+            $widgets[$plugin][$pluginclass] = [];
+            //We try get the list of widgets for this class
             if ($item && is_callable([$item, 'getWidgetsForItem'])) {
                if (isset($item->interfaces)) {
                   if (is_array($item->interfaces) && in_array($profile_interface, $item->interfaces)) {
@@ -121,8 +130,8 @@ class PluginMydashboardWidgetlist {
          }
 
          //Widget filtered by profile (authorized list)
-         $pauthlist             = new PluginMydashboardProfileAuthorizedWidget();
-         $profile               = ($active_profile != -1) ? $active_profile : $_SESSION['glpiactiveprofile']['id'];
+         $pauthlist = new PluginMydashboardProfileAuthorizedWidget();
+         $profile   = ($active_profile != -1) ? $active_profile : $_SESSION['glpiactiveprofile']['id'];
 
          if (($filters['authorized'] = $pauthlist->getAuthorizedListForProfile($profile)) !== false) {
             //getAuthorizedListForProfile() return false when the profile can see all the widgets

@@ -28,21 +28,22 @@ include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
+$widgets = PluginMydashboardWidget::getWidgetList();
+
 if (isset($_POST['gsid']) && isset($_POST['id'])) {
    $gsid = $_POST['gsid'];
    $opt  = [];
    if (isset($_POST['params']) && is_array($_POST['params'])) {
       $opt = $_POST['params'];
    }
-   $widget = PluginMydashboardWidget::getWidget($gsid, $opt);
+   $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
    echo $widget;
 } else {
    $gsid    = $_POST['gsid'];
-   $widgets = PluginMydashboardWidget::getWidgetList();
    $data = [];
    if (isset($widgets[$gsid])) {
       $opt    = [];
-      $widget = PluginMydashboardWidget::getWidget($gsid, $opt);
+      $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
       $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
    }
 

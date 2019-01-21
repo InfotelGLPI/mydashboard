@@ -1060,7 +1060,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
 
             return $widget;
@@ -1106,7 +1106,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
 
             return $widget;
             break;
@@ -1148,7 +1148,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
             //            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
             return $widget;
@@ -1284,6 +1284,10 @@ class PluginMydashboardAlert extends CommonDBTM {
                             $script;
                          });
                   </script>";
+            } else {
+
+               $table .= "<i style='color:orange' class='fa fa-exclamation-triangle fa-3x'></i>";
+               $table .= "<br><br><span class='b'>". __("No alerts are setup", "mydashboard")."</span>";
             }
             $table .= "</div>";
             $table .= PluginMydashboardHelper::getGraphFooter($params);
@@ -2013,7 +2017,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $alert .= __("GLPI is OK", "mydashboard");
          $alert .= "</b></div>";
       } else {
-         $alert .= "<div class='md-title-status' style='color:orange'><i class='fa fa-warning fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:orange'><i class='fa fa-exclamation-triangle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Alert is not properly configured or is not reachable", "mydashboard");
          $alert .= "</b>";
