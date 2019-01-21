@@ -154,10 +154,9 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidget($id, $opt = []) {
+   static function getWidget($id, $opt = [], $widgets) {
       global $CFG_GLPI;
       $class   = "bt-col-md-11";
-      $widgets = self::getWidgetList();
 
       if (isset($widgets[$id])) {
          return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
@@ -178,13 +177,13 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return array|string
     */
-   static function getWidgetOptions($id) {
+   static function getWidgetOptions($id, $widgets) {
       global $CFG_GLPI;
-      $widgets = self::getWidgetList();
 
       if (isset($widgets[$id])) {
          return self::getAllOptions($widgets[$id]["class"], $widgets[$id]["id"], []);
       }
+      
       $message = __('No data available', 'mydashboard');
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          $message .= " - " . $id;
@@ -272,6 +271,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                      "scripts"         => $scripts,
                      //                        "_glpi_csrf_token" => Session::getNewCSRFToken()
                   ];
+               $_SESSION["glpi_plugin_mydashboard_widgets"][$widget->getWidgetId()] = json_decode($widget->getWidgetEnableRefresh());
                //safeJson because refreshCallBack must be a javascript function not a string,
                // not a string, but a function in a json object is not valid
                //               Toolbox::logDebug($json);

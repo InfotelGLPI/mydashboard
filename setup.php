@@ -40,13 +40,13 @@ function plugin_init_mydashboard() {
       "lib/fileSaver.min.js",
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
-      //"lib/sdashboard/jquery-sDashboard.js",
+      "scripts/mydashboard.js",
       "lib/vticker/vticker.js"
    ];
 
-//   $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-//      "/plugins/mydashboard/scripts/mydashboard.js",
-//   ];
+   $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
+      "/plugins/mydashboard/scripts/mydashboard.js",
+   ];
 
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
    $PLUGIN_HOOKS['change_profile']['mydashboard'] = ['PluginMydashboardProfile', 'initProfile'];
@@ -121,7 +121,6 @@ function plugin_init_mydashboard() {
             Plugin::registerClass('PluginMydashboardAlert',
                                   ['addtabon' => ['Reminder', 'Problem']]);
 
-            $PLUGIN_HOOKS['mydashboard']['mydashboard'] = ['PluginMydashboardInfotel', 'PluginMydashboardAlert'];
          }
 
       }

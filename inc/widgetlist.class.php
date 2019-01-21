@@ -64,7 +64,13 @@ class PluginMydashboardWidgetlist {
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
          $widgets = $PLUGIN_HOOKS['mydashboard'];
       }
-
+      
+      //We add classes from mydashboard
+      $widgets['mydashboard'] = [
+         'PluginMydashboardInfotel',
+         'PluginMydashboardAlert'
+      ];
+      
       //We add classes for GLPI core widgets
       $widgets['GLPI'] = ["PluginMydashboardReminder",
                           "PluginMydashboardPlanning",
