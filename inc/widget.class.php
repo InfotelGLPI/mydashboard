@@ -216,6 +216,7 @@ class PluginMydashboardWidget extends CommonDBTM {
             $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
             if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
                $loadwidget = $TIMER->getTime();
+               $displayloadwidget = "";
             }
 
             if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
@@ -479,7 +480,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= "</div>";
 
                if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                  $widgetdisplay .= "Load widget : " . $loadwidget;
+                  $displayloadwidget = "Load widget : " . $loadwidget."<br>";
+                  $widgetdisplay .= $displayloadwidget;
                }
                return $widgetdisplay;
             } else {
