@@ -177,23 +177,23 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return array|string
     */
-   static function getWidgetOptions($id, $widgets) {
-      global $CFG_GLPI;
-
-      if (isset($widgets[$id])) {
-         return self::getAllOptions($widgets[$id]["class"], $widgets[$id]["id"], []);
-      }
-      
-      $message = __('No data available', 'mydashboard');
-      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-         $message .= " - " . $id;
-      }
-      $msg = "<div class='center'><br><br>";
-      $msg .= Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-      $msg .= "<br><br><span class='b'>$message</span></div>";
-
-      return $msg;
-   }
+//   static function getWidgetOptions($id, $widgets) {
+//      global $CFG_GLPI;
+//
+//      if (isset($widgets[$id])) {
+//         return self::getAllOptions($widgets[$id]["class"], $widgets[$id]["id"], []);
+//      }
+//
+//      $message = __('No data available', 'mydashboard');
+//      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+//         $message .= " - " . $id;
+//      }
+//      $msg = "<div class='center'><br><br>";
+//      $msg .= Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+//      $msg .= "<br><br><span class='b'>$message</span></div>";
+//
+//      return $msg;
+//   }
 
    /**
     * @param $id
@@ -508,24 +508,24 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return array
     */
-   static function getAllOptions($classname, $widgetindex, $opt = []) {
-
-      if (isset($classname) && isset($widgetindex)) {
-
-         $classname   = $classname;
-         $classobject = getItemForItemtype($classname);
-         if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
-            $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
-            if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
-               $json =
-                  [
-                     "enableRefresh" => json_decode($widget->getWidgetEnableRefresh()),
-                  ];
-               return $json;
-            }
-         }
-      }
-   }
+//   static function getAllOptions($classname, $widgetindex, $opt = []) {
+//
+//      if (isset($classname) && isset($widgetindex)) {
+//
+//         $classname   = $classname;
+//         $classobject = getItemForItemtype($classname);
+//         if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
+//            $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
+//            if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
+//               $json =
+//                  [
+//                     "enableRefresh" => json_decode($widget->getWidgetEnableRefresh()),
+//                  ];
+//               return $json;
+//            }
+//         }
+//      }
+//   }
 
    /**
     * @param $class
