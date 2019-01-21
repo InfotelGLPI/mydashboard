@@ -689,14 +689,16 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $widgetclasses = $widgetlist['GLPI'];
 
-      foreach ($widgetclasses as $widgetclass => $widgets) {
-         foreach ($widgets as $widgetview => $widgetlist) {
-            foreach ($widgetlist as $widgetId => $widgetTitle) {
-               if (is_numeric($widgetId)) {
-                  $widgetId = $widgetTitle;
-               }
-               $widgetDB->saveWidget($widgetId);
+      foreach ($widgetlist as $widgetclasses) {
+         foreach ($widgetclasses as $widgetclass => $widgets) {
+            foreach ($widgets as $widgetview => $widgetlist) {
+               foreach ($widgetlist as $widgetId => $widgetTitle) {
+                  if (is_numeric($widgetId)) {
+                     $widgetId = $widgetTitle;
+                  }
+                  $widgetDB->saveWidget($widgetId);
 
+               }
             }
          }
       }
@@ -885,17 +887,19 @@ class PluginMydashboardMenu extends CommonGLPI {
                $widgetId = $widgetTitle;
             }
             $this->widgets[$classname][$widgetId] = -1;
-            $gsid = $gslist[$widgetId];
-            if (!in_array($gsid, $used)) {
-               $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
+            if (isset($gslist[$widgetId])) {
+               $gsid = $gslist[$widgetId];
+               if (!in_array($gsid, $used)) {
+                  $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
                       . " class='plugin_mydashboard_menuDashboardListItem' "
                       . " data-widgetid='" . $gsid . "'"
                       . " data-classname='" . $classname . "'>";
-               $wl .= $widgetTitle;
-               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                  $wl .= " (" . $gsid . ")";
-               }/*->getWidgetListTitle()*/
-               $wl .= "</li>";
+                  $wl .= $widgetTitle;
+                  if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                     $wl .= " (" . $gsid . ")";
+                  }/*->getWidgetListTitle()*/
+                  $wl .= "</li>";
+               }
             }
          } else { //If it's not a real widget
             //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
@@ -945,7 +949,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function getPluginsNames() {
       global $PLUGIN_HOOKS;
-      $plugins_hooked = $PLUGIN_HOOKS['mydashboard'];
+      $plugins_hooked = (isset($PLUGIN_HOOKS['mydashboard']) ? $PLUGIN_HOOKS['mydashboard'] : []);
       $tab            = [];
       foreach ($plugins_hooked as $plugin_name => $x) {
          $tab[$plugin_name] = $this->getLocalName($plugin_name);

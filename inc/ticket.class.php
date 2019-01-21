@@ -937,7 +937,7 @@ class PluginMydashboardTicket {
 
          //Categories
          $colnum++;
-         $config = new PluginServicecatalogConfig();
+         $config = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $itilCategory = new ITILCategory();
          $itilCategory->getFromDB($item_link->fields['itilcategories_id']);
