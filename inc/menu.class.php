@@ -1191,7 +1191,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo "<script type='text/javascript'>
         $(function () {
             var options = {
-                cellHeight: 40,
+                cellHeight: 41,
                 verticalMargin: 2,
                  disableResize: $disableResize,
                  disableDrag: $disableDrag,
