@@ -687,8 +687,6 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $widgetDB = new PluginMydashboardWidget();
 
-      $widgetclasses = $widgetlist['GLPI'];
-
       foreach ($widgetlist as $widgetclasses) {
          foreach ($widgetclasses as $widgetclass => $widgets) {
             foreach ($widgets as $widgetview => $widgetlist) {
@@ -1208,7 +1206,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo "<script type='text/javascript'>
         $(function () {
             var options = {
-                cellHeight: 40,
+                cellHeight: 41,
                 verticalMargin: 2,
                  disableResize: $disableResize,
                  disableDrag: $disableDrag,
