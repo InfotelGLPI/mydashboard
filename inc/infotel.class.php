@@ -86,6 +86,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
                                          $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
+                                         $this->getType() . "32" => __('Incident') . " : " . __("New tickets", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "33" => __('Request') . " : " . __("New tickets", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "34" => __('Incident') . " : " . __("Tickets in progress", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
+                                         $this->getType() . "35" => __('Request') . " : " . __("Tickets in progress", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
          ]
       ];
    }
@@ -4022,6 +4026,547 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             return $widget;
 
+            break;
+
+         case $this->getType() . "32":
+
+            $criterias = ['entities_id', 'is_recursive'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+            $opt           = $options['opt'];
+            $crit          = $options['crit'];
+            $type          = $opt['type'];
+            $type_criteria = $crit['type'];
+            //$status_criteria      = $crit['status'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $type                 = Ticket::INCIDENT_TYPE;
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $query = "SELECT DISTINCT `priority`, COUNT(`id`) AS nb
+                      FROM `glpi_tickets`
+                      WHERE $is_deleted $type_criteria $entities_criteria";
+            $query .= " AND `status` = " . CommonITILObject::INCOMING . " ";
+            $query .= " AND `type` = ".$type. " ";
+            $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
+
+            $colors = [];
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabpriority = [];
+            $title = __('Incident') . " : " .  sprintf(_n('%d new ticket', '%d new tickets', 1), 0);
+            if ($nb) {
+               $total = 0;
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]        = CommonITILObject::getPriorityName($data['priority']);
+                  $colors[]      = $_SESSION["glpipriority_" . $data['priority']];
+                  $datas[]       = $data['nb'];
+                  $tabpriority[] = $data['priority'];
+                  $total += $data['nb'];
+               }
+               $title  = __('Incident') . " : " .  sprintf(_n('%d new ticket', '%d new tickets', $total), $total);
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $backgroundPieColor = json_encode($colors);
+            $labelsPie          = json_encode($name);
+            $tabpriorityset     = json_encode($tabpriority);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataNewTicketIncidentPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var priorityset = $tabpriorityset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('NewTicketsIncident');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var NewTicketsIncident = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataNewTicketIncidentPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#NewTicketsIncident').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = NewTicketsIncident.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var priority_id = priorityset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{priority_id:priority_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type,
+                                widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'NewTicketsIncident',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => 1];
+            $graph  .= PluginMydashboardHelper::getGraphHeader($params);
+
+            $widget->setWidgetHtmlContent(
+                $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "33":
+
+            $criterias = ['entities_id', 'is_recursive'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+            $opt           = $options['opt'];
+            $crit          = $options['crit'];
+            $type_criteria = $crit['type'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $type                 = Ticket::DEMAND_TYPE;
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $query = "SELECT DISTINCT `priority`, COUNT(`id`) AS nb
+                      FROM `glpi_tickets`
+                      WHERE $is_deleted $type_criteria $entities_criteria";
+            $query .= " AND `status` = " . CommonITILObject::INCOMING . " ";
+            $query .= " AND `type` = " . $type . " ";
+            $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
+
+            $colors = [];
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabpriority = [];
+            $title = __('Request') . " : " .  sprintf(_n('%d new ticket', '%d new tickets', 1), 0);
+            if ($nb) {
+               $total = 0;
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]        = CommonITILObject::getPriorityName($data['priority']);
+                  $colors[]      = $_SESSION["glpipriority_" . $data['priority']];
+                  $datas[]       = $data['nb'];
+                  $tabpriority[] = $data['priority'];
+                  $total += $data['nb'];
+               }
+               $title  = __('Request') . " : " .  sprintf(_n('%d new ticket', '%d new tickets', $total), $total);
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $backgroundPieColor = json_encode($colors);
+            $labelsPie          = json_encode($name);
+            $tabpriorityset     = json_encode($tabpriority);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataNewTicketRequestPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var priorityset = $tabpriorityset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('NewTicketRequest');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var NewTicketRequest = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataNewTicketRequestPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#NewTicketRequest').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = NewTicketRequest.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var priority_id = priorityset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{priority_id:priority_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type,
+                                widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'NewTicketRequest',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => 1];
+            $graph  .= PluginMydashboardHelper::getGraphHeader($params);
+
+            $widget->setWidgetHtmlContent(
+                $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "34":
+
+            $criterias = ['entities_id', 'is_recursive','groups_id'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+            $opt           = $options['opt'];
+            $crit          = $options['crit'];
+            $type_criteria = $crit['type'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $groups_criteria      = $crit['groups_id'];
+            $type                 = Ticket::INCIDENT_TYPE;
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $query = "SELECT DISTINCT `priority`, COUNT(`glpi_tickets`.`id`) AS nb
+                      FROM `glpi_tickets`";
+            if (isset($groups_criteria) && ($groups_criteria != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+            }
+            $query .= " WHERE $is_deleted $type_criteria $entities_criteria";
+            $query .= " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::INCOMING . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " AND `glpi_tickets`.`type` = ". $type . " ";
+            if (isset($groups_criteria) && ($groups_criteria != 0)) {
+               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
+            }
+            $query .= " GROUP BY `glpi_tickets`.`priority` ORDER BY `glpi_tickets`.`priority` ASC";
+            $colors = [];
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabpriority = [];
+            $title = __('Incident') . " : " .  sprintf(_n('%d ticket in progress', '%d tickets in progress', 1,'mydashboard'), 0);
+            if ($nb) {
+               $total = 0;
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]        = CommonITILObject::getPriorityName($data['priority']);
+                  $colors[]      = $_SESSION["glpipriority_" . $data['priority']];
+                  $datas[]       = $data['nb'];
+                  $tabpriority[] = $data['priority'];
+                  $total += $data['nb'];
+               }
+               $title  = __('Incident') . " : " .  sprintf(_n('%d ticket in progress', '%d tickets in progress', $total,'mydashboard'), $total);
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $backgroundPieColor = json_encode($colors);
+            $labelsPie          = json_encode($name);
+            $tabpriorityset     = json_encode($tabpriority);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataInProgressIncidentPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var priorityset = $tabpriorityset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('InProgressIncidentPie');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var InProgressIncidentPie = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataInProgressIncidentPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#InProgressIncidentPie').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = InProgressIncidentPie.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var priority_id = priorityset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{priority_id:priority_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type,
+                                groups_id:$groups_criteria,
+                                widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'InProgressIncidentPie',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => 1];
+            $graph  .= PluginMydashboardHelper::getGraphHeader($params);
+
+            $widget->setWidgetHtmlContent(
+                $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "35":
+
+            $criterias = ['entities_id', 'is_recursive','groups_id'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+            $opt           = $options['opt'];
+            $crit          = $options['crit'];
+            $type_criteria = $crit['type'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $groups_criteria      = $crit['groups_id'];
+            $type                 = Ticket::DEMAND_TYPE;
+            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $query = "SELECT DISTINCT `priority`, COUNT(`glpi_tickets`.`id`) AS nb
+                      FROM `glpi_tickets`";
+            if (isset($groups_criteria) && ($groups_criteria != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+            }
+            $query .= " WHERE $is_deleted $type_criteria $entities_criteria";
+            $query .= " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::INCOMING . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " AND `glpi_tickets`.`type` = ". $type . " ";
+            if (isset($groups_criteria) && ($groups_criteria != 0)) {
+               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
+            }
+            $query .= " GROUP BY `glpi_tickets`.`priority` ORDER BY `glpi_tickets`.`priority` ASC";
+
+            $colors = [];
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tabpriority = [];
+            $title = __('Request') . " : " .  sprintf(_n('%d ticket in progress', '%d tickets in progress', 1, 'mydashboard'), 0);
+            if ($nb) {
+               $total = 0;
+               while ($data = $DB->fetch_array($result)) {
+                  $name[]        = CommonITILObject::getPriorityName($data['priority']);
+                  $colors[]      = $_SESSION["glpipriority_" . $data['priority']];
+                  $datas[]       = $data['nb'];
+                  $tabpriority[] = $data['priority'];
+                  $total += $data['nb'];
+               }
+               $title  = __('Request') . " : " .  sprintf(_n('%d ticket in progress', '%d tickets in progress', $total,'mydashboard'), $total);
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $widget->setWidgetTitle($title);
+
+            $dataPieset         = json_encode($datas);
+            $backgroundPieColor = json_encode($colors);
+            $labelsPie          = json_encode($name);
+            $tabpriorityset     = json_encode($tabpriority);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataInProgressRequestPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var priorityset = $tabpriorityset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('InProgressRequestPie');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var InProgressRequestPie = new Chart(ctx, {
+                  type: 'pie',
+                  data: dataInProgressRequestPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#InProgressRequestPie').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = InProgressRequestPie.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var priority_id = priorityset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{priority_id:priority_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type,
+                                groups_id:$groups_criteria,
+                                widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'InProgressRequestPie',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => 1];
+            $graph  .= PluginMydashboardHelper::getGraphHeader($params);
+
+            $widget->setWidgetHtmlContent(
+                $graph
+            );
+
+            return $widget;
             break;
       }
    }
