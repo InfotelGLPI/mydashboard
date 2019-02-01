@@ -57,6 +57,13 @@ if (!isset($_POST)) {
    $idProfile = $_SESSION['glpiactiveprofile']['id'];
 
    $dashboard = new  PluginMydashboardDashboard();
+
+   $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+   if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+      $idUser = 0;
+      $idProfile = $_POST['profiles_id'];
+   }
+
    if($dashboard->getFromDBByCrit(['users_id' => $idUser,'profiles_id'=> $idProfile])){
       if(!is_null($dashboard->fields['grid_statesave'])){
          $grids_saved = json_decode($dashboard->fields['grid_statesave']);

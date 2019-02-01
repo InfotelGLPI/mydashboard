@@ -741,13 +741,20 @@ class PluginMydashboardTicket {
       $job  = new Ticket();
       $rand = mt_rand();
       if ($job->getFromDBwithData($ID, 0)) {
-         $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
+         $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
+         $textColor = "color:black!important;";
+         if ($bgcolor=='#000000') {
+            $textColor =  "color:white!important;";
+         }
+
+         $link = "<a style='$textColor' id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
              "/front/ticket.form.php?id=" . $job->fields["id"];
          if ($forcetab != '') {
             $link .= "&amp;forcetab=" . $forcetab;
          }
          $link            .= "'>";
-         $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
+
+
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" .
                             $link.
                             sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</a></div>";
@@ -827,8 +834,8 @@ class PluginMydashboardTicket {
          $colnum++;
          $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
-         $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>
-                                <span>".$job->fields["priority"] . " - " . Ticket::getPriorityName($job->fields["priority"])."</span>
+         $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>
+                                <span class='b'>".$job->fields["priority"] . " - " . Ticket::getPriorityName($job->fields["priority"])."</span>
                              </div>";
          //Categories
          $colnum++;

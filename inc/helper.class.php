@@ -126,6 +126,7 @@ class PluginMydashboardHelper {
 
    static function getGraphHeader($params) {
 
+      $name  = $params['name'];
       $graph = "<div class='bt-row'>";
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-8 left'>";
@@ -138,7 +139,6 @@ class PluginMydashboardHelper {
       $graph .= "</div>";
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
-         $name  = $params['name'];
          $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
          $graph .= "<a href='#' id='download'></a>";
          $graph .= "</div>";
@@ -923,6 +923,8 @@ class PluginMydashboardHelper {
          }
          else if(isset($opt['groups_id'])){
             $res = $opt['groups_id'];
+         } else{
+            $res = 0;
          }
       }else{
          if (isset($params['preferences']['prefered_group'])
@@ -936,7 +938,7 @@ class PluginMydashboardHelper {
          } else if (isset($params['opt']['groups_id'])
              && $params['opt']['groups_id'] > 0) {
             $res = $params['opt']['groups_id'];
-         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+         } else if(($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
              && !isset($params['opt']['groups_id'])){
             $res = $group;
          }

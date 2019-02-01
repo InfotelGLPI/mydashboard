@@ -445,6 +445,21 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='far fa-times-circle fa-1x'></i>";
             echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
             echo "&nbsp;";
+
+
+            if ($drag < 1) {
+               echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
+            if ($drag > 0) {
+               echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
+
             Html::closeForm();
 
             echo "<div class='bt-alert bt-alert-success' id='success-alert'>
@@ -817,7 +832,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
     */
-   private function getWidgetsListFromPlugins($used = [], &$html = "", $gslist) {
+   private function getWidgetsListFromPlugins($used = [], &$html = "", $gslist = []) {
       $plugin_names                = $this->getPluginsNames();
       $plugin_names["mydashboard"] = __('My Dashboard', 'mydashboard');
       $plugins_is_empty            = true;
@@ -1194,8 +1209,6 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          if ($edit > 0) {
             $delete_button = 'true';
-            $disableResize = 'false';
-            $disableDrag   = 'false';
          }
       }
 
