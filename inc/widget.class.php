@@ -368,6 +368,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                                stateSave: true,
                                 'stateSaveParams': function (settings, data) {
                                   data.gsId = '$widgetindex';
+                                  if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
+                                   data.profiles_id = document.getElementsByName('profiles_id')[0].value;
+                                 }
                                 }, 
                                 'stateSaveCallback': function (settings, data) {
                                     // Send an Ajax request to the server with the state object
@@ -382,8 +385,12 @@ class PluginMydashboardWidget extends CommonDBTM {
                                     });
                                },       
                                'stateLoadCallback': function (settings, callback) {
+                                 profiles_id='';
+                                 if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
+                                   profiles_id = document.getElementsByName('profiles_id')[0].value;
+                                 }
                                 $.ajax({
-                                    url: '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/state_load.php?gsId={$widgetindex}',
+                                    url: '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/state_load.php?gsId={$widgetindex}&profiles_id='+profiles_id,
                                     dataType: 'json',
                                     success: function (json) {                               
                                       //JSON parse the saved filter and set the time equal to now.          

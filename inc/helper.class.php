@@ -126,6 +126,7 @@ class PluginMydashboardHelper {
 
    static function getGraphHeader($params) {
 
+      $name  = $params['name'];
       $graph = "<div class='bt-row'>";
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-8 left'>";
@@ -138,7 +139,6 @@ class PluginMydashboardHelper {
       $graph .= "</div>";
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
-         $name  = $params['name'];
          $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
          $graph .= "<a href='#' id='download'></a>";
          $graph .= "</div>";

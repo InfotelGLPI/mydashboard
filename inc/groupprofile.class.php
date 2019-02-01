@@ -63,9 +63,9 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
          }
          echo "<tr><td>";
          Html::showCheckbox(['name' => 'use_group_profile','checked' => $checked]);
-         echo " " . __('Use first user group as prefered group','mydashboard');
+         echo " " . __('Use profile group','mydashboard');
          echo "</td><td>";
-         echo __('If user has no group use :', 'mydashboard');
+         echo __('Default group', 'mydashboard');
          echo "</td><td>";
          $groupprofile = new PluginMydashboardGroupprofile();
          $groups_id = 0;
@@ -92,17 +92,17 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
       if($profilerights->getFromDBByCrit(['profiles_id' => $profiles_id,
                                           'name'        => 'plugin_mydashboard_groupprofile'])){
          if($profilerights->fields['rights'] == 1){
-            $groupUsr = new Group_User();
-            $results = $groupUsr->find('`users_id`='. Session::getLoginUserID(),"id",1);
-            if (count($results) > 0) {
-               foreach ($results as $result) {
-                  $group = $result['groups_id'];
-               }
-            } else{
+//            $groupUsr = new Group_User();
+//            $results = $groupUsr->find('`users_id`='. Session::getLoginUserID(),"id",1);
+//            if (count($results) > 0) {
+//               foreach ($results as $result) {
+//                  $group = $result['groups_id'];
+//               }
+//            } else{
                if($this->getFromDBByCrit(['profiles_id' => $profiles_id])){
                   $group = $this->fields['groups_id'];
                }
-            }
+//            }
             return $group;
          }
       }
