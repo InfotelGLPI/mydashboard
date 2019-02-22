@@ -453,20 +453,6 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
             echo "&nbsp;";
 
-
-            if ($drag < 1) {
-               echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
-            if ($drag > 0) {
-               echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
-
             Html::closeForm();
 
             echo "<div class='bt-alert bt-alert-success' id='success-alert'>
