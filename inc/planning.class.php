@@ -148,7 +148,9 @@ class PluginMydashboardPlanning {
                $val["end"] = $end;
             }
             $title = $val['name'];
-            $title .= " (".getUserName($val['users_id']).")";
+            if ($val['users_id'] > 0) {
+               $title .= " (".getUserName($val['users_id']).")";
+            }
             $events[] = ['title'   => $title,
                          'tooltip' => isset($val['content']) ? Html::clean($val['content']) : "",
                          'start'   => $val["begin"],
