@@ -79,9 +79,16 @@ class PluginMydashboardPlanning {
    function getWidgetContentForItem($widgetId) {
       switch ($widgetId) {
          case "planningwidget":
+            $who_group = "";
+            $who = 0;
             if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
-               return self::showCentral(Session::getLoginUserID());
+               $who = Session::getLoginUserID();
             }
+            if (Session::haveRightsOr(Planning::$rightname, [Planning::READGROUP,
+                                                             Planning::READALL])) {
+               $who_group = "mine";
+            }
+            return self::showCentral($who, $who_group);
             break;
       }
    }
@@ -93,15 +100,14 @@ class PluginMydashboardPlanning {
     *
     * @return \PluginMydashboardDatatable (display function)
     */
-   static function showCentral($who) {
+   static function showCentral($who, $who_group = "") {
       global $CFG_GLPI;
 
       if (!Session::haveRight(Planning::$rightname, Planning::READMY)
-          || ($who <= 0)
+          || ($who <= 0 && $who_group == "")
       ) {
          return false;
       }
-
       $widget = new PluginMydashboardHtml();
       $title  = __("Your planning");
       $widget->setWidgetTitle($title);
@@ -122,7 +128,7 @@ class PluginMydashboardPlanning {
       $begin  = date("Y-m-d H:i:s", $begin);
       $end    = date("Y-m-d H:i:s", $end);
       $params = ['who'       => $who,
-                 'who_group' => 0,
+                 'who_group' => $who_group,
                  'whogroup'  => 0,
                  'begin'     => $begin,
                  'end'       => $end];
@@ -142,9 +148,7 @@ class PluginMydashboardPlanning {
                $val["end"] = $end;
             }
             $title = $val['name'];
-            if (isset($val['entities_name'])) {
-               $title = $val['entities_name'] . " > " . $val['name'];
-            }
+            $title .= " (".getUserName($val['users_id']).")";
             $events[] = ['title'   => $title,
                          'tooltip' => isset($val['content']) ? Html::clean($val['content']) : "",
                          'start'   => $val["begin"],
