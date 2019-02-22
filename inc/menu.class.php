@@ -392,7 +392,14 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo "&nbsp;(" . __('Global', 'mydashboard') . ")&nbsp;";
             }
             echo "&nbsp;:&nbsp;";
-
+            
+            echo "&nbsp;";
+            echo "<a id='load-widgets$rand' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
+            echo __('Load widgets', 'mydashboard') . "</a>&nbsp;";
+            echo "<i class='fas fa-spinner fa-1x'></i>";
+            echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
+            echo "&nbsp;";
+            
             if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
                self::dropdownProfiles(['value' => $selected_profile]);
             } else {
@@ -464,7 +471,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
             echo "<div class='bt-alert bt-alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
-                " . __('The widget was added to dashboard. Save the dashboard to see it.', 'mydashboard') . "
+                " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
             </div>";
             echo Html::scriptBlock('
                $("#success-alert").hide();
@@ -509,6 +516,8 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo "</a>";
             }
          }
+         echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
+         echo "</div>";
       }
    }
 
@@ -1146,7 +1155,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $datagrid = [];
       $datajson = [];
       $optjson  = [];
-
+      $widgets  = [];
       if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
 
          $widgets = PluginMydashboardWidget::getWidgetList();
@@ -1185,13 +1194,19 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       if ($edit > 0) {
 
-         if (empty($grid)) {
-            $widgets = PluginMydashboardWidget::getWidgetList();
-         }
-         foreach ($widgets as $k => $val) {
-            $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
-            //NOT LOAD ALL WIDGETS FOR PERF
-            //            $allwidgetjson[$k] = PluginMydashboardWidget::getWidget($k);
+         if (isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
+             && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
+            $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
+         } else {
+            if (empty($grid) && count($widgets) < 1) {
+               $widgets = PluginMydashboardWidget::getWidgetList();
+            }
+            foreach ($widgets as $k => $val) {
+               $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
+               //NOT LOAD ALL WIDGETS FOR PERF
+               //               $allwidgetjson[$k] = PluginMydashboardWidget::getWidget($k, [], $widgets);
+
+            }
          }
       }
       $allwidgetjson = json_encode($allwidgetjson);
@@ -1393,6 +1408,22 @@ class PluginMydashboardMenu extends CommonGLPI {
                        });
                     return false;
                 }.bind(this);
+                this.loadWidgets = function () {
+                  var modal = $('<div>').dialog({ modal: true });
+                  modal.dialog('widget').hide();
+                  $('#ajax_loader').show();
+                  $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/loadWidgets.php',
+                       type: 'POST',
+                       complete: function () {
+                                //back to normal!
+                                $('#ajax_loader').hide();
+                                modal.dialog('close');
+                                window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                            }
+                       });
+                    return false;
+                }.bind(this);
                 $('#save-grid$rand').click(this.saveGrid);
                 $('#edit-grid$rand').click(this.editGrid);
                 $('#drag-grid$rand').click(this.dragGrid);
@@ -1402,6 +1433,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 $('#save-default-grid$rand').click(this.saveDefaultGrid);
                 $('#remove-widget$rand').click(this.removewidget);
                 $('#clear-grid$rand').click(this.clearGrid);
+                $('#load-widgets$rand').click(this.loadWidgets);
                 this.loadGrid();
             };
         });

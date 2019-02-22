@@ -99,6 +99,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
             $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
             $this->getType() . "10" => __("Inventory stock alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "11" => __('Your equipments', 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
          ]
       ];
    }
@@ -864,7 +865,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $url    = $CFG_GLPI['url_base'] . "/status.php";
             //            $url = "http://localhost/glpi/status.php";
             $options = ["url" => $url];
-
+            $table = "";
             $contents = self::cURLData($options);
             $contents = nl2br($contents);
 
@@ -1147,7 +1148,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setTabDatas($datas);
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
-            //            $widget->toggleWidgetRefresh();
+            $widget->toggleWidgetRefresh();
             $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
@@ -1299,6 +1300,14 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Inventory stock alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display alerts for inventory stocks", "mydashboard"));
 
+            return $widget;
+            break;
+         case $this->getType() . "11":
+            $widget = new PluginMydashboardHtml();
+            $class = "bt-col-md-12";
+            $display = PluginMydashboardWidget::getWidgetMydashboardEquipments($class, false);
+            $widget->setWidgetHtmlContent($display);
+            $widget->setWidgetTitle(__('Your equipments', 'mydashboard'));
             return $widget;
             break;
       }

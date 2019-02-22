@@ -843,8 +843,8 @@ div.dt-button-background {
 }
 
 .count-title {
-   font-size: 40px;
-   font-weight: normal;
+   font-size: 14px;
+   font-weight: bold;
    margin-top: 10px;
    margin-bottom: 0;
    text-align: center;
@@ -854,6 +854,17 @@ div.dt-button-background {
    font-size: 11px;
    font-weight: bold;
    text-align: center;
+}
+
+.equip-text {
+   font-size: 11px;
+   font-weight: bold;
+   text-align: center;
+   border: #8080804d;
+   border-width: 2px;
+   padding: 5px;
+   border-style: dashed;
+   width: 90% !important;
 }
 
 .fa-2x {
@@ -1025,4 +1036,21 @@ div.dt-button-background {
 .grid-stack .grid-stack-placeholder > .placeholder-content {
    border: 1px dashed #000 !important;
    background-color: #FFF !important;
+}
+
+.ajax_loader{
+   position:   fixed;
+   z-index:    1000;
+   top:        0;
+   left:       0;
+   height:     100%;
+   width:      100%;
+   background: rgba( 255, 255, 255, .8 )
+   url(../../../pics/spinner.48.gif)
+   50% 50%
+   no-repeat;
+}
+
+.hidden{
+   display:none;
 }

@@ -628,32 +628,61 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardEquipments($class) {
+   static function getWidgetMydashboardEquipments($class, $fromsc) {
       global $CFG_GLPI;
 
       $delclass = "";
-      $display  = "<div id='gs17' class=\"bt-row $delclass\">";
-      $display  .= "<div class=\"bt-feature $class \">";
-      $display  .= "<h3 class=\"bt-title-divider\">";
-      $display  .= "<span>";
-      $display  .= __('Your computer equipment', 'mydashboard');
-      $display  .= "</span>";
-      $display  .= "</h3>";
-      $display  .= "<div id='display-sc'>";
-
+      //      $display  = "<div id='gs17' class=\"bt-row $delclass\">";
+      $display = "";
+      if ($fromsc == true) {
+         $display .= "<div class=\"bt-feature $class\">";
+         $display .= "<h3 class=\"bt-title-divider\">";
+         $display .= "<span>";
+         $display .= __('Your equipments', 'mydashboard');
+         $display .= "</span>";
+         $display .= "</h3>";
+         $display .= "</div>";
+      }
       $allUsedItemsForUser = self::getAllUsedItemsForUser();
 
       if (count($allUsedItemsForUser) > 0) {
-
-         $display .= "<div class=\"tickets-stats\">";
-
+         if ($fromsc == true) {
+            $display .= "<div class=\"bt-feature bt-col-md-12 count-title \">";
+         }
          foreach ($allUsedItemsForUser as $itemtype => $used_items) {
 
             $item = getItemForItemtype($itemtype);
-            //            $nb   = 0;
+
+
+            //            if ($i % 2 == 0 && $nb > 1) {
+            $display .= "<div class=\"bt-feature bt-col-md-11 center equip-text\">";
+            //            }
+            //            if ($nb == 1) {
+            //               $display .= "<div class=\"bt-feature bt-col-md-6 center equip-text\">";
+            //            }
+            $i  = 0;
+            $nb = count($used_items);
             foreach ($used_items as $item_datas) {
-               //               $nb = count($used_items);
-               $color = "steelblue";
+
+               //               if ($i % 2 == 0 && $nb > 1) {
+               //                  $display .= "<div class=\"bt-col-md-6 center\">";
+               //               }
+               if ($nb == 1) {
+                  $display .= "<div class=\"bt-feature bt-col-md-11 center\">";
+               } else {
+                  $display .= "<div class=\"bt-feature bt-col-md-5 center\">";
+               }
+
+               //               $display .= "<div class=\"nbstock\" style=\"color:$color\">";
+               //               $display .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" .$item_datas['name']  . "'>";
+
+               //               $display .= "<h4>";
+               //               $display .= "<span class=\"counter count-number\" id=\"stock_$itemtype\"></span>";
+               //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
+               //               $display .= "<p class=\"count-text \">";
+
+               $display .= "</br>";
+               $color   = "steelblue";
 
                //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense','PluginBadgesBadge'];
                if ($itemtype == 'Computer') {
@@ -671,37 +700,58 @@ class PluginMydashboardWidget extends CommonDBTM {
                } else if ($itemtype == 'PluginBadgesBadge') {
                   $icon = 'far fa-id-badge';
                }
-               $display .= "<div class=\"nbstock\" style=\"color:$color\">";
-               //               $display .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" .$item_datas['name']  . "'>";
-               $display .= "<i style='color:$color' class=\"$icon fa-3x fa-border\"></i>";
-               $display .= "<h3>";
-               $display .= "<span class=\"counter count-number\" id=\"stock_$itemtype\"></span>";
-               //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
-               $display .= "</h3>";
-               $display .= "<p class=\"count-text \">" . $item_datas['name'] . "</p>";
-               $display .= "<p class=\"count-text \">" . $item->getTypeName() . "</p>";
-               //               $display .= "</a>";
-               $display .= "</div>";
+               if ($item->canView()) {
+                  $display .= "<a href='" . $item::getFormURL() . "?id=" . $item_datas['id'] . "' target='_blank'>";
+               }
 
+
+               $display .= "<i style='color:$color' class=\"$icon fa-2x fa-border\"></i>";
+               $display .= "</br>";
+               $display .= $item_datas['name'];
+               if ($item->canView()) {
+                  $display .= "</a>";
+               }
+               $display .= "</br>";
+               $display .= $item->getTypeName();
+               $display .= "</br>";
                //               $script .= "$('#stock_$itemtype').countup($nb);";
 
+               $i++;
+               //               if (($i == $nb) && (($nb % 2) != 0) && ($nb > 1)) {
+
+//               if ($item_datas['id']
+//                   && Ticket::isPossibleToAssignType($itemtype)
+//                   && Ticket::canCreate()
+//                   && (!isset($item->fields['is_template']) || ($item->fields['is_template'] == 0))) {
+//                  $link = Html::showSimpleForm(Ticket::getFormURL(),
+//                                       '_add_fromitem',
+//                                       __('New ticket for this item...'),
+//                                       ['itemtype' => $itemtype,
+//                                        'items_id' => $item_datas['id']],
+//                     'fa-plus-circle');
+//                  $display .= $link;
+//               }
+
+               $display .= "</div>";
+               //               }
             }
+
+            $display .= "</div>";
          }
          //         $display .= "<script type='text/javascript'>
          //                         $(function(){
          //                            $script;
          //                         });
          //                  </script>";
-         $display .= "</div>";
+         //                  $display .= "</div>";
       } else {
          $display .= "<div align='center'><h3><span class ='alert-color'>";
          $display .= __("No equipments founded", "mydashboard");
          $display .= "</span></h3></div>";
       }
-      $display .= "</div>";
-      $display .= "</div>";
-      $display .= "</div>";
-
+      if ($fromsc == true) {
+         $display .= "</div>";
+      }
       return $display;
    }
 
