@@ -5,103 +5,98 @@
 #
 # Translators:
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2018
-# Pavel Borecki <pavel.borecki@gmail.com>, 2019
+# Andrejs <andrew.k2@gmail.com>, 2018
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-02-24 10:36+0100\n"
-"PO-Revision-Date: 2019-02-24 10:44+0100\n"
-"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2019\n"
-"Language-Team: Czech (Czech Republic) (https://www.transifex.com/tsmr/"
-"teams/65490/cs_CZ/)\n"
+"PO-Revision-Date: 2019-02-24 10:51+0100\n"
+"Last-Translator: Andrejs <andrew.k2@gmail.com>, 2018\n"
+"Language-Team: Latvian (Latvia) (https://www.transifex.com/tsmr/"
+"teams/65490/lv_LV/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs_CZ\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: lv_LV\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 "X-Generator: Poedit 2.0.9\n"
 
 #: setup.php:140 inc/menu.class.php:87 inc/menu.class.php:832
 #: inc/preference.class.php:62
 msgid "My Dashboard"
-msgstr "Nástěnka"
+msgstr ""
 
 #: ajax/clearGrid.php:40
 msgid "Grid cleared"
-msgstr "Nástěnka vrácena do výchozího stavu"
+msgstr ""
 
 #: inc/alert.class.php:55
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
-msgstr[0] "Nástěnka s výstrahou"
-msgstr[1] "Nástěnka s výstrahami"
-msgstr[2] "Nástěnka s výstrahami"
-msgstr[3] "Nástěnka s výstrahami"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: inc/alert.class.php:91 inc/alert.class.php:1809 inc/alert.class.php:1812
 #: inc/alert.class.php:1925 inc/alert.class.php:1928
 #: inc/problemalert.class.php:110 inc/problemalert.class.php:113
 msgid "Alert"
 msgid_plural "Alerts"
-msgstr[0] "Výstraha"
-msgstr[1] "Výstrahy"
-msgstr[2] "Výstrah"
-msgstr[3] "Výstrahy"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: inc/alert.class.php:92
 msgid "Network alert"
 msgid_plural "Network alerts"
-msgstr[0] "Upozornění ze sítě"
-msgstr[1] "Upozornění ze sítě"
-msgstr[2] "Upozornění ze sítě"
-msgstr[3] "Upozornění ze sítě"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: inc/alert.class.php:93 inc/alert.class.php:169 inc/alert.class.php:1813
 #: inc/alert.class.php:1929 inc/problemalert.class.php:114
 #: inc/widget.class.php:564
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
-msgstr[0] "Naplánovaná údržba"
-msgstr[1] "Naplánované údržby"
-msgstr[2] "Naplánovaných údržeb"
-msgstr[3] "Naplánované údržby"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: inc/alert.class.php:94 inc/alert.class.php:179 inc/alert.class.php:1814
 #: inc/alert.class.php:1930 inc/problemalert.class.php:115
 #: inc/widget.class.php:605
 msgid "Information"
 msgid_plural "Informations"
-msgstr[0] "Informace"
-msgstr[1] "Informace"
-msgstr[2] "Informací"
-msgstr[3] "Informace"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: inc/alert.class.php:95 inc/alert.class.php:481
 msgid "Incidents alerts"
-msgstr "Upozornění na incidenty"
+msgstr ""
 
 #: inc/alert.class.php:96 inc/alert.class.php:856
 msgid "SLA Incidents alerts"
-msgstr "Upozornění na SLA incidenty"
+msgstr ""
 
 #: inc/alert.class.php:97 inc/alert.class.php:883
 msgid "GLPI Status"
-msgstr "Stav GLPI"
+msgstr ""
 
 #: inc/alert.class.php:98 inc/alert.class.php:1064
 msgid "User ticket alerts"
-msgstr "Upozornění na požadavky uživatelů"
+msgstr ""
 
 #: inc/alert.class.php:99 inc/alert.class.php:1110
 msgid "Automatic actions in error"
-msgstr "Automatické akce s chybou"
+msgstr ""
 
 #: inc/alert.class.php:100 inc/alert.class.php:1152
 msgid "Not imported mails in collectors"
-msgstr "Nenaimportované e-maily v kolektorech"
+msgstr ""
 
 #: inc/alert.class.php:101 inc/alert.class.php:1300
 msgid "Inventory stock alerts"
@@ -113,67 +108,67 @@ msgstr ""
 
 #: inc/alert.class.php:159 inc/alert.class.php:1981 inc/widget.class.php:523
 msgid "Network Monitoring"
-msgstr "Dohledování sítě"
+msgstr ""
 
 #: inc/alert.class.php:339 inc/alert.class.php:343
 msgid "New incidents"
-msgstr "Nové incidenty"
+msgstr ""
 
 #: inc/alert.class.php:379 inc/alert.class.php:383
 msgid "Opened tickets without assigned technicians"
-msgstr "Otevřené požadavky nepřiřazené technikovi"
+msgstr ""
 
 #: inc/alert.class.php:423 inc/alert.class.php:427
 msgid "Incidents with very high or major priority"
-msgstr "Incidenty s velmi vysokou nebo nejvyšší prioritou"
+msgstr ""
 
 #: inc/alert.class.php:453 inc/alert.class.php:457
 msgid "Problems with very high or major priority"
-msgstr "Problémy s velmi vysokou nebo nejvyšší prioritou"
+msgstr ""
 
 #: inc/alert.class.php:482
 msgid "Display alerts for tickets and problems"
-msgstr "Zobrazovat upozornění na požadavky a problémy"
+msgstr ""
 
 #: inc/alert.class.php:694
 msgid "Incidents where time to own will be exceeded"
-msgstr "Incidenty u kterých bude překročena doba pro přidělení"
+msgstr ""
 
 #: inc/alert.class.php:740
 msgid "Incidents where time to resolve will be exceeded"
-msgstr "Incidenty u kterých bude překročena doba pro vyřešení"
+msgstr ""
 
 #: inc/alert.class.php:787
 msgid "Incidents where time to own is exceeded"
-msgstr "Incidenty u kterých je překročená doba pro přidělení"
+msgstr ""
 
 #: inc/alert.class.php:834
 msgid "Incidents where time to resolve is exceeded"
-msgstr "Incidenty u kterých je překročená doba pro vyřešení"
+msgstr ""
 
 #: inc/alert.class.php:857
 msgid "Display alerts for SLA of tickets"
-msgstr "Zobrazit upozornění na SLA požadavků"
+msgstr ""
 
 #: inc/alert.class.php:884
 msgid "Check if GLPI have no problem"
-msgstr "Zkontrolovat zda je GLPI v pořádku"
+msgstr ""
 
 #: inc/alert.class.php:911 inc/ticket.class.php:327 inc/ticket.class.php:649
 msgid "ID and priority"
-msgstr "Identif. a priorita"
+msgstr ""
 
 #: inc/alert.class.php:1014
 msgid "New document"
-msgstr "Nový dokument"
+msgstr ""
 
 #: inc/alert.class.php:1065
 msgid "Display tickets where last modification is a user action"
-msgstr "Zobrazit požadavky u kterých je poslední úprava akce uživatele"
+msgstr ""
 
 #: inc/alert.class.php:1153
 msgid "Display of mails which are not imported"
-msgstr "Zobrazit e-maily, které nejsou naimportované"
+msgstr ""
 
 #: inc/alert.class.php:1291
 msgid "No alerts are setup"
@@ -188,64 +183,61 @@ msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see "
 "more"
 msgstr ""
-"V plánu je přinejmenším jedna údržba. Přihlaste se abyste se dozvěděli více"
 
 #: inc/alert.class.php:1409 inc/widget.class.php:574
 msgid "No scheduled maintenance"
-msgstr "Žádná naplánovaná údržba"
+msgstr ""
 
 #: inc/alert.class.php:1496 inc/widget.class.php:616
 msgid "No informations founded"
-msgstr "Nebyly nalezeny žádné informace"
+msgstr ""
 
 #: inc/alert.class.php:1610 inc/alert.class.php:1779 inc/widget.class.php:533
 msgid "No problem detected"
-msgstr "Nebyl zjištěn žádný problém"
+msgstr ""
 
 #: inc/alert.class.php:1729
 msgid "Monitoring"
-msgstr "Dohledování"
+msgstr ""
 
 #: inc/alert.class.php:1823 inc/alert.class.php:1940
 #: inc/problemalert.class.php:125
 msgid "No impact"
-msgstr "Bez dopadu"
+msgstr ""
 
 #: inc/alert.class.php:1828 inc/alert.class.php:1945
 #: inc/problemalert.class.php:130
 msgid "Alert level"
-msgstr "Stupeň výstrahy"
+msgstr ""
 
 #: inc/alert.class.php:1866 inc/alert.class.php:1869
 #: inc/problemalert.class.php:50 inc/problemalert.class.php:53
 msgid "Create a new alert"
-msgstr "Vytvořit novou výstrahu"
+msgstr ""
 
 #: inc/alert.class.php:1894 inc/problemalert.class.php:78
 msgid "Linked reminder"
-msgstr "Připojená připomínka"
+msgstr ""
 
 #: inc/alert.class.php:1983 inc/widget.class.php:525
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
-"Upozornění ohledně sítě, které se vás může týkat a zabránit vytvoření "
-"požadavku"
 
 #: inc/alert.class.php:2021
 msgid "Problem with GLPI"
-msgstr "Problém s GLPI"
+msgstr ""
 
 #: inc/alert.class.php:2026
 msgid "GLPI is OK"
-msgstr "GLPI je v pořádku"
+msgstr ""
 
 #: inc/alert.class.php:2031
 msgid "Alert is not properly configured or is not reachable"
-msgstr "Upozornění není správně nastavené nebo není dosažitelné"
+msgstr ""
 
 #: inc/alert.class.php:2048
 msgid "Curl PHP package not installed"
-msgstr "Není nainstalovaný balíček PHP curl"
+msgstr ""
 
 #: inc/change.class.php:37 inc/dashboard.class.php:52
 #: inc/datatable.class.php:53 inc/html.class.php:49 inc/menu.class.php:1045
@@ -253,94 +245,94 @@ msgstr "Není nainstalovaný balíček PHP curl"
 #: inc/project.class.php:37 inc/projecttask.class.php:37
 #: inc/servicecatalog.class.php:58
 msgid "Dashboard"
-msgstr "Nástěnka"
+msgstr ""
 
 #: inc/change.class.php:51 inc/change.class.php:56 inc/change.class.php:112
 #: inc/change.class.php:231 inc/change.class.php:282
 msgid "Changes to be processed"
-msgstr "Změny pro zpracování"
+msgstr ""
 
 #: inc/change.class.php:52 inc/change.class.php:57 inc/change.class.php:110
 #: inc/change.class.php:213 inc/change.class.php:266
 msgid "Changes on pending status"
-msgstr "Změny na čekajícím stavu"
+msgstr ""
 
 #: inc/change.class.php:62 inc/change.class.php:493
 msgid "Change followup"
-msgstr "Sledování změn"
+msgstr ""
 
 #: inc/chart.class.php:94 inc/datatable.class.php:208
 msgid "No data is given to the widget"
-msgstr "Ovládacímu prvku nebyla dodána žádná data"
+msgstr ""
 
 #: inc/chart.class.php:111 inc/menu.class.php:679 inc/menu.class.php:1200
 #: inc/widget.class.php:165 inc/widget.class.php:495
 msgid "No data available"
-msgstr "Nejsou k dispozici žádná data"
+msgstr ""
 
 #: inc/chart.class.php:117 inc/datatable.class.php:120
 msgid "Not an array"
-msgstr "Není pole"
+msgstr ""
 
 #: inc/config.class.php:42
 msgid "Dashboard - Configuration"
-msgstr "Nástěnka – nastavení"
+msgstr ""
 
 #: inc/config.class.php:93
 msgid "Enable the possibility to display Dashboard in full screen"
-msgstr "Zpřístupnit možnost zobrazit nástěnku na celou obrazovku"
+msgstr ""
 
 #: inc/config.class.php:103
 msgid "Display widgets from plugins"
-msgstr "Zobrazit ovládací prvky ze zásuvných modulů"
+msgstr ""
 
 #: inc/config.class.php:109 inc/preference.class.php:109
 msgid "Replace central interface"
-msgstr "Nahradit ústřední rozhraní"
+msgstr ""
 
 #: inc/config.class.php:115
 msgid "Google API Key"
-msgstr "Klíč ke Google API"
+msgstr ""
 
 #: inc/config.class.php:122
 msgid "Impact colors"
-msgstr "Barvy dopadu"
+msgstr ""
 
 #: inc/config.class.php:144
 msgid "Level of categories to show"
-msgstr "Úroveň kategorií které zobrazit"
+msgstr ""
 
 #: inc/dashboard.class.php:118 inc/menu.class.php:103
 msgid "GLPI admin grid"
-msgstr "Správa GLPI"
+msgstr ""
 
 #: inc/dashboard.class.php:119
 msgid "Inventory admin grid"
-msgstr "Mřížka správce inventáře"
+msgstr ""
 
 #: inc/dashboard.class.php:120
 msgid "Helpdesk supervisor grid"
-msgstr "Dohlížení na podporu"
+msgstr ""
 
 #: inc/dashboard.class.php:121
 msgid "Incident supervisor grid"
-msgstr "Dohlížení na poruchy"
+msgstr ""
 
 #: inc/dashboard.class.php:122
 msgid "Request supervisor grid"
-msgstr "Dohlížení na požadavky"
+msgstr ""
 
 #: inc/dashboard.class.php:123
 msgid "Helpdesk technician grid"
-msgstr "Pro technika podpory"
+msgstr ""
 
 #: inc/datatable.class.php:235
 msgid "No column defined"
-msgstr "Není určen žádný sloupec"
+msgstr ""
 
 #: inc/groupprofile.class.php:56
 msgid "Default dashboard group"
-msgstr "Výchozí skupina nástěnky"
+msgstr ""
 
 #: inc/groupprofile.class.php:66
 msgid "Use profile group"
@@ -352,246 +344,246 @@ msgstr ""
 
 #: inc/helper.class.php:517 inc/infotel.class.php:3944
 msgid "Year"
-msgstr "Rok"
+msgstr ""
 
 #: inc/helper.class.php:526
 msgid "Month"
-msgstr "Měsíc"
+msgstr ""
 
 #: inc/helper.class.php:845
 msgid "Not a valid SQL SELECT query"
-msgstr "Není platný dotaz SQL SELECT"
+msgstr ""
 
 #: inc/infotel.class.php:57 inc/infotel.class.php:471
 msgid "Internal annuary"
-msgstr "Vnitřní adresář"
+msgstr ""
 
 #: inc/infotel.class.php:66
 msgid "Charts"
-msgstr "Grafy"
+msgstr ""
 
 #: inc/infotel.class.php:66 inc/infotel.class.php:184
 msgid "Opened tickets backlog"
-msgstr "Seznam nahromaděných otevřených požadavků"
+msgstr ""
 
 #: inc/infotel.class.php:67 inc/infotel.class.php:350
 msgid "Number of opened tickets by priority"
-msgstr "Počet otevřených požadavků dle priority"
+msgstr ""
 
 #: inc/infotel.class.php:68
 msgid "Tickets stock by month"
-msgstr "Množství požadavků v měsíci"
+msgstr ""
 
 #: inc/infotel.class.php:69 inc/infotel.class.php:838
 msgid "Top ten ticket requesters by month"
-msgstr "Deset nejčastějších požadovatelů v měsíci"
+msgstr ""
 
 #: inc/infotel.class.php:70 inc/infotel.class.php:931
 msgid "Process time by technicians by month"
-msgstr "Doba zpracovávání techniky v jednotlivých měsících"
+msgstr ""
 
 #: inc/infotel.class.php:71 inc/infotel.class.php:1266
 msgid "TTR Compliance"
-msgstr "Soulad s TTR"
+msgstr ""
 
 #: inc/infotel.class.php:72 inc/infotel.class.php:1400
 msgid "TTO Compliance"
-msgstr "Soulad s TTO"
+msgstr ""
 
 #: inc/infotel.class.php:73 inc/infotel.class.php:1579
 msgid "Top ten ticket categories by type of ticket"
-msgstr "Deset nejčastějších kategorií požadavků dle typu požadavku"
+msgstr ""
 
 #: inc/infotel.class.php:74 inc/infotel.class.php:1710
 msgid "Number of opened incidents by category"
-msgstr "Počet otevřených incidentů dle kategorie"
+msgstr ""
 
 #: inc/infotel.class.php:75 inc/infotel.class.php:1850
 msgid "Number of opened requests by category"
-msgstr "Počet otevřených požadavků dle kategorie"
+msgstr ""
 
 #: inc/infotel.class.php:76 inc/infotel.class.php:2426
 msgid "Number of opened and closed tickets by month"
-msgstr "Počet otevřených a uzavřených požadavků v jednotlivých měsících"
+msgstr ""
 
 #: inc/infotel.class.php:77 inc/infotel.class.php:2113
 msgid "Percent of use of solution types"
-msgstr "Procento využitý typů řešení"
+msgstr ""
 
 #: inc/infotel.class.php:78 inc/infotel.class.php:2225
 msgid "Number of tickets affected by technicians by month"
-msgstr "Počet požadavků přiřazených jednotlivým technikům v každém měsíci"
+msgstr ""
 
 #: inc/infotel.class.php:79 inc/infotel.class.php:1988
 msgid "Number of opened and solved tickets by month"
-msgstr "Počet otevřených a vyřešených požadavků v jednotlivých měsících"
+msgstr ""
 
 #: inc/infotel.class.php:80 inc/infotel.class.php:2597
 msgid "Average real duration of treatment of the ticket"
-msgstr "Průměrná doba nakládání s požadavkem"
+msgstr "Pieteikuma apstrādes reālais ilgums"
 
 #: inc/infotel.class.php:81 inc/infotel.class.php:2741
 msgid "Top ten technicians (by tickets number)"
-msgstr "Deset nejvytíženějších techniků (dle počtu požadavků)"
+msgstr ""
 
 #: inc/infotel.class.php:82 inc/infotel.class.php:2914
 msgid "Number of opened tickets by requester groups"
-msgstr "Počet otevřených požadavků podle skupin žadatele"
+msgstr ""
 
 #: inc/infotel.class.php:83 inc/infotel.class.php:3037
 msgid "Global satisfaction level"
-msgstr "Celková úroveň spokojenosti"
+msgstr ""
 
 #: inc/infotel.class.php:84 inc/infotel.class.php:3159
 msgid "Top 10 of opened tickets by location"
-msgstr "10 nejčastějších otevřených požadavků podle umístění"
+msgstr ""
 
 #: inc/infotel.class.php:86 inc/infotel.class.php:3478
 msgid "OpenStreetMap - Opened tickets by location"
-msgstr "OpenStreetMap – otevřené požadavky podle umístění"
+msgstr ""
 
 #: inc/infotel.class.php:87 inc/infotel.class.php:3771
 msgid "Number of use of request sources"
-msgstr "Počet použití prostředků požadavku"
+msgstr ""
 
 #: inc/infotel.class.php:88 inc/infotel.class.php:3939
 msgid "Tickets request sources evolution"
-msgstr "Vývoj zdrojů požadavku"
+msgstr ""
 
 #: inc/infotel.class.php:185
 msgid "Display of opened tickets by month"
-msgstr "Zobrazit otevřené požadavky dle měsíců"
+msgstr ""
 
 #: inc/infotel.class.php:190 inc/infotel.class.php:697
 #: inc/infotel.class.php:2748
 msgid "Tickets number"
-msgstr "Počet požadavků"
+msgstr ""
 
 #: inc/infotel.class.php:472
 msgid "Search users of your organisation"
-msgstr "Hledat uživatele vaší organizace"
+msgstr ""
 
 #: inc/infotel.class.php:607
 msgid "Display if you have duplicates into inventory"
-msgstr "Zobrazit zda máte duplicity v inventáři"
+msgstr ""
 
 #: inc/infotel.class.php:688
 msgid "Tickets stock"
-msgstr "Množství požadavků"
+msgstr ""
 
 #: inc/infotel.class.php:689
 msgid "Sum of not solved tickets by month"
-msgstr "Součet nevyřešených požadavků za měsíc"
+msgstr ""
 
 #: inc/infotel.class.php:932
 msgid "Sum of ticket tasks duration by technicians"
-msgstr "Součet čas stráveného jednotlivými techniky na požadavcích"
+msgstr ""
 
 #: inc/infotel.class.php:1267
 msgid "Display tickets where time to resolve is respected"
-msgstr "Zobrazit požadavky u kterých byl dodržen čas na vyřešení"
+msgstr ""
 
 #: inc/infotel.class.php:1273
 msgid "Respected TTR"
-msgstr "Respektované TTR"
+msgstr ""
 
 #: inc/infotel.class.php:1273
 msgid "Not respected TTR"
-msgstr "Nerespektované TTR"
+msgstr ""
 
 #: inc/infotel.class.php:1401
 msgid "Display tickets where time to own is respected"
-msgstr "Zobrazit požadavky u kterých byl dodržena lhůta na přidělení"
+msgstr ""
 
 #: inc/infotel.class.php:1406
 msgid "Respected TTO"
-msgstr "Respektované TTO"
+msgstr ""
 
 #: inc/infotel.class.php:1406
 msgid "Not respected TTO"
-msgstr "Nerespektované TTO"
+msgstr ""
 
 #: inc/infotel.class.php:1966 inc/infotel.class.php:2430
 msgid "Opened tickets"
-msgstr "Otevřené požadavky"
+msgstr ""
 
 #: inc/infotel.class.php:1982
 msgid "Solved tickets"
-msgstr "Vyřešené požadavky"
+msgstr ""
 
 #: inc/infotel.class.php:2114
 msgid "Display percent of solution types for tickets"
-msgstr "Zobrazit procentuální podíly typů řešení požadavků"
+msgstr ""
 
 #: inc/infotel.class.php:2226
 msgid "Sum of ticket affected by technicians"
-msgstr "Součet požadavků přidělených technikům"
+msgstr ""
 
 #: inc/infotel.class.php:2431
 msgid "Closed tickets"
-msgstr "Uzavřené požadavky"
+msgstr ""
 
 #: inc/infotel.class.php:2432
 msgid "Number of opened tickets"
-msgstr "Počet otevřených požadavků"
+msgstr "Atvērto pieteikumu skaits"
 
 #: inc/infotel.class.php:2598
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
-msgstr "Zobrazit průměrný skutečnou dobu zpracování požadavku (trvání úkolů)"
+msgstr ""
 
 #: inc/infotel.class.php:2603
 msgid "Tasks duration (minutes)"
-msgstr "Trvání úkolů (minuty)"
+msgstr ""
 
 #: inc/infotel.class.php:2742
 msgid "Display of number of tickets by technicians"
-msgstr "Zobrazit počty požadavků dle techniků"
+msgstr ""
 
 #: inc/infotel.class.php:3043
 msgid "Satisfy percent"
-msgstr "Procento spokojenosti"
+msgstr ""
 
 #: inc/infotel.class.php:3043
 msgid "Not satisfy percent"
-msgstr "Procento nespokojenosti"
+msgstr ""
 
 #: inc/infotel.class.php:3479
 msgid "Display Tickets by location (Latitude / Longitude)"
-msgstr "Zobrazit požadavky podle umístění (zeměpisná šířka/délka)"
+msgstr ""
 
 #: inc/infotel.class.php:3772
 msgid "Display number of request sources for closed tickets"
-msgstr "Zobrazit počet požadovaných zdrojů pro uzavřené požadavky"
+msgstr ""
 
 #: inc/infotel.class.php:3940
 msgid "Evolution of tickets request sources types by year"
-msgstr "Vývoj typů zdrojů požadavku podle roku"
+msgstr ""
 
 #: inc/knowbaseitem.class.php:127
 msgid "Publication date"
-msgstr "Datum zveřejnění"
+msgstr ""
 
 #: inc/knowbaseitem.class.php:129
 msgid "Modification date"
-msgstr "Datum úpravy"
+msgstr ""
 
 #: inc/menu.class.php:102
 msgid "My view"
-msgstr "Můj pohled"
+msgstr ""
 
 #: inc/menu.class.php:341
 msgid "Fullscreen"
-msgstr "Na celou obrazovku"
+msgstr ""
 
 #: inc/menu.class.php:386
 msgid "Edit mode"
-msgstr "Režim úprav"
+msgstr ""
 
 #: inc/menu.class.php:392
 msgid "Global"
-msgstr "Globální"
+msgstr "Globāls"
 
 #: inc/menu.class.php:397 inc/menu.class.php:398 inc/menu.class.php:400
 msgid "Load widgets"
@@ -599,31 +591,31 @@ msgstr ""
 
 #: inc/menu.class.php:410
 msgid "Add a widget"
-msgstr "Přidat ovládací prvek"
+msgstr ""
 
 #: inc/menu.class.php:416 inc/menu.class.php:417
 msgid "Load a predefined grid"
-msgstr "Načíst předpřipravenou mřížku"
+msgstr ""
 
 #: inc/menu.class.php:431 inc/menu.class.php:432 inc/menu.class.php:433
 msgid "Save grid"
-msgstr "Uložit mřížku"
+msgstr ""
 
 #: inc/menu.class.php:438 inc/menu.class.php:439 inc/menu.class.php:440
 msgid "Save default grid"
-msgstr "Uložit výchozí mřítku"
+msgstr ""
 
 #: inc/menu.class.php:445 inc/menu.class.php:446 inc/menu.class.php:447
 msgid "Clear grid"
-msgstr "Vyčistit mřížku"
+msgstr ""
 
 #: inc/menu.class.php:451 inc/menu.class.php:452 inc/menu.class.php:453
 msgid "Close edit mode"
-msgstr "Ukončit režim úprav"
+msgstr ""
 
 #: inc/menu.class.php:459
 msgid "Success"
-msgstr "Úspěch"
+msgstr ""
 
 #: inc/menu.class.php:460
 msgid "The widget was added to dashboard. Save the dashboard."
@@ -631,203 +623,203 @@ msgstr ""
 
 #: inc/menu.class.php:467
 msgid "Error"
-msgstr "Chyba"
+msgstr "Kļūda"
 
 #: inc/menu.class.php:468
 msgid "Please reload your page."
-msgstr "Načtěte stránku znovu."
+msgstr ""
 
 #: inc/menu.class.php:475 inc/menu.class.php:477
 msgid "Switch to edit mode"
-msgstr "Přepnout do režimu úprav"
+msgstr ""
 
 #: inc/menu.class.php:481 inc/menu.class.php:483
 msgid "Permit drag / resize widgets"
-msgstr "Umožnit přemisťování a změnu velikosti miniaplikací"
+msgstr ""
 
 #: inc/menu.class.php:488 inc/menu.class.php:490
 msgid "Block drag / resize widgets"
-msgstr "Znemožnit přemisťování a změnu velikosti miniaplikací"
+msgstr ""
 
 #: inc/menu.class.php:493 inc/menu.class.php:495
 msgid "Save positions"
-msgstr "Uložit pozice"
+msgstr ""
 
 #: inc/menu.class.php:499 inc/menu.class.php:501
 msgid "Custom and save default grid"
-msgstr "Vlastní a uložit výchozí mřížku"
+msgstr ""
 
 #: inc/menu.class.php:1007
 msgid "No data available in table"
-msgstr "V tabulce nejsou k dispozici žádná data"
+msgstr ""
 
 #: inc/menu.class.php:1008
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Zobrazení _START_ po _END_ z _TOTAL_ položek"
+msgstr ""
 
 #: inc/menu.class.php:1009
 msgid "Showing 0 to 0 of 0 entries"
-msgstr "Zobrazuje se 0 až 0 z 0 položek"
+msgstr ""
 
 #: inc/menu.class.php:1010
 msgid "(filtered from _MAX_ total entries)"
-msgstr "(filtrováno z _MAX_ celkem položek)"
+msgstr ""
 
 #: inc/menu.class.php:1013
 msgid "Show _MENU_ entries"
-msgstr "Zobrazit položky _MENU_"
+msgstr ""
 
 #: inc/menu.class.php:1017
 msgid "No matching records found"
-msgstr "Nenalezeny žádné odpovídající záznamy"
+msgstr ""
 
 #: inc/menu.class.php:1025
 msgid ": activate to sort column ascending"
-msgstr ": aktivujte pro seřazení sloupce vzestupně"
+msgstr ""
 
 #: inc/menu.class.php:1026
 msgid ": activate to sort column descending"
-msgstr ": aktivujte pro seřazení sloupce sestupně"
+msgstr ""
 
 #: inc/menu.class.php:1032
 msgid "1 row selected"
-msgstr "Vybrán jeden řádek"
+msgstr ""
 
 #: inc/menu.class.php:1035 inc/menu.class.php:1044
 msgid "Close"
-msgstr "Zavřít"
+msgstr "Aizvērt"
 
 #: inc/menu.class.php:1036
 msgid "Maximize"
-msgstr "Maximalizovat"
+msgstr ""
 
 #: inc/menu.class.php:1037
 msgid "Minimize"
-msgstr "Minimalizovat"
+msgstr ""
 
 #: inc/menu.class.php:1038
 msgid "Refresh"
-msgstr "Načíst znovu"
+msgstr ""
 
 #: inc/menu.class.php:1040
 msgid "Column visibility"
-msgstr "Viditelnost sloupce"
+msgstr ""
 
 #: inc/menu.class.php:1046
 msgid "Dashboard saved"
-msgstr "Nástěnka uložena"
+msgstr ""
 
 #: inc/menu.class.php:1047
 msgid "Dashboard not saved"
-msgstr "Nástěnka nebyla uložena"
+msgstr ""
 
 #: inc/menu.class.php:1048
 msgid "Data received for"
-msgstr "Obdržena data pro"
+msgstr ""
 
 #: inc/menu.class.php:1049
 msgid "No data received for"
-msgstr "Neobdržena žádná data pro"
+msgstr ""
 
 #: inc/menu.class.php:1050
 msgid "Updating all widgets"
-msgstr "Aktualizují se všechny miniaplikace"
+msgstr ""
 
 #: inc/menu.class.php:1051
 msgid "Widget added on Dashboard"
-msgstr "Miniaplikace přidána na nástěnku"
+msgstr ""
 
 #: inc/menu.class.php:1166
 msgid "Warning"
-msgstr "Varování"
+msgstr "Brīdinājums"
 
 #: inc/menu.class.php:1167
 msgid "No widgets founded, please add widgets"
-msgstr "Nebyly nalezeny žádné miniaplikace, přidejte nějaké"
+msgstr ""
 
 #: inc/menu.class.php:1191
 msgid "Save grid to see widget"
-msgstr "Pro zobrazení miniaplikace uložte mřížku"
+msgstr ""
 
 #: inc/menu.class.php:1199
 msgid "Delete widget"
-msgstr "Smazat miniaplikaci"
+msgstr ""
 
 #: inc/menu.class.php:1201
 msgid "Refresh widget"
-msgstr "Znovu načíst miniaplikaci"
+msgstr ""
 
 #: inc/module.class.php:144 inc/module.class.php:290
 msgid "notice"
-msgstr "upozornění"
+msgstr ""
 
 #: inc/module.class.php:144 inc/module.class.php:297
 msgid "warning"
-msgstr "varování"
+msgstr ""
 
 #: inc/module.class.php:144 inc/module.class.php:304
 msgid "error"
-msgstr "chyba"
+msgstr ""
 
 #: inc/piechart.class.php:59
 msgid "You can't have more than one serie for a pie chart"
-msgstr "Pro koláčový graf není možné mít více než jednu sérii"
+msgstr ""
 
 #: inc/planning.class.php:164
 msgid "List by day"
-msgstr "Vypsat podle dne"
+msgstr ""
 
 #: inc/planning.class.php:165
 msgid "List by week"
-msgstr "Vypsat podle týdne"
+msgstr ""
 
 #: inc/preference.class.php:95
 msgid "Automatic refreshing of the widgets that can be refreshed"
-msgstr "Automatické obnovování miniaplikací, u kterých je to možné"
+msgstr ""
 
 #: inc/preference.class.php:101
 msgid "Refresh every "
-msgstr "Znovu načíst každých"
+msgstr ""
 
 #: inc/preference.class.php:105
 msgid "minute(s)"
-msgstr "minut"
+msgstr ""
 
 #: inc/preference.class.php:115
 msgid "My prefered group for widget"
-msgstr "Moje upřednostňovaná skupina pro ovládací prvek"
+msgstr ""
 
 #: inc/preference.class.php:125
 msgid "My prefered entity for widget"
-msgstr "Moje upřednostňovaná entita pro ovládací prvek"
+msgstr ""
 
 #: inc/preferenceuserblacklist.class.php:56
 msgid "From which plugins you want to display the widgets?"
-msgstr "Ze kterých zásuvných modulů chcete zobrazovat miniaplikace?"
+msgstr ""
 
 #: inc/profileauthorizedwidget.class.php:88
 msgid "Authorize/Unauthorize all"
-msgstr "Pověřit / zrušit pověření pro vše"
+msgstr ""
 
 #: inc/profile.class.php:45
 msgid "Rights management"
-msgstr "Správa oprávnění"
+msgstr ""
 
 #: inc/profile.class.php:147
 msgid "Full"
-msgstr "Plné"
+msgstr ""
 
 #: inc/profile.class.php:147
 msgid "Custom"
-msgstr "Uživatelem určené"
+msgstr ""
 
 #: inc/profile.class.php:149
 msgid "Dashboard Access"
-msgstr "Přístup k nástěnce"
+msgstr ""
 
 #: inc/profile.class.php:161
 msgid "Configuration Access"
-msgstr "Přístup k nastavení"
+msgstr ""
 
 #: inc/profile.class.php:180 inc/profile.class.php:235
 msgid "Setup stock widget"
@@ -835,30 +827,30 @@ msgstr ""
 
 #: inc/profile.class.php:240
 msgid "See the dashboard"
-msgstr "Zobrazit nástěnku"
+msgstr ""
 
 #: inc/profile.class.php:244
 msgid "See the configuration"
-msgstr "Zobrazit nastavení"
+msgstr ""
 
 #: inc/project.class.php:51 inc/project.class.php:55 inc/project.class.php:94
 #: inc/project.class.php:176 inc/project.class.php:195
 msgid "projects to be processed"
-msgstr "projekty ke zpracování"
+msgstr ""
 
 #: inc/projecttask.class.php:51 inc/projecttask.class.php:55
 #: inc/projecttask.class.php:95 inc/projecttask.class.php:172
 #: inc/projecttask.class.php:192
 msgid "projects tasks to be processed"
-msgstr "projektové úkoly ke zpracování"
+msgstr ""
 
 #: inc/servicecatalog.class.php:58
 msgid "Access"
-msgstr "Přístup"
+msgstr ""
 
 #: inc/servicecatalog.class.php:65
 msgid "Dashboard access"
-msgstr "Přístup k nástěnce"
+msgstr ""
 
 #: inc/stockwidget.class.php:38
 msgid "Stock widget"
@@ -866,7 +858,6 @@ msgid_plural "Stock widgets"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: inc/stockwidget.class.php:50
 msgid "Cannot create alert without a type"
@@ -874,15 +865,15 @@ msgstr ""
 
 #: inc/ticket.class.php:63 inc/ticket.class.php:1145
 msgid "New tickets"
-msgstr "Nové požadavky"
+msgstr ""
 
 #: inc/userwidget.class.php:65
 msgid "user_widget management"
-msgstr "správa user_widget"
+msgstr ""
 
 #: inc/widget.class.php:41
 msgid "Widget management"
-msgstr "Správa miniaplikace"
+msgstr ""
 
 #: inc/widget.class.php:749
 msgid "No equipments founded"
@@ -890,4 +881,4 @@ msgstr ""
 
 #: scripts/clean_stock_tickets.php:85 scripts/insert_stock_tickets.php:56
 msgid "Plugin disabled"
-msgstr "Zásuvný modul vypnut"
+msgstr ""
