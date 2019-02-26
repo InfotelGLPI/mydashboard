@@ -1152,7 +1152,8 @@ class PluginMydashboardMenu extends CommonGLPI {
 
                if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
                   foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-                     if ($widgets[$v["id"]]["id"] == $w) {
+                     if (isset($widgets[$v["id"]]["id"])
+                           && $widgets[$v["id"]]["id"] == $w) {
                         $optjson[$v["id"]]["enableRefresh"] = $r;
                      }
                   }
