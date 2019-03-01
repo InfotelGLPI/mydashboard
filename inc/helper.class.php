@@ -165,7 +165,7 @@ class PluginMydashboardHelper {
 
       $graph = "<div class='bt-row'>";
       $graph .= "<div class='bt-col-md-12 left'>";
-      if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
+      if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
          $graph .= "<a target='_blank' href='".$params["setup"]."'><i class=\"far fa-edit fa-1x\"></i></a>";
       }
       $graph .= "</div>";

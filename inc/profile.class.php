@@ -128,20 +128,19 @@ class PluginMydashboardProfile extends CommonDBTM {
     * @param       $ID
     * @param array $options
     */
-   function showForm($ID, $options = []) {
+   function showForm($profiles_id = 0, $openform = TRUE, $closeform = TRUE) {
       //85
       $profile = new Profile();
-      $profile->getFromDB($ID);
+      $profile->getFromDB($profiles_id);
       if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
          echo "<form method='post' action='" . $profile->getFormURL() . "'>";
       }
 
-      $effective_rights = ProfileRight::getProfileRights($ID, ['plugin_mydashboard_stockwidget','plugin_mydashboard', 'plugin_mydashboard_config']);
+      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget','plugin_mydashboard', 'plugin_mydashboard_config']);
 
       //      Toolbox::logDebug($effective_rights);
       echo "<table class='tab_cadre_fixehov'>";
       echo "<tr class='tab_bg_2'>";
-
       echo "<th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), self::getTypeName(1), $profile->fields["name"]) . "</th>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'><td></td><td>" . __("Full", "mydashboard") . "</td><td>" . __("Custom", "mydashboard") . "</td></tr>";
@@ -166,25 +165,26 @@ class PluginMydashboardProfile extends CommonDBTM {
       echo "<td></td>";
       echo "</tr>";
 
-      $options['candel'] = false;
-      $profile->showFormButtons($options);
-
-      if ($effective_rights["plugin_mydashboard"] == READ) {
-         $authorizedform = new PluginMydashboardProfileAuthorizedWidget();
-         $authorizedform->showForm($ID, ['interface' => $profile->fields["interface"]]);
-      }
-
       $rights = $this->getAllRights();
       $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
                                                     'default_class' => 'tab_bg_2',
                                                     'title'         => __('Setup stock widget', 'mydashboard')]);
 
-      echo "</table>";
-      Html::closeForm();
+      if ($canedit
+          && $closeform) {
+         echo "<div class='center'>";
+         echo Html::hidden('id', array('value' => $profiles_id));
+         echo Html::submit(_sx('button', 'Save'), array('name' => 'update'));
+         echo "</div>\n";
+         Html::closeForm();
+      }
 
-      PluginMydashboardGroupprofile::addGroup($ID, $canedit);
+      PluginMydashboardGroupprofile::addGroup($profiles_id, $canedit);
 
-
+      if ($effective_rights["plugin_mydashboard"] == READ) {
+         $authorizedform = new PluginMydashboardProfileAuthorizedWidget();
+         $authorizedform->showForm($profiles_id, ['interface' => $profile->fields["interface"]]);
+      }
    }
 
 
