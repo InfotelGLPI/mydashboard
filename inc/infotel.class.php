@@ -79,9 +79,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
                                          $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
                                          $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-                                         $this->getType() . "25" => __("Number of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "25" => __("Top ten of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                                          $this->getType() . "26" => __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
-                                         $this->getType() . "27" => __("Top 10 of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "27" => __("Top ten of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
 //                                         $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
@@ -2886,7 +2886,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         WHERE $is_deleted $type_criteria ";
             $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-            $query .= " GROUP BY `groups_id`";
+            $query .= " GROUP BY `groups_id` LIMIT 10";
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
@@ -2911,7 +2911,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened tickets by requester groups", "mydashboard");
+            $title  = __("Top ten of opened tickets by requester groups", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($datas);
@@ -3156,7 +3156,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget = new PluginMydashboardHtml();
-            $title  = __("Top 10 of opened tickets by location", "mydashboard");
+            $title  = __("Top ten of opened tickets by location", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($datas);

@@ -392,14 +392,14 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo "&nbsp;(" . __('Global', 'mydashboard') . ")&nbsp;";
             }
             echo "&nbsp;:&nbsp;";
-            
+
             echo "&nbsp;";
             echo "<a id='load-widgets$rand' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
             echo __('Load widgets', 'mydashboard') . "</a>&nbsp;";
             echo "<i class='fas fa-spinner fa-1x'></i>";
             echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
             echo "&nbsp;";
-            
+
             if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
                self::dropdownProfiles(['value' => $selected_profile]);
             } else {
@@ -545,18 +545,23 @@ class PluginMydashboardMenu extends CommonGLPI {
             $used[] = $v["id"];
          }
       }
-
-      $wl = "<script>
+      $layout = $_SESSION['glpilayout'];
+      $wl     = "<script>
 
             $(document).ready(function () {
+                var layout = '$layout';
+                console.log(layout);
                 //===================Start:Showing Menu=====================================
                 //Showing the menu on click
                 $('.plugin_mydashboard_add_button').on('click', function (e) {
                     //For tabs
-                    //$('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top - 100);
-                    //$('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
-                    $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
-                    $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
+                    if (layout == 'vsplit') {
+                        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top - 100);
+                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
+                    } else {
+                        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
+                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
+                    }
                     $('.plugin_mydashboard_menuDashboard').width(400);
                     $('.plugin_mydashboard_menuDashboard').zIndex(10000);
                     $('.plugin_mydashboard_menuDashboard').show();
@@ -899,9 +904,9 @@ class PluginMydashboardMenu extends CommonGLPI {
                $gsid = $gslist[$widgetId];
                if (!in_array($gsid, $used)) {
                   $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
-                      . " class='plugin_mydashboard_menuDashboardListItem' "
-                      . " data-widgetid='" . $gsid . "'"
-                      . " data-classname='" . $classname . "'>";
+                         . " class='plugin_mydashboard_menuDashboardListItem' "
+                         . " data-widgetid='" . $gsid . "'"
+                         . " data-classname='" . $classname . "'>";
                   $wl .= $widgetTitle;
                   if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
                      $wl .= " (" . $gsid . ")";
@@ -1153,7 +1158,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
                   foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
                      if (isset($widgets[$v["id"]]["id"])
-                           && $widgets[$v["id"]]["id"] == $w) {
+                         && $widgets[$v["id"]]["id"] == $w) {
                         $optjson[$v["id"]]["enableRefresh"] = $r;
                      }
                   }
