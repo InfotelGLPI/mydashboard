@@ -29,6 +29,8 @@
  */
 class PluginMydashboardHelper {
 
+   static private $icons;
+
    /**
     * get the delay between two automatic refreshing
     * @return int
@@ -88,6 +90,23 @@ class PluginMydashboardHelper {
     */
    static function getGoogleApiKey() {
       return self::getConfigField("google_api_key");
+   }
+
+   /**
+    * @return array
+    */
+   static function icons(){
+      if(!isset(self::$icons)){
+         self::$icons = [
+             "table" => "<i class='fa fa-table'></i>",
+             "bar" => "<i class='fa fa-bar-chart'></i>",
+             "pie" => "<i class='fa fa-pie-chart'></i>",
+             "line" => "<i class='fa fa-line-chart'></i>",
+             "map" => "<i class='fa fa-map'></i>",
+             "calendar" => "<i class='fa fa-calendar'></i>",
+             "circle" => "<i class='fa fa-info-circle'></i>"];
+      }
+      return self::$icons;
    }
 
    /**

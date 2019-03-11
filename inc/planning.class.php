@@ -61,10 +61,13 @@ class PluginMydashboardPlanning {
    function getWidgetsForItem() {
 
       if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
+
+         $icons = PluginMydashboardHelper::icons();
+
          return [
             PluginMydashboardMenu::$TICKET_TECHVIEW =>
                [
-                  "planningwidget" => __('Your planning') . "&nbsp;<i class='fa fa-calendar'></i>",
+                  "planningwidget" => $icons["calendar"]. "&nbsp;" . __('Your planning'),
                ]
          ];
       }

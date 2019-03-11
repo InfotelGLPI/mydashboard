@@ -87,17 +87,20 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return array
     */
    function getWidgetsForItem() {
+
+      $icons = PluginMydashboardHelper::icons();
+
       return [
          _n('Alert', 'Alerts', 2, 'mydashboard') => [
-            $this->getType() . "1" => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "2" => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "3" => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "4" => __("Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "5" => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "6" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "7" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "8" => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "9" => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+            $this->getType() . "1" => $icons["circle"] . "&nbsp;" . _n('Network alert', 'Network alerts', 2, 'mydashboard'),
+            $this->getType() . "2" => $icons["circle"] . "&nbsp;" . _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
+            $this->getType() . "3" => $icons["circle"] . "&nbsp;" . _n('Information', 'Informations', 2, 'mydashboard'),
+            $this->getType() . "4" => $icons["circle"] . "&nbsp;" . __("Incidents alerts", "mydashboard"),
+            $this->getType() . "5" => $icons["circle"] . "&nbsp;" . __("SLA Incidents alerts", "mydashboard"),
+            $this->getType() . "6" => $icons["circle"] . "&nbsp;" . __("GLPI Status", "mydashboard"),
+            $this->getType() . "7" => $icons["table"] . "&nbsp;" . __("User ticket alerts", "mydashboard"),
+            $this->getType() . "8" => $icons["table"] . "&nbsp;" . __('Automatic actions in error', 'mydashboard'),
+            $this->getType() . "9" => $icons["table"] . "&nbsp;" . __("Not imported mails in collectors", "mydashboard"),
          ]
       ];
    }

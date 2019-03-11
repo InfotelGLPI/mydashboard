@@ -43,17 +43,17 @@ class PluginMydashboardRSSFeed {
    function getWidgetsForItem() {
 
       $array = [];
-
+      $icons = PluginMydashboardHelper::icons();
       if (Session::getCurrentInterface() != 'helpdesk') {
          $array = [
             PluginMydashboardMenu::$RSS_VIEW =>
                [
-                  "rssfeedpersonalwidget" => _n('Personal RSS feed', 'Personal RSS feeds', 2) . "&nbsp;<i class='fa fa-table'></i>"
+                  "rssfeedpersonalwidget" => $icons["table"] . "&nbsp;" . _n('Personal RSS feed', 'Personal RSS feeds', 2)
                ]
          ];
       }
       if (Session::haveRight("rssfeed_public", READ)) {
-         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = _n('Public RSS feed', 'Public RSS feeds', 2) . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = $icons["table"] . "&nbsp;" . _n('Public RSS feed', 'Public RSS feeds', 2);
       }
       return $array;
    }

@@ -56,6 +56,9 @@ class PluginMydashboardEvent extends Glpi\Event {
    function getWidgetsForItem() {
       $array = [];
       if (Session::haveRight("logs", READ)) {
+
+         $icons = PluginMydashboardHelper::icons();
+
          $array = [
          //            PluginMydashboardMenu::$MY_VIEW =>
          //               array(
@@ -63,7 +66,7 @@ class PluginMydashboardEvent extends Glpi\Event {
          //               ),
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "&nbsp;<i class='fa fa-table'></i>"
+                  "eventwidgetglobal" => $icons["table"] . "&nbsp;" . sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
                ]
          ];
       }

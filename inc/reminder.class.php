@@ -37,16 +37,19 @@ class PluginMydashboardReminder {
     */
    function getWidgetsForItem() {
       $array = [];
+
+      $icons = PluginMydashboardHelper::icons();
+
       if (Session::getCurrentInterface() != 'helpdesk') {
          $array = [
             PluginMydashboardMenu::$MY_VIEW =>
                [
-                  "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2) . "&nbsp;<i class='fa fa-table'></i>"
+                  "reminderpersonalwidget" => $icons["table"] . "&nbsp;" . _n('Personal reminder', 'Personal reminders', 2)
                ]
          ];
       }
       if (Session::haveRight("reminder_public", READ)) {
-         $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2) . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = $icons["table"] . "&nbsp;" . _n('Public reminder', 'Public reminders', 2);
       }
       return $array;
    }

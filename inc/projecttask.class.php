@@ -45,14 +45,17 @@ class PluginMydashboardProjecttask {
       $showprojecttask = Session::haveRightsOr('projecttask', [Projecttask::READMY]);
 
       if ($showprojecttask) {
+
+         $icons = PluginMydashboardHelper::icons();
+
          $array = [
             PluginMydashboardMenu::$PROJECT_VIEW =>
                [
-                  "projecttaskprocesswidget" => __('projects tasks to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                  "projecttaskprocesswidget" => $icons["table"] . "&nbsp;" . __('projects tasks to be processed', 'mydashboard'),
                ],
             PluginMydashboardMenu::$GROUP_VIEW =>
                [
-                  "projecttaskprocesswidgetgroup" => __('projects tasks to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                  "projecttaskprocesswidgetgroup" => $icons["table"] . "&nbsp;" . __('projects tasks to be processed', 'mydashboard'),
 
                ]
          ];

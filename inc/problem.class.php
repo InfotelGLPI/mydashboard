@@ -46,20 +46,23 @@ class PluginMydashboardProblem {
       $showproblem = Session::haveRightsOr('problem', [Problem::READALL, Problem::READMY]);
 
       if ($showproblem) {
+
+         $icons = PluginMydashboardHelper::icons();
+
          $array = [
             PluginMydashboardMenu::$PROBLEM_VIEW =>
                [
-                  "problemprocesswidget" => __('Problems to be processed') . "&nbsp;<i class='fa fa-table'></i>",
-                  "problemwaitingwidget" => __('Problems on pending status') . "&nbsp;<i class='fa fa-table'></i>"
+                  "problemprocesswidget" => $icons["table"] . "&nbsp;" . __('Problems to be processed'),
+                  "problemwaitingwidget" => $icons["table"] . "&nbsp;" . __('Problems on pending status')
                ],
             PluginMydashboardMenu::$GROUP_VIEW =>
                [
-                  "problemprocesswidgetgroup" => __('Problems to be processed') . "&nbsp;<i class='fa fa-table'></i>",
-                  "problemwaitingwidgetgroup" => __('Problems on pending status') . "&nbsp;<i class='fa fa-table'></i>"
+                  "problemprocesswidgetgroup" => $icons["table"] . "&nbsp;" . __('Problems to be processed'),
+                  "problemwaitingwidgetgroup" => $icons["table"] . "&nbsp;" . __('Problems on pending status')
                ],
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "problemcountwidget" => __('Problem followup') . "&nbsp;<i class='fa fa-table'></i>"
+                  "problemcountwidget" => $icons["table"] . "&nbsp;" . __('Problem followup')
                ]
          ];
       }

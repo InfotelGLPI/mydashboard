@@ -31,6 +31,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
    private $options;
    private $pref;
+   private $widgets;
 
    /**
     * PluginMydashboardInfotel constructor.
@@ -53,41 +54,47 @@ class PluginMydashboardInfotel extends CommonGLPI {
     * @return array
     */
    public function getWidgetsForItem() {
+
+      $icons = PluginMydashboardHelper::icons();
+
       return [
-         __('Public')                => [$this->getType() . "3"  => __("Internal annuary", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-                                         //                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "5"  => __("Fields unicity") . "&nbsp;<i class='fa fa-table'></i>",
-                                         //                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                                         //                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-                                         //                                         $this->getType() . "11" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-                                         $this->getType() . "14" => __("All unpublished articles") . "&nbsp;<i class='fa fa-table'></i>",
-                                         //                                              $this->getType() . "19" => __("Tickets alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-         ],
-         __('Charts', "mydashboard") => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "6"  => __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
-                                         $this->getType() . "7"  => __("Top ten ticket requesters by month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "8"  => __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "12" => __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "13" => __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "15" => __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "16" => __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "17" => __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "18" => __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "20" => __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "21" => __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
-                                         $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "25" => __("Number of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "26" => __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "27" => __("Top 10 of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
-                                         $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
-                                         $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
-         ]
+          __('Public') => [
+              $this->getType() . "3"  => $icons["table"]. "&nbsp;" . __("Internal annuary", "mydashboard"),
+             //                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;$tableIcon",
+              $this->getType() . "5"  => $icons["table"]. "&nbsp;" . __("Fields unicity"),
+             //                                         $this->getType() . "9"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;$tableIcon",
+             //                                         $this->getType() . "10" => __("User ticket alerts", "mydashboard") . "&nbsp;$tableIcon",
+             //                                         $this->getType() . "11" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+              $this->getType() . "14" => $icons["table"]. "&nbsp;" . __("All unpublished articles"),
+             //                                              $this->getType() . "19" => __("Tickets alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+          ],
+          __('Charts', "mydashboard") => [
+              $this->getType() . "1"  => $icons["bar"] . "&nbsp;" . __("Opened tickets backlog", "mydashboard"),
+              $this->getType() . "2"  => $icons["pie"] . "&nbsp;" . __("Number of opened tickets by priority", "mydashboard"),
+              $this->getType() . "6"  => $icons["line"] . "&nbsp;" . __("Tickets stock by month", "mydashboard"),
+              $this->getType() . "7"  => $icons["pie"] . "&nbsp;" . __("Top ten ticket requesters by month", "mydashboard"),
+              $this->getType() . "8"  => $icons["bar"] . "&nbsp;" . __("Process time by technicians by month", "mydashboard"),
+              $this->getType() . "12" => $icons["pie"] . "&nbsp;" . __("TTR Compliance", "mydashboard"),
+              $this->getType() . "13" => $icons["pie"] . "&nbsp;" . __("TTO Compliance", "mydashboard"),
+              $this->getType() . "15" => $icons["pie"] . "&nbsp;" . __("Top ten ticket categories by type of ticket", "mydashboard"),
+              $this->getType() . "16" => $icons["pie"] . "&nbsp;" . __("Number of opened incidents by category", "mydashboard"),
+              $this->getType() . "17" => $icons["pie"] . "&nbsp;" . __("Number of opened requests by category", "mydashboard"),
+              $this->getType() . "18" => $icons["pie"] . "&nbsp;" . __("Number of opened and closed tickets by month", "mydashboard"),
+              $this->getType() . "20" => $icons["pie"] . "&nbsp;" . __("Percent of use of solution types", "mydashboard"),
+              $this->getType() . "21" => $icons["bar"] . "&nbsp;" . __("Number of tickets affected by technicians by month", "mydashboard"),
+              $this->getType() . "22" => $icons["line"] . "&nbsp;" . __("Number of opened and solved tickets by month", "mydashboard"),
+              $this->getType() . "23" => $icons["bar"] . "&nbsp;" . __("Average real duration of treatment of the ticket", "mydashboard"),
+              $this->getType() . "24" => $icons["bar"] . "&nbsp;" . __("Top ten technicians (by tickets number)", "mydashboard"),
+              $this->getType() . "25" => $icons["pie"] . "&nbsp;" . __("Number of opened tickets by requester groups", "mydashboard"),
+              $this->getType() . "26" => $icons["pie"] . "&nbsp;" . __("Global satisfaction level", "mydashboard"),
+              $this->getType() . "27" => $icons["pie"] . "&nbsp;" . __("Top 10 of opened tickets by location", "mydashboard"),
+              $this->getType() . "28" => $icons["map"] . "&nbsp;" . __("Map - Opened tickets by location", "mydashboard"),
+              $this->getType() . "29" => $icons["map"] . "&nbsp;" . __("OpenStreetMap - Opened tickets by location", "mydashboard"),
+              $this->getType() . "30" => $icons["pie"] . "&nbsp;" . __("Number of use of request sources", "mydashboard"),
+              $this->getType() . "31" => $icons["line"] . "&nbsp;" . __("Tickets request sources evolution", "mydashboard"),
+          ]
       ];
+
    }
 
    public function cronMydashboardInfotelUpdateStockTicket() {

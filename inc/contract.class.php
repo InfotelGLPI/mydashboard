@@ -42,10 +42,13 @@ class PluginMydashboardContract {
     */
    function getWidgetsForItem() {
       if (Session::haveRight("contract", READ)) {
+
+         $icons = PluginMydashboardHelper::icons();
+
          return [
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "contractwidget" => Contract::getTypeName(1) . "&nbsp;<i class='fa fa-table'></i>"
+                  "contractwidget" => $icons["table"] . "&nbsp;" . Contract::getTypeName(1)
                ]
          ];
       }

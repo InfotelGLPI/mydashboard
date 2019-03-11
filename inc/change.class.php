@@ -45,21 +45,24 @@ class PluginMydashboardChange {
       $showchange = Session::haveRightsOr('change', [Change::READALL, Change::READMY]);
 
       if ($showchange) {
+
+         $icons = PluginMydashboardHelper::icons();
+
          $array = [
             PluginMydashboardMenu::$CHANGE_VIEW =>
                [
-                  "changeprocesswidget" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "changeprocesswidget" => $icons["table"] . "&nbsp;" . __('Changes to be processed', 'mydashboard'),
+                  "changewaitingwidget" => $icons["table"] . "&nbsp;" . __('Changes on pending status', 'mydashboard')
                ],
             PluginMydashboardMenu::$GROUP_VIEW =>
                [
-                  "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                  "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "changeprocesswidgetgroup" => $icons["table"] . "&nbsp;" . __('Changes to be processed', 'mydashboard'),
+                  "changewaitingwidgetgroup" => $icons["table"] . "&nbsp;" . __('Changes on pending status', 'mydashboard')
 
                ],
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "changecountwidget" => __('Change followup', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "changecountwidget" => $icons["table"] . "&nbsp;" . __('Change followup', 'mydashboard')
                ]
          ];
       }

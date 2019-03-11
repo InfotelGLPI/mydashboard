@@ -46,41 +46,45 @@ class PluginMydashboardTicket {
 
       $array = [];
 
+      $icons = PluginMydashboardHelper::icons();
+
       $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW] =
-         [
-            "ticketlistrequestbyselfwidget" => __('Your tickets in progress') . "&nbsp;<i class='fa fa-table'></i>",
-            "ticketlistobservedwidget"      => __('Your observed tickets') . "&nbsp;<i class='fa fa-table'></i>",
-            "ticketlistrejectedwidget"      => __('Your rejected tickets') . "&nbsp;<i class='fa fa-table'></i>",
-            "ticketlisttoapprovewidget"     => __('Your tickets to close') . "&nbsp;<i class='fa fa-table'></i>",
-            "ticketlistsurveywidget"        => __('Satisfaction survey') . "&nbsp;<i class='fa fa-table'></i>",
-         ];
+          [
+              "ticketlistrequestbyselfwidget" => $icons["table"]. "&nbsp;" . __('Your tickets in progress'),
+              "ticketlistobservedwidget"      => $icons["table"]. "&nbsp;" . __('Your observed tickets'),
+              "ticketlistrejectedwidget"      => $icons["table"]. "&nbsp;" . __('Your rejected tickets'),
+              "ticketlisttoapprovewidget"     => $icons["table"]. "&nbsp;" . __('Your tickets to close'),
+              "ticketlistsurveywidget"        => $icons["table"]. "&nbsp;" . __('Satisfaction survey'),
+          ];
 
       if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
-         $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = __('Your tickets to validate') . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = $icons["table"]. "&nbsp;" . __('Your tickets to validate');
       }
 
       if ($showticket) {
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketcountwidget2"] = __('New tickets', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = __('Tickets to be processed') . "&nbsp;<i class='fa fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = __('Tickets on pending status') . "&nbsp;<i class='fa fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["tickettaskstodowidget"]   = __("Ticket tasks to do") . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$TICKET_TECHVIEW] = [
+            "ticketcountwidget2" => $icons["table"]. "&nbsp;" . __('New tickets', 'mydashboard'),
+            "ticketlistprocesswidget" => $icons["table"]. "&nbsp;" . __('Tickets to be processed'),
+            "ticketlistwaitingwidget" => $icons["table"]. "&nbsp;" . __('Tickets on pending status'),
+            "tickettaskstodowidget" => $icons["table"]. "&nbsp;" . __("Ticket tasks to do")
+         ];
       }
 
       if (Session::haveRight('ticket', Ticket::READGROUP)) {
          $array[PluginMydashboardMenu::$GROUP_VIEW] =
             [
-               "ticketlistwaitingwidgetgroup"       => __('Tickets on pending status') . "&nbsp;<i class='fa fa-table'></i>",
-               "ticketlisttoapprovewidgetgroup"     => __('Your tickets to close') . "&nbsp;<i class='fa fa-table'></i>",
-               "ticketlistrequestbyselfwidgetgroup" => __('Your tickets in progress') . "&nbsp;<i class='fa fa-table'></i>",
-               "ticketlistobservedwidgetgroup"      => __('Your observed tickets') . "&nbsp;<i class='fa fa-table'></i>"
+               "ticketlistwaitingwidgetgroup"       => $icons["table"]. "&nbsp;" . __('Tickets on pending status'),
+               "ticketlisttoapprovewidgetgroup"     => $icons["table"]. "&nbsp;" . __('Your tickets to close'),
+               "ticketlistrequestbyselfwidgetgroup" => $icons["table"]. "&nbsp;" . __('Your tickets in progress'),
+               "ticketlistobservedwidgetgroup"      => $icons["table"]. "&nbsp;" . __('Your observed tickets')
             ];
       }
       if ($showticket) {
-         $array[PluginMydashboardMenu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = __('Tickets to be processed') . "&nbsp;<i class='fa fa-table'></i>";
-         $array[PluginMydashboardMenu::$GROUP_VIEW]["tickettaskstodowidgetgroup"]   = __("Ticket tasks to do") . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = $icons["table"]. "&nbsp;" . __('Tickets to be processed');
+         $array[PluginMydashboardMenu::$GROUP_VIEW]["tickettaskstodowidgetgroup"]   = $icons["table"]. "&nbsp;" . __("Ticket tasks to do");
       }
       if ($showticket || $createticket) {
-         $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = __('Ticket followup') . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = $icons["table"]. "&nbsp;" . __('Ticket followup');
       }
 
       return $array;

@@ -46,11 +46,14 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
     * @return array
     */
    public function getWidgetsForItem() {
+
+      $icons = PluginMydashboardHelper::icons();
+
       return [
          PluginMydashboardMenu::$GLOBAL_VIEW => [
-            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions') . "&nbsp;<i class='fa fa-table'></i>",
-            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries') . "&nbsp;<i class='fa fa-table'></i>",
-            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries') . "&nbsp;<i class='fa fa-table'></i>"
+            "knowbaseitempopular" => $icons["table"] . "&nbsp;" . __('FAQ') . " - " . __('Most popular questions'),
+            "knowbaseitemrecent" => $icons["table"] . "&nbsp;" . __('FAQ') . " - " . __('Recent entries'),
+            "knowbaseitemlastupdate" => $icons["table"] . "&nbsp;" . __('FAQ') . " - " . __('Last updated entries')
          ]
 
       ];
