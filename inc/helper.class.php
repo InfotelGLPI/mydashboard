@@ -30,7 +30,6 @@
 class PluginMydashboardHelper {
 
    static private $icons;
-
    /**
     * get the delay between two automatic refreshing
     * @return int
@@ -107,6 +106,319 @@ class PluginMydashboardHelper {
              "circle" => "<i class='fa fa-info-circle'></i>"];
       }
       return self::$icons;
+   }
+
+   /**
+    * @param $graph
+    * @param $id MUST BE UNIQUE
+    * @param $graphType
+    * @param array $options
+    * @return bool
+    */
+   static function graph(&$graph, $type, $widgetId, $results, $events, $infos, $crit){
+
+      global $CFG_GLPI;
+      $url = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL2.php";
+
+      $graph = "";
+
+      switch($type){
+         case 'pie':{
+            $graph .= self::pieGraph($url, $widgetId, $results, $events, $infos, $crit);
+            break;
+         }
+         case 'bar':{
+            $graph .= self::barGraph($url, $widgetId, $results, $events, $infos, $crit);
+            break;
+         }
+         case 'polarArea':{
+
+         }
+         case 'doughtnut':{
+
+         }
+         case 'line':{
+
+         }
+         case 'horizontalBar':{
+
+         }
+      }
+
+      return true;
+   }
+
+   private static function pieGraph($url, $widgetId, $results, $events, $infos, $crit){
+
+      $entities_id_criteria = null;
+      $sons_criteria        = null;
+
+      if(isset($crit['entity']) && isset($crit['sons'])){
+         $entities_id_criteria = $crit['entity'];
+         $sons_criteria        = $crit['sons'];
+      }
+
+      $dataPieset = json_encode($results['datas']);
+      $backgroundPieColor = json_encode($results['colors']);
+      $labelsPie = json_encode($results['name']);
+
+      $tab = "";
+      switch($infos['filter']){
+         case "CATEGORY":{
+            $tab = $infos['values']['category_id'];
+            break;
+         }
+         case "PRIORITY":{
+            $tab = $infos['values']['priority_id'];
+            break;
+         }
+      }
+      //Toolbox::logDebug($tab);
+
+      unset($infos['values']);
+      $ajaxPostDatas = json_encode($infos);
+
+      $fctName = $widgetId."Pie";
+      $divName = $widgetId."PieChart";
+
+      $onclick = "";
+      $hover = "";
+      $tooltip = "";
+
+      if($events['onclick']){
+         $onclick =
+             "canvas.onclick = function(evt) {
+             var activePoints = $divName.getElementsAtEvent(evt);
+             if (activePoints[0]) {
+                var chartData = activePoints[0]['_chart'].config.data;
+                var idx = activePoints[0]['_index'];
+                var label = chartData.labels[idx];
+                var value = chartData.datasets[0].data[idx];
+                var selection = ".$tab."[idx];
+                $.ajax({
+                   url: '" . $url . "',
+                   type: 'POST',
+                   data:{
+                      entities_id:$entities_id_criteria, 
+                      sons:$sons_criteria, 
+                      infos:$ajaxPostDatas,
+                      selection:selection,
+                      widget:'$widgetId'},
+                   success:function(response) {
+                      window.open(response);
+                   }
+                });
+             }
+          };";
+      }
+
+      if($events['hover']){
+         $hover =
+             "hover: {
+                onHover: function(event,elements) {
+                   $('#$divName').css('cursor', elements[0] ? 'pointer' : 'default');
+                }
+             }";
+      }
+
+      if($events['tooltip']){
+         $tooltip =
+             "tooltips: {
+                mode: 'label',
+                callbacks: {
+                   label: function(tooltipItem, data) {
+                      return data['datasets'][0]['data'][tooltipItem['index']] + ' %';
+                   }
+                }
+             },";
+      }
+
+      return
+          "<script type='text/javascript'>
+         
+            var $fctName = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('$divName');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var $divName = new Chart(ctx, {
+                  type: 'pie',
+                  data: $fctName,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    $tooltip
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                    },
+                    $hover 
+                   }
+                });
+            
+                $onclick
+              }
+            );
+                
+             </script>";
+   }
+
+   private static function barGraph($url, $widgetId, $results, $events, $infos, $crit){
+
+      $entities_id_criteria = null;
+      $sons_criteria        = null;
+
+      if(isset($crit['entity']) && isset($crit['sons'])){
+         $entities_id_criteria = $crit['entity'];
+         $sons_criteria        = $crit['sons'];
+      }
+
+      $datasets = "";
+      for($it = 0 ; $it < count($results['datas']) ; $it++){
+         $temp = [
+            "label" => $results['name'][$it],
+            "data" => $results['datas'][$it],
+            "backgroundColor"  => $results['colors'][$it],
+         ];
+         $datasets .= json_encode($temp) . ",";
+      }
+
+      $labelsback = $infos['values']['label'];
+      $tabdatesset = json_encode($results['tab']);
+
+      $fctName = $widgetId."Bar";
+      $divName = $widgetId."BarChart";
+
+      unset($infos['values']);
+      $ajaxPostDatas = json_encode($infos);
+
+      $onclick = "";
+      $hover = "";
+      $tooltip = "";
+      $animation =
+          "animation: {
+              onComplete: function() {
+                 isChartRendered = true
+              }
+           },";
+
+      if($events['onclick']){
+         $onclick =
+             "canvas.onclick = function(evt) {
+                var activePoints = $divName.getElementsAtEvent(evt);
+                if (activePoints[0]) {
+                   var chartData = activePoints[0]['_chart'].config.data;
+                   var idx = activePoints[0]['_index'];
+                   var label = chartData.labels[idx];
+                   var value = chartData.datasets[0].data[idx];                   
+                   $.ajax({
+                      url: '" . $url . "',
+                      type: 'POST',
+                      data:{                                        
+                         infos:$ajaxPostDatas,
+                         selection:" . $tabdatesset . "[idx],
+                         entities_id:$entities_id_criteria, 
+                         sons:$sons_criteria, 
+                         widget:'$widgetId'},
+                      success:function(response) {
+                         window.open(response);
+                      }
+                   });
+                }
+             };";
+      }
+
+      if($events['hover']){
+         $hover =
+             "hover: {
+                onHover: function(event,elements) {
+                   $('#$divName').css('cursor', elements[0] ? 'pointer' : 'default');
+                }
+             }";
+      }
+
+      if($events['tooltip']){
+         $tooltip =
+             "tooltips: {
+                mode: 'index',
+                intersect: false
+             },";
+      }
+
+      if(isset($events['animation']) && $events['animation']){
+         $animation =
+             "animation: {
+                 onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+                    Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                              
+                    this.data.datasets.forEach(function (dataset, i) {
+                    var meta = chartInstance.controller.getDatasetMeta(i);
+                       meta.data.forEach(function (bar, index) {
+                          var data = dataset.data[index];                            
+                          ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                       });
+                    });
+                    isChartRendered = true;
+                 }
+              },";
+      }
+
+      return
+          "<script type='text/javascript'>
+             var $fctName = {
+                datasets: [$datasets],
+                labels: $labelsback
+             };                     
+             $(document).ready(
+                function () {
+                   var isChartRendered = false;
+                   var canvas = document . getElementById('$divName');
+                   var ctx = canvas . getContext('2d');
+                   ctx.canvas.width = 700;
+                   ctx.canvas.height = 400;
+                   var $divName = new Chart(ctx, {
+                      type: 'bar',
+                      data: $fctName,
+                      options: {
+                         responsive:true,
+                         maintainAspectRatio: true,
+                         title:{
+                            display:false,
+                            text:'$divName'
+                         },
+                         $tooltip
+                         scales: {
+                            xAxes: [{
+                               stacked: true,
+                            }],
+                            yAxes: [{
+                               stacked: true
+                            }]
+                         },
+                         $animation                                      
+                         $hover
+                      }
+                   });
+                   $onclick
+                }
+             );
+                     
+          </script>";
    }
 
    /**
