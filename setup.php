@@ -121,6 +121,8 @@ function plugin_init_mydashboard() {
             Plugin::registerClass('PluginMydashboardAlert',
                                   ['addtabon' => ['Reminder', 'Problem']]);
 
+            Plugin::registerClass('PluginMydashboardHTMLEditor', ['addtabon' => 'PluginMydashboardCustomswidget']);
+
          }
 
       }

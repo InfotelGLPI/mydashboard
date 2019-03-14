@@ -38,7 +38,7 @@ function plugin_mydashboard_install() {
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.4.sql");
 
       PluginMydashboardMenu::installWidgets();
    }
@@ -150,6 +150,12 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
+   if(!$DB->tableExists("glpi_plugin_mydashboard_customswidgets","id")) {
+      $mig = new Migration("1.6.4");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.4.sql");
+      $mig->executeMigration();
+   }
+
 
 
    //If default configuration is not loaded
@@ -204,7 +210,7 @@ function plugin_mydashboard_uninstall() {
    global $DB;
 
    // Plugin tables deletion
-   $tables = [/*"glpi_plugin_mydashboard_profiles",*/
+   $tables = [
                    "glpi_plugin_mydashboard_profileauthorizedwidgets",
                    "glpi_plugin_mydashboard_widgets",
                    "glpi_plugin_mydashboard_userwidgets",
@@ -215,7 +221,8 @@ function plugin_mydashboard_uninstall() {
                    "glpi_plugin_mydashboard_stocktickets",
                    "glpi_plugin_mydashboard_problemalerts",
                    "glpi_plugin_mydashboard_dashboards",
-                   "glpi_plugin_mydashboard_groupprofiles"];
+                   "glpi_plugin_mydashboard_groupprofiles",
+                   "glpi_plugin_mydashboard_customswidgets"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -272,4 +279,17 @@ function plugin_mydashboard_display_login() {
 function plugin_mydashboard_getDatabaseRelations() {
 
    return [];
+}
+
+// Define Dropdown tables to be manage in GLPI
+function plugin_mydashboard_getDropdown() {
+
+   $plugin = new Plugin();
+
+   if ($plugin->isActivated("mydashboard")) {
+      return [
+          'PluginMydashboardCustomswidget' => PluginMydashboardCustomswidget::getTypeName(2),];
+   } else {
+      return [];
+   }
 }
