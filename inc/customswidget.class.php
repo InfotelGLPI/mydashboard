@@ -49,7 +49,8 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
 
    /**
     * Display tab for each customwidget
-    * */
+    * @override
+    */
    function defineTabs($options = []) {
       $ong = [];
 
@@ -58,5 +59,52 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
       return $ong;
    }
 
+   static function listCustomsWidgets(){
 
+      $customsWidgets = [];
+
+      global $DB;
+
+      $query = "SELECT * from ".PluginMydashboardCustomswidget::getTable();
+
+      $result = $DB->query($query);
+
+      while ($data = $DB->fetch_assoc($result)) {
+         $customsWidgets[] = $data;
+      }
+
+      return $customsWidgets;
+   }
+
+   static function checkCustomWidgetExist($id){
+      global $DB;
+
+      $query = "SELECT count(*) as count from ".PluginMydashboardCustomswidget::getTable();
+      $query .= " WHERE id=".$id;
+
+      $result = $DB->query($query);
+
+      $data2       = $DB->fetch_array($result);
+      return $data2['count'] > 0;
+   }
+
+   static private function getCustomWidgetById($id){
+      global $DB;
+
+      $query = "SELECT * from ".PluginMydashboardCustomswidget::getTable();
+      $query .= " WHERE id=".$id;
+
+      $result = $DB->query($query);
+
+      while ($data = $DB->fetch_assoc($result)) {
+         return $data;
+      }
+      return null;
+   }
+
+   static function getCustomWidget($id){
+      $temp = self::getCustomWidgetById($id);
+
+      return $temp;
+   }
 }
