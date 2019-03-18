@@ -177,28 +177,26 @@ function insertDefaultTitles(){
    $endTitle =' </p>';
 
    // Insert default title in table customwidgets
-   $res1 = $DB->insert("glpi_plugin_mydashboard_customswidgets",
+   $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
            'name' => __('Incidents'),
            'content' => $startTitle . __("Traitement des incidents") . $endTitle,
            'comment' => ''
        ]);
 
-   $res2 = $DB->insert("glpi_plugin_mydashboard_customswidgets",
+   $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
            'name' => __('Demandes'),
            'content' => $startTitle . __("Traitement des demandes") . $endTitle,
            'comment' => ''
        ]);
 
-   $res3 = $DB->insert("glpi_plugin_mydashboard_customswidgets",
+   $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
            'name' => __('Problèmes'),
            'content' => $startTitle . __("Traitement des problèmes") . $endTitle,
            'comment' => ''
        ]);
-
-   Toolbox::logDebug("\n$res1\n"."\n$res2\n"."\n$res3\n");
 }
 
 function fillTableMydashboardStocktickets() {
