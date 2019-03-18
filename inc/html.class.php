@@ -29,15 +29,16 @@
  */
 class PluginMydashboardHtml extends PluginMydashboardModule
 {
-
    static $rightname = "plugin_mydashboard";
 
    /**
     * PluginMydashboardHtml constructor.
     */
-   function __construct() {
+   function __construct($titleVisibility = true) {
       $this->setWidgetType("html");
       $this->toggleOnlyHTML();
+
+      $this->titleVisibility = $titleVisibility;
    }
 
    /**

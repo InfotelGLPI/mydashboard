@@ -53,7 +53,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
     * @return array
     */
    public function getWidgetsForItem() {
-      return [
+
+      $widgets = [
          __('Public')                => [$this->getType() . "3"  => __("Internal annuary", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
                                          //                                         $this->getType() . "4"  => __("Mails collector", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
                                          $this->getType() . "5"  => __("Fields unicity") . "&nbsp;<i class='fa fa-table'></i>",
@@ -85,9 +86,18 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>"
+                                         $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
          ]
       ];
+
+      $customsWidgets = PluginMydashboardCustomswidget::listCustomsWidgets();
+      if(!empty($customsWidgets)){
+
+         foreach($customsWidgets as $customWidget){
+            $widgets[__('Custom Widgets')][$this->getType() . "cw".$customWidget['id']] = $customWidget['name'];
+         }
+      }
+      return $widgets;
    }
 
    public function cronMydashboardInfotelUpdateStockTicket() {
@@ -4024,6 +4034,38 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             break;
 
+         default:{
+            // It's a custom widget
+            if(strpos($widgetId, "cw")){
+
+               // Last letter of widgetId is customWidget index in database
+               $id = intval(substr($widgetId, -1));
+
+               $content = PluginMydashboardCustomswidget::getCustomWidget($id);
+
+               $widget = new PluginMydashboardHtml(false);
+
+               $widget->setWidgetTitle("");
+
+               $htmlContent = html_entity_decode($content['content']) ;
+
+               // Edit style to avoid padding, margin, and limited width
+
+               $htmlContent .= "<script>
+                $( document ).ready(function() {
+                    let $widgetId = document.getElementById('$widgetId');
+                    ".$widgetId.".children[0].style.marginTop = '-10px';
+                    ".$widgetId.".children[0].children[0].classList.remove('bt-col-md-11');
+                    ".$widgetId.".children[0].children[0].classList.add('bt-col-md-12');
+                    ".$widgetId.".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';
+                });
+                </script>";
+
+               $widget->setWidgetHtmlContent($htmlContent);
+
+               return $widget;
+            }
+         }
       }
    }
 

@@ -175,29 +175,6 @@ class PluginMydashboardWidget extends CommonDBTM {
    /**
     * @param $id
     *
-    * @return array|string
-    */
-//   static function getWidgetOptions($id, $widgets) {
-//      global $CFG_GLPI;
-//
-//      if (isset($widgets[$id])) {
-//         return self::getAllOptions($widgets[$id]["class"], $widgets[$id]["id"], []);
-//      }
-//
-//      $message = __('No data available', 'mydashboard');
-//      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-//         $message .= " - " . $id;
-//      }
-//      $msg = "<div class='center'><br><br>";
-//      $msg .= Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-//      $msg .= "<br><br><span class='b'>$message</span></div>";
-//
-//      return $msg;
-//   }
-
-   /**
-    * @param $id
-    *
     * @return bool
     */
    static function getGsID($id) {
@@ -250,14 +227,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $scripts = $widget->getWidgetScripts();
                $scripts = implode($scripts, "");
 
-               //            $jsondatas = $widget->getJSonDatas();
-               //            $widgetContent = json_decode($jsondatas);
-               //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
                //We prepare a "JSon object" compatible with sDashboard
                $widgetTitle = $widget->getWidgetTitle();
-               //               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-               //                  $widgetTitle .= " (" . $widget->getWidgetId() . ")";
-               //               }
                $json =
                   [
                      "widgetTitle"     => $widgetTitle,
@@ -274,7 +245,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                $_SESSION["glpi_plugin_mydashboard_widgets"][$widget->getWidgetId()] = json_decode($widget->getWidgetEnableRefresh());
                //safeJson because refreshCallBack must be a javascript function not a string,
                // not a string, but a function in a json object is not valid
-               //               Toolbox::logDebug($json);
                $menu  = new PluginMydashboardMenu();
                $views = $menu->getViewNames();
                $view  = -1;
@@ -284,6 +254,7 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                $type    = $json['widgetType'];
                $title   = $json['widgetTitle'];
+
                $comment = $json['widgetComment'];
                if (isset($view) && $view != -1) {
                   $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
@@ -435,26 +406,26 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $widgetdisplay = "";
                }
                $delclass = "";
-               //               if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-               //                   || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-               //                  $delclass = "delclass";
-               //               }
 
                $widgetdisplay .= "<div id='$widgetindex'>";
                $widgetdisplay .= "<div class=\"bt-row $delclass\">";
                $widgetdisplay .= "<div class=\"bt-feature $class \">";
-               $widgetdisplay .= "<h5 class=\"bt-title-divider\">";
-               $widgetdisplay .= "<span>";
-               $widgetdisplay .= $title;
-               if ($comment != "") {
-                  $widgetdisplay .= "&nbsp;";
-                  $opt           = ['awesome-class' => 'fa-info-circle',
-                                    'display'       => false];
-                  $widgetdisplay .= Html::showToolTip($comment, $opt);
+
+               if($widget->getTitleVisibility()){
+                  $widgetdisplay .= "<h5 class=\"bt-title-divider\">";
+                  $widgetdisplay .= "<span>";
+                  $widgetdisplay .= $title;
+                  if ($comment != "") {
+                     $widgetdisplay .= "&nbsp;";
+                     $opt           = ['awesome-class' => 'fa-info-circle',
+                         'display'       => false];
+                     $widgetdisplay .= Html::showToolTip($comment, $opt);
+                  }
+                  $widgetdisplay .= "</span>";
+                  //         $widget .= "<small>" . __('A comment') . "</small>";
+                  $widgetdisplay .= "</h5>";
                }
-               $widgetdisplay .= "</span>";
-               //         $widget .= "<small>" . __('A comment') . "</small>";
-               $widgetdisplay .= "</h5>";
+
                $widgetdisplay .= "<div id=\"display-sc\">";
 
                if ($type == "table") {
@@ -507,33 +478,6 @@ class PluginMydashboardWidget extends CommonDBTM {
 
    }
 
-
-   /**
-    * @param       $classname
-    * @param       $widgetindex
-    * @param array $opt
-    *
-    * @return array
-    */
-//   static function getAllOptions($classname, $widgetindex, $opt = []) {
-//
-//      if (isset($classname) && isset($widgetindex)) {
-//
-//         $classname   = $classname;
-//         $classobject = getItemForItemtype($classname);
-//         if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
-//            $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
-//            if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
-//               $json =
-//                  [
-//                     "enableRefresh" => json_decode($widget->getWidgetEnableRefresh()),
-//                  ];
-//               return $json;
-//            }
-//         }
-//      }
-//   }
-
    /**
     * @param $class
     *
@@ -546,10 +490,6 @@ class PluginMydashboardWidget extends CommonDBTM {
          return $display;
       }
       $delclass = "";
-      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-      //         $delclass = "delclass";
-      //      }
       $display = "<div id='gs4' class=\"bt-row $delclass\">";
       $display .= "<div class=\"bt-feature $class \">";
       $display .= "<h3 class=\"bt-title-divider\">";
@@ -587,10 +527,6 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-      //         $delclass = "delclass";
-      //      }
       $display = "<div id='gs5' class=\"bt-row $delclass\">";
       $display .= "<div class=\"bt-feature $class \">";
       $display .= "<h3 class=\"bt-title-divider\">";
@@ -628,10 +564,6 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-      //         $delclass = "delclass";
-      //      }
       $display = "<div id='gs6' class=\"bt-row $delclass\">";
       $display .= "<div class=\"bt-feature $class \">";
       $display .= "<h3 class=\"bt-title-divider\">";

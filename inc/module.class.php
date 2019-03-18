@@ -42,6 +42,7 @@ abstract class PluginMydashboardModule extends CommonGLPI {
    private $widgetIsOnlyHTML = false;
    private $widgetDebug = [];
    private $widgetColorTab;
+   protected $titleVisibility = true;
 
    static $rightname = "plugin_mydashboard";
 
@@ -52,6 +53,10 @@ abstract class PluginMydashboardModule extends CommonGLPI {
    static function getTypeName($nb = 0) {
 
       return __('Dashboard', 'mydashboard');
+   }
+
+   function getTitleVisibility(){
+      return $this->titleVisibility;
    }
 
 
