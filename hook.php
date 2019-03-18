@@ -41,6 +41,7 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.4.sql");
 
       PluginMydashboardMenu::installWidgets();
+      insertDefaultTitles();
    }
    //end---------------------------------------------------------------------
    //From 1.0.0 (0.84) to 1.0.1 (0.84)------------------------------------
@@ -154,6 +155,7 @@ function plugin_mydashboard_install() {
       $mig = new Migration("1.6.4");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.4.sql");
       $mig->executeMigration();
+      insertDefaultTitles();
    }
 
 
@@ -166,6 +168,37 @@ function plugin_mydashboard_install() {
    PluginMydashboardProfile::initProfile();
    PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    return true;
+}
+
+function insertDefaultTitles(){
+
+   global $DB;
+   $startTitle = '<p style="background-color: lightgrey; padding: 5px; font-weight: bold; border: solid 1px black;">';
+   $endTitle =' </p>';
+
+   // Insert default title in table customwidgets
+   $res1 = $DB->insert("glpi_plugin_mydashboard_customswidgets",
+       [
+           'name' => __('Incidents'),
+           'content' => $startTitle . __("Traitement des incidents") . $endTitle,
+           'comment' => ''
+       ]);
+
+   $res2 = $DB->insert("glpi_plugin_mydashboard_customswidgets",
+       [
+           'name' => __('Demandes'),
+           'content' => $startTitle . __("Traitement des demandes") . $endTitle,
+           'comment' => ''
+       ]);
+
+   $res3 = $DB->insert("glpi_plugin_mydashboard_customswidgets",
+       [
+           'name' => __('Problèmes'),
+           'content' => $startTitle . __("Traitement des problèmes") . $endTitle,
+           'comment' => ''
+       ]);
+
+   Toolbox::logDebug("\n$res1\n"."\n$res2\n"."\n$res3\n");
 }
 
 function fillTableMydashboardStocktickets() {
