@@ -39,14 +39,6 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
 
    static $rightname = 'plugin_mydashboard';
 
-   /**
-    * functions mandatory
-    * getTypeName(), canCreate(), canView()
-    * */
-   static function getTypeName($nb = 0) {
-      return __('Content Editor', 'mydashboard');
-   }
-
    function rawSearchOptions() {
       $tab = [];
 
