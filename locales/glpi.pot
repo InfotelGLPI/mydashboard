@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-18 10:11+0100\n"
+"POT-Creation-Date: 2019-03-26 09:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:140 inc/menu.class.php:87 inc/menu.class.php:812
+#: setup.php:140 inc/menu.class.php:87 inc/menu.class.php:827
 #: inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
@@ -49,7 +49,7 @@ msgstr[1] ""
 
 #: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1661
 #: inc/alert.class.php:1777 inc/problemalert.class.php:114
-#: inc/widget.class.php:527
+#: inc/widget.class.php:534
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
@@ -57,7 +57,7 @@ msgstr[1] ""
 
 #: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1662
 #: inc/alert.class.php:1778 inc/problemalert.class.php:115
-#: inc/widget.class.php:564
+#: inc/widget.class.php:571
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Not imported mails in collectors"
 msgstr ""
 
-#: inc/alert.class.php:157 inc/alert.class.php:1829 inc/widget.class.php:490
+#: inc/alert.class.php:157 inc/alert.class.php:1829 inc/widget.class.php:497
 msgid "Network Monitoring"
 msgstr ""
 
@@ -156,15 +156,15 @@ msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: inc/alert.class.php:1257 inc/widget.class.php:537
+#: inc/alert.class.php:1257 inc/widget.class.php:544
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/alert.class.php:1344 inc/widget.class.php:575
+#: inc/alert.class.php:1344 inc/widget.class.php:582
 msgid "No informations founded"
 msgstr ""
 
-#: inc/alert.class.php:1458 inc/alert.class.php:1627 inc/widget.class.php:500
+#: inc/alert.class.php:1458 inc/alert.class.php:1627 inc/widget.class.php:507
 msgid "No problem detected"
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Linked reminder"
 msgstr ""
 
-#: inc/alert.class.php:1831 inc/widget.class.php:492
+#: inc/alert.class.php:1831 inc/widget.class.php:499
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
@@ -212,7 +212,7 @@ msgid "Curl PHP package not installed"
 msgstr ""
 
 #: inc/change.class.php:37 inc/dashboard.class.php:52
-#: inc/datatable.class.php:53 inc/html.class.php:50 inc/menu.class.php:1025
+#: inc/datatable.class.php:53 inc/html.class.php:50 inc/menu.class.php:1040
 #: inc/module.class.php:55 inc/planning.class.php:40 inc/problem.class.php:37
 #: inc/project.class.php:37 inc/projecttask.class.php:37
 #: inc/servicecatalog.class.php:58
@@ -237,8 +237,8 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:111 inc/menu.class.php:659 inc/menu.class.php:1169
-#: inc/widget.class.php:164 inc/widget.class.php:466
+#: inc/chart.class.php:111 inc/menu.class.php:674 inc/menu.class.php:1184
+#: inc/widget.class.php:164 inc/widget.class.php:473
 msgid "No data available"
 msgstr ""
 
@@ -275,7 +275,7 @@ msgid "Level of categories to show"
 msgstr ""
 
 #: inc/customswidget.class.php:47
-msgid "Customs Widgets"
+msgid "Custom Widgets"
 msgstr ""
 
 #: inc/dashboard.class.php:118 inc/menu.class.php:103
@@ -311,11 +311,11 @@ msgid "Default dashboard group"
 msgstr ""
 
 #: inc/groupprofile.class.php:66
-msgid "Use first user group as prefered group"
+msgid "Use profile group"
 msgstr ""
 
 #: inc/groupprofile.class.php:68
-msgid "If user has no group use :"
+msgid "Default group"
 msgstr ""
 
 #: inc/helper.class.php:475 inc/infotel.class.php:3952
@@ -595,139 +595,141 @@ msgstr ""
 msgid "Close edit mode"
 msgstr ""
 
-#: inc/menu.class.php:442
-msgid "Success"
-msgstr ""
-
-#: inc/menu.class.php:443
-msgid "The widget was added to dashboard. Save the dashboard to see it."
-msgstr ""
-
-#: inc/menu.class.php:450
-msgid "Error"
-msgstr ""
-
-#: inc/menu.class.php:451
-msgid "Please reload your page."
-msgstr ""
-
-#: inc/menu.class.php:458 inc/menu.class.php:460
-msgid "Switch to edit mode"
-msgstr ""
-
-#: inc/menu.class.php:464 inc/menu.class.php:466
+#: inc/menu.class.php:442 inc/menu.class.php:444 inc/menu.class.php:479
+#: inc/menu.class.php:481
 msgid "Permit drag / resize widgets"
 msgstr ""
 
-#: inc/menu.class.php:471 inc/menu.class.php:473
+#: inc/menu.class.php:448 inc/menu.class.php:450 inc/menu.class.php:486
+#: inc/menu.class.php:488
 msgid "Block drag / resize widgets"
 msgstr ""
 
-#: inc/menu.class.php:476 inc/menu.class.php:478
+#: inc/menu.class.php:457
+msgid "Success"
+msgstr ""
+
+#: inc/menu.class.php:458
+msgid "The widget was added to dashboard. Save the dashboard to see it."
+msgstr ""
+
+#: inc/menu.class.php:465
+msgid "Error"
+msgstr ""
+
+#: inc/menu.class.php:466
+msgid "Please reload your page."
+msgstr ""
+
+#: inc/menu.class.php:473 inc/menu.class.php:475
+msgid "Switch to edit mode"
+msgstr ""
+
+#: inc/menu.class.php:491 inc/menu.class.php:493
 msgid "Save positions"
 msgstr ""
 
-#: inc/menu.class.php:482 inc/menu.class.php:484
+#: inc/menu.class.php:497 inc/menu.class.php:499
 msgid "Custom and save default grid"
 msgstr ""
 
-#: inc/menu.class.php:987
+#: inc/menu.class.php:1002
 msgid "No data available in table"
 msgstr ""
 
-#: inc/menu.class.php:988
+#: inc/menu.class.php:1003
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: inc/menu.class.php:989
+#: inc/menu.class.php:1004
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: inc/menu.class.php:990
+#: inc/menu.class.php:1005
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: inc/menu.class.php:993
+#: inc/menu.class.php:1008
 msgid "Show _MENU_ entries"
 msgstr ""
 
-#: inc/menu.class.php:997
+#: inc/menu.class.php:1012
 msgid "No matching records found"
 msgstr ""
 
-#: inc/menu.class.php:1005
+#: inc/menu.class.php:1020
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: inc/menu.class.php:1006
+#: inc/menu.class.php:1021
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: inc/menu.class.php:1012
+#: inc/menu.class.php:1027
 msgid "1 row selected"
 msgstr ""
 
-#: inc/menu.class.php:1015 inc/menu.class.php:1024
+#: inc/menu.class.php:1030 inc/menu.class.php:1039
 msgid "Close"
 msgstr ""
 
-#: inc/menu.class.php:1016
+#: inc/menu.class.php:1031
 msgid "Maximize"
 msgstr ""
 
-#: inc/menu.class.php:1017
+#: inc/menu.class.php:1032
 msgid "Minimize"
 msgstr ""
 
-#: inc/menu.class.php:1018
+#: inc/menu.class.php:1033
 msgid "Refresh"
 msgstr ""
 
-#: inc/menu.class.php:1020
+#: inc/menu.class.php:1035
 msgid "Column visibility"
 msgstr ""
 
-#: inc/menu.class.php:1026
+#: inc/menu.class.php:1041
 msgid "Dashboard saved"
 msgstr ""
 
-#: inc/menu.class.php:1027
+#: inc/menu.class.php:1042
 msgid "Dashboard not saved"
 msgstr ""
 
-#: inc/menu.class.php:1028
+#: inc/menu.class.php:1043
 msgid "Data received for"
 msgstr ""
 
-#: inc/menu.class.php:1029
+#: inc/menu.class.php:1044
 msgid "No data received for"
 msgstr ""
 
-#: inc/menu.class.php:1030
+#: inc/menu.class.php:1045
 msgid "Updating all widgets"
 msgstr ""
 
-#: inc/menu.class.php:1031
+#: inc/menu.class.php:1046
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: inc/menu.class.php:1143
+#: inc/menu.class.php:1158
 msgid "Warning"
 msgstr ""
 
-#: inc/menu.class.php:1144
+#: inc/menu.class.php:1159
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: inc/menu.class.php:1162
+#: inc/menu.class.php:1177
 msgid "Save grid to see widget"
 msgstr ""
 
-#: inc/menu.class.php:1168
+#: inc/menu.class.php:1183
 msgid "Delete widget"
 msgstr ""
 
-#: inc/menu.class.php:1170
+#: inc/menu.class.php:1185
 msgid "Refresh widget"
 msgstr ""
 

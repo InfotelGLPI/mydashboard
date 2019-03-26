@@ -44,7 +44,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
     */
    static function getTypeName($nb = 0){
 
-      return __('Customs Widgets', 'mydashboard');
+      return __('Custom Widgets', 'mydashboard');
    }
 
    /**
