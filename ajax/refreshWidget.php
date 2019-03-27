@@ -36,6 +36,7 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
    if (isset($_POST['params']) && is_array($_POST['params'])) {
       $opt = $_POST['params'];
    }
+
    $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
    echo $widget;
 } else {
