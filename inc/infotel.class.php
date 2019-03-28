@@ -4040,7 +4040,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             case $this->getType() . "32":
 
-               $criterias = ['entities_id', 'is_recursive', 'technician', 'groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technician', 'groups_id', 'users_id'];
                $params    = ["preferences" => $this->preferences,
                   "criterias"   => $criterias,
                   "opt"         => $opt];
@@ -4059,6 +4059,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   }
                }
 
+               $users_criteria = "";
+
+               if(isset($crit['users_id']) && $crit['users_id'] != 0 && !empty($crit['users_id'])){
+                  $users_criteria = " AND `glpi_groups_users`.`users_id` = ".$crit['users_id'];
+               }
+
                $statusList = [
                   CommonITILObject::ASSIGNED,
                   CommonITILObject::PLANNED,
@@ -4075,6 +4081,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   . " AND `glpi_users`.`is_active` = 1"
                   . " AND `glpi_users`.`is_deleted` = 0"
                   . $groups_criteria
+                  . $users_criteria
                   . " GROUP BY `glpi_groups_users`.`users_id`";
 
                // Number of tickets by technician and by status
