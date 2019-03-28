@@ -208,7 +208,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                           "export"    => false,
                           "canvas"    => false,
                           "nb"        => 1];
-            $table     = PluginMydashboardHelper::getGraphHeader($params);
+            $widget->setWidgetHeader( PluginMydashboardHelper::getGraphHeader($params));
 
             $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
@@ -312,7 +312,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $colorstats4 = "indianred";
             }
 
-            $table .= "<div class=\"tickets-stats\">";
+            $table = "<div class=\"tickets-stats\">";
 
             //////////////////////////////////////////
 
@@ -519,7 +519,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                           "export"    => false,
                           "canvas"    => false,
                           "nb"        => 1];
-            $table     = PluginMydashboardHelper::getGraphHeader($params);
+            $widget->setWidgetHeader( PluginMydashboardHelper::getGraphHeader($params));
 
             $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                            FROM `glpi_tickets`
@@ -647,7 +647,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $colorstats5 = "indianred";
             }
 
-            $table .= "<div class=\"tickets-stats\">";
+            $table = "<div class=\"tickets-stats\">";
             if ($stats2 > 0) {
                $options2['reset']                     = 'reset';
                $options2['criteria'][0]['field']      = 12; // status

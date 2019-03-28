@@ -128,12 +128,6 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     */
    function sortArrayByArray(Array $array, Array $orderArray) {
       $ordered = [];
-      //    foreach($orderArray as $key) {
-      //        if(array_key_exists($key,$array)) {
-      //            $ordered[$key] = $array[$key];
-      //            unset($array[$key]);
-      //        }
-      //    }
       ksort($orderArray);
       foreach ($orderArray as $index => $key) {
          if (isset($array[$key])) {
@@ -142,13 +136,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
             $array = array_values($array);
             $ordered[$index] = $array[$index];
          }
-         //            (isset($array[$key]))? $array[$key] : $array[$index];
       }
-      //      $inversed = array_flip($orderArray);
-      //      foreach($array as $key => $value){
-      //          $ordered[(isset($inversed[$key]))? $inversed[$key]:$key] = $value;
-      //      }
-      //    return $ordered + $array;
 
       return $ordered;
    }

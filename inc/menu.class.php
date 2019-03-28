@@ -133,21 +133,6 @@ class PluginMydashboardMenu extends CommonGLPI {
             case 2 :
                $self->loadDashboard($profile, 1);
                break;
-            //            case 3 :
-            //               $self->loadDashboard($profile, 2);
-            //               break;
-            //            case 4 :
-            //               $self->loadDashboard($profile, 3);
-            //               break;
-            //            case 5 :
-            //               $self->loadDashboard($profile, 4);
-            //               break;
-            //            case 6 :
-            //               $self->loadDashboard($profile, 5);
-            //               break;
-            //            case 7 :
-            //               $self->loadDashboard($profile, 6);
-            //               break;
             default :
                break;
          }
@@ -1428,25 +1413,48 @@ class PluginMydashboardMenu extends CommonGLPI {
               }
            });
              return false;
-           };
-         function refreshWidgetByForm (id, gsid, formId) {
-            var widgetOptions = $('#' + formId).serializeArray();
-            var widgetOptionsObject = {};
-            $.each(widgetOptions,
-               function (i, v) {
-                   widgetOptionsObject[v.name] = v.value;
-               });
-            var widget = $('div[id='+ id + ']');
-            $.ajax({
+        };
+        function refreshWidgetByForm (id, gsid, formId) {
+           var widgetOptions = $('#' + formId).serializeArray();
+           var widgetOptionsObject = {};
+           $.each(widgetOptions,
+              function (i, v) {
+                 let name = v.name;
+                 // Remove [] in the name do issue with ajax
+                 let index = v.name.indexOf('[]');
+                 if( index != -1 ){
+                    name = v.name.substring(0, index);
+                 }
+                 // Key already exist
+                 if(name in widgetOptionsObject){
+                    if(widgetOptionsObject[name] instanceof Array){
+                       widgetOptionsObject[name].push(v.value);
+                    }else{
+                       let tempArray = [];
+                       tempArray.push(widgetOptionsObject[name]);
+                       tempArray.push(v.value);
+                       widgetOptionsObject[name] = tempArray;
+                    }
+                 }else{
+                    widgetOptionsObject[name] = v.value;
+                 }
+              }
+           );           
+           var widget = $('div[id='+ id + ']');
+           $.ajax({
               url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/refreshWidget.php',
               type: 'POST',
-              data:{gsid:gsid, params:widgetOptionsObject,id:id},
+              data:{
+                  gsid:gsid,
+                  params:widgetOptionsObject,
+                  id:id
+              },
               success:function(data) {
                   widget.replaceWith(data);
               }
            });
-             return false;
-           };
+           return false;
+        };
          function deleteWidget (id) {
            this.grid = $('.grid-stack$rand').data('gridstack');
            widget = $('div[data-gs-id='+ id + ']');

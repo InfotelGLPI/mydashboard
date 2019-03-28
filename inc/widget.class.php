@@ -428,6 +428,9 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                $widgetdisplay .= "<div id=\"display-sc\">";
 
+               // HEADER
+               $widgetdisplay .= $widget->getWidgetHeader();
+
                if ($type == "table") {
                   $head = $datas['aoColumns'];
                   $data = $datas['aaData'];
