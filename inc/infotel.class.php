@@ -95,7 +95,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
       if(!empty($customsWidgets)){
 
          foreach($customsWidgets as $customWidget){
-            $widgets[__('Custom Widgets')][$this->getType() . "cw".$customWidget['id']] = $customWidget['name'];
+            $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw".$customWidget['id']] = $customWidget['name'];
          }
       }
       return $widgets;
@@ -4137,15 +4137,23 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $widget = new PluginMydashboardDatatable();
 
-               $widget->setWidgetTitle(__("Number of tickets open by technician and by status", "mydashboard")
-                  . _n('Techncian', 'Techncians', 2));
+               $title = __("Number of tickets open by technician and by status", "mydashboard");
+
+               if($nb > 1 || $nb == 0){
+                  // String technicians never translated in glpi
+                  $title .= " : $nb " . __( 'Technicians', 'mydashboard');
+               }else{
+                  $title .= " : $nb " . __( 'Technician');
+               }
+
+               $widget->setWidgetTitle($title);
 
                $widget->setTabNames([
-                  __("Technician"),
-                  __("Processing (assigned)") ,
-                  __("Processing (planned)"),
-                  __("Pending"),
-                  __("Solved")
+                  __('Technician'),
+                  _x('status','Processing (assigned)'),
+                  _x('status','Processing (planned)'),
+                  __('Pending'),
+                  _x('status','Solved')
                ]);
                $widget->setTabDatas($temp);
                $widget->toggleWidgetRefresh();
@@ -4155,10 +4163,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   "onsubmit"  => true,
                   "opt"       => $opt,
                   "criterias" => $criterias,
-                  "export"    => true,
+                  "export"    => false,
                   "canvas"    => false,
                   "nb"        => $nb];
-               $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+               $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params)."<br>");
 
                return $widget;
                break;
