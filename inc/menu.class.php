@@ -133,21 +133,6 @@ class PluginMydashboardMenu extends CommonGLPI {
             case 2 :
                $self->loadDashboard($profile, 1);
                break;
-            //            case 3 :
-            //               $self->loadDashboard($profile, 2);
-            //               break;
-            //            case 4 :
-            //               $self->loadDashboard($profile, 3);
-            //               break;
-            //            case 5 :
-            //               $self->loadDashboard($profile, 4);
-            //               break;
-            //            case 6 :
-            //               $self->loadDashboard($profile, 5);
-            //               break;
-            //            case 7 :
-            //               $self->loadDashboard($profile, 6);
-            //               break;
             default :
                break;
          }

@@ -33,6 +33,7 @@ abstract class PluginMydashboardModule extends CommonGLPI {
    private $widgetId;
    private $widgetType = "chart";
    private $widgetTitle;
+   private $widgetHeader;
    private $widgetComment;
    private $widgetListTitle;
    private $widgetScripts = [];
@@ -94,6 +95,10 @@ abstract class PluginMydashboardModule extends CommonGLPI {
          $this->widgetTitle = "Default Title";
       }
       return $this->widgetTitle;
+   }
+
+   function getWidgetHeader(){
+      return !isset($this->widgetHeader) ? "" : $this->widgetHeader;
    }
 
    /**
@@ -187,6 +192,10 @@ abstract class PluginMydashboardModule extends CommonGLPI {
    function setWidgetTitle($nTitle) {
       //        $this->widgetTitle = addslashes($nTitle);
       return $this->widgetTitle = str_replace(["\""], ["'"], $nTitle);
+   }
+
+   function setWidgetHeader($header){
+      return $this->widgetHeader = $header;
    }
 
    /**
