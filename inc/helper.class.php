@@ -134,7 +134,7 @@ class PluginMydashboardHelper {
          $graph .= "<div class='bt-col-md-12 left'>";
       }
       if (count($params["criterias"]) > 0) {
-         $graph .= PluginMydashboardHelper::getForm($params["widgetId"], $params["onsubmit"], $params["opt"], $params["criterias"]);
+         $graph .= self::getForm($params["widgetId"], $params["onsubmit"], $params["opt"], $params["criterias"]);
       }
       $graph .= "</div>";
       if ($params["export"] == true) {
@@ -155,9 +155,25 @@ class PluginMydashboardHelper {
          $graph .= "</div>";
       }
 
+
+
       return $graph;
    }
 
+
+   static function getGraphFooter($params) {
+
+      $graph = "<div class='bt-row'>";
+      $graph .= "<div class='bt-col-md-12 left'>";
+      if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
+         $graph .= "<a target='_blank' href='".$params["setup"]."'><i class=\"far fa-edit fa-1x\"></i></a>";
+      }
+      $graph .= "</div>";
+      $graph .= "</div>";
+
+
+      return $graph;
+   }
 
    /**
     * @param $table
@@ -256,6 +272,16 @@ class PluginMydashboardHelper {
          $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
          $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
       }
+      $opt['locations_id'] = 0;
+      $crit['crit']['locations_id'] = "AND 1 = 1";
+      if (in_array("locations_id", $criterias)) {
+         if (isset($params['opt']["locations_id"])
+             && $params['opt']["locations_id"] > 0) {
+            $opt['locations_id']          = $params['opt']['locations_id'];
+            $crit['crit']['locations_id'] = $params['opt']['locations_id'];
+         }
+      }
+
       $opt['type']          = 0;
       $crit['crit']['type'] = "AND 1 = 1";
       if (in_array("type", $criterias)) {
@@ -378,6 +404,7 @@ class PluginMydashboardHelper {
       return $crit;
    }
 
+
    /**
     * Get a form header, this form header permit to update data of the widget
     * with parameters of this form
@@ -483,12 +510,27 @@ class PluginMydashboardHelper {
 
          }
       }
+      if (in_array("locations_id", $criterias)) {
+         $gparams = ['name'      => 'locations_id',
+                     'display'   => false,
+                     'value'     => isset($opt['locations_id']) ? $opt['locations_id'] : 0,
+                     'entity'    => $_SESSION['glpiactiveentities'],
+         ];
+         $form    .= "<span class='md-widgetcrit'>";
+         $form    .= __('Location');
+         $form    .= "&nbsp;";
+         $form    .= Location::dropdown($gparams);
+         $form    .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
       if (in_array("groups_id", $criterias)) {
          $gparams = ['name'      => 'groups_id',
                      'display'   => false,
                      'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
                      'entity'    => $_SESSION['glpiactiveentities'],
-                     'condition' => '`is_assign`'
+                     'condition' => ['is_assign' => 1]
          ];
          $form    .= "<span class='md-widgetcrit'>";
          $form    .= __('Group');
@@ -542,7 +584,7 @@ class PluginMydashboardHelper {
       }
       if (in_array("users_id", $criterias)) {
          $params = array('name'     => "users_id",
-                         'value'    => $opt['users_id'],
+                         'value'    => isset($opt['users_id']) ? $opt['users_id'] : null,
                          'right'    => "interface",
                          'comments' => 1,
                          'entity'   => $_SESSION["glpiactiveentities"],
@@ -931,7 +973,7 @@ class PluginMydashboardHelper {
             } else{
                $res = $prefered_group;
             }
-         } else if(($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
+         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
                    && count($opt) < 1){
             $res = $group;
          }
@@ -940,7 +982,7 @@ class PluginMydashboardHelper {
          } else{
             $res = 0;
          }
-      } else{
+      }else{
          if (isset($params['preferences']['prefered_group'])
              && $params['preferences']['prefered_group'] > 0
              && !isset($params['opt']['groups_id'])) {
@@ -956,7 +998,11 @@ class PluginMydashboardHelper {
              && !isset($params['opt']['groups_id'])){
             $res = $group;
          }
+
+
       }
+
+
       return $res;
    }
 }

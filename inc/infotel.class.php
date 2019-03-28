@@ -64,29 +64,29 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "14" => __("All unpublished articles") . "&nbsp;<i class='fa fa-table'></i>",
                                          //                                              $this->getType() . "19" => __("Tickets alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
          ],
-         __('Charts', "mydashboard") => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "6"  => __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
-                                         $this->getType() . "7"  => __("Top ten ticket requesters by month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "8"  => __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "12" => __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "13" => __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "15" => __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "16" => __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "17" => __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "18" => __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "20" => __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "21" => __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
-                                         $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fa fa-bar-chart'></i>",
-                                         $this->getType() . "25" => __("Number of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "26" => __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "27" => __("Top 10 of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
+         __('Charts', "mydashboard") => [$this->getType() . "1"  => __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+                                         $this->getType() . "2"  => __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "6"  => __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
+                                         $this->getType() . "7"  => __("Top ten ticket requesters by month", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "8"  => __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+                                         $this->getType() . "12" => __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "13" => __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "15" => __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "16" => __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "17" => __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "18" => __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "20" => __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "21" => __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+                                         $this->getType() . "22" => __("Number of opened and solved tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
+                                         $this->getType() . "23" => __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+                                         $this->getType() . "24" => __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+                                         $this->getType() . "25" => __("Top ten of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "26" => __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "27" => __("Top ten of opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+//                                       $this->getType() . "28" => __("Map - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "29" => __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
-                                         $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-pie-chart'></i>",
-                                         $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fa fa-line-chart'></i>",
+                                         $this->getType() . "30" => __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
+                                         $this->getType() . "31" => __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
                                          $this->getType() . "32" => __("Number of tickets open by technician and by status", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>"
          ]
       ];
@@ -444,7 +444,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "3":
             $profile_user = new Profile_User();
-            $users        = $profile_user->find($dbu->getEntitiesRestrictRequest("", "glpi_profiles_users", "entities_id", '', true));
+            $condition  = $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', 'entities_id', '', true);
+            $users        = $profile_user->find($condition);
             $filtredUsers = [];
             foreach ($users as $user) {
                $filtredUsers[$user['users_id']] = $user['users_id'];
@@ -2898,7 +2899,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         WHERE $is_deleted $type_criteria ";
             $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-            $query .= " GROUP BY `groups_id`";
+            $query .= " GROUP BY `groups_id` LIMIT 10";
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
@@ -2923,7 +2924,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened tickets by requester groups", "mydashboard");
+            $title  = __("Top ten of opened tickets by requester groups", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($datas);
@@ -3168,7 +3169,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget = new PluginMydashboardHtml();
-            $title  = __("Top 10 of opened tickets by location", "mydashboard");
+            $title  = __("Top ten of opened tickets by location", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($datas);
@@ -3258,216 +3259,216 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "28":
 
-            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
-            $params    = ["preferences" => $this->preferences,
-                          "criterias"   => $criterias,
-                          "opt"         => $opt];
-            $options   = PluginMydashboardHelper::manageCriterias($params);
-
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
-
-            $type          = $opt['type'];
-            $type_criteria = $crit['type'];
-            //$status_criteria      = $crit['status'];
-            $entities_criteria    = $crit['entities_id'];
-            $entities_id_criteria = $crit['entity'];
-            $sons_criteria        = $crit['sons'];
-            $groups_criteria      = $crit['groups_id'];
-            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
-
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Map - Opened tickets by location", "mydashboard");
-            $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude). You must define a Google API Key and add it into setup", "mydashboard"));
-            $widget->setWidgetTitle($title);
-            $query = "SELECT DISTINCT
-                           `glpi_locations`.`completename` AS `name`,
-                           `glpi_locations`.`latitude`, 
-                           `glpi_locations`.`longitude`,
-                           `glpi_locations`.`comment`,
-                            `glpi_locations`.`id`,
-                           COUNT(`glpi_tickets`.`id`) AS `nb`
-                        FROM `glpi_tickets` ";
-            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
-               $query .= " LEFT JOIN `glpi_groups_tickets` 
-                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
-                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "') 
-                            LEFT JOIN `glpi_groups`  ON (`glpi_groups_tickets`.`groups_id` = `glpi_groups`.`id` ) ";
-            }
-            $query .= " LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
-                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                        WHERE $is_deleted $type_criteria $entities_criteria ";
-            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
-               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
-            }
-            //            $query .= " AND `status` IN('" . implode("', '", $status_criteria) . "')";
-            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-            $query .= " GROUP BY `glpi_tickets`.`locations_id`";
-
-            $result = $DB->query($query);
-            $nb     = $DB->numrows($result);
-
-            $locations = "[";
-            $infos     = "[";
-
-            if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
-                  if (!empty($data['latitude']) && !empty($data['longitude'])) {
-                     $name      = addslashes($data['name']);
-                     $locations .= "['" . $name . "'," . $data['latitude'] . "," . $data['longitude'] . ",'" . $data['nb'] . "'],";
-                     $comment   = addslashes(str_replace("\r\n", "<br>", $data['comment']));
-
-                     $options['reset']                     = 'reset';
-                     $options['criteria'][0]['field']      = 12; // status
-                     $options['criteria'][0]['searchtype'] = 'equals';
-                     $options['criteria'][0]['value']      = "notold";
-                     $options['criteria'][0]['link']       = 'AND';
-
-                     $options['criteria'][1]['field']      = 83; // location
-                     $options['criteria'][1]['searchtype'] = 'equals';
-                     $options['criteria'][1]['value']      = $data['id'];
-                     $options['criteria'][1]['link']       = 'AND';
-
-                     if ($type > 0) {
-                        $options['criteria'][2]['field']      = 14; // type
-                        $options['criteria'][2]['searchtype'] = 'equals';
-                        $options['criteria'][2]['value']      = $type;
-                        $options['criteria'][2]['link']       = 'AND';
-                     }
-
-                     $options['criteria'][3]['field']      = 80; // entities
-                     $options['criteria'][3]['searchtype'] = 'equals';
-                     if (isset($sons_criteria) && $sons_criteria > 0) {
-                        $options['criteria'][3]['searchtype'] = 'under';
-                     }
-                     $options['criteria'][3]['value'] = $entities_id_criteria;
-                     $options['criteria'][3]['link']  = 'AND';
-
-                     if (!empty($groups_criteria)) {
-                        $options['criteria'][4]['field']      = 8; // technician group
-                        $options['criteria'][4]['searchtype'] = 'equals';
-                        $options['criteria'][4]['value']      = $groups_criteria;
-                        $options['criteria'][4]['link']       = 'AND';
-                     }
-                     $link_ticket = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
-                                    Toolbox::append_params($options, "&");
-                     $nb          = "<a href=\"" . $link_ticket . "\" target=\"_blank\">" . $data['nb'] . " " . _n('Ticket', 'Tickets', $data['nb']) . "</a>";
-
-                     $infos .= "['<div class=\"info_content\">' + '<h5>$name</h5>'+ '<p>$comment</p>'+ '<p>$nb</p>'+'</div>'],";
-                  }
-               }
-            }
-            $locations .= "]";
-            $infos     .= "]";
-
-            $params = ["widgetId"  => $widgetId,
-                       "name"      => 'TicketsByLocationMap',
-                       "onsubmit"  => false,
-                       "opt"       => $opt,
-                       "criterias" => $criterias,
-                       "export"    => false,
-                       "canvas"    => false,
-                       "nb"        => $nb];
-            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
-
-            $graph = "<script>
-               function initialize() {
-                   var map;
-                   var bounds = new google.maps.LatLngBounds();
-               //    var centre = { lat: 46.3333300, lng: 2.6000000 };
-                   var mapOptions = {
-                       //mapTypeId: roadmap,
-                       zoom: 4,
-                       streetViewControl: false,
-               //        center: centre 
-                   };
-                   //http://chrisltd.com/blog/2013/08/google-map-random-color-pins/
-                   //https://wrightshq.com/playground/placing-multiple-markers-on-a-google-map-using-api-3/
-                   // Display a map on the page
-                   map = new google.maps.Map(document.getElementById(\"TicketsByLocationMap\"), mapOptions);
-                   map.setTilt(45);
-                       
-                   // Multiple Markers
-                   var markers = $locations;
-                   
-                   //var icon = {
-                         //url: '../pics/marker.png',
-               //          scaledSize: new google.maps.Size(72, 40),
-               //
-                     //};
-//                     var iconURLPrefix = 'https://maps.gstatic.com/mapfiles/api-3/images/';
-                     var iconURLPrefix = '../pics/';
-                     var icons = [
-                        iconURLPrefix + 'spotlight-poi-dotless2_hdpi.png',
-                        //iconURLPrefix + 'green.png',
-                        //iconURLPrefix + 'orange.png',
-                      ]
-                   // Info Window Content
-                   var infoWindowContent = $infos;
-                       
-                   // Display multiple markers on a map
-                   var infoWindow = new google.maps.InfoWindow(), marker, i;
-
-                   // Loop through our array of markers & place each one on the map  
-                   for( i = 0; i < markers.length; i++ ) {
-                       var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
-                       bounds.extend(position);
-                       var fontSize = '14px';
-                       if (markers[i][3] >= 100) {
-                         fontSize = '10px';
-                       }
-                       marker = new google.maps.Marker({
-                           position: position,
-                           icon: {
-                                  url:icons[0], 
-                                  scaledSize: new google.maps.Size(27, 43), 
-                                  labelOrigin: new google.maps.Point(14, 14),
-                                  fillColor: '#FFF'
-                                  },
-                           map: map,
-                           label: {
-                              text: markers[i][3],
-                              color: '#FFF',
-                              fontSize: fontSize,
-                              //fontWeight: 'bold',
-                            },
-                           title: markers[i][0]
-                       });
-                       
-                       // Allow each marker to have an info window    
-                       google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                           return function() {
-                               infoWindow.setContent(infoWindowContent[i][0]);
-                               infoWindow.open(map, marker);
-                           }
-                       })(marker, i));
-               
-                       // Automatically center the map fitting all markers on the screen
-                       map.fitBounds(bounds);
-                   }
-               
-                   // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-                   var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-                       this.setZoom(6);
-                       google.maps.event.removeListener(boundsListener);
-                   });
-                   
-               }
-               $(document).ready( function () {
-                       initialize();
-                   });
-                   </script>";
-            $graph .= "<div id=\"map_wrapper\">";
-            $graph .= "<div id=\"TicketsByLocationMap\" class=\"mapping\"></div>";
-            $graph .= "</div>";
-
-            $widget->toggleWidgetRefresh();
-            $widget->setWidgetHtmlContent(
-               $graph
-            );
-
-            return $widget;
-
+//            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
+//            $params    = ["preferences" => $this->preferences,
+//                          "criterias"   => $criterias,
+//                          "opt"         => $opt];
+//            $options   = PluginMydashboardHelper::manageCriterias($params);
+//
+//            $opt  = $options['opt'];
+//            $crit = $options['crit'];
+//
+//            $type          = $opt['type'];
+//            $type_criteria = $crit['type'];
+//            //$status_criteria      = $crit['status'];
+//            $entities_criteria    = $crit['entities_id'];
+//            $entities_id_criteria = $crit['entity'];
+//            $sons_criteria        = $crit['sons'];
+//            $groups_criteria      = $crit['groups_id'];
+//            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+//
+//            $widget = new PluginMydashboardHtml();
+//            $title  = __("Map - Opened tickets by location", "mydashboard");
+//            $widget->setWidgetComment(__("Display Tickets by location (Latitude / Longitude). You must define a Google API Key and add it into setup", "mydashboard"));
+//            $widget->setWidgetTitle($title);
+//            $query = "SELECT DISTINCT
+//                           `glpi_locations`.`completename` AS `name`,
+//                           `glpi_locations`.`latitude`,
+//                           `glpi_locations`.`longitude`,
+//                           `glpi_locations`.`comment`,
+//                            `glpi_locations`.`id`,
+//                           COUNT(`glpi_tickets`.`id`) AS `nb`
+//                        FROM `glpi_tickets` ";
+//            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+//               $query .= " LEFT JOIN `glpi_groups_tickets`
+//                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
+//                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')
+//                            LEFT JOIN `glpi_groups`  ON (`glpi_groups_tickets`.`groups_id` = `glpi_groups`.`id` ) ";
+//            }
+//            $query .= " LEFT JOIN `glpi_locations` ON (`glpi_tickets`.`locations_id` = `glpi_locations`.`id`)
+//                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                        WHERE $is_deleted $type_criteria $entities_criteria ";
+//            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+//               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
+//            }
+//            //            $query .= " AND `status` IN('" . implode("', '", $status_criteria) . "')";
+//            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+//            $query .= " GROUP BY `glpi_tickets`.`locations_id`";
+//
+//            $result = $DB->query($query);
+//            $nb     = $DB->numrows($result);
+//
+//            $locations = "[";
+//            $infos     = "[";
+//
+//            if ($nb) {
+//               while ($data = $DB->fetch_array($result)) {
+//                  if (!empty($data['latitude']) && !empty($data['longitude'])) {
+//                     $name      = addslashes($data['name']);
+//                     $locations .= "['" . $name . "'," . $data['latitude'] . "," . $data['longitude'] . ",'" . $data['nb'] . "'],";
+//                     $comment   = addslashes(str_replace("\r\n", "<br>", $data['comment']));
+//
+//                     $options['reset']                     = 'reset';
+//                     $options['criteria'][0]['field']      = 12; // status
+//                     $options['criteria'][0]['searchtype'] = 'equals';
+//                     $options['criteria'][0]['value']      = "notold";
+//                     $options['criteria'][0]['link']       = 'AND';
+//
+//                     $options['criteria'][1]['field']      = 83; // location
+//                     $options['criteria'][1]['searchtype'] = 'equals';
+//                     $options['criteria'][1]['value']      = $data['id'];
+//                     $options['criteria'][1]['link']       = 'AND';
+//
+//                     if ($type > 0) {
+//                        $options['criteria'][2]['field']      = 14; // type
+//                        $options['criteria'][2]['searchtype'] = 'equals';
+//                        $options['criteria'][2]['value']      = $type;
+//                        $options['criteria'][2]['link']       = 'AND';
+//                     }
+//
+//                     $options['criteria'][3]['field']      = 80; // entities
+//                     $options['criteria'][3]['searchtype'] = 'equals';
+//                     if (isset($sons_criteria) && $sons_criteria > 0) {
+//                        $options['criteria'][3]['searchtype'] = 'under';
+//                     }
+//                     $options['criteria'][3]['value'] = $entities_id_criteria;
+//                     $options['criteria'][3]['link']  = 'AND';
+//
+//                     if (!empty($groups_criteria)) {
+//                        $options['criteria'][4]['field']      = 8; // technician group
+//                        $options['criteria'][4]['searchtype'] = 'equals';
+//                        $options['criteria'][4]['value']      = $groups_criteria;
+//                        $options['criteria'][4]['link']       = 'AND';
+//                     }
+//                     $link_ticket = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+//                                    Toolbox::append_params($options, "&");
+//                     $nb          = "<a href=\"" . $link_ticket . "\" target=\"_blank\">" . $data['nb'] . " " . _n('Ticket', 'Tickets', $data['nb']) . "</a>";
+//
+//                     $infos .= "['<div class=\"info_content\">' + '<h5>$name</h5>'+ '<p>$comment</p>'+ '<p>$nb</p>'+'</div>'],";
+//                  }
+//               }
+//            }
+//            $locations .= "]";
+//            $infos     .= "]";
+//
+//            $params = ["widgetId"  => $widgetId,
+//                       "name"      => 'TicketsByLocationMap',
+//                       "onsubmit"  => false,
+//                       "opt"       => $opt,
+//                       "criterias" => $criterias,
+//                       "export"    => false,
+//                       "canvas"    => false,
+//                       "nb"        => $nb];
+//            $graph  = PluginMydashboardHelper::getGraphHeader($params);
+//
+//            $graph .= "<script>
+//               function initialize() {
+//                   var map;
+//                   var bounds = new google.maps.LatLngBounds();
+//               //    var centre = { lat: 46.3333300, lng: 2.6000000 };
+//                   var mapOptions = {
+//                       //mapTypeId: roadmap,
+//                       zoom: 4,
+//                       streetViewControl: false,
+//               //        center: centre
+//                   };
+//                   //http://chrisltd.com/blog/2013/08/google-map-random-color-pins/
+//                   //https://wrightshq.com/playground/placing-multiple-markers-on-a-google-map-using-api-3/
+//                   // Display a map on the page
+//                   map = new google.maps.Map(document.getElementById(\"TicketsByLocationMap\"), mapOptions);
+//                   map.setTilt(45);
+//
+//                   // Multiple Markers
+//                   var markers = $locations;
+//
+//                   //var icon = {
+//                         //url: '../pics/marker.png',
+//               //          scaledSize: new google.maps.Size(72, 40),
+//               //
+//                     //};
+////                     var iconURLPrefix = 'https://maps.gstatic.com/mapfiles/api-3/images/';
+//                     var iconURLPrefix = '../pics/';
+//                     var icons = [
+//                        iconURLPrefix + 'spotlight-poi-dotless2_hdpi.png',
+//                        //iconURLPrefix + 'green.png',
+//                        //iconURLPrefix + 'orange.png',
+//                      ]
+//                   // Info Window Content
+//                   var infoWindowContent = $infos;
+//
+//                   // Display multiple markers on a map
+//                   var infoWindow = new google.maps.InfoWindow(), marker, i;
+//
+//                   // Loop through our array of markers & place each one on the map
+//                   for( i = 0; i < markers.length; i++ ) {
+//                       var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+//                       bounds.extend(position);
+//                       var fontSize = '14px';
+//                       if (markers[i][3] >= 100) {
+//                         fontSize = '10px';
+//                       }
+//                       marker = new google.maps.Marker({
+//                           position: position,
+//                           icon: {
+//                                  url:icons[0],
+//                                  scaledSize: new google.maps.Size(27, 43),
+//                                  labelOrigin: new google.maps.Point(14, 14),
+//                                  fillColor: '#FFF'
+//                                  },
+//                           map: map,
+//                           label: {
+//                              text: markers[i][3],
+//                              color: '#FFF',
+//                              fontSize: fontSize,
+//                              //fontWeight: 'bold',
+//                            },
+//                           title: markers[i][0]
+//                       });
+//
+//                       // Allow each marker to have an info window
+//                       google.maps.event.addListener(marker, 'click', (function(marker, i) {
+//                           return function() {
+//                               infoWindow.setContent(infoWindowContent[i][0]);
+//                               infoWindow.open(map, marker);
+//                           }
+//                       })(marker, i));
+//
+//                       // Automatically center the map fitting all markers on the screen
+//                       map.fitBounds(bounds);
+//                   }
+//
+//                   // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+//                   var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+//                       this.setZoom(6);
+//                       google.maps.event.removeListener(boundsListener);
+//                   });
+//
+//               }
+//               $(document).ready( function () {
+//                       initialize();
+//                   });
+//                   </script>";
+//            $graph .= "<div id=\"map_wrapper\">";
+//            $graph .= "<div id=\"TicketsByLocationMap\" class=\"mapping\"></div>";
+//            $graph .= "</div>";
+//
+//            $widget->toggleWidgetRefresh();
+//            $widget->setWidgetHtmlContent(
+//               $graph
+//            );
+//
+//            return $widget;
+//
             break;
 
          case $this->getType() . "29":
@@ -4198,7 +4199,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $htmlContent .= "<script>
                 $( document ).ready(function() {
                     let $widgetId = document.getElementById('$widgetId');
-                    ".$widgetId.".children[0].style.marginTop = '-10px';
+                    ".$widgetId.".children[0].style.marginTop = '0px';
                     ".$widgetId.".children[0].children[0].classList.remove('bt-col-md-11');
                     ".$widgetId.".children[0].children[0].classList.add('bt-col-md-12');
                     ".$widgetId.".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';

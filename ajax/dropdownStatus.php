@@ -24,28 +24,25 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+if (strpos($_SERVER['PHP_SELF'], "dropdownStatus.php")) {
+   include("../../../inc/includes.php");
+   header("Content-Type: text/html; charset=UTF-8");
+   Html::header_nocache();
+}
 
-Session::checkLoginUser();
+Session::checkCentralAccess();
 
-$widgets = PluginMydashboardWidget::getWidgetList();
-
-if (isset($_POST['gsid']) && isset($_POST['id'])) {
-   $gsid = $_POST['gsid'];
-   $opt  = [];
-   if (isset($_POST['params']) && is_array($_POST['params'])) {
-      $opt = $_POST['params'];
+// Make a select box
+if (isset($_POST["itemtype"])) {
+   $dbu       = new DbUtils();
+   $state     = new State();
+   $states     = [];
+   $field = 'is_visible_'.strtolower($_POST["itemtype"]);
+   $condition = [$field => 1]
+                + $dbu->getEntitiesRestrictCriteria('glpi_states', 'entities_id', $_SESSION['glpiactive_entity'], true);
+   $allstates = $state->find($condition);
+   foreach ($allstates as $k => $v) {
+      $states[$v['id']] = $v['name'];
    }
-   $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
-   echo $widget;
-} else {
-   $gsid    = $_POST['gsid'];
-   $data = [];
-   if (isset($widgets[$gsid])) {
-      $opt    = [];
-      $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
-      $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
-   }
-
-   echo json_encode($data);
+   Dropdown::showFromArray('states', $states, array('multiple' => true));
 }

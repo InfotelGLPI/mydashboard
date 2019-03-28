@@ -114,7 +114,8 @@ class PluginMydashboardWidget extends CommonDBTM {
     */
    static function getWidgetList() {
 
-      $list       = new PluginMydashboardWidgetlist();
+      $list = new PluginMydashboardWidgetlist();
+      //Load widgets
       $widgetlist = $list->getList();
       $i          = 1;
       $self       = new self();
@@ -155,8 +156,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return string
     */
    static function getWidget($id, $opt = [], $widgets) {
-      global $CFG_GLPI;
-      $class   = "bt-col-md-11";
+      $class = "bt-col-md-11";
 
       if (isset($widgets[$id])) {
          return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
@@ -166,11 +166,12 @@ class PluginMydashboardWidget extends CommonDBTM {
          $message .= " - " . $id;
       }
       $msg = "<div class='center'><br><br>";
-      $msg .= Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+      $msg .= "<i style='color:orange' class='fa fa-exclamation-triangle fa-3x'></i>";
       $msg .= "<br><br><span class='b'>$message</span></div>";
 
       return $msg;
    }
+
 
    /**
     * @param $id
@@ -205,12 +206,20 @@ class PluginMydashboardWidget extends CommonDBTM {
       global $CFG_GLPI;
 
       if (isset($classname) && isset($widgetindex)) {
-
-         $classname   = $classname;
          $classobject = getItemForItemtype($classname);
          if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
+            if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+               $TIMER = new Timer();
+               $TIMER->start();
+            }
             $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
+            if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+               $loadwidget = $TIMER->getTime();
+               $displayloadwidget = "";
+            }
+
             if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
+
                $widget->setWidgetId($widgetindex);
                //Then its Html content
                $htmlContent = $widget->getWidgetHtmlContent();
@@ -260,7 +269,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
                }
 
-               $json  = PluginMydashboardHelper::safeJson($json);
+               //               $json  = PluginMydashboardHelper::safeJson($json);
                $datas = json_decode($jsondata, true);
 
                if ($type == "table") {
@@ -471,6 +480,11 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= "</div>";
                $widgetdisplay .= "</div>";
                $widgetdisplay .= "</div>";
+
+               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                  $displayloadwidget = "Load widget : " . $loadwidget."<br>";
+                  $widgetdisplay .= $displayloadwidget;
+               }
                return $widgetdisplay;
             } else {
                $widgetdisplay = $widgetindex . " : " . __('No data available', 'mydashboard');
@@ -478,7 +492,6 @@ class PluginMydashboardWidget extends CommonDBTM {
             }
          }
       }
-
    }
 
    /**
@@ -590,5 +603,176 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display .= "</div>";
 
       return $display;
+   }
+
+   /**
+    * @param $class
+    *
+    * @return string
+    */
+   static function getWidgetMydashboardEquipments($class, $fromsc) {
+      global $CFG_GLPI;
+
+      $delclass = "";
+      //      $display  = "<div id='gs17' class=\"bt-row $delclass\">";
+      $display = "";
+      if ($fromsc == true) {
+         $display .= "<div class=\"bt-feature $class\">";
+         $display .= "<h3 class=\"bt-title-divider\">";
+         $display .= "<span>";
+         $display .= __('Your equipments', 'mydashboard');
+         $display .= "</span>";
+         $display .= "</h3>";
+         $display .= "</div>";
+      }
+      $allUsedItemsForUser = self::getAllUsedItemsForUser();
+
+      if (count($allUsedItemsForUser) > 0) {
+         if ($fromsc == true) {
+            $display .= "<div class=\"bt-feature bt-col-md-12 count-title \">";
+         }
+         foreach ($allUsedItemsForUser as $itemtype => $used_items) {
+
+            $item = getItemForItemtype($itemtype);
+
+
+            //            if ($i % 2 == 0 && $nb > 1) {
+            $display .= "<div class=\"bt-feature bt-col-md-11 center equip-text\">";
+            //            }
+            //            if ($nb == 1) {
+            //               $display .= "<div class=\"bt-feature bt-col-md-6 center equip-text\">";
+            //            }
+            $i  = 0;
+            $nb = count($used_items);
+            foreach ($used_items as $item_datas) {
+
+               //               if ($i % 2 == 0 && $nb > 1) {
+               //                  $display .= "<div class=\"bt-col-md-6 center\">";
+               //               }
+               if ($nb == 1) {
+                  $display .= "<div class=\"bt-feature bt-col-md-11 center\">";
+               } else {
+                  $display .= "<div class=\"bt-feature bt-col-md-5 center\">";
+               }
+
+               //               $display .= "<div class=\"nbstock\" style=\"color:$color\">";
+               //               $display .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" .$item_datas['name']  . "'>";
+
+               //               $display .= "<h4>";
+               //               $display .= "<span class=\"counter count-number\" id=\"stock_$itemtype\"></span>";
+               //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
+               //               $display .= "<p class=\"count-text \">";
+
+               $display .= "</br>";
+               $color   = "steelblue";
+
+               //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense','PluginBadgesBadge'];
+               if ($itemtype == 'Computer') {
+                  $icon = 'fa fa-laptop';
+               } else if ($itemtype == 'Monitor') {
+                  $icon = 'fas fa-desktop';
+               } else if ($itemtype == 'Peripheral') {
+                  $icon = 'fa fa-hdd';
+               } else if ($itemtype == 'Phone') {
+                  $icon = 'fas fa-mobile-alt';
+               } else if ($itemtype == 'Printer') {
+                  $icon = 'fas fa-print';
+               } else if ($itemtype == 'SoftwareLicense') {
+                  $icon = 'fas fa-award';
+               } else if ($itemtype == 'PluginBadgesBadge') {
+                  $icon = 'far fa-id-badge';
+               }
+               if ($item->canView()) {
+                  $display .= "<a href='" . $item::getFormURL() . "?id=" . $item_datas['id'] . "' target='_blank'>";
+               }
+
+
+               $display .= "<i style='color:$color' class=\"$icon fa-2x fa-border\"></i>";
+               $display .= "</br>";
+               $display .= $item_datas['name'];
+               if ($item->canView()) {
+                  $display .= "</a>";
+               }
+               $display .= "</br>";
+               $display .= $item->getTypeName();
+               $display .= "</br>";
+               //               $script .= "$('#stock_$itemtype').countup($nb);";
+
+               $i++;
+               //               if (($i == $nb) && (($nb % 2) != 0) && ($nb > 1)) {
+
+//               if ($item_datas['id']
+//                   && Ticket::isPossibleToAssignType($itemtype)
+//                   && Ticket::canCreate()
+//                   && (!isset($item->fields['is_template']) || ($item->fields['is_template'] == 0))) {
+//                  $link = Html::showSimpleForm(Ticket::getFormURL(),
+//                                       '_add_fromitem',
+//                                       __('New ticket for this item...'),
+//                                       ['itemtype' => $itemtype,
+//                                        'items_id' => $item_datas['id']],
+//                     'fa-plus-circle');
+//                  $display .= $link;
+//               }
+
+               $display .= "</div>";
+               //               }
+            }
+
+            $display .= "</div>";
+         }
+         //         $display .= "<script type='text/javascript'>
+         //                         $(function(){
+         //                            $script;
+         //                         });
+         //                  </script>";
+         //                  $display .= "</div>";
+      } else {
+         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= __("No equipments founded", "mydashboard");
+         $display .= "</span></h3></div>";
+      }
+      if ($fromsc == true) {
+         $display .= "</div>";
+      }
+      return $display;
+   }
+
+   /**
+    * Get all used items for user
+    *
+    * @param ID of user
+    *
+    * @return array
+    */
+   static function getAllUsedItemsForUser() {
+      $items = [];
+
+      $types = ['Computer', 'Monitor', 'Peripheral', 'Phone', 'Printer', 'SoftwareLicense', 'PluginBadgesBadge'];
+
+      $users_id = Session::getLoginUserID();
+      foreach ($types as $itemtype) {
+         if (!($item = getItemForItemtype($itemtype))) {
+            continue;
+         }
+         $condition = ['users_id' => $users_id];
+         if ($item->maybeTemplate()) {
+            $condition['is_template'] = 0;
+         }
+         if ($item->maybeDeleted()) {
+            $condition['is_deleted'] = 0;
+         }
+         $dbu       = new DbUtils();
+         $condition += $dbu->getEntitiesRestrictCriteria(getTableForItemType($itemtype), '', '', true);
+
+         $objects = $item->find($condition);
+
+         $nb = count($objects);
+         if ($nb > 0) {
+            foreach ($objects as $object) {
+               $items[$itemtype][] = $object;
+            }
+         }
+      }
+      return $items;
    }
 }

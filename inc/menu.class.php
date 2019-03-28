@@ -197,6 +197,15 @@ class PluginMydashboardMenu extends CommonGLPI {
          $menu['links']['config'] = PluginMydashboardConfig::getFormURL(false);
       }
 
+      $menu['options']['pluginmydashboardstockwidget'] = [
+         'title' => PluginMydashboardStockWidget::getTypeName(2),
+         'page'  => PluginMydashboardStockWidget::getSearchURL(false),
+         'links' => [
+            'search' => PluginMydashboardStockWidget::getSearchURL(false),
+            'add'    => PluginMydashboardStockWidget::getFormURL(false)
+         ]
+      ];
+
       return $menu;
    }
 
@@ -369,6 +378,13 @@ class PluginMydashboardMenu extends CommonGLPI {
             }
             echo "&nbsp;:&nbsp;";
 
+            echo "&nbsp;";
+            echo "<a id='load-widgets$rand' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
+            echo __('Load widgets', 'mydashboard') . "</a>&nbsp;";
+            echo "<i class='fas fa-spinner fa-1x'></i>";
+            echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
+            echo "&nbsp;";
+
             if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
                self::dropdownProfiles(['value' => $selected_profile]);
             } else {
@@ -398,40 +414,39 @@ class PluginMydashboardMenu extends CommonGLPI {
             if ($edit == 1) {
                echo "&nbsp;";
                echo "<a id='save-grid$rand' href='#' title=\"" . __('Save grid', 'mydashboard') . "\">";
-               echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='fa fa-floppy-o fa-1x'></i>";
+               echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-save fa-1x'></i>";
                echo "<span class='sr-only'>" . __('Save grid', 'mydashboard') . "</span>";
                echo "&nbsp;";
             }
             if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
                echo "&nbsp;";
                echo "<a id='save-default-grid$rand' href='#' title=\"" . __('Save default grid', 'mydashboard') . "\">";
-               echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='fa fa-hdd-o fa-1x'></i>";
+               echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-hdd fa-1x'></i>";
                echo "<span class='sr-only'>" . __('Save default grid', 'mydashboard') . "</span>";
                echo "&nbsp;";
             }
 
             echo "&nbsp;";
             echo "<a id='clear-grid$rand' href='#' title=\"" . __('Clear grid', 'mydashboard') . "\">";
-            echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='fa fa-window-restore  fa-1x'></i>";
+            echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-window-restore  fa-1x'></i>";
             echo "<span class='sr-only'>" . __('Clear grid', 'mydashboard') . "</span>";
             echo "&nbsp;";
 
             echo "&nbsp;";
             echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
-            echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='fa fa-times-circle-o fa-1x'></i>";
+            echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='far fa-times-circle fa-1x'></i>";
             echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
             echo "&nbsp;";
 
-
             if ($drag < 1) {
                echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
             if ($drag > 0) {
                echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
@@ -440,7 +455,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
             echo "<div class='bt-alert bt-alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
-                " . __('The widget was added to dashboard. Save the dashboard to see it.', 'mydashboard') . "
+                " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
             </div>";
             echo Html::scriptBlock('
                $("#success-alert").hide();
@@ -456,7 +471,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          } else {
             echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-pencil-square-o fa-2x'></i>";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit fa-2x'></i>";
             echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
             echo "</a>";
 
@@ -474,7 +489,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo "</a>";
 
                echo "<a id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-floppy-o fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
                echo "</a>";
             }
@@ -485,6 +500,8 @@ class PluginMydashboardMenu extends CommonGLPI {
                echo "</a>";
             }
          }
+         echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
+         echo "</div>";
       }
    }
 
@@ -526,18 +543,23 @@ class PluginMydashboardMenu extends CommonGLPI {
             $used[] = $v["id"];
          }
       }
-
-      $wl = "<script>
+      $layout = $_SESSION['glpilayout'];
+      $wl     = "<script>
 
             $(document).ready(function () {
+                var layout = '$layout';
+                console.log(layout);
                 //===================Start:Showing Menu=====================================
                 //Showing the menu on click
                 $('.plugin_mydashboard_add_button').on('click', function (e) {
                     //For tabs
-                    //$('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top - 100);
-                    //$('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
-                    $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
-                    $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
+                    if (layout == 'vsplit') {
+                        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top - 100);
+                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
+                    } else {
+                        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
+                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
+                    }
                     $('.plugin_mydashboard_menuDashboard').width(400);
                     $('.plugin_mydashboard_menuDashboard').zIndex(10000);
                     $('.plugin_mydashboard_menuDashboard').show();
@@ -638,6 +660,11 @@ class PluginMydashboardMenu extends CommonGLPI {
       $wl .= "<div class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
 
       $empty       = false;
+      $widgetslist = PluginMydashboardWidget::getWidgetList();
+      foreach ($widgetslist as $gs => $widgetclasses) {
+         $gslist[$widgetclasses['id']] = $gs;
+      }
+
       $widgetslist = PluginMydashboardWidget::getWidgetList();
       foreach ($widgetslist as $gs => $widgetclasses) {
          $gslist[$widgetclasses['id']] = $gs;
@@ -919,16 +946,16 @@ class PluginMydashboardMenu extends CommonGLPI {
       return $user_widget->getWidgets();
    }
 
-   /**
-    * Get the widget index on dash, to add it in the correct order
-    *
-    * @param type $name
-    *
-    * @return int if $name is in self::dash, FALSE otherwise
-    */
-   private function getIndexOnDash($name) {
-      return array_search($name, $this->dashboard);
-   }
+   //   /**
+   //    * Get the widget index on dash, to add it in the correct order
+   //    *
+   //    * @param type $name
+   //    *
+   //    * @return int if $name is in self::dash, FALSE otherwise
+   //    */
+   //   private function getIndexOnDash($name) {
+   //      return array_search($name, $this->dashboard);
+   //   }
 
    /**
     * Get all plugin names of plugin hooked with mydashboard
@@ -1121,7 +1148,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $datagrid = [];
       $datajson = [];
       $optjson  = [];
-
+      $widgets  = [];
       if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
 
          $widgets = PluginMydashboardWidget::getWidgetList();
@@ -1129,15 +1156,19 @@ class PluginMydashboardMenu extends CommonGLPI {
          foreach ($datagrid as $k => $v) {
             if (isset($v["id"])) {
                $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+
                if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
                   foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-                     if ($widgets[$v["id"]]["id"] == $w) {
+                     if (isset($widgets[$v["id"]]["id"])
+                         && $widgets[$v["id"]]["id"] == $w) {
                         $optjson[$v["id"]]["enableRefresh"] = $r;
                      }
                   }
                }
             }
          }
+
+
       } else {
          echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
@@ -1156,12 +1187,20 @@ class PluginMydashboardMenu extends CommonGLPI {
       $allwidgetjson = [];
 
       if ($edit > 0) {
-         $widgets = PluginMydashboardWidget::getWidgetList();
 
-         foreach ($widgets as $k => $val) {
-            $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
-            //NOT LOAD ALL WIDGETS FOR PERF
-            //            $allwidgetjson[$k] = PluginMydashboardWidget::getWidget($k);
+         if (isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
+             && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
+            $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
+         } else {
+            if (empty($grid) && count($widgets) < 1) {
+               $widgets = PluginMydashboardWidget::getWidgetList();
+            }
+            foreach ($widgets as $k => $val) {
+               $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
+               //NOT LOAD ALL WIDGETS FOR PERF
+               //               $allwidgetjson[$k] = PluginMydashboardWidget::getWidget($k, [], $widgets);
+
+            }
          }
       }
       $allwidgetjson = json_encode($allwidgetjson);
@@ -1232,7 +1271,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                             var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
                          }
                          if (refreshopt == 1) {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-refresh\"></i></button>';
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-sync-alt\"></i></button>';
                          }
                          if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
@@ -1363,6 +1402,22 @@ class PluginMydashboardMenu extends CommonGLPI {
                        });
                     return false;
                 }.bind(this);
+                this.loadWidgets = function () {
+                  var modal = $('<div>').dialog({ modal: true });
+                  modal.dialog('widget').hide();
+                  $('#ajax_loader').show();
+                  $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/loadWidgets.php',
+                       type: 'POST',
+                       complete: function () {
+                                //back to normal!
+                                $('#ajax_loader').hide();
+                                modal.dialog('close');
+                                window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                            }
+                       });
+                    return false;
+                }.bind(this);
                 $('#save-grid$rand').click(this.saveGrid);
                 $('#edit-grid$rand').click(this.editGrid);
                 $('#drag-grid$rand').click(this.dragGrid);
@@ -1372,6 +1427,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 $('#save-default-grid$rand').click(this.saveDefaultGrid);
                 $('#remove-widget$rand').click(this.removewidget);
                 $('#clear-grid$rand').click(this.clearGrid);
+                $('#load-widgets$rand').click(this.loadWidgets);
                 this.loadGrid();
             };
         });

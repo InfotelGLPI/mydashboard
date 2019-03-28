@@ -842,27 +842,26 @@ class PluginMydashboardTicket {
          $config = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $itilCategory = new ITILCategory();
-         if($itilCategory->getFromDB($job->fields['itilcategories_id'])){
+         if($itilCategory->getFromDB($job->fields['itilcategories_id'])) {
             $haystack = $itilCategory->getField('completename');
             $needle = '>';
             $offset = 0;
             $allpos = [];
 
             while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
-               $offset   = $pos + 1;
+               $offset = $pos + 1;
                $allpos[] = $pos;
             }
 
-            if(isset($allpos[$config->getField('levelCat')-1])){
-               $pos = $allpos[$config->getField('levelCat')-1];
-            } else{
+            if (isset($allpos[$config->getField('levelCat') - 1])) {
+               $pos = $allpos[$config->getField('levelCat') - 1];
+            } else {
                $pos = strlen($haystack);
             }
-            $output[$colnum] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
+            $output[$colnum] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
          } else{
             $output[$colnum] = "<span></span>";
          }
-
 
          //status
          $colnum++;
@@ -1208,7 +1207,7 @@ class PluginMydashboardTicket {
       // Make new job object and fill it from database, if success, print it
       $job = new Ticket();
 
-      $showprivate = Session::haveRight('followup', TicketFollowup::SEEPRIVATE);
+      $showprivate = Session::haveRight('followup', ItilFollowup::SEEPRIVATE);
 
       if ($job->getFromDB($id)) {
          $bgcolor  = $_SESSION["glpipriority_" . $job->fields["priority"]];
@@ -1332,7 +1331,7 @@ class PluginMydashboardTicket {
             if ($followups
                 && ($output_type == Search::HTML_OUTPUT)
             ) {
-               $eigth_column .= TicketFollowup::showShortForTicket($job->fields["id"]);
+               $eigth_column .= ItilFollowup::showShortForTicket($job->fields["id"]);
             } else {
                $eigth_column = sprintf(__('%1$s (%2$s)'), $eigth_column,
                                        sprintf(__('%1$s - %2$s'),

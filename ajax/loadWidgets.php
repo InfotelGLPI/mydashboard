@@ -1,14 +1,13 @@
+<?php
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
- Copyright (C) 2006-2014 by the mydashboard Development Team.
-
- https://forge.indepnet.net/projects/mydashboard
+ Copyright (C) 2015 by the MyDashboard Development Team.
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of mydashboard.
+ This file is part of MyDashboard.
 
  MyDashboard is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -21,26 +20,18 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
 
-// onMaximize = new Array();
-// onMinimize = new Array();
-// onInit = new Array();
+include("../../../inc/includes.php");
 
-//this object contains all methods to manage the dashboard
-var mydashboard = {
+Session::checkLoginUser();
 
-    //Refresh all widgets that can be refreshed
-    refreshAll: function () {
-        // this.log(this.language.refreshAll);
-        $('.refresh-icon').trigger('click');
-    },
-    //Launch the automatic refresh with a specified delay
-    automaticRefreshAll: function (delay) {
-        setInterval(function () {
-            refreshAll();
-        }, delay);
-    },
-};
+if (!isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
+    || count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) < 1) {
+   $widgets = PluginMydashboardWidget::getWidgetList();
+   foreach ($widgets as $k => $val) {
+      $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = PluginMydashboardWidget::getWidget($k, [], $widgets);
+   }
+}

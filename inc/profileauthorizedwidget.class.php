@@ -76,19 +76,24 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
 
       echo "<form method='post' action='../plugins/mydashboard/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
       echo "<table class='tab_cadre_fixe'>";
+      echo "<tr class='tab_bg_2'>";
+      echo "<th colspan='2' class='center b'>" . __('Authorized widgets', 'mydashboard') . "</th>";
+      echo "</tr>";
       foreach ($widgetlist as $plugin => $widgetclasses) {
+         echo "<tr class='tab_bg_2'>";
          $fct = 'plugin_version_' . strtolower($plugin);
          if (function_exists($fct)) {
-            echo "<th>" . ucfirst($this->getLocalName($plugin)) . "</th>";
+            echo "<td>" . ucfirst($this->getLocalName($plugin)) . "</td>";
          } else {
-            echo "<th>" . ucfirst($plugin) . "</th>";
+            echo "<td>" . ucfirst($plugin) . "</td>";
          }
-         echo "<th class='plugin_mydashboard_authorize_all' onclick=\""
+         echo "<td class='plugin_mydashboard_authorize_all' onclick=\""
               . "$('.from_$plugin').find('select').val(($('.from_$plugin').find('select').val() === '0')?'1':'0');
                        $('.from_$plugin').find('select').trigger('change');\" >" . __('Authorize/Unauthorize all', 'mydashboard') . "&nbsp;"
               //                     ."<input type='checkbox' value='all' />"
 
-              . "</th>";
+              . "</td>";
+         echo "</tr>";
          foreach ($widgetclasses as $widgetclass => $widgetlist) {
             $this->displayList($widgetlist, '', 'from_' . $plugin);
          }

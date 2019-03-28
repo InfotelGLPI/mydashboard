@@ -58,7 +58,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
                  rel="stylesheet">
 
            <!--GLPI-->
-           <link type="text/css" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+           <link type="text/css" href="../../../lib/font-awesome/css/all.min.css" rel="stylesheet">
            <link type="text/css" href="../../../lib/gridstack/src/gridstack.css" rel="stylesheet">
            <link type="text/css" href="../../../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
            <script src="../../../lib/lodash.min.js"></script>

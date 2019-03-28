@@ -69,6 +69,47 @@ class PluginMydashboardReminder {
    }
 
    /**
+    * Return visibility joins to add to SQL
+    *
+    * @param $forceall force all joins (false by default)
+    *
+    * @return string joins to add
+    **/
+   static function addVisibilityJoins($forceall = false) {
+
+      if (!Session::haveRight(Reminder::$rightname, READ)) {
+         return '';
+      }
+      // Users
+      $join = " LEFT JOIN `glpi_reminders_users`
+                     ON (`glpi_reminders_users`.`reminders_id` = `glpi_reminders`.`id`) ";
+
+      // Groups
+      if ($forceall
+          || (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"]))) {
+         $join .= " LEFT JOIN `glpi_groups_reminders`
+                        ON (`glpi_groups_reminders`.`reminders_id` = `glpi_reminders`.`id`) ";
+      }
+
+      // Profiles
+      if ($forceall
+          || (isset($_SESSION["glpiactiveprofile"])
+              && isset($_SESSION["glpiactiveprofile"]['id']))) {
+         $join .= " LEFT JOIN `glpi_profiles_reminders`
+                        ON (`glpi_profiles_reminders`.`reminders_id` = `glpi_reminders`.`id`) ";
+      }
+
+      // Entities
+      if ($forceall
+          || (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"]))) {
+         $join .= " LEFT JOIN `glpi_entities_reminders`
+                        ON (`glpi_entities_reminders`.`reminders_id` = `glpi_reminders`.`id`) ";
+      }
+
+      return $join;
+
+   }
+   /**
     * Show list for central view
     *
     * @param $personal boolean : display reminders created by me ? (true by default)
@@ -120,7 +161,7 @@ class PluginMydashboardReminder {
 
          $query = "SELECT `glpi_reminders`.*
                    FROM `glpi_reminders` " .
-            Reminder::addVisibilityJoins() . "
+            self::addVisibilityJoins() . "
                    WHERE $restrict_user
                          $restrict_visibility
                          AND " . Reminder::addVisibilityRestrict() . "
@@ -223,7 +264,7 @@ class PluginMydashboardReminder {
 
       $query = "SELECT `glpi_reminders`.*
                 FROM `glpi_reminders`
-                " . Reminder::addVisibilityJoins() . "
+                " . self::addVisibilityJoins() . "
                 WHERE $restrict_user
                       $restrict_visibility
                      AND " . Reminder::addVisibilityRestrict() . "

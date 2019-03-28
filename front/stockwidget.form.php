@@ -24,28 +24,49 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-$widgets = PluginMydashboardWidget::getWidgetList();
+$plugin = new Plugin();
 
-if (isset($_POST['gsid']) && isset($_POST['id'])) {
-   $gsid = $_POST['gsid'];
-   $opt  = [];
-   if (isset($_POST['params']) && is_array($_POST['params'])) {
-      $opt = $_POST['params'];
+if ($plugin->isActivated("mydashboard")) {
+
+   $config = new PluginMydashboardStockWidget();
+
+   if (isset($_POST["add"])) {
+
+      $config->check(-1, CREATE, $_POST);
+      $newID = $config->add($_POST);
+      if ($_SESSION['glpibackcreated']) {
+         Html::redirect($config->getFormURL() . "?id=" . $newID);
+      }
+      Html::back();
+
+   } else if (isset($_POST["purge"])) {
+
+      $config->check($_POST['id'], PURGE);
+      $config->delete($_POST, 1);
+      $config->redirectToList();
+
+   } else if (isset($_POST["update"])) {
+
+      $config->check($_POST['id'], UPDATE);
+      $config->update($_POST);
+      Html::back();
+
+   } else {
+
+      $config->checkGlobal(READ);
+
+      Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'pluginmydashboardstockwidget');
+
+      $config->display($_GET);
+
+      Html::footer();
    }
-   $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
-   echo $widget;
 } else {
-   $gsid    = $_POST['gsid'];
-   $data = [];
-   if (isset($widgets[$gsid])) {
-      $opt    = [];
-      $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
-      $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
-   }
-
-   echo json_encode($data);
+   Html::displayRightError();
 }
+
+Html::footer();

@@ -373,14 +373,41 @@ div#tabcontent{
    height: 90%;
 }
 
+.plugin_mydashboard_fa-thermometer-1:before {
+   content: "\f2cb";
+   font-family: "Font Awesome 5 Free";
+}
+
+.plugin_mydashboard_fa-thermometer-2:before {
+   content: "\f2ca";
+   font-family: "Font Awesome 5 Free";
+}
+
+.plugin_mydashboard_fa-thermometer-3:before {
+   content: "\f2c9";
+   font-family: "Font Awesome 5 Free";
+}
+
+.plugin_mydashboard_fa-thermometer-4:before {
+   content: "\f2c8";
+   font-family: "Font Awesome 5 Free";
+}
+
+.plugin_mydashboard_fa-thermometer-5:before {
+   content: "\f2c7";
+   font-family: "Font Awesome 5 Free";
+}
+
 .plugin_mydashboard_menuSliderButton:hover {
    content: "\f0da";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
 }
 
 .plugin_mydashboard_menuSliderButtonClose:hover {
    content: "\f0d9";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
 
 }
 
@@ -406,14 +433,16 @@ div#tabcontent{
 .plugin_mydashboard_menuDashboardListTitle1:before,
 .plugin_mydashboard_menuDashboardListTitle2:before {
    content: "\f0da";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
    margin-right: 5px;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1.plugin_mydashboard_menuDashboardListTitle1Opened:before,
 .plugin_mydashboard_menuDashboardListTitle2.plugin_mydashboard_menuDashboardListTitle1Opened:before {
    content: "\f0d7";
-   font-family: FontAwesome;
+   font-weight: 900;
+   font-family: "Font Awesome 5 Free";
 }
 
 .plugin_mydashboard_menuDashboard li {
@@ -679,6 +708,10 @@ svg:hover {
    border-style: none;
 }
 
+.pull-right {
+   float: right;
+}
+
 /*****datatable export******/
 
 a.buttons-collection {
@@ -796,13 +829,22 @@ div.dt-button-background {
    width: 95px;
 }
 
+.tickets-stats .nbstock {
+   display: inline-block;
+   margin: 0 30px 0 10px;
+   position: relative;
+   vertical-align: top;
+   text-align: center;
+   /*width: 80px;*/
+}
+
 .count-number {
    font-size: 20px;
 }
 
 .count-title {
-   font-size: 40px;
-   font-weight: normal;
+   font-size: 14px;
+   font-weight: bold;
    margin-top: 10px;
    margin-bottom: 0;
    text-align: center;
@@ -814,10 +856,20 @@ div.dt-button-background {
    text-align: center;
 }
 
+.equip-text {
+   font-size: 11px;
+   font-weight: bold;
+   text-align: center;
+   border: #8080804d;
+   border-width: 2px;
+   padding: 5px;
+   border-style: dashed;
+   width: 90% !important;
+}
+
 .fa-2x {
    margin: 0 auto;
    float: none;
-   display: table;
    color: #000;
 }
 
@@ -984,4 +1036,21 @@ div.dt-button-background {
 .grid-stack .grid-stack-placeholder > .placeholder-content {
    border: 1px dashed #000 !important;
    background-color: #FFF !important;
+}
+
+.ajax_loader{
+   position:   fixed;
+   z-index:    1000;
+   top:        0;
+   left:       0;
+   height:     100%;
+   width:      100%;
+   background: rgba( 255, 255, 255, .8 )
+   url(../../../pics/spinner.48.gif)
+   50% 50%
+   no-repeat;
+}
+
+.hidden{
+   display:none;
 }

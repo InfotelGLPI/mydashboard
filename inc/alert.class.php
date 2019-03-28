@@ -89,15 +89,17 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getWidgetsForItem() {
       return [
          _n('Alert', 'Alerts', 2, 'mydashboard') => [
-            $this->getType() . "1" => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "2" => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "3" => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "4" => __("Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "5" => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "6" => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "7" => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "8" => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "9" => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>"
+            $this->getType() . "1"  => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "2"  => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "3"  => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "4"  => __("Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "5"  => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "6"  => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "7"  => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+            $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+            $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+            $this->getType() . "10" => __("Inventory stock alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "11" => __('Your equipments', 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
          ]
       ];
    }
@@ -121,10 +123,10 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
-               . "LEFT JOIN `glpi_plugin_mydashboard_alerts`"
-               . "ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
-               . "WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
+               . PluginMydashboardReminder::addVisibilityJoins()
+               . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
+               . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
+               . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
                          $restrict_visibility ";
 
       if ($public == 0) {
@@ -149,7 +151,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    function getWidgetContentForItem($widgetId, $opt = []) {
       global $CFG_GLPI, $DB;
-      $dbu        = new DbUtils();
+      $dbu = new DbUtils();
       switch ($widgetId) {
          case $this->getType() . "1":
             $widget = new PluginMydashboardHtml();
@@ -199,6 +201,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
             $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
+
+
             $criterias = ['groups_id'];
             $params    = ["widgetId"  => $widgetId,
                           "name"      => 'PluginMydashboardAlert4',
@@ -618,7 +622,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $stats5        = 0;
             if (isset($opt)) {
 
-               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -863,7 +867,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $url    = $CFG_GLPI['url_base'] . "/status.php";
             //            $url = "http://localhost/glpi/status.php";
             $options = ["url" => $url];
-
+            $table = "";
             $contents = self::cURLData($options);
             $contents = nl2br($contents);
 
@@ -906,7 +910,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('ID and priority','mydashboard'), _n('Requester', 'Requesters', 2), __('Status'),
+            $headers = [__('ID and priority', 'mydashboard'), _n('Requester', 'Requesters', 2), __('Status'),
                         __('Last update'), __('Assigned to'), __('Action'),
                         __('ID'), __('Priority'), __('Category')];
             $widget->setTabNames($headers);
@@ -942,11 +946,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                   }
                   if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
 
-                     $ticketfollowup = new TicketFollowup();
-                     $followups      = $ticketfollowup->find("`tickets_id` = " . $ticket->fields['id'], 'date DESC');
+                     $itilfollowup = new ItilFollowup();
+                     $followups    = $itilfollowup->find(['items_id' => $ticket->fields['id'],
+                                                          'itemtype' => 'Ticket'], 'date DESC');
 
                      $ticketdocument = new Document();
-                     $documents      = $ticketdocument->find("`tickets_id` = " . $ticket->fields['id'], 'date_mod DESC');
+                     $documents      = $ticketdocument->find(['tickets_id' => $ticket->fields['id']], ['date_mod DESC']);
 
                      if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
                          || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
@@ -1032,7 +1037,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $config = new PluginMydashboardConfig();
                         $config->getFromDB(1);
                         $itilCategory = new ITILCategory();
-                        if($itilCategory->getFromDB($ticket->fields["itilcategories_id"])){
+                        if ($itilCategory->getFromDB($ticket->fields["itilcategories_id"])) {
                            $haystack = $itilCategory->getField('completename');
                            $needle = '>';
                            $offset = 0;
@@ -1065,7 +1070,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
 
             return $widget;
@@ -1111,7 +1116,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
 
             return $widget;
             break;
@@ -1152,10 +1157,166 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setTabDatas($datas);
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
-            //            $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-warning fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
+            $widget->toggleWidgetRefresh();
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
+            return $widget;
+            break;
+
+         case $this->getType() . "10":
+
+            $widget = new PluginMydashboardHtml();
+
+            $setuplink = PluginMydashboardStockWidget::getSearchURL(true);
+            $criterias = ["locations_id"];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt               = $options['opt'];
+            $crit              = $options['crit'];
+            $location_criteria = $crit['locations_id'];
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'PluginMydashboardAlert10',
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "setup"     => $setuplink,
+                       "export"    => false,
+                       "canvas"    => false,
+                       "nb"        => 1];
+            $table  = PluginMydashboardHelper::getGraphHeader($params);
+
+            $table .= "<div class=\"tickets-stats\">";
+            $stockwidget = new PluginMydashboardStockWidget();
+            $stocks      = $stockwidget->find();
+            $script      = "";
+            if (count($stocks) > 0) {
+               $nb = 0;
+               foreach ($stocks as $data) {
+                  $nb++;
+                  $alarm    = $data['alarm_threshold'];
+                  $stock    = 0;
+                  $color    = "olivedrab";
+                  $itemtype = $data['itemtype'];
+                  if ($item = getItemForItemtype($itemtype)) {
+                     $itemtable = getTableForItemType($itemtype);
+                     $typefield = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype . "Type"));
+
+                     $types  = json_decode($data["types"], true);
+                     $states = json_decode($data["states"], true);
+                     $q2     = "SELECT DISTINCT COUNT(`" . $itemtable . "`.`id`) AS nb
+                        FROM `" . $itemtable . "`
+                        WHERE `" . $itemtable . "`.`is_deleted` = '0' AND `" . $itemtable . "`.`is_template` = '0' ";
+                     $q2     .= $dbu->getEntitiesRestrictRequest("AND", $itemtype::getTable());
+                     if (is_array($states) && count($states) > 0) {
+                        $q2 .= " AND `" . $itemtable . "`.`states_id` IN('" . implode("', '", $states) . "') ";
+                     }
+                     if (is_array($types) && count($types) > 0) {
+                        $q2 .= "AND `" . $itemtable . "`.`" . $typefield . "` IN('" . implode("', '", $types) . "')";
+                     }
+                     if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
+                        $q2 .= " AND `" . $itemtable . "`.`locations_id` = '" . $location_criteria . "' ";
+                     }
+                     $r2  = $DB->query($q2);
+                     $nb2 = $DB->numrows($r2);
+                     if ($nb2) {
+                        foreach ($DB->request($q2) as $data2) {
+                           $stock = $data2['nb'];
+                        }
+                     }
+                     if ($stock < $alarm) {
+                        $color = "indianred";
+                     }
+
+                     //////////////////////////////////////////
+                     $search                              = [];
+                     $search['reset']                     = 'reset';
+                     $search['criteria'][0]['field']      = "view";
+                     $search['criteria'][0]['searchtype'] = 'contains';
+                     $search['criteria'][0]['value']      = "^";
+                     $search['criteria'][0]['link']       = 'AND';
+                     if (is_array($types) && count($types) > 0) {
+                        $nbs = 1;
+                        foreach ($types as $type) {
+                           $nbs++;
+                           if ($itemtype == 'Certificate') {
+                              $search['criteria'][1]['criteria'][$nbs]['field'] = "7";
+                           } else {
+                              $search['criteria'][1]['criteria'][$nbs]['field'] = "4";
+                           }
+                           $search['criteria'][1]['criteria'][$nbs]['searchtype'] = 'equals';
+                           $search['criteria'][1]['criteria'][$nbs]['value']      = $type;
+                           $search['criteria'][1]['criteria'][$nbs]['link']       = 'OR';
+                        }
+                     }
+                     if (is_array($states) && count($states) > 0) {
+                        $nbs = 1;
+                        foreach ($states as $state) {
+                           $nbs++;
+                           $search['criteria'][2]['criteria'][$nbs]['field']      = 31; // type
+                           $search['criteria'][2]['criteria'][$nbs]['searchtype'] = 'equals';
+                           $search['criteria'][2]['criteria'][$nbs]['value']      = $state;
+                           $search['criteria'][2]['criteria'][$nbs]['link']       = 'OR';
+                        }
+                     }
+                     if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
+                        $search['criteria'][3]['field']      = "3";
+                        $search['criteria'][3]['searchtype'] = 'equals';
+                        $search['criteria'][3]['value']      = $opt['locations_id'];
+                        $search['criteria'][3]['link']       = 'AND';
+                     }
+                     $form = $itemtype::getSearchURL(false);
+                     $link = $CFG_GLPI["root_doc"] . $form . '?is_deleted=0&' .
+                             Toolbox::append_params($search, "&");
+
+                     $icon  = $data['icon'];
+                     $table .= "<div class=\"nbstock\" style=\"color:$color\">";
+                     $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $data['name'] . "'>";
+                     $table .= "<i style='color:$color' class=\"$icon fa-3x fa-border\"></i>";
+                     $table .= "<h3>";
+                     $table .= "<span class=\"counter count-number\" id=\"stock_$nb\"></span>";
+//                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
+                     $table .= "</h3>";
+                     $table .= "<p class=\"count-text \">" . $data['name'] . "</p>";
+                     $table .= "</a>";
+                     $table .= "</div>";
+
+                     $script .= "$('#stock_$nb').countup($stock);";
+
+                  }
+               }
+               $table .= "<script type='text/javascript'>
+                         $(function(){
+                            $script;
+                         });
+                  </script>";
+            } else {
+
+               $table .= "<i style='color:orange' class='fa fa-exclamation-triangle fa-3x'></i>";
+               $table .= "<br><br><span class='b'>". __("No alerts are setup", "mydashboard")."</span>";
+            }
+            $table .= "</div>";
+            $table .= PluginMydashboardHelper::getGraphFooter($params);
+            $widget->setWidgetHtmlContent(
+               $table
+            );
+            $widget->toggleWidgetRefresh();
+
+            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Inventory stock alerts", "mydashboard") . "</span>");
+            $widget->setWidgetComment(__("Display alerts for inventory stocks", "mydashboard"));
+
+            return $widget;
+            break;
+         case $this->getType() . "11":
+            $widget = new PluginMydashboardHtml();
+            $class = "bt-col-md-12";
+            $display = PluginMydashboardWidget::getWidgetMydashboardEquipments($class, false);
+            $widget->setWidgetHtmlContent($display);
+            $widget->setWidgetTitle(__('Your equipments', 'mydashboard'));
             return $widget;
             break;
       }
@@ -1201,7 +1362,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `glpi_reminders`.`begin_view_date`,
                        `glpi_reminders`.`end_view_date`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1290,7 +1451,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `glpi_reminders`.`begin_view_date`,
                        `glpi_reminders`.`end_view_date`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1380,7 +1541,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
+               . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
@@ -1407,23 +1568,23 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "<li>";
 
-            $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-4 center \">";
-            $class = "fa-thermometer-" . ($row['impact']-1);
-            $style = "color:".$config->getField('impact_'.$row['impact']);
-            $wl .= "<i style='$style' class='fa $class fa-alert-7'></i>";
+            $wl    .= "<div class='bt-row'>";
+            $wl    .= "<div class=\"bt-col-xs-4 center \">";
+            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
+            $style = "color:" . $config->getField('impact_' . $row['impact']);
+            $wl    .= "<i style='$style' class='fa $class fa-alert-7'></i>";
 
             $wl .= "</div>";
 
             $wl .= "<div class=\"bt-col-xs-8 alert-title-div\">";
             $wl .= "<h3>";
 
-            $rand      = mt_rand();
-            $name      = $row['name'];
-            $wl        .= "<div id='alert$rand'>";
-            $wl        .= "<span style='$style' class='left'>" . $name . "</span>";
-            $wl        .= "</div>";
-            $wl        .= "</h3>";
+            $rand = mt_rand();
+            $name = $row['name'];
+            $wl   .= "<div id='alert$rand'>";
+            $wl   .= "<span style='$style' class='left'>" . $name . "</span>";
+            $wl   .= "</div>";
+            $wl   .= "</h3>";
 
             $wl .= "</div>";
             $wl .= "</div>";
@@ -1473,7 +1634,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getAlertSummary($public = 0, $force = 0) {
       global $DB;
 
-      echo Html::css("/lib/font-awesome-4.7.0/css/font-awesome.min.css");
+      echo Html::css("/lib/font-awesome/css/all.min.css");
       echo Html::css("/plugins/mydashboard/css/mydashboard.css");
       echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
       $now = date('Y-m-d H:i:s');
@@ -1498,10 +1659,10 @@ class PluginMydashboardAlert extends CommonDBTM {
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-               . Reminder::addVisibilityJoins()
-               . "LEFT JOIN `" . $this->getTable() . "`"
-               . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-               . "WHERE $restrict_user
+               . PluginMydashboardReminder::addVisibilityJoins()
+               . " LEFT JOIN `" . $this->getTable() . "`"
+               . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+               . " WHERE $restrict_user
                          $restrict_visibility ";
 
       if ($public == 0) {
@@ -1566,12 +1727,12 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    private function displayContent($impact, $list = [], $public = 0) {
 
-      $div = "";
+      $div    = "";
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
 
-      $class = "fa-thermometer-" . ($impact-1);
-      $style = "color:".$config->getField('impact_'.$impact);
+      $class = "plugin_mydashboard_fa-thermometer-" . ($impact - 1);
+      $style = "color:" . $config->getField('impact_' . $impact);
 
       $div .= "<div class='bt-row weather_public_block'>";
       $div .= "<div class='center'><h3>" . __("Monitoring", "mydashboard") . "</h3></div>";
@@ -1595,17 +1756,17 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    private function getMessage($list, $public) {
 
-      $l = "";
+      $l      = "";
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
       if (!empty($list)) {
          foreach ($list as $listitem) {
 
-            $configColor = $config->getField("impact_".$listitem['impact']);
+            $configColor = $config->getField("impact_" . $listitem['impact']);
             //            $class     = (Html::convDate(date("Y-m-d")) == Html::convDate($listitem['date'])) ? 'alert_new' : '';
-//            $class     = ' alert_impact' . $listitem['impact'];
-            $style     = "background-color : " . $configColor;
-//            $classfont = ' alert_fontimpact' . $listitem['impact'];
+            //            $class     = ' alert_impact' . $listitem['impact'];
+            $style = "background-color : " . $configColor;
+            //            $classfont = ' alert_fontimpact' . $listitem['impact'];
             $styleFont = 'color : ' . $configColor;
             $rand      = mt_rand();
             $name      = (Session::haveRight("reminder_public", READ)) ?
@@ -1869,12 +2030,12 @@ class PluginMydashboardAlert extends CommonDBTM {
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "</b></div>";
       } else if (preg_match('/OK/is', $message)) {
-         $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fa fa-check-circle-o fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='far fa-check-circle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("GLPI is OK", "mydashboard");
          $alert .= "</b></div>";
       } else {
-         $alert .= "<div class='md-title-status' style='color:orange'><i class='fa fa-warning fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:orange'><i class='fa fa-exclamation-triangle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Alert is not properly configured or is not reachable", "mydashboard");
          $alert .= "</b>";
