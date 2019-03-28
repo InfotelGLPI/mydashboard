@@ -4106,6 +4106,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                      $userFullname = $user->getField("firstname") . " " . $user->getField("realname");
 
+                     // If user has not firstname and lastname display it's name (ex : glpi)
                      if($userFullname == " "){
                         $userFullname = $user->getField("name");
                      }
@@ -4135,7 +4136,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
                }
 
                $widget = new PluginMydashboardDatatable();
-               $widget->setTabNames(["Technicien", "En cours attribué" , "En cours planifié", "En attente", "Résolu"]);
+
+               $widget->setWidgetTitle(__("Number of tickets open by technician and by status", "mydashboard")
+                  . _n('Techncian', 'Techncians', 2));
+
+               $widget->setTabNames([
+                  __("Technician"),
+                  __("Processing (assigned)") ,
+                  __("Processing (planned)"),
+                  __("Pending"),
+                  __("Solved")
+               ]);
                $widget->setTabDatas($temp);
                $widget->toggleWidgetRefresh();
 
@@ -4186,18 +4197,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
          }
       }
    }
-
-   /**
-    * @param $id
-    *
-    * @return string
-    */
-   //   private function getSeeProfilebutton class='btn btn-primary btn-sm'($id) {
-   //      global $CFG_GLPI;
-   //      return "<a target='blank' href='" . $CFG_GLPI['root_doc'] . "/front/user.form.php?id=" . $id . "'>"
-   //             . "<input type='button class='btn btn-primary btn-sm'' class='submit' value=' " . __("Show Profile", "mydashboard") . " '/>"
-   //             . "</a>";
-   //   }
 
    /**
     * @param $table
