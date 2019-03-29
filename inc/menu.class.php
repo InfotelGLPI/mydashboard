@@ -548,7 +548,6 @@ class PluginMydashboardMenu extends CommonGLPI {
 
             $(document).ready(function () {
                 var layout = '$layout';
-                console.log(layout);
                 //===================Start:Showing Menu=====================================
                 //Showing the menu on click
                 $('.plugin_mydashboard_add_button').on('click', function (e) {
