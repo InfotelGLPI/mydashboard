@@ -238,6 +238,25 @@ class PluginMydashboardHelper {
             $crit['crit']['sons'] = $opt['sons'];
          }
 
+         if (in_array("requesters_id", $criterias)) {
+
+            // Remove the '[' if exist to avoid issues
+            if(isset($params['opt']['requesters_id['])){
+               $params['opt']['requesters_id'] = $params['opt']['requesters_id['];
+               unset($params['opt']['requesters_id[']);
+            }
+
+            if (isset($params['opt']['requesters_id'])) {
+               $opt['requesters_id'] = is_array($params['opt']['requesters_id']) ? $params['opt']['requesters_id'] : [$params['opt']['requesters_id']];
+               $crit['crit']['requesters_id'] = " AND `glpi_tickets`.`id` IN (SELECT tickets_id as id FROM glpi_groups_tickets
+            WHERE type = 2 AND groups_id IN (" . implode(",", $opt['requesters_id']) . "))";
+
+
+            }else{
+               $crit['crit']['requesters_id'] = "";
+            }
+         }
+
          if (isset($opt)) {
             $crit['crit']['entities_id'] = self::getSpecificEntityRestrict("glpi_tickets", $opt);
             $crit['crit']['entity']      = $opt['entities_id'];
@@ -428,6 +447,38 @@ class PluginMydashboardHelper {
 
       $count = count($criterias);
       if (Session::isMultiEntitiesMode()) {
+         if (in_array("requesters_id", $criterias)){
+            $form    .= "<span class='md-widgetcrit'>";
+
+            $dbu = new DbUtils();
+            $result = $dbu->getAllDataFromTable(Group::getTable());
+
+            $temp = [];
+            foreach($result as $item){
+               $temp[$item['id']] = $item['name'];
+            }
+
+            $params = [
+               "name"=> 'requesters_id',
+               "display"=>false,
+               "multiple"=>true,
+               "width"=> '200px',
+               'values'=> isset($opt['requesters_id']) ? $opt['requesters_id'] : [],
+               'display_emptychoice' => true
+            ];
+
+            $form   .= __('Requester');
+            $form   .= "&nbsp;";
+
+            $dropdown = Dropdown::showFromArray("requesters_id", $temp, $params);
+
+            $form .= $dropdown;
+
+            $form   .= "</span>";
+            if ($count > 1) {
+               $form .= "</br></br>";
+            }
+         }
          if (in_array("entities_id", $criterias)) {
             $form   .= "<span class='md-widgetcrit'>";
             $params = ['name'                => 'entities_id',
@@ -533,7 +584,7 @@ class PluginMydashboardHelper {
       }
       if (in_array("users_id", $criterias)) {
          $params = array('name'     => "users_id",
-                         'value'    => $opt['users_id'],
+                         'value'    => isset($opt['users_id']) ? $opt['users_id'] : null,
                          'right'    => "interface",
                          'comments' => 1,
                          'entity'   => $_SESSION["glpiactiveentities"],
@@ -598,6 +649,11 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+
+      if($onsubmit){
+         $form .= "<input type='submit' class='submit' value='".__("Submit")."'>";
+      }
+
       $form .= self::getFormFooter();
 
       return $form;

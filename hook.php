@@ -38,9 +38,10 @@ function plugin_mydashboard_install() {
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.4.sql");
 
       PluginMydashboardMenu::installWidgets();
+      insertDefaultTitles();
    }
    //end---------------------------------------------------------------------
    //From 1.0.0 (0.84) to 1.0.1 (0.84)------------------------------------
@@ -150,11 +151,18 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
+   if(!$DB->tableExists("glpi_plugin_mydashboard_customswidgets","id")) {
+      $mig = new Migration("1.6.4");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.4.sql");
+      $mig->executeMigration();
+      insertDefaultTitles();
+   }
    if (!$DB->tableExists("glpi_plugin_mydashboard_stockwidgets")) {
       $mig = new Migration("1.7.0");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.0.sql");
       $mig->executeMigration();
    }
+
 
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
@@ -164,6 +172,35 @@ function plugin_mydashboard_install() {
    PluginMydashboardProfile::initProfile();
    PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    return true;
+}
+
+function insertDefaultTitles(){
+
+   global $DB;
+   $startTitle = '<p style="background-color: lightgrey; padding: 5px; font-weight: bold; border: solid 1px black;">';
+   $endTitle =' </p>';
+
+   // Insert default title in table customwidgets
+   $DB->insert("glpi_plugin_mydashboard_customswidgets",
+       [
+           'name' => __('Incidents'),
+           'content' => $startTitle . __("Traitement des incidents") . $endTitle,
+           'comment' => ''
+       ]);
+
+   $DB->insert("glpi_plugin_mydashboard_customswidgets",
+       [
+           'name' => __('Demandes'),
+           'content' => $startTitle . __("Traitement des demandes") . $endTitle,
+           'comment' => ''
+       ]);
+
+   $DB->insert("glpi_plugin_mydashboard_customswidgets",
+       [
+           'name' => __('Problèmes'),
+           'content' => $startTitle . __("Traitement des problèmes") . $endTitle,
+           'comment' => ''
+       ]);
 }
 
 function fillTableMydashboardStocktickets() {
@@ -208,7 +245,7 @@ function plugin_mydashboard_uninstall() {
    global $DB;
 
    // Plugin tables deletion
-   $tables = [/*"glpi_plugin_mydashboard_profiles",*/
+   $tables = [
                    "glpi_plugin_mydashboard_profileauthorizedwidgets",
                    "glpi_plugin_mydashboard_widgets",
                    "glpi_plugin_mydashboard_userwidgets",
@@ -220,7 +257,8 @@ function plugin_mydashboard_uninstall() {
                    "glpi_plugin_mydashboard_stocktickets",
                    "glpi_plugin_mydashboard_problemalerts",
                    "glpi_plugin_mydashboard_dashboards",
-                   "glpi_plugin_mydashboard_groupprofiles"];
+                   "glpi_plugin_mydashboard_groupprofiles",
+                   "glpi_plugin_mydashboard_customswidgets"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -277,4 +315,17 @@ function plugin_mydashboard_display_login() {
 function plugin_mydashboard_getDatabaseRelations() {
 
    return [];
+}
+
+// Define Dropdown tables to be manage in GLPI
+function plugin_mydashboard_getDropdown() {
+
+   $plugin = new Plugin();
+
+   if ($plugin->isActivated("mydashboard")) {
+      return [
+          'PluginMydashboardCustomswidget' => PluginMydashboardCustomswidget::getTypeName(2),];
+   } else {
+      return [];
+   }
 }

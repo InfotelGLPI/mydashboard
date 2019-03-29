@@ -191,7 +191,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             if (isset($opt)) {
-               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -200,17 +200,19 @@ class PluginMydashboardAlert extends CommonDBTM {
                }
             }
 
-            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-            $criterias        = ['groups_id'];
-            $params           = ["widgetId"  => $widgetId,
-                                 "name"      => 'PluginMydashboardAlert4',
-                                 "onsubmit"  => false,
-                                 "opt"       => $opt,
-                                 "criterias" => $criterias,
-                                 "export"    => false,
-                                 "canvas"    => false,
-                                 "nb"        => 1];
-            $table            = PluginMydashboardHelper::getGraphHeader($params);
+            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
+
+
+            $criterias = ['groups_id'];
+            $params    = ["widgetId"  => $widgetId,
+                          "name"      => 'PluginMydashboardAlert4',
+                          "onsubmit"  => false,
+                          "opt"       => $opt,
+                          "criterias" => $criterias,
+                          "export"    => false,
+                          "canvas"    => false,
+                          "nb"        => 1];
+            $widget->setWidgetHeader( PluginMydashboardHelper::getGraphHeader($params));
 
             $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
@@ -284,7 +286,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             if (isset($opt)) {
 
-               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -314,7 +316,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $colorstats4 = "indianred";
             }
 
-            $table .= "<div class=\"tickets-stats\">";
+            $table = "<div class=\"tickets-stats\">";
 
             //////////////////////////////////////////
 
@@ -499,7 +501,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $stats2        = 0;
             if (isset($opt)) {
 
-               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
 
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
@@ -510,7 +512,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
 
-            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
 
             $criterias = ['groups_id'];
             $params    = ["widgetId"  => $widgetId,
@@ -521,7 +523,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                           "export"    => false,
                           "canvas"    => false,
                           "nb"        => 1];
-            $table     = PluginMydashboardHelper::getGraphHeader($params);
+            $widget->setWidgetHeader( PluginMydashboardHelper::getGraphHeader($params));
 
             $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                            FROM `glpi_tickets`
@@ -549,7 +551,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $stats3        = 0;
             if (isset($opt)) {
 
-               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -585,7 +587,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $stats4        = 0;
             if (isset($opt)) {
 
-               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+               $opt['groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'],$opt);
                if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
                   $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -649,7 +651,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                $colorstats5 = "indianred";
             }
 
-            $table .= "<div class=\"tickets-stats\">";
+            $table = "<div class=\"tickets-stats\">";
             if ($stats2 > 0) {
                $options2['reset']                     = 'reset';
                $options2['criteria'][0]['field']      = 12; // status
@@ -955,9 +957,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                          || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
 
                         $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
-
+                        $textColor = "color:black!important;";
+                        if ($bgcolor=='#000000') {
+                           $textColor =  "color:white!important;";
+                        }
                         $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
-                        $name_ticket .= "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+                        $name_ticket .= "<a style='$textColor' href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
                         $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
                         $name_ticket .= "</a>";
                         $name_ticket .= "</div>";
@@ -1016,15 +1021,16 @@ class PluginMydashboardAlert extends CommonDBTM {
                         }
                         $datas[$i]["action"] = $action;
 
-                        $ticketId        = "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
-                        $ticketId        .= $data['tickets_id'];
-                        $ticketId        .= "</a>";
+
+                        $ticketId = "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+                        $ticketId .= $data['tickets_id'];
+                        $ticketId .= "</a>";
                         $datas[$i]["id"] = $ticketId;
 
                         // Priorities
-                        $priority              = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>";
-                        $priority              .= "<span class='b'>" . $ticket->fields["priority"] . " - " . Ticket::getPriorityName($ticket->fields["priority"]) . "</span>";
-                        $priority              .= "</div>";
+                        $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
+                        $priority .= "<span class='b'>". $ticket->fields["priority"] . " - " .Ticket::getPriorityName($ticket->fields["priority"])."</span>";
+                        $priority .= "</div>";
                         $datas[$i]["priority"] = $priority;
 
                         // Categories
@@ -1033,23 +1039,26 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $itilCategory = new ITILCategory();
                         if ($itilCategory->getFromDB($ticket->fields["itilcategories_id"])) {
                            $haystack = $itilCategory->getField('completename');
-                           $needle   = '>';
-                           $offset   = 0;
-                           $allpos   = [];
+                           $needle = '>';
+                           $offset = 0;
+                           $allpos = [];
 
                            while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
                               $offset   = $pos + 1;
                               $allpos[] = $pos;
                            }
-                           if (isset($allpos[$config->getField('levelCat') - 1])) {
-                              $pos = $allpos[$config->getField('levelCat') - 1];
-                           } else {
+
+                           if(isset($allpos[$config->getField('levelCat')-1])){
+                              $pos = $allpos[$config->getField('levelCat')-1];
+                           } else{
                               $pos = strlen($haystack);
                            }
-                           $datas[$i]["category"] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
-                        } else {
+                           $datas[$i]["category"] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
+                        } else{
                            $datas[$i]["category"] = "<span></span>";
                         }
+
+
                         $i++;
                      }
                   }

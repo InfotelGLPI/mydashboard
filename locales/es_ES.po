@@ -6,15 +6,14 @@
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2016
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2018
-# Jorge Paniagua <jpaniaguam@gmail.com>, 2019
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - MyDashboard plugin 1.7.0\n"
+"Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-24 10:36+0100\n"
-"PO-Revision-Date: 2019-02-24 10:44+0100\n"
-"Last-Translator: Jorge Paniagua <jpaniaguam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2019-01-08 15:37+0100\n"
+"PO-Revision-Date: 2019-01-08 16:08+0100\n"
+"Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/tsmr/teams/65490/"
 "es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -22,222 +21,203 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: Poedit 2.2\n"
 
-#: setup.php:140 inc/menu.class.php:87 inc/menu.class.php:832
-#: inc/preference.class.php:62
+#: setup.php:139 inc/menu.class.php:87 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr "Mi Dashboard"
 
 #: ajax/clearGrid.php:40
 msgid "Grid cleared"
-msgstr "Tabla limpiada"
+msgstr ""
 
 #: inc/alert.class.php:55
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
-msgstr[0] "Dashboard de Alertas"
-msgstr[1] "Dashboard de Alertas"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/alert.class.php:91 inc/alert.class.php:1809 inc/alert.class.php:1812
-#: inc/alert.class.php:1925 inc/alert.class.php:1928
+#: inc/alert.class.php:91 inc/alert.class.php:1657 inc/alert.class.php:1660
+#: inc/alert.class.php:1773 inc/alert.class.php:1776
 #: inc/problemalert.class.php:110 inc/problemalert.class.php:113
 msgid "Alert"
 msgid_plural "Alerts"
-msgstr[0] "Alertas"
-msgstr[1] "Alertas"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/alert.class.php:92
 msgid "Network alert"
 msgid_plural "Network alerts"
-msgstr[0] "Alertas de Red"
-msgstr[1] "Alertas de Red"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/alert.class.php:93 inc/alert.class.php:169 inc/alert.class.php:1813
-#: inc/alert.class.php:1929 inc/problemalert.class.php:114
-#: inc/widget.class.php:564
+#: inc/alert.class.php:93 inc/alert.class.php:167 inc/alert.class.php:1661
+#: inc/alert.class.php:1777 inc/problemalert.class.php:114
+#: inc/widget.class.php:591
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
-msgstr[0] "Mantenimientos calendarizados"
-msgstr[1] "Mantenimientos calendarizados"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/alert.class.php:94 inc/alert.class.php:179 inc/alert.class.php:1814
-#: inc/alert.class.php:1930 inc/problemalert.class.php:115
-#: inc/widget.class.php:605
+#: inc/alert.class.php:94 inc/alert.class.php:177 inc/alert.class.php:1662
+#: inc/alert.class.php:1778 inc/problemalert.class.php:115
+#: inc/widget.class.php:632
 msgid "Information"
 msgid_plural "Informations"
-msgstr[0] "Informaciones"
-msgstr[1] "Informaciones"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/alert.class.php:95 inc/alert.class.php:481
+#: inc/alert.class.php:95 inc/alert.class.php:479
 msgid "Incidents alerts"
-msgstr "Alertas de Incidentes"
+msgstr ""
 
-#: inc/alert.class.php:96 inc/alert.class.php:856
+#: inc/alert.class.php:96 inc/alert.class.php:854
 msgid "SLA Incidents alerts"
-msgstr "SLA Alertas de Incidentes"
+msgstr ""
 
-#: inc/alert.class.php:97 inc/alert.class.php:883
+#: inc/alert.class.php:97 inc/alert.class.php:881
 msgid "GLPI Status"
 msgstr "GLPI Status"
 
-#: inc/alert.class.php:98 inc/alert.class.php:1064
+#: inc/alert.class.php:98 inc/alert.class.php:1068
 msgid "User ticket alerts"
-msgstr "Alertas de tickets de usuario"
+msgstr ""
 
-#: inc/alert.class.php:99 inc/alert.class.php:1110
+#: inc/alert.class.php:99 inc/alert.class.php:1114
 msgid "Automatic actions in error"
-msgstr "Acciones automáticas en error"
+msgstr ""
 
-#: inc/alert.class.php:100 inc/alert.class.php:1152
+#: inc/alert.class.php:100 inc/alert.class.php:1156
 msgid "Not imported mails in collectors"
-msgstr "Correos no importados en colectores"
-
-#: inc/alert.class.php:101 inc/alert.class.php:1300
-msgid "Inventory stock alerts"
 msgstr ""
 
-#: inc/alert.class.php:102 inc/alert.class.php:1310 inc/widget.class.php:641
-msgid "Your equipments"
-msgstr ""
-
-#: inc/alert.class.php:159 inc/alert.class.php:1981 inc/widget.class.php:523
+#: inc/alert.class.php:157 inc/alert.class.php:1829 inc/widget.class.php:550
 msgid "Network Monitoring"
-msgstr "Monitoreo de Red"
+msgstr ""
 
-#: inc/alert.class.php:339 inc/alert.class.php:343
+#: inc/alert.class.php:337 inc/alert.class.php:341
 msgid "New incidents"
-msgstr "Nuevos incidentes"
+msgstr ""
 
-#: inc/alert.class.php:379 inc/alert.class.php:383
+#: inc/alert.class.php:377 inc/alert.class.php:381
 msgid "Opened tickets without assigned technicians"
-msgstr "Tickets abiertos sin técnico asignado"
+msgstr ""
 
-#: inc/alert.class.php:423 inc/alert.class.php:427
+#: inc/alert.class.php:421 inc/alert.class.php:425
 msgid "Incidents with very high or major priority"
-msgstr "Incidentes con prioridad muy alta o mayor"
+msgstr ""
 
-#: inc/alert.class.php:453 inc/alert.class.php:457
+#: inc/alert.class.php:451 inc/alert.class.php:455
 msgid "Problems with very high or major priority"
-msgstr "Problemas con prioridad muy alta o mayor"
+msgstr ""
 
-#: inc/alert.class.php:482
+#: inc/alert.class.php:480
 msgid "Display alerts for tickets and problems"
-msgstr "Mostrar alertas para tickets y problemas"
+msgstr ""
 
-#: inc/alert.class.php:694
+#: inc/alert.class.php:692
 msgid "Incidents where time to own will be exceeded"
-msgstr "Incidentes donde el tiempo de propiedad fue excedido"
+msgstr ""
 
-#: inc/alert.class.php:740
+#: inc/alert.class.php:738
 msgid "Incidents where time to resolve will be exceeded"
-msgstr "Incidentes donde el tiempo de resolución fue excedido"
+msgstr ""
 
-#: inc/alert.class.php:787
+#: inc/alert.class.php:785
 msgid "Incidents where time to own is exceeded"
-msgstr "Incidentes donde el tiempo de propiedad fue excedido"
+msgstr ""
 
-#: inc/alert.class.php:834
+#: inc/alert.class.php:832
 msgid "Incidents where time to resolve is exceeded"
-msgstr "Incidentes donde el tiempo de resolución fue excedido"
+msgstr ""
 
-#: inc/alert.class.php:857
+#: inc/alert.class.php:855
 msgid "Display alerts for SLA of tickets"
-msgstr "Mostrar alertas para SLA de tickets"
+msgstr ""
 
-#: inc/alert.class.php:884
+#: inc/alert.class.php:882
 msgid "Check if GLPI have no problem"
-msgstr "Comprobar si GLPI no tiene problema"
+msgstr ""
 
-#: inc/alert.class.php:911 inc/ticket.class.php:327 inc/ticket.class.php:649
+#: inc/alert.class.php:909 inc/ticket.class.php:327 inc/ticket.class.php:649
 msgid "ID and priority"
-msgstr "ID y prioridad"
+msgstr ""
 
 #: inc/alert.class.php:1014
 msgid "New document"
-msgstr "Nuevo documento"
+msgstr ""
 
-#: inc/alert.class.php:1065
+#: inc/alert.class.php:1069
 msgid "Display tickets where last modification is a user action"
 msgstr ""
-"Mostrar tickets donde la última modificación es una acción del usuario"
 
-#: inc/alert.class.php:1153
+#: inc/alert.class.php:1157
 msgid "Display of mails which are not imported"
-msgstr "Mostrar correos que no fueron importados"
-
-#: inc/alert.class.php:1291
-msgid "No alerts are setup"
 msgstr ""
 
-#: inc/alert.class.php:1301
-msgid "Display alerts for inventory stocks"
-msgstr ""
-
-#: inc/alert.class.php:1324
+#: inc/alert.class.php:1172
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see "
 "more"
 msgstr ""
-"Hay al menos un mantenimiento programado. Por favor ingrese para ver mas"
 
-#: inc/alert.class.php:1409 inc/widget.class.php:574
+#: inc/alert.class.php:1257 inc/widget.class.php:601
 msgid "No scheduled maintenance"
-msgstr "No hay mantenimiento programado"
+msgstr ""
 
-#: inc/alert.class.php:1496 inc/widget.class.php:616
+#: inc/alert.class.php:1344 inc/widget.class.php:643
 msgid "No informations founded"
-msgstr "No hay información establecida"
+msgstr ""
 
-#: inc/alert.class.php:1610 inc/alert.class.php:1779 inc/widget.class.php:533
+#: inc/alert.class.php:1458 inc/alert.class.php:1627 inc/widget.class.php:560
 msgid "No problem detected"
-msgstr "Ningún problema detectado"
+msgstr ""
 
-#: inc/alert.class.php:1729
+#: inc/alert.class.php:1577
 msgid "Monitoring"
 msgstr "Vigilencia"
 
-#: inc/alert.class.php:1823 inc/alert.class.php:1940
+#: inc/alert.class.php:1671 inc/alert.class.php:1788
 #: inc/problemalert.class.php:125
 msgid "No impact"
 msgstr "Ningún efecto"
 
-#: inc/alert.class.php:1828 inc/alert.class.php:1945
+#: inc/alert.class.php:1676 inc/alert.class.php:1793
 #: inc/problemalert.class.php:130
 msgid "Alert level"
 msgstr "Nivel de alerta"
 
-#: inc/alert.class.php:1866 inc/alert.class.php:1869
+#: inc/alert.class.php:1714 inc/alert.class.php:1717
 #: inc/problemalert.class.php:50 inc/problemalert.class.php:53
 msgid "Create a new alert"
-msgstr "Crea una nueva alerta"
+msgstr ""
 
-#: inc/alert.class.php:1894 inc/problemalert.class.php:78
+#: inc/alert.class.php:1742 inc/problemalert.class.php:78
 msgid "Linked reminder"
-msgstr "Recordatorio vinculado"
+msgstr ""
 
-#: inc/alert.class.php:1983 inc/widget.class.php:525
+#: inc/alert.class.php:1831 inc/widget.class.php:552
 msgid "A network alert can impact you and will avoid creating a ticket"
-msgstr "Una alerta de red puede impactarle y evitará crear un ticket"
+msgstr ""
 
-#: inc/alert.class.php:2021
+#: inc/alert.class.php:1869
 msgid "Problem with GLPI"
 msgstr "Problem with GLPI"
 
-#: inc/alert.class.php:2026
+#: inc/alert.class.php:1874
 msgid "GLPI is OK"
 msgstr "GLPI is OK"
 
-#: inc/alert.class.php:2031
+#: inc/alert.class.php:1879
 msgid "Alert is not properly configured or is not reachable"
-msgstr "Alerta no esta configurada apropiadamente o no esta accesible"
+msgstr ""
 
-#: inc/alert.class.php:2048
+#: inc/alert.class.php:1896
 msgid "Curl PHP package not installed"
 msgstr "Curl PHP package not installed"
 
 #: inc/change.class.php:37 inc/dashboard.class.php:52
-#: inc/datatable.class.php:53 inc/html.class.php:49 inc/menu.class.php:1045
+#: inc/datatable.class.php:53 inc/html.class.php:49 inc/menu.class.php:1018
 #: inc/module.class.php:54 inc/planning.class.php:40 inc/problem.class.php:37
 #: inc/project.class.php:37 inc/projecttask.class.php:37
 #: inc/servicecatalog.class.php:58
@@ -262,8 +242,8 @@ msgstr "Change followup"
 msgid "No data is given to the widget"
 msgstr "No hay datos para el widget"
 
-#: inc/chart.class.php:111 inc/menu.class.php:679 inc/menu.class.php:1200
-#: inc/widget.class.php:165 inc/widget.class.php:495
+#: inc/chart.class.php:111 inc/menu.class.php:655 inc/menu.class.php:1159
+#: inc/widget.class.php:165 inc/widget.class.php:188 inc/widget.class.php:495
 msgid "No data available"
 msgstr "No hay datos disponibles en la tabla"
 
@@ -289,39 +269,39 @@ msgstr "sustituir la interfaz central"
 
 #: inc/config.class.php:115
 msgid "Google API Key"
-msgstr "Clave API Google"
+msgstr ""
 
 #: inc/config.class.php:122
 msgid "Impact colors"
-msgstr "Colores de Impacto"
+msgstr ""
 
 #: inc/config.class.php:144
 msgid "Level of categories to show"
-msgstr "Nivel de categorias a mostrar"
+msgstr ""
 
 #: inc/dashboard.class.php:118 inc/menu.class.php:103
 msgid "GLPI admin grid"
-msgstr "Tabla de administrador GLPI"
+msgstr ""
 
 #: inc/dashboard.class.php:119
 msgid "Inventory admin grid"
-msgstr "Tabla de administrador de Inventario"
+msgstr ""
 
 #: inc/dashboard.class.php:120
 msgid "Helpdesk supervisor grid"
-msgstr "Tabla de supervisor de Heldesk"
+msgstr ""
 
 #: inc/dashboard.class.php:121
 msgid "Incident supervisor grid"
-msgstr "Tabla de supervisor de Incidentes"
+msgstr ""
 
 #: inc/dashboard.class.php:122
 msgid "Request supervisor grid"
-msgstr "Tabla de supervisor de Requerimientos"
+msgstr ""
 
 #: inc/dashboard.class.php:123
 msgid "Helpdesk technician grid"
-msgstr "Tabla de técnicos de Helpdesk"
+msgstr ""
 
 #: inc/datatable.class.php:235
 msgid "No column defined"
@@ -329,35 +309,35 @@ msgstr "No columna definida"
 
 #: inc/groupprofile.class.php:56
 msgid "Default dashboard group"
-msgstr "Grupo de dashboard predefinido"
+msgstr ""
 
 #: inc/groupprofile.class.php:66
-msgid "Use profile group"
+msgid "Use first user group as prefered group"
 msgstr ""
 
 #: inc/groupprofile.class.php:68
-msgid "Default group"
+msgid "If user has no group use :"
 msgstr ""
 
-#: inc/helper.class.php:517 inc/infotel.class.php:3944
+#: inc/helper.class.php:475 inc/infotel.class.php:3942
 msgid "Year"
-msgstr "Año"
+msgstr ""
 
-#: inc/helper.class.php:526
+#: inc/helper.class.php:484
 msgid "Month"
-msgstr "Mes"
+msgstr ""
 
-#: inc/helper.class.php:845
+#: inc/helper.class.php:803
 msgid "Not a valid SQL SELECT query"
 msgstr "Not a valid SQL SELECT query"
 
-#: inc/infotel.class.php:57 inc/infotel.class.php:471
+#: inc/infotel.class.php:57 inc/infotel.class.php:470
 msgid "Internal annuary"
 msgstr "Internal annuary"
 
 #: inc/infotel.class.php:66
 msgid "Charts"
-msgstr "Gráficos"
+msgstr ""
 
 #: inc/infotel.class.php:66 inc/infotel.class.php:184
 msgid "Opened tickets backlog"
@@ -371,382 +351,386 @@ msgstr "Number of opened tickets by priority"
 msgid "Tickets stock by month"
 msgstr "Tickets stock by month"
 
-#: inc/infotel.class.php:69 inc/infotel.class.php:838
+#: inc/infotel.class.php:69 inc/infotel.class.php:837
 msgid "Top ten ticket requesters by month"
-msgstr "Top 10 solicitantes de tickets por mes"
+msgstr ""
 
-#: inc/infotel.class.php:70 inc/infotel.class.php:931
+#: inc/infotel.class.php:70 inc/infotel.class.php:930
 msgid "Process time by technicians by month"
-msgstr "Tiempo de proceso por técnico por mes"
+msgstr ""
 
-#: inc/infotel.class.php:71 inc/infotel.class.php:1266
+#: inc/infotel.class.php:71 inc/infotel.class.php:1265
 msgid "TTR Compliance"
-msgstr "TTR Cumplimiento"
+msgstr ""
 
-#: inc/infotel.class.php:72 inc/infotel.class.php:1400
+#: inc/infotel.class.php:72 inc/infotel.class.php:1399
 msgid "TTO Compliance"
-msgstr "TTO Cumplimiento"
+msgstr ""
 
-#: inc/infotel.class.php:73 inc/infotel.class.php:1579
+#: inc/infotel.class.php:73 inc/infotel.class.php:1578
 msgid "Top ten ticket categories by type of ticket"
-msgstr "Top 10 categorias de ticket por tipo de ticket"
+msgstr ""
 
-#: inc/infotel.class.php:74 inc/infotel.class.php:1710
+#: inc/infotel.class.php:74 inc/infotel.class.php:1709
 msgid "Number of opened incidents by category"
-msgstr "Número de incidentes abiertos por categoría"
+msgstr ""
 
-#: inc/infotel.class.php:75 inc/infotel.class.php:1850
+#: inc/infotel.class.php:75 inc/infotel.class.php:1849
 msgid "Number of opened requests by category"
-msgstr "Número de solicitudes abiertas por categoría"
+msgstr ""
 
-#: inc/infotel.class.php:76 inc/infotel.class.php:2426
+#: inc/infotel.class.php:76 inc/infotel.class.php:2424
 msgid "Number of opened and closed tickets by month"
-msgstr "Número de tickets abiertos y cerrados por mes"
+msgstr ""
 
-#: inc/infotel.class.php:77 inc/infotel.class.php:2113
+#: inc/infotel.class.php:77 inc/infotel.class.php:2112
 msgid "Percent of use of solution types"
-msgstr "Porcentaje de tipos de solución usados"
+msgstr ""
 
-#: inc/infotel.class.php:78 inc/infotel.class.php:2225
+#: inc/infotel.class.php:78 inc/infotel.class.php:2224
 msgid "Number of tickets affected by technicians by month"
-msgstr "Número de tickets afectados por técnico por mes"
+msgstr ""
 
-#: inc/infotel.class.php:79 inc/infotel.class.php:1988
+#: inc/infotel.class.php:79 inc/infotel.class.php:1987
 msgid "Number of opened and solved tickets by month"
-msgstr "Número de tickets abiertos y resueltos por mes"
+msgstr ""
 
-#: inc/infotel.class.php:80 inc/infotel.class.php:2597
+#: inc/infotel.class.php:80 inc/infotel.class.php:2595
 msgid "Average real duration of treatment of the ticket"
 msgstr "Duración media real de tratamiento de la petición"
 
-#: inc/infotel.class.php:81 inc/infotel.class.php:2741
+#: inc/infotel.class.php:81 inc/infotel.class.php:2739
 msgid "Top ten technicians (by tickets number)"
-msgstr "Top 10 técnicos (por número de tickets)"
+msgstr ""
 
-#: inc/infotel.class.php:82 inc/infotel.class.php:2914
+#: inc/infotel.class.php:82 inc/infotel.class.php:2912
 msgid "Number of opened tickets by requester groups"
-msgstr "Número de tickets abiertos por grupo solicitante"
+msgstr ""
 
-#: inc/infotel.class.php:83 inc/infotel.class.php:3037
+#: inc/infotel.class.php:83 inc/infotel.class.php:3035
 msgid "Global satisfaction level"
-msgstr "Nivel de satisfacción global"
+msgstr ""
 
-#: inc/infotel.class.php:84 inc/infotel.class.php:3159
+#: inc/infotel.class.php:84 inc/infotel.class.php:3157
 msgid "Top 10 of opened tickets by location"
-msgstr "Top 10 de tickets abiertos por ubicación"
+msgstr ""
 
-#: inc/infotel.class.php:86 inc/infotel.class.php:3478
+#: inc/infotel.class.php:85 inc/infotel.class.php:3266
+msgid "Map - Opened tickets by location"
+msgstr ""
+
+#: inc/infotel.class.php:86 inc/infotel.class.php:3476
 msgid "OpenStreetMap - Opened tickets by location"
-msgstr "OpenStreeMap - Tickets abiertos por ubicación"
+msgstr ""
 
-#: inc/infotel.class.php:87 inc/infotel.class.php:3771
+#: inc/infotel.class.php:87 inc/infotel.class.php:3769
 msgid "Number of use of request sources"
-msgstr "Número de uso fuentes de solicitud"
+msgstr ""
 
-#: inc/infotel.class.php:88 inc/infotel.class.php:3939
+#: inc/infotel.class.php:88 inc/infotel.class.php:3937
 msgid "Tickets request sources evolution"
-msgstr "Evolución de fuentes de solicitud de tickets"
+msgstr ""
 
 #: inc/infotel.class.php:185
 msgid "Display of opened tickets by month"
-msgstr "Mostrar tickets abiertos por mes"
+msgstr ""
 
-#: inc/infotel.class.php:190 inc/infotel.class.php:697
-#: inc/infotel.class.php:2748
+#: inc/infotel.class.php:190 inc/infotel.class.php:696
+#: inc/infotel.class.php:2746
 msgid "Tickets number"
-msgstr "Número de tickets"
+msgstr ""
 
-#: inc/infotel.class.php:472
+#: inc/infotel.class.php:471
 msgid "Search users of your organisation"
-msgstr "Buscar usuarios de su organización"
+msgstr ""
 
-#: inc/infotel.class.php:607
+#: inc/infotel.class.php:606
 msgid "Display if you have duplicates into inventory"
-msgstr "Mostrar si hay duplicados en inventario"
+msgstr ""
 
-#: inc/infotel.class.php:688
+#: inc/infotel.class.php:687
 msgid "Tickets stock"
 msgstr "Tickets stock"
 
-#: inc/infotel.class.php:689
+#: inc/infotel.class.php:688
 msgid "Sum of not solved tickets by month"
-msgstr "Suma de tickets resueltos por mes"
+msgstr ""
 
-#: inc/infotel.class.php:932
+#: inc/infotel.class.php:931
 msgid "Sum of ticket tasks duration by technicians"
-msgstr "Suma de duración de tareas de ticket por técnicos"
+msgstr ""
 
-#: inc/infotel.class.php:1267
+#: inc/infotel.class.php:1266
 msgid "Display tickets where time to resolve is respected"
-msgstr "Mostrar tickets donde el tiempo de resolución es respetado"
+msgstr ""
 
-#: inc/infotel.class.php:1273
+#: inc/infotel.class.php:1272
 msgid "Respected TTR"
-msgstr "TTR Respetado"
+msgstr ""
 
-#: inc/infotel.class.php:1273
+#: inc/infotel.class.php:1272
 msgid "Not respected TTR"
-msgstr "TTR No Respetado"
+msgstr ""
 
-#: inc/infotel.class.php:1401
+#: inc/infotel.class.php:1400
 msgid "Display tickets where time to own is respected"
-msgstr "Mostrar tickets donde el tiempo de propiedad es respetado"
+msgstr ""
 
-#: inc/infotel.class.php:1406
+#: inc/infotel.class.php:1405
 msgid "Respected TTO"
-msgstr "TTO Respetado"
+msgstr ""
 
-#: inc/infotel.class.php:1406
+#: inc/infotel.class.php:1405
 msgid "Not respected TTO"
-msgstr "TTO No Respetado"
+msgstr ""
 
-#: inc/infotel.class.php:1966 inc/infotel.class.php:2430
+#: inc/infotel.class.php:1965 inc/infotel.class.php:2428
 msgid "Opened tickets"
-msgstr "Tickets abiertos"
+msgstr ""
 
-#: inc/infotel.class.php:1982
+#: inc/infotel.class.php:1981
 msgid "Solved tickets"
-msgstr "Tickets resueltos"
+msgstr ""
 
-#: inc/infotel.class.php:2114
+#: inc/infotel.class.php:2113
 msgid "Display percent of solution types for tickets"
-msgstr "Mostrar porcentaje de tipos de solución por tickets"
+msgstr ""
 
-#: inc/infotel.class.php:2226
+#: inc/infotel.class.php:2225
 msgid "Sum of ticket affected by technicians"
-msgstr "Suma de tickets afectados por técnicos"
+msgstr ""
 
-#: inc/infotel.class.php:2431
+#: inc/infotel.class.php:2429
 msgid "Closed tickets"
-msgstr "Tickets cerrados"
+msgstr ""
 
-#: inc/infotel.class.php:2432
+#: inc/infotel.class.php:2430
 msgid "Number of opened tickets"
 msgstr "Número de peticiones abiertas"
 
-#: inc/infotel.class.php:2598
+#: inc/infotel.class.php:2596
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
 msgstr ""
-"Mostrar duración real promedio del tratamiento de los tickets (tiempo de "
-"acción de tareas)"
 
-#: inc/infotel.class.php:2603
+#: inc/infotel.class.php:2601
 msgid "Tasks duration (minutes)"
-msgstr "Duración de tareas (minutos)"
+msgstr ""
 
-#: inc/infotel.class.php:2742
+#: inc/infotel.class.php:2740
 msgid "Display of number of tickets by technicians"
-msgstr "Mostrar número de tickets por técnicos"
+msgstr ""
 
-#: inc/infotel.class.php:3043
+#: inc/infotel.class.php:3041
 msgid "Satisfy percent"
-msgstr "Porcentaje satisfactorio"
+msgstr ""
 
-#: inc/infotel.class.php:3043
+#: inc/infotel.class.php:3041
 msgid "Not satisfy percent"
-msgstr "Porcentaje no satisfactorio"
+msgstr ""
 
-#: inc/infotel.class.php:3479
+#: inc/infotel.class.php:3267
+msgid ""
+"Display Tickets by location (Latitude / Longitude). You must define a "
+"Google API Key and add it into setup"
+msgstr ""
+
+#: inc/infotel.class.php:3477
 msgid "Display Tickets by location (Latitude / Longitude)"
-msgstr "Mostrar tickets por ubicación (Latitud / Longitud)"
+msgstr ""
 
-#: inc/infotel.class.php:3772
+#: inc/infotel.class.php:3770
 msgid "Display number of request sources for closed tickets"
-msgstr "Mostrar número de fuentes de solicitud por tickets cerrados"
+msgstr ""
 
-#: inc/infotel.class.php:3940
+#: inc/infotel.class.php:3938
 msgid "Evolution of tickets request sources types by year"
-msgstr "Evolución de tipos de solicitud de tickets por año"
+msgstr ""
 
 #: inc/knowbaseitem.class.php:127
 msgid "Publication date"
-msgstr "Fecha de publicación"
+msgstr ""
 
 #: inc/knowbaseitem.class.php:129
 msgid "Modification date"
-msgstr "Fecha de modificación"
+msgstr ""
 
 #: inc/menu.class.php:102
 msgid "My view"
-msgstr "Mi vista"
+msgstr ""
 
-#: inc/menu.class.php:341
+#: inc/menu.class.php:332
 msgid "Fullscreen"
-msgstr "Pantalla completa"
+msgstr ""
 
-#: inc/menu.class.php:386
+#: inc/menu.class.php:377
 msgid "Edit mode"
-msgstr "Modo edición"
+msgstr ""
 
-#: inc/menu.class.php:392
+#: inc/menu.class.php:383
 msgid "Global"
 msgstr "Global"
 
-#: inc/menu.class.php:397 inc/menu.class.php:398 inc/menu.class.php:400
-msgid "Load widgets"
-msgstr ""
-
-#: inc/menu.class.php:410
+#: inc/menu.class.php:394
 msgid "Add a widget"
-msgstr "Agregar un widget"
-
-#: inc/menu.class.php:416 inc/menu.class.php:417
-msgid "Load a predefined grid"
-msgstr "Cargar una tabla predefinida"
-
-#: inc/menu.class.php:431 inc/menu.class.php:432 inc/menu.class.php:433
-msgid "Save grid"
-msgstr "Grabar tabla"
-
-#: inc/menu.class.php:438 inc/menu.class.php:439 inc/menu.class.php:440
-msgid "Save default grid"
-msgstr "Grabar tabla predefinida"
-
-#: inc/menu.class.php:445 inc/menu.class.php:446 inc/menu.class.php:447
-msgid "Clear grid"
-msgstr "Limpiar tabla"
-
-#: inc/menu.class.php:451 inc/menu.class.php:452 inc/menu.class.php:453
-msgid "Close edit mode"
-msgstr "Cerrar modo de edición"
-
-#: inc/menu.class.php:459
-msgid "Success"
-msgstr "Satisfactorio"
-
-#: inc/menu.class.php:460
-msgid "The widget was added to dashboard. Save the dashboard."
 msgstr ""
 
-#: inc/menu.class.php:467
+#: inc/menu.class.php:400 inc/menu.class.php:401
+msgid "Load a predefined grid"
+msgstr ""
+
+#: inc/menu.class.php:415 inc/menu.class.php:416 inc/menu.class.php:417
+msgid "Save grid"
+msgstr ""
+
+#: inc/menu.class.php:422 inc/menu.class.php:423 inc/menu.class.php:424
+msgid "Save default grid"
+msgstr ""
+
+#: inc/menu.class.php:429 inc/menu.class.php:430 inc/menu.class.php:431
+msgid "Clear grid"
+msgstr ""
+
+#: inc/menu.class.php:435 inc/menu.class.php:436 inc/menu.class.php:437
+msgid "Close edit mode"
+msgstr ""
+
+#: inc/menu.class.php:442
+msgid "Success"
+msgstr ""
+
+#: inc/menu.class.php:443
+msgid "The widget was added to dashboard. Save the dashboard to see it."
+msgstr ""
+
+#: inc/menu.class.php:450
 msgid "Error"
 msgstr "Error"
 
-#: inc/menu.class.php:468
+#: inc/menu.class.php:451
 msgid "Please reload your page."
-msgstr "Por favor actualice su página"
+msgstr ""
 
-#: inc/menu.class.php:475 inc/menu.class.php:477
+#: inc/menu.class.php:458 inc/menu.class.php:460
 msgid "Switch to edit mode"
-msgstr "Cambiar a modo de edición"
+msgstr ""
 
-#: inc/menu.class.php:481 inc/menu.class.php:483
+#: inc/menu.class.php:464 inc/menu.class.php:466
 msgid "Permit drag / resize widgets"
-msgstr "Permitir arrastrar / redimensionar widgets"
+msgstr ""
 
-#: inc/menu.class.php:488 inc/menu.class.php:490
+#: inc/menu.class.php:471 inc/menu.class.php:473
 msgid "Block drag / resize widgets"
-msgstr "Rechazar arrastrar / redimensionar widget"
+msgstr ""
 
-#: inc/menu.class.php:493 inc/menu.class.php:495
+#: inc/menu.class.php:476 inc/menu.class.php:478
 msgid "Save positions"
-msgstr "Grabar posiciones"
+msgstr ""
 
-#: inc/menu.class.php:499 inc/menu.class.php:501
+#: inc/menu.class.php:482 inc/menu.class.php:484
 msgid "Custom and save default grid"
-msgstr "Personaliza y graba tabla predefinda"
+msgstr ""
 
-#: inc/menu.class.php:1007
+#: inc/menu.class.php:980
 msgid "No data available in table"
 msgstr "No hay datos disponibles en la tabla"
 
-#: inc/menu.class.php:1008
+#: inc/menu.class.php:981
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Mostrando _START_ a _END_ de _TOTAL_ entradas"
 
-#: inc/menu.class.php:1009
+#: inc/menu.class.php:982
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Mostrando 0 a 0 de 0 entradas"
 
-#: inc/menu.class.php:1010
+#: inc/menu.class.php:983
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtrado de _MAX_ total entradas)"
 
-#: inc/menu.class.php:1013
+#: inc/menu.class.php:986
 msgid "Show _MENU_ entries"
 msgstr "Mostrar _MENU_ entradas"
 
-#: inc/menu.class.php:1017
+#: inc/menu.class.php:990
 msgid "No matching records found"
 msgstr "No hay registros coincidentes encontrados"
 
-#: inc/menu.class.php:1025
+#: inc/menu.class.php:998
 msgid ": activate to sort column ascending"
 msgstr ": activar para ordenar ascendente"
 
-#: inc/menu.class.php:1026
+#: inc/menu.class.php:999
 msgid ": activate to sort column descending"
 msgstr ": activar para ordenar descendente"
 
-#: inc/menu.class.php:1032
+#: inc/menu.class.php:1005
 msgid "1 row selected"
-msgstr "1 fila seleccionada"
+msgstr ""
 
-#: inc/menu.class.php:1035 inc/menu.class.php:1044
+#: inc/menu.class.php:1008 inc/menu.class.php:1017
 msgid "Close"
 msgstr "Cerrar"
 
-#: inc/menu.class.php:1036
+#: inc/menu.class.php:1009
 msgid "Maximize"
 msgstr "Maximizar"
 
-#: inc/menu.class.php:1037
+#: inc/menu.class.php:1010
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: inc/menu.class.php:1038
+#: inc/menu.class.php:1011
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: inc/menu.class.php:1040
+#: inc/menu.class.php:1013
 msgid "Column visibility"
-msgstr "Visibilidad de columna"
+msgstr ""
 
-#: inc/menu.class.php:1046
+#: inc/menu.class.php:1019
 msgid "Dashboard saved"
 msgstr "Dashboard ahorrado"
 
-#: inc/menu.class.php:1047
+#: inc/menu.class.php:1020
 msgid "Dashboard not saved"
 msgstr "Dashboard no ahorrado"
 
-#: inc/menu.class.php:1048
+#: inc/menu.class.php:1021
 msgid "Data received for"
 msgstr "Data received for"
 
-#: inc/menu.class.php:1049
+#: inc/menu.class.php:1022
 msgid "No data received for"
 msgstr "No data received for"
 
-#: inc/menu.class.php:1050
+#: inc/menu.class.php:1023
 msgid "Updating all widgets"
 msgstr "Actualizar todos los widgets"
 
-#: inc/menu.class.php:1051
+#: inc/menu.class.php:1024
 msgid "Widget added on Dashboard"
 msgstr "Widget agregado en Dashboard"
 
-#: inc/menu.class.php:1166
+#: inc/menu.class.php:1133
 msgid "Warning"
 msgstr "Advertencia"
 
-#: inc/menu.class.php:1167
+#: inc/menu.class.php:1134
 msgid "No widgets founded, please add widgets"
-msgstr "Widgets no encontrados, por favor agregue widgets"
+msgstr ""
 
-#: inc/menu.class.php:1191
+#: inc/menu.class.php:1152
 msgid "Save grid to see widget"
-msgstr "Grabar tabla y ver widget"
+msgstr ""
 
-#: inc/menu.class.php:1199
+#: inc/menu.class.php:1158
 msgid "Delete widget"
-msgstr "Eliminar widget"
+msgstr ""
 
-#: inc/menu.class.php:1201
+#: inc/menu.class.php:1160
 msgid "Refresh widget"
-msgstr "Actualizar widget"
+msgstr ""
 
 #: inc/module.class.php:144 inc/module.class.php:290
 msgid "notice"
@@ -764,13 +748,13 @@ msgstr "error"
 msgid "You can't have more than one serie for a pie chart"
 msgstr "No se puede tener más de una serie de un gráfico circular"
 
-#: inc/planning.class.php:164
+#: inc/planning.class.php:158
 msgid "List by day"
-msgstr "Lista de día"
+msgstr ""
 
-#: inc/planning.class.php:165
+#: inc/planning.class.php:159
 msgid "List by week"
-msgstr "Lista de semana"
+msgstr ""
 
 #: inc/preference.class.php:95
 msgid "Automatic refreshing of the widgets that can be refreshed"
@@ -786,82 +770,68 @@ msgstr "minuto(s)"
 
 #: inc/preference.class.php:115
 msgid "My prefered group for widget"
-msgstr " Mi grupo preferido para widget"
+msgstr ""
 
 #: inc/preference.class.php:125
 msgid "My prefered entity for widget"
-msgstr "Mi entidad preferida para widget"
+msgstr ""
 
 #: inc/preferenceuserblacklist.class.php:56
 msgid "From which plugins you want to display the widgets?"
 msgstr "Desde que los plugins que desea mostrar los widgets?"
 
-#: inc/profileauthorizedwidget.class.php:88
-msgid "Authorize/Unauthorize all"
-msgstr "Permitir/Prohibir a todos"
-
 #: inc/profile.class.php:45
 msgid "Rights management"
 msgstr "Gestión de derechos"
 
-#: inc/profile.class.php:147
+#: inc/profile.class.php:144
 msgid "Full"
 msgstr "Completo"
 
-#: inc/profile.class.php:147
+#: inc/profile.class.php:144
 msgid "Custom"
 msgstr "Personalizada"
 
-#: inc/profile.class.php:149
+#: inc/profile.class.php:146
 msgid "Dashboard Access"
 msgstr "Acceso al Dashboard"
 
-#: inc/profile.class.php:161
+#: inc/profile.class.php:158
 msgid "Configuration Access"
 msgstr "Acceso a la configuración"
 
-#: inc/profile.class.php:180 inc/profile.class.php:235
-msgid "Setup stock widget"
-msgstr ""
-
-#: inc/profile.class.php:240
+#: inc/profile.class.php:297
 msgid "See the dashboard"
 msgstr "See the dashboard"
 
-#: inc/profile.class.php:244
+#: inc/profile.class.php:301
 msgid "See the configuration"
 msgstr "See the configuration"
+
+#: inc/profileauthorizedwidget.class.php:88
+msgid "Authorize/Unauthorize all"
+msgstr "Permitir/Prohibir a todos"
 
 #: inc/project.class.php:51 inc/project.class.php:55 inc/project.class.php:94
 #: inc/project.class.php:176 inc/project.class.php:195
 msgid "projects to be processed"
-msgstr "Proyectos a ser procesados"
+msgstr ""
 
 #: inc/projecttask.class.php:51 inc/projecttask.class.php:55
 #: inc/projecttask.class.php:95 inc/projecttask.class.php:172
 #: inc/projecttask.class.php:192
 msgid "projects tasks to be processed"
-msgstr "Tareas de proyectos a ser procesados"
+msgstr ""
 
 #: inc/servicecatalog.class.php:58
 msgid "Access"
-msgstr "Acceso"
+msgstr ""
 
 #: inc/servicecatalog.class.php:65
 msgid "Dashboard access"
-msgstr "Acceso a Dashboard"
-
-#: inc/stockwidget.class.php:38
-msgid "Stock widget"
-msgid_plural "Stock widgets"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/stockwidget.class.php:50
-msgid "Cannot create alert without a type"
 msgstr ""
 
-#: inc/ticket.class.php:63 inc/ticket.class.php:1145
+#: inc/ticket.class.php:63 inc/ticket.class.php:1146
 msgid "New tickets"
 msgstr "Nuevos billetes"
 
@@ -872,10 +842,6 @@ msgstr "Gestión de user_widget"
 #: inc/widget.class.php:41
 msgid "Widget management"
 msgstr "Gestión del widget"
-
-#: inc/widget.class.php:749
-msgid "No equipments founded"
-msgstr ""
 
 #: scripts/clean_stock_tickets.php:85 scripts/insert_stock_tickets.php:56
 msgid "Plugin disabled"

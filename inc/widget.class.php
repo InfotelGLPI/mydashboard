@@ -157,7 +157,6 @@ class PluginMydashboardWidget extends CommonDBTM {
     */
    static function getWidget($id, $opt = [], $widgets) {
       $class = "bt-col-md-11";
-      //      $widgets = self::getWidgetList();
 
       if (isset($widgets[$id])) {
          return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
@@ -237,14 +236,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $scripts = $widget->getWidgetScripts();
                $scripts = implode($scripts, "");
 
-               //            $jsondatas = $widget->getJSonDatas();
-               //            $widgetContent = json_decode($jsondatas);
-               //            if(!isset($widgetContent)) $widgetContent = $jsondatas;
                //We prepare a "JSon object" compatible with sDashboard
                $widgetTitle = $widget->getWidgetTitle();
-               //               if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-               //                  $widgetTitle .= " (" . $widget->getWidgetId() . ")";
-               //               }
                $json =
                   [
                      "widgetTitle"     => $widgetTitle,
@@ -258,11 +251,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                      "scripts"         => $scripts,
                      //                        "_glpi_csrf_token" => Session::getNewCSRFToken()
                   ];
-
                $_SESSION["glpi_plugin_mydashboard_widgets"][$widget->getWidgetId()] = json_decode($widget->getWidgetEnableRefresh());
                //safeJson because refreshCallBack must be a javascript function not a string,
                // not a string, but a function in a json object is not valid
-               //               Toolbox::logDebug($json);
                $menu  = new PluginMydashboardMenu();
                $views = $menu->getViewNames();
                $view  = -1;
@@ -272,6 +263,7 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                $type    = $json['widgetType'];
                $title   = $json['widgetTitle'];
+
                $comment = $json['widgetComment'];
                if (isset($view) && $view != -1) {
                   $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
@@ -423,27 +415,30 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $widgetdisplay = "";
                }
                $delclass = "";
-               //               if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-               //                   || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-               //                  $delclass = "delclass";
-               //               }
 
                $widgetdisplay .= "<div id='$widgetindex'>";
                $widgetdisplay .= "<div class=\"bt-row $delclass\">";
                $widgetdisplay .= "<div class=\"bt-feature $class \">";
-               $widgetdisplay .= "<h5 class=\"bt-title-divider\">";
-               $widgetdisplay .= "<span>";
-               $widgetdisplay .= $title;
-               if ($comment != "") {
-                  $widgetdisplay .= "&nbsp;";
-                  $opt           = ['awesome-class' => 'fa-info-circle',
-                                    'display'       => false];
-                  $widgetdisplay .= Html::showToolTip($comment, $opt);
+
+               if($widget->getTitleVisibility()){
+                  $widgetdisplay .= "<h5 class=\"bt-title-divider\">";
+                  $widgetdisplay .= "<span>";
+                  $widgetdisplay .= $title;
+                  if ($comment != "") {
+                     $widgetdisplay .= "&nbsp;";
+                     $opt           = ['awesome-class' => 'fa-info-circle',
+                         'display'       => false];
+                     $widgetdisplay .= Html::showToolTip($comment, $opt);
+                  }
+                  $widgetdisplay .= "</span>";
+                  //         $widget .= "<small>" . __('A comment') . "</small>";
+                  $widgetdisplay .= "</h5>";
                }
-               $widgetdisplay .= "</span>";
-               //         $widget .= "<small>" . __('A comment') . "</small>";
-               $widgetdisplay .= "</h5>";
+
                $widgetdisplay .= "<div id=\"display-sc\">";
+
+               // HEADER
+               $widgetdisplay .= $widget->getWidgetHeader();
 
                if ($type == "table") {
                   $head = $datas['aoColumns'];
@@ -499,7 +494,6 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
    }
 
-
    /**
     * @param $class
     *
@@ -512,10 +506,6 @@ class PluginMydashboardWidget extends CommonDBTM {
          return $display;
       }
       $delclass = "";
-      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-      //         $delclass = "delclass";
-      //      }
       $display = "<div id='gs4' class=\"bt-row $delclass\">";
       $display .= "<div class=\"bt-feature $class \">";
       $display .= "<h3 class=\"bt-title-divider\">";
@@ -553,10 +543,6 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-      //         $delclass = "delclass";
-      //      }
       $display = "<div id='gs5' class=\"bt-row $delclass\">";
       $display .= "<div class=\"bt-feature $class \">";
       $display .= "<h3 class=\"bt-title-divider\">";
@@ -594,10 +580,6 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      //      if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-      //          || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-      //         $delclass = "delclass";
-      //      }
       $display = "<div id='gs6' class=\"bt-row $delclass\">";
       $display .= "<div class=\"bt-feature $class \">";
       $display .= "<h3 class=\"bt-title-divider\">";

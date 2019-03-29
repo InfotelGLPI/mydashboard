@@ -133,21 +133,6 @@ class PluginMydashboardMenu extends CommonGLPI {
             case 2 :
                $self->loadDashboard($profile, 1);
                break;
-            //            case 3 :
-            //               $self->loadDashboard($profile, 2);
-            //               break;
-            //            case 4 :
-            //               $self->loadDashboard($profile, 3);
-            //               break;
-            //            case 5 :
-            //               $self->loadDashboard($profile, 4);
-            //               break;
-            //            case 6 :
-            //               $self->loadDashboard($profile, 5);
-            //               break;
-            //            case 7 :
-            //               $self->loadDashboard($profile, 6);
-            //               break;
             default :
                break;
          }
@@ -453,6 +438,19 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
             echo "&nbsp;";
 
+            if ($drag < 1) {
+               echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
+            if ($drag > 0) {
+               echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
+
             Html::closeForm();
 
             echo "<div class='bt-alert bt-alert-success' id='success-alert'>
@@ -661,7 +659,11 @@ class PluginMydashboardMenu extends CommonGLPI {
       //menuSliderContent contains the lists of widgets
       $wl .= "<div class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
 
-      $empty = false;
+      $empty       = false;
+      $widgetslist = PluginMydashboardWidget::getWidgetList();
+      foreach ($widgetslist as $gs => $widgetclasses) {
+         $gslist[$widgetclasses['id']] = $gs;
+      }
 
       $widgetslist = PluginMydashboardWidget::getWidgetList();
       foreach ($widgetslist as $gs => $widgetclasses) {
@@ -1266,7 +1268,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                          var delbutton = '';
                          var refreshbutton = '';
                          if ($delete_button == 1) {
-                            var delbutton = '&nbsp;<button title=\"$msg_delete\" class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
+                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
                          }
                          if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-sync-alt\"></i></button>';
@@ -1467,25 +1469,48 @@ class PluginMydashboardMenu extends CommonGLPI {
               }
            });
              return false;
-           };
-         function refreshWidgetByForm (id, gsid, formId) {
-            var widgetOptions = $('#' + formId).serializeArray();
-            var widgetOptionsObject = {};
-            $.each(widgetOptions,
-               function (i, v) {
-                   widgetOptionsObject[v.name] = v.value;
-               });
-            var widget = $('div[id='+ id + ']');
-            $.ajax({
+        };
+        function refreshWidgetByForm (id, gsid, formId) {
+           var widgetOptions = $('#' + formId).serializeArray();
+           var widgetOptionsObject = {};
+           $.each(widgetOptions,
+              function (i, v) {
+                 let name = v.name;
+                 // Remove [] in the name do issue with ajax
+                 let index = v.name.indexOf('[]');
+                 if( index != -1 ){
+                    name = v.name.substring(0, index);
+                 }
+                 // Key already exist
+                 if(name in widgetOptionsObject){
+                    if(widgetOptionsObject[name] instanceof Array){
+                       widgetOptionsObject[name].push(v.value);
+                    }else{
+                       let tempArray = [];
+                       tempArray.push(widgetOptionsObject[name]);
+                       tempArray.push(v.value);
+                       widgetOptionsObject[name] = tempArray;
+                    }
+                 }else{
+                    widgetOptionsObject[name] = v.value;
+                 }
+              }
+           );           
+           var widget = $('div[id='+ id + ']');
+           $.ajax({
               url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/refreshWidget.php',
               type: 'POST',
-              data:{gsid:gsid, params:widgetOptionsObject,id:id},
+              data:{
+                  gsid:gsid,
+                  params:widgetOptionsObject,
+                  id:id
+              },
               success:function(data) {
                   widget.replaceWith(data);
               }
            });
-             return false;
-           };
+           return false;
+        };
          function deleteWidget (id) {
            this.grid = $('.grid-stack$rand').data('gridstack');
            widget = $('div[data-gs-id='+ id + ']');
