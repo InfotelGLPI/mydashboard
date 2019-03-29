@@ -38,7 +38,7 @@ function plugin_mydashboard_install() {
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.6.4.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.7.2.sql");
 
       PluginMydashboardMenu::installWidgets();
       insertDefaultTitles();
@@ -151,16 +151,16 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
-   if(!$DB->tableExists("glpi_plugin_mydashboard_customswidgets","id")) {
-      $mig = new Migration("1.6.4");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.4.sql");
-      $mig->executeMigration();
-      insertDefaultTitles();
-   }
    if (!$DB->tableExists("glpi_plugin_mydashboard_stockwidgets")) {
       $mig = new Migration("1.7.0");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.0.sql");
       $mig->executeMigration();
+   }
+   if(!$DB->tableExists("glpi_plugin_mydashboard_customswidgets")) {
+      $mig = new Migration("1.7.2");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.2.sql");
+      $mig->executeMigration();
+      insertDefaultTitles();
    }
 
 
@@ -184,21 +184,21 @@ function insertDefaultTitles(){
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
            'name' => __('Incidents'),
-           'content' => $startTitle . __("Traitement des incidents") . $endTitle,
+           'content' => $startTitle . __("Incidents") . $endTitle,
            'comment' => ''
        ]);
 
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
-           'name' => __('Demandes'),
-           'content' => $startTitle . __("Traitement des demandes") . $endTitle,
+           'name' => __('Requests'),
+           'content' => $startTitle . __("Requests") . $endTitle,
            'comment' => ''
        ]);
 
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
-           'name' => __('Problèmes'),
-           'content' => $startTitle . __("Traitement des problèmes") . $endTitle,
+           'name' => __('Problems'),
+           'content' => $startTitle . __("Problems") . $endTitle,
            'comment' => ''
        ]);
 }
