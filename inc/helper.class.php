@@ -651,7 +651,7 @@ class PluginMydashboardHelper {
       }
 
       if($onsubmit){
-         $form .= "<input type='submit' class='submit' value='".__("Submit")."'>";
+         $form .= "<input type='submit' class='submit' value='"._x('button', 'Send')."'>";
       }
 
       $form .= self::getFormFooter();
