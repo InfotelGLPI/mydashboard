@@ -4199,7 +4199,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $htmlContent .= "<script>
                 $( document ).ready(function() {
                     let $widgetId = document.getElementById('$widgetId');
-                    ".$widgetId.".children[0].style.marginTop = '0px';
+                    ".$widgetId.".children[0].style.marginTop = '-5px';
                     ".$widgetId.".children[0].children[0].classList.remove('bt-col-md-11');
                     ".$widgetId.".children[0].children[0].classList.add('bt-col-md-12');
                     ".$widgetId.".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';
