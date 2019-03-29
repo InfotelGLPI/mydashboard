@@ -1999,7 +1999,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             //            $widget->toggleWidgetRefresh();
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened and solved tickets by month", "mydashboard");
+            $title  = __("Number of opened and closed tickets by month", "mydashboard");
             $widget->setWidgetTitle($title);
 
             $dataPieset         = json_encode($dataspie);
