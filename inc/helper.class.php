@@ -249,8 +249,7 @@ class PluginMydashboardHelper {
             if (isset($params['opt']['requesters_id'])) {
                $opt['requesters_id'] = is_array($params['opt']['requesters_id']) ? $params['opt']['requesters_id'] : [$params['opt']['requesters_id']];
                $crit['crit']['requesters_id'] = " AND `glpi_tickets`.`id` IN (SELECT tickets_id as id FROM glpi_groups_tickets
-            WHERE type = 2 AND groups_id IN (" . implode(",", $opt['requesters_id']) . "))";
-
+            WHERE type = ".CommonITILActor::REQUESTER." AND groups_id IN (" . implode(",", $opt['requesters_id']) . "))";
 
             }else{
                $crit['crit']['requesters_id'] = "";
