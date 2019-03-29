@@ -64,13 +64,7 @@ class PluginMydashboardWidgetlist {
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
          $widgets = (isset($PLUGIN_HOOKS['mydashboard'])?$PLUGIN_HOOKS['mydashboard']:[]);
       }
-      
-      //We add classes from mydashboard
-      $widgets['mydashboard'] = [
-         'PluginMydashboardInfotel',
-         'PluginMydashboardAlert'
-      ];
-      
+            
       //We add classes from mydashboard
       $widgets['mydashboard'] = [
          'PluginMydashboardInfotel',
