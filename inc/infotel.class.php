@@ -4074,9 +4074,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                if(isset($crit['groups_id']) && $crit['groups_id'] != 0 && !empty($crit['groups_id'])){
                   $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
                   if(is_array($crit['groups_id'])){
-                     $groups_sql_criteria .= " IN (". implode(",", $opt['groups_id']) . ")";
+                     $groups_sql_criteria .= " IN (". implode(",", $options['groups_id']) . ")";
                   }else{
-                     $groups_sql_criteria .= " = ".$opt['groups_id'];
+                     $groups_sql_criteria .= " = ".$options['groups_id'];
                   }
                }
 
@@ -4108,7 +4108,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                // Number of tickets by technician and by status
                // Tickets are not deleted
                // User Type is 2
-               $query_tickets_by_technician_by_status = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets"
+               $query_tickets_by_technician_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
                   . " FROM `glpi_tickets`"
                   . " INNER JOIN `glpi_tickets_users`"
                   . " ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
@@ -4128,18 +4128,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   while ($data = $DB->fetch_array($result)) {
 
                      $userId = $data['users_id'];
+                     $username = getUserName($userId);
 
-                     $user = new User();
-                     $user->getFromDB($userId);
-
-                     $userFullname = $user->getField("firstname") . " " . $user->getField("realname");
-
-                     // If user has not firstname and lastname display it's name (ex : glpi)
-                     if($userFullname == " "){
-                        $userFullname = $user->getField("name");
-                     }
-
-                     $temp[$i] = [0 => $userFullname];
+                     $temp[$i] = [0 => $username];
 
                      $j = 1;
                      foreach($statusList as $status){
