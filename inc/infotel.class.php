@@ -4066,23 +4066,26 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $options   = PluginMydashboardHelper::manageCriterias($params);
                $crit = $options['crit'];
 
-               $groups_criteria = "";
+               $groups_sql_criteria = "";
+               $entities_criteria = $crit['entities_id'];
+               $users_criteria = "";
 
+               // GROUP
                if(isset($crit['groups_id']) && $crit['groups_id'] != 0 && !empty($crit['groups_id'])){
-                  $groups_criteria = " AND `glpi_groups_users`.`groups_id`";
+                  $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
                   if(is_array($crit['groups_id'])){
-                     $groups_criteria .= " IN (". implode(",", $opt['groups_id']) . ")";
+                     $groups_sql_criteria .= " IN (". implode(",", $opt['groups_id']) . ")";
                   }else{
-                     $groups_criteria .= " = ".$opt['groups_id'];
+                     $groups_sql_criteria .= " = ".$opt['groups_id'];
                   }
                }
 
-               $users_criteria = "";
-
+               // USER
                if(isset($crit['users_id']) && $crit['users_id'] != 0 && !empty($crit['users_id'])){
                   $users_criteria = " AND `glpi_groups_users`.`users_id` = ".$crit['users_id'];
                }
 
+               // Allowed status
                $statusList = [
                   CommonITILObject::ASSIGNED,
                   CommonITILObject::PLANNED,
@@ -4098,7 +4101,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   . " WHERE `glpi_groups`.`is_assign` = 1"
                   . " AND `glpi_users`.`is_active` = 1"
                   . " AND `glpi_users`.`is_deleted` = 0"
-                  . $groups_criteria
+                  . $groups_sql_criteria
                   . $users_criteria
                   . " GROUP BY `glpi_groups_users`.`users_id`";
 
@@ -4112,7 +4115,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
                   . " WHERE `glpi_tickets`.`status` = %s"
                   . " AND `glpi_tickets_users`.`users_id` = '%s'"
-                  . " ".self::getSpecificEntityRestrict("glpi_tickets", $params);
+                  . $entities_criteria;
 
                // Lists of tickets by technician by status
                $result = $DB->query($query_technicians);
@@ -4151,7 +4154,16 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         if($nb2){
 
                            while ($data = $DB->fetch_assoc($result2)) {
-                              $temp[$i][$j] += $data['nbtickets'];
+
+                              $value = "";
+                              if($data['nbtickets'] != "0"){
+                                 $value .= "<a href='#' onclick='".$widgetId."_search($userId, $status)'>";
+                              }
+                              $value .= $data['nbtickets'];
+                              if($data['nbtickets'] != "0"){
+                                 $value .= "</a>";
+                              }
+                              $temp[$i][$j] = $value;
                            }
                         }
                         $j++;
@@ -4192,6 +4204,36 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   "canvas"    => false,
                   "nb"        => $nb];
                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params)."<br>");
+
+               $linkURL = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+
+               $js_group = $crit['groups_id'];
+               $js_entity = $crit['entity'];
+               $js_sons = $crit['sons'];
+
+               $js = "
+               var ".$widgetId."_search = function(_technician, _status){
+                  $.ajax({
+                     url: '" . $linkURL . "',
+                     type: 'POST',
+                     data:{
+                        groups_id:$js_group,
+                        entities_id:$js_entity, 
+                        sons:$js_sons,
+                        technician: _technician,
+                        status: _status,
+                        widget:'$widgetId'},
+                     success:function(response) {
+                        window.open(response);
+                        console.log('SUCCESS');
+                     },
+                     error:function(response){
+                        console.log('FAILED');
+                     }
+                  });
+               }";
+
+               echo Html::scriptBlock($js);
 
                return $widget;
                break;
