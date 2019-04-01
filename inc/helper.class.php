@@ -515,7 +515,7 @@ class PluginMydashboardHelper {
          $form    .= "<span class='md-widgetcrit'>";
 
          $dbu = new DbUtils();
-         $result = $dbu->getAllDataFromTable(Group::getTable());
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester'=>1]);
 
          $temp = [];
          foreach($result as $item){

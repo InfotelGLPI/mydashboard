@@ -4074,9 +4074,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                if(isset($crit['groups_id']) && $crit['groups_id'] != 0 && !empty($crit['groups_id'])){
                   $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
                   if(is_array($crit['groups_id'])){
-                     $groups_sql_criteria .= " IN (". implode(",", $options['groups_id']) . ")";
+                     $groups_sql_criteria .= " IN (". implode(",", $crit['groups_id']) . ")";
                   }else{
-                     $groups_sql_criteria .= " = ".$options['groups_id'];
+                     $groups_sql_criteria .= " = ".$crit['groups_id'];
                   }
                }
 

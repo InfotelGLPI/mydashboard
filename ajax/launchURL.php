@@ -299,17 +299,6 @@ if (isset($_POST["widget"])
       'link' => 'AND'
    ];
 
-   // GROUP
-   if (!empty($_POST["groups_id"])) {
-
-      $options['criteria'][] = [
-         'field' => 8,
-         'searchtype' => 'equals',
-         'value' => $_POST["groups_id"],
-         'link' => 'AND'
-      ];
-   }
-
    // USER
    if(isset($_POST["technician"])){
       $options['criteria'][] = [
