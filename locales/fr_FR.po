@@ -458,7 +458,7 @@ msgstr "Évolution des sources de demande de tickets"
 
 #: inc/infotel.class.php:90 inc/infotel.class.php:4165
 msgid "Number of tickets open by technician and by status"
-msgstr "Nombre de tickets ouvert par techniciens et par status"
+msgstr "Nombre de tickets ouvert par techniciens et par statut"
 
 #: inc/infotel.class.php:196
 msgid "Display of opened tickets by month"

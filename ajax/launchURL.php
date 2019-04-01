@@ -28,6 +28,8 @@ include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
+global $CFG_GLPI;
+
 if (isset($_POST["widget"])
     && $_POST["widget"] == "PluginOcsinventoryngDashboard1") {
    if (isset($_POST["dateinv"])) {
@@ -298,17 +300,6 @@ if (isset($_POST["widget"])
       'value' => $_POST["entities_id"],
       'link' => 'AND'
    ];
-
-   // GROUP
-   if (!empty($_POST["groups_id"])) {
-
-      $options['criteria'][] = [
-         'field' => 8,
-         'searchtype' => 'equals',
-         'value' => $_POST["groups_id"],
-         'link' => 'AND'
-      ];
-   }
 
    // USER
    if(isset($_POST["technician"])){
