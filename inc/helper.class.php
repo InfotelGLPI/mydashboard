@@ -207,6 +207,7 @@ class PluginMydashboardHelper {
       $criterias = $params['criterias'];
 
 
+      // ENTITY | SONS
       if (Session::isMultiEntitiesMode()) {
 
          $opt['entities_id'] = $_SESSION['glpiactive_entity'];
@@ -238,24 +239,6 @@ class PluginMydashboardHelper {
             $crit['crit']['sons'] = $opt['sons'];
          }
 
-         if (in_array("requesters_id", $criterias)) {
-
-            // Remove the '[' if exist to avoid issues
-            if(isset($params['opt']['requesters_id['])){
-               $params['opt']['requesters_id'] = $params['opt']['requesters_id['];
-               unset($params['opt']['requesters_id[']);
-            }
-
-            if (isset($params['opt']['requesters_id'])) {
-               $opt['requesters_id'] = is_array($params['opt']['requesters_id']) ? $params['opt']['requesters_id'] : [$params['opt']['requesters_id']];
-               $crit['crit']['requesters_id'] = " AND `glpi_tickets`.`id` IN (SELECT tickets_id as id FROM glpi_groups_tickets
-            WHERE type = ".CommonITILActor::REQUESTER." AND groups_id IN (" . implode(",", $opt['requesters_id']) . "))";
-
-            }else{
-               $crit['crit']['requesters_id'] = "";
-            }
-         }
-
          if (isset($opt)) {
             $crit['crit']['entities_id'] = self::getSpecificEntityRestrict("glpi_tickets", $opt);
             $crit['crit']['entity']      = $opt['entities_id'];
@@ -265,12 +248,36 @@ class PluginMydashboardHelper {
          $crit['crit']['entity']      = 0;
          $crit['crit']['sons']        = 0;
       }
+
+      // REQUESTER GROUP
+      $opt['requester_groups_id'] = null;
+      $crit['crit']['requester_groups_id'] = null;
+      if (in_array("requester_groups_id", $criterias)) {
+
+         // Remove the '[' if exist to avoid issues
+         if(isset($params['opt']['requester_groups_id['])){
+            $params['opt']['requester_groups_id'] = $params['opt']['requester_groups_id['];
+            unset($params['opt']['requester_groups_id[']);
+         }
+
+         if (isset($params['opt']['requester_groups_id'])) {
+            $opt['requester_groups_id'] = is_array($params['opt']['requester_groups_id']) ? $params['opt']['requester_groups_id'] : [$params['opt']['requester_groups_id']];
+            $crit['crit']['requester_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`
+            WHERE `type` = ".CommonITILActor::REQUESTER." AND `groups_id` IN (" . implode(",", $opt['requester_groups_id']) . "))";
+
+         }else{
+            $crit['crit']['requester_groups_id'] = "";
+         }
+      }
+
+      // GROUP
       $opt['groups_id'] = 0;
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
          $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
          $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
       }
+      //LOCATION
       $opt['locations_id'] = 0;
       $crit['crit']['locations_id'] = "AND 1 = 1";
       if (in_array("locations_id", $criterias)) {
@@ -281,6 +288,7 @@ class PluginMydashboardHelper {
          }
       }
 
+      //TYPE
       $opt['type']          = 0;
       $crit['crit']['type'] = "AND 1 = 1";
       if (in_array("type", $criterias)) {
@@ -291,6 +299,8 @@ class PluginMydashboardHelper {
          }
       }
 
+      // DATE
+      // MONTH
       $year  = intval(strftime("%Y"));
       $month = intval(strftime("%m") - 1);
       $crit['crit']['year'] = $year;
@@ -310,6 +320,7 @@ class PluginMydashboardHelper {
          }
       }
 
+      // YEAR
       if (in_array("year", $criterias)) {
          if (isset($params['opt']["year"])
              && $params['opt']["year"] > 0) {
@@ -319,6 +330,26 @@ class PluginMydashboardHelper {
             $opt["year"] = $year;
          }
          $crit['crit']['year'] = $opt['year'];
+      }
+      // BEGIN DATE
+      if (in_array("begin", $criterias)) {
+         if (isset($params['opt']['begin'])
+            && $params['opt']["begin"] > 0) {
+            $opt["begin"]          = $params['opt']['begin'];
+            $crit['crit']['begin'] = $params['opt']['begin'];
+         } else {
+            $opt["begin"] = date("Y-m-d");
+         }
+      }
+      // END DATE
+      if (in_array("end", $criterias)) {
+         if (isset($params['opt']['end'])
+            && $params['opt']["end"] > 0) {
+            $opt["end"]          = $params['opt']['end'];
+            $crit['crit']['end'] = $params['opt']['end'];
+         } else {
+            $opt["end"] = date("Y-m-d");
+         }
       }
 
       $nbdays                    = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -333,6 +364,7 @@ class PluginMydashboardHelper {
          $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
       }
+      // USER
       $opt["users_id"] = $_SESSION['glpiID'];
       if (in_array("users_id", $criterias)) {
          if (isset($params['opt']['users_id'])) {
@@ -341,6 +373,7 @@ class PluginMydashboardHelper {
          }
       }
 
+      // STATUS
       $default = array(CommonITILObject::INCOMING,
                        CommonITILObject::ASSIGNED,
                        CommonITILObject::PLANNED,
@@ -378,24 +411,6 @@ class PluginMydashboardHelper {
          if (count($status) > 0){
             $opt['status']          = $status;
             $crit['crit']['status'] = $status;
-         }
-      }
-      if (in_array("begin", $criterias)) {
-         if (isset($params['opt']['begin'])
-             && $params['opt']["begin"] > 0) {
-            $opt["begin"]          = $params['opt']['begin'];
-            $crit['crit']['begin'] = $params['opt']['begin'];
-         } else {
-            $opt["begin"] = date("Y-m-d");
-         }
-      }
-      if (in_array("end", $criterias)) {
-         if (isset($params['opt']['end'])
-             && $params['opt']["end"] > 0) {
-            $opt["end"]          = $params['opt']['end'];
-            $crit['crit']['end'] = $params['opt']['end'];
-         } else {
-            $opt["end"] = date("Y-m-d");
          }
       }
       $crit['opt'] = $opt;
@@ -445,39 +460,9 @@ class PluginMydashboardHelper {
       $form = self::getFormHeader($widgetId, $gsid, $onsubmit);
 
       $count = count($criterias);
+
+      // ENTITY | SONS
       if (Session::isMultiEntitiesMode()) {
-         if (in_array("requesters_id", $criterias)){
-            $form    .= "<span class='md-widgetcrit'>";
-
-            $dbu = new DbUtils();
-            $result = $dbu->getAllDataFromTable(Group::getTable());
-
-            $temp = [];
-            foreach($result as $item){
-               $temp[$item['id']] = $item['name'];
-            }
-
-            $params = [
-               "name"=> 'requesters_id',
-               "display"=>false,
-               "multiple"=>true,
-               "width"=> '200px',
-               'values'=> isset($opt['requesters_id']) ? $opt['requesters_id'] : [],
-               'display_emptychoice' => true
-            ];
-
-            $form   .= __('Requester');
-            $form   .= "&nbsp;";
-
-            $dropdown = Dropdown::showFromArray("requesters_id", $temp, $params);
-
-            $form .= $dropdown;
-
-            $form   .= "</span>";
-            if ($count > 1) {
-               $form .= "</br></br>";
-            }
-         }
          if (in_array("entities_id", $criterias)) {
             $form   .= "<span class='md-widgetcrit'>";
             $params = ['name'                => 'entities_id',
@@ -509,6 +494,7 @@ class PluginMydashboardHelper {
 
          }
       }
+      // LOCATION
       if (in_array("locations_id", $criterias)) {
          $gparams = ['name'      => 'locations_id',
                      'display'   => false,
@@ -524,6 +510,40 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+      // REQUESTER GROUPS
+      if (in_array("requester_groups_id", $criterias)){
+         $form    .= "<span class='md-widgetcrit'>";
+
+         $dbu = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Group::getTable());
+
+         $temp = [];
+         foreach($result as $item){
+            $temp[$item['id']] = $item['name'];
+         }
+
+         $params = [
+            "name"=> 'requester_groups_id',
+            "display"=>false,
+            "multiple"=>true,
+            "width"=> '200px',
+            'values'=> isset($opt['requester_groups_id']) ? $opt['requester_groups_id'] : [],
+            'display_emptychoice' => true
+         ];
+
+         $form   .= __('Requester group');
+         $form   .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("requester_groups_id", $temp, $params);
+
+         $form .= $dropdown;
+
+         $form   .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      // GROUP
       if (in_array("groups_id", $criterias)) {
          $gparams = ['name'      => 'groups_id',
                      'display'   => false,
@@ -540,6 +560,7 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+      // TYPE
       if (in_array("type", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
          $type = 0;
@@ -557,6 +578,8 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+      // DATE
+      // YEAR
       if (in_array("year", $criterias)) {
          $form           .= "<span class='md-widgetcrit'>";
          $annee_courante = strftime("%Y");
@@ -572,6 +595,7 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+      // MONTH
       if (in_array("month", $criterias)) {
          $form .= __('Month', 'mydashboard');
          $form .= "&nbsp;";
@@ -581,6 +605,28 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+      // START DATE
+      if (in_array("begin", $criterias)) {
+         $form .= __('Start');
+         $form .= "&nbsp;";
+         $form .= Html::showDateField("begin", array('value' => $opt['begin'], 'maybeempty' => false, 'display' => false));
+         $form .= "&nbsp;";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      // END DATE
+      if (in_array("end", $criterias)) {
+         $form .= __('End');
+         $form .= "&nbsp;";
+         $form .= Html::showDateField("end", array('value' => $opt['end'], 'maybeempty' => false, 'display' => false));
+         $form .= "&nbsp;";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
+      // USER
       if (in_array("users_id", $criterias)) {
          $params = array('name'     => "users_id",
                          'value'    => isset($opt['users_id']) ? $opt['users_id'] : null,
@@ -597,7 +643,7 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
-
+      //STATUS
       if (in_array("status", $criterias)) {
          $form    .= _n('Status', 'Statuses', 2) . "&nbsp;";
          $default = array(CommonITILObject::INCOMING,
@@ -630,32 +676,12 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
-      if (in_array("begin", $criterias)) {
-         $form .= __('Start');
-         $form .= "&nbsp;";
-         $form .= Html::showDateField("begin", array('value' => $opt['begin'], 'maybeempty' => false, 'display' => false));
-         $form .= "&nbsp;";
-         if ($count > 1) {
-            $form .= "</br></br>";
-         }
-      }
-      if (in_array("end", $criterias)) {
-         $form .= __('End');
-         $form .= "&nbsp;";
-         $form .= Html::showDateField("end", array('value' => $opt['end'], 'maybeempty' => false, 'display' => false));
-         $form .= "&nbsp;";
-         if ($count > 1) {
-            $form .= "</br></br>";
-         }
-      }
 
       if($onsubmit){
          $form .= "<input type='submit' class='submit' value='"._x('button', 'Send')."'>";
       }
 
-      $form .= self::getFormFooter();
-
-      return $form;
+      return $form . self::getFormFooter();
    }
 
    static function getFormFooter() {
