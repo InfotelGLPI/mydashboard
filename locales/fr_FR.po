@@ -2,26 +2,35 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2018
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2019
 # Mathieu Templier <mathieu.templier@infotel.com>, 2019
-# 
-#, fuzzy
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-28 15:52+0100\n"
-"PO-Revision-Date: 2016-07-28 07:50+0000\n"
+"POT-Creation-Date: 2019-04-01 09:33+0200\n"
+"PO-Revision-Date: 2019-04-01 09:45+0200\n"
 "Last-Translator: Mathieu Templier <mathieu.templier@infotel.com>, 2019\n"
-"Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
+"Language-Team: French (France) (https://www.transifex.com/infotelGLPI/"
+"teams/65490/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#: hook.php:186
+msgid "Incidents"
+msgstr "Incidents"
+
+#: hook.php:193
+msgid "Requests"
+msgstr "Demandes"
 
 #: setup.php:142 inc/menu.class.php:87 inc/menu.class.php:839
 #: inc/preference.class.php:62
@@ -174,11 +183,10 @@ msgstr "Affichage des alertes des stocks"
 
 #: inc/alert.class.php:1333
 msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see "
-"more"
+"There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
-"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier"
-" pour plus de détails"
+"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier "
+"pour plus de détails"
 
 #: inc/alert.class.php:1418 inc/widget.class.php:560
 msgid "No scheduled maintenance"
@@ -343,15 +351,15 @@ msgstr "Utiliser le groupe du profil"
 msgid "Default group"
 msgstr "Groupe par défaut"
 
-#: inc/helper.class.php:568 inc/infotel.class.php:3957
+#: inc/helper.class.php:590 inc/infotel.class.php:3974
 msgid "Year"
 msgstr "Année"
 
-#: inc/helper.class.php:577
+#: inc/helper.class.php:600
 msgid "Month"
 msgstr "Mois"
 
-#: inc/helper.class.php:901
+#: inc/helper.class.php:926
 msgid "Not a valid SQL SELECT query"
 msgstr "Requête SQL SELECT non valide"
 
@@ -403,7 +411,8 @@ msgstr "Nombre d'incidents ouverts par catégorie"
 msgid "Number of opened requests by category"
 msgstr "Nombre de demandes ouvertes par catégorie"
 
-#: inc/infotel.class.php:77 inc/infotel.class.php:2439
+#: inc/infotel.class.php:77 inc/infotel.class.php:80 inc/infotel.class.php:2002
+#: inc/infotel.class.php:2456
 msgid "Number of opened and closed tickets by month"
 msgstr "Nombre de tickets ouverts et clos par mois"
 
@@ -415,43 +424,39 @@ msgstr "Pourcentage d’utilisation des types de solution"
 msgid "Number of tickets affected by technicians by month"
 msgstr "Nombre de tickets affectés par techniciens par mois"
 
-#: inc/infotel.class.php:80 inc/infotel.class.php:2002
-msgid "Number of opened and solved tickets by month"
-msgstr "Nombre de tickets ouverts et résolus par mois"
-
-#: inc/infotel.class.php:81 inc/infotel.class.php:2610
+#: inc/infotel.class.php:81 inc/infotel.class.php:2627
 msgid "Average real duration of treatment of the ticket"
 msgstr "Moyenne de la durée réelle de traitement des tickets"
 
-#: inc/infotel.class.php:82 inc/infotel.class.php:2754
+#: inc/infotel.class.php:82 inc/infotel.class.php:2771
 msgid "Top ten technicians (by tickets number)"
 msgstr "Top 10 des techniciens (par nombre de tickets)"
 
-#: inc/infotel.class.php:83 inc/infotel.class.php:2927
+#: inc/infotel.class.php:83 inc/infotel.class.php:2944
 msgid "Top ten of opened tickets by requester groups"
 msgstr "Top 10 des tickets ouverts par groupes demandeurs"
 
-#: inc/infotel.class.php:84 inc/infotel.class.php:3050
+#: inc/infotel.class.php:84 inc/infotel.class.php:3067
 msgid "Global satisfaction level"
 msgstr "Niveau de satisfaction global"
 
-#: inc/infotel.class.php:85 inc/infotel.class.php:3172
+#: inc/infotel.class.php:85 inc/infotel.class.php:3189
 msgid "Top ten of opened tickets by location"
 msgstr "Top 10 des tickets ouverts par emplacement"
 
-#: inc/infotel.class.php:87 inc/infotel.class.php:3491
+#: inc/infotel.class.php:87 inc/infotel.class.php:3508
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr "OpenStreetMap - Nombre des tickets ouverts par lieu"
 
-#: inc/infotel.class.php:88 inc/infotel.class.php:3784
+#: inc/infotel.class.php:88 inc/infotel.class.php:3801
 msgid "Number of use of request sources"
 msgstr "Nombre d'utilisation des sources de demande"
 
-#: inc/infotel.class.php:89 inc/infotel.class.php:3952
+#: inc/infotel.class.php:89 inc/infotel.class.php:3969
 msgid "Tickets request sources evolution"
 msgstr "Évolution des sources de demande de tickets"
 
-#: inc/infotel.class.php:90 inc/infotel.class.php:4148
+#: inc/infotel.class.php:90 inc/infotel.class.php:4165
 msgid "Number of tickets open by technician and by status"
 msgstr "Nombre de tickets ouvert par techniciens et par status"
 
@@ -460,7 +465,7 @@ msgid "Display of opened tickets by month"
 msgstr "Affiche le nombre de tickets ouverts par mois"
 
 #: inc/infotel.class.php:201 inc/infotel.class.php:704
-#: inc/infotel.class.php:1585 inc/infotel.class.php:2761
+#: inc/infotel.class.php:1585 inc/infotel.class.php:2778
 msgid "Tickets number"
 msgstr "Nombre de tickets"
 
@@ -512,13 +517,13 @@ msgstr "TTO non respectés"
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr "Affichage du Top 10 des catégories de tickets par type de ticket"
 
-#: inc/infotel.class.php:1980 inc/infotel.class.php:2443
+#: inc/infotel.class.php:1980 inc/infotel.class.php:2460
 msgid "Opened tickets"
 msgstr "Tickets ouverts"
 
-#: inc/infotel.class.php:1996
-msgid "Solved tickets"
-msgstr "Tickets résolus"
+#: inc/infotel.class.php:1996 inc/infotel.class.php:2461
+msgid "Closed tickets"
+msgstr "Tickets clos"
 
 #: inc/infotel.class.php:2128
 msgid "Display percent of solution types for tickets"
@@ -528,15 +533,11 @@ msgstr "Affiche le pourcentage des types de solution pour les tickets"
 msgid "Sum of ticket affected by technicians"
 msgstr "Somme des tickets affectés par techniciens"
 
-#: inc/infotel.class.php:2444
-msgid "Closed tickets"
-msgstr "Tickets clos"
-
-#: inc/infotel.class.php:2445
+#: inc/infotel.class.php:2462
 msgid "Number of opened tickets"
 msgstr "Nombre de tickets ouverts"
 
-#: inc/infotel.class.php:2611
+#: inc/infotel.class.php:2628
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
@@ -544,35 +545,35 @@ msgstr ""
 "Affiche la moyenne de la durée réelle de traitement des tickets (durée des "
 "tâches)"
 
-#: inc/infotel.class.php:2616
+#: inc/infotel.class.php:2633
 msgid "Tasks duration (minutes)"
 msgstr "Durée des tâches (minutes)"
 
-#: inc/infotel.class.php:2755
+#: inc/infotel.class.php:2772
 msgid "Display of number of tickets by technicians"
 msgstr "Affiche le nombre de tickets affectés par techniciens"
 
-#: inc/infotel.class.php:3056
+#: inc/infotel.class.php:3073
 msgid "Satisfy percent"
 msgstr "Pourcentage de satisfaction"
 
-#: inc/infotel.class.php:3056
+#: inc/infotel.class.php:3073
 msgid "Not satisfy percent"
 msgstr "Pourcentage de non satisfaction"
 
-#: inc/infotel.class.php:3492
+#: inc/infotel.class.php:3509
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr "Affiche les tickets par lieu (Latitude / Longitude)"
 
-#: inc/infotel.class.php:3785
+#: inc/infotel.class.php:3802
 msgid "Display number of request sources for closed tickets"
 msgstr "Afficher le nombre de sources de demande pour les tickets clos"
 
-#: inc/infotel.class.php:3953
+#: inc/infotel.class.php:3970
 msgid "Evolution of tickets request sources types by year"
 msgstr "Évolution des types de sources de demande des tickets par année"
 
-#: inc/infotel.class.php:4152
+#: inc/infotel.class.php:4169
 msgid "Technicians"
 msgstr "Techniciens"
 
@@ -902,3 +903,9 @@ msgstr "Aucun équipement trouvé"
 #: scripts/clean_stock_tickets.php:85 scripts/insert_stock_tickets.php:56
 msgid "Plugin disabled"
 msgstr "Plugin désactivé"
+
+#~ msgid "Number of opened and solved tickets by month"
+#~ msgstr "Nombre de tickets ouverts et résolus par mois"
+
+#~ msgid "Solved tickets"
+#~ msgstr "Tickets résolus"
