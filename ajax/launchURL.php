@@ -28,6 +28,8 @@ include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
+global $CFG_GLPI;
+
 if (isset($_POST["widget"])
     && $_POST["widget"] == "PluginOcsinventoryngDashboard1") {
    if (isset($_POST["dateinv"])) {
