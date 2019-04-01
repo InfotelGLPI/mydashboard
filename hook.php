@@ -184,14 +184,14 @@ function insertDefaultTitles(){
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
            'name' => __('Incidents', 'mydashboard'),
-           'content' => $startTitle . __("Incidents") . $endTitle,
+           'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
            'comment' => ''
        ]);
 
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
        [
            'name' => __('Requests', 'mydashboard'),
-           'content' => $startTitle . __("Requests") . $endTitle,
+           'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
            'comment' => ''
        ]);
 
