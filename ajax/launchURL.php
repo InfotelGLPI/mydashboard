@@ -28,6 +28,8 @@ include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
+global $CFG_GLPI;
+
 if (isset($_POST["widget"])
     && $_POST["widget"] == "PluginOcsinventoryngDashboard1") {
    if (isset($_POST["dateinv"])) {
@@ -285,4 +287,38 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
+}else if (isset($_POST["widget"])
+   && $_POST["widget"] == "PluginMydashboardInfotel32") {
+
+   // Reset criterias
+   $options['reset'] = 'reset';
+
+   // ENTITY | SONS
+   $options['criteria'][] = [
+      'field' => 80,
+      'searchtype' => (isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals',
+      'value' => $_POST["entities_id"],
+      'link' => 'AND'
+   ];
+
+   // USER
+   if (isset($_POST["technician"])) {
+      $options['criteria'][] = [
+         'field' => 5,
+         'searchtype' => 'equals',
+         'value' => $_POST["technician"],
+         'link' => 'AND'
+      ];
+   }
+
+   // STATUS
+   $options['criteria'][] = [
+      'field' => 12,
+      'searchtype' => 'equals',
+      'value' => $_POST["status"],
+      'link' => 'AND'
+   ];
+
+   echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+      Toolbox::append_params($options, "&");
 }
