@@ -250,6 +250,29 @@ class PluginMydashboardHelper {
          $crit['crit']['entity']      = 0;
          $crit['crit']['sons']        = 0;
       }
+
+      // REQUESTER GROUP
+      $opt['requester_groups_id'] = null;
+      $crit['crit']['requester_groups_id'] = null;
+      if (in_array("requester_groups_id", $criterias)) {
+
+         // Remove the '[' if exist to avoid issues
+         if(isset($params['opt']['requester_groups_id['])){
+            $params['opt']['requester_groups_id'] = $params['opt']['requester_groups_id['];
+            unset($params['opt']['requester_groups_id[']);
+         }
+
+         if (isset($params['opt']['requester_groups_id'])) {
+            $opt['requester_groups_id'] = is_array($params['opt']['requester_groups_id']) ? $params['opt']['requester_groups_id'] : [$params['opt']['requester_groups_id']];
+            $crit['crit']['requester_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`
+            WHERE `type` = ".CommonITILActor::REQUESTER." AND `groups_id` IN (" . implode(",", $opt['requester_groups_id']) . "))";
+
+         }else{
+            $crit['crit']['requester_groups_id'] = "";
+         }
+      }
+
+      // GROUP
       $opt['groups_id'] = 0;
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
@@ -483,6 +506,40 @@ class PluginMydashboardHelper {
 
          }
       }
+      // REQUESTER GROUPS
+      if (in_array("requester_groups_id", $criterias)){
+         $form    .= "<span class='md-widgetcrit'>";
+
+         $dbu = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester'=>1]);
+
+         $temp = [];
+         foreach($result as $item){
+            $temp[$item['id']] = $item['name'];
+         }
+
+         $params = [
+            "name"=> 'requester_groups_id',
+            "display"=>false,
+            "multiple"=>true,
+            "width"=> '200px',
+            'values'=> isset($opt['requester_groups_id']) ? $opt['requester_groups_id'] : [],
+            'display_emptychoice' => true
+         ];
+
+         $form   .= __('Requester group');
+         $form   .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("requester_groups_id", $temp, $params);
+
+         $form .= $dropdown;
+
+         $form   .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      // GROUP
       if (in_array("groups_id", $criterias)) {
          $gparams = ['name'      => 'groups_id',
                      'display'   => false,
