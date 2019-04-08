@@ -2,27 +2,26 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2018
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2019
 # Mathieu Templier <mathieu.templier@infotel.com>, 2019
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-01 09:33+0200\n"
-"PO-Revision-Date: 2019-04-01 09:45+0200\n"
+"PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Mathieu Templier <mathieu.templier@infotel.com>, 2019\n"
-"Language-Team: French (France) (https://www.transifex.com/infotelGLPI/"
-"teams/65490/fr_FR/)\n"
-"Language: fr_FR\n"
+"Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
 
 #: hook.php:186
 msgid "Incidents"
@@ -183,10 +182,11 @@ msgstr "Affichage des alertes des stocks"
 
 #: inc/alert.class.php:1333
 msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see more"
+"There is at least on planned scheduled maintenance. Please log on to see "
+"more"
 msgstr ""
-"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier "
-"pour plus de détails"
+"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier"
+" pour plus de détails"
 
 #: inc/alert.class.php:1418 inc/widget.class.php:560
 msgid "No scheduled maintenance"
@@ -411,8 +411,8 @@ msgstr "Nombre d'incidents ouverts par catégorie"
 msgid "Number of opened requests by category"
 msgstr "Nombre de demandes ouvertes par catégorie"
 
-#: inc/infotel.class.php:77 inc/infotel.class.php:80 inc/infotel.class.php:2002
-#: inc/infotel.class.php:2456
+#: inc/infotel.class.php:77 inc/infotel.class.php:80
+#: inc/infotel.class.php:2002 inc/infotel.class.php:2456
 msgid "Number of opened and closed tickets by month"
 msgstr "Nombre de tickets ouverts et clos par mois"
 
@@ -903,9 +903,3 @@ msgstr "Aucun équipement trouvé"
 #: scripts/clean_stock_tickets.php:85 scripts/insert_stock_tickets.php:56
 msgid "Plugin disabled"
 msgstr "Plugin désactivé"
-
-#~ msgid "Number of opened and solved tickets by month"
-#~ msgstr "Nombre de tickets ouverts et résolus par mois"
-
-#~ msgid "Solved tickets"
-#~ msgstr "Tickets résolus"
