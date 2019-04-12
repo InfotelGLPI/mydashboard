@@ -599,7 +599,7 @@ class PluginMydashboardHelper {
       }
       if (in_array("users_id", $criterias)) {
          $params = array('name'     => "users_id",
-                         'value'    => $opt['users_id'],
+                         'value'    => isset($opt['users_id'])?$opt['users_id']:null,
                          'right'    => "interface",
                          'comments' => 1,
                          'entity'   => $_SESSION["glpiactiveentities"],
