@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.6.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-12 10:15+0200\n"
-"PO-Revision-Date: 2019-04-12 10:18+0200\n"
+"PO-Revision-Date: 2019-04-12 10:24+0200\n"
 "Last-Translator: Mathieu Templier <mathieu.templier@infotel.com>, 2019\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/"
 "teams/65490/fr_FR/)\n"
@@ -425,14 +425,10 @@ msgid "Global satisfaction level"
 msgstr "Niveau de satisfaction global"
 
 #: inc/infotel.class.php:85 inc/infotel.class.php:3186
-#, fuzzy
-#| msgid "Top ten of opened tickets by location"
 msgid "Top 10 of opened tickets by location"
 msgstr "Top 10 des tickets ouverts par emplacement"
 
 #: inc/infotel.class.php:86 inc/infotel.class.php:3295
-#, fuzzy
-#| msgid "OpenStreetMap - Opened tickets by location"
 msgid "Map - Opened tickets by location"
 msgstr "OpenStreetMap - Nombre des tickets ouverts par lieu"
 
