@@ -180,6 +180,8 @@ class PluginMydashboardProfile extends CommonDBTM {
       }
 
       PluginMydashboardGroupprofile::addGroup($profiles_id, $canedit);
+      
+      PluginMydashboardMenu::installWidgets();
 
       if ($effective_rights["plugin_mydashboard"] == READ) {
          $authorizedform = new PluginMydashboardProfileAuthorizedWidget();

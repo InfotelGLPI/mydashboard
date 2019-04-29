@@ -706,12 +706,18 @@ class PluginMydashboardMenu extends CommonGLPI {
       foreach ($widgetlist as $widgetclasses) {
          foreach ($widgetclasses as $widgetclass => $widgets) {
             foreach ($widgets as $widgetview => $widgetlist) {
-               foreach ($widgetlist as $widgetId => $widgetTitle) {
-                  if (is_numeric($widgetId)) {
-                     $widgetId = $widgetTitle;
+               if (is_array($widgetlist)) {
+                  foreach ($widgetlist as $widgetId => $widgetTitle) {
+                     if (is_numeric($widgetId)) {
+                        $widgetId = $widgetTitle;
+                     }
+                     $widgetDB->saveWidget($widgetId);
                   }
-                  $widgetDB->saveWidget($widgetId);
-
+               } else {
+                  if (is_numeric($widgetview)) {
+                     $widgetview = $widgetlist;
+                  }
+                  $widgetDB->saveWidget($widgetview);
                }
             }
          }
