@@ -1973,7 +1973,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "22":
 
-            $criterias = ['entities_id', 'requester_groups_id', 'is_recursive', 'year'];
+            $criterias = ['entities_id', 'requester_groups_id', 'is_recursive', 'technicians_id', 'year'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
@@ -1986,37 +1986,35 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $requester_groups_criteria    = $crit['requester_groups_id'];
             $mdentities        = self::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
+            if(isset($opt['technicians_id']) && $opt['technicians_id'] != 0){
+
+            }
+
             $currentyear = date("Y");
 
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
+            if (isset($opt["year"]) && $opt["year"] > 0) {
                $currentyear = $opt["year"];
             }
             $currentmonth = date("m");
-
-            $previousyear = $currentyear - 1;
-            $tabopened    = [];
-            $tabclosed    = [];
-            $tabprogress  = [];
-            $tabnames     = [];
 
             $query_stockTickets =
                "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month,".
                " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname,".
                " SUM(nbStockTickets) as nbStockTickets".
                " FROM `glpi_plugin_mydashboard_stocktickets`".
-               " WHERE  (`glpi_plugin_mydashboard_stocktickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')".
-               " AND (`glpi_plugin_mydashboard_stocktickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')".
+               " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)".
                " ".$mdentities.
                " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $resultsStockTickets = $DB->query($query_stockTickets);
             $maxcount = 0;
             $i        = 0;
-
+            $tabopened    = [];
+            $tabclosed    = [];
+            $tabprogress  = [];
+            $tabnames     = [];
             while ($data = $DB->fetch_array($resultsStockTickets)) {
                $tabprogress[] = $data["nbStockTickets"];
-               $tabnames[]    = $data['monthname'];
                if ($data["nbStockTickets"] > $maxcount) {
                   $maxcount = $data["nbStockTickets"];
                }
@@ -2030,8 +2028,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,".
                " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))".
                " FROM `glpi_tickets`".
-               " WHERE $is_deleted AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')".
-               " AND (`glpi_tickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')".
+               " WHERE $is_deleted".
+               " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)".
                " $entities_criteria".
                " $requester_groups_criteria".
                " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')"
@@ -2041,10 +2039,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $i       = 0;
             while ($data = $DB->fetch_array($results)) {
 
+               $tabnames[] = $data['monthname'];
+
                list($year, $month) = explode('-', $data['month']);
 
                $nbdays        = date("t", mktime(0, 0, 0, $month, 1, $year));
-               $date_criteria = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+
+               $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
                $query_1 =
                   "SELECT COUNT(*) as count FROM `glpi_tickets`".
@@ -2058,9 +2059,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $tabopened[] = $data_1['count'];
 
-               $closedate_criteria =
-                  "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01'".
-                  " AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+               $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
                $query_2 =
                   "SELECT COUNT(*) as count FROM `glpi_tickets`".
@@ -2081,16 +2080,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      " WHERE $is_deleted".
                      " $entities_criteria".
                      " $requester_groups_criteria".
-                     " AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')".
+                     // Tickets open in the month
+                     " AND ( `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)".
                      " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))".
-                     " OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')".
-                     " AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+                     // Tickets solved in the month
+                     " OR ( `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)".
+                     " AND `glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)))";
 
                   $results_3 = $DB->query($query_3);
                   $data_3    = $DB->fetch_array($results_3);
 
                   $tabprogress[] = $data_3['count'];
-                  $tabnames[]    = $data['monthname'];
                }
 
                $i++;
@@ -3466,7 +3466,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             case $this->getType() . "32":
 
-               $criterias = ['entities_id', 'is_recursive', 'technician', 'groups_id', 'users_id'];
+               $criterias = ['entities_id', 'is_recursive', 'groups_id', 'users_id'];
                $params    = ["preferences" => $this->preferences,
                   "criterias"   => $criterias,
                   "opt"         => $opt];

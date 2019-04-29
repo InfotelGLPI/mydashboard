@@ -373,6 +373,15 @@ class PluginMydashboardHelper {
          }
       }
 
+      // TECHNICIAN
+      $opt["technicians_id"] = 0;
+      if (in_array("technicians_id", $criterias)) {
+         if (isset($params['opt']['technicians_id'])) {
+            $opt["technicians_id"]          = $params['opt']['technicians_id'];
+            $crit['crit']['technicians_id'] = $params['opt']['technicians_id'];
+         }
+      }
+
       // STATUS
       $default = array(CommonITILObject::INCOMING,
                        CommonITILObject::ASSIGNED,
@@ -637,6 +646,23 @@ class PluginMydashboardHelper {
                          'display'  => false
          );
          $form   .= __('User');
+         $form   .= "&nbsp;";
+         $form   .= User::dropdown($params);
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+      // TECHNICIAN
+      if (in_array("technicians_id", $criterias)) {
+         $params = array('name'     => "technicians_id",
+            'value'    => isset($opt['technicians_id']) ? $opt['technicians_id'] : null,
+            'right'    => "interface",
+            'comments' => 1,
+            'entity'   => $_SESSION["glpiactiveentities"],
+            'width'    => '50%',
+            'display'  => false
+         );
+         $form   .= __('Technician');
          $form   .= "&nbsp;";
          $form   .= User::dropdown($params);
          if ($count > 1) {
