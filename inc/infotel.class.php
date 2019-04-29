@@ -1986,8 +1986,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $requester_groups_criteria    = $crit['requester_groups_id'];
             $mdentities        = self::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
-            if(isset($opt['technicians_id']) && $opt['technicians_id'] != 0){
+            $ticket_users_join = "";
+            $technician_criteria = "";
 
+            if(isset($opt['technicians_id']) && $opt['technicians_id'] != 0){
+               $ticket_users_join = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
+               $technician_criteria = "AND glpi_tickets_users.type = ".CommonITILObject::ASSIGNED;
+               $technician_criteria .= " AND glpi_tickets_users.users_id = ".$opt['technicians_id'];
             }
 
             $currentyear = date("Y");
@@ -2049,7 +2054,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $query_1 =
                   "SELECT COUNT(*) as count FROM `glpi_tickets`".
+                  " $ticket_users_join".
                   " WHERE $date_criteria".
+                  " $technician_criteria".
                   " $entities_criteria".
                   " $requester_groups_criteria".
                   " AND $is_deleted";
@@ -2063,7 +2070,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $query_2 =
                   "SELECT COUNT(*) as count FROM `glpi_tickets`".
+                  " $ticket_users_join".
                   " WHERE $closedate_criteria".
+                  " $technician_criteria".
                   " $entities_criteria".
                   " $requester_groups_criteria".
                   " AND $is_deleted";
@@ -2077,7 +2086,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                   $query_3 =
                      "SELECT COUNT(*) as count FROM `glpi_tickets`".
+                     " $ticket_users_join".
                      " WHERE $is_deleted".
+                     " $technician_criteria".
                      " $entities_criteria".
                      " $requester_groups_criteria".
                      // Tickets open in the month
