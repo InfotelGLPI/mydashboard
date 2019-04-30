@@ -38,8 +38,6 @@ function plugin_init_mydashboard() {
    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
       "lib/fileSaver.min.js",
-      //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
-      //"lib/sdashboard/lib/flotr2/flotr2.min.js",
       "scripts/mydashboard.js",
       "lib/vticker/vticker.js"
    ];
@@ -138,7 +136,7 @@ function plugin_version_mydashboard() {
 
    return [
       'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => '1.6.6',
+      'version'        => '1.6.7',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
