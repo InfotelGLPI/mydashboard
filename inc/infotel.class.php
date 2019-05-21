@@ -2109,7 +2109,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))".
                         // Tickets solved in the month
                         " OR ( `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)".
-                        " AND `glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)))";
+                        " AND `glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH))";
 
                      $results_3 = $DB->query($query_3);
 
