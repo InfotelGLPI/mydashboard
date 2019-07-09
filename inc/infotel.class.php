@@ -2096,20 +2096,23 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   }
 
                   if ($month == date("m") && $year == date("Y")) {
-
+                     
+                     $nbdays        = date("t", mktime(0, 0, 0, $month, 1, $year));
+                     //nbstock : cannot use tech or group criteria
+                     
                      $query_3 =
                         "SELECT COUNT(*) as count FROM `glpi_tickets`".
-                        " $ticket_users_join".
+                        //" $ticket_users_join".
                         " WHERE $is_deleted".
-                        " $technician_criteria".
+                        //" $technician_criteria".
                         " $entities_criteria".
-                        " $requester_groups_criteria".
+                        //" $requester_groups_criteria".
                         // Tickets open in the month
-                        " AND ( `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)".
-                        " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))".
+                        " AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ".
                         // Tickets solved in the month
-                        " OR ( `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)".
-                        " AND `glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH))";
+                        "OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                           AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
 
                      $results_3 = $DB->query($query_3);
 
@@ -3502,6 +3505,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $options   = PluginMydashboardHelper::manageCriterias($params);
                $crit = $options['crit'];
+               $opt  = $options['opt'];
 
                $groups_sql_criteria = "";
                $entities_criteria = $crit['entities_id'];

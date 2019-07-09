@@ -181,7 +181,7 @@ class PluginMydashboardHelper {
     *
     * @return string
     */
-   private static function getSpecificEntityRestrict($table, $params) {
+   static function getSpecificEntityRestrict($table, $params) {
 
       if (isset($params['entities_id']) && $params['entities_id'] == "") {
          $params['entities_id'] = $_SESSION['glpiactive_entity'];
@@ -365,7 +365,7 @@ class PluginMydashboardHelper {
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
       }
       // USER
-      $opt["users_id"] = $_SESSION['glpiID'];
+//      $opt["users_id"] = $_SESSION['glpiID'];
       if (in_array("users_id", $criterias)) {
          if (isset($params['opt']['users_id'])) {
             $opt["users_id"]          = $params['opt']['users_id'];
@@ -438,7 +438,7 @@ class PluginMydashboardHelper {
     *
     * @return string , like '<form id=...>'
     */
-   static function getFormHeader($widgetId, $gsid, $onsubmit = false) {
+   static function getFormHeader($widgetId, $gsid, $onsubmit = false, $opt = []) {
       $formId = uniqid('form');
       $rand   = mt_rand();
       $form   = "<script type='text/javascript'>
@@ -450,7 +450,30 @@ class PluginMydashboardHelper {
                  });
                 </script>";
 
-      $form .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"fa fa-bars fa-2x\"></i></div>";
+      $form .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"fa fa-bars fa-2x\"></i>";
+      $form .= "<span style='font-size: 12px;font-family: verdana;color: #CCC;font-weight: bold;'>";
+      $entity = new Entity();
+      if (isset($opt['entities_id']) && $opt['entities_id'] > -1) {
+         if ($entity->getFromDB($opt['entities_id'])) {
+            $form .= "&nbsp;".__('Entity')."&nbsp;:&nbsp;".$entity->getField('name');
+         }
+      } else {
+         if ($entity->getFromDB($_SESSION["glpiactive_entity"])) {
+            $form .= "&nbsp;".__('Entity')."&nbsp;:&nbsp;".$entity->getField('name');
+         }
+      }
+      if (isset($opt['groups_id']) && $opt['groups_id'] > 0) {
+         $form .= "&nbsp;/&nbsp;".__('Group')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_groups', $opt['groups_id']);
+      }
+      if (isset($opt['type']) && $opt['type'] > 0) {
+         $form .= "&nbsp;/&nbsp;".__('Type')."&nbsp;:&nbsp;".Ticket::getTicketTypeName($opt['type']);
+      }
+      if (isset($opt['year']) && isset($opt['month'])) {
+         $monthsarray   = Toolbox::getMonthsOfYearArray();
+         $form .= "&nbsp;/&nbsp;".__('Date')."&nbsp;:&nbsp;".sprintf(__('%1$s %2$s'), $monthsarray[$opt['month']], $opt['year']);
+      }
+      $form .= "</span>";
+      $form .= "</div>";
       $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
       if ($onsubmit) {
          $form .= "<form id='" . $formId . "' action='' "
@@ -466,7 +489,7 @@ class PluginMydashboardHelper {
 
       $gsid = PluginMydashboardWidget::getGsID($widgetId);
 
-      $form = self::getFormHeader($widgetId, $gsid, $onsubmit);
+      $form = self::getFormHeader($widgetId, $gsid, $onsubmit, $opt);
 
       $count = count($criterias);
 
