@@ -1022,7 +1022,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             $languages['sInfoFiltered']   = __('(filtered from _MAX_ total entries)', 'mydashboard');
             $languages['sInfoPostFix']    = __('');
             $languages['sInfoThousands']  = __(',');
-            $languages['sLengthMenu']     = __('Show _MENU_ entries', 'mydashboard');
+            //$languages['aLengthMenu']     = __('Show _MENU_ entries', 'mydashboard');
             $languages['sLoadingRecords'] = __('Loading') . "...";
             $languages['sProcessing']     = __('Processing') . "...";
             $languages['sSearch']         = __('Search') . ":";
@@ -1044,12 +1044,17 @@ class PluginMydashboardMenu extends CommonGLPI {
                   "1" => __('1 row selected', 'mydashboard')
                ]
             ];
+
             $languages['close']           = __("Close", "mydashboard");
             $languages['maximize']        = __("Maximize", "mydashboard");
             $languages['minimize']        = __("Minimize", "mydashboard");
             $languages['refresh']         = __("Refresh", "mydashboard");
             $languages['buttons']         = [
                'colvis' => __('Column visibility', 'mydashboard'),
+               "pageLength" => [
+                  "_" => __('Show %d elements', 'mydashboard'),
+                  "-1" => __('Show all', 'mydashboard'),
+               ],
             ];
             break;
          case "mydashboard" :

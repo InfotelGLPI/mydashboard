@@ -334,18 +334,20 @@ class PluginMydashboardWidget extends CommonDBTM {
                   }
                   $rand                  = mt_rand();
                   $languages             = json_encode($menu->getJsLanguages("datatables"));
-                  $display_count_on_home = $CFG_GLPI['display_count_on_home'];
-                  $user                  = new User();
-                  if ($user->getFromDB(Session::getLoginUserID())) {
-                     $user->computePreferences();
-                     $display_count_on_home = $user->fields['display_count_on_home'];
-                  }
+                  $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
+
+                  $lengthMenulangs = [ __('10 rows', 'mydashboard'),
+                                  __('25 rows', 'mydashboard'),
+                                  __('50 rows', 'mydashboard'),
+                                 __('Show all', 'mydashboard'),
+                                    ];
+                  $lengthMenulangs             = json_encode($lengthMenulangs);
                   $widgetdisplay = "<script type='text/javascript'>
                //         setTimeout(function () {
                            $.fn.dataTable.moment('$mask');
-                           $('#$widgetindex$rand').DataTable(
+                           $('#$widgetindex$rand').dataTable(
                                {
-                               stateSave: true,
+                                stateSave: true,
                                 'stateSaveParams': function (settings, data) {
                                   data.gsId = '$widgetindex';
                                   if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
@@ -381,21 +383,26 @@ class PluginMydashboardWidget extends CommonDBTM {
                                         callback(null);
                                     }
                                 })
-                               },                  
-                               'iDisplayLength' : $display_count_on_home,
+                               },
+                               'pageLength' : $display_count_on_home,
                                'order': $order,
                                'colReorder': true,
                                'columnDefs' :$defs,
                                rowReorder: {
                                  selector: 'td:nth-child(2)'
-                             },
+                               },
                                responsive: true,
-                           'language': $languages,
-                           dom: 'Bfrtip',
-                           select: true,
-                          buttons: [
-                              'colvis',
-                              {
+                              'language': $languages,
+                              dom: 'Bfrtip',
+                              select: true,
+                              lengthMenu: [
+                                   [ 10, 25, 50, -1 ],
+                                   $lengthMenulangs
+                               ],
+                              buttons: [
+                                 'colvis',
+                                 'pageLength',
+                                 {
                                   extend: 'collection',
                                   text: 'Export',
                                   buttons: [

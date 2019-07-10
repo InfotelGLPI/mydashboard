@@ -201,9 +201,8 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
 
       //Setting options
       //number of lines displayed
-      $jsonData['iDisplayLength'] = 25;
       //nmbers available to select
-      $jsonData['aLengthMenu'] = [[1, 25, 50, -1], [1, 25, 50, __("All")]];
+      //$jsonData['LengthMenu'] = [[10, 25, 50, -1], [10, 25, 50, __("All")]];
       $jsonData['bAutoWidth'] = false;
 
       //Setting specific options
