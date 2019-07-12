@@ -336,7 +336,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $languages             = json_encode($menu->getJsLanguages("datatables"));
                   $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
 
-                  $lengthMenulangs = [ __('10 rows', 'mydashboard'),
+                  $lengthMenulangs = [ __('5 rows', 'mydashboard'),
+                                       __('10 rows', 'mydashboard'),
                                   __('25 rows', 'mydashboard'),
                                   __('50 rows', 'mydashboard'),
                                  __('Show all', 'mydashboard'),
@@ -396,7 +397,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                               dom: 'Bfrtip',
                               select: true,
                               lengthMenu: [
-                                   [ 10, 25, 50, -1 ],
+                                   [ 5, 10, 25, 50, -1 ],
                                    $lengthMenulangs
                                ],
                               buttons: [
