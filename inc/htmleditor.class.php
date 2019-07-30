@@ -98,7 +98,7 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
       $options = [];
       $options['name'] = 'content';
       $options['value'] = $item->fields['content'];
-      $options['enable_richtext'] = true;
+      $options['enable_richtext'] = false;
       $options['display'] = false;
 
 
