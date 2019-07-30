@@ -32,8 +32,8 @@ include ('../../../inc/includes.php');
 $customsWidget = new PluginMydashboardCustomswidget();
 
 if(isset($_POST['update'])){
-   $content = $_POST["content"];
-   $_POST["content"] = html_entity_decode($content);
+   //decode html marks
+   $_POST["content"] = html_entity_decode($_POST["content"]);
    $customsWidget->update($_POST);
 
    Html::back();
