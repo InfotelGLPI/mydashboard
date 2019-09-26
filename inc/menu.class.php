@@ -438,13 +438,13 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
             echo "&nbsp;";
 
-            if ($drag < 1) {
+            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit",6)) {
                echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
                echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
-            if ($drag > 0) {
+            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit",6)) {
                echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
                echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
@@ -470,18 +470,21 @@ class PluginMydashboardMenu extends CommonGLPI {
          ');
 
          } else {
-            echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit fa-2x'></i>";
-            echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
-            echo "</a>";
+            if(Session::haveRight("plugin_mydashboard_edit",6)){
+               echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit fa-2x'></i>";
+               echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
+               echo "</a>";
+            }
 
-            if ($drag < 1) {
+
+            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit",6)) {
                echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
                echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
-            if ($drag > 0) {
+            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit",6)) {
 
                echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
                echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt fa-2x'></i>";
