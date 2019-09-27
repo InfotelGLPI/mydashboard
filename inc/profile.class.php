@@ -76,6 +76,7 @@ class PluginMydashboardProfile extends CommonDBTM {
          self::addDefaultProfileInfos($ID,
                                       ['plugin_mydashboard'             => 0,
                                        'plugin_mydashboard_config'      => 0,
+                                       'plugin_mydashboard_edit'      => 0,
                                        'plugin_mydashboard_stockwidget' => 0]);
          $prof->showForm($ID);
       }
@@ -119,6 +120,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       self::addDefaultProfileInfos($ID,
                                    ['plugin_mydashboard'             => 6,
                                     'plugin_mydashboard_config'      => 6,
+                                    'plugin_mydashboard_edit'        => 6,
                                     'plugin_mydashboard_stockwidget' => READ + CREATE + UPDATE + PURGE], true);
    }
 
@@ -136,7 +138,7 @@ class PluginMydashboardProfile extends CommonDBTM {
          echo "<form method='post' action='" . $profile->getFormURL() . "'>";
       }
 
-      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget','plugin_mydashboard', 'plugin_mydashboard_config']);
+      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget','plugin_mydashboard', 'plugin_mydashboard_config','plugin_mydashboard_edit']);
 
       //      Toolbox::logDebug($effective_rights);
       echo "<table class='tab_cadre_fixehov'>";
@@ -161,6 +163,14 @@ class PluginMydashboardProfile extends CommonDBTM {
       //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
       Html::showCheckbox(['name'    => '_plugin_mydashboard_config[6_0]',
                           'checked' => $effective_rights["plugin_mydashboard_config"]]);
+      echo "</td>";
+      echo "<td></td>";
+      echo "</tr>";
+      echo "<tr class='tab_bg_2'>";
+      echo "<td>" . __("See edit mode", "mydashboard") . "</td><td>";
+      //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
+      Html::showCheckbox(['name'    => '_plugin_mydashboard_edit[6_0]',
+         'checked' => $effective_rights["plugin_mydashboard_edit"]]);
       echo "</td>";
       echo "<td></td>";
       echo "</tr>";
@@ -245,6 +255,10 @@ class PluginMydashboardProfile extends CommonDBTM {
          $rights[] = ['itemtype' => 'PluginMydashboardConfig',
                       'label'    => __('See the configuration', 'mydashboard'),
                       'field'    => 'plugin_mydashboard_config'];
+
+         $rights[] = ['itemtype' => 'PluginMydashboardMenu',
+            'label'    => __('See edit mode', 'mydashboard'),
+            'field'    => 'plugin_mydashboard_edit'];
 
       }
 
