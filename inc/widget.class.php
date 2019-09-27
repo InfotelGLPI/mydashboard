@@ -695,7 +695,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                }
 
 
-               $display .= "<i style='color:$color' class=\"$icon fa-2x fa-border\"></i>";
+               $display .= "<i style='color:$color' class=\"$icon md-fa-2x fa-border\"></i>";
                $display .= "</br>";
                $display .= $item_datas['name'];
                if ($item->canView()) {
