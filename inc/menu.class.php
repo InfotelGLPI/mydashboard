@@ -440,13 +440,13 @@ class PluginMydashboardMenu extends CommonGLPI {
 
             if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit",6)) {
                echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
             if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit",6)) {
                echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
@@ -469,36 +469,35 @@ class PluginMydashboardMenu extends CommonGLPI {
                $("#error-alert").hide();
          ');
 
-         } else {
+         } else {        
             if(Session::haveRight("plugin_mydashboard_edit",6)){
                echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
                echo "</a>";
             }
 
-
             if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit",6)) {
                echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
             }
             if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit",6)) {
 
                echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
                echo "</a>";
 
                echo "<a id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
                echo "</a>";
             }
             if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
                echo "<a id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-cogs fa-2x'></i>";
+               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-cogs md-fa-2x'></i>";
                echo "<span class='sr-only'>" . __('Custom and save default grid', 'mydashboard') . "</span>";
                echo "</a>";
             }
