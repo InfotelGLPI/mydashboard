@@ -132,6 +132,11 @@ if (isset($_POST["widget"])
          $options['criteria'][1]['searchtype'] = 'equals';
          $options['criteria'][1]['value']      = $_POST["groups_id"];
          $options['criteria'][1]['link']       = 'AND';
+      } else {
+         $options['criteria'][1]['field']      = 71; // requester group
+         $options['criteria'][1]['searchtype'] = 'contains';
+         $options['criteria'][1]['value']      = '^$';
+         $options['criteria'][1]['link']       = 'AND';
       }
       if ($_POST["type"] > 0) {
          $options['criteria'][2]['field']      = 14; // type
@@ -287,7 +292,7 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-}else if (isset($_POST["widget"])
+} else if (isset($_POST["widget"])
    && $_POST["widget"] == "PluginMydashboardInfotel32"){
 
    // Reset criterias
