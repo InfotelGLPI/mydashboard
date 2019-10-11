@@ -1634,7 +1634,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
          case $this->getType() . "18":
 
-            $criterias = ['entities_id', 'requester_groups_id', 'is_recursive', 'type', 'year', 'month'];
+            $criterias = ['entities_id', 'technicians_groups_id', 'requester_groups_id', 'is_recursive', 'type', 'year', 'month'];
             $params    = ["preferences" => $this->preferences,
                           "criterias"   => $criterias,
                           "opt"         => $opt];
@@ -1646,14 +1646,16 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $type_criteria      = $crit['type'];
             $entities_criteria  = $crit['entities_id'];
             $requester_groups_criteria    = $crit['requester_groups_id'];
+            $technician_groups_criteria   = $crit['technicians_groups_id'];
             $date_criteria      = $crit['date'];
             $closedate_criteria = $crit['closedate'];
             $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
+
             $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
                      FROM `glpi_tickets`
                      WHERE $date_criteria
-                     $entities_criteria $type_criteria $requester_groups_criteria
+                     $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria
                      AND $is_deleted";
 
             $result   = $DB->query($query);
@@ -1669,8 +1671,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
                      FROM `glpi_tickets`
+
                      WHERE $closedate_criteria
-                     $entities_criteria $type_criteria $requester_groups_criteria
+                     $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria 
                      AND $is_deleted";
 
             $result = $DB->query($query);
