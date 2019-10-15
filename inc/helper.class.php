@@ -794,6 +794,8 @@ class PluginMydashboardHelper {
       return $scripts;
    }
 
+
+
    /**
     * Get an array of scripts found in a string
     *

@@ -3498,6 +3498,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             case $this->getType() . "32":
 
+
                $criterias = ['entities_id', 'is_recursive', 'groups_id', 'users_id'];
                $params    = ["preferences" => $this->preferences,
                   "criterias"   => $criterias,
@@ -3534,6 +3535,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   CommonITILObject::SOLVED
                ];
 
+
                // List of technicians active and not deleted
                $query_technicians = "SELECT `glpi_groups_users`.`users_id`"
                   . " FROM `glpi_groups_users`"
@@ -3546,6 +3548,29 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   . $users_criteria
                   . " GROUP BY `glpi_groups_users`.`users_id`";
 
+
+               // Number of tickets by technician and by status more ticket
+               $plugin = new Plugin();
+               if ($plugin->isActivated('moreticket')) {
+                  $query_moretickets_by_technician_by_status = "SELECT `glpi_tickets_users`.`users_id` as userid,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
+                     . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname"
+                     . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                     . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                     . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                     . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                     . " INNER JOIN `glpi_tickets_users` ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                     . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                     . " ORDER BY statusname";
+
+                  $query_moreticket_type = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
+
+                  $result = $DB->query($query_moreticket_type);
+                  $moreTicketType = [];
+                  while ($data= $DB->fetch_array($result)) {
+                     array_push($moreTicketType, $data['typename']);
+                  }
+               }
+
                // Number of tickets by technician and by status
                // Tickets are not deleted
                // User Type is 2
@@ -3557,6 +3582,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   . " WHERE `glpi_tickets`.`status` = %s"
                   . " AND `glpi_tickets_users`.`users_id` = '%s'"
                   . $entities_criteria;
+
 
                // Lists of tickets by technician by status
                $result = $DB->query($query_technicians);
@@ -3571,36 +3597,69 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      $userId = $data['users_id'];
                      $username = getUserName($userId);
 
-                     $temp[$i] = [0 => $username];
+                     $temp[$i] = ['id' => $userId, 0 => $username];
 
                      $j = 1;
-                     foreach($statusList as $status){
+
+                     foreach ($statusList as $status) {
 
                         $query = sprintf($query_tickets_by_technician_by_status, $status, $userId);
 
                         $temp[$i][$j] = 0;
 
                         $result2 = $DB->query($query);
-                        $nb2     = $DB->numrows($result2);
+                        $nb2 = $DB->numrows($result2);
 
-                        if($nb2){
+                        if ($nb2) {
 
                            while ($data = $DB->fetch_assoc($result2)) {
 
                               $value = "";
-                              if($data['nbtickets'] != "0"){
-                                 $value .= "<a href='#' onclick='".$widgetId."_search($userId, $status)'>";
+
+                              if ($data['nbtickets'] != "0") {
+                                 $value .= "<a href='#' onclick='" . $widgetId . "_search($userId, $status)'>";
                               }
-                              $value .= $data['nbtickets'];
-                              if($data['nbtickets'] != "0"){
+                                 $value .= $data['nbtickets'];
+
+                              if ($data['nbtickets'] != "0") {
                                  $value .= "</a>";
                               }
+
                               $temp[$i][$j] = $value;
                            }
                         }
                         $j++;
                      }
                      $i++;
+                  }
+               }
+
+            $result3 = $DB->query($query_moretickets_by_technician_by_status);
+            $nb3 = $DB->numrows($result3);
+            $nbMoreTicket = 0;
+            $status = Ticket::WAITING;
+            $i = 1;
+
+            if ($nb3) {
+               while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
+                  foreach ($temp as $key => $data) {
+                     $value = '';
+                        if ($data['id'] == $dataMoreTicket['userid']) {
+                           $nbMoreTicket++;
+                           $userIdMT = $dataMoreTicket['userid'];
+                           $value .= "<a href='#' onclick='" . $widgetId . "_search($userIdMT, $status)'>";
+                           $value .= $nbMoreTicket;
+                           $value .= "</a>";
+                           array_push($temp[$key], $value);
+                           }
+                         else {
+                              array_push($temp[$key], 0);
+                            }
+                   if ($i == $nb3) {
+                     unset($temp[$key]['id']);
+                     }
+                  }
+                  $i++;
                   }
                }
 
@@ -3617,13 +3676,19 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $widget->setWidgetTitle((($isDebug)?"32 ":"").$title);
 
-               $widget->setTabNames([
-                  __('Technician'),
+               $typesTicketStatus  = [__('Technician'),
                   _x('status','Processing (assigned)'),
                   _x('status','Processing (planned)'),
                   __('Pending'),
-                  _x('status','Solved')
-               ]);
+                  _x('status','Solved')];
+
+               if (count($moreTicketType) > 0) {
+                  $allTypes = array_merge($typesTicketStatus, $moreTicketType );
+                  }
+
+               $widget->setTabNames($allTypes);
+
+
                $widget->setTabDatas($temp);
                $widget->toggleWidgetRefresh();
 
