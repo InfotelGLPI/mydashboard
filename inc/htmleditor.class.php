@@ -95,10 +95,12 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
 
    function showForm($item, $openform = true, $closeform = true ){
 
+      Html::requireJs('tinymce');
+      
       $options = [];
       $options['name'] = 'content';
       $options['value'] = $item->fields['content'];
-      $options['enable_richtext'] = false;
+      $options['enable_richtext'] = true;
       $options['display'] = false;
 
 

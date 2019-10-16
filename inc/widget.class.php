@@ -672,7 +672,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                //               $display .= "<p class=\"count-text \">";
 
                $display .= "</br>";
-               $color   = "steelblue";
 
                //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense','PluginBadgesBadge'];
                if ($itemtype == 'Computer') {
@@ -695,7 +694,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                }
 
 
-               $display .= "<i style='color:$color' class=\"$icon md-fa-2x fa-border\"></i>";
+               $display .= "<i class=\"$icon md-fa-2x fa-border\"></i>";
                $display .= "</br>";
                $display .= $item_datas['name'];
                if ($item->canView()) {
