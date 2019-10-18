@@ -202,6 +202,32 @@ class PluginMydashboardHelper {
       return $entities;
    }
 
+   /**
+      * @param $table
+      * @param $params
+      *
+      * @return string
+      */
+   static function getGroupsAncestors($table, $params) {
+      $groups = "";
+         if (isset($params['groups_id'])) {
+            if (isset($params['ancestors']) && ($params['ancestors'] != 0)) {
+               if (count(getAncestorsOf($table, $params['groups_id'])) > 1) {
+               $groups = [];
+               $groups = getAncestorsOf($table, $params['groups_id']);
+               } else {
+                 $groups = implode(" , ", getAncestorsOf($table, $params['groups_id']));
+               }
+               if (!isset($groups) || $groups == "" || empty($groups)) {
+                  $groups = $params['groups_id'];
+               }
+            } else {
+               $groups = $params['groups_id'];
+            }
+         }
+      return $groups;
+   }
+
    static function manageCriterias($params) {
 
       $criterias = $params['criterias'];
@@ -273,10 +299,21 @@ class PluginMydashboardHelper {
       // GROUP
       $opt['groups_id'] = 0;
       $crit['crit']['groups_id'] = 0;
+      $opt['ancestors'] = 0;
+      $crit['crit']['ancestors'] = 0;
       if (in_array("groups_id", $criterias)) {
          $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
          $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
-      }
+         if (in_array("is_recursive", $criterias) &&  isset($params['opt']['ancestors']) &&  $params['opt']['ancestors'] != 0)  {
+            $opt['ancestors'] = $params['opt']['ancestors'];
+            $opt['groups_id'] = self::getGroupsAncestors("glpi_groups", $opt);
+            $crit['crit']['ancestors'] = $opt['ancestors'];
+      } else {
+            $opt['ancestors'] = 0;
+            $crit['crit']['ancestors'] = 0;
+         }
+    }
+
       //LOCATION
       $opt['locations_id'] = 0;
       $crit['crit']['locations_id'] = "AND 1 = 1";
@@ -523,7 +560,6 @@ class PluginMydashboardHelper {
             if ($count > 1) {
                $form .= "</br></br>";
             }
-
          }
       }
       // LOCATION
@@ -590,6 +626,19 @@ class PluginMydashboardHelper {
          $form    .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
+         }
+
+         if (in_array("is_recursive", $criterias)) {
+            $form .= "<span class='md-widgetcrit'>";
+            $form .= __('Recursive') . "&nbsp;";
+            $paramsy = [
+               'display' => false];
+            $ancestors = isset($opt['ancestors']) ? $opt['ancestors'] : 0;
+            $form .= Dropdown::showYesNo('ancestors', $ancestors, -1, $paramsy);
+            $form .= "</span>";
+            if ($count > 1) {
+               $form .= "</br></br>";
+            }
          }
       }
       // TYPE

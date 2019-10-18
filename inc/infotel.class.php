@@ -3507,17 +3507,20 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $crit = $options['crit'];
                $opt  = $options['opt'];
 
-               $groups_sql_criteria = "";
+               $groups_sql_criteria = '';
                $entities_criteria = $crit['entities_id'];
                $users_criteria = "";
 
+
                // GROUP
-               if(isset($crit['groups_id']) && $crit['groups_id'] != 0 && !empty($crit['groups_id'])){
+               if (isset($crit['groups_id']) && $crit['groups_id'] != 0 && !empty($crit['groups_id'])) {
                   $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
-                  if(is_array($crit['groups_id'])){
-                     $groups_sql_criteria .= " IN (". implode(",", $crit['groups_id']) . ")";
-                  }else{
-                     $groups_sql_criteria .= " = ".$crit['groups_id'];
+                  if (is_array($crit['groups_id']) && $params['opt']['ancestors'] == 0) {
+                     $groups_sql_criteria .= " IN (" . implode(",", $crit['groups_id']) . ")";
+                  } else if (in_array('is_recursive',$criterias) &&  is_array($opt['groups_id'])) {
+                     $groups_sql_criteria .= " IN (" . implode(",", $opt['groups_id']) . ")";
+                  } else {
+                     $groups_sql_criteria .= " = " . $opt['groups_id'];
                   }
                }
 
@@ -3642,6 +3645,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $js_group = $crit['groups_id'];
                $js_entity = $crit['entity'];
                $js_sons = $crit['sons'];
+               $js_ancestors = $crit['ancestors'];
 
                $js = "
                var ".$widgetId."_search = function(_technician, _status){
@@ -3652,6 +3656,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         groups_id:$js_group,
                         entities_id:$js_entity, 
                         sons:$js_sons,
+                        ancestors:$js_ancestors,
                         technician: _technician,
                         status: _status,
                         widget:'$widgetId'},
