@@ -214,9 +214,10 @@ class PluginMydashboardHelper {
             if (isset($params['ancestors']) && ($params['ancestors'] != 0)) {
                if (count(getAncestorsOf($table, $params['groups_id'])) > 1) {
                $groups = [];
-               $groups = getAncestorsOf($table, $params['groups_id']);
+               $groups = getSonsAndAncestorsOf($table, $params['groups_id']);
+
                } else {
-                 $groups = implode(" , ", getAncestorsOf($table, $params['groups_id']));
+                 $groups = implode(" , ", getSonsAndAncestorsOf($table, $params['groups_id']));
                }
                if (!isset($groups) || $groups == "" || empty($groups)) {
                   $groups = $params['groups_id'];
@@ -306,7 +307,7 @@ class PluginMydashboardHelper {
          $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
          if (in_array("is_recursive", $criterias) &&  isset($params['opt']['ancestors']) &&  $params['opt']['ancestors'] != 0)  {
             $opt['ancestors'] = $params['opt']['ancestors'];
-            $opt['groups_id'] = self::getGroupsAncestors("glpi_groups", $opt);
+            $crit['crit']['groups_id'] = self::getGroupsAncestors("glpi_groups", $opt);
             $crit['crit']['ancestors'] = $opt['ancestors'];
       } else {
             $opt['ancestors'] = 0;
@@ -639,8 +640,9 @@ class PluginMydashboardHelper {
             if ($count > 1) {
                $form .= "</br></br>";
             }
-         }
       }
+      }
+
       // TYPE
       if (in_array("type", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";

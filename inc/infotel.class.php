@@ -3517,10 +3517,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
                   if (is_array($crit['groups_id']) && $params['opt']['ancestors'] == 0) {
                      $groups_sql_criteria .= " IN (" . implode(",", $crit['groups_id']) . ")";
-                  } else if (in_array('is_recursive',$criterias) &&  is_array($opt['groups_id'])) {
-                     $groups_sql_criteria .= " IN (" . implode(",", $opt['groups_id']) . ")";
+                  } else if (in_array('is_recursive',$criterias) &&  is_array($crit['groups_id'])) {
+                     $groups_sql_criteria .= " IN (" . implode(",", $crit['groups_id']) . ")";
                   } else {
-                     $groups_sql_criteria .= " = " . $opt['groups_id'];
+                     $groups_sql_criteria .= " = " . $crit['groups_id'];
                   }
                }
 
@@ -3642,7 +3642,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                $linkURL = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
 
-               $js_group = $crit['groups_id'];
+               $js_group = $opt['groups_id'];
                $js_entity = $crit['entity'];
                $js_sons = $crit['sons'];
                $js_ancestors = $crit['ancestors'];
