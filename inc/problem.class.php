@@ -182,13 +182,13 @@ class PluginMydashboardProblem {
       $result = $DB->query($query);
       $numrows = $DB->numrows($result);
 
-      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
+//      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
+//         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
          $result = $DB->query($query);
          $number = $DB->numrows($result);
-      } else {
-         $number = 0;
-      }
+//      } else {
+//         $number = 0;
+//      }
 
       if ($numrows > 0) {
          $output['title'] = "";

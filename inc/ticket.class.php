@@ -316,13 +316,13 @@ class PluginMydashboardTicket {
       $result  = $DB->query($query);
       $numrows = $DB->numrows($result);
 
-      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-         $query  .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
+//      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
+//         $query  .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
          $result = $DB->query($query);
          $number = $DB->numrows($result);
-      } else {
-         $number = 0;
-      }
+//      } else {
+//         $number = 0;
+//      }
 
       $output['header'][] = __('ID and priority','mydashboard');
       $output['header'][] = __('Requester');
@@ -631,9 +631,11 @@ class PluginMydashboardTicket {
       }
 
       $number = 0;
-      if ($_SESSION['glpidisplay_count_on_home'] > 0 && $req !== false) {
+//      $_SESSION['glpidisplay_count_on_home'] > 0 &&
+      if ($req !== false) {
          $start  = (int)$start;
-         $limit  = (int)$_SESSION['glpidisplay_count_on_home'];
+         $limit = "";
+//         $limit  = (int)$_SESSION['glpidisplay_count_on_home'];
          $req    = TicketTask::getTaskList($status, $showgrouptickets, $start, $limit);
          $number = $req->numrows();
       }

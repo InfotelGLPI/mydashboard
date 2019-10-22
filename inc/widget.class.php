@@ -334,7 +334,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                   }
                   $rand                  = mt_rand();
                   $languages             = json_encode($menu->getJsLanguages("datatables"));
-                  $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
+//                  $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
 
                   $lengthMenulangs = [ __('5 rows', 'mydashboard'),
                                        __('10 rows', 'mydashboard'),
@@ -385,7 +385,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                                     }
                                 })
                                },
-                               'pageLength' : $display_count_on_home,
                                'order': $order,
                                'colReorder': true,
                                'columnDefs' :$defs,
