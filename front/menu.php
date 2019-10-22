@@ -50,11 +50,11 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <link type="text/css" href="../css/style_bootstrap_ticket.css" rel="stylesheet">
            <!--DATATABLES CSS-->
            <link type="text/css" href="../lib/datatables/datatables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/Responsive-2.2.2/css/responsive.dataTables.min.css"
+           <link type="text/css" href="../lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css"
                  rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/Select-1.2.6/css/select.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/Buttons-1.5.2/css/buttons.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/ColReorder-1.5.0/css/colReorder.dataTables.min.css"
+           <link type="text/css" href="../lib/datatables/Select-1.3.1/css/select.dataTables.min.css" rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css" rel="stylesheet">
+           <link type="text/css" href="../lib/datatables/ColReorder-1.5.2/css/colReorder.dataTables.min.css"
                  rel="stylesheet">
 
            <!--GLPI-->
@@ -67,13 +67,13 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 
            <!--DATATABLES-->
            <script src="../lib/datatables/datatables.min.js"></script>
-           <script src="../lib/datatables/Responsive-2.2.2/js/dataTables.responsive.min.js"></script>
-           <script src="../lib/datatables/Select-1.2.6/js/dataTables.select.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.5.2/js/dataTables.buttons.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.5.2/js/buttons.html5.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.5.2/js/buttons.print.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.5.2/js/buttons.colVis.min.js"></script>
-           <script src="../lib/datatables/ColReorder-1.5.0/js/dataTables.colReorder.min.js"></script>
+           <script src="../lib/datatables/Responsive-2.2.3/js/dataTables.responsive.min.js"></script>
+           <script src="../lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.6.1/js/buttons.html5.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.6.1/js/buttons.print.min.js"></script>
+           <script src="../lib/datatables/Buttons-1.6.1/js/buttons.colVis.min.js"></script>
+           <script src="../lib/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.js"></script>
            <script src="../lib/datatables/JSZip-2.5.0/jszip.min.js"></script>
            <script src="../lib/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
            <script src="../lib/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>

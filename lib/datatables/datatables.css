@@ -4,10 +4,10 @@
  *
  * To rebuild or modify this file with the latest versions of the included
  * software please visit:
- *   https://datatables.net/download/#dt/jszip-2.5.0/pdfmake-0.1.36/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-html5-1.5.2/cr-1.5.0/r-2.2.2/sl-1.2.6
+ *   https://datatables.net/download/#dt/jszip-2.5.0/pdfmake-0.1.36/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/r-2.2.3/sl-1.3.1
  *
  * Included libraries:
- *   JSZip 2.5.0, pdfmake 0.1.36, DataTables 1.10.18, Buttons 1.5.2, Column visibility 1.5.2, HTML5 export 1.5.2, ColReorder 1.5.0, Responsive 2.2.2, Select 1.2.6
+ *   JSZip 2.5.0, pdfmake 0.1.36, DataTables 1.10.20, Buttons 1.6.1, Column visibility 1.6.1, HTML5 export 1.6.1, Print view 1.6.1, ColReorder 1.5.2, Responsive 2.2.3, Select 1.3.1
  */
 
 /*
@@ -55,19 +55,19 @@ table.dataTable thead .sorting_desc_disabled {
   background-position: center right;
 }
 table.dataTable thead .sorting {
-  background-image: url("DataTables-1.10.18/images/sort_both.png");
+  background-image: url("DataTables-1.10.20/images/sort_both.png");
 }
 table.dataTable thead .sorting_asc {
-  background-image: url("DataTables-1.10.18/images/sort_asc.png");
+  background-image: url("DataTables-1.10.20/images/sort_asc.png");
 }
 table.dataTable thead .sorting_desc {
-  background-image: url("DataTables-1.10.18/images/sort_desc.png");
+  background-image: url("DataTables-1.10.20/images/sort_desc.png");
 }
 table.dataTable thead .sorting_asc_disabled {
-  background-image: url("DataTables-1.10.18/images/sort_asc_disabled.png");
+  background-image: url("DataTables-1.10.20/images/sort_asc_disabled.png");
 }
 table.dataTable thead .sorting_desc_disabled {
-  background-image: url("DataTables-1.10.18/images/sort_desc_disabled.png");
+  background-image: url("DataTables-1.10.20/images/sort_desc_disabled.png");
 }
 table.dataTable tbody tr {
   background-color: #ffffff;
@@ -514,6 +514,16 @@ div.dt-button-info > div {
   padding: 1em;
 }
 
+div.dt-button-collection-title {
+  text-align: center;
+  padding: 0.3em 0 0.5em;
+  font-size: 0.9em;
+}
+
+div.dt-button-collection-title:empty {
+  display: none;
+}
+
 button.dt-button,
 div.dt-button,
 a.dt-button {
@@ -549,6 +559,7 @@ a.dt-button {
   user-select: none;
   text-decoration: none;
   outline: none;
+  text-overflow: ellipsis;
 }
 button.dt-button.disabled,
 div.dt-button.disabled,
@@ -675,11 +686,7 @@ div.dt-button-collection {
   z-index: 2002;
   border-radius: 5px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-  -webkit-column-gap: 8px;
-  -moz-column-gap: 8px;
-  -ms-column-gap: 8px;
-  -o-column-gap: 8px;
-  column-gap: 8px;
+  box-sizing: border-box;
 }
 div.dt-button-collection button.dt-button,
 div.dt-button-collection div.dt-button,
@@ -720,7 +727,7 @@ div.dt-button-collection.fixed {
   border-radius: 0;
 }
 div.dt-button-collection.fixed.two-column {
-  margin-left: -150px;
+  margin-left: -200px;
 }
 div.dt-button-collection.fixed.three-column {
   margin-left: -225px;
@@ -728,12 +735,22 @@ div.dt-button-collection.fixed.three-column {
 div.dt-button-collection.fixed.four-column {
   margin-left: -300px;
 }
-div.dt-button-collection > * {
+div.dt-button-collection > :last-child {
+  display: block !important;
+  -webkit-column-gap: 8px;
+  -moz-column-gap: 8px;
+  -ms-column-gap: 8px;
+  -o-column-gap: 8px;
+  column-gap: 8px;
+}
+div.dt-button-collection > :last-child > * {
   -webkit-column-break-inside: avoid;
   break-inside: avoid;
 }
 div.dt-button-collection.two-column {
-  width: 300px;
+  width: 400px;
+}
+div.dt-button-collection.two-column > :last-child {
   padding-bottom: 1px;
   -webkit-column-count: 2;
   -moz-column-count: 2;
@@ -743,6 +760,8 @@ div.dt-button-collection.two-column {
 }
 div.dt-button-collection.three-column {
   width: 450px;
+}
+div.dt-button-collection.three-column > :last-child {
   padding-bottom: 1px;
   -webkit-column-count: 3;
   -moz-column-count: 3;
@@ -752,6 +771,8 @@ div.dt-button-collection.three-column {
 }
 div.dt-button-collection.four-column {
   width: 600px;
+}
+div.dt-button-collection.four-column > :last-child {
   padding-bottom: 1px;
   -webkit-column-count: 4;
   -moz-column-count: 4;
