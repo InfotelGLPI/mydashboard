@@ -2069,7 +2069,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'requester_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
+               $criterias = ['entities_id', 'technicians_groups_id', 'requester_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -2086,6 +2086,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $entities_criteria         = $crit['entities_id'];
             $requester_groups_criteria = $crit['requester_groups_id'];
+            $technician_groups_criteria   = $crit['technicians_groups_id'];
             $mdentities                = self::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
             $ticket_users_join   = "";
@@ -2145,6 +2146,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
                " $entities_criteria" .
                " $requester_groups_criteria" .
+               " $technician_groups_criteria" .
                " $locations_criteria" .
                " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
@@ -2169,6 +2171,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      " $technician_criteria" .
                      " $entities_criteria" .
                      " $requester_groups_criteria" .
+                     " $technician_groups_criteria" .
                      " $locations_criteria" .
                      " AND $is_deleted";
 
@@ -2190,6 +2193,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      " $technician_criteria" .
                      " $entities_criteria" .
                      " $requester_groups_criteria" .
+                     " $technician_groups_criteria" .
                      " $locations_criteria" .
                      " AND $is_deleted";
 
