@@ -270,6 +270,34 @@ class PluginMydashboardHelper {
          }
       }
 
+      // TECH GROUP
+      $opt['technicians_groups_id'] = null;
+      $crit['crit']['technicians_groups_id'] = null;
+      if (in_array("technicians_groups_id", $criterias)) {
+
+         // Remove the '[' if exist to avoid issues
+         if(isset($params['opt']['technicians_groups_id['])){
+            $params['opt']['technicians_groups_id'] = $params['opt']['technicians_groups_id['];
+            unset($params['opt']['technicians_groups_id[']);
+         }
+
+         if (isset($params['opt']['technicians_groups_id']) && !isset($params['opt']['requester_groups_id'])) {
+            $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
+            $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`technicians_groups_id
+            WHERE `type` = ".CommonITILActor::ASSIGN." AND `groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . "))";
+
+         } else if (isset($params['opt']['technicians_groups_id']) && isset($params['opt']['requester_groups_id']) ) {
+            $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
+            $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`technicians_groups_id
+            WHERE `type` = ".CommonITILActor::ASSIGN." AND `groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . "))";
+
+         } else {
+            $crit['crit']['technicians_groups_id'] = "";
+         }
+      }
+
+
+
       // GROUP
       $opt['groups_id'] = 0;
       $crit['crit']['groups_id'] = 0;
@@ -277,6 +305,7 @@ class PluginMydashboardHelper {
          $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
          $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
       }
+
       //LOCATION
       $opt['locations_id'] = 0;
       $crit['crit']['locations_id'] = "AND 1 = 1";
@@ -331,6 +360,7 @@ class PluginMydashboardHelper {
          }
          $crit['crit']['year'] = $opt['year'];
       }
+
       // BEGIN DATE
       if (in_array("begin", $criterias)) {
          if (isset($params['opt']['begin'])
@@ -341,6 +371,7 @@ class PluginMydashboardHelper {
             $opt["begin"] = date("Y-m-d");
          }
       }
+
       // END DATE
       if (in_array("end", $criterias)) {
          if (isset($params['opt']['end'])
@@ -575,13 +606,47 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+
+      // TECHNICIAN GROUPS
+      if (in_array("technicians_groups_id", $criterias)){
+         $form    .= "<span class='md-widgetcrit'>";
+
+         $dbu = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign'=>1]);
+
+         $temp = [];
+         foreach($result as $item){
+            $temp[$item['id']] = $item['name'];
+         }
+
+         $params = [
+            "name"=> 'technicians_groups_id',
+            "display"=>false,
+            "multiple"=>true,
+            "width"=> '200px',
+            'values'=> isset($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [],
+            'display_emptychoice' => true
+         ];
+
+         $form   .= __('Technician group');
+         $form   .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("technicians_groups_id", $temp, $params);
+
+         $form .= $dropdown;
+
+         $form   .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
       // GROUP
       if (in_array("groups_id", $criterias)) {
          $gparams = ['name'      => 'groups_id',
-                     'display'   => false,
-                     'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-                     'entity'    => $_SESSION['glpiactiveentities'],
-                     'condition' => ['is_assign' => 1]
+            'display'   => false,
+            'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
+            'entity'    => $_SESSION['glpiactiveentities'],
+            'condition' => ['is_assign' => 1]
          ];
          $form    .= "<span class='md-widgetcrit'>";
          $form    .= __('Group');
