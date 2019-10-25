@@ -327,7 +327,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'type'];
+               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -347,11 +347,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
             $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $technician_group           = $opt['technicians_groups_id'];
+            $technician_groups_criteria = $crit['technicians_groups_id'];
+
             $query                = "SELECT DISTINCT
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria $entities_criteria";
+                        WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria";
             $query                .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query                .= " GROUP BY `priority` ORDER BY `priority` ASC";
 
@@ -379,6 +382,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($colors);
             $labelsPie          = json_encode($name);
             $tabpriorityset     = json_encode($tabpriority);
+            $technician_group = json_encode($technician_group);
+
             $graph              = "<script type='text/javascript'>
          
             var dataPriorityPie = {
@@ -428,6 +433,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           type: 'POST',
                           data:{priority_id:priority_id, 
                                 entities_id:$entities_id_criteria, 
+                                technician_group:$technician_group,
                                 sons:$sons_criteria, 
                                 type:$type,
                                 widget:'$widgetId'},
@@ -444,7 +450,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => 'TicketsByPriorityPieChart',
-                       "onsubmit"  => false,
+                       "onsubmit"  => true,
                        "opt"       => $opt,
                        "criterias" => $criterias,
                        "export"    => true,
@@ -3084,7 +3090,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -3102,7 +3108,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $type                 = $opt['type'];
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
-            $groups_criteria      = $crit['groups_id'];
+            $groups_criteria      = $crit['technicians_groups_id'];
 
             $widget = new PluginMydashboardHtml();
             $title  = __("OpenStreetMap - Opened tickets by location", "mydashboard");
@@ -3156,6 +3162,22 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   'searchtype' => 'equals',
                   'value'      => $type
                ];
+            }
+
+            if ($groups_criteria > 0) {
+               $options['criteria'][7]['link']       = 'AND';
+               $nb = 0;
+               foreach($groups_criteria as $group) {
+                  if ($nb == 0) {
+                     $options['criteria'][7]['criteria'][$nb]['link']       = 'AND';
+                  } else {
+                     $options['criteria'][7]['criteria'][$nb]['link']       = 'OR';
+                  }
+                  $options['criteria'][7]['criteria'][$nb]['field']       = 8;
+                  $options['criteria'][7]['criteria'][$nb]['searchtype'] = 'equals';
+                  $options['criteria'][7]['criteria'][$nb]['value']      = $group;
+                  $nb++;
+               }
             }
 
             if ($groups_criteria > 0) {
@@ -3821,7 +3843,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      url: '" . $linkURL . "',
                      type: 'POST',
                      data:{
-                        groups_id:$js_group,
+                        technician_group:$js_group,
                         entities_id:$js_entity, 
                         sons:$js_sons,
                         technician: _technician,
@@ -3971,7 +3993,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $linkURL = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
 
-//            $js_group  = $crit['groups_id'];
             $js_entity = $crit['entity'];
             $js_sons   = $crit['sons'];
 
@@ -4203,9 +4224,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
       }
 
       $selected_group = [];
-      if (isset($opt["technicians_groups_id"])
-          &&  count($opt["technicians_groups_id"]) > 0) {
-         $selected_group = $opt['technicians_groups_id'];
+      if (isset($params["opt"]["technicians_groups_id"])
+          &&  count($params["opt"]["technicians_groups_id"]) > 0) {
+         $selected_group = $params["opt"]['technicians_groups_id'];
       } else if (count($_SESSION['glpigroups']) > 0) {
          $selected_group = $_SESSION['glpigroups'];
       }
