@@ -250,72 +250,44 @@ class PluginMydashboardHelper {
 
       // REQUESTER GROUP
       $opt['requester_groups_id']          = null;
-      $crit['crit']['requester_groups_id'] = null;
+      $crit['crit']['requester_groups_id'] = "AND 1 = 1";
       if (in_array("requester_groups_id", $criterias)) {
-
-         // Remove the '[' if exist to avoid issues
-         if (isset($params['opt']['requester_groups_id['])) {
-            $params['opt']['requester_groups_id'] = $params['opt']['requester_groups_id['];
-            unset($params['opt']['requester_groups_id[']);
-         }
-
          if (isset($params['opt']['requester_groups_id'])) {
-            $opt['requester_groups_id']          = is_array($params['opt']['requester_groups_id']) ? $params['opt']['requester_groups_id'] : [$params['opt']['requester_groups_id']];
             $crit['crit']['requester_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $opt['requester_groups_id']) . "))";
-
-         } else {
-            $crit['crit']['requester_groups_id'] = "";
          }
       }
 
       // TECH GROUP
-      $opt['technicians_groups_id'] = null;
-      $crit['crit']['technicians_groups_id'] = null;
+      $opt['technicians_groups_id']          = null;
+      $crit['crit']['technicians_groups_id'] = "AND 1 = 1";
       if (in_array("technicians_groups_id", $criterias)) {
-
-         // Remove the '[' if exist to avoid issues
-         if(isset($params['opt']['technicians_groups_id['])){
-            $params['opt']['technicians_groups_id'] = $params['opt']['technicians_groups_id['];
-            unset($params['opt']['technicians_groups_id[']);
-         }
-
-         if (isset($params['opt']['technicians_groups_id']) && !isset($params['opt']['requester_groups_id'])) {
+         if (isset($params['opt']['technicians_groups_id'])) {
             $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
-            $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`technicians_groups_id
-            WHERE `type` = ".CommonITILActor::ASSIGN." AND `groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . "))";
-
-         } else if (isset($params['opt']['technicians_groups_id']) && isset($params['opt']['requester_groups_id']) ) {
-            $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
-            $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`technicians_groups_id
-            WHERE `type` = ".CommonITILActor::ASSIGN." AND `groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . "))";
-
          } else {
-            $crit['crit']['technicians_groups_id'] = "";
+            $groups_id = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
+            $opt['technicians_groups_id'] = [$groups_id];
          }
-      }
 
+         $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
 
-
-      // GROUP
-      $opt['groups_id']          = 0;
-      $crit['crit']['groups_id'] = 0;
-      if (in_array("groups_id", $criterias)) {
-         $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
-         $opt['groups_id']          = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
+         if (isset($params['opt']['technicians_groups_id'])) {
+            $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $params['opt']['technicians_groups_id']) . "))";
+         }
       }
 
       //LOCATION
       $opt['locations_id']          = 0;
       $crit['crit']['locations_id'] = "AND 1 = 1";
-      $user = new User();
+      $user                         = new User();
       if (in_array("locations_id", $criterias)) {
          if (isset($params['opt']["locations_id"])
              && $params['opt']["locations_id"] > 0) {
             $opt['locations_id']          = $params['opt']['locations_id'];
             $crit['crit']['locations_id'] = " AND `glpi_tickets`.`locations_id` = '" . $params['opt']["locations_id"] . "' ";
          } else if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
+                    && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
             $opt['locations_id']          = $user->fields['locations_id'];
             $crit['crit']['locations_id'] = " AND `glpi_tickets`.`locations_id` = '" . $opt["locations_id"] . "' ";
          }
@@ -502,12 +474,24 @@ class PluginMydashboardHelper {
          $form .= "&nbsp;/&nbsp;" . __('Location') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $opt['locations_id']);
       }
 
-      if (isset($opt['groups_id']) && $opt['groups_id'] > 0) {
-         $form .= "&nbsp;/&nbsp;" . __('Group') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_groups', $opt['groups_id']);
+      if (isset($opt['technicians_groups_id'])) {
+         $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+         if (count($opt['technicians_groups_id']) > 0) {
+            $form .= "&nbsp;/&nbsp;" . __('Group') . "&nbsp;:&nbsp;";
+            foreach ($opt['technicians_groups_id'] as $k => $v) {
+               $form .= Dropdown::getDropdownName('glpi_groups', $v);
+               if (count($opt['technicians_groups_id']) > 1) {
+                  $form .= "&nbsp;-&nbsp;";
+               }
+
+            }
+         }
       }
+
       if (isset($opt['type']) && $opt['type'] > 0) {
          $form .= "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . Ticket::getTicketTypeName($opt['type']);
       }
+
       if (isset($opt['year']) && isset($opt['month'])) {
          $monthsarray = Toolbox::getMonthsOfYearArray();
          $form        .= "&nbsp;/&nbsp;" . __('Date') . "&nbsp;:&nbsp;" . sprintf(__('%1$s %2$s'), $monthsarray[$opt['month']], $opt['year']);
@@ -568,7 +552,7 @@ class PluginMydashboardHelper {
       }
       // LOCATION
       if (in_array("locations_id", $criterias)) {
-         $user = new User();
+         $user             = new User();
          $default_location = 0;
          if (isset($_SESSION['glpiactiveprofile']['interface'])
              && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
@@ -623,55 +607,40 @@ class PluginMydashboardHelper {
       }
 
       // TECHNICIAN GROUPS
-      if (in_array("technicians_groups_id", $criterias)){
-         $form    .= "<span class='md-widgetcrit'>";
+      if (in_array("technicians_groups_id", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
 
-         $dbu = new DbUtils();
-         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign'=>1]);
+         $dbu    = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
 
-         $temp = [];
-         foreach($result as $item){
+         $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+         $temp                         = [];
+         foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
          }
 
          $params = [
-            "name"=> 'technicians_groups_id',
-            "display"=>false,
-            "multiple"=>true,
-            "width"=> '200px',
-            'values'=> isset($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [],
+            "name"                => 'technicians_groups_id',
+            "display"             => false,
+            "multiple"            => true,
+            "width"               => '200px',
+            'values'              => isset($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [],
             'display_emptychoice' => true
          ];
 
-         $form   .= __('Technician group');
-         $form   .= "&nbsp;";
+         $form .= __('Technician group');
+         $form .= "&nbsp;";
 
          $dropdown = Dropdown::showFromArray("technicians_groups_id", $temp, $params);
 
          $form .= $dropdown;
 
-         $form   .= "</span>";
+         $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
       }
-      // GROUP
-      if (in_array("groups_id", $criterias)) {
-         $gparams = ['name'      => 'groups_id',
-            'display'   => false,
-            'value'     => isset($opt['groups_id']) ? $opt['groups_id'] : 0,
-            'entity'    => $_SESSION['glpiactiveentities'],
-            'condition' => ['is_assign' => 1]
-         ];
-         $form    .= "<span class='md-widgetcrit'>";
-         $form    .= __('Group');
-         $form    .= "&nbsp;";
-         $form    .= Group::dropdown($gparams);
-         $form    .= "</span>";
-         if ($count > 1) {
-            $form .= "</br></br>";
-         }
-      }
+
       // TYPE
       if (in_array("type", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
@@ -1151,11 +1120,7 @@ class PluginMydashboardHelper {
                     && !isset($params['opt']['groups_id'])) {
             $res = $group;
          }
-
-
       }
-
-
       return $res;
    }
 }
