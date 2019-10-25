@@ -326,4 +326,38 @@ if (isset($_POST["widget"])
 
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
       Toolbox::append_params($options, "&");
+} else if (isset($_POST["widget"])
+   && $_POST["widget"] == "PluginMydashboardInfotel33"){
+
+   // Reset criterias
+   $options['reset'] = 'reset';
+
+   // ENTITY | SONS
+   $options['criteria'][] = [
+      'field' => 80,
+      'searchtype' => (isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals',
+      'value' => $_POST["entities_id"],
+      'link' => 'AND'
+   ];
+
+   // Group
+   if(isset($_POST["group"])){
+      $options['criteria'][] = [
+         'field' => 8,
+         'searchtype' => 'equals',
+         'value' => $_POST["group"],
+         'link' => 'AND'
+      ];
+   }
+
+   // STATUS
+   $options['criteria'][] = [
+      'field' => 12,
+      'searchtype' => 'equals',
+      'value' => $_POST["status"],
+      'link' => 'AND'
+   ];
+
+   echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+      Toolbox::append_params($options, "&");
 }

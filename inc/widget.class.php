@@ -657,9 +657,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                //                  $display .= "<div class=\"bt-col-md-6 center\">";
                //               }
                if ($nb == 1) {
-                  $display .= "<div class=\"bt-feature bt-col-md-11 center\">";
+                  $display .= "<div class=\"bt-feature bt-col-md-11 equip-item center\">";
                } else {
-                  $display .= "<div class=\"bt-feature bt-col-md-5 center\">";
+                  $display .= "<div class=\"bt-feature bt-col-md-5 equip-item center\">";
                }
 
                //               $display .= "<div class=\"nbstock\" style=\"color:$color\">";
@@ -688,7 +688,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                } else if ($itemtype == 'PluginBadgesBadge') {
                   $icon = 'far fa-id-badge';
                }
-               if ($item->canView()) {
+
+               if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])
+                   && Session::getCurrentInterface() == 'central') {
                   $display .= "<a href='" . $item::getFormURL() . "?id=" . $item_datas['id'] . "' target='_blank'>";
                }
 
@@ -696,7 +698,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $display .= "<i class=\"$icon md-fa-2x fa-border\"></i>";
                $display .= "</br>";
                $display .= $item_datas['name'];
-               if ($item->canView()) {
+               if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])
+                   && Session::getCurrentInterface() == 'central') {
                   $display .= "</a>";
                }
                $display .= "</br>";

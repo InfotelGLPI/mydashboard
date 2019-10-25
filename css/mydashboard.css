@@ -54,7 +54,7 @@
    margin-top: 15px;
    margin-bottom: 15px;
    width: 95% !important;
-   min-height: 100px !important;
+   /*min-height: 100px !important;*/
 }
 
 .alert_date {
@@ -155,7 +155,7 @@ div#tabcontent{
       background-color: white;
       padding-top:3px;*/
    width: 300px;
-   position: absolute;
+   /*position: absolute;*/
    right: 0px;
 }
 
@@ -864,13 +864,18 @@ div.dt-button-background {
    border-width: 2px;
    padding: 5px;
    border-style: dashed;
-   width: 90% !important;
+   float: left;
+   /*width: 90% !important;*/
+}
+
+.equip-item {
+   float: left;
 }
 
 .md-fa-2x {
    margin: 0 auto;
    float: none;
-   color: #000;
+   color: steelblue;
 }
 
 .fa-border-green {

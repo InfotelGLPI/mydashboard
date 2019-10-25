@@ -156,7 +156,6 @@ class PluginMydashboardHelper {
       }
 
 
-
       return $graph;
    }
 
@@ -166,7 +165,7 @@ class PluginMydashboardHelper {
       $graph = "<div class='bt-row'>";
       $graph .= "<div class='bt-col-md-12 left'>";
       if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
-         $graph .= "<a target='_blank' href='".$params["setup"]."'><i class=\"fas fa-wrench fa-1x\"></i></a>";
+         $graph .= "<a target='_blank' href='" . $params["setup"] . "'><i class=\"fas fa-wrench fa-1x\"></i></a>";
       }
       $graph .= "</div>";
       $graph .= "</div>";
@@ -223,14 +222,14 @@ class PluginMydashboardHelper {
                $opt['entities_id'] = $_SESSION['glpiactive_entity'];
             }
          }
-         $opt['sons'] = 0;
+         $opt['sons']          = 0;
          $crit['crit']['sons'] = 0;
          if (in_array("is_recursive", $criterias)) {
             if (!isset($params['opt']['sons'])) {
                //TODO : Add conf for recursiv 
-               if(isset($_SESSION['glpiactive_entity_recursive']) && $_SESSION['glpiactive_entity_recursive'] != false){
+               if (isset($_SESSION['glpiactive_entity_recursive']) && $_SESSION['glpiactive_entity_recursive'] != false) {
                   $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
-               } else{
+               } else {
                   $opt['sons'] = 0;
                }
             } else {
@@ -250,22 +249,22 @@ class PluginMydashboardHelper {
       }
 
       // REQUESTER GROUP
-      $opt['requester_groups_id'] = null;
+      $opt['requester_groups_id']          = null;
       $crit['crit']['requester_groups_id'] = null;
       if (in_array("requester_groups_id", $criterias)) {
 
          // Remove the '[' if exist to avoid issues
-         if(isset($params['opt']['requester_groups_id['])){
+         if (isset($params['opt']['requester_groups_id['])) {
             $params['opt']['requester_groups_id'] = $params['opt']['requester_groups_id['];
             unset($params['opt']['requester_groups_id[']);
          }
 
          if (isset($params['opt']['requester_groups_id'])) {
-            $opt['requester_groups_id'] = is_array($params['opt']['requester_groups_id']) ? $params['opt']['requester_groups_id'] : [$params['opt']['requester_groups_id']];
+            $opt['requester_groups_id']          = is_array($params['opt']['requester_groups_id']) ? $params['opt']['requester_groups_id'] : [$params['opt']['requester_groups_id']];
             $crit['crit']['requester_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`
-            WHERE `type` = ".CommonITILActor::REQUESTER." AND `groups_id` IN (" . implode(",", $opt['requester_groups_id']) . "))";
+            WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $opt['requester_groups_id']) . "))";
 
-         }else{
+         } else {
             $crit['crit']['requester_groups_id'] = "";
          }
       }
@@ -299,21 +298,26 @@ class PluginMydashboardHelper {
 
 
       // GROUP
-      $opt['groups_id'] = 0;
+      $opt['groups_id']          = 0;
       $crit['crit']['groups_id'] = 0;
       if (in_array("groups_id", $criterias)) {
-         $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
-         $opt['groups_id'] = self::getGroup($params['preferences']['prefered_group'],$opt,$params);
+         $crit['crit']['groups_id'] = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
+         $opt['groups_id']          = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
       }
 
       //LOCATION
-      $opt['locations_id'] = 0;
+      $opt['locations_id']          = 0;
       $crit['crit']['locations_id'] = "AND 1 = 1";
+      $user = new User();
       if (in_array("locations_id", $criterias)) {
          if (isset($params['opt']["locations_id"])
              && $params['opt']["locations_id"] > 0) {
             $opt['locations_id']          = $params['opt']['locations_id'];
-            $crit['crit']['locations_id'] = $params['opt']['locations_id'];
+            $crit['crit']['locations_id'] = " AND `glpi_tickets`.`locations_id` = '" . $params['opt']["locations_id"] . "' ";
+         } else if (isset($_SESSION['glpiactiveprofile']['interface'])
+                && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
+            $opt['locations_id']          = $user->fields['locations_id'];
+            $crit['crit']['locations_id'] = " AND `glpi_tickets`.`locations_id` = '" . $opt["locations_id"] . "' ";
          }
       }
 
@@ -330,8 +334,8 @@ class PluginMydashboardHelper {
 
       // DATE
       // MONTH
-      $year  = intval(strftime("%Y"));
-      $month = intval(strftime("%m") - 1);
+      $year                 = intval(strftime("%Y"));
+      $month                = intval(strftime("%m") - 1);
       $crit['crit']['year'] = $year;
       if (in_array("month", $criterias)) {
          if ($month > 0) {
@@ -364,7 +368,7 @@ class PluginMydashboardHelper {
       // BEGIN DATE
       if (in_array("begin", $criterias)) {
          if (isset($params['opt']['begin'])
-            && $params['opt']["begin"] > 0) {
+             && $params['opt']["begin"] > 0) {
             $opt["begin"]          = $params['opt']['begin'];
             $crit['crit']['begin'] = $params['opt']['begin'];
          } else {
@@ -375,7 +379,7 @@ class PluginMydashboardHelper {
       // END DATE
       if (in_array("end", $criterias)) {
          if (isset($params['opt']['end'])
-            && $params['opt']["end"] > 0) {
+             && $params['opt']["end"] > 0) {
             $opt["end"]          = $params['opt']['end'];
             $crit['crit']['end'] = $params['opt']['end'];
          } else {
@@ -396,7 +400,7 @@ class PluginMydashboardHelper {
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
       }
       // USER
-//      $opt["users_id"] = $_SESSION['glpiID'];
+      //      $opt["users_id"] = $_SESSION['glpiID'];
       if (in_array("users_id", $criterias)) {
          if (isset($params['opt']['users_id'])) {
             $opt["users_id"]          = $params['opt']['users_id'];
@@ -414,17 +418,17 @@ class PluginMydashboardHelper {
       }
 
       // STATUS
-      $default = array(CommonITILObject::INCOMING,
-                       CommonITILObject::ASSIGNED,
-                       CommonITILObject::PLANNED,
-                       CommonITILObject::WAITING);
+      $default                = array(CommonITILObject::INCOMING,
+                                      CommonITILObject::ASSIGNED,
+                                      CommonITILObject::PLANNED,
+                                      CommonITILObject::WAITING);
       $crit['crit']['status'] = $default;
       $opt['status']          = $default;
       if (in_array("status", $criterias)) {
          $status = [];
 
          if (isset($params['opt']["status_1"])
-                         && $params['opt']["status_1"] > 0) {
+             && $params['opt']["status_1"] > 0) {
             $status[] = CommonITILObject::INCOMING;
          }
          if (isset($params['opt']["status_2"])
@@ -448,7 +452,7 @@ class PluginMydashboardHelper {
             $status[] = CommonITILObject::CLOSED;
          }
 
-         if (count($status) > 0){
+         if (count($status) > 0) {
             $opt['status']          = $status;
             $crit['crit']['status'] = $status;
          }
@@ -481,27 +485,32 @@ class PluginMydashboardHelper {
                  });
                 </script>";
 
-      $form .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"fa fa-bars md-fa-2x\"></i>";
-      $form .= "<span style='font-size: 12px;font-family: verdana;color: #CCC;font-weight: bold;'>";
+      $form   .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"fa fa-bars md-fa-2x\"></i>";
+      $form   .= "<span style='font-size: 12px;font-family: verdana;color: #CCC;font-weight: bold;'>";
       $entity = new Entity();
       if (isset($opt['entities_id']) && $opt['entities_id'] > -1) {
          if ($entity->getFromDB($opt['entities_id'])) {
-            $form .= "&nbsp;".__('Entity')."&nbsp;:&nbsp;".$entity->getField('name');
+            $form .= "&nbsp;" . __('Entity') . "&nbsp;:&nbsp;" . $entity->getField('name');
          }
       } else {
          if ($entity->getFromDB($_SESSION["glpiactive_entity"])) {
-            $form .= "&nbsp;".__('Entity')."&nbsp;:&nbsp;".$entity->getField('name');
+            $form .= "&nbsp;" . __('Entity') . "&nbsp;:&nbsp;" . $entity->getField('name');
          }
       }
+
+      if (isset($opt['locations_id']) && $opt['locations_id'] > 0) {
+         $form .= "&nbsp;/&nbsp;" . __('Location') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $opt['locations_id']);
+      }
+
       if (isset($opt['groups_id']) && $opt['groups_id'] > 0) {
-         $form .= "&nbsp;/&nbsp;".__('Group')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_groups', $opt['groups_id']);
+         $form .= "&nbsp;/&nbsp;" . __('Group') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_groups', $opt['groups_id']);
       }
       if (isset($opt['type']) && $opt['type'] > 0) {
-         $form .= "&nbsp;/&nbsp;".__('Type')."&nbsp;:&nbsp;".Ticket::getTicketTypeName($opt['type']);
+         $form .= "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . Ticket::getTicketTypeName($opt['type']);
       }
       if (isset($opt['year']) && isset($opt['month'])) {
-         $monthsarray   = Toolbox::getMonthsOfYearArray();
-         $form .= "&nbsp;/&nbsp;".__('Date')."&nbsp;:&nbsp;".sprintf(__('%1$s %2$s'), $monthsarray[$opt['month']], $opt['year']);
+         $monthsarray = Toolbox::getMonthsOfYearArray();
+         $form        .= "&nbsp;/&nbsp;" . __('Date') . "&nbsp;:&nbsp;" . sprintf(__('%1$s %2$s'), $monthsarray[$opt['month']], $opt['year']);
       }
       $form .= "</span>";
       $form .= "</div>";
@@ -548,7 +557,7 @@ class PluginMydashboardHelper {
             $form    .= __('Recursive') . "&nbsp;";
             $paramsy = [
                'display' => false];
-            $sons = isset($opt['sons']) ? $opt['sons'] : 0;
+            $sons    = isset($opt['sons']) ? $opt['sons'] : 0;
             $form    .= Dropdown::showYesNo('sons', $sons, -1, $paramsy);
             $form    .= "</span>";
             if ($count > 1) {
@@ -559,10 +568,16 @@ class PluginMydashboardHelper {
       }
       // LOCATION
       if (in_array("locations_id", $criterias)) {
-         $gparams = ['name'      => 'locations_id',
-                     'display'   => false,
-                     'value'     => isset($opt['locations_id']) ? $opt['locations_id'] : 0,
-                     'entity'    => $_SESSION['glpiactiveentities'],
+         $user = new User();
+         $default_location = 0;
+         if (isset($_SESSION['glpiactiveprofile']['interface'])
+             && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
+            $default_location = $user->fields['locations_id'];
+         }
+         $gparams = ['name'    => 'locations_id',
+                     'display' => false,
+                     'value'   => isset($opt['locations_id']) ? $opt['locations_id'] : $default_location,
+                     'entity'  => $_SESSION['glpiactiveentities'],
          ];
          $form    .= "<span class='md-widgetcrit'>";
          $form    .= __('Location');
@@ -574,34 +589,34 @@ class PluginMydashboardHelper {
          }
       }
       // REQUESTER GROUPS
-      if (in_array("requester_groups_id", $criterias)){
-         $form    .= "<span class='md-widgetcrit'>";
+      if (in_array("requester_groups_id", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
 
-         $dbu = new DbUtils();
-         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester'=>1]);
+         $dbu    = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
 
          $temp = [];
-         foreach($result as $item){
+         foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
          }
 
          $params = [
-            "name"=> 'requester_groups_id',
-            "display"=>false,
-            "multiple"=>true,
-            "width"=> '200px',
-            'values'=> isset($opt['requester_groups_id']) ? $opt['requester_groups_id'] : [],
+            "name"                => 'requester_groups_id',
+            "display"             => false,
+            "multiple"            => true,
+            "width"               => '200px',
+            'values'              => isset($opt['requester_groups_id']) ? $opt['requester_groups_id'] : [],
             'display_emptychoice' => true
          ];
 
-         $form   .= __('Requester group');
-         $form   .= "&nbsp;";
+         $form .= __('Requester group');
+         $form .= "&nbsp;";
 
          $dropdown = Dropdown::showFromArray("requester_groups_id", $temp, $params);
 
          $form .= $dropdown;
 
-         $form   .= "</span>";
+         $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
@@ -743,12 +758,12 @@ class PluginMydashboardHelper {
       // TECHNICIAN
       if (in_array("technicians_id", $criterias)) {
          $params = array('name'     => "technicians_id",
-            'value'    => isset($opt['technicians_id']) ? $opt['technicians_id'] : null,
-            'right'    => "interface",
-            'comments' => 1,
-            'entity'   => $_SESSION["glpiactiveentities"],
-            'width'    => '50%',
-            'display'  => false
+                         'value'    => isset($opt['technicians_id']) ? $opt['technicians_id'] : null,
+                         'right'    => "interface",
+                         'comments' => 1,
+                         'entity'   => $_SESSION["glpiactiveentities"],
+                         'width'    => '50%',
+                         'display'  => false
          );
          $form   .= __('Technician');
          $form   .= "&nbsp;";
@@ -773,7 +788,7 @@ class PluginMydashboardHelper {
             if (in_array($svalue, $opt['status'])) {
                $form .= ' checked="checked"';
             }
-            if (count($opt['status']) < 1 && in_array($svalue, $default)){
+            if (count($opt['status']) < 1 && in_array($svalue, $default)) {
                $form .= ' checked="checked"';
             }
 
@@ -791,8 +806,8 @@ class PluginMydashboardHelper {
          }
       }
 
-      if($onsubmit){
-         $form .= "<input type='submit' class='submit' value='"._x('button', 'Send')."'>";
+      if ($onsubmit) {
+         $form .= "<input type='submit' class='submit' value='" . _x('button', 'Send') . "'>";
       }
 
       return $form . self::getFormFooter();
@@ -1100,41 +1115,40 @@ class PluginMydashboardHelper {
     * @return string
     *
     */
-   static function getGroup($prefered_group, $opt,$params=false) {
+   static function getGroup($prefered_group, $opt, $params = false) {
       $groupprofiles = new PluginMydashboardGroupprofile();
-      $res = 0;
-      if(!$params){
+      $res           = 0;
+      if (!$params) {
          if (isset($prefered_group)
              && $prefered_group > 0
              && count($opt) < 1) {
-            if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])){
+            if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
                $res = $group;
-            } else{
+            } else {
                $res = $prefered_group;
             }
-         } else if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
-                   && count($opt) < 1){
+         } else if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+                             && count($opt) < 1) {
             $res = $group;
-         }
-         else if(isset($opt['groups_id'])){
+         } else if (isset($opt['groups_id'])) {
             $res = $opt['groups_id'];
-         } else{
+         } else {
             $res = 0;
          }
-      }else{
+      } else {
          if (isset($params['preferences']['prefered_group'])
              && $params['preferences']['prefered_group'] > 0
              && !isset($params['opt']['groups_id'])) {
-            if($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])){
+            if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
                $res = $group;
-            } else{
+            } else {
                $res = $params['preferences']['prefered_group'];
             }
          } else if (isset($params['opt']['groups_id'])
-             && $params['opt']['groups_id'] > 0) {
+                    && $params['opt']['groups_id'] > 0) {
             $res = $params['opt']['groups_id'];
-         } else if(($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
-             && !isset($params['opt']['groups_id'])){
+         } else if (($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
+                    && !isset($params['opt']['groups_id'])) {
             $res = $group;
          }
 
