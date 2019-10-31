@@ -59,16 +59,16 @@ if (isset($_POST["widget"])
       $options['criteria'][1]['link']       = 'AND';
 
       if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
-         $options['criteria'][2]['link']       = 'AND';
-         $nb = 0;
-         foreach($groups as $group) {
+         $groups                         = $_POST["technician_group"];
+         $options['criteria'][2]['link'] = 'AND';
+         $nb                             = 0;
+         foreach ($groups as $group) {
             if ($nb == 0) {
-               $options['criteria'][2]['criteria'][$nb]['link']       = 'AND';
+               $options['criteria'][2]['criteria'][$nb]['link'] = 'AND';
             } else {
-               $options['criteria'][2]['criteria'][$nb]['link']       = 'OR';
+               $options['criteria'][2]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][2]['criteria'][$nb]['field']       = 8;
+            $options['criteria'][2]['criteria'][$nb]['field']      = 8;
             $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'equals';
             $options['criteria'][2]['criteria'][$nb]['value']      = $group;
             $nb++;
@@ -122,6 +122,22 @@ if (isset($_POST["widget"])
       $options['criteria'][3]['value'] = $_POST["entities_id"];
       $options['criteria'][3]['link']  = 'AND';
 
+      if (!empty($_POST["technician_group"])) {
+         $groups                         = $_POST["technician_group"];
+         $options['criteria'][4]['link'] = 'AND';
+         $nb                             = 0;
+         foreach ($groups as $group) {
+            if ($nb == 0) {
+               $options['criteria'][4]['criteria'][$nb]['link'] = 'AND';
+            } else {
+               $options['criteria'][4]['criteria'][$nb]['link'] = 'OR';
+            }
+            $options['criteria'][4]['criteria'][$nb]['field']      = 8;
+            $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'equals';
+            $options['criteria'][4]['criteria'][$nb]['value']      = $group;
+            $nb++;
+         }
+      }
 
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
@@ -197,16 +213,16 @@ if (isset($_POST["widget"])
       }
 
       if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
-         $options['criteria'][3]['link']       = 'AND';
-         $nb = 0;
-         foreach($groups as $group) {
+         $groups                         = $_POST["technician_group"];
+         $options['criteria'][3]['link'] = 'AND';
+         $nb                             = 0;
+         foreach ($groups as $group) {
             if ($nb == 0) {
-               $options['criteria'][3]['criteria'][$nb]['link']       = 'AND';
+               $options['criteria'][3]['criteria'][$nb]['link'] = 'AND';
             } else {
-               $options['criteria'][3]['criteria'][$nb]['link']       = 'OR';
+               $options['criteria'][3]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][3]['criteria'][$nb]['field']       = 8;
+            $options['criteria'][3]['criteria'][$nb]['field']      = 8;
             $options['criteria'][3]['criteria'][$nb]['searchtype'] = 'equals';
             $options['criteria'][3]['criteria'][$nb]['value']      = $group;
             $nb++;
@@ -303,16 +319,16 @@ if (isset($_POST["widget"])
       $options['criteria'][3]['link']  = 'AND';
 
       if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
-         $options['criteria'][4]['link']       = 'AND';
-         $nb = 0;
-         foreach($groups as $group) {
+         $groups                         = $_POST["technician_group"];
+         $options['criteria'][4]['link'] = 'AND';
+         $nb                             = 0;
+         foreach ($groups as $group) {
             if ($nb == 0) {
-               $options['criteria'][4]['criteria'][$nb]['link']       = 'AND';
+               $options['criteria'][4]['criteria'][$nb]['link'] = 'AND';
             } else {
-               $options['criteria'][4]['criteria'][$nb]['link']       = 'OR';
+               $options['criteria'][4]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][4]['criteria'][$nb]['field']       = 8;
+            $options['criteria'][4]['criteria'][$nb]['field']      = 8;
             $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'equals';
             $options['criteria'][4]['criteria'][$nb]['value']      = $group;
             $nb++;
@@ -324,80 +340,97 @@ if (isset($_POST["widget"])
       echo $link;
    }
 } else if (isset($_POST["widget"])
-   && $_POST["widget"] == "PluginMydashboardInfotel32"){
+           && $_POST["widget"] == "PluginMydashboardInfotel32") {
 
    // Reset criterias
    $options['reset'] = 'reset';
 
    // ENTITY | SONS
    $options['criteria'][] = [
-      'field' => 80,
+      'field'      => 80,
       'searchtype' => (isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals',
-      'value' => $_POST["entities_id"],
-      'link' => 'AND'
+      'value'      => $_POST["entities_id"],
+      'link'       => 'AND'
    ];
 
    // USER
-   if(isset($_POST["technician"])){
+   if (isset($_POST["technician"])) {
       $options['criteria'][] = [
-         'field' => 5,
+         'field'      => 5,
          'searchtype' => 'equals',
-         'value' => $_POST["technician"],
-         'link' => 'AND'
+         'value'      => $_POST["technician"],
+         'link'       => 'AND'
       ];
    }
 
    // STATUS
-   $options['criteria'][] = [
-      'field' => 12,
-      'searchtype' => 'equals',
-      'value' => $_POST["status"],
-      'link' => 'AND'
-   ];
+   if ($_POST['moreticket'] == 1) {
+      $options['criteria'][] = [
+         'field'      => 3452,
+         'searchtype' => 'equals',
+         'value'      => $_POST["status"],
+         'link'       => 'AND'
+      ];
+   } else {
+      $options['criteria'][] = [
+         'field'      => 12,
+         'searchtype' => 'equals',
+         'value'      => $_POST["status"],
+         'link'       => 'AND'
+      ];
+   }
 
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
-      Toolbox::append_params($options, "&");
+        Toolbox::append_params($options, "&");
 } else if (isset($_POST["widget"])
-   && $_POST["widget"] == "PluginMydashboardInfotel33"){
+           && $_POST["widget"] == "PluginMydashboardInfotel33") {
 
    // Reset criterias
    $options['reset'] = 'reset';
 
    // ENTITY | SONS
    $options['criteria'][] = [
-      'field' => 80,
+      'field'      => 80,
       'searchtype' => (isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals',
-      'value' => $_POST["entities_id"],
-      'link' => 'AND'
+      'value'      => $_POST["entities_id"],
+      'link'       => 'AND'
    ];
+
+   // STATUS
+   if ($_POST['moreticket'] == 1) {
+      $options['criteria'][] = [
+         'field'      => 3452,
+         'searchtype' => 'equals',
+         'value'      => $_POST["status"],
+         'link'       => 'AND'
+      ];
+   } else {
+      $options['criteria'][] = [
+         'field'      => 12,
+         'searchtype' => 'equals',
+         'value'      => $_POST["status"],
+         'link'       => 'AND'
+      ];
+   }
 
    // Group
    if (!empty($_POST["technician_group"])) {
-      $groups = [$_POST["technician_group"]];
-      $options['criteria'][1]['link']       = 'AND';
-      $nb = 0;
-      foreach($groups as $group) {
+      $groups                         = [$_POST["technician_group"]];
+      $options['criteria'][1]['link'] = 'AND';
+      $nb                             = 0;
+      foreach ($groups as $group) {
          if ($nb == 0) {
-            $options['criteria'][1]['criteria'][$nb]['link']       = 'AND';
+            $options['criteria'][2]['criteria'][$nb]['link'] = 'AND';
          } else {
-            $options['criteria'][1]['criteria'][$nb]['link']       = 'OR';
+            $options['criteria'][2]['criteria'][$nb]['link'] = 'OR';
          }
-         $options['criteria'][1]['criteria'][$nb]['field']       = 8;
-         $options['criteria'][1]['criteria'][$nb]['searchtype'] = 'equals';
-         $options['criteria'][1]['criteria'][$nb]['value']      = $group;
+         $options['criteria'][2]['criteria'][$nb]['field']      = 8;
+         $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'equals';
+         $options['criteria'][2]['criteria'][$nb]['value']      = $group;
          $nb++;
       }
    }
 
-
-   // STATUS
-   $options['criteria'][] = [
-      'field' => 12,
-      'searchtype' => 'equals',
-      'value' => $_POST["status"],
-      'link' => 'AND'
-   ];
-
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
-      Toolbox::append_params($options, "&");
+        Toolbox::append_params($options, "&");
 }
