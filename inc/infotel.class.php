@@ -152,12 +152,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $onclick = 0;
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'type', 'locations_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'type', 'locations_id'];
                $onclick   = 1;
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['type', 'locations_id'];
+               $criterias = ['type', 'locations_id', 'requesters_groups_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -172,6 +172,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria          = $crit['entities_id'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
+            $requester_groups          = $opt['requesters_groups_id'];
+            $requester_groups_criteria = $crit['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $location                   = $opt['locations_id'];
@@ -184,7 +186,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            COUNT(`glpi_tickets`.`id`) AS nb,
                            DATE_FORMAT(`date`, '%Y-%m') AS period
                         FROM `glpi_tickets` ";
-            $query .= " WHERE $is_deleted $type_criteria $locations_criteria $technician_groups_criteria";
+            $query .= " WHERE $is_deleted $type_criteria $locations_criteria $technician_groups_criteria $requester_groups_criteria";
             $query .= " $entities_criteria AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY period_name ORDER BY period ASC";
 
@@ -209,7 +211,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabdatesset    = json_encode($tabdates);
 
             $nbtickets        = __('Tickets number', 'mydashboard');
+            $requester_groups = json_encode($requester_groups);
             $technician_group = json_encode($technician_group);
+            $js_ancestors       = $crit['ancestors'];
+
             $graph            = "<script type='text/javascript'>
                      var backlogData = {
                              datasets: [{
@@ -290,6 +295,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                    type: 'POST',
                                    data:{datetik:datetik,
                                         technician_group:$technician_group,
+                                        group_is_recursive:$js_ancestors,
+                                        requester_groups:$requester_groups,
                                         type:$type, 
                                         location:$location, 
                                         entities_id:$entities_id_criteria, 
@@ -327,7 +334,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id', 'group_is_recursive'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -339,24 +346,24 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         "opt"         => $opt];
             $options = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt                  = $options['opt'];
-            $crit                 = $options['crit'];
-            $type                 = $opt['type'];
-            $type_criteria        = $crit['type'];
-            $entities_criteria    = $crit['entities_id'];
-            $entities_id_criteria = $crit['entity'];
-            $sons_criteria        = $crit['sons'];
-            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $opt                        = $options['opt'];
+            $crit                       = $options['crit'];
+            $type                       = $opt['type'];
+            $type_criteria              = $crit['type'];
+            $entities_criteria          = $crit['entities_id'];
+            $entities_id_criteria       = $crit['entity'];
+            $sons_criteria              = $crit['sons'];
+            $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
 
-            $query                = "SELECT DISTINCT
+            $query = "SELECT DISTINCT
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria ";
-            $query                .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-            $query                .= " GROUP BY `priority` ORDER BY `priority` ASC";
+                        WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria";
+            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
 
             $colors = [];
             $result = $DB->query($query);
@@ -382,7 +389,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $backgroundPieColor = json_encode($colors);
             $labelsPie          = json_encode($name);
             $tabpriorityset     = json_encode($tabpriority);
-            $technician_group = json_encode($technician_group);
+            $technician_group   = json_encode($technician_group);
+            $js_ancestors       = $crit['ancestors'];
 
             $graph              = "<script type='text/javascript'>
          
@@ -434,6 +442,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           data:{priority_id:priority_id, 
                                 entities_id:$entities_id_criteria, 
                                 technician_group:$technician_group,
+                                group_is_recursive:$js_ancestors,
                                 sons:$sons_criteria, 
                                 type:$type,
                                 widget:'$widgetId'},
@@ -1275,11 +1284,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['requester_groups_id', 'entities_id', 'is_recursive', 'type', 'year'];
+               $criterias = ['requesters_groups_id', 'entities_id', 'is_recursive', 'type', 'year'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requester_groups_id', 'type', 'year'];
+               $criterias = ['requesters_groups_id', 'type', 'year'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1292,7 +1301,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $type_criteria             = $crit['type'];
             $entities_criteria         = $crit['entities_id'];
-            $requester_groups_criteria = $crit['requester_groups_id'];
+            $requester_groups_criteria = $crit['requesters_groups_id'];
             $date_criteria             = $crit['date'];
             $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
 
@@ -1411,11 +1420,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = [];
+               $criterias = ['requesters_groups_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1429,6 +1438,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria          = $crit['entities_id'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
@@ -1441,7 +1451,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query .= "LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
                         WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'";
-            $query .= $entities_criteria . " " . $technician_groups_criteria
+            $query .= $entities_criteria . " " . $technician_groups_criteria." ".$requester_groups_criteria
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `glpi_itilcategories`.`id`";
 
@@ -1474,6 +1484,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $labelsPie              = json_encode($name);
             $tabincidentcategoryset = json_encode($tabincidentcategory);
             $technician_group       = json_encode($technician_group);
+            $js_ancestors       = $crit['ancestors'];
 
             $graph = "<script type='text/javascript'>
          
@@ -1525,6 +1536,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           type: 'POST',
                           data:{category_id:incidentcategory_id,
                                 technician_group:$technician_group,
+                                group_is_recursive:$js_ancestors,
                                  entities_id:$entities_id_criteria,
                                  sons:$sons_criteria,
                                  widget:'$widgetId'
@@ -1560,11 +1572,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = [];
+               $criterias = ['requesters_groups_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1578,6 +1590,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria          = $crit['entities_id'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
@@ -1590,7 +1603,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query .= " LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
                         WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'";
-            $query .= $entities_criteria . " " . $technician_groups_criteria
+            $query .= $entities_criteria . " " . $technician_groups_criteria." ".$requester_groups_criteria
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `glpi_itilcategories`.`id`";
 
@@ -1622,6 +1635,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $labelsPie          = json_encode($name);
             $tabcategoryset     = json_encode($tabcategory);
             $technician_group   = json_encode($technician_group);
+            $js_ancestors       = $crit['ancestors'];
 
             $graph = "<script type='text/javascript'>
          
@@ -1673,6 +1687,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           type: 'POST',
                           data:{category_id:category_id,
                                 technician_group:$technician_group,
+                                group_is_recursive:$js_ancestors,
                                 entities_id:$entities_id_criteria, 
                                 sons:$sons_criteria,
                                 widget:'$widgetId'
@@ -1688,7 +1703,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                 
              </script>";
 
-            $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id'];
             $params    = ["widgetId"  => $widgetId,
                           "name"      => 'RequestsByCategoryPieChart',
                           "onsubmit"  => true,
@@ -1710,11 +1724,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'technicians_groups_id', 'requester_groups_id', 'is_recursive', 'type', 'year', 'month'];
+               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'is_recursive', 'type', 'year', 'month'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requester_groups_id', 'type', 'year', 'month'];
+               $criterias = ['requesters_groups_id', 'type', 'year', 'month'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1727,7 +1741,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $type_criteria              = $crit['type'];
             $entities_criteria          = $crit['entities_id'];
-            $requester_groups_criteria  = $crit['requester_groups_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $date_criteria              = $crit['date'];
             $closedate_criteria         = $crit['closedate'];
@@ -1960,7 +1974,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'type', 'year'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'type', 'year'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -2052,14 +2066,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       </script>";
 
 
-            $params    = ["widgetId"  => $widgetId,
-                          "name"      => 'TicketsByTechChart',
-                          "onsubmit"  => true,
-                          "opt"       => $opt,
-                          "criterias" => $criterias,
-                          "export"    => true,
-                          "canvas"    => true,
-                          "nb"        => count($dataset)];
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => 'TicketsByTechChart',
+                       "onsubmit"  => true,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => count($dataset)];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
             $widget->setWidgetHtmlContent(
                $graph
@@ -2073,11 +2087,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'technicians_groups_id', 'requester_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
+               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['year', 'locations_id'];
+               $criterias = ['requesters_groups_id','year', 'locations_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -2089,7 +2103,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $crit = $options['crit'];
 
             $entities_criteria          = $crit['entities_id'];
-            $requester_groups_criteria  = $crit['requester_groups_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $mdentities                 = self::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
@@ -2705,7 +2719,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DISTINCT
-                           `groups_id` AS `requester_groups_id`,
+                           `groups_id` AS `requesters_groups_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_groups_tickets` 
@@ -2724,14 +2738,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabgroup = [];
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
-                  if (!empty($data['requester_groups_id'])) {
-                     $name[] = Dropdown::getDropdownName("glpi_groups", $data['requester_groups_id']);
+                  if (!empty($data['requesters_groups_id'])) {
+                     $name[] = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
                   } else {
                      $name[] = __('None');
                   }
                   $datas[] = $data['nb'];
-                  if (!empty($data['requester_groups_id'])) {
-                     $tabgroup[] = $data['requester_groups_id'];
+                  if (!empty($data['requesters_groups_id'])) {
+                     $tabgroup[] = $data['requesters_groups_id'];
                   } else {
                      $tabgroup[] = 0;
                   }
@@ -2940,7 +2954,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $onclick = 0;
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id', 'group_is_recursive'];
                $onclick   = 1;
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -3004,6 +3018,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $labelsPie          = json_encode($name);
             $tablocationset     = json_encode($tablocation);
             $technician_group   = json_encode($technician_group);
+            $js_ancestors       = $crit['ancestors'];
 
             $graph = "<script type='text/javascript'>
          
@@ -3058,6 +3073,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                 sons:$sons_criteria, 
                                 type:$type, 
                                 technician_group:$technician_group,
+                                group_is_recursive:$js_ancestors,
                                 widget:'$widgetId'},
                           success:function(response) {
                                   window.open(response);
@@ -3090,7 +3106,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'type', 'technicians_groups_id', 'group_is_recursive'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -3165,15 +3181,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             if ($groups_criteria > 0) {
-               $options['criteria'][7]['link']       = 'AND';
-               $nb = 0;
-               foreach($groups_criteria as $group) {
+               $options['criteria'][7]['link'] = 'AND';
+               $nb                             = 0;
+               foreach ($groups_criteria as $group) {
                   if ($nb == 0) {
-                     $options['criteria'][7]['criteria'][$nb]['link']       = 'AND';
+                     $options['criteria'][7]['criteria'][$nb]['link'] = 'AND';
                   } else {
-                     $options['criteria'][7]['criteria'][$nb]['link']       = 'OR';
+                     $options['criteria'][7]['criteria'][$nb]['link'] = 'OR';
                   }
-                  $options['criteria'][7]['criteria'][$nb]['field']       = 8;
+                  $options['criteria'][7]['criteria'][$nb]['field']      = 8;
                   $options['criteria'][7]['criteria'][$nb]['searchtype'] = 'equals';
                   $options['criteria'][7]['criteria'][$nb]['value']      = $group;
                   $nb++;
@@ -3685,7 +3701,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'users_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'users_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -3703,7 +3719,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $groups_sql_criteria = "";
             $entities_criteria   = $crit['entities_id'];
             $users_criteria      = "";
-            $technician_group           = $opt['technicians_groups_id'];
+            $technician_group    = $opt['technicians_groups_id'];
 
             // GROUP
             if (isset($technician_group) && $technician_group != 0 && !empty($technician_group)) {
@@ -3739,7 +3755,33 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                  . $groups_sql_criteria
                                  . $users_criteria
                                  . " GROUP BY `glpi_groups_users`.`users_id`";
-
+            // Number of tickets by technician and by status more ticket
+            $plugin         = new Plugin();
+            $moreTicketType = [];
+            if ($plugin->isActivated('moreticket')) {
+               $query_moretickets_by_technician_by_status = "SELECT count(*) as nb, `glpi_tickets_users`.`users_id` as userid,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
+                                                            . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
+                                                            . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
+                                                            . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                                                            . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                                                            . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                                                            . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                                                            . " INNER JOIN `glpi_tickets_users` ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                                                            . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                                                            . " GROUP BY userid,statusname"
+                                                            . " ORDER BY statusname";
+               $query_moreticket_type                     = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
+                                                            . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
+               $result                                    = $DB->query($query_moreticket_type);
+               $i                                         = 0;
+               $moreTicketTypeName                        = [];
+               while ($data = $DB->fetch_array($result)) {
+                  $moreTicketType[$i]['name'] = $data['typename'];
+                  $moreTicketType[$i]['id']   = $data['typeid'];
+                  array_push($moreTicketTypeName, $data['typename']);
+                  $i++;
+               }
+            }
             // Number of tickets by technician and by status
             // Tickets are not deleted
             // User Type is 2
@@ -3751,39 +3793,30 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                                      . " WHERE `glpi_tickets`.`status` = %s"
                                                      . " AND `glpi_tickets_users`.`users_id` = '%s'"
                                                      . $entities_criteria;
-
             // Lists of tickets by technician by status
             $result = $DB->query($query_technicians);
             $nb     = $DB->numrows($result);
-
-            $temp = [];
-
+            $temp   = [];
             if ($nb) {
                $i = 0;
                while ($data = $DB->fetch_array($result)) {
-
-                  $userId   = $data['users_id'];
-                  $username = getUserName($userId);
-
-                  $temp[$i] = [0 => $username];
-
-                  $j = 1;
+                  $nbWaitingTickets = "";
+                  $hasMoreTicket    = 0;
+                  $userId           = $data['users_id'];
+                  $username         = getUserName($userId);
+                  $temp[$i]         = [0 => $username];
+                  $j                = 1;
                   foreach ($statusList as $status) {
-
-                     $query = sprintf($query_tickets_by_technician_by_status, $status, $userId);
-
+                     $query        = sprintf($query_tickets_by_technician_by_status, $status, $userId);
                      $temp[$i][$j] = 0;
-
-                     $result2 = $DB->query($query);
-                     $nb2     = $DB->numrows($result2);
-
+                     $result2      = $DB->query($query);
+                     $nb2          = $DB->numrows($result2);
                      if ($nb2) {
-
                         while ($data = $DB->fetch_assoc($result2)) {
-
-                           $value = "";
+                           $value            = "";
+                           $nbWaitingTickets = $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
-                              $value .= "<a href='#' onclick='" . $widgetId . "_search($userId, $status)'>";
+                              $value .= "<a href='#' onclick='" . $widgetId . "_search($userId, $status, $hasMoreTicket)'>";
                            }
                            $value .= $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
@@ -3794,33 +3827,55 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      }
                      $j++;
                   }
+                  if ($plugin->isActivated('moreticket')) {
+                     $result3       = $DB->query($query_moretickets_by_technician_by_status);
+                     $hasMoreTicket = 1;
+                     if ($DB->numrows($result3) > 0) {
+                        while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
+                           $array[$dataMoreTicket['statusname']][$dataMoreTicket['userid']] = $dataMoreTicket['nb'];
+                        }
+                        foreach ($moreTicketType as $key => $value) {
+                           $status   = $value['name'];
+                           $statusId = $value['id'];
+                           if (isset($array[$status][$userId])) {
+                              $value        = '';
+                              $value        .= "<a href='#' onclick='" . $widgetId . "_search($userId, $statusId , $hasMoreTicket)'>";
+                              $value        .= $array[$status][$userId];
+                              $value        .= "</a>";
+                              $temp[$i][$j] = $value;
+                              $newNbTickets = $nbWaitingTickets - $array[$status][$userId];
+                              $temp[$i][3]  = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
+                           } else {
+                              $temp[$i][$j] = 0;
+                           }
+                           $j++;
+                        }
+                     }
+                  }
                   $i++;
                }
             }
 
             $widget = new PluginMydashboardDatatable();
-
-            $title = __("Number of opened tickets by technician and by status", "mydashboard");
-
+            $title  = __("Number of tickets open by technician and by status", "mydashboard");
             if ($nb > 1 || $nb == 0) {
                // String technicians never translated in glpi
                $title .= " : $nb " . __('Technicians', 'mydashboard');
             } else {
                $title .= " : $nb " . __('Technician');
             }
-
             $widget->setWidgetTitle((($isDebug) ? "32 " : "") . $title);
-
-            $widget->setTabNames([
-                                    __('Technician'),
-                                    _x('status', 'Processing (assigned)'),
-                                    _x('status', 'Processing (planned)'),
-                                    __('Pending'),
-                                    _x('status', 'Solved')
-                                 ]);
+            $typesTicketStatus = [__('Technician'),
+                                  _x('status', 'Processing (assigned)'),
+                                  _x('status', 'Processing (planned)'),
+                                  __('Pending'),
+                                  _x('status', 'Solved')];
+            if (count($moreTicketType) > 0) {
+               $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
+            }
+            $widget->setTabNames($typesTicketStatus);
             $widget->setTabDatas($temp);
             $widget->toggleWidgetRefresh();
-
             $params = ["widgetId"  => $widgetId,
                        "name"      => 'NumberOfTicketsByTechnicianAndStatus',
                        "onsubmit"  => true,
@@ -3830,15 +3885,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        "canvas"    => false,
                        "nb"        => $nb];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params) . "<br>");
-
-            $linkURL = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
-
+            $linkURL   = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
             $js_group  = json_encode($technician_group);
             $js_entity = $crit['entity'];
             $js_sons   = $crit['sons'];
 
             $js = "
-               var " . $widgetId . "_search = function(_technician, _status){
+               var " . $widgetId . "_search = function(_technician, _status, _hasMoreTicket){
                   $.ajax({
                      url: '" . $linkURL . "',
                      type: 'POST',
@@ -3848,6 +3901,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         sons:$js_sons,
                         technician: _technician,
                         status: _status,
+                        moreticket: _hasMoreTicket,
                         widget:'$widgetId'},
                      success:function(response) {
                         window.open(response);
@@ -3858,16 +3912,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      }
                   });
                }";
-
             echo Html::scriptBlock($js);
-
             return $widget;
             break;
          case $this->getType() . "33":
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -3884,7 +3936,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $groups_sql_criteria = "";
             $entities_criteria   = $crit['entities_id'];
-            $technician_group           = $opt['technicians_groups_id'];
+            $technician_group    = $opt['technicians_groups_id'];
 
             // Allowed status
             $statusList = [
@@ -3899,6 +3951,36 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             . " FROM `glpi_groups`"
                             . " WHERE `is_assign` = 1
                             AND `id` IN ('" . implode("','", $technician_group) . "')";
+
+            $plugin         = new Plugin();
+            $moreTicketType = [];
+            if ($plugin->isActivated('moreticket')) {
+               $query_moretickets_by_group_by_status = "SELECT count(*) as nb, `glpi_groups_tickets`.`groups_id` as groups_id,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
+                                                       . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
+                                                       . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
+                                                       . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                                                       . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                                                       . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                                                       . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                                                       . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2 
+                                                            AND `glpi_tickets`.`is_deleted` = 0)"
+                                                       . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                                                       . " GROUP BY groups_id,statusname"
+                                                       . " ORDER BY statusname";
+
+               $query_moreticket_type = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
+                                        . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid 
+                                        FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
+               $result                = $DB->query($query_moreticket_type);
+               $i                     = 0;
+               $moreTicketTypeName    = [];
+               while ($data = $DB->fetch_array($result)) {
+                  $moreTicketType[$i]['name'] = $data['typename'];
+                  $moreTicketType[$i]['id']   = $data['typeid'];
+                  array_push($moreTicketTypeName, $data['typename']);
+                  $i++;
+               }
+            }
 
             // Number of tickets by group and by status
             // Tickets are not deleted
@@ -3921,9 +4003,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if ($nb) {
                $i = 0;
                while ($data = $DB->fetch_array($result)) {
-
-                  $groupId   = $data['id'];
-                  $groupname = $data['name'];
+                  $nbWaitingTickets = "";
+                  $hasMoreTicket    = 0;
+                  $groupId          = $data['id'];
+                  $groupname        = $data['name'];
 
                   $temp[$i] = [0 => $groupname];
 
@@ -3941,9 +4024,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
                         while ($data = $DB->fetch_assoc($result2)) {
 
-                           $value = "";
+                           $value            = "";
+                           $nbWaitingTickets = $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
-                              $value .= "<a href='#' onclick='" . $widgetId . "_search($groupId, $status)'>";
+                              $value .= "<a href='#' onclick='" . $widgetId . "_search($groupId, $status, $hasMoreTicket)'>";
                            }
                            $value .= $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
@@ -3953,6 +4037,31 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         }
                      }
                      $j++;
+                  }
+                  if ($plugin->isActivated('moreticket')) {
+                     $result3       = $DB->query($query_moretickets_by_group_by_status);
+                     $hasMoreTicket = 1;
+                     if ($DB->numrows($result3) > 0) {
+                        while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
+                           $array[$dataMoreTicket['statusname']][$dataMoreTicket['groups_id']] = $dataMoreTicket['nb'];
+                        }
+                        foreach ($moreTicketType as $key => $value) {
+                           $status   = $value['name'];
+                           $statusId = $value['id'];
+                           if (isset($array[$status][$groupId])) {
+                              $value        = '';
+                              $value        .= "<a href='#' onclick='" . $widgetId . "_search($groupId, $statusId , $hasMoreTicket)'>";
+                              $value        .= $array[$status][$groupId];
+                              $value        .= "</a>";
+                              $temp[$i][$j] = $value;
+                              $newNbTickets = $nbWaitingTickets - $array[$status][$groupId];
+                              $temp[$i][3]  = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
+                           } else {
+                              $temp[$i][$j] = 0;
+                           }
+                           $j++;
+                        }
+                     }
                   }
                   $i++;
                }
@@ -3971,13 +4080,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $widget->setWidgetTitle((($isDebug) ? "33 " : "") . $title);
 
-            $widget->setTabNames([
-                                    __('Group'),
-                                    _x('status', 'Processing (assigned)'),
-                                    _x('status', 'Processing (planned)'),
-                                    __('Pending'),
-                                    _x('status', 'Solved')
-                                 ]);
+            $typesTicketStatus = [__('Group'),
+                                  _x('status', 'Processing (assigned)'),
+                                  _x('status', 'Processing (planned)'),
+                                  __('Pending'),
+                                  _x('status', 'Solved')];
+            if (count($moreTicketType) > 0) {
+               $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
+            }
+            $widget->setTabNames($typesTicketStatus);
             $widget->setTabDatas($temp);
             $widget->toggleWidgetRefresh();
 
@@ -3997,7 +4108,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $js_sons   = $crit['sons'];
 
             $js = "
-               var " . $widgetId . "_search = function(_group, _status){
+               var " . $widgetId . "_search = function(_group, _status, _hasMoreTicket){
                   $.ajax({
                      url: '" . $linkURL . "',
                      type: 'POST',
@@ -4005,6 +4116,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         entities_id:$js_entity, 
                         sons:$js_sons,
                         technician_group: _group,
+                        moreticket: _hasMoreTicket,
                         status: _status,
                         widget:'$widgetId'},
                      success:function(response) {
@@ -4103,7 +4215,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
       $selected_group = [];
       if (isset($opt["technicians_groups_id"])
-          &&  count($opt["technicians_groups_id"]) > 0) {
+          && count($opt["technicians_groups_id"]) > 0) {
          $selected_group = $opt['technicians_groups_id'];
       } else if (count($_SESSION['glpigroups']) > 0) {
          $selected_group = $_SESSION['glpigroups'];
@@ -4225,7 +4337,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
       $selected_group = [];
       if (isset($params["opt"]["technicians_groups_id"])
-          &&  count($params["opt"]["technicians_groups_id"]) > 0) {
+          && count($params["opt"]["technicians_groups_id"]) > 0) {
          $selected_group = $params["opt"]['technicians_groups_id'];
       } else if (count($_SESSION['glpigroups']) > 0) {
          $selected_group = $_SESSION['glpigroups'];
