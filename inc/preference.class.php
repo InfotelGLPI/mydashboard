@@ -118,7 +118,33 @@ class PluginMydashboardPreference extends CommonDBTM
                       'value'     => $this->fields['prefered_group'],
                       'entity'    => $_SESSION['glpiactiveentities'],
                       'condition' => '`is_assign`'];
-      Group::dropdown($params);
+
+      $dbu    = new DbUtils();
+      $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
+      $pref = json_decode($this->fields['prefered_group']);
+
+//      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+      $temp                         = [];
+      foreach ($result as $item) {
+         $temp[$item['id']] = $item['name'];
+      }
+
+      $params = [
+         "name"                => 'prefered_group',
+         'entity'    => $_SESSION['glpiactiveentities'],
+         "display"             => false,
+         "multiple"            => true,
+         "width"               => '200px',
+         'values'              => isset($pref) ? $pref : [],
+         'display_emptychoice' => true
+      ];
+
+
+
+      $dropdown = Dropdown::showFromArray("prefered_group", $temp, $params);
+
+      echo $dropdown;
+//      Group::dropdown($params);
       echo "</td>";
       echo "</tr>";
 

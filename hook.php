@@ -163,6 +163,28 @@ function plugin_mydashboard_install() {
       insertDefaultTitles();
    }
 
+   $query = "SELECT DATA_TYPE 
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE 
+     TABLE_SCHEMA = '$DB->dbdefault' AND
+     TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND 
+     COLUMN_NAME = 'prefered_group'";
+   $result = $DB->query($query);
+   while ($data = $DB->fetch_assoc($result)) {
+      $type = $data["DATA_TYPE"];
+
+   }
+
+
+   if($type != "varchar") {
+      $mig = new Migration("1.7.5");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.5.sql");
+      $mig->executeMigration();
+      transform_prefered_group_to_prefered_groups();
+//      Toolbox::logWarning("Ca marche");
+//      Toolbox::logWarning($type);
+   }
+
 
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
@@ -235,6 +257,34 @@ function fillTableMydashboardStocktickets() {
          $DB->query($query);
       }
    }
+}
+
+function transform_prefered_group_to_prefered_groups(){
+
+   $pref = new pluginMydashboardPreference();
+   $prefs = $pref->find();
+//   Toolbox::logWarning("array : ".print_r($prefs,true));
+   foreach ($prefs as $p){
+      if($p["prefered_group"] == "0"){
+         $p["prefered_group"] = "[]";
+      }else{
+         $p["prefered_group"] = "[\"".$p["prefered_group"]."\"]";
+      }
+      $pref->update($p);
+   }
+
+   $prefgroup = new pluginMydashboardGroupprofile();
+   $prefgroups = $prefgroup->find();
+//   Toolbox::logWarning("array : ".print_r($prefs,true));
+   foreach ($prefgroups as $p){
+      if($p["prefered_group"] == "0"){
+         $p["prefered_group"] = "[]";
+      }else{
+         $p["prefered_group"] = "[\"".$p["prefered_group"]."\"]";
+      }
+      $prefgroup->update($p);
+   }
+
 }
 
 // Uninstall process for plugin : need to return true if succeeded

@@ -354,7 +354,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria";
+                        WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria ";
             $query                .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query                .= " GROUP BY `priority` ORDER BY `priority` ASC";
 

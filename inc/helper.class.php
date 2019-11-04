@@ -266,12 +266,12 @@ class PluginMydashboardHelper {
             $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
          } else {
             $groups_id = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
-            $opt['technicians_groups_id'] = [$groups_id];
+            $opt['technicians_groups_id'] = $groups_id;
          }
 
          $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
 
-         if (isset($params['opt']['technicians_groups_id'])) {
+         if (isset($params['opt']['technicians_groups_id']) && !empty($params['opt']['technicians_groups_id']) ) {
             $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $params['opt']['technicians_groups_id']) . "))";
          }
@@ -1089,16 +1089,16 @@ class PluginMydashboardHelper {
       $res           = 0;
       if (!$params) {
          if (isset($prefered_group)
-             && $prefered_group > 0
+             && !empty($prefered_group)
              && count($opt) < 1) {
             if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
-               $res = $group;
+               $res = json_decode($group);
             } else {
-               $res = $prefered_group;
+               $res = json_decode($prefered_group);
             }
          } else if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
                              && count($opt) < 1) {
-            $res = $group;
+            $res = json_decode($group);
          } else if (isset($opt['groups_id'])) {
             $res = $opt['groups_id'];
          } else {
@@ -1106,19 +1106,19 @@ class PluginMydashboardHelper {
          }
       } else {
          if (isset($params['preferences']['prefered_group'])
-             && $params['preferences']['prefered_group'] > 0
+             && !empty($params['preferences']['prefered_group'])
              && !isset($params['opt']['groups_id'])) {
             if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
-               $res = $group;
+               $res = json_decode($group);
             } else {
-               $res = $params['preferences']['prefered_group'];
+               $res = json_decode($params['preferences']['prefered_group']);
             }
          } else if (isset($params['opt']['groups_id'])
-                    && $params['opt']['groups_id'] > 0) {
-            $res = $params['opt']['groups_id'];
+                    && !empty($params['opt']['groups_id'])) {
+            $res = json_decode($params['opt']['groups_id']);
          } else if (($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
                     && !isset($params['opt']['groups_id'])) {
-            $res = $group;
+            $res = json_decode($group);
          }
       }
       return $res;
