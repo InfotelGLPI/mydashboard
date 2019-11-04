@@ -543,7 +543,6 @@ class PluginMydashboardHelper {
 
 
       if (isset($opt['technicians_groups_id'])) {
-         Toolbox::logWarning($opt['technicians_groups_id']);
          $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
          if (count($opt['technicians_groups_id']) > 0) {
             $form .= "&nbsp;/&nbsp;" . __('Technician group') . "&nbsp;:&nbsp;";
@@ -698,7 +697,6 @@ class PluginMydashboardHelper {
 
          $technicians_groups_id = (isset($opt['technicians_groups_id']) && is_array($opt['technicians_groups_id'])) ? $opt['technicians_groups_id'] : [];
 
-         Toolbox::logWarning($opt['technicians_groups_id']);
          $temp                         = [];
          foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
@@ -1197,7 +1195,7 @@ class PluginMydashboardHelper {
                              && count($opt) < 1) {
             $res = json_decode($group, true);
          } else if (isset($opt['technicians_groups_id'])) {
-            $res = [$opt['technicians_groups_id']];
+            $res = (is_array($opt['technicians_groups_id'])?$opt['technicians_groups_id']:[$opt['technicians_groups_id']]);
          } else {
             $res = [];
          }

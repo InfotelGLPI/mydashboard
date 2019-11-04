@@ -100,7 +100,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
             $this->getType() . "10" => __("Inventory stock alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
             $this->getType() . "11" => __('Your equipments', 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "12" => __("SLA Demands alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "12" => __("SLA Requests alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "13"  => __("Requests alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
          ]
       ];
    }
@@ -198,7 +199,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
                $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
             }
 
@@ -296,7 +297,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         $left
-                        WHERE $search_assign AND `glpi_tickets`.`is_deleted` = 0 ";
+                        WHERE $search_assign  AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "' AND `glpi_tickets`.`is_deleted` = 0 ";
             $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                    . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::CLOSED . ") ";
 
@@ -374,11 +375,11 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
             if ($stats_tickets4 > 0) {
-               $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __('Opened tickets without assigned technicians', 'mydashboard') . "'>";
+               $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __('Opened incidents without assigned technicians', 'mydashboard') . "'>";
             }
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fa fa-user-times fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats_tickets4\"></span></h3>";
-            $table .= "<p class=\"count-text \">" . __('Opened tickets without assigned technicians', 'mydashboard') . "</p>";
+            $table .= "<p class=\"count-text \">" . __('Opened incidents without assigned technicians', 'mydashboard') . "</p>";
             if ($stats_tickets4 > 0) {
                $table .= "</a>";
             }
@@ -496,22 +497,16 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats2        = 0;
-            if (isset($opt)) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
 
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
-
-
-            $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
 
             $criterias = ['technicians_groups_id'];
             $params    = ["widgetId"  => $widgetId,
@@ -586,18 +581,16 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats4        = 0;
-            if (isset($opt)) {
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`technicians_groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
+
             $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                                        FROM `glpi_tickets`
                                        $left
@@ -623,18 +616,16 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats5        = 0;
-            if (isset($opt)) {
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
+
             $q5 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                                        FROM `glpi_tickets`
                                        $left
@@ -861,7 +852,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->toggleWidgetRefresh();
 
             $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("SLA Incidents alerts", "mydashboard") . "</span>");
-            $widget->setWidgetComment(__("Display alerts for SLA of tickets", "mydashboard"));
+            $widget->setWidgetComment(__("Display alerts for SLA of Incidents tickets", "mydashboard"));
 
             return $widget;
             break;
@@ -1338,18 +1329,14 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats2        = 0;
-            if (isset($opt)) {
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
 
 
@@ -1390,18 +1377,16 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats3        = 0;
-            if (isset($opt)) {
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
+
             $q3 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                            FROM `glpi_tickets`
                            $left
@@ -1428,17 +1413,14 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats4        = 0;
-            if (isset($opt)) {
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
             $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                                        FROM `glpi_tickets`
@@ -1465,18 +1447,17 @@ class PluginMydashboardAlert extends CommonDBTM {
             $search_assign = "1=1";
             $left          = "";
             $stats5        = 0;
-            if (isset($opt)) {
 
-               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
+
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
+
             $q5 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                                        FROM `glpi_tickets`
                                        $left
@@ -1540,7 +1521,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $table .= "<i style='color:$colorstats2' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats2_demands\"></span></h3>
-               <p class=\"count-text \">" . __('Demands where time to own will be exceeded', 'mydashboard') . "</p>";
+               <p class=\"count-text \">" . __('Requests where time to own will be exceeded', 'mydashboard') . "</p>";
             if ($stats2 > 0) {
                $table .= "</a>";
             }
@@ -1586,7 +1567,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $table .= "<i style='color:$colorstats3' class=\"fa fa-times-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id=\"stats3_demands\"></span></h3>
-               <p class=\"count-text \">" . __('Demands where time to resolve will be exceeded', 'mydashboard') . "</p>";
+               <p class=\"count-text \">" . __('Requests where time to resolve will be exceeded', 'mydashboard') . "</p>";
             if ($stats3 > 0) {
                $table .= "</a>";
             }
@@ -1633,7 +1614,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $table .= "<i style='color:$colorstats4' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id=\"stats4_demands\"></span></h3>
-                           <p class=\"count-text \">" . __('Demands where time to own is exceeded', 'mydashboard') . "</p>";
+                           <p class=\"count-text \">" . __('Requests where time to own is exceeded', 'mydashboard') . "</p>";
             if ($stats4 > 0) {
                $table .= "</a>";
             }
@@ -1680,7 +1661,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $table .= "<i style='color:$colorstats5' class=\"fa fa-times-circle fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id=\"stats5_demands\"></span></h3>
-                           <p class=\"count-text \">" . __('Demands where time to resolve is exceeded', 'mydashboard') . "</p>";
+                           <p class=\"count-text \">" . __('Requests where time to resolve is exceeded', 'mydashboard') . "</p>";
             if ($stats5 > 0) {
                $table .= "</a>";
             }
@@ -1702,8 +1683,309 @@ class PluginMydashboardAlert extends CommonDBTM {
             );
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("SLA Demands alerts", "mydashboard") . "</span>");
-            $widget->setWidgetComment(__("Display alerts for SLA of tickets", "mydashboard"));
+            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("SLA Requests alerts", "mydashboard") . "</span>");
+            $widget->setWidgetComment(__("Display alerts for SLA of Requests tickets", "mydashboard"));
+
+            return $widget;
+            break;
+         case $this->getType() . "13":
+
+            $widget = new PluginMydashboardHtml();
+
+            $colorstats1 = "#CCC";
+            $colorstats2 = "#CCC";
+            $colorstats3 = "#CCC";
+            $colorstats4 = "#CCC";
+            /*Stats1*/
+            $search_assign = "1=1";
+            $left          = "";
+
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $opt['technicians_groups_id'] = $technicians_groups_id;
+            if (count($technicians_groups_id) > 0) {
+
+               $left          = "LEFT JOIN `glpi_groups_tickets`
+                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
+               $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
+                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+            }
+
+            $criterias = ['technicians_groups_id'];
+            $params    = ["widgetId"  => $widgetId,
+                          "name"      => 'PluginMydashboardAlert4',
+                          "onsubmit"  => true,
+                          "opt"       => $opt,
+                          "criterias" => $criterias,
+                          "export"    => false,
+                          "canvas"    => false,
+                          "nb"        => 1];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+            $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        $left
+                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
+            $q1 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
+                   . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+            AND `glpi_tickets`.`priority` > 4 AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "' AND $search_assign";
+
+            $r1             = $DB->query($q1);
+            $stats_requests1 = 0;
+            $nb1            = $DB->numrows($r1);
+            if ($nb1) {
+               foreach ($DB->request($q1) as $data1) {
+                  $stats_requests1 = $data1['nb'];
+               }
+            }
+            if ($stats_requests1 > 0) {
+               $colorstats1 = "indianred";
+            }
+
+            /*Stats2*/
+            $search_assign = "1=1";
+            $left          = "";
+
+            $q2 = "SELECT DISTINCT COUNT(`glpi_problems`.`id`) AS nb
+                        FROM `glpi_problems`
+                        $left
+                        WHERE `glpi_problems`.`is_deleted` = '0' ";
+            $q2 .= $dbu->getEntitiesRestrictRequest("AND", Problem::getTable())
+                   . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+            AND `glpi_problems`.`priority` > 4 AND $search_assign";
+
+            $r2             = $DB->query($q2);
+            $stats_requests2 = 0;
+            $nb2            = $DB->numrows($r2);
+            if ($nb2) {
+               foreach ($DB->request($q2) as $data6) {
+                  $stats_requests2 = $data6['nb'];
+               }
+            }
+            if ($stats_requests2 > 0) {
+               $colorstats2 = "indianred";
+            }
+
+            /*Stats3*/
+            $left = "";
+
+            $q3 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        $left
+                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
+            $q3 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
+                   . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ") 
+            AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "' ";
+
+            $r3             = $DB->query($q3);
+            $stats_requests3 = 0;
+            $nb3            = $DB->numrows($r3);
+            if ($nb3) {
+               foreach ($DB->request($q3) as $data3) {
+                  $stats_requests3 = $data3['nb'];
+               }
+            }
+            if ($stats_requests3 > 0) {
+               $colorstats3 = "indianred";
+            }
+
+            /*Stats4*/
+            $left          = "";
+            $search_assign = "1=1";
+
+            if (count($technicians_groups_id) > 0) {
+               $left          = "LEFT JOIN `glpi_groups_tickets`
+                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
+               $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
+                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+            }
+
+            $search_assign .= " AND `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` FROM `glpi_tickets_users` WHERE `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "') ";
+
+            $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        $left
+                        WHERE $search_assign  AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'AND `glpi_tickets`.`is_deleted` = 0 ";
+            $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
+                   . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::CLOSED . ") ";
+
+            $r4             = $DB->query($q4);
+            $stats_requests4 = 0;
+            $nb4            = $DB->numrows($r4);
+            if ($nb4) {
+               foreach ($DB->request($q4) as $data4) {
+                  $stats_requests4 = $data4['nb'];
+               }
+            }
+            if ($stats_requests4 > 0) {
+               $colorstats4 = "indianred";
+            }
+
+            $table = "<div class=\"tickets-stats\">";
+
+            //////////////////////////////////////////
+
+            if ($stats_requests3 > 0) {
+               $options3['reset']                     = 'reset';
+               $options3['criteria'][0]['field']      = 12; // status
+               $options3['criteria'][0]['searchtype'] = 'equals';
+               $options3['criteria'][0]['value']      = "1";
+               $options3['criteria'][0]['link']       = 'AND';
+
+               $options3['criteria'][1]['field']      = 14; // type
+               $options3['criteria'][1]['searchtype'] = 'equals';
+               $options3['criteria'][1]['value']      = Ticket::DEMAND_TYPE;
+               $options3['criteria'][1]['link']       = 'AND';
+
+               $stats3link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                             Toolbox::append_params($options3, "&");
+            }
+
+            $table .= "<div class=\"nb\" style=\"color:$colorstats3\">";
+            if ($stats_requests3 > 0) {
+               $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __('New requests', 'mydashboard') . "'>";
+            }
+            $table .= "<i style='color:$colorstats3' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
+               <h3><span class=\"counter count-number\" id=\"stats_requests3\"></span></h3>";
+            $table .= "<p class=\"count-text \">" . __('New requests', 'mydashboard') . "</p>";
+            if ($stats_requests3 > 0) {
+               $table .= "</a>";
+            }
+            $table .= "</div>";
+
+            //////////////////////////////////////////
+
+            if ($stats_requests4 > 0) {
+               $options4['reset']                     = 'reset';
+               $options4['criteria'][0]['field']      = 12; // status
+               $options4['criteria'][0]['searchtype'] = 'equals';
+               $options4['criteria'][0]['value']      = "notclosed";
+               $options4['criteria'][0]['link']       = 'AND';
+
+               $options4['criteria'][1]['field']      = 5; // tech
+               $options4['criteria'][1]['searchtype'] = 'contains';
+               $options4['criteria'][1]['value']      = '^$';
+               $options4['criteria'][1]['link']       = 'AND';
+
+               if (isset($opt['technicians_groups_id']) && $opt['technicians_groups_id'] > 0) {
+                  $group = $opt['technicians_groups_id'];
+
+                  $options4['criteria'][2]['field']      = 8; // groups_id_assign
+                  $options4['criteria'][2]['searchtype'] = 'equals';
+                  $options4['criteria'][2]['value']      = $group;
+                  $options4['criteria'][2]['link']       = 'AND';
+
+               }
+
+               $stats4link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                             Toolbox::append_params($options4, "&");
+            }
+
+            $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
+            if ($stats_requests4 > 0) {
+               $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __('Opened requests without assigned technicians', 'mydashboard') . "'>";
+            }
+            $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fa fa-user-times fa-3x fa-border\"></i>
+               <h3><span class=\"counter count-number\" id=\"stats_requests4\"></span></h3>";
+            $table .= "<p class=\"count-text \">" . __('Opened requests without assigned technicians', 'mydashboard') . "</p>";
+            if ($stats_requests4 > 0) {
+               $table .= "</a>";
+            }
+            $table .= "</div>";
+
+            //////////////////////////////////////////
+
+            if ($stats_requests1 > 0) {
+               $options1['reset']                     = 'reset';
+               $options1['criteria'][0]['field']      = 12; // status
+               $options1['criteria'][0]['searchtype'] = 'equals';
+               $options1['criteria'][0]['value']      = "notold";
+               $options1['criteria'][0]['link']       = 'AND';
+
+               $options1['criteria'][1]['field']      = 3; // priority
+               $options1['criteria'][1]['searchtype'] = 'equals';
+               $options1['criteria'][1]['value']      = -5;
+               $options1['criteria'][1]['link']       = 'AND';
+
+               $options1['criteria'][2]['field']      = 14; // type
+               $options1['criteria'][2]['searchtype'] = 'equals';
+               $options1['criteria'][2]['value']      = Ticket::INCIDENT_TYPE;
+               $options1['criteria'][2]['link']       = 'AND';
+
+               if (isset($opt['technicians_groups_id']) && $opt['technicians_groups_id'] > 0) {
+                  $group = $opt['technicians_groups_id'];
+
+                  $options1['criteria'][3]['field']      = 8; // groups_id_assign
+                  $options1['criteria'][3]['searchtype'] = 'equals';
+                  $options1['criteria'][3]['value']      = $group;
+                  $options1['criteria'][3]['link']       = 'AND';
+
+               }
+               $stats1link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                             Toolbox::append_params($options1, "&");
+            }
+
+            $table .= "<div class=\"nb\" style=\"color:$colorstats1\">";
+            if ($stats_requests1 > 0) {
+               $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Requests with very high or major priority', 'mydashboard') . "'>";
+            }
+            $table .= "<i style='color:$colorstats1' class=\"fa fa-exclamation-triangle fa-3x fa-border\"></i>
+               <h3><span class=\"counter count-number\" id=\"stats_requests1\"></span></h3>";
+            $table .= "<p class=\"count-text \">" . __('Requests with very high or major priority', 'mydashboard') . "</p>";
+            if ($stats_requests1 > 0) {
+               $table .= "</a>";
+            }
+            $table .= "</div>";
+
+            //////////////////////////////////////////
+
+//            if ($stats_requests2 > 0) {
+//               $options2['reset']                     = 'reset';
+//               $options2['criteria'][0]['field']      = 12; // status
+//               $options2['criteria'][0]['searchtype'] = 'equals';
+//               $options2['criteria'][0]['value']      = "notold";
+//               $options2['criteria'][0]['link']       = 'AND';
+//
+//               $options2['criteria'][1]['field']      = 3; // priority
+//               $options2['criteria'][1]['searchtype'] = 'equals';
+//               $options2['criteria'][1]['value']      = -5;
+//               $options2['criteria'][1]['link']       = 'AND';
+//
+//               $stats2link = $CFG_GLPI["root_doc"] . '/front/problem.php?is_deleted=0&' .
+//                             Toolbox::append_params($options2, "&");
+//            }
+//
+//            $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
+//            if ($stats_requests2 > 0) {
+//               $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __('Problems with very high or major priority', 'mydashboard') . "'>";
+//            }
+//            $table .= "<i style='color:$colorstats2' class=\"fa fa-bug fa-3x fa-border\"></i>
+//                           <h3><span class=\"counter count-number\" id=\"stats_requests2\"></span></h3>";
+//            $table .= "<p class=\"count-text \">" . __('Problems with very high or major priority', 'mydashboard') . "</p>";
+//            if ($stats_requests2 > 0) {
+//               $table .= "</a>";
+//            }
+//            $table .= "</div>";
+
+            //////////////////////////////////////////
+
+            $table .= "<script type='text/javascript'>
+                         $(function(){
+                            $('#stats_requests1').countup($stats_requests1);
+//                            $('#stats_requests2').countup($stats_requests2);
+                            $('#stats_requests3').countup($stats_requests3);
+                            $('#stats_requests4').countup($stats_requests4);
+                         });
+                  </script>";
+
+            $table .= "</div>";
+
+            $widget->setWidgetHtmlContent(
+               $table
+            );
+            $widget->toggleWidgetRefresh();
+
+            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Requests alerts", "mydashboard") . "</span>");
+            $widget->setWidgetComment(__("Display alerts for requests", "mydashboard"));
 
             return $widget;
             break;
