@@ -152,12 +152,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $onclick = 0;
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requester_groups_id', 'type', 'locations_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'type', 'locations_id'];
                $onclick   = 1;
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['type', 'locations_id', 'requester_groups_id'];
+               $criterias = ['type', 'locations_id', 'requesters_groups_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -172,8 +172,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria          = $crit['entities_id'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
-            $requester_groups          = $opt['requester_groups_id'];
-            $requester_groups_criteria = $crit['requester_groups_id'];
+            $requester_groups          = $opt['requesters_groups_id'];
+            $requester_groups_criteria = $crit['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $location                   = $opt['locations_id'];
@@ -1284,11 +1284,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['requester_groups_id', 'entities_id', 'is_recursive', 'type', 'year'];
+               $criterias = ['requesters_groups_id', 'entities_id', 'is_recursive', 'type', 'year'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requester_groups_id', 'type', 'year'];
+               $criterias = ['requesters_groups_id', 'type', 'year'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1301,7 +1301,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $type_criteria             = $crit['type'];
             $entities_criteria         = $crit['entities_id'];
-            $requester_groups_criteria = $crit['requester_groups_id'];
+            $requester_groups_criteria = $crit['requesters_groups_id'];
             $date_criteria             = $crit['date'];
             $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
 
@@ -1420,11 +1420,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requester_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requester_groups_id'];
+               $criterias = ['requesters_groups_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1438,7 +1438,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria          = $crit['entities_id'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
-            $requester_groups_criteria  = $crit['requester_groups_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
@@ -1572,11 +1572,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requester_groups_id'];
+               $criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requester_groups_id'];
+               $criterias = ['requesters_groups_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1590,7 +1590,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_criteria          = $crit['entities_id'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
-            $requester_groups_criteria  = $crit['requester_groups_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
@@ -1724,11 +1724,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requester_groups_id', 'is_recursive', 'type', 'year', 'month'];
+               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'is_recursive', 'type', 'year', 'month'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requester_groups_id', 'type', 'year', 'month'];
+               $criterias = ['requesters_groups_id', 'type', 'year', 'month'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -1741,7 +1741,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $type_criteria              = $crit['type'];
             $entities_criteria          = $crit['entities_id'];
-            $requester_groups_criteria  = $crit['requester_groups_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $date_criteria              = $crit['date'];
             $closedate_criteria         = $crit['closedate'];
@@ -2087,11 +2087,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requester_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
+               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['year', 'locations_id'];
+               $criterias = ['requesters_groups_id','year', 'locations_id'];
             }
 
             $params  = ["preferences" => $this->preferences,
@@ -2103,7 +2103,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $crit = $options['crit'];
 
             $entities_criteria          = $crit['entities_id'];
-            $requester_groups_criteria  = $crit['requester_groups_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $mdentities                 = self::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
@@ -2719,7 +2719,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT DISTINCT
-                           `groups_id` AS `requester_groups_id`,
+                           `groups_id` AS `requesters_groups_id`,
                            COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
                         LEFT JOIN `glpi_groups_tickets` 
@@ -2738,14 +2738,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabgroup = [];
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
-                  if (!empty($data['requester_groups_id'])) {
-                     $name[] = Dropdown::getDropdownName("glpi_groups", $data['requester_groups_id']);
+                  if (!empty($data['requesters_groups_id'])) {
+                     $name[] = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
                   } else {
                      $name[] = __('None');
                   }
                   $datas[] = $data['nb'];
-                  if (!empty($data['requester_groups_id'])) {
-                     $tabgroup[] = $data['requester_groups_id'];
+                  if (!empty($data['requesters_groups_id'])) {
+                     $tabgroup[] = $data['requesters_groups_id'];
                   } else {
                      $tabgroup[] = 0;
                   }
