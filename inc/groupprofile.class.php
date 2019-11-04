@@ -77,7 +77,7 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
          //                          'value'  => $groups_id]);
 
          $dbu    = new DbUtils();
-         $result = $dbu->getAllDataFromTable(Group::getTable(), []);
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign'=>1]);
          //         $pref = json_decode($groupprofile->fields['prefered_group']);
 
          $temp                         = [];
