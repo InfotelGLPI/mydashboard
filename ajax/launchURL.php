@@ -58,35 +58,61 @@ if (isset($_POST["widget"])
       $options['criteria'][1]['value']      = $_POST["datetik"];
       $options['criteria'][1]['link']       = 'AND';
 
-      if (!empty($_POST["technician_group"])) {
-         $groups                         = $_POST["technician_group"];
+      if (!empty($_POST["requester_groups"])) {
+         $requester_groups               = $_POST["requester_groups"];
          $options['criteria'][2]['link'] = 'AND';
          $nb                             = 0;
-         foreach ($groups as $group) {
+         foreach ($requester_groups as $requester_group) {
             if ($nb == 0) {
                $options['criteria'][2]['criteria'][$nb]['link'] = 'AND';
             } else {
                $options['criteria'][2]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][2]['criteria'][$nb]['field']      = 8;
+            $options['criteria'][2]['criteria'][$nb]['field'] = 71;
+            //            if (!empty($_POST["group_is_recursive"])) {
+            //               $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'under';
+            //            } else {
             $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'equals';
-            $options['criteria'][2]['criteria'][$nb]['value']      = $group;
+            //            }
+            $options['criteria'][2]['criteria'][$nb]['value'] = $requester_group;
             $nb++;
          }
       }
+
+      if (!empty($_POST["technician_group"])) {
+         $groups                         = $_POST["technician_group"];
+         $options['criteria'][3]['link'] = 'AND';
+         $nb                             = 0;
+         foreach ($groups as $group) {
+            if ($nb == 0) {
+               $options['criteria'][3]['criteria'][$nb]['link'] = 'AND';
+            } else {
+               $options['criteria'][3]['criteria'][$nb]['link'] = 'OR';
+            }
+            $options['criteria'][3]['criteria'][$nb]['field'] = 8;
+            if (!empty($_POST["group_is_recursive"])) {
+               $options['criteria'][3]['criteria'][$nb]['searchtype'] = 'under';
+            } else {
+               $options['criteria'][3]['criteria'][$nb]['searchtype'] = 'equals';
+            }
+            $options['criteria'][3]['criteria'][$nb]['value'] = $group;
+            $nb++;
+         }
+      }
+
       if ($_POST["type"] > 0) {
-         $options['criteria'][3]['field']      = 14; // type
-         $options['criteria'][3]['searchtype'] = 'equals';
-         $options['criteria'][3]['value']      = $_POST["type"];
-         $options['criteria'][3]['link']       = 'AND';
+         $options['criteria'][4]['field']      = 14; // type
+         $options['criteria'][4]['searchtype'] = 'equals';
+         $options['criteria'][4]['value']      = $_POST["type"];
+         $options['criteria'][4]['link']       = 'AND';
       }
-      $options['criteria'][4]['field']      = 80; // entities
-      $options['criteria'][4]['searchtype'] = 'equals';
+      $options['criteria'][5]['field']      = 80; // entities
+      $options['criteria'][5]['searchtype'] = 'equals';
       if (isset($_POST["sons"]) && $_POST["sons"] > 0) {
-         $options['criteria'][4]['searchtype'] = 'under';
+         $options['criteria'][5]['searchtype'] = 'under';
       }
-      $options['criteria'][4]['value'] = $_POST["entities_id"];
-      $options['criteria'][4]['link']  = 'AND';
+      $options['criteria'][5]['value'] = $_POST["entities_id"];
+      $options['criteria'][5]['link']  = 'AND';
 
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");
@@ -132,9 +158,13 @@ if (isset($_POST["widget"])
             } else {
                $options['criteria'][4]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][4]['criteria'][$nb]['field']      = 8;
-            $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'equals';
-            $options['criteria'][4]['criteria'][$nb]['value']      = $group;
+            $options['criteria'][4]['criteria'][$nb]['field'] = 8;
+            if (!empty($_POST["group_is_recursive"])) {
+               $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'under';
+            } else {
+               $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'equals';
+            }
+            $options['criteria'][4]['criteria'][$nb]['value'] = $group;
             $nb++;
          }
       }
@@ -222,9 +252,13 @@ if (isset($_POST["widget"])
             } else {
                $options['criteria'][3]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][3]['criteria'][$nb]['field']      = 8;
-            $options['criteria'][3]['criteria'][$nb]['searchtype'] = 'equals';
-            $options['criteria'][3]['criteria'][$nb]['value']      = $group;
+            $options['criteria'][3]['criteria'][$nb]['field'] = 8;
+            if (!empty($_POST["group_is_recursive"])) {
+               $options['criteria'][3]['criteria'][$nb]['searchtype'] = 'under';
+            } else {
+               $options['criteria'][3]['criteria'][$nb]['searchtype'] = 'equals';
+            }
+            $options['criteria'][3]['criteria'][$nb]['value'] = $group;
             $nb++;
          }
       }
@@ -328,9 +362,13 @@ if (isset($_POST["widget"])
             } else {
                $options['criteria'][4]['criteria'][$nb]['link'] = 'OR';
             }
-            $options['criteria'][4]['criteria'][$nb]['field']      = 8;
-            $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'equals';
-            $options['criteria'][4]['criteria'][$nb]['value']      = $group;
+            $options['criteria'][4]['criteria'][$nb]['field'] = 8;
+            if (!empty($_POST["group_is_recursive"])) {
+               $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'under';
+            } else {
+               $options['criteria'][4]['criteria'][$nb]['searchtype'] = 'equals';
+            }
+            $options['criteria'][4]['criteria'][$nb]['value'] = $group;
             $nb++;
          }
       }
@@ -424,9 +462,13 @@ if (isset($_POST["widget"])
          } else {
             $options['criteria'][2]['criteria'][$nb]['link'] = 'OR';
          }
-         $options['criteria'][2]['criteria'][$nb]['field']      = 8;
-         $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'equals';
-         $options['criteria'][2]['criteria'][$nb]['value']      = $group;
+         $options['criteria'][2]['criteria'][$nb]['field'] = 8;
+         if (!empty($_POST["group_is_recursive"])) {
+            $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'under';
+         } else {
+            $options['criteria'][2]['criteria'][$nb]['searchtype'] = 'equals';
+         }
+         $options['criteria'][2]['criteria'][$nb]['value'] = $group;
          $nb++;
       }
    }

@@ -201,6 +201,11 @@ class PluginMydashboardHelper {
       return $entities;
    }
 
+   /**
+    * @param $params
+    *
+    * @return mixed
+    */
    static function manageCriterias($params) {
 
       $criterias = $params['criterias'];
@@ -252,15 +257,22 @@ class PluginMydashboardHelper {
       $opt['requester_groups_id']          = null;
       $crit['crit']['requester_groups_id'] = "AND 1 = 1";
       if (in_array("requester_groups_id", $criterias)) {
+
          if (isset($params['opt']['requester_groups_id'])) {
-            $crit['crit']['requester_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` as id FROM `glpi_groups_tickets`
-            WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $opt['requester_groups_id']) . "))";
+            $opt['requester_groups_id'] = is_array($params['opt']['requester_groups_id']) ? $params['opt']['requester_groups_id'] : [$params['opt']['requester_groups_id']];
+
+            $params['opt']['requester_groups_id'] = $opt['requester_groups_id'];
+
+            $crit['crit']['requester_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+            WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $params['opt']['requester_groups_id']) . "))";
          }
       }
 
       // TECH GROUP
       $opt['technicians_groups_id']          = null;
       $crit['crit']['technicians_groups_id'] = "AND 1 = 1";
+      $opt['ancestors'] = 0;
+      $crit['crit']['ancestors'] = 0;
       if (in_array("technicians_groups_id", $criterias)) {
          if (isset($params['opt']['technicians_groups_id'])) {
             $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
@@ -272,8 +284,24 @@ class PluginMydashboardHelper {
          $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
 
          if (isset($params['opt']['technicians_groups_id'])) {
-            $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+            if (in_array("group_is_recursive", $criterias) &&  isset($params['opt']['ancestors']) &&  $params['opt']['ancestors'] != 0)  {
+               $dbu = new DbUtils();
+               $childs = [];
+
+               foreach ($opt['technicians_groups_id'] as $k => $v) {
+                  $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
+               }
+
+               $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . "))";
+               $opt['ancestors'] = $params['opt']['ancestors'];
+               $crit['crit']['ancestors'] = $opt['ancestors'];
+            } else {
+               $crit['crit']['technicians_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $params['opt']['technicians_groups_id']) . "))";
+               $opt['ancestors'] = 0;
+               $crit['crit']['ancestors'] = 0;
+            }
          }
       }
 
@@ -636,6 +664,18 @@ class PluginMydashboardHelper {
          $form .= $dropdown;
 
          $form .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
+      if (in_array("group_is_recursive", $criterias)) {
+         $form      .= "<span class='md-widgetcrit'>";
+         $form      .= __('Child groups') . "&nbsp;";
+         $paramsy   = ['display' => false];
+         $ancestors = isset($opt['ancestors']) ? $opt['ancestors'] : 0;
+         $form      .= Dropdown::showYesNo('ancestors', $ancestors, -1, $paramsy);
+         $form      .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
