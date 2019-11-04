@@ -541,7 +541,9 @@ class PluginMydashboardHelper {
          $form .= "&nbsp;/&nbsp;" . __('Location') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $opt['locations_id']);
       }
 
+
       if (isset($opt['technicians_groups_id'])) {
+         Toolbox::logWarning($opt['technicians_groups_id']);
          $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
          if (count($opt['technicians_groups_id']) > 0) {
             $form .= "&nbsp;/&nbsp;" . __('Technician group') . "&nbsp;:&nbsp;";
@@ -690,10 +692,13 @@ class PluginMydashboardHelper {
       // TECHNICIAN GROUPS
       if (in_array("technicians_groups_id", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
-Toolbox::logWarning($opt);
+
          $dbu    = new DbUtils();
          $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
-         $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+
+         $technicians_groups_id = (isset($opt['technicians_groups_id']) && is_array($opt['technicians_groups_id'])) ? $opt['technicians_groups_id'] : [];
+
+         Toolbox::logWarning($opt['technicians_groups_id']);
          $temp                         = [];
          foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
@@ -704,7 +709,7 @@ Toolbox::logWarning($opt);
             "display"             => false,
             "multiple"            => true,
             "width"               => '200px',
-            'values'              => (isset($opt['technicians_groups_id']) && is_array($opt['technicians_groups_id']))? $opt['technicians_groups_id'] : [],
+            'values'              => $technicians_groups_id,
             'display_emptychoice' => true
          ];
 
@@ -1191,8 +1196,8 @@ Toolbox::logWarning($opt);
          } else if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
                              && count($opt) < 1) {
             $res = json_decode($group, true);
-         } else if (isset($opt['groups_id'])) {
-            $res = [$opt['groups_id']];
+         } else if (isset($opt['technicians_groups_id'])) {
+            $res = [$opt['technicians_groups_id']];
          } else {
             $res = [];
          }

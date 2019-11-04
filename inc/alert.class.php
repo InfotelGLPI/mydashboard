@@ -191,20 +191,11 @@ class PluginMydashboardAlert extends CommonDBTM {
             /*Stats1*/
             $search_assign = "1=1";
             $left          = "";
-            //            Toolbox::logWarning($opt);
+
             $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-
-
-//            if (isset($opt['technicians_groups_id'])) {
-////
-//               $technicians_groups_id = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
-//            }
-//            Toolbox::logWarning($technicians_groups_id);
-
-//            Toolbox::logWarning($opt);
-
+            $opt['technicians_groups_id'] = $technicians_groups_id;
             if (count($technicians_groups_id) > 0) {
-               Toolbox::logWarning($technicians_groups_id);
+
                $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
                $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -293,17 +284,11 @@ class PluginMydashboardAlert extends CommonDBTM {
             $left          = "";
             $search_assign = "1=1";
 
-            if (isset($opt)) {
-               //               $opt['technicians_groups_id'] = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
-               //               Toolbox::logWarning($opt);
-               if (isset($opt['technicians_groups_id'])
-                   && is_array($opt['technicians_groups_id'])
-                   && count($opt['technicians_groups_id']) > 0) {
-                  $left          = "LEFT JOIN `glpi_groups_tickets`
+            if (count($technicians_groups_id) > 0) {
+               $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                  $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+               $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-               }
             }
 
             $search_assign .= " AND `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` FROM `glpi_tickets_users` WHERE `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "') ";
