@@ -32,6 +32,11 @@ Session::checkLoginUser();
 if (isset ($_POST['update'])) {
    $pref = new PluginMydashboardPreference();
    $pref->check(-1, UPDATE, $_POST);
+   if(isset($_POST["prefered_group"])){
+      $_POST["prefered_group"] = json_encode($_POST["prefered_group"]);
+   }else{
+      $_POST["prefered_group"] = "[]";
+   }
    $pref->update($_POST);
    Html::back();
 }

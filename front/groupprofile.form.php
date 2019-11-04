@@ -28,10 +28,15 @@ include('../../../inc/includes.php');
 
 $group = new PluginMydashboardGroupprofile();
 if (isset($_POST["addGroup"])) {
-   if ($_POST['groups_id'] == 0) {
+   if (empty($_POST['groups_id'])) {
       Html::back();
    } else {
       $group->check(-1, CREATE, $_POST);
+      if(isset($_POST["groups_id"])){
+         $_POST["groups_id"] = json_encode($_POST["groups_id"]);
+      }else{
+         $_POST["groups_id"] = "[]";
+      }
       if($group->getFromDBByCrit(['profiles_id' => $_POST['profiles_id']])){
          $group->update(['id'   => $group->fields['id'],
                          'groups_id'   => $_POST['groups_id']]);

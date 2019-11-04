@@ -58,23 +58,49 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
          $checked = '';
          $profilerights = new ProfileRight();
          if($profilerights->getFromDBByCrit(['profiles_id' => $profiles_id,
-                                          'name'        => 'plugin_mydashboard_groupprofile'])){
+                                             'name'        => 'plugin_mydashboard_groupprofile'])){
             $checked = $profilerights->fields['rights'] ? 'checked' : '';
          }
          echo "<tr class='tab_bg_1'><td>";
          Html::showCheckbox(['name' => 'use_group_profile','checked' => $checked]);
          echo " " . __('Use profile group','mydashboard');
          echo "</td><td>";
-         echo __('Default group', 'mydashboard');
+         echo __('Default groups', 'mydashboard');
          echo "</td><td>";
          $groupprofile = new PluginMydashboardGroupprofile();
-         $groups_id = 0;
+         $groups_id = [];
          if($groupprofile->getFromDBByCrit(['profiles_id' => $profiles_id])){
-            $groups_id = $groupprofile->fields['groups_id'];
+            $groups_id =  json_decode($groupprofile->fields['groups_id']);
          }
-         Group::dropdown(['entity' => $_SESSION['glpiactive_entity'],
-                          'name'   => 'groups_id',
-                          'value'  => $groups_id]);
+         //         Group::dropdown(['entity' => $_SESSION['glpiactive_entity'],
+         //                          'name'   => 'groups_id',
+         //                          'value'  => $groups_id]);
+
+         $dbu    = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Group::getTable(), []);
+         //         $pref = json_decode($groupprofile->fields['prefered_group']);
+
+         $temp                         = [];
+         foreach ($result as $item) {
+            $temp[$item['id']] = $item['name'];
+         }
+
+         $params = [
+            "name"                => 'groups_id',
+            'entity'    => $_SESSION['glpiactive_entity'],
+            "display"             => false,
+            "multiple"            => true,
+            "width"               => '200px',
+            'values'              => isset($groups_id) ? $groups_id : [],
+            'display_emptychoice' => true
+         ];
+
+
+
+         $dropdown = Dropdown::showFromArray("groups_id", $temp, $params);
+
+         echo $dropdown;
+
          echo "</td></tr>";
 
          echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
@@ -92,9 +118,9 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
       if($profilerights->getFromDBByCrit(['profiles_id' => $profiles_id,
                                           'name'        => 'plugin_mydashboard_groupprofile'])){
          if($profilerights->fields['rights'] == 1){
-               if($this->getFromDBByCrit(['profiles_id' => $profiles_id])){
-                  $group = $this->fields['groups_id'];
-               }
+            if($this->getFromDBByCrit(['profiles_id' => $profiles_id])){
+               $group = $this->fields['groups_id'];
+            }
             return $group;
          }
       }

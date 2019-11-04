@@ -298,7 +298,7 @@ class PluginMydashboardHelper {
          }
 
          $params['opt']['requesters_groups_id'] = $opt['requesters_groups_id'];
-         $crit['crit']['requesters_groups_id'] = " ";
+         $crit['crit']['requesters_groups_id']  = " ";
          if ($opt['requesters_groups_id'] != null) {
             $crit['crit']['requesters_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $params['opt']['requesters_groups_id']) . "))";
@@ -306,21 +306,23 @@ class PluginMydashboardHelper {
       }
 
       // TECH GROUP
-      $opt['technicians_groups_id']          = null;
+      $opt['technicians_groups_id']          = [];
       $crit['crit']['technicians_groups_id'] = "AND 1 = 1";
       $opt['ancestors']                      = 0;
       $crit['crit']['ancestors']             = 0;
       if (in_array("technicians_groups_id", $criterias)) {
          if (isset($params['opt']['technicians_groups_id'])) {
-            $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
+            $opt['technicians_groups_id'] = $params['opt']['technicians_groups_id'];
          } else {
             $groups_id                    = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
-            $opt['technicians_groups_id'] = [$groups_id];
+            $opt['technicians_groups_id'] = $groups_id;
          }
 
          $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
 
-         if (isset($params['opt']['technicians_groups_id'])) {
+         if (isset($params['opt']['technicians_groups_id'])
+             && is_array($params['opt']['technicians_groups_id'])
+             && count($params['opt']['technicians_groups_id']) > 0) {
             if (in_array("group_is_recursive", $criterias) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
                $dbu    = new DbUtils();
                $childs = [];
@@ -688,10 +690,9 @@ class PluginMydashboardHelper {
       // TECHNICIAN GROUPS
       if (in_array("technicians_groups_id", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
-
+Toolbox::logWarning($opt);
          $dbu    = new DbUtils();
          $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
-
          $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
          $temp                         = [];
          foreach ($result as $item) {
@@ -703,7 +704,7 @@ class PluginMydashboardHelper {
             "display"             => false,
             "multiple"            => true,
             "width"               => '200px',
-            'values'              => isset($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [],
+            'values'              => (isset($opt['technicians_groups_id']) && is_array($opt['technicians_groups_id']))? $opt['technicians_groups_id'] : [],
             'display_emptychoice' => true
          ];
 
@@ -1165,51 +1166,51 @@ class PluginMydashboardHelper {
    }
 
    /*
-    *
-    * @Create an HTML drop down menu
-    *
-    * @param string $name The element name and ID
-    *
-    * @param int $selected The month to be selected
-    *
-    * @return string
-    *
-    */
+   *
+   * @Create an HTML drop down menu
+   *
+   * @param string $name The element name and ID
+   *
+   * @param int $selected The month to be selected
+   *
+   * @return string
+   *
+   */
    static function getGroup($prefered_group, $opt, $params = false) {
       $groupprofiles = new PluginMydashboardGroupprofile();
-      $res           = 0;
+      $res           = [];
       if (!$params) {
          if (isset($prefered_group)
-             && $prefered_group > 0
+             && !empty($prefered_group)
              && count($opt) < 1) {
             if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
-               $res = $group;
+               $res = json_decode($group, true);
             } else {
-               $res = $prefered_group;
+               $res = json_decode($prefered_group, true);
             }
          } else if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
                              && count($opt) < 1) {
-            $res = $group;
+            $res = json_decode($group, true);
          } else if (isset($opt['groups_id'])) {
-            $res = $opt['groups_id'];
+            $res = [$opt['groups_id']];
          } else {
-            $res = 0;
+            $res = [];
          }
       } else {
          if (isset($params['preferences']['prefered_group'])
-             && $params['preferences']['prefered_group'] > 0
-             && !isset($params['opt']['groups_id'])) {
+             && !empty($params['preferences']['prefered_group'])
+             && !isset($params['opt']['technicians_groups_id'])) {
             if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
-               $res = $group;
+               $res = json_decode($group, true);
             } else {
-               $res = $params['preferences']['prefered_group'];
+               $res = json_decode($params['preferences']['prefered_group'], true);
             }
-         } else if (isset($params['opt']['groups_id'])
-                    && $params['opt']['groups_id'] > 0) {
-            $res = $params['opt']['groups_id'];
+         } else if (isset($params['opt']['technicians_groups_id'])
+                    && count($params['opt']['technicians_groups_id']) > 0 ) {
+            $res = json_decode($params['opt']['technicians_groups_id'], true);
          } else if (($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
-                    && !isset($params['opt']['groups_id'])) {
-            $res = $group;
+                    && !isset($params['opt']['technicians_groups_id'])) {
+            $res = json_decode($group, true);
          }
       }
       return $res;

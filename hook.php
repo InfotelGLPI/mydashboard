@@ -59,8 +59,8 @@ function plugin_mydashboard_install() {
    if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "replace_central")
        && !$DB->fieldExists("glpi_plugin_mydashboard_preferences", "replace_central")) {
       //Adding the new field to preferences
-      $mig = new Migration("1.0.3");
-      $dbu        = new DbUtils();
+      $mig             = new Migration("1.0.3");
+      $dbu             = new DbUtils();
       $configs         = $dbu->getAllDataFromTable("glpi_plugin_mydashboard_configs");
       $replace_central = 1;
       //Basically there is only one config for Dashboard (this foreach may be useless)
@@ -135,18 +135,18 @@ function plugin_mydashboard_install() {
       update133to150();
    }
 
-   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","google_api_key")) {
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")) {
       $mig = new Migration("1.5.1");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.5.1.sql");
       $mig->executeMigration();
    }
 
-   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs","impact_1")) {
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "impact_1")) {
       $mig = new Migration("1.6.2");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.2.sql");
       $mig->executeMigration();
    }
-   if (!$DB->fieldExists("glpi_plugin_mydashboard_dashboards","grid_statesave")) {
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_dashboards", "grid_statesave")) {
       $mig = new Migration("1.6.3");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
@@ -156,13 +156,30 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.0.sql");
       $mig->executeMigration();
    }
-   if(!$DB->tableExists("glpi_plugin_mydashboard_customswidgets")) {
+   if (!$DB->tableExists("glpi_plugin_mydashboard_customswidgets")) {
       $mig = new Migration("1.7.2");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.2.sql");
       $mig->executeMigration();
       insertDefaultTitles();
    }
 
+   $query  = "SELECT DATA_TYPE 
+               FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = '$DB->dbdefault' AND
+                    TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND 
+                    COLUMN_NAME = 'prefered_group'";
+   $result = $DB->query($query);
+   while ($data = $DB->fetch_assoc($result)) {
+      $type = $data["DATA_TYPE"];
+
+   }
+
+   if ($type != "varchar") {
+      $mig = new Migration("1.7.5");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.5.sql");
+      $mig->executeMigration();
+      transform_prefered_group_to_prefered_groups();
+   }
 
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
@@ -174,33 +191,33 @@ function plugin_mydashboard_install() {
    return true;
 }
 
-function insertDefaultTitles(){
+function insertDefaultTitles() {
 
    global $DB;
    $startTitle = '<p style="background-color: lightgrey; padding: 5px; font-weight: bold; border: solid 1px black;">';
-   $endTitle =' </p>';
+   $endTitle   = ' </p>';
 
    // Insert default title in table customwidgets
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
-       [
-           'name' => __('Incidents', 'mydashboard'),
-           'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
-           'comment' => ''
-       ]);
+               [
+                  'name'    => __('Incidents', 'mydashboard'),
+                  'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
+                  'comment' => ''
+               ]);
 
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
-       [
-           'name' => __('Requests', 'mydashboard'),
-           'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
-           'comment' => ''
-       ]);
+               [
+                  'name'    => __('Requests', 'mydashboard'),
+                  'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
+                  'comment' => ''
+               ]);
 
    $DB->insert("glpi_plugin_mydashboard_customswidgets",
-       [
-           'name' => __('Problems'),
-           'content' => $startTitle . __("Problems") . $endTitle,
-           'comment' => ''
-       ]);
+               [
+                  'name'    => __('Problems'),
+                  'content' => $startTitle . __("Problems") . $endTitle,
+                  'comment' => ''
+               ]);
 }
 
 function fillTableMydashboardStocktickets() {
@@ -237,6 +254,32 @@ function fillTableMydashboardStocktickets() {
    }
 }
 
+function transform_prefered_group_to_prefered_groups() {
+
+   $pref  = new PluginMydashboardPreference();
+   $prefs = $pref->find();
+   foreach ($prefs as $p) {
+      if ($p["prefered_group"] == "0") {
+         $p["prefered_group"] = "[]";
+      } else {
+         $p["prefered_group"] = "[\"" . $p["prefered_group"] . "\"]";
+      }
+      $pref->update($p);
+   }
+
+   $prefgroup  = new PluginMydashboardGroupprofile();
+   $prefgroups = $prefgroup->find();
+   foreach ($prefgroups as $p) {
+      if ($p["prefered_group"] == "0") {
+         $p["prefered_group"] = "[]";
+      } else {
+         $p["prefered_group"] = "[\"" . $p["prefered_group"] . "\"]";
+      }
+      $prefgroup->update($p);
+   }
+
+}
+
 // Uninstall process for plugin : need to return true if succeeded
 /**
  * @return bool
@@ -246,19 +289,19 @@ function plugin_mydashboard_uninstall() {
 
    // Plugin tables deletion
    $tables = [
-                   "glpi_plugin_mydashboard_profileauthorizedwidgets",
-                   "glpi_plugin_mydashboard_widgets",
-                   "glpi_plugin_mydashboard_userwidgets",
-                   "glpi_plugin_mydashboard_configs",
-                   "glpi_plugin_mydashboard_preferences",
-                   "glpi_plugin_mydashboard_preferenceuserblacklists",
-                   "glpi_plugin_mydashboard_alerts",
-                   "glpi_plugin_mydashboard_stockwidgets",
-                   "glpi_plugin_mydashboard_stocktickets",
-                   "glpi_plugin_mydashboard_problemalerts",
-                   "glpi_plugin_mydashboard_dashboards",
-                   "glpi_plugin_mydashboard_groupprofiles",
-                   "glpi_plugin_mydashboard_customswidgets"];
+      "glpi_plugin_mydashboard_profileauthorizedwidgets",
+      "glpi_plugin_mydashboard_widgets",
+      "glpi_plugin_mydashboard_userwidgets",
+      "glpi_plugin_mydashboard_configs",
+      "glpi_plugin_mydashboard_preferences",
+      "glpi_plugin_mydashboard_preferenceuserblacklists",
+      "glpi_plugin_mydashboard_alerts",
+      "glpi_plugin_mydashboard_stockwidgets",
+      "glpi_plugin_mydashboard_stocktickets",
+      "glpi_plugin_mydashboard_problemalerts",
+      "glpi_plugin_mydashboard_dashboards",
+      "glpi_plugin_mydashboard_groupprofiles",
+      "glpi_plugin_mydashboard_customswidgets"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -324,7 +367,7 @@ function plugin_mydashboard_getDropdown() {
 
    if ($plugin->isActivated("mydashboard")) {
       return [
-          'PluginMydashboardCustomswidget' => PluginMydashboardCustomswidget::getTypeName(2),];
+         'PluginMydashboardCustomswidget' => PluginMydashboardCustomswidget::getTypeName(2),];
    } else {
       return [];
    }

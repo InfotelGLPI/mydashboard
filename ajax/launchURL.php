@@ -31,9 +31,7 @@ Session::checkLoginUser();
 global $CFG_GLPI;
 
 // Reset criterias
-$options['criteria'][] = [
-   'reset' => 'reset',
-];
+$options['reset'][] = 'reset';
 
 if (isset($_POST["widget"])
     && $_POST["widget"] == "PluginOcsinventoryngDashboard1") {
@@ -70,33 +68,27 @@ if (isset($_POST["widget"])
       ];
 
       if (!empty($_POST["requester_groups"])) {
-         $requester_groups      = $_POST["requester_groups"];
-         $options['criteria'][] = [
-            'link' => 'AND',
-         ];
-
-         $nb = 0;
+         $requester_groups = $_POST["requester_groups"];
+         $nb               = 0;
          foreach ($requester_groups as $requester_group) {
 
-            $options['criteria'][] = [
+            $criterias['criteria'][$nb] = [
                'field'      => 71, // requester_group
                'searchtype' => 'equals',
                'value'      => $requester_group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
             ];
-
             $nb++;
          }
+         $options['criteria'][] = $criterias;
       }
 
       if (!empty($_POST["technician_group"])) {
-         $groups                = $_POST["technician_group"];
-         $options['criteria'][] = [
-            'link' => 'AND',
-         ];
-         $nb                    = 0;
+         $groups = $_POST["technician_group"];
+         $nb     = 0;
          foreach ($groups as $group) {
-            $options['criteria'][] = [
+
+            $criterias['criteria'][$nb] = [
                'field'      => 8, // technician_group
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
@@ -104,6 +96,7 @@ if (isset($_POST["widget"])
             ];
             $nb++;
          }
+         $options['criteria'][] = $criterias;
       }
 
       if ($_POST["type"] > 0) {
@@ -161,13 +154,11 @@ if (isset($_POST["widget"])
       ];
 
       if (!empty($_POST["technician_group"])) {
-         $groups                = $_POST["technician_group"];
-         $options['criteria'][] = [
-            'link' => 'AND',
-         ];
-         $nb                    = 0;
+         $groups = $_POST["technician_group"];
+         $nb     = 0;
          foreach ($groups as $group) {
-            $options['criteria'][] = [
+
+            $criterias['criteria'][$nb] = [
                'field'      => 8, // technician_group
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
@@ -175,6 +166,7 @@ if (isset($_POST["widget"])
             ];
             $nb++;
          }
+         $options['criteria'][] = $criterias;
       }
 
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
@@ -241,13 +233,11 @@ if (isset($_POST["widget"])
       ];
 
       if (!empty($_POST["technician_group"])) {
-         $groups                = $_POST["technician_group"];
-         $options['criteria'][] = [
-            'link' => 'AND',
-         ];
-         $nb                    = 0;
+         $groups = $_POST["technician_group"];
+         $nb     = 0;
          foreach ($groups as $group) {
-            $options['criteria'][] = [
+
+            $criterias['criteria'][$nb] = [
                'field'      => 8, // technician_group
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
@@ -255,6 +245,7 @@ if (isset($_POST["widget"])
             ];
             $nb++;
          }
+         $options['criteria'][] = $criterias;
       }
 
       $options['criteria'][] = [
@@ -343,13 +334,11 @@ if (isset($_POST["widget"])
       ];
 
       if (!empty($_POST["technician_group"])) {
-         $groups                = $_POST["technician_group"];
-         $options['criteria'][] = [
-            'link' => 'AND',
-         ];
-         $nb                    = 0;
+         $groups = $_POST["technician_group"];
+         $nb     = 0;
          foreach ($groups as $group) {
-            $options['criteria'][] = [
+
+            $criterias['criteria'][$nb] = [
                'field'      => 8, // technician_group
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
@@ -357,6 +346,7 @@ if (isset($_POST["widget"])
             ];
             $nb++;
          }
+         $options['criteria'][] = $criterias;
       }
 
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
@@ -433,13 +423,11 @@ if (isset($_POST["widget"])
 
    // Group
    if (!empty($_POST["technician_group"])) {
-      $groups                = $_POST["technician_group"];
-      $options['criteria'][] = [
-         'link' => 'AND',
-      ];
-      $nb                    = 0;
+      $groups = $_POST["technician_group"];
+      $nb     = 0;
       foreach ($groups as $group) {
-         $options['criteria'][] = [
+
+         $criterias['criteria'][$nb] = [
             'field'      => 8, // technician_group
             'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
             'value'      => $group,
@@ -447,6 +435,7 @@ if (isset($_POST["widget"])
          ];
          $nb++;
       }
+      $options['criteria'][] = $criterias;
    }
 
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
