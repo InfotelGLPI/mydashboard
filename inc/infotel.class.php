@@ -3949,9 +3949,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
             // List of group active and not deleted
             $query_groups = "SELECT `id`, `name`"
                             . " FROM `glpi_groups`"
-                            . " WHERE `is_assign` = 1
-                            AND `id` IN ('" . implode("','", $technician_group) . "')";
+                            . " WHERE `is_assign` = 1 ";
 
+            if (count($technician_group) > 0) {
+               $query_groups .= " AND `id` IN ('" . implode("','", $technician_group) . "')";
+            }
             $plugin         = new Plugin();
             $moreTicketType = [];
             if ($plugin->isActivated('moreticket')) {
@@ -3988,7 +3990,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $query_tickets_by_groups_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
                                                  . " FROM `glpi_tickets`"
                                                  . " LEFT JOIN `glpi_groups_tickets`"
-                                                 . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                                                 . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "' 
+                                                  AND `glpi_tickets`.`is_deleted` = 0)"
                                                  . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
                                                  . " WHERE `glpi_tickets`.`status` = %s"
                                                  . " AND `glpi_groups_tickets`.`groups_id` = '%s'"

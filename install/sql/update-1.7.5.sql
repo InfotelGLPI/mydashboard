@@ -10,4 +10,5 @@
 --   ENGINE = InnoDB
 --   DEFAULT CHARSET = latin1;
 ALTER TABLE `glpi_plugin_mydashboard_preferences` CHANGE `prefered_group` `prefered_group` VARCHAR(255) NOT NULL DEFAULT '[]';
+ALTER TABLE `glpi_plugin_mydashboard_preferences` ADD `requester_prefered_group` VARCHAR(255) NOT NULL DEFAULT '[]';
 ALTER TABLE `glpi_plugin_mydashboard_groupprofiles` CHANGE `groups_id` `groups_id` VARCHAR(255) NOT NULL DEFAULT '[]';

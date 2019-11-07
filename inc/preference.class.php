@@ -148,6 +148,42 @@ class PluginMydashboardPreference extends CommonDBTM
       echo "</td>";
       echo "</tr>";
 
+      echo "<tr class='tab_bg_1'><td>" . __("My requester prefered groups for widget", "mydashboard") . "</td>";
+      echo "<td>";
+      $params = ['name'      => 'requester_prefered_group',
+                 'value'     => $this->fields['requester_prefered_group'],
+                 'entity'    => $_SESSION['glpiactiveentities'],
+                 'condition' => '`is_requester`'];
+
+      $dbu    = new DbUtils();
+      $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
+      $pref = json_decode($this->fields['requester_prefered_group']);
+
+      //      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+      $temp                         = [];
+      foreach ($result as $item) {
+         $temp[$item['id']] = $item['name'];
+      }
+
+      $params = [
+         "name"                => 'requester_prefered_group',
+         'entity'    => $_SESSION['glpiactiveentities'],
+         "display"             => false,
+         "multiple"            => true,
+         "width"               => '200px',
+         'values'              => isset($pref) ? $pref : [],
+         'display_emptychoice' => true
+      ];
+
+
+
+      $dropdown = Dropdown::showFromArray("requester_prefered_group", $temp, $params);
+
+      echo $dropdown;
+      //      Group::dropdown($params);
+      echo "</td>";
+      echo "</tr>";
+
       echo "<tr class='tab_bg_1'><td>" . __("My prefered entity for widget", "mydashboard") . "</td>";
       echo "<td>";
       $params = ['name'      => 'prefered_entity',
@@ -176,7 +212,8 @@ class PluginMydashboardPreference extends CommonDBTM
       $input['automatic_refresh_delay'] = "10";
       $input['nb_widgets_width'] = "3";
       $input['replace_central'] = "1";
-      $input['prefered_group'] = "0";
+      $input['prefered_group'] = "[]";
+      $input['requester_prefered_group'] = "[]";
       $input['prefered_entity'] = "0";
       $input['edit_mode'] = "0";
       $input['drag_mode'] = "0";

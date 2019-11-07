@@ -37,6 +37,13 @@ if (isset ($_POST['update'])) {
    }else{
       $_POST["prefered_group"] = "[]";
    }
+
+   if(isset($_POST["requester_prefered_group"])){
+      $_POST["requester_prefered_group"] = json_encode($_POST["requester_prefered_group"]);
+   }else{
+      $_POST["requester_prefered_group"] = "[]";
+   }
+
    $pref->update($_POST);
    Html::back();
 }

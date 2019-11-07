@@ -201,31 +201,6 @@ class PluginMydashboardHelper {
       return $entities;
    }
 
-
-   static public function getRequesterGroup($entity, $userid) {
-      global $DB;
-
-      $dbu = new DbUtils();
-
-      $first = true;
-      $query = ['FIELDS'     => ['glpi_groups' => ['id']],
-                'FROM'       => 'glpi_groups_users',
-                'INNER JOIN' => ['glpi_groups' => ['FKEY' => ['glpi_groups'       => 'id',
-                                                              'glpi_groups_users' => 'groups_id']]],
-                'WHERE'      => ['users_id' => $userid,
-                                 $dbu->getEntitiesRestrictCriteria('glpi_groups', '', $entity, true),
-                                 '`is_requester`']];
-
-      $rep = [];
-      foreach ($DB->request($query) as $data) {
-         if ($first) {
-            return $data['id'];
-         }
-         $rep[] = $data['id'];
-      }
-      return ($first ? [] : $rep);
-   }
-
    /**
     * @param $params
     *
@@ -279,29 +254,41 @@ class PluginMydashboardHelper {
       }
 
       // REQUESTER GROUP
-      $opt['requesters_groups_id']          = null;
+      $opt['requesters_groups_id']          = [];
       $crit['crit']['requesters_groups_id'] = "AND 1 = 1";
-      $user                                 = new User();
+      //      $opt['ancestors']                     = 0;
+      //      $crit['crit']['ancestors']            = 0;
       if (in_array("requesters_groups_id", $criterias)) {
-
          if (isset($params['opt']['requesters_groups_id'])) {
-            $opt['requesters_groups_id'] = is_array($params['opt']['requesters_groups_id']) ? $params['opt']['requesters_groups_id'] : [$params['opt']['requesters_groups_id']];
+            $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
          } else {
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central') {
-               $requesters_groups_id = self::getRequesterGroup($crit['crit']['entity'],
-                                                               Session::getLoginUserID());
-               if (count($requesters_groups_id) > 0) {
-                  $opt['requesters_groups_id'] = $requesters_groups_id;
-               }
-            }
+            $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $opt, $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID());
+            $opt['requesters_groups_id'] = $groups_id;
          }
 
          $params['opt']['requesters_groups_id'] = $opt['requesters_groups_id'];
-         $crit['crit']['requesters_groups_id']  = " ";
-         if ($opt['requesters_groups_id'] != null) {
+
+         if (isset($params['opt']['requesters_groups_id'])
+             && is_array($params['opt']['requesters_groups_id'])
+             && count($params['opt']['requesters_groups_id']) > 0) {
+            //            if (in_array("group_is_recursive", $criterias) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
+            //               $dbu    = new DbUtils();
+            //               $childs = [];
+            //
+            //               foreach ($opt['requesters_groups_id'] as $k => $v) {
+            //                  $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
+            //               }
+            //
+            //               $crit['crit']['requesters_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+            //            WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $childs) . "))";
+            //               $opt['ancestors']                     = $params['opt']['ancestors'];
+            //               $crit['crit']['ancestors']            = $opt['ancestors'];
+            //            } else {
             $crit['crit']['requesters_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $params['opt']['requesters_groups_id']) . "))";
+//            $opt['ancestors']                     = 0;
+//            $crit['crit']['ancestors']            = 0;
+            //            }
          }
       }
 
@@ -659,6 +646,8 @@ class PluginMydashboardHelper {
          $dbu    = new DbUtils();
          $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
 
+         $requesters_groups_id = (isset($opt['requesters_groups_id']) && is_array($opt['requesters_groups_id'])) ? $opt['requesters_groups_id'] : [];
+
          $temp = [];
          foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
@@ -669,7 +658,7 @@ class PluginMydashboardHelper {
             "display"             => false,
             "multiple"            => true,
             "width"               => '200px',
-            'values'              => isset($opt['requesters_groups_id']) ? $opt['requesters_groups_id'] : [],
+            'values'              => $requesters_groups_id,
             'display_emptychoice' => true
          ];
 
@@ -695,7 +684,7 @@ class PluginMydashboardHelper {
 
          $technicians_groups_id = (isset($opt['technicians_groups_id']) && is_array($opt['technicians_groups_id'])) ? $opt['technicians_groups_id'] : [];
 
-         $temp                         = [];
+         $temp = [];
          foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
          }
@@ -1166,6 +1155,49 @@ class PluginMydashboardHelper {
       return Dropdown::showFromArray($name, $monthsarray, $opt);
    }
 
+
+   static public function getRequesterGroup($prefered_group, $opt, $params = false, $entity, $userid) {
+      global $DB;
+
+      $dbu = new DbUtils();
+
+      $query = ['FIELDS'     => ['glpi_groups' => ['id']],
+                'FROM'       => 'glpi_groups_users',
+                'INNER JOIN' => ['glpi_groups' => ['FKEY' => ['glpi_groups'       => 'id',
+                                                              'glpi_groups_users' => 'groups_id']]],
+                'WHERE'      => ['users_id' => $userid,
+                                 $dbu->getEntitiesRestrictCriteria('glpi_groups', '', $entity, true),
+                                 '`is_requester`']];
+
+      $rep = [];
+      foreach ($DB->request($query) as $data) {
+         $rep[] = $data['id'];
+      }
+
+      $res = [];
+      if (!$params) {
+         if (isset($prefered_group)
+             && !empty($prefered_group)
+             && count($opt) < 1) {
+            $res = json_decode($prefered_group, true);
+         } else if (isset($opt['requesters_groups_id'])) {
+            $res = (is_array($opt['requesters_groups_id']) ? $opt['requesters_groups_id'] : [$opt['requesters_groups_id']]);
+         } else {
+            $res = $rep;
+         }
+      } else {
+         if (isset($params['preferences']['requester_prefered_group'])
+             && !empty($params['preferences']['requester_prefered_group'])
+             && !isset($params['opt']['requesters_groups_id'])) {
+            $res = json_decode($params['preferences']['requester_prefered_group'], true);
+         } else if (isset($params['opt']['requesters_groups_id'])
+                    && count($params['opt']['requesters_groups_id']) > 0) {
+            $res = json_decode($params['opt']['requesters_groups_id'], true);
+         }
+      }
+      return $res;
+   }
+
    /*
    *
    * @Create an HTML drop down menu
@@ -1193,7 +1225,7 @@ class PluginMydashboardHelper {
                              && count($opt) < 1) {
             $res = json_decode($group, true);
          } else if (isset($opt['technicians_groups_id'])) {
-            $res = (is_array($opt['technicians_groups_id'])?$opt['technicians_groups_id']:[$opt['technicians_groups_id']]);
+            $res = (is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']]);
          } else {
             $res = [];
          }
@@ -1207,7 +1239,7 @@ class PluginMydashboardHelper {
                $res = json_decode($params['preferences']['prefered_group'], true);
             }
          } else if (isset($params['opt']['technicians_groups_id'])
-                    && count($params['opt']['technicians_groups_id']) > 0 ) {
+                    && count($params['opt']['technicians_groups_id']) > 0) {
             $res = json_decode($params['opt']['technicians_groups_id'], true);
          } else if (($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
                     && !isset($params['opt']['technicians_groups_id'])) {
