@@ -202,7 +202,7 @@ class PluginMydashboardHelper {
    }
 
 
-   static private function getRequesterGroup($entity, $userid) {
+   static public function getRequesterGroup($entity, $userid) {
       global $DB;
 
       $dbu = new DbUtils();
@@ -223,7 +223,7 @@ class PluginMydashboardHelper {
          }
          $rep[] = $data['id'];
       }
-      return ($first ? 0 : $rep);
+      return ($first ? [] : $rep);
    }
 
    /**
@@ -291,8 +291,8 @@ class PluginMydashboardHelper {
                 && Session::getCurrentInterface() != 'central') {
                $requesters_groups_id = self::getRequesterGroup($crit['crit']['entity'],
                                                                Session::getLoginUserID());
-               if ($requesters_groups_id > 0) {
-                  $opt['requesters_groups_id'] = [$requesters_groups_id];
+               if (count($requesters_groups_id) > 0) {
+                  $opt['requesters_groups_id'] = $requesters_groups_id;
                }
             }
          }
@@ -551,7 +551,6 @@ class PluginMydashboardHelper {
                if (count($opt['technicians_groups_id']) > 1) {
                   $form .= "&nbsp;-&nbsp;";
                }
-
             }
          }
       }
@@ -565,7 +564,6 @@ class PluginMydashboardHelper {
                if (count($opt['requesters_groups_id']) > 1) {
                   $form .= "&nbsp;-&nbsp;";
                }
-
             }
          }
       }

@@ -89,7 +89,7 @@ if (isset($_POST["widget"])
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
-               'field'      => 8, // technician_group
+               'field'      => 8, // groups_id_assign
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
@@ -159,7 +159,7 @@ if (isset($_POST["widget"])
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
-               'field'      => 8, // technician_group
+               'field'      => 8, //groups_id_assign
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
@@ -339,7 +339,7 @@ if (isset($_POST["widget"])
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
-               'field'      => 8, // technician_group
+               'field'      => 8, // groups_id_assign
                'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
@@ -428,7 +428,7 @@ if (isset($_POST["widget"])
       foreach ($groups as $group) {
 
          $criterias['criteria'][$nb] = [
-            'field'      => 8, // technician_group
+            'field'      => 8, // groups_id_assign
             'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
             'value'      => $group,
             'link'       => (($nb == 0) ? 'AND' : 'OR'),
