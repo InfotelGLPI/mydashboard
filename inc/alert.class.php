@@ -795,7 +795,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $left
                         WHERE $search_assign  AND `glpi_tickets`.`type` = '" . $type . "' AND `glpi_tickets`.`is_deleted` = 0 ";
       $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-             . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::CLOSED . ") ";
+             . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
       $r4             = $DB->query($q4);
       $stats_tickets4 = 0;
@@ -868,7 +868,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $options4['criteria'][] = [
             'field'      => 12,//status
             'searchtype' => 'equals',
-            'value'      => 'notclosed',
+            'value'      => 'notold',
             'link'       => 'AND'
          ];
 

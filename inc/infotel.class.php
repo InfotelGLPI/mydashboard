@@ -3951,6 +3951,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             . " FROM `glpi_groups`"
                             . " WHERE `is_assign` = 1 ";
 
+            $technician_group = (is_array($technician_group) ? $technician_group : [$technician_group]);
             if (count($technician_group) > 0) {
                $query_groups .= " AND `id` IN ('" . implode("','", $technician_group) . "')";
             }

@@ -268,6 +268,8 @@ class PluginMydashboardHelper {
 
          $params['opt']['requesters_groups_id'] = $opt['requesters_groups_id'];
 
+         $params['opt']['requesters_groups_id'] = is_array($params['opt']['requesters_groups_id']) ? $params['opt']['requesters_groups_id'] : [$params['opt']['requesters_groups_id']];
+
          if (isset($params['opt']['requesters_groups_id'])
              && is_array($params['opt']['requesters_groups_id'])
              && count($params['opt']['requesters_groups_id']) > 0) {
@@ -298,6 +300,7 @@ class PluginMydashboardHelper {
       $opt['ancestors']                      = 0;
       $crit['crit']['ancestors']             = 0;
       if (in_array("technicians_groups_id", $criterias)) {
+
          if (isset($params['opt']['technicians_groups_id'])) {
             $opt['technicians_groups_id'] = $params['opt']['technicians_groups_id'];
          } else {
@@ -307,14 +310,15 @@ class PluginMydashboardHelper {
 
          $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
 
+         $params['opt']['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
+
          if (isset($params['opt']['technicians_groups_id'])
-             && is_array($params['opt']['technicians_groups_id'])
              && count($params['opt']['technicians_groups_id']) > 0) {
             if (in_array("group_is_recursive", $criterias) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
                $dbu    = new DbUtils();
                $childs = [];
 
-               foreach ($opt['technicians_groups_id'] as $k => $v) {
+               foreach ($params['opt']['technicians_groups_id'] as $k => $v) {
                   $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
                }
 
@@ -646,7 +650,11 @@ class PluginMydashboardHelper {
          $dbu    = new DbUtils();
          $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
 
-         $requesters_groups_id = (isset($opt['requesters_groups_id']) && is_array($opt['requesters_groups_id'])) ? $opt['requesters_groups_id'] : [];
+         if (isset($opt['requesters_groups_id'])) {
+            $requesters_groups_id = (is_array($opt['requesters_groups_id']) ? $opt['requesters_groups_id'] : [$opt['requesters_groups_id']]);
+         } else {
+            $requesters_groups_id = [];
+         }
 
          $temp = [];
          foreach ($result as $item) {
@@ -682,7 +690,11 @@ class PluginMydashboardHelper {
          $dbu    = new DbUtils();
          $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
 
-         $technicians_groups_id = (isset($opt['technicians_groups_id']) && is_array($opt['technicians_groups_id'])) ? $opt['technicians_groups_id'] : [];
+         if (isset($opt['technicians_groups_id'])) {
+            $technicians_groups_id = (is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']]);
+         } else {
+            $technicians_groups_id = [];
+         }
 
          $temp = [];
          foreach ($result as $item) {

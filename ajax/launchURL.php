@@ -32,6 +32,13 @@ global $CFG_GLPI;
 
 // Reset criterias
 $options['reset'][] = 'reset';
+if (isset($_POST["technician_group"])) {
+   $_POST["technician_group"] = is_array($_POST["technician_group"]) ? $_POST["technician_group"] : [$_POST["technician_group"]];
+}
+
+if (isset($_POST["requester_groups"])) {
+   $_POST["requester_groups"] = is_array($_POST["requester_groups"]) ? $_POST["requester_groups"] : [$_POST["requester_groups"]];
+}
 
 if (isset($_POST["widget"])
     && $_POST["widget"] == "PluginOcsinventoryngDashboard1") {
@@ -84,8 +91,9 @@ if (isset($_POST["widget"])
       }
 
       if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
-         $nb     = 0;
+         $groups    = $_POST["technician_group"];
+         $nb        = 0;
+         $criterias = [];
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
