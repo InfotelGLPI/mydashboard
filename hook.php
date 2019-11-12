@@ -179,6 +179,7 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.5.sql");
       $mig->executeMigration();
       transform_prefered_group_to_prefered_groups();
+      fillTableMydashboardStockticketsGroup();
    }
 
    //If default configuration is not loaded
@@ -250,6 +251,62 @@ function fillTableMydashboardStocktickets() {
          $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) 
                               VALUES (NULL,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
          $DB->query($query);
+      }
+   }
+}
+
+function fillTableMydashboardStockticketsGroup() {
+   global $DB;
+   $currentmonth = date("m");
+   $currentyear  = date("Y");
+   $previousyear = $currentyear - 1;
+   $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id`,
+                      `glpi_groups_tickets`.`groups_id` as groups_id
+      FROM `glpi_tickets` 
+      LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+      WHERE `glpi_tickets`.`is_deleted`= 0 
+      AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') 
+      AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') 
+      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
+   $results      = $DB->query($query);
+   while ($data = $DB->fetch_array($results)) {
+      list($year, $month) = explode('-', $data['month']);
+      $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+      $entities_id = $data["entities_id"];
+      $groups_id   = $data["groups_id"];
+      if (!empty($groups_id)) {
+         $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
+                  LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_groups_tickets`.`groups_id` = $groups_id
+                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
+                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+         $results2    = $DB->query($query);
+         $data2       = $DB->fetch_array($results2);
+         $countTicket = $data2['count'];
+         if ($countTicket > 0) {
+            $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`) 
+                              VALUES (NULL,$groups_id,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
+            $DB->query($query);
+         }
+      } else {
+         $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
+                  LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_tickets`.`id` NOT IN  (SELECT tickets_id FROM `glpi_groups_tickets`)
+                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
+                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+         $results2    = $DB->query($query);
+         $data2       = $DB->fetch_array($results2);
+         $countTicket = $data2['count'];
+         if ($countTicket > 0) {
+            $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`) 
+                              VALUES (NULL,0,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
+            $DB->query($query);
+         }
       }
    }
 }
@@ -357,7 +414,10 @@ function plugin_mydashboard_display_login() {
  */
 function plugin_mydashboard_getDatabaseRelations() {
 
-   return [];
+   return ["glpi_groups" => [
+      'glpi_plugin_mydashboard_stocktickets' => "groups_id",
+   ],
+   ];
 }
 
 // Define Dropdown tables to be manage in GLPI
