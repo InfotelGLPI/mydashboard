@@ -140,6 +140,72 @@ class PluginMydashboardHelper {
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
          $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
+         $graph .= "<button class='btn btn-primary btn-sm' style=\"margin-left: 1px;\" id=\"downloadCSV$name\">CSV</button>";
+         $graph .= "<script>
+         $(document).ready(
+               function () {
+                document.getElementById(\"downloadCSV$name\").addEventListener(\"click\", function(){
+                    downloadCSV({ filename: \"chart-data.csv\", chart: $name })
+                  });
+                   
+                   function convertChartDataToCSV(args,labels, nbIterations) {  
+                       
+                       var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+                     
+                       data = args.data.data || null;
+                       if (data == null || !data.length) {
+                         return null;
+                       }
+
+                       columnDelimiter = args.columnDelimiter || \";\";
+                       lineDelimiter = args.lineDelimiter || '\\n';
+                       result = '';     
+                       if(nbIterations == 0){
+                           
+                          labels.forEach(function(label) {
+                            result += columnDelimiter;
+                            result += label;
+                          });
+                       }
+                       keys = Object.keys(data);
+                       result += lineDelimiter;
+                       result += args.data.label;
+                       result += columnDelimiter;
+                       data.forEach(function(item) {
+                          if (typeof item != 'undefined') {
+                                 result += item;
+                          }
+                           ctr++;
+                         result += columnDelimiter;
+                       });
+                       return result;
+                     }
+                     
+                     function downloadCSV(args) {
+                       var data, filename, link;
+                       var csv = \"\";
+                       
+                       for(var i = 0; i < args.chart.chart.data.datasets.length; i++){
+                         csv += convertChartDataToCSV({
+                           data: args.chart.chart.data.datasets[i]
+                         }, args.chart.chart.data.labels, i);
+                       }
+                       if (csv == null) return;
+                     
+                       filename = args.filename || 'chart-data.csv';
+                     
+                       if (!csv.match(/^data:text\/csv/i)) {
+                         var universalBOM = '\uFEFF';
+                         csv = 'data:text/csv;charset=utf-8,' + encodeURIComponent(universalBOM+csv);
+                       }
+                       link = document.createElement('a');
+                       link.setAttribute('href', csv);
+                       link.setAttribute('download', filename);
+                       document.body.appendChild(link); // Required for FF
+                       link.click(); 
+                       document.body.removeChild(link);
+                     }
+         });</script>";
          $graph .= "<a href='#' id='download'></a>";
          $graph .= "</div>";
       }
@@ -288,8 +354,8 @@ class PluginMydashboardHelper {
             //            } else {
             $crit['crit']['requesters_groups_id'] = " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::REQUESTER . " AND `groups_id` IN (" . implode(",", $params['opt']['requesters_groups_id']) . "))";
-//            $opt['ancestors']                     = 0;
-//            $crit['crit']['ancestors']            = 0;
+            //            $opt['ancestors']                     = 0;
+            //            $crit['crit']['ancestors']            = 0;
             //            }
          }
       }

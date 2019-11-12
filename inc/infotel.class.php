@@ -226,8 +226,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            $labelsback
                            };
                      var datesetbacklog = $tabdatesset;
-                     $(document).ready(
-                        function () {
                             var isChartRendered = false;
                             var canvasbacklog = document . getElementById('BacklogBarChart');
                             var ctx = canvasbacklog . getContext('2d');
@@ -308,8 +306,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                 });
                               }
                             };
-                         }
-                      );
                      
                       </script>";
 
@@ -397,13 +393,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataPriorityPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var priorityset = $tabpriorityset;
-            $(document).ready(
-              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TicketsByPriorityPieChart');
                 var ctx = canvas.getContext('2d');
@@ -452,8 +447,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        });
                      }
                    };
-              }
-            );
                 
              </script>";
 
@@ -855,6 +848,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTopTenPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1055,7 +1049,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $respected    = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
             }
             $widget = new PluginMydashboardHtml();
-            $widget->setWidgetTitle((($isDebug) ? "12 " : "") . __("TTR Compliance", "mydashboard"));
+            $title  = __("TTR Compliance", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "12 " : "") . $title);
             $widget->setWidgetComment(__("Display tickets where time to resolve is respected", "mydashboard"));
 
             $dataPieset = json_encode([$respected, $notrespected]);
@@ -1069,6 +1064,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTTRPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1168,7 +1164,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $respected    = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
             }
             $widget = new PluginMydashboardHtml();
-            $widget->setWidgetTitle((($isDebug) ? "13 " : "") . __("TTO Compliance", "mydashboard"));
+            $title  = __("TT0 Compliance", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "13 " : "") . $title);
             $widget->setWidgetComment(__("Display tickets where time to own is respected", "mydashboard"));
 
             $dataPieset         = json_encode([$respected, $notrespected]);
@@ -1181,6 +1178,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTTOPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1328,8 +1326,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget = new PluginMydashboardHtml();
-            $widget->setWidgetTitle((($isDebug) ? "15 " : "") . __("Top ten ticket categories by type of ticket"
-                                       , "mydashboard"));
+            $title  = __("Top ten ticket categories by type of ticket" , "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "15 " : "") . $title);
             $widget->setWidgetComment(__("Display of Top ten ticket categories by type of ticket"
                , "mydashboard"));
             $databacklogset = json_encode($tabdata);
@@ -1341,6 +1339,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      var TopTenTicketCategoriesData = {
                              datasets: [{
                                data: $databacklogset,
+                               label: '$title',
                                label: '$nbtickets',
                                backgroundColor: '#1f77b4',
                              }],
@@ -1348,8 +1347,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            $labelsback
                            };
                      var datesetbacklog = $labelsback;
-                     $(document).ready(
-                        function () {
                             var isChartRendered = false;
                             var canvasbacklog = document . getElementById('TopTenTicketCategoriesPieChart');
                             var ctx = canvasbacklog . getContext('2d');
@@ -1398,8 +1395,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                      }
                                   }
                               });
-                         }
-                      );
                      
                       </script>";
 
@@ -1491,13 +1486,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataIncidentCatPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var incidentcategoryset = $tabincidentcategoryset;
-            $(document).ready(
-              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('IncidentsByCategoryPieChart');
                 var ctx = canvas.getContext('2d');
@@ -1547,8 +1541,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        });
                      }
                    };
-              }
-            );
                 
              </script>";
 
@@ -1642,13 +1634,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataRequestCatPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var categoryset = $tabcategoryset;
-            $(document).ready(
-              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('RequestsByCategoryPieChart');
                 var ctx = canvas.getContext('2d');
@@ -1698,8 +1689,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        });
                      }
                    };
-              }
-            );
                 
              </script>";
 
@@ -1724,7 +1713,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'is_recursive', 'type', 'year', 'month'];
+               $criterias = ['entities_id',
+                             'technicians_groups_id',
+                             'group_is_recursive',
+                             'requesters_groups_id',
+                             'is_recursive',
+                             'type',
+                             'year',
+                             'month'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -1796,6 +1792,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTypePie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1911,13 +1908,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataSolutionTypePie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var solutionset = $tabsolutionset;
-            $(document).ready(
-              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('SolutionTypePieChart');
                 var ctx = canvas.getContext('2d');
@@ -1949,8 +1945,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       }
                    }
                 });
-              }
-            );
                 
              </script>";
 
@@ -2027,8 +2021,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            $labelsLine
                            };
                      
-//                     $(document).ready(
-//                        function () {
                             var isChartRendered = false;
                             var canvas = document . getElementById('TicketsByTechChart');
                             var ctx = canvas . getContext('2d');
@@ -2087,7 +2079,16 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id', 'technicians_groups_id', 'group_is_recursive', 'requesters_groups_id', 'is_recursive', 'technicians_id', 'year', 'locations_id'];
+               $criterias = ['entities_id',
+                             'technicians_groups_id',
+                             'group_is_recursive',
+                             'requesters_groups_id',
+                             'is_recursive',
+                             'technicians_id',
+                             'year',
+                             'type',
+                             'locations_id',
+                             'status'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -2102,6 +2103,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $opt  = $options['opt'];
             $crit = $options['crit'];
 
+            $type_criteria              = $crit['type'];
             $entities_criteria          = $crit['entities_id'];
             $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
@@ -2166,6 +2168,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                " $requester_groups_criteria" .
                " $technician_groups_criteria" .
                " $locations_criteria" .
+               " $type_criteria" .
                " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
             $results   = $DB->query($query_tickets);
@@ -2191,6 +2194,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      " $requester_groups_criteria" .
                      " $technician_groups_criteria" .
                      " $locations_criteria" .
+                     " $type_criteria" .
                      " AND $is_deleted";
 
                   $results_1 = $DB->query($query_1);
@@ -2213,6 +2217,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      " $requester_groups_criteria" .
                      " $technician_groups_criteria" .
                      " $locations_criteria" .
+                     " $type_criteria" .
                      " AND $is_deleted";
 
                   $results_2 = $DB->query($query_2);
@@ -2296,8 +2301,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $labels
                   };
             
-            $(document).ready(
-               function () {
                    var isChartRendered = false;
                    var canvas = document . getElementById('TicketStatusBarLineChart');
                    var ctx = canvas . getContext('2d');
@@ -2335,8 +2338,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             },
                          }
                      });
-                  }
-             );
              </script>";
 
             $params = ["widgetId"  => $widgetId,
@@ -2447,8 +2448,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            $labelsLine
                            };
                      var dateset = $tabdatesset;
-                     $(document).ready(
-                        function () {
                             var isChartRendered = false;
                             var canvas = document . getElementById('AverageBarChart');
                             var ctx = canvas . getContext('2d');
@@ -2497,8 +2496,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                      },
                                   }
                               });
-                           }
-                      );
                      
                       </script>";
 
@@ -2599,8 +2596,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                            labels: $tabNamesset
                            };
                      var techidset = $tabIdTechset;
-                     $(document).ready(
-                        function () {
                             var isChartRendered = false;
                             var canvas = document . getElementById('TicketByTechsBarChart');
                             var ctx = canvas . getContext('2d');
@@ -2681,8 +2676,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                    });
                                  }
                                };
-                           }
-                      );
                      
                       </script>";
 
@@ -2766,13 +2759,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataGroupPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var groupset = $tabgroupset;
-            $(document).ready(
-              function() {
+           
                 var isChartRendered = false;
                 var canvas = document.getElementById('TicketsByRequesterGroupPieChart');
                 var ctx = canvas.getContext('2d');
@@ -2816,8 +2809,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        });
                      }
                    };
-              }
-            );
                 
              </script>";
 
@@ -2884,9 +2875,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
 
             $widget = new PluginMydashboardHtml();
-            $widget->setWidgetTitle((($isDebug) ? "26 " : "") . __("Global satisfaction level", "mydashboard"));
-            //            $widget->setWidgetComment(__("Display tickets where time to own is respected", "mydashboard"));
-
+            $title  = __("Global satisfaction level", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "26 " : "") . $title);
             $dataPieset         = json_encode([$satisfy, $notsatisfy]);
             $palette            = PluginMydashboardColor::getColors(2);
             $backgroundPieColor = json_encode($palette);
@@ -2897,13 +2887,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataSatisfactionPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             
-//            $(document).ready(
-//              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('SatisfactionPercent');
                 var ctx = canvas.getContext('2d');
@@ -2928,7 +2917,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           isChartRendered = true
                         }
                       }
-                }
+                   }
                 });
 
              </script>";
@@ -3025,13 +3014,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataLocationPie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var locationset = $tablocationset;
-            $(document).ready(
-              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('TicketsByLocationPieChart');
                 var ctx = canvas.getContext('2d');
@@ -3081,8 +3069,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                        });
                      }
                    };
-              }
-            );
                 
              </script>";
 
@@ -3458,13 +3444,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataRequestTypePie = {
               datasets: [{
                 data: $dataPieset,
+                label: '$title',
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
             };
             var requestset = $tabrequestset;
-            $(document).ready(
-              function() {
                 var isChartRendered = false;
                 var canvas = document.getElementById('RequestTypePieChart');
                 var ctx = canvas.getContext('2d');
@@ -3483,8 +3468,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                       },
                    }
                 });
-              }
-            );
                 
              </script>";
 
@@ -3625,8 +3608,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   $labelsLine
                   };
             
-//            $(document).ready(
-//               function () {
                  var isChartRendered = false;
                   var canvas = document . getElementById('RequestTypeEvolutionLineChart');
                    var ctx = canvas . getContext('2d');
@@ -3950,25 +3931,25 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $condition        = "1=1";
             $technician_group = (is_array($technician_group) ? $technician_group : [$technician_group]);
             if (count($technician_group) > 0) {
-                if (isset($opt['ancestors']) && $opt['ancestors'] != 0) {
+               if (isset($opt['ancestors']) && $opt['ancestors'] != 0) {
                   $childs = [];
 
-                 foreach ($technician_group as $k => $v) {
-                    $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
-                 }
-                 $condition .= " AND `id` IN ('" . implode("','", $childs) . "')";
+                  foreach ($technician_group as $k => $v) {
+                     $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
+                  }
+                  $condition .= " AND `id` IN ('" . implode("','", $childs) . "')";
                } else {
-               
-                $condition .= " AND `id` IN ('" . implode("','", $technician_group) . "')";
+
+                  $condition .= " AND `id` IN ('" . implode("','", $technician_group) . "')";
                }
             }
             $iterator = $DB->request([
                                         'SELECT' => ['id', 'name'],
                                         'FROM'   => 'glpi_groups',
                                         'WHERE'  => [
-                                                       'is_assign' => 1,
-                                                       $condition
-                                                    ]
+                                           'is_assign' => 1,
+                                           $condition
+                                        ]
                                      ]);
 
             $plugin         = new Plugin();
