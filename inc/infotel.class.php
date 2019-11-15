@@ -1184,7 +1184,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $respected    = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
             }
             $widget = new PluginMydashboardHtml();
-            $title  = __("TT0 Compliance", "mydashboard");
+            $title  = __("TTO Compliance", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "13 " : "") . $title);
             $widget->setWidgetComment(__("Display tickets where time to own is respected", "mydashboard"));
 
