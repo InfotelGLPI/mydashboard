@@ -256,6 +256,22 @@ if (isset($_POST["widget"])
          $options['criteria'][] = $criterias;
       }
 
+      if (!empty($_POST["requester_groups"])) {
+         $requester_groups = $_POST["requester_groups"];
+         $nb               = 0;
+         foreach ($requester_groups as $requester_group) {
+
+            $criterias['criteria'][$nb] = [
+               'field'      => 71, // requester_group
+               'searchtype' => 'equals',
+               'value'      => $requester_group,
+               'link'       => (($nb == 0) ? 'AND' : 'OR'),
+            ];
+            $nb++;
+         }
+         $options['criteria'][] = $criterias;
+      }
+
       $options['criteria'][] = [
          'field'      => 80, // entities
          'searchtype' => ((isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals'),

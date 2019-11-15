@@ -408,7 +408,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataPriorityPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -716,7 +716,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataStockLine = {
                     datasets: [{
                       data: $dataLineset,
-                      label: '$title',
+                      label: \"$title\",
                       borderColor: '#1f77b4',
                             fill: false,
                             lineTension: '0.1',
@@ -868,7 +868,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTopTenPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1084,7 +1084,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTTRPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1198,7 +1198,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTTOPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1359,7 +1359,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      var TopTenTicketCategoriesData = {
                              datasets: [{
                                data: $databacklogset,
-                               label: '$title',
+                               label: \"$title\",
                                label: '$nbtickets',
                                backgroundColor: '#1f77b4',
                              }],
@@ -1454,6 +1454,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
             $requester_groups_criteria  = $crit['requesters_groups_id'];
+            $requester_groups           = $opt['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
@@ -1500,13 +1501,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabincidentcategoryset = json_encode($tabincidentcategory);
             $technician_group       = json_encode($technician_group);
             $js_ancestors           = $crit['ancestors'];
-
+            $requester_groups = json_encode($requester_groups);
             $graph = "<script type='text/javascript'>
          
             var dataIncidentCatPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1551,6 +1552,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           data:{category_id:incidentcategory_id,
                                 technician_group:$technician_group,
                                 group_is_recursive:$js_ancestors,
+                                requester_groups:$requester_groups,
                                  entities_id:$entities_id_criteria,
                                  sons:$sons_criteria,
                                  widget:'$widgetId'
@@ -1603,6 +1605,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
             $requester_groups_criteria  = $crit['requesters_groups_id'];
+            $requester_groups           = $opt['requesters_groups_id'];
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
@@ -1648,13 +1651,13 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $tabcategoryset     = json_encode($tabcategory);
             $technician_group   = json_encode($technician_group);
             $js_ancestors       = $crit['ancestors'];
-
+            $requester_groups = json_encode($requester_groups);
             $graph = "<script type='text/javascript'>
          
             var dataRequestCatPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1699,6 +1702,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                           data:{category_id:category_id,
                                 technician_group:$technician_group,
                                 group_is_recursive:$js_ancestors,
+                                requester_groups:$requester_groups,
                                 entities_id:$entities_id_criteria, 
                                 sons:$sons_criteria,
                                 widget:'$widgetId'
@@ -1812,7 +1816,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataTypePie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -1928,7 +1932,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataSolutionTypePie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -2783,7 +2787,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataGroupPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -2911,7 +2915,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataSatisfactionPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -3038,7 +3042,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataLocationPie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie
@@ -3468,7 +3472,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             var dataRequestTypePie = {
               datasets: [{
                 data: $dataPieset,
-                label: '$title',
+                label: \"$title\",
                 backgroundColor: $backgroundPieColor
               }],
               labels: $labelsPie

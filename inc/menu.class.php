@@ -359,7 +359,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0, $rand) {
 
-      if ($this->interface == 1) {
+//      if ($this->interface == 1) {
 
          $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
@@ -504,7 +504,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
          echo "</div>";
-      }
+//      }
    }
 
    /**
@@ -1223,7 +1223,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $disableDrag   = 'true';
       $delete_button = 'false';
 
-      if ($this->interface == 1) {
+//      if ($this->interface == 1) {
          if ($drag > 0) {
             $disableResize = 'false';
             $disableDrag   = 'false';
@@ -1231,7 +1231,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if ($edit > 0) {
             $delete_button = 'true';
          }
-      }
+//      }
 
       echo "<div id='mygrid$rand' class='mygrid'>";
       echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
