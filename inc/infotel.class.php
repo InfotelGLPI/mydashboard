@@ -1161,15 +1161,15 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $name                = [];
+            $name_category                = [];
             $datas               = [];
             $tabincidentcategory = [];
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
                   if ($data['name'] == NULL) {
-                     $name[] = __('None');
+                     $name_category[] = __('None');
                   } else {
-                     $name[] = $data['name'];
+                     $name_category[] = $data['name'];
                   }
                   $datas[]               = $data['nb'];
                   $tabincidentcategory[] = $data['itilcategories_id'];
@@ -1183,7 +1183,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $dataPieset             = json_encode($datas);
             $palette                = PluginMydashboardColor::getColors($nb);
             $backgroundPieColor     = json_encode($palette);
-            $labelsPie              = json_encode($name);
+            $labelsPie              = json_encode($name_category);
             $tabincidentcategoryset = json_encode($tabincidentcategory);
             $js_ancestors           = $crit['ancestors'];
 
