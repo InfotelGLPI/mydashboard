@@ -95,4 +95,105 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
       return $funct;
    }
 
+
+   static function launchGraph($graph_datas = [], $graph_criterias = []) {
+      global $CFG_GLPI;
+
+      $onclick = 0;
+      if (count($graph_criterias) > 0) {
+         $onclick = 1;
+      }
+      $name            = $graph_datas['name'];
+      $datas           = $graph_datas['data'];
+      $ids             = $graph_datas['ids'];
+      $label           = $graph_datas['label'];
+      $labels          = $graph_datas['labels'];
+
+      $json_criterias = json_encode($graph_criterias);
+
+      $graph = "<script type='text/javascript'>
+            var dataLine$name = {
+              datasets: [{
+                data: $datas,
+                label: \"$label\",
+                borderColor: '#1f77b4',
+                            fill: false,
+                            lineTension: '0.1',
+              }],
+              labels: $labels
+            };
+             var id$name = $ids;
+             var isChartRendered = false;
+             var canvas$name = document.getElementById('$name');
+             var ctx = canvas$name.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var $name = new Chart(ctx, {
+               type: 'line',
+               data: dataLine$name,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 title:{
+                     display:false,
+                     text:'$name'
+                 },
+//                 tooltips: {
+//                     enabled: false,
+//                 },
+                 tooltips: {
+                                    mode: 'index',
+                                    intersect: false
+                                },
+                 scales: {
+                     xAxes: [{
+                         stacked: true,
+                     }],
+                     yAxes: [{
+                         stacked: true
+                     }]
+                 },
+                 animation: {
+                     onComplete: function() {
+                       isChartRendered = true;
+                     }
+                   },
+                   hover: {
+                      onHover: function(event,elements) {
+                         if ($onclick) {
+                            $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
+                         }
+                       }
+                    }
+                }
+             });
+//             canvas$name.onclick = function(evt) {
+//               var activePoints = $name.getElementsAtEvent(evt);
+//               if (activePoints[0] && $onclick) {
+//                 var chartData = activePoints[0]['_chart'].config.data;
+//                 var idx = activePoints[0]['_index'];
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
+//                 var tab = id$name;
+//                 var selected_id = tab[idx];
+//                 $.ajax({
+//                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+//                    type: 'POST',
+//                    data:
+//                    {
+//                        selected_id:selected_id,
+//                        params: $json_criterias
+//                      },
+//                    success:function(response) {
+//                            window.open(response);
+//                          }
+//                 });
+//               }
+//             };
+             
+          </script>";
+
+      return $graph;
+   }
+
 }

@@ -30,24 +30,25 @@ Session::checkLoginUser();
 
 global $CFG_GLPI;
 
+//Toolbox::logWarning($_POST);
 // Reset criterias
 $options['reset'][] = 'reset';
-if (isset($_POST["technician_group"])) {
-   $_POST["technician_group"] = is_array($_POST["technician_group"]) ? $_POST["technician_group"] : [$_POST["technician_group"]];
+if (isset($_POST["params"]["technician_group"])) {
+   $_POST["params"]["technician_group"] = is_array($_POST["params"]["technician_group"]) ? $_POST["params"]["technician_group"] : [$_POST["params"]["technician_group"]];
 }
 
-if (isset($_POST["requester_groups"])) {
-   $_POST["requester_groups"] = is_array($_POST["requester_groups"]) ? $_POST["requester_groups"] : [$_POST["requester_groups"]];
+if (isset($_POST["params"]["requester_groups"])) {
+   $_POST["params"]["requester_groups"] = is_array($_POST["params"]["requester_groups"]) ? $_POST["params"]["requester_groups"] : [$_POST["params"]["requester_groups"]];
 }
 
-if (isset($_POST["widget"])
-    && $_POST["widget"] == "PluginOcsinventoryngDashboard1") {
-   if (isset($_POST["dateinv"])) {
+if (isset($_POST["params"]["widget"])
+    && $_POST["params"]["widget"] == "PluginOcsinventoryngDashboard1") {
+   if (isset($_POST["params"]["dateinv"])) {
 
       $options['criteria'][] = [
          'field'      => 10002,// last inv
          'searchtype' => 'contains',
-         'value'      => $_POST["dateinv"],
+         'value'      => $_POST["params"]["dateinv"],
          'link'       => 'AND'
       ];
 
@@ -55,10 +56,10 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel1") {
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel1") {
    //$criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'type'];
-   if (isset($_POST["datetik"])) {
+   if (isset($_POST["selected_id"])) {
 
       $options['criteria'][] = [
          'field'      => 12,// status inv
@@ -70,12 +71,13 @@ if (isset($_POST["widget"])
       $options['criteria'][] = [
          'field'      => 15, // open date
          'searchtype' => 'contains',
-         'value'      => $_POST["datetik"],
+         'value'      => $_POST["selected_id"],
          'link'       => 'AND',
       ];
 
-      if (!empty($_POST["requester_groups"])) {
-         $requester_groups = $_POST["requester_groups"];
+      if (isset($_POST["params"]["requester_groups"])
+          && count($_POST["params"]["requester_groups"]) > 0) {
+         $requester_groups = $_POST["params"]["requester_groups"];
          $nb               = 0;
          foreach ($requester_groups as $requester_group) {
 
@@ -90,15 +92,16 @@ if (isset($_POST["widget"])
          $options['criteria'][] = $criterias;
       }
 
-      if (!empty($_POST["technician_group"])) {
-         $groups    = $_POST["technician_group"];
+      if (isset($_POST["params"]["technician_group"])
+          && count($_POST["params"]["technician_group"]) > 0) {
+         $groups    = $_POST["params"]["technician_group"];
          $nb        = 0;
          $criterias = [];
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
                'field'      => 8, // groups_id_assign
-               'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
+               'searchtype' => ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
             ];
@@ -107,19 +110,19 @@ if (isset($_POST["widget"])
          $options['criteria'][] = $criterias;
       }
 
-      if ($_POST["type"] > 0) {
+      if ($_POST["params"]["type"] > 0) {
          $options['criteria'][] = [
             'field'      => 14, // type
             'searchtype' => 'equals',
-            'value'      => $_POST["type"],
+            'value'      => $_POST["params"]["type"],
             'link'       => 'AND',
          ];
       }
 
       $options['criteria'][] = [
          'field'      => 80, // entities
-         'searchtype' => ((isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals'),
-         'value'      => $_POST["entities_id"],
+         'searchtype' => ((isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals'),
+         'value'      => $_POST["params"]["entities_id"],
          'link'       => 'AND',
       ];
 
@@ -127,10 +130,12 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel2") {
-   //   $criterias = ['type'];
-   if (isset($_POST["priority_id"])) {
+} else if (isset($_POST["params"]["widget"])
+           && ($_POST["params"]["widget"] == "PluginMydashboardInfotel2"
+               || $_POST["params"]["widget"] == "PluginMydashboardInfotel36")) {
+
+
+   if (isset($_POST["selected_id"])) {
       $options['criteria'][] = [
          'field'      => 12, // status
          'searchtype' => 'equals',
@@ -141,34 +146,35 @@ if (isset($_POST["widget"])
       $options['criteria'][] = [
          'field'      => 3, // priority
          'searchtype' => 'equals',
-         'value'      => $_POST["priority_id"],
+         'value'      => $_POST["selected_id"],
          'link'       => 'AND',
       ];
 
-      if ($_POST["type"] > 0) {
+      if ($_POST["params"]["type"] > 0) {
          $options['criteria'][] = [
             'field'      => 14, // type
             'searchtype' => 'equals',
-            'value'      => $_POST["type"],
+            'value'      => $_POST["params"]["type"],
             'link'       => 'AND',
          ];
       }
 
       $options['criteria'][] = [
          'field'      => 80, // entities
-         'searchtype' => ((isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals'),
-         'value'      => $_POST["entities_id"],
+         'searchtype' => ((isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals'),
+         'value'      => $_POST["params"]["entities_id"],
          'link'       => 'AND',
       ];
 
-      if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
+      if (isset($_POST["params"]["technician_group"])
+          && count($_POST["params"]["technician_group"]) > 0) {
+         $groups = $_POST["params"]["technician_group"];
          $nb     = 0;
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
                'field'      => 8, //groups_id_assign
-               'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
+               'searchtype' => ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
             ];
@@ -181,11 +187,11 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel25") {
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel25") {
    //    $criterias = ['type'];
    //requester groups;
-   if (isset($_POST["groups_id"])) {
+   if (isset($_POST["selected_id"])) {
 
       $options['criteria'][] = [
          'field'      => 12, // status
@@ -196,17 +202,17 @@ if (isset($_POST["widget"])
 
       $options['criteria'][] = [
          'field'      => 71, // requester_group
-         'searchtype' => ((empty($_POST["groups_id"])) ? 'contains' : 'equals'),
-         'value'      => ((empty($_POST["groups_id"])) ? '^$' : $_POST["groups_id"]),
+         'searchtype' => ((empty($_POST["selected_id"])) ? 'contains' : 'equals'),
+         'value'      => ((empty($_POST["selected_id"])) ? '^$' : $_POST["selected_id"]),
          'link'       => 'AND',
       ];
 
 
-      if ($_POST["type"] > 0) {
+      if ($_POST["params"]["type"] > 0) {
          $options['criteria'][] = [
             'field'      => 14, // type
             'searchtype' => 'equals',
-            'value'      => $_POST["type"],
+            'value'      => $_POST["params"]["type"],
             'link'       => 'AND',
          ];
       }
@@ -214,11 +220,11 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && ($_POST["widget"] == "PluginMydashboardInfotel16"
-               || $_POST["widget"] == "PluginMydashboardInfotel17")) {
+} else if (isset($_POST["params"]["widget"])
+           && ($_POST["params"]["widget"] == "PluginMydashboardInfotel16"
+               || $_POST["params"]["widget"] == "PluginMydashboardInfotel17")) {
    //$criterias = ['entities_id', 'is_recursive', 'technicians_groups_id'];
-   if (isset($_POST["category_id"])) {
+   if (isset($_POST["selected_id"])) {
       $options['criteria'][] = [
          'field'      => 12, // status
          'searchtype' => 'equals',
@@ -229,25 +235,26 @@ if (isset($_POST["widget"])
       $options['criteria'][] = [
          'field'      => 14, // type
          'searchtype' => 'equals',
-         'value'      => (($_POST["widget"] == "PluginMydashboardInfotel16") ? Ticket::INCIDENT_TYPE : Ticket::DEMAND_TYPE),
+         'value'      => (($_POST["params"]["widget"] == "PluginMydashboardInfotel16") ? Ticket::INCIDENT_TYPE : Ticket::DEMAND_TYPE),
          'link'       => 'AND',
       ];
 
       $options['criteria'][] = [
          'field'      => 7, // category
-         'searchtype' => ((empty($_POST["category_id"])) ? 'contains' : 'equals'),
-         'value'      => ((empty($_POST["category_id"])) ? '^$' : $_POST["category_id"]),
+         'searchtype' => ((empty($_POST["selected_id"])) ? 'contains' : 'equals'),
+         'value'      => ((empty($_POST["selected_id"])) ? '^$' : $_POST["selected_id"]),
          'link'       => 'AND',
       ];
 
-      if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
+      if (isset($_POST["params"]["technician_group"])
+          && count($_POST["params"]["technician_group"]) > 0) {
+         $groups = $_POST["params"]["technician_group"];
          $nb     = 0;
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
                'field'      => 8, // technician_group
-               'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
+               'searchtype' => ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
             ];
@@ -256,8 +263,9 @@ if (isset($_POST["widget"])
          $options['criteria'][] = $criterias;
       }
 
-      if (!empty($_POST["requester_groups"])) {
-         $requester_groups = $_POST["requester_groups"];
+      if (isset($_POST["params"]["requester_groups"])
+          && count($_POST["params"]["requester_groups"]) > 0) {
+         $requester_groups = $_POST["params"]["requester_groups"];
          $nb               = 0;
          foreach ($requester_groups as $requester_group) {
 
@@ -274,8 +282,8 @@ if (isset($_POST["widget"])
 
       $options['criteria'][] = [
          'field'      => 80, // entities
-         'searchtype' => ((isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals'),
-         'value'      => $_POST["entities_id"],
+         'searchtype' => ((isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals'),
+         'value'      => $_POST["params"]["entities_id"],
          'link'       => 'AND',
       ];
 
@@ -283,38 +291,38 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel24") {
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel24") {
    //$criterias = ['entities_id', 'is_recursive', 'year', 'type'];
-   if (isset($_POST["techtik"])) {
+   if (isset($_POST["selected_id"])) {
 
       $options['criteria'][] = [
          'field'      => 5, // tech
-         'searchtype' => (($_POST["techtik"] == -1) ? 'contains' : 'equals'),
-         'value'      => (($_POST["techtik"] == -1) ? '^$' : $_POST["techtik"]),
+         'searchtype' => (($_POST["selected_id"] == -1) ? 'contains' : 'equals'),
+         'value'      => (($_POST["selected_id"] == -1) ? '^$' : $_POST["selected_id"]),
          'link'       => 'AND',
       ];
 
       $options['criteria'][] = [
          'field'      => 15, // open date
          'searchtype' => 'contains',
-         'value'      => $_POST["year"],
+         'value'      => $_POST["params"]["year"],
          'link'       => 'AND',
       ];
 
-      if ($_POST["type"] > 0) {
+      if ($_POST["params"]["type"] > 0) {
          $options['criteria'][] = [
             'field'      => 14, // type
             'searchtype' => 'equals',
-            'value'      => $_POST["type"],
+            'value'      => $_POST["params"]["type"],
             'link'       => 'AND',
          ];
       }
 
       $options['criteria'][] = [
          'field'      => 80, // entities
-         'searchtype' => ((isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals'),
-         'value'      => $_POST["entities_id"],
+         'searchtype' => ((isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals'),
+         'value'      => $_POST["params"]["entities_id"],
          'link'       => 'AND',
       ];
 
@@ -322,10 +330,10 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel27") {
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel27") {
    //   $criterias = ['entities_id', 'is_recursive','type'];
-   if (isset($_POST["locations_id"])) {
+   if (isset($_POST["selected_id"])) {
 
       $options['criteria'][] = [
          'field'      => 12, // status
@@ -336,35 +344,36 @@ if (isset($_POST["widget"])
 
       $options['criteria'][] = [
          'field'      => 83, // location
-         'searchtype' => ((empty($_POST["locations_id"])) ? 'contains' : 'equals'),
-         'value'      => ((empty($_POST["locations_id"])) ? '^$' : $_POST["locations_id"]),
+         'searchtype' => ((empty($_POST["selected_id"])) ? 'contains' : 'equals'),
+         'value'      => ((empty($_POST["selected_id"])) ? '^$' : $_POST["selected_id"]),
          'link'       => 'AND',
       ];
 
-      if ($_POST["type"] > 0) {
+      if ($_POST["params"]["type"] > 0) {
          $options['criteria'][] = [
             'field'      => 14, // type
             'searchtype' => 'equals',
-            'value'      => $_POST["type"],
+            'value'      => $_POST["params"]["type"],
             'link'       => 'AND',
          ];
       }
 
       $options['criteria'][] = [
          'field'      => 80, // entities
-         'searchtype' => ((isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals'),
-         'value'      => $_POST["entities_id"],
+         'searchtype' => ((isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals'),
+         'value'      => $_POST["params"]["entities_id"],
          'link'       => 'AND',
       ];
 
-      if (!empty($_POST["technician_group"])) {
-         $groups = $_POST["technician_group"];
+      if (isset($_POST["params"]["technician_group"])
+          && count($_POST["params"]["technician_group"]) > 0) {
+         $groups = $_POST["params"]["technician_group"];
          $nb     = 0;
          foreach ($groups as $group) {
 
             $criterias['criteria'][$nb] = [
                'field'      => 8, // groups_id_assign
-               'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
+               'searchtype' => ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'),
                'value'      => $group,
                'link'       => (($nb == 0) ? 'AND' : 'OR'),
             ];
@@ -377,83 +386,84 @@ if (isset($_POST["widget"])
               Toolbox::append_params($options, "&");
       echo $link;
    }
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel32") {
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel32") {
 
    // ENTITY | SONS
    $options['criteria'][] = [
       'field'      => 80,
-      'searchtype' => (isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals',
-      'value'      => $_POST["entities_id"],
+      'searchtype' => (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals',
+      'value'      => $_POST["params"]["entities_id"],
       'link'       => 'AND'
    ];
 
    // USER
-   if (isset($_POST["technician"])) {
+   if (isset($_POST["params"]["technician"])) {
       $options['criteria'][] = [
          'field'      => 5,
          'searchtype' => 'equals',
-         'value'      => $_POST["technician"],
+         'value'      => $_POST["params"]["technician"],
          'link'       => 'AND'
       ];
    }
 
    // STATUS
-   if ($_POST['moreticket'] == 1) {
+   if ($_POST["params"]['moreticket'] == 1) {
       $options['criteria'][] = [
          'field'      => 3452,
          'searchtype' => 'equals',
-         'value'      => $_POST["status"],
+         'value'      => $_POST["params"]["status"],
          'link'       => 'AND'
       ];
    } else {
       $options['criteria'][] = [
          'field'      => 12,
          'searchtype' => 'equals',
-         'value'      => $_POST["status"],
+         'value'      => $_POST["params"]["status"],
          'link'       => 'AND'
       ];
    }
 
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
         Toolbox::append_params($options, "&");
-} else if (isset($_POST["widget"])
-           && $_POST["widget"] == "PluginMydashboardInfotel33") {
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel33") {
 
    // ENTITY | SONS
    $options['criteria'][] = [
       'field'      => 80,
-      'searchtype' => (isset($_POST["sons"]) && $_POST["sons"] > 0) ? 'under' : 'equals',
-      'value'      => $_POST["entities_id"],
+      'searchtype' => (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals',
+      'value'      => $_POST["params"]["entities_id"],
       'link'       => 'AND'
    ];
 
    // STATUS
-   if ($_POST['moreticket'] == 1) {
+   if ($_POST["params"]['moreticket'] == 1) {
       $options['criteria'][] = [
          'field'      => 3452,
          'searchtype' => 'equals',
-         'value'      => $_POST["status"],
+         'value'      => $_POST["params"]["status"],
          'link'       => 'AND'
       ];
    } else {
       $options['criteria'][] = [
          'field'      => 12,
          'searchtype' => 'equals',
-         'value'      => $_POST["status"],
+         'value'      => $_POST["params"]["status"],
          'link'       => 'AND'
       ];
    }
 
    // Group
-   if (!empty($_POST["technician_group"])) {
-      $groups = $_POST["technician_group"];
+   if (isset($_POST["params"]["technician_group"])
+       && count($_POST["params"]["technician_group"]) > 0) {
+      $groups = $_POST["params"]["technician_group"];
       $nb     = 0;
       foreach ($groups as $group) {
 
          $criterias['criteria'][$nb] = [
             'field'      => 8, // groups_id_assign
-            'searchtype' => ((isset($_POST["group_is_recursive"]) && !empty($_POST["group_is_recursive"])) ? 'under' : 'equals'),
+            'searchtype' => ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'),
             'value'      => $group,
             'link'       => (($nb == 0) ? 'AND' : 'OR'),
          ];

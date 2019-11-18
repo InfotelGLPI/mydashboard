@@ -48,6 +48,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
 
    /**
     * Sets the orientation of the barchart
+    *
     * @param string $_o , orientation
     *        $_o is only accepted within "h" or "v"
     */
@@ -60,8 +61,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
 
    /**
     * Return an array of two item ordered according to orientation
+    *
     * @param type $dataValue , the Y value
     * @param type $dataLabel , the X value
+    *
     * @return array like [X,Y] or [Y,X]
     */
    private function getCouple($dataValue, $dataLabel) {
@@ -117,8 +120,8 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
     * @return string
     */
    function getJSonDatas() {
-      $stacked = false;
-      $count = 0;
+      $stacked         = false;
+      $count           = 0;
       $jsonDatasLabels = [];
 
       foreach ($this->getTabDatas() as $dataLabel => $dataValue) {
@@ -149,9 +152,11 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
 
    /**
     * Get a label formatter javascript function for a barchart Flotr2
+    *
     * @param int $id
     *      0 : Y value (default)
     *      1 : X value
+    *
     * @return string
     */
    static function getLabelFormatter($id = 0) {
@@ -170,8 +175,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
 
    /**
     * Get a tick formatter javascript function for a barchart Flotr2
+    *
     * @param int $id
     *      0 : value (default)
+    *
     * @return string, a tick formatter function
     */
    static function getTickFormatter($id = 0) {
@@ -187,12 +194,14 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
    /**
     * Get ticks form an array of datas, useful for non-numeric labels
     * Warning : for stacked bar it doesn't work for the moment (TODO)
+    *
     * @param array $datas
+    *
     * @return an array of ticks as wanted by Flotr2
     */
    static function getTicksFromLabels($datas) {
-      $cumul = [];
-      $count = 0;
+      $cumul   = [];
+      $count   = 0;
       $stacked = false;
       if (!empty($datas)) {
          //each data must be as X => Y
@@ -211,11 +220,412 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
          }
          if ($stacked) {
             $values = array_values($datas);
-            $cumul = self::getTicksFromLabels($values[0]);
+            $cumul  = self::getTicksFromLabels($values[0]);
          }
       }
       //Finally $cumul looks like [[0,"label1"],[1,"label2"],...]
       return $cumul;
    }
 
+
+   static function launchGraph($graph_datas = [], $graph_criterias = []) {
+      global $CFG_GLPI;
+
+      $onclick = 0;
+      if (count($graph_criterias) > 0) {
+         $onclick = 1;
+      }
+      $name            = $graph_datas['name'];
+      $datas           = $graph_datas['data'];
+      $ids             = $graph_datas['ids'];
+      $label           = $graph_datas['label'];
+      $labels          = $graph_datas['labels'];
+      $backgroundColor = $graph_datas['backgroundColor'];
+
+      $json_criterias = json_encode($graph_criterias);
+
+      $graph = "<script type='text/javascript'>
+            var dataBar$name = {
+              datasets: [{
+                data: $datas,
+                label: \"$label\",
+                backgroundColor: $backgroundColor
+              }],
+              labels: $labels
+            };
+             var id$name = $ids;
+             var isChartRendered = false;
+             var canvas$name = document.getElementById('$name');
+             var ctx = canvas$name.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var $name = new Chart(ctx, {
+               type: 'bar',
+               data: dataBar$name,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 title:{
+                     display:false,
+                     text:'$name'
+                 },
+//                 tooltips: {
+//                     enabled: false,
+//                 },
+                 tooltips: {
+                     mode: 'index',
+                     intersect: false
+                 },
+                 scales: {
+                     xAxes: [{
+                         stacked: true,
+                     }],
+                     yAxes: [{
+                         stacked: true
+                     }]
+                 },
+                 animation: {
+                     onComplete: function() {
+                       var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+            
+                        this.data.datasets.forEach(function (dataset, i) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
+                       isChartRendered = true;
+                     }
+                   },
+                   hover: {
+                      onHover: function(event,elements) {
+                         if ($onclick) {
+                            $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
+                         }
+                       }
+                    }
+                }
+             });
+             canvas$name.onclick = function(evt) {
+               var activePoints = $name.getElementsAtEvent(evt);
+               if (activePoints[0] && $onclick) {
+                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0]['_index'];
+                 var label = chartData.labels[idx];
+                 var value = chartData.datasets[0].data[idx];
+                 var tab = id$name;
+                 var selected_id = tab[idx];
+                 $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    type: 'POST',
+                    data:
+                    {
+                        selected_id:selected_id,
+                        params: $json_criterias
+                      },
+                    success:function(response) {
+                            window.open(response);
+                          }
+                 });
+               }
+             };
+             
+          </script>";
+
+      return $graph;
+   }
+
+   static function launchStackedGraph($graph_datas = [], $graph_criterias = []) {
+      global $CFG_GLPI;
+
+      $onclick = 0;
+      if (count($graph_criterias) > 0) {
+         $onclick = 1;
+      }
+      $name            = $graph_datas['name'];
+      $datas           = $graph_datas['data'];
+      $ids             = $graph_datas['ids'];
+      $labels          = $graph_datas['labels'];
+
+      $json_criterias = json_encode($graph_criterias);
+
+      $graph = "<script type='text/javascript'>
+            var dataBar$name = {
+              datasets: $datas,
+              labels: $labels
+            };
+             var id$name = $ids;
+             var isChartRendered = false;
+             var canvas$name = document.getElementById('$name');
+             var ctx = canvas$name.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var $name = new Chart(ctx, {
+               type: 'bar',
+               data: dataBar$name,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 title:{
+                     display:false,
+                     text:'$name'
+                 },
+                 tooltips: {
+                     mode: 'index',
+                     intersect: false
+                 },
+                 scales: {
+                     xAxes: [{
+                         stacked: true,
+                     }],
+                     yAxes: [{
+                         stacked: true
+                     }]
+                 },
+                 animation: {
+                     onComplete: function() {
+                       isChartRendered = true;
+                     }
+                   },
+                   hover: {
+                      onHover: function(event,elements) {
+                         if ($onclick) {
+                            $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
+                         }
+                       }
+                    }
+                }
+             });
+             canvas$name.onclick = function(evt) {
+               var activePoints = $name.getElementsAtEvent(evt);
+               if (activePoints[0] && $onclick) {
+                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0]['_index'];
+                 var label = chartData.labels[idx];
+                 var value = chartData.datasets[0].data[idx];
+                 var tab = id$name;
+                 var selected_id = tab[idx];
+                 $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    type: 'POST',
+                    data:
+                    {
+                        selected_id:selected_id,
+                        params: $json_criterias
+                      },
+                    success:function(response) {
+                            window.open(response);
+                          }
+                 });
+               }
+             };
+             
+          </script>";
+
+      return $graph;
+   }
+
+   static function launchHorizontalGraph($graph_datas = [], $graph_criterias = []) {
+      global $CFG_GLPI;
+
+      $onclick = 0;
+      if (count($graph_criterias) > 0) {
+         $onclick = 1;
+      }
+      $name            = $graph_datas['name'];
+      $datas           = $graph_datas['data'];
+      $ids             = $graph_datas['ids'];
+      $label           = $graph_datas['label'];
+      $labels          = $graph_datas['labels'];
+      $backgroundColor = $graph_datas['backgroundColor'];
+
+      $json_criterias = json_encode($graph_criterias);
+
+      $graph = "<script type='text/javascript'>
+            var dataBar$name = {
+              datasets: [{
+                data: $datas,
+                label: \"$label\",
+                backgroundColor: $backgroundColor
+              }],
+              labels: $labels
+            };
+             var id$name = $ids;
+             var isChartRendered = false;
+             var canvas$name = document.getElementById('$name');
+             var ctx = canvas$name.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var $name = new Chart(ctx, {
+               type: 'horizontalBar',
+               data: dataBar$name,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 title:{
+                     display:false,
+                     text:'$name'
+                 },
+                 legend: {
+                     display:false,
+                     position: 'right',
+                 },
+                 tooltips: {
+                     enabled: true,
+                 },
+                 animation: {
+                     onComplete: function() {
+                       var chartInstance = this.chart;
+                        ctx = chartInstance.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillStyle = '#333';
+            
+                        this.data.datasets.forEach(function (dataset, i) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];                            
+                                ctx.fillText(data, bar._model.x + 40, bar._model.y);
+                            });
+                        });
+                       isChartRendered = true;
+                     }
+                   },
+                   hover: {
+                      onHover: function(event,elements) {
+                         if ($onclick) {
+                            $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
+                         }
+                       }
+                    }
+                }
+             });
+             canvas$name.onclick = function(evt) {
+               var activePoints = $name.getElementsAtEvent(evt);
+               if (activePoints[0] && $onclick) {
+                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0]['_index'];
+                 var label = chartData.labels[idx];
+                 var value = chartData.datasets[0].data[idx];
+                 var tab = id$name;
+                 var selected_id = tab[idx];
+                 $.ajax({
+                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    type: 'POST',
+                    data:
+                    {
+                        selected_id:selected_id,
+                        params: $json_criterias
+                      },
+                    success:function(response) {
+                            window.open(response);
+                          }
+                 });
+               }
+             };
+             
+          </script>";
+
+      return $graph;
+   }
+
+   static function launchMultipleGraph($graph_datas = [], $graph_criterias = []) {
+      global $CFG_GLPI;
+
+      $onclick = 0;
+      if (count($graph_criterias) > 0) {
+         $onclick = 1;
+      }
+      $name            = $graph_datas['name'];
+      $datas           = $graph_datas['data'];
+      $ids             = $graph_datas['ids'];
+      $labels          = $graph_datas['labels'];
+
+      $json_criterias = json_encode($graph_criterias);
+
+      $graph = "<script type='text/javascript'>
+            var dataBar$name = {
+              datasets: $datas,
+              labels: $labels
+            };
+             var isChartRendered = false;
+             var canvas$name = document.getElementById('$name');
+             var ctx = canvas$name.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var $name = new Chart(ctx, {
+               type: 'bar',
+               data: dataBar$name,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 title:{
+                     display:false,
+                     text:'$name'
+                 },
+                 tooltips: {
+                     enabled: false,
+                 },
+                 animation: {
+                  onComplete: function() {
+                    var ctx = this.chart.ctx;
+                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+                   ctx.fillStyle = '#595959';
+                   ctx.textAlign = 'center';
+                   ctx.textBaseline = 'bottom';
+                   this.data.datasets.forEach(function (dataset) {
+                       for (var i = 0; i < dataset.data.length; i++) {
+                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
+                       }
+                   });
+                     
+                    isChartRendered = true;
+                  }
+                 },
+                 hover: {
+                      onHover: function(event,elements) {
+                         if ($onclick) {
+                            $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
+                         }
+                       }
+                    }
+                }
+             });
+//             canvas$name.onclick = function(evt) {
+//               var activePoints = $name.getElementsAtEvent(evt);
+//               if (activePoints[0] && $onclick) {
+//                 var chartData = activePoints[0]['_chart'].config.data;
+//                 var idx = activePoints[0]['_index'];
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
+//                 var tab = id$name;
+//                 var selected_id = tab[idx];
+//                 $.ajax({
+//                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+//                    type: 'POST',
+//                    data:
+//                    {
+//                        selected_id:selected_id,
+//                        params: $json_criterias
+//                      },
+//                    success:function(response) {
+//                            window.open(response);
+//                          }
+//                 });
+//               }
+//             };
+             
+          </script>";
+
+      return $graph;
+   }
 }
