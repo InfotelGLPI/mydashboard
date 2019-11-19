@@ -1161,7 +1161,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
-            $name_category                = [];
+            $name_category       = [];
             $datas               = [];
             $tabincidentcategory = [];
             if ($nb) {

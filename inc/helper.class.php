@@ -1286,17 +1286,13 @@ class PluginMydashboardHelper {
       return $res;
    }
 
-   /*
-   *
-   * @Create an HTML drop down menu
-   *
-   * @param string $name The element name and ID
-   *
-   * @param int $selected The month to be selected
-   *
-   * @return string
-   *
-   */
+   /**
+    * @param      $prefered_group
+    * @param      $opt
+    * @param bool $params
+    *
+    * @return array|mixed
+    */
    static function getGroup($prefered_group, $opt, $params = false) {
       $groupprofiles = new PluginMydashboardGroupprofile();
       $res           = [];
