@@ -1487,9 +1487,9 @@ class PluginMydashboardMenu extends CommonGLPI {
            var widgetOptionsObject = {};
            $.each(widgetOptions,
               function (i, v) {
-                 let name = v.name;
+                 var name = v.name;
                  // Remove [] in the name do issue with ajax
-                 let index = v.name.indexOf('[]');
+                 var index = v.name.indexOf('[]');
                  if( index != -1 ){
                     name = v.name.substring(0, index);
                  }
@@ -1498,7 +1498,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                     if(widgetOptionsObject[name] instanceof Array){
                        widgetOptionsObject[name].push(v.value);
                     }else{
-                       let tempArray = [];
+                       var tempArray = [];
                        tempArray.push(widgetOptionsObject[name]);
                        tempArray.push(v.value);
                        widgetOptionsObject[name] = tempArray;
