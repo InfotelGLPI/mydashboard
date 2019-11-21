@@ -3019,9 +3019,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
                            $array[$dataMoreTicket['statusname']][$dataMoreTicket['userid']] = $dataMoreTicket['nb'];
                         }
-                        if (count($array) > 0) {
-                           $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
-                        }
+
                         foreach ($moreTicketType as $key => $value) {
                            $status   = $value['name'];
                            $statusId = $value['id'];
@@ -3041,6 +3039,11 @@ class PluginMydashboardInfotel extends CommonGLPI {
                      }
                   }
                   $i++;
+               }
+               if ($plugin->isActivated('moreticket')) {
+                  if (isset($array) && count($array) > 0) {
+                     $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
+                  }
                }
             }
 
