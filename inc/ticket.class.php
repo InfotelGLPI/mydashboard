@@ -50,7 +50,7 @@ class PluginMydashboardTicket {
          [
             "ticketlistrequestbyselfwidget" => __('Your tickets in progress') . "&nbsp;<i class='fa fa-table'></i>",
             "ticketlistobservedwidget"      => __('Your observed tickets') . "&nbsp;<i class='fa fa-table'></i>",
-            "ticketlistrejectedwidget"      => __('Your rejected tickets') . "&nbsp;<i class='fa fa-table'></i>",
+            "ticketlistrejectedwidget"      => __('Your rejected tickets', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
             "ticketlisttoapprovewidget"     => __('Your tickets to close') . "&nbsp;<i class='fa fa-table'></i>",
             "ticketlistsurveywidget"        => __('Satisfaction survey') . "&nbsp;<i class='fa fa-table'></i>",
          ];
