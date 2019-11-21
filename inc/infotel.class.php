@@ -2976,6 +2976,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $result = $DB->query($query_technicians);
             $nb     = $DB->numrows($result);
             $temp   = [];
+
+            $typesTicketStatus = [__('Technician'),
+                                  _x('status', 'Processing (assigned)'),
+                                  _x('status', 'Processing (planned)'),
+                                  __('Pending'),
+                                  _x('status', 'Solved')];
             if ($nb) {
                $i = 0;
                while ($data = $DB->fetch_array($result)) {
@@ -3013,6 +3019,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
                         while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
                            $array[$dataMoreTicket['statusname']][$dataMoreTicket['userid']] = $dataMoreTicket['nb'];
                         }
+                        if (count($array) > 0) {
+                           $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
+                        }
                         foreach ($moreTicketType as $key => $value) {
                            $status   = $value['name'];
                            $statusId = $value['id'];
@@ -3044,14 +3053,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $title .= " : $nb " . __('Technician');
             }
             $widget->setWidgetTitle((($isDebug) ? "32 " : "") . $title);
-            $typesTicketStatus = [__('Technician'),
-                                  _x('status', 'Processing (assigned)'),
-                                  _x('status', 'Processing (planned)'),
-                                  __('Pending'),
-                                  _x('status', 'Solved')];
-            if (count($moreTicketType) > 0) {
-               $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
-            }
+
             $widget->setTabNames($typesTicketStatus);
             $widget->setTabDatas($temp);
             $widget->toggleWidgetRefresh();
