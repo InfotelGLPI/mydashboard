@@ -683,14 +683,14 @@ class PluginMydashboardInfotel extends CommonGLPI {
             if ($nb > 0) {
                foreach ($datas as $k => $v) {
                   if ($k == 0) {
-                     $name = __('Email');
+                     $name_user = __('Email');
                   } else if ($k == -1) {
-                     $name = __('None');
+                     $name_user = __('None');
                   } else if ($k > 0) {
-                     $name = getUserName($k);
+                     $name_user = getUserName($k);
                   }
                   $dataspie[] = $v;
-                  $namespie[] = $name;
+                  $namespie[] = $name_user;
                   unset($datas[$k]);
                }
             }

@@ -89,10 +89,14 @@ function groupCriteria($field, $searchType, $value) {
 $options['reset'][] = 'reset';
 if (isset($_POST["params"]["technician_group"])) {
    $_POST["params"]["technician_group"] = is_array($_POST["params"]["technician_group"]) ? $_POST["params"]["technician_group"] : [$_POST["params"]["technician_group"]];
+} else{
+   $_POST["params"]["technician_group"] = [];
 }
 
 if (isset($_POST["params"]["requester_groups"])) {
    $_POST["params"]["requester_groups"] = is_array($_POST["params"]["requester_groups"]) ? $_POST["params"]["requester_groups"] : [$_POST["params"]["requester_groups"]];
+} else{
+   $_POST["params"]["requester_groups"] = [];
 }
 
 if (isset($_POST["params"]["widget"])
