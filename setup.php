@@ -81,7 +81,8 @@ function plugin_init_mydashboard() {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
             if (isset($_SERVER['HTTP_REFERER'])
-                && strpos($_SERVER['HTTP_REFERER'], 'redirect') !== false) {
+                && strpos($_SERVER['HTTP_REFERER'], 'redirect') !== false
+                && strpos($_SERVER['REQUEST_URI'], 'apirest.php') === false) {
                $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
             }
             if (isset($_SESSION["glpi_plugin_mydashboard_loaded"])

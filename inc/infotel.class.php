@@ -246,7 +246,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                             'labels'          => $labelsback,
                             'label'           => $nbtickets,
                             'backgroundColor' => $backgroundColor];
-
+            $graph_criterias = [];
             if ($onclick == 1) {
                $graph_criterias = ['entities_id'        => $entities_id_criteria,
                                    'sons'               => $sons_criteria,
