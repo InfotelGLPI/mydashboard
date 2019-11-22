@@ -474,4 +474,69 @@ if (isset($_POST["params"]["widget"])
 
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
         Toolbox::append_params($options, "&");
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardInfotel37") {
+
+   // ENTITY | SONS
+   $options['criteria'][] = [
+      'field'      => 80,
+      'searchtype' => (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals',
+      'value'      => $_POST["params"]["entities_id"],
+      'link'       => 'AND'
+   ];
+
+   if ($_POST["params"]["type"] > 0) {
+      $options['criteria'][] = [
+         'field'      => 14, // type
+         'searchtype' => 'equals',
+         'value'      => $_POST["params"]["type"],
+         'link'       => 'AND',
+      ];
+   }
+
+   // STATUS
+   if (strpos($_POST["selected_id"], 'moreticket_') !== false) {
+      $status = explode("_", $_POST["selected_id"]);
+      $options['criteria'][] = [
+         'field'      => 12,
+         'searchtype' => 'equals',
+         'value'      => Ticket::WAITING,
+         'link'       => 'AND'
+      ];
+
+      $options['criteria'][] = [
+         'field'      => 3452,
+         'searchtype' => 'equals',
+         'value'      => $status[1],
+         'link'       => 'AND'
+      ];
+   } else {
+      $options['criteria'][] = [
+         'field'      => 12,
+         'searchtype' => 'equals',
+         'value'      => $_POST["selected_id"],
+         'link'       => 'AND'
+      ];
+   }
+
+   // Group
+   if (isset($_POST["params"]["technician_group"])
+       && count($_POST["params"]["technician_group"]) > 0) {
+      $groups = $_POST["params"]["technician_group"];
+      $nb     = 0;
+      foreach ($groups as $group) {
+
+         $criterias['criteria'][$nb] = [
+            'field'      => 8, // groups_id_assign
+            'searchtype' => ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            'value'      => $group,
+            'link'       => (($nb == 0) ? 'AND' : 'OR'),
+         ];
+         $nb++;
+      }
+      $options['criteria'][] = $criterias;
+   }
+
+   echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+        Toolbox::append_params($options, "&");
 }

@@ -93,6 +93,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "34" => (($isDebug) ? "34 " : "") . __("Number of opened and resolved / closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
                                          $this->getType() . "35" => (($isDebug) ? "35 " : "") . __("Age of tickets", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
                                          $this->getType() . "36" => (($isDebug) ? "36 " : "") . __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+                                         $this->getType() . "37" => (($isDebug) ? "37 " : "") . __("Stock of tickets by status", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
          ]
       ];
 
@@ -240,12 +241,12 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $colors          = '#1f77b4';
             $backgroundColor = json_encode($colors);
 
-            $graph_datas = ['name'            => $name,
-                            'ids'             => $tabdatesset,
-                            'data'            => $databacklogset,
-                            'labels'          => $labelsback,
-                            'label'           => $nbtickets,
-                            'backgroundColor' => $backgroundColor];
+            $graph_datas     = ['name'            => $name,
+                                'ids'             => $tabdatesset,
+                                'data'            => $databacklogset,
+                                'labels'          => $labelsback,
+                                'label'           => $nbtickets,
+                                'backgroundColor' => $backgroundColor];
             $graph_criterias = [];
             if ($onclick == 1) {
                $graph_criterias = ['entities_id'        => $entities_id_criteria,
@@ -3811,6 +3812,141 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
             $widget->setWidgetHtmlContent($graph);
+
+            return $widget;
+            break;
+
+         case $this->getType() . "37":
+            $name = 'TicketsByStatusBarChart';
+            if (isset($_SESSION['glpiactiveprofile']['interface'])
+                && Session::getCurrentInterface() == 'central') {
+               $criterias = ['entities_id',
+                             'is_recursive',
+                             'type',
+                             'technicians_groups_id',
+                             'group_is_recursive'];
+            }
+            if (isset($_SESSION['glpiactiveprofile']['interface'])
+                && Session::getCurrentInterface() != 'central') {
+               $criterias = ['type'];
+            }
+
+            $params  = ["preferences" => $this->preferences,
+                        "criterias"   => $criterias,
+                        "opt"         => $opt];
+            $options = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt                        = $options['opt'];
+            $crit                       = $options['crit'];
+            $type                       = $opt['type'];
+            $type_criteria              = $crit['type'];
+            $entities_criteria          = $crit['entities_id'];
+            $entities_id_criteria       = $crit['entity'];
+            $sons_criteria              = $crit['sons'];
+            $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
+            $technician_group           = $opt['technicians_groups_id'];
+            $technician_groups_criteria = $crit['technicians_groups_id'];
+
+            $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
+                FROM glpi_tickets
+                WHERE $is_deleted
+                $type_criteria
+                $technician_groups_criteria
+                $entities_criteria
+                AND `glpi_tickets`.`status` IN (" . implode(",", Ticket::getNotSolvedStatusArray()) . ")
+                GROUP BY `glpi_tickets`.`status`";
+
+            //            $colors = [];
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name_status = [];
+            $datas       = [];
+            $tabstatus   = [];
+            $colors      = PluginMydashboardColor::getColors(10);
+            if ($nb) {
+               while ($data = $DB->fetch_array($result)) {
+                  foreach (Ticket::getAllStatusArray() as $value => $name) {
+                     if ($data['status'] == $value) {
+                        $datas[]       = $data['Total'];
+                        $name_status[] = $name;
+                        $tabstatus[]   = $data['status'];
+                     }
+                  }
+               }
+            }
+            $plugin = new Plugin();
+            if ($plugin->isActivated('moreticket')) {
+               $moreTicketToShow = [];
+               foreach (self::getAllMoreTicketStatus() as $id => $name) {
+                  $moreTicketToShow[] = $id;
+               }
+               $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTicketToShow) . ')';
+               $query_moreticket = "SELECT COUNT(*) AS Total,   
+                         `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS status
+                          FROM `glpi_plugin_moreticket_waitingtickets`
+                          INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`
+                          INNER JOIN `glpi_plugin_moreticket_waitingtypes` ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`
+                          WHERE $is_deleted
+                          $type_criteria
+                          $moreTicketToShow
+                          $entities_criteria
+                          GROUP BY status";
+
+               $result_more_ticket = $DB->query($query_moreticket);
+               $rows               = $DB->numrows($result_more_ticket);
+               if ($rows) {
+                  while ($ticket = $DB->fetch_assoc($result_more_ticket)) {
+                     foreach (self::getAllMoreTicketStatus() as $value => $name) {
+                        if ($ticket['status'] == $value) {
+                           $datas[]       = $ticket['Total'];
+                           $name_status[] = $name;
+                           $tabstatus[]   = 'moreticket_' . $ticket['status'];
+                        }
+                     }
+                  }
+               }
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Stock of tickets by status", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "37 " : "") . $title);
+
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => $name,
+                       "onsubmit"  => true,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => 1];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+            $dataset         = json_encode($datas);
+            $backgroundColor = json_encode($colors);
+            $labels          = json_encode($name_status);
+            $tabstatusset    = json_encode($tabstatus);
+            $js_ancestors    = $crit['ancestors'];
+
+            $graph_datas = ['name'            => $name,
+                            'ids'             => $tabstatusset,
+                            'data'            => $dataset,
+                            'labels'          => $labels,
+                            'label'           => $title,
+                            'backgroundColor' => $backgroundColor];
+
+            $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                'sons'               => $sons_criteria,
+                                'technician_group'   => $technician_group,
+                                'group_is_recursive' => $js_ancestors,
+                                'type'               => $type,
+                                'widget'             => $widgetId];
+
+            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+            $widget->setWidgetHtmlContent($graph);
+
             return $widget;
             break;
 
@@ -3848,6 +3984,23 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
          }
       }
+   }
+
+
+   static function getAllMoreTicketStatus() {
+      global $DB;
+
+      $tabs   = [];
+      $plugin = new Plugin();
+      if ($plugin->isActivated('moreticket')) {
+         $query  = "SELECT `glpi_plugin_moreticket_waitingtypes`.`completename` as name, 
+                   `glpi_plugin_moreticket_waitingtypes`.`id` as id  FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY id";
+         $result = $DB->query($query);
+         while ($type = $DB->fetch_assoc($result)) {
+            $tabs[$type['id']] = $type['name'];
+         }
+      }
+      return $tabs;
    }
 
    /**
