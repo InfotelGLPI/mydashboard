@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 17:13+0100\n"
+"POT-Creation-Date: 2019-11-22 13:58+0100\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/infotelGLPI/teams/65490/fi_FI/)\n"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: setup.php:142 inc/menu.class.php:87 inc/menu.class.php:846
+#: setup.php:143 inc/menu.class.php:87 inc/menu.class.php:846
 #: inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr "Oma raportointinäkymä"
@@ -61,7 +61,7 @@ msgstr[1] "Verkon hälytykset"
 
 #: inc/alert.class.php:93 inc/alert.class.php:171 inc/alert.class.php:2052
 #: inc/alert.class.php:2169 inc/problemalert.class.php:114
-#: inc/widget.class.php:557
+#: inc/widget.class.php:558
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] "Ajoitettu ylläpitotoimi"
@@ -69,7 +69,7 @@ msgstr[1] "Ajoitetut ylläpitotoimet"
 
 #: inc/alert.class.php:94 inc/alert.class.php:181 inc/alert.class.php:2053
 #: inc/alert.class.php:2170 inc/problemalert.class.php:115
-#: inc/widget.class.php:594
+#: inc/widget.class.php:595
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] "Tieto"
@@ -103,7 +103,7 @@ msgstr "Ei tuotuja sähköpostiviestejä viestinkeräimissä"
 msgid "Inventory stock alerts"
 msgstr ""
 
-#: inc/alert.class.php:102 inc/alert.class.php:651 inc/widget.class.php:630
+#: inc/alert.class.php:102 inc/alert.class.php:651 inc/widget.class.php:631
 msgid "Your equipments"
 msgstr ""
 
@@ -231,15 +231,15 @@ msgstr ""
 "Suunniteltu ja aikataulutettu ylläpitotehtävä. Kirjaudu sisään nähdäksesi "
 "lisää"
 
-#: inc/alert.class.php:1646 inc/widget.class.php:567
+#: inc/alert.class.php:1646 inc/widget.class.php:568
 msgid "No scheduled maintenance"
 msgstr "Ajoittamaton ylläpitotoimi"
 
-#: inc/alert.class.php:1733 inc/widget.class.php:605
+#: inc/alert.class.php:1733 inc/widget.class.php:606
 msgid "No informations founded"
 msgstr "Tietoja ei löytynyt"
 
-#: inc/alert.class.php:1847 inc/alert.class.php:2018 inc/widget.class.php:530
+#: inc/alert.class.php:1847 inc/alert.class.php:2018 inc/widget.class.php:531
 msgid "No problem detected"
 msgstr "Ongelmaa ei havaittu"
 
@@ -266,23 +266,23 @@ msgstr "Luo uusi hälytys"
 msgid "Linked reminder"
 msgstr "Linkitetty muistutus"
 
-#: inc/alert.class.php:2223 inc/widget.class.php:522
+#: inc/alert.class.php:2225 inc/widget.class.php:524
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr "Verkon hälytys saattaa estää tiketin luomisen"
 
-#: inc/alert.class.php:2261
+#: inc/alert.class.php:2262
 msgid "Problem with GLPI"
 msgstr "Ongelma GLPI:n kanssa"
 
-#: inc/alert.class.php:2266
+#: inc/alert.class.php:2267
 msgid "GLPI is OK"
 msgstr "GLPI on kunnossa"
 
-#: inc/alert.class.php:2271
+#: inc/alert.class.php:2272
 msgid "Alert is not properly configured or is not reachable"
 msgstr "Hälytystä ei ole määritelty oikein tai se ei ole tavoitettavissa"
 
-#: inc/alert.class.php:2288
+#: inc/alert.class.php:2289
 msgid "Curl PHP package not installed"
 msgstr "Curl PHP-pakettia ei ole asennettu"
 
@@ -349,7 +349,7 @@ msgstr ""
 msgid "Level of categories to show"
 msgstr ""
 
-#: inc/customswidget.class.php:47 inc/infotel.class.php:101
+#: inc/customswidget.class.php:47 inc/infotel.class.php:104
 msgid "Custom Widgets"
 msgstr ""
 
@@ -393,7 +393,7 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: inc/helper.class.php:841 inc/infotel.class.php:3622
+#: inc/helper.class.php:841 inc/infotel.class.php:2847
 msgid "Year"
 msgstr "Vuosi"
 
@@ -405,7 +405,7 @@ msgstr "Kuukausi"
 msgid "Not a valid SQL SELECT query"
 msgstr "Ei kelvollinen SQL SELECT -kysely"
 
-#: inc/infotel.class.php:60 inc/infotel.class.php:516
+#: inc/infotel.class.php:60 inc/infotel.class.php:411
 msgid "Internal annuary"
 msgstr "Sisäiset tiedot"
 
@@ -413,12 +413,13 @@ msgstr "Sisäiset tiedot"
 msgid "Charts"
 msgstr "Kaaviot"
 
-#: inc/infotel.class.php:69 inc/infotel.class.php:222
-#: inc/infotel.class.php:2297 inc/infotel.class.php:4362
+#: inc/infotel.class.php:69 inc/infotel.class.php:233
+#: inc/infotel.class.php:1813 inc/infotel.class.php:3547
 msgid "Opened tickets backlog"
 msgstr "Avattujen tikettien kertymä"
 
-#: inc/infotel.class.php:70 inc/infotel.class.php:396
+#: inc/infotel.class.php:70 inc/infotel.class.php:95 inc/infotel.class.php:336
+#: inc/infotel.class.php:3779
 msgid "Number of opened tickets by priority"
 msgstr "Avattujen tikettien lukumäärä prioriteetin mukaan"
 
@@ -426,76 +427,76 @@ msgstr "Avattujen tikettien lukumäärä prioriteetin mukaan"
 msgid "Tickets stock by month"
 msgstr "Tikettikertymä kuukaudessa"
 
-#: inc/infotel.class.php:72 inc/infotel.class.php:857
+#: inc/infotel.class.php:72 inc/infotel.class.php:699
 msgid "Top ten ticket requesters by month"
 msgstr "Top 10 tikettien toimeksiantajaa kuukaudessa"
 
-#: inc/infotel.class.php:73 inc/infotel.class.php:959
+#: inc/infotel.class.php:73 inc/infotel.class.php:784
 msgid "Process time by technicians by month"
 msgstr "Käsittelyaika asentajittain kuukaudessa"
 
-#: inc/infotel.class.php:74 inc/infotel.class.php:1072
+#: inc/infotel.class.php:74 inc/infotel.class.php:860
 msgid "TTR Compliance"
 msgstr "Ratkaisuajan noudattaminen"
 
-#: inc/infotel.class.php:75
+#: inc/infotel.class.php:75 inc/infotel.class.php:943
 msgid "TTO Compliance"
 msgstr "Vasteajan noudattaminen"
 
-#: inc/infotel.class.php:76 inc/infotel.class.php:1349
+#: inc/infotel.class.php:76 inc/infotel.class.php:1082
 msgid "Top ten ticket categories by type of ticket"
 msgstr "Top 10 tikettiluokkaa tikettityypin perusteella"
 
-#: inc/infotel.class.php:77 inc/infotel.class.php:1493
+#: inc/infotel.class.php:77 inc/infotel.class.php:1181
 msgid "Number of opened incidents by category"
 msgstr "Avattujen häiriötilanteiden määrä kategorioittain"
 
-#: inc/infotel.class.php:78 inc/infotel.class.php:1641
+#: inc/infotel.class.php:78 inc/infotel.class.php:1287
 msgid "Number of opened requests by category"
 msgstr "Avattujen palvelupyyntöjen määrä kategorioittain"
 
 #: inc/infotel.class.php:79 inc/infotel.class.php:82
-#: inc/infotel.class.php:1802 inc/infotel.class.php:2291
+#: inc/infotel.class.php:1403 inc/infotel.class.php:1807
 msgid "Number of opened and closed tickets by month"
 msgstr "Avattujen ja suljettujen tikettien määrä kuukaudessa"
 
-#: inc/infotel.class.php:80 inc/infotel.class.php:1917
+#: inc/infotel.class.php:80 inc/infotel.class.php:1497
 msgid "Percent of use of solution types"
 msgstr "Ratkaisutyyppien osuus prosentteina"
 
-#: inc/infotel.class.php:81 inc/infotel.class.php:2031
+#: inc/infotel.class.php:81 inc/infotel.class.php:1583
 msgid "Number of tickets affected by technicians by month"
 msgstr "Tikettien määrä kuukaudessa, joihin asentajat ovat vaikuttaneet "
 
-#: inc/infotel.class.php:83 inc/infotel.class.php:2456
+#: inc/infotel.class.php:83 inc/infotel.class.php:1939
 msgid "Average real duration of treatment of the ticket"
 msgstr "Tikettien käsittelyn keskimääräinen todellinen kesto"
 
-#: inc/infotel.class.php:84 inc/infotel.class.php:2604
+#: inc/infotel.class.php:84 inc/infotel.class.php:2040
 msgid "Top ten technicians (by tickets number)"
 msgstr "Top 10 asentajat (tikettien määrä)"
 
-#: inc/infotel.class.php:85 inc/infotel.class.php:2773
+#: inc/infotel.class.php:85 inc/infotel.class.php:2131
 msgid "Top ten of opened tickets by requester groups"
 msgstr ""
 
-#: inc/infotel.class.php:86 inc/infotel.class.php:2902
+#: inc/infotel.class.php:86 inc/infotel.class.php:2219
 msgid "Global satisfaction level"
 msgstr "Yleisen tyytyväisyyden taso"
 
-#: inc/infotel.class.php:87 inc/infotel.class.php:3025
+#: inc/infotel.class.php:87 inc/infotel.class.php:2315
 msgid "Top ten of opened tickets by location"
 msgstr ""
 
-#: inc/infotel.class.php:88 inc/infotel.class.php:3140
+#: inc/infotel.class.php:88 inc/infotel.class.php:2386
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr "OpenStreetMap - Avatut tiketit sijainnin mukaan"
 
-#: inc/infotel.class.php:89 inc/infotel.class.php:3457
+#: inc/infotel.class.php:89 inc/infotel.class.php:2703
 msgid "Number of use of request sources"
 msgstr ""
 
-#: inc/infotel.class.php:90 inc/infotel.class.php:3617
+#: inc/infotel.class.php:90 inc/infotel.class.php:2842
 msgid "Tickets request sources evolution"
 msgstr ""
 
@@ -503,93 +504,99 @@ msgstr ""
 msgid "Number of opened tickets by technician and by status"
 msgstr ""
 
-#: inc/infotel.class.php:92 inc/infotel.class.php:4097
+#: inc/infotel.class.php:92 inc/infotel.class.php:3280
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
-#: inc/infotel.class.php:93 inc/infotel.class.php:4356
+#: inc/infotel.class.php:93 inc/infotel.class.php:3541
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr ""
 
-#: inc/infotel.class.php:223
+#: inc/infotel.class.php:94 inc/infotel.class.php:3687
+#: inc/infotel.class.php:3691
+msgid "Age of tickets"
+msgstr ""
+
+#: inc/infotel.class.php:96 inc/infotel.class.php:3913
+msgid "Stock of tickets by status"
+msgstr ""
+
+#: inc/infotel.class.php:234
 msgid "Display of opened tickets by month"
 msgstr "Näytä avattujen tikettien määrä kuukaudessa"
 
-#: inc/infotel.class.php:228 inc/infotel.class.php:711
-#: inc/infotel.class.php:1356 inc/infotel.class.php:2611
+#: inc/infotel.class.php:239 inc/infotel.class.php:609
+#: inc/infotel.class.php:1089 inc/infotel.class.php:2046
 msgid "Tickets number"
 msgstr "Tikettien määrä"
 
-#: inc/infotel.class.php:517
+#: inc/infotel.class.php:412
 msgid "Search users of your organisation"
 msgstr "Etsi organisaatiosi käyttäjiä"
 
-#: inc/infotel.class.php:611
+#: inc/infotel.class.php:506
 msgid "Display if you have duplicates into inventory"
 msgstr "Näytä, jos inventaariossa on kaksoiskappaleita"
 
-#: inc/infotel.class.php:702
+#: inc/infotel.class.php:600
 msgid "Tickets stock"
 msgstr "Tikettikertymä"
 
-#: inc/infotel.class.php:703
+#: inc/infotel.class.php:601
 msgid "Sum of not solved tickets by month"
 msgstr "Ratkaisemattomien tikettien määrä kuukaudessa"
 
-#: inc/infotel.class.php:960
+#: inc/infotel.class.php:786
 msgid "Sum of ticket tasks duration by technicians"
 msgstr "Tikettitehtävien kokonaiskesto asentajittain"
 
-#: inc/infotel.class.php:1074
-msgid "Display tickets where time to resolve is respected"
-msgstr "Näytä tiketit, joissa ratkaisuaikaa on noudatettu"
+#: inc/infotel.class.php:862
+msgid "Display tickets where time to resolve is respected (percent)"
+msgstr ""
 
-#: inc/infotel.class.php:1080
+#: inc/infotel.class.php:867
 msgid "Respected TTR"
 msgstr "Ratkaisuaikaa noudatettu"
 
-#: inc/infotel.class.php:1080
+#: inc/infotel.class.php:867
 msgid "Not respected TTR"
 msgstr "Ratkaisuaikaa ei noudatettu"
 
-#: inc/infotel.class.php:1187
-msgid "TT0 Compliance"
+#: inc/infotel.class.php:945
+msgid "Display tickets where time to own is respected (percent)"
 msgstr ""
 
-#: inc/infotel.class.php:1189
-msgid "Display tickets where time to own is respected"
-msgstr "Näytä tiketit, joissa vasteaikaa on noudatettu"
-
-#: inc/infotel.class.php:1194
+#: inc/infotel.class.php:950
 msgid "Respected TTO"
 msgstr "Vasteaikaa noudatettu"
 
-#: inc/infotel.class.php:1194
+#: inc/infotel.class.php:950
 msgid "Not respected TTO"
 msgstr "Vasteaikaa ei noudatettu"
 
-#: inc/infotel.class.php:1351
+#: inc/infotel.class.php:1084
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: inc/infotel.class.php:1780 inc/infotel.class.php:2295
-#: inc/infotel.class.php:4360
+#: inc/infotel.class.php:1381 inc/infotel.class.php:1811
+#: inc/infotel.class.php:3545
 msgid "Opened tickets"
 msgstr "Avatut tiketit"
 
-#: inc/infotel.class.php:1797 inc/infotel.class.php:2296
+#: inc/infotel.class.php:1398 inc/infotel.class.php:1812
+#: inc/infotel.class.php:3546
 msgid "Closed tickets"
 msgstr "Suljetut tiketit"
 
-#: inc/infotel.class.php:1918
+#: inc/infotel.class.php:1498
 msgid "Display percent of solution types for tickets"
 msgstr "Näytä ratkaisujen tyypit tiketeille prosentteina"
 
-#: inc/infotel.class.php:2032
+#: inc/infotel.class.php:1584
 msgid "Sum of ticket affected by technicians"
 msgstr "Tikettien yhteismäärä, joihin asentajat ovat vaikuttaneet"
 
-#: inc/infotel.class.php:2457
+#: inc/infotel.class.php:1940
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
@@ -597,44 +604,40 @@ msgstr ""
 "Näytä tikettien käsittelyn keskimääräinen todellinen kesto (tehtävien "
 "suoritusaika)"
 
-#: inc/infotel.class.php:2462
+#: inc/infotel.class.php:1945
 msgid "Tasks duration (minutes)"
 msgstr "Tehtävien kesto (minuutit)"
 
-#: inc/infotel.class.php:2605
+#: inc/infotel.class.php:2041
 msgid "Display of number of tickets by technicians"
 msgstr "Näytä tikettien määrä asentajittain"
 
-#: inc/infotel.class.php:2907
+#: inc/infotel.class.php:2224
 msgid "Satisfy percent"
 msgstr "Tyytyväisyysprosentti"
 
-#: inc/infotel.class.php:2907
+#: inc/infotel.class.php:2224
 msgid "Not satisfy percent"
 msgstr "Tyytymättömyysprosentti"
 
-#: inc/infotel.class.php:3141
+#: inc/infotel.class.php:2387
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr "Näytä tiketit sijainnin mukaan (leveysaste/pituusaste)"
 
-#: inc/infotel.class.php:3458
-msgid "Display number of request sources for closed tickets"
+#: inc/infotel.class.php:2704
+msgid "Display percent of request sources for closed tickets"
 msgstr ""
 
-#: inc/infotel.class.php:3618
+#: inc/infotel.class.php:2843
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: inc/infotel.class.php:3865
+#: inc/infotel.class.php:3052
 msgid "Number of tickets open by technician and by status"
 msgstr ""
 
-#: inc/infotel.class.php:3868
+#: inc/infotel.class.php:3055
 msgid "Technicians"
-msgstr ""
-
-#: inc/infotel.class.php:4361
-msgid "Resolved / closed tickets"
 msgstr ""
 
 #: inc/knowbaseitem.class.php:127
@@ -868,29 +871,21 @@ msgstr "Päivitä joka"
 msgid "minute(s)"
 msgstr "minuutti"
 
-#: inc/preference.class.php:115
+#: inc/preference.class.php:117
 msgid "My prefered groups for widget"
 msgstr ""
 
-#: inc/preference.class.php:151
+#: inc/preference.class.php:152
 msgid "My requester prefered groups for widget"
 msgstr ""
 
-#: inc/preference.class.php:187
+#: inc/preference.class.php:188
 msgid "My prefered entity for widget"
 msgstr "Haluamani yksikkö widgetille"
 
 #: inc/preferenceuserblacklist.class.php:56
 msgid "From which plugins you want to display the widgets?"
 msgstr "Mistä laajennuksista haluat näyttää widgetit?"
-
-#: inc/profileauthorizedwidget.class.php:80
-msgid "Authorized widgets"
-msgstr ""
-
-#: inc/profileauthorizedwidget.class.php:92
-msgid "Authorize/Unauthorize all"
-msgstr "Valtuuta kaikkiin/Poista valtuutus kaikista"
 
 #: inc/profile.class.php:45
 msgid "Rights management"
@@ -928,6 +923,14 @@ msgstr "Katso raportointinäkymää"
 msgid "See the configuration"
 msgstr "Katso asetukset"
 
+#: inc/profileauthorizedwidget.class.php:80
+msgid "Authorized widgets"
+msgstr ""
+
+#: inc/profileauthorizedwidget.class.php:92
+msgid "Authorize/Unauthorize all"
+msgstr "Valtuuta kaikkiin/Poista valtuutus kaikista"
+
 #: inc/project.class.php:51 inc/project.class.php:55 inc/project.class.php:94
 #: inc/project.class.php:176 inc/project.class.php:195
 msgid "projects to be processed"
@@ -955,6 +958,10 @@ msgstr[1] ""
 
 #: inc/stockwidget.class.php:50
 msgid "Cannot create alert without a type"
+msgstr ""
+
+#: inc/ticket.class.php:53
+msgid "Your rejected tickets"
 msgstr ""
 
 #: inc/ticket.class.php:63 inc/ticket.class.php:1147
@@ -985,7 +992,7 @@ msgstr ""
 msgid "50 rows"
 msgstr ""
 
-#: inc/widget.class.php:740
+#: inc/widget.class.php:741
 msgid "No equipments founded"
 msgstr ""
 
