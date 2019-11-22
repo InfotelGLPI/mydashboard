@@ -4170,9 +4170,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
       }
 
       $selected_group = [];
-      if (isset($params["opt"]["technicians_groups_id"])
-          && count($params["opt"]["technicians_groups_id"]) > 0) {
-         $selected_group = $params["opt"]['technicians_groups_id'];
+      if (isset($params["technicians_groups_id"])
+          && count($params["technicians_groups_id"]) > 0) {
+         $selected_group = $params['technicians_groups_id'];
       } else if (count($_SESSION['glpigroups']) > 0) {
          $selected_group = $_SESSION['glpigroups'];
       }
