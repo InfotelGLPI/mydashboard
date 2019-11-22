@@ -257,17 +257,13 @@ function fillTableMydashboardStocktickets() {
 
 function fillTableMydashboardStockticketsGroup() {
    global $DB;
-   $currentmonth = date("m");
-   $currentyear  = date("Y");
-   $previousyear = $currentyear - 1;
+
    $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
                      DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id`,
                       `glpi_groups_tickets`.`groups_id` as groups_id
       FROM `glpi_tickets` 
       LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
       WHERE `glpi_tickets`.`is_deleted`= 0 
-      AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') 
-      AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') 
       GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
    $results      = $DB->query($query);
    while ($data = $DB->fetch_array($results)) {
