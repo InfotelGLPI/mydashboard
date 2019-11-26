@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '1.7.6');
+define('PLUGIN_MYDASHBOARD_VERSION', '1.7.7');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mydashboard() {
@@ -122,7 +122,7 @@ function plugin_init_mydashboard() {
                                   ['addtabon' => 'Preference']);
 
             Plugin::registerClass('PluginMydashboardAlert',
-                                  ['addtabon' => ['Reminder', 'Problem']]);
+                                  ['addtabon' => ['Reminder', 'Problem', 'Change']]);
 
             Plugin::registerClass('PluginMydashboardHTMLEditor', ['addtabon' => 'PluginMydashboardCustomswidget']);
 

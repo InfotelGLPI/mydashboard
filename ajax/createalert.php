@@ -46,15 +46,16 @@ if (isset($_POST['itemtype'])) {
                                 'reminders_id' => $reminders_id]);
          }
       }
-   } else if ($class == 'Problem') {
+   } else if ($class == 'Problem' || $class == 'Change') {
       if (isset($_POST['items_id'])) {
          if ($item->getFromDB($_POST['items_id'])) {
             $reminder     = new Reminder();
             $reminders_id = $reminder->add(['name'     => addslashes($item->fields['name']),
                                                  'text'     => addslashes($item->fields['content']),
                                                  'users_id' => $_SESSION['glpiID']]);
-            $alert        = new PluginMydashboardProblemAlert();
-            $alert->add(['problems_id'  => $_POST['items_id'],
+            $alert        = new PluginMydashboardItilAlert();
+            $alert->add(['items_id'  => $_POST['items_id'],
+                         'itemtype'  => $_POST['itemtype'],
                               'reminders_id' => $reminders_id]);
          }
       }

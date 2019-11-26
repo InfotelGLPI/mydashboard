@@ -51,6 +51,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item->getType() == 'Reminder'
           || $item->getType() == 'Problem'
+          || $item->getType() == 'Change'
           || $item->getType() == 'PluginEventsmanagerEvent') {
          return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
       }
@@ -66,13 +67,14 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       $alert  = new self();
-      $palert = new PluginMydashboardProblemAlert();
+      $itil_alert = new PluginMydashboardItilAlert();
       switch ($item->getType()) {
          case "Reminder":
             $alert->showForm($item);
             break;
          case "Problem":
-            $palert->showForItem($item);
+         case "Change":
+            $itil_alert->showForItem($item);
             break;
          default :
             $alert->showForItem($item);
@@ -1611,7 +1613,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-4 center alert-title-div \">";
-            $wl .= "<i class='fa fa-exclamation-triangle fa-alert-7 fa-alert-orange' aria-hidden='true'></i>";
+            $wl .= "<i class='fa fa-exclamation-triangle fa-alert-5 fa-alert-orange' aria-hidden='true'></i>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-8 alert-title-div \">";
             $wl .= "<h3>";
@@ -1790,17 +1792,17 @@ class PluginMydashboardAlert extends CommonDBTM {
       if ($nb) {
 
          $wl .= "<div id='alert-div'>";
-         $wl .= "<ul>";
+         $wl .= "<ul  class='alert-div'>";
 
          while ($row = $DB->fetch_array($result)) {
 
             $wl .= "<li>";
 
             $wl    .= "<div class='bt-row'>";
-            $wl    .= "<div class=\"bt-col-xs-4 center \">";
+            $wl    .= "<div class=\"bt-col-xs-4 center alert-title-div\">";
             $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
             $style = "color:" . $config->getField('impact_' . $row['impact']);
-            $wl    .= "<i style='$style' class='fa $class fa-alert-7'></i>";
+            $wl    .= "<i style='$style' class='fa $class fa-alert-5'></i>";
 
             $wl .= "</div>";
 
@@ -2221,7 +2223,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $display .= __('Network Monitoring', 'mydashboard');
          $display .= "</span>";
          $display .= "</h3>";
-         $display .= "<div align='left' style='margin: 5px;'><small>";
+         $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
          $display .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
          $display .= "<div id=\"display-sc\">";
          $alerts  = new self();

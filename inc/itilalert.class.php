@@ -25,9 +25,9 @@
  */
 
 /**
- * Class PluginMydashboardProblemalert
+ * Class PluginMydashboardItilAlert
  */
-class PluginMydashboardProblemalert extends CommonDBTM {
+class PluginMydashboardItilAlert extends CommonDBTM {
 
    /**
     * @param $item
@@ -37,8 +37,9 @@ class PluginMydashboardProblemalert extends CommonDBTM {
 
       $items_id = $item->getID();
       $item->getFromDB($items_id);
-      $this->getFromDBByCrit(['problems_id' => $items_id]);
       $itemtype = $item->getType();
+      $this->getFromDBByCrit(['items_id' => $items_id, 'itemtype' => $itemtype]);
+
 
       $reminder = new Reminder();
 
@@ -86,13 +87,16 @@ class PluginMydashboardProblemalert extends CommonDBTM {
          echo "<tr class='tab_bg_2'>";
          echo "<td>" . __("Comment") . "</td>";
          echo "<td>";
-         echo Html::clean(nl2br($reminder->fields['text']));
+         $content = Toolbox::unclean_cross_side_scripting_deep(html_entity_decode($reminder->fields['text'],
+                                                                                  ENT_QUOTES,
+                                                                                  "UTF-8"));
+         echo $content;
          echo "</td>";
          echo "</tr>";
          echo "</table>";
 
          $alert = new PluginMydashboardAlert();
-         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
+         $alert->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
          if (isset($alert->fields['id'])) {
             $id        = $alert->fields['id'];
@@ -150,5 +154,4 @@ class PluginMydashboardProblemalert extends CommonDBTM {
          $reminder->showVisibility();
       }
    }
-
 }

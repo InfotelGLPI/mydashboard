@@ -182,6 +182,13 @@ function plugin_mydashboard_install() {
       fillTableMydashboardStockticketsGroup();
    }
 
+   if (!$DB->tableExists("glpi_plugin_mydashboard_itilalerts")) {
+      $mig = new Migration("1.7.7");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.7.sql");
+      $mig->executeMigration();
+      insertDefaultTitles();
+   }
+
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
    if (!$config->getFromDB("1")) {
@@ -351,7 +358,8 @@ function plugin_mydashboard_uninstall() {
       "glpi_plugin_mydashboard_alerts",
       "glpi_plugin_mydashboard_stockwidgets",
       "glpi_plugin_mydashboard_stocktickets",
-      "glpi_plugin_mydashboard_problemalerts",
+      "glpi_plugin_mydashboard_itilalerts",
+      "glpi_plugin_mydashboard_changealerts",
       "glpi_plugin_mydashboard_dashboards",
       "glpi_plugin_mydashboard_groupprofiles",
       "glpi_plugin_mydashboard_customswidgets"];

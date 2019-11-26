@@ -520,7 +520,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display .= __('Network Monitoring', 'mydashboard');
       $display .= "</span>";
       $display .= "</h3>";
-      $display .= "<div align='left' style='margin: 5px;'><small>";
+      $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
       $display .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
       $display .= "<div id=\"display-sc\">";
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
