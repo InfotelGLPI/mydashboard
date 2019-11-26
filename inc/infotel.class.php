@@ -3873,10 +3873,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $colors      = PluginMydashboardColor::getColors(10);
             if ($nb) {
                while ($data = $DB->fetch_array($result)) {
-                  foreach (Ticket::getAllStatusArray() as $value => $name) {
+                  foreach (Ticket::getAllStatusArray() as $value => $names) {
                      if ($data['status'] == $value) {
                         $datas[]       = $data['Total'];
-                        $name_status[] = $name;
+                        $name_status[] = $names;
                         $tabstatus[]   = $data['status'];
                      }
                   }
@@ -3885,7 +3885,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $plugin = new Plugin();
             if ($plugin->isActivated('moreticket')) {
                $moreTicketToShow = [];
-               foreach (self::getAllMoreTicketStatus() as $id => $name) {
+               foreach (self::getAllMoreTicketStatus() as $id => $names) {
                   $moreTicketToShow[] = $id;
                }
                $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTicketToShow) . ')';
@@ -3904,10 +3904,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                $rows               = $DB->numrows($result_more_ticket);
                if ($rows) {
                   while ($ticket = $DB->fetch_assoc($result_more_ticket)) {
-                     foreach (self::getAllMoreTicketStatus() as $value => $name) {
+                     foreach (self::getAllMoreTicketStatus() as $value => $names) {
                         if ($ticket['status'] == $value) {
                            $datas[]       = $ticket['Total'];
-                           $name_status[] = $name;
+                           $name_status[] = $names;
                            $tabstatus[]   = 'moreticket_' . $ticket['status'];
                         }
                      }
