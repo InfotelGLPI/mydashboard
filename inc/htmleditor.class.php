@@ -109,20 +109,24 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
          echo "<form method='post' action='".Toolbox::getItemTypeFormURL('PluginMydashboardHTMLEditor')."'>";
       }
 
-      echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr class='tab_bg_2'>";
-      echo "<td width='20%'>".$item->fields['name']."</td>";
-      echo "<td colspan='5'>";
+      echo "<table class='tab_cadre_fixe'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>".$item->fields['name']."</th></tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
       echo HTML::textarea($options);
       echo "</td></tr>\n";
-      echo "</table>";
+
       if ($closeform) {
-         echo "<div class='center'>";
+         echo "<tr class='tab_bg_1 center'>";
+         echo "<td>";
          echo Html::hidden('id', ['value' => $item->getID()]);
          echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
-         echo "</div>\n";
+         echo "</td></tr>\n";
+         echo "</table>";
          Html::closeForm();
+      } else {
+         echo "</table>";
       }
-      echo "</div>";
    }
 }
