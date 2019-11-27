@@ -737,7 +737,8 @@ class PluginMydashboardWidget extends CommonDBTM {
          //                  </script>";
          //                  $display .= "</div>";
       } else {
-         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= "<div class=\"bt-feature bt-col-md-11 equip-item center\">";
+         $display .= "<h3><span class ='alert-color'>";
          $display .= __("No equipments founded", "mydashboard");
          $display .= "</span></h3></div>";
       }
