@@ -253,7 +253,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $p['name']  = 'profiles_id';
       $p['value'] = '';
       $p['rand']  = mt_rand();
-
+      $profiles = [];
       if (is_array($options) && count($options)) {
          foreach ($options as $key => $val) {
             $p[$key] = $val;
