@@ -310,7 +310,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                          }
                        }
                     }
-                }
+                 }
              });
              canvas$name.onclick = function(evt) {
                var activePoints = $name.getElementsAtEvent(evt);
@@ -537,7 +537,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       return $graph;
    }
 
-   static function launchMultipleGraph($graph_datas = [], $graph_criterias = []) {
+   static function launchMultipleGraph($graph_datas = [], $graph_criterias = [], $isStartedAtZero = 0) {
       global $CFG_GLPI;
 
       $onclick = 0;
@@ -552,6 +552,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
+            let disp = $isStartedAtZero;
             var dataBar$name = {
               datasets: $datas,
               labels: $labels
@@ -562,8 +563,101 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
              ctx.canvas.width = 700;
              ctx.canvas.height = 400;
              var $name = new Chart(ctx, {
+              plugins: [{
+                      beforeInit: function(ctx, options) {
+                      ctx.legend.afterFit = function() {
+                      this.height = this.height + 15;
+                  };
+                }
+              }],
                type: 'bar',
                data: dataBar$name,
+               options: {
+                 responsive: true,
+                 maintainAspectRatio: true,
+                 scales: {
+                    yAxes: [{
+                         ticks: {
+                         beginAtZero: disp
+                        }
+                    }]
+                },
+                 title:{
+                     display:false,
+                     text:'$name'
+                 },
+                 tooltips: {
+                     enabled: false,
+                 },
+                 animation: {
+                  onComplete: function() {
+                    var ctx = this.chart.ctx;
+                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+                   ctx.fillStyle = '#595959';
+                   ctx.textAlign = 'center';
+                   ctx.textBaseline = 'bottom';
+                   this.data.datasets.forEach(function (dataset) {
+                       for (var i = 0; i < dataset.data.length; i++) {
+                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
+                       }
+                   });
+                    isChartRendered = true;
+                  }
+                 },
+                 hover: {
+                      onHover: function(event,elements) {
+                         if ($onclick) {
+                            $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
+                         }
+                       }
+                    }
+                }
+             });
+             
+          </script>";
+
+      return $graph;
+   }
+
+   static function launchMultipleGraphWithMultipleAxis($graph_datas = [], $graph_criterias = []) {
+      global $CFG_GLPI;
+
+      $onclick = 0;
+      if (count($graph_criterias) > 0) {
+         $onclick = 1;
+      }
+
+      $name            = $graph_datas['name'];
+      $datas           = $graph_datas['data'];
+      $ids             = $graph_datas['ids'];
+      $labels          = $graph_datas['labels'];
+      $max             = isset($graph_datas['max']) ? "max:".$graph_datas['max'] : "";
+
+      $json_criterias = json_encode($graph_criterias);
+
+      $graph = "<script type='text/javascript'>
+            
+            var dataBar$name = {
+              datasets: $datas,
+              labels: $labels
+            };
+        
+             var isChartRendered = false;
+             var canvas$name = document.getElementById('$name');
+             var ctx = canvas$name.getContext('2d');
+             ctx.canvas.width = 700;
+             ctx.canvas.height = 400;
+             var $name = new Chart(ctx, {
+               type: 'bar',
+               data: dataBar$name,
+               plugins: [{
+                      beforeInit: function(ctx, options) {
+                      ctx.legend.afterFit = function() {
+                      this.height = this.height + 10;
+                  };
+                }
+              }],
                options: {
                  responsive: true,
                  maintainAspectRatio: true,
@@ -573,6 +667,26 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  },
                  tooltips: {
                      enabled: false,
+                 },
+                 scales: {
+                     yAxes: [{
+                         id: 'left-y-axis',
+                         type: 'linear',
+                         position: 'left',
+                         ticks: {
+                             max:100,
+                             beginAtZero: true
+                         }
+                        
+                     }, {
+                         id: 'right-y-axis',
+                         type: 'linear',
+                         position: 'right',
+                         ticks: {
+                             $max
+                             beginAtZero: true
+                         }
+                      }]
                  },
                  animation: {
                   onComplete: function() {
@@ -600,30 +714,6 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                     }
                 }
              });
-//             canvas$name.onclick = function(evt) {
-//               var activePoints = $name.getElementsAtEvent(evt);
-//               if (activePoints[0] && $onclick) {
-//                 var chartData = activePoints[0]['_chart'].config.data;
-//                 var idx = activePoints[0]['_index'];
-//                 var label = chartData.labels[idx];
-//                 var value = chartData.datasets[0].data[idx];
-//                 var tab = id$name;
-//                 var selected_id = tab[idx];
-//                 $.ajax({
-//                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
-//                    type: 'POST',
-//                    data:
-//                    {
-//                        selected_id:selected_id,
-//                        params: $json_criterias
-//                      },
-//                    success:function(response) {
-//                            window.open(response);
-//                          }
-//                 });
-//               }
-//             };
-             
           </script>";
 
       return $graph;
