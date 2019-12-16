@@ -253,7 +253,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $p['name']  = 'profiles_id';
       $p['value'] = '';
       $p['rand']  = mt_rand();
-      $profiles = [];
+      $profiles   = [];
       if (is_array($options) && count($options)) {
          foreach ($options as $key => $val) {
             $p[$key] = $val;
@@ -359,152 +359,152 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0, $rand) {
 
-//      if ($this->interface == 1) {
+      //      if ($this->interface == 1) {
 
-         $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
+      $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
-         if ($edit > 0) {
+      if ($edit > 0) {
 
-            echo "<form id=\"editmode\" class='plugin_mydashboard_header_title' method='post' 
+         echo "<form id=\"editmode\" class='plugin_mydashboard_header_title' method='post' 
                      action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
 
-            echo __('Edit mode', 'mydashboard');
+         echo __('Edit mode', 'mydashboard');
 
-            if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-               $edit = 1;
-            }
-            if ($edit == 2) {
-               echo "&nbsp;(" . __('Global', 'mydashboard') . ")&nbsp;";
-            }
-            echo "&nbsp;:&nbsp;";
+         if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+            $edit = 1;
+         }
+         if ($edit == 2) {
+            echo "&nbsp;(" . __('Global', 'mydashboard') . ")&nbsp;";
+         }
+         echo "&nbsp;:&nbsp;";
 
-            echo "&nbsp;";
-            echo "<a id='load-widgets$rand' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
-            echo __('Load widgets', 'mydashboard') . "</a>&nbsp;";
-            echo "<i class='fas fa-spinner fa-1x'></i>";
-            echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
-            echo "&nbsp;";
+         echo "&nbsp;";
+         echo "<a id='load-widgets$rand' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
+         echo __('Load widgets', 'mydashboard') . "</a>&nbsp;";
+         echo "<i class='fas fa-spinner fa-1x'></i>";
+         echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
+         echo "&nbsp;";
 
-            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-               self::dropdownProfiles(['value' => $selected_profile]);
-            } else {
-               echo Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
-            }
+         if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+            self::dropdownProfiles(['value' => $selected_profile]);
+         } else {
+            echo Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
+         }
 
-            echo "&nbsp;<span class='plugin_mydashboard_add_button'>
+         echo "&nbsp;<span class='plugin_mydashboard_add_button'>
                 <a id='add-widget$rand' href='#'>" . __('Add a widget', 'mydashboard') . "</a>
                 </span>";//(span.plugin_mydashboard_header_title)
 
-            echo "&nbsp;<i class=\"fa fa-caret-down\"></i></span>";
+         echo "&nbsp;<i class=\"fa fa-caret-down\"></i></span>";
 
+         echo "&nbsp;";
+         echo __('Load a predefined grid', 'mydashboard') . "&nbsp;<i class='fa fa-tasks fa-1x'></i>";
+         echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
+         echo "&nbsp;";
+
+         $elements = PluginMydashboardDashboard::getPredefinedDashboardName();
+
+         Dropdown::showFromArray("predefined_grid", $elements, [
+            'value'               => $predefined_grid,
+            'width'               => '170px',
+            'display_emptychoice' => true,
+            'on_change'           => 'this.form.submit()']);
+         echo "&nbsp;";
+
+         if ($edit == 1) {
             echo "&nbsp;";
-            echo __('Load a predefined grid', 'mydashboard') . "&nbsp;<i class='fa fa-tasks fa-1x'></i>";
-            echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
+            echo "<a id='save-grid$rand' href='#' title=\"" . __('Save grid', 'mydashboard') . "\">";
+            echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-save fa-1x'></i>";
+            echo "<span class='sr-only'>" . __('Save grid', 'mydashboard') . "</span>";
             echo "&nbsp;";
-
-            $elements = PluginMydashboardDashboard::getPredefinedDashboardName();
-
-            Dropdown::showFromArray("predefined_grid", $elements, [
-               'value'               => $predefined_grid,
-               'width'               => '170px',
-               'display_emptychoice' => true,
-               'on_change'           => 'this.form.submit()']);
+         }
+         if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
             echo "&nbsp;";
-
-            if ($edit == 1) {
-               echo "&nbsp;";
-               echo "<a id='save-grid$rand' href='#' title=\"" . __('Save grid', 'mydashboard') . "\">";
-               echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-save fa-1x'></i>";
-               echo "<span class='sr-only'>" . __('Save grid', 'mydashboard') . "</span>";
-               echo "&nbsp;";
-            }
-            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-               echo "&nbsp;";
-               echo "<a id='save-default-grid$rand' href='#' title=\"" . __('Save default grid', 'mydashboard') . "\">";
-               echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-hdd fa-1x'></i>";
-               echo "<span class='sr-only'>" . __('Save default grid', 'mydashboard') . "</span>";
-               echo "&nbsp;";
-            }
-
+            echo "<a id='save-default-grid$rand' href='#' title=\"" . __('Save default grid', 'mydashboard') . "\">";
+            echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-hdd fa-1x'></i>";
+            echo "<span class='sr-only'>" . __('Save default grid', 'mydashboard') . "</span>";
             echo "&nbsp;";
-            echo "<a id='clear-grid$rand' href='#' title=\"" . __('Clear grid', 'mydashboard') . "\">";
-            echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-window-restore  fa-1x'></i>";
-            echo "<span class='sr-only'>" . __('Clear grid', 'mydashboard') . "</span>";
-            echo "&nbsp;";
+         }
 
-            echo "&nbsp;";
-            echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
-            echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='far fa-times-circle fa-1x'></i>";
-            echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
-            echo "&nbsp;";
+         echo "&nbsp;";
+         echo "<a id='clear-grid$rand' href='#' title=\"" . __('Clear grid', 'mydashboard') . "\">";
+         echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-window-restore  fa-1x'></i>";
+         echo "<span class='sr-only'>" . __('Clear grid', 'mydashboard') . "</span>";
+         echo "&nbsp;";
 
-            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit",6)) {
-               echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
-            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit",6)) {
-               echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
+         echo "&nbsp;";
+         echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
+         echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='far fa-times-circle fa-1x'></i>";
+         echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
+         echo "&nbsp;";
 
-            Html::closeForm();
+         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
+            echo "</a>";
+         }
+         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
+            echo "</a>";
+         }
 
-            echo "<div class='bt-alert bt-alert-success' id='success-alert'>
+         Html::closeForm();
+
+         echo "<div class='bt-alert bt-alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
                 " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
             </div>";
-            echo Html::scriptBlock('
+         echo Html::scriptBlock('
                $("#success-alert").hide();
          ');
 
-            echo "<div class='bt-alert bt-alert-error' id='error-alert'>
+         echo "<div class='bt-alert bt-alert-error' id='error-alert'>
                 <strong>" . __('Error', 'mydashboard') . "</strong>
                 " . __('Please reload your page.', 'mydashboard') . "
             </div>";
-            echo Html::scriptBlock('
+         echo Html::scriptBlock('
                $("#error-alert").hide();
          ');
 
-         } else {        
-            if(Session::haveRight("plugin_mydashboard_edit",6)){
-               echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
-
-            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit",6)) {
-               echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
-            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit",6)) {
-
-               echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
-               echo "</a>";
-
-               echo "<a id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
-            if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-               echo "<a id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
-               echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-cogs md-fa-2x'></i>";
-               echo "<span class='sr-only'>" . __('Custom and save default grid', 'mydashboard') . "</span>";
-               echo "</a>";
-            }
+      } else {
+         if (Session::haveRight("plugin_mydashboard_edit", 6)) {
+            echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
+            echo "</a>";
          }
-         echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
-         echo "</div>";
-//      }
+
+         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
+            echo "</a>";
+         }
+         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+
+            echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
+            echo "</a>";
+
+            echo "<a id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
+            echo "</a>";
+         }
+         if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
+            echo "<a id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
+            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-cogs md-fa-2x'></i>";
+            echo "<span class='sr-only'>" . __('Custom and save default grid', 'mydashboard') . "</span>";
+            echo "</a>";
+         }
+      }
+      echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
+      echo "</div>";
+      //      }
    }
 
    /**
@@ -900,41 +900,42 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = []) {
       $wl = "";
-
-      foreach ($widgetsarray as $widgetId => $widgetTitle) {
-         //We check if this widget is a real widget
-         if (!is_array($widgetTitle)) {
-            //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
-            if (is_numeric($widgetId)) {
-               $widgetId = $widgetTitle;
-            }
-            $this->widgets[$classname][$widgetId] = -1;
-            if (isset($gslist[$widgetId])) {
-               $gsid = $gslist[$widgetId];
-               if (!in_array($gsid, $used)) {
-                  $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
-                         . " class='plugin_mydashboard_menuDashboardListItem' "
-                         . " data-widgetid='" . $gsid . "'"
-                         . " data-classname='" . $classname . "'>";
-                  $wl .= $widgetTitle;
-                  if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                     $wl .= " (" . $gsid . ")";
-                  }/*->getWidgetListTitle()*/
-                  $wl .= "</li>";
+      if (is_array($widgetsarray) && count($widgetsarray) > 0) {
+         foreach ($widgetsarray as $widgetId => $widgetTitle) {
+            //We check if this widget is a real widget
+            if (!is_array($widgetTitle)) {
+               //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
+               if (is_numeric($widgetId)) {
+                  $widgetId = $widgetTitle;
                }
-            }
-         } else { //If it's not a real widget
-            //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
-            $tmp = "<li class='plugin_mydashboard_menuDashboardList'>";
-            $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
-            $tmp .= "<ul class='plugin_mydashboard_menuDashboardList$depth'>";
-            $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
-            if ($res != '') {
-               $tmp .= $res;
-            }
-            $tmp .= "</ul></li>";
-            if ($res != '') {
-               $wl .= $tmp;
+               $this->widgets[$classname][$widgetId] = -1;
+               if (isset($gslist[$widgetId])) {
+                  $gsid = $gslist[$widgetId];
+                  if (!in_array($gsid, $used)) {
+                     $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
+                            . " class='plugin_mydashboard_menuDashboardListItem' "
+                            . " data-widgetid='" . $gsid . "'"
+                            . " data-classname='" . $classname . "'>";
+                     $wl .= $widgetTitle;
+                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                        $wl .= " (" . $gsid . ")";
+                     }/*->getWidgetListTitle()*/
+                     $wl .= "</li>";
+                  }
+               }
+            } else { //If it's not a real widget
+               //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
+               $tmp = "<li class='plugin_mydashboard_menuDashboardList'>";
+               $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
+               $tmp .= "<ul class='plugin_mydashboard_menuDashboardList$depth'>";
+               $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
+               if ($res != '') {
+                  $tmp .= $res;
+               }
+               $tmp .= "</ul></li>";
+               if ($res != '') {
+                  $wl .= $tmp;
+               }
             }
          }
       }
@@ -966,8 +967,8 @@ class PluginMydashboardMenu extends CommonGLPI {
 
    /**
     * Get all plugin names of plugin hooked with mydashboard
-    * @global type $PLUGIN_HOOKS
     * @return array of string
+    * @global type $PLUGIN_HOOKS
     */
    private function getPluginsNames() {
       global $PLUGIN_HOOKS;
@@ -1018,12 +1019,12 @@ class PluginMydashboardMenu extends CommonGLPI {
       $languages = [];
       switch ($libraryname) {
          case "datatables" :
-            $languages['sEmptyTable']     = __('No data available in table', 'mydashboard');
-            $languages['sInfo']           = __('Showing _START_ to _END_ of _TOTAL_ entries', 'mydashboard');
-            $languages['sInfoEmpty']      = __('Showing 0 to 0 of 0 entries', 'mydashboard');
-            $languages['sInfoFiltered']   = __('(filtered from _MAX_ total entries)', 'mydashboard');
-            $languages['sInfoPostFix']    = __('');
-            $languages['sInfoThousands']  = __(',');
+            $languages['sEmptyTable']    = __('No data available in table', 'mydashboard');
+            $languages['sInfo']          = __('Showing _START_ to _END_ of _TOTAL_ entries', 'mydashboard');
+            $languages['sInfoEmpty']     = __('Showing 0 to 0 of 0 entries', 'mydashboard');
+            $languages['sInfoFiltered']  = __('(filtered from _MAX_ total entries)', 'mydashboard');
+            $languages['sInfoPostFix']   = __('');
+            $languages['sInfoThousands'] = __(',');
             //$languages['aLengthMenu']     = __('Show _MENU_ entries', 'mydashboard');
             $languages['sLoadingRecords'] = __('Loading') . "...";
             $languages['sProcessing']     = __('Processing') . "...";
@@ -1047,14 +1048,14 @@ class PluginMydashboardMenu extends CommonGLPI {
                ]
             ];
 
-            $languages['close']           = __("Close", "mydashboard");
-            $languages['maximize']        = __("Maximize", "mydashboard");
-            $languages['minimize']        = __("Minimize", "mydashboard");
-            $languages['refresh']         = __("Refresh", "mydashboard");
-            $languages['buttons']         = [
-               'colvis' => __('Column visibility', 'mydashboard'),
+            $languages['close']    = __("Close", "mydashboard");
+            $languages['maximize'] = __("Maximize", "mydashboard");
+            $languages['minimize'] = __("Minimize", "mydashboard");
+            $languages['refresh']  = __("Refresh", "mydashboard");
+            $languages['buttons']  = [
+               'colvis'     => __('Column visibility', 'mydashboard'),
                "pageLength" => [
-                  "_" => __('Show %d elements', 'mydashboard'),
+                  "_"  => __('Show %d elements', 'mydashboard'),
                   "-1" => __('Show all', 'mydashboard'),
                ],
             ];
@@ -1223,15 +1224,15 @@ class PluginMydashboardMenu extends CommonGLPI {
       $disableDrag   = 'true';
       $delete_button = 'false';
 
-//      if ($this->interface == 1) {
-         if ($drag > 0) {
-            $disableResize = 'false';
-            $disableDrag   = 'false';
-         }
-         if ($edit > 0) {
-            $delete_button = 'true';
-         }
-//      }
+      //      if ($this->interface == 1) {
+      if ($drag > 0) {
+         $disableResize = 'false';
+         $disableDrag   = 'false';
+      }
+      if ($edit > 0) {
+         $delete_button = 'true';
+      }
+      //      }
 
       echo "<div id='mygrid$rand' class='mygrid'>";
       echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";

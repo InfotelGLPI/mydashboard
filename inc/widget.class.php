@@ -43,11 +43,12 @@ class PluginMydashboardWidget extends CommonDBTM {
 
    /**
     * Get the widget name with his id
-    * @global type $DB
     *
     * @param type  $widgetId
     *
     * @return string, the widget 'name'
+    * @global type $DB
+    *
     */
    function getWidgetNameById($widgetId) {
 
@@ -60,11 +61,12 @@ class PluginMydashboardWidget extends CommonDBTM {
 
    /**
     * Get the widgets_id by its 'name'
-    * @global type  $DB
     *
     * @param string $widgetName
     *
     * @return the widgets_id if found, NULL otherwise
+    * @global type  $DB
+    *
     */
    function getWidgetIdByName($widgetName) {
 
@@ -78,23 +80,24 @@ class PluginMydashboardWidget extends CommonDBTM {
 
    /**
     * Save a new widget Name
-    * @global type  $DB
     *
     * @param string $widgetName
     *
     * @return TRUE if the new widget name has been added, FALSE otherwise
+    * @global type  $DB
+    *
     */
    function saveWidget($widgetName) {
 
       if (isset($widgetName) && $widgetName !== "") {
          //            $widgettmp = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
          //Not really good regex
-         $widgettmp = preg_match('#[^.0-9a-z]+#i', $widgetName, $matches);
-
-         if ($widgettmp == 1) {
-            Toolbox::logDebug("'$widgetName' can't be used as a widget Name, '$matches[0]' is not a valid character ");
-            return false;
-         }
+         //         $widgettmp = preg_match('#[^.0-9a-z]+#i', $widgetName, $matches);
+         //
+         //         if ($widgettmp == 1) {
+         //            Toolbox::logDebug("'$widgetName' can't be used as a widget Name, '$matches[0]' is not a valid character ");
+         //            return false;
+         //         }
 
          $this->fields["id"] = null;
          $id                 = $this->getWidgetIdByName($widgetName);
@@ -106,6 +109,61 @@ class PluginMydashboardWidget extends CommonDBTM {
          return true;
       } else {
          return false;
+      }
+   }
+
+   /**
+    * Save a new widget Name
+    *
+    * @param string $widgetName
+    *
+    * @return TRUE if the new widget name has been added, FALSE otherwise
+    * @global type  $DB
+    *
+    */
+   function migrateWidgets() {
+
+      $dbu     = new DbUtils();
+      $reports = $dbu->getAllDataFromTable($this->getTable());
+      foreach ($reports as $report) {
+         $name      = $report['name'];
+         if (strpos($report['name'], "PluginMydashboardInfotel")!== false && strpos($report['name'], "PluginMydashboardInfotelcw") === false) {
+            $widgettmp = preg_match_all('!\d+!', $name, $matches);
+            if ($widgettmp == 1) {
+               $widgetName = "";
+               foreach ($matches[0] as $k => $v) {
+                  if (in_array($v, PluginMydashboardReports_Bar::$reports)) {
+                     $widgetName = "PluginMydashboardReports_Bar" . $v;
+                  }
+                  if (in_array($v, PluginMydashboardReports_Pie::$reports)) {
+                     $widgetName = "PluginMydashboardReports_Pie" . $v;
+                  }
+                  if (in_array($v, PluginMydashboardReports_Table::$reports)) {
+                     $widgetName = "PluginMydashboardReports_Table" . $v;
+                  }
+                  if (in_array($v, PluginMydashboardReports_Line::$reports)) {
+                     $widgetName = "PluginMydashboardReports_Line" . $v;
+                  }
+                  if (in_array($v, PluginMydashboardReports_Map::$reports)) {
+                     $widgetName = "PluginMydashboardReports_Map" . $v;
+                  }
+                  if ($widgetName != "") {
+                     $this->update(["id" => $report['id'], "name" => $widgetName]);
+                  }
+               }
+            }
+         }
+         if (strpos($report['name'], "PluginMydashboardInfotelcw") !== false) {
+            $widgettmp = preg_match_all('!\d+!', $name, $matches);
+            if ($widgettmp == 1) {
+               foreach ($matches[0] as $k => $v) {
+                  $widgetName = "PluginMydashboardReports_Custom" . $v;
+                  if ($widgetName != "") {
+                     $this->update(["id" => $report['id'], "name" => $widgetName]);
+                  }
+               }
+            }
+         }
       }
    }
 
@@ -214,7 +272,7 @@ class PluginMydashboardWidget extends CommonDBTM {
             }
             $widget = $classobject->getWidgetContentForItem($widgetindex, $opt);
             if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-               $loadwidget = $TIMER->getTime();
+               $loadwidget        = $TIMER->getTime();
                $displayloadwidget = "";
             }
 
@@ -237,8 +295,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $scripts = implode($scripts, "");
 
                //We prepare a "JSon object" compatible with sDashboard
-               $widgetTitle = $widget->getWidgetTitle();
-               $json =
+               $widgetTitle                                                         = $widget->getWidgetTitle();
+               $json                                                                =
                   [
                      "widgetTitle"     => $widgetTitle,
                      "widgetComment"   => $widget->getWidgetComment(),
@@ -261,8 +319,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $view = $views[$parent];
                }
 
-               $type    = $json['widgetType'];
-               $title   = $json['widgetTitle'];
+               $type  = $json['widgetType'];
+               $title = $json['widgetTitle'];
 
                $comment = $json['widgetComment'];
                if (isset($view) && $view != -1) {
@@ -332,18 +390,18 @@ class PluginMydashboardWidget extends CommonDBTM {
                            break;
                      }
                   }
-                  $rand                  = mt_rand();
-                  $languages             = json_encode($menu->getJsLanguages("datatables"));
-//                  $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
+                  $rand      = mt_rand();
+                  $languages = json_encode($menu->getJsLanguages("datatables"));
+                  //                  $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
 
-                  $lengthMenulangs = [ __('5 rows', 'mydashboard'),
-                                       __('10 rows', 'mydashboard'),
-                                  __('25 rows', 'mydashboard'),
-                                  __('50 rows', 'mydashboard'),
-                                 __('Show all', 'mydashboard'),
-                                    ];
-                  $lengthMenulangs             = json_encode($lengthMenulangs);
-                  $widgetdisplay = "<script type='text/javascript'>
+                  $lengthMenulangs = [__('5 rows', 'mydashboard'),
+                                      __('10 rows', 'mydashboard'),
+                                      __('25 rows', 'mydashboard'),
+                                      __('50 rows', 'mydashboard'),
+                                      __('Show all', 'mydashboard'),
+                  ];
+                  $lengthMenulangs = json_encode($lengthMenulangs);
+                  $widgetdisplay   = "<script type='text/javascript'>
                //         setTimeout(function () {
                            $.fn.dataTable.moment('$mask');
                            $('#$widgetindex$rand').dataTable(
@@ -427,14 +485,14 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= "<div class=\"bt-row $delclass\">";
                $widgetdisplay .= "<div class=\"bt-feature $class \">";
 
-               if($widget->getTitleVisibility()){
+               if ($widget->getTitleVisibility()) {
                   $widgetdisplay .= "<h5 class=\"bt-title-divider\">";
                   $widgetdisplay .= "<span>";
                   $widgetdisplay .= $title;
                   if ($comment != "") {
                      $widgetdisplay .= "&nbsp;";
                      $opt           = ['awesome-class' => 'fa-info-circle',
-                         'display'       => false];
+                                       'display'       => false];
                      $widgetdisplay .= Html::showToolTip($comment, $opt);
                   }
                   $widgetdisplay .= "</span>";
@@ -489,8 +547,8 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= "</div>";
 
                if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                  $displayloadwidget = "Load widget : " . $loadwidget."<br>";
-                  $widgetdisplay .= $displayloadwidget;
+                  $displayloadwidget = "Load widget : " . $loadwidget . "<br>";
+                  $widgetdisplay     .= $displayloadwidget;
                }
                return $widgetdisplay;
             } else {
@@ -513,16 +571,16 @@ class PluginMydashboardWidget extends CommonDBTM {
          return $display;
       }
       $delclass = "";
-      $display = "<div id='gs4' class=\"bt-row $delclass\">";
-      $display .= "<div class=\"bt-feature $class \">";
-      $display .= "<h3 class=\"bt-title-divider\">";
-      $display .= "<span>";
-      $display .= __('Network Monitoring', 'mydashboard');
-      $display .= "</span>";
-      $display .= "</h3>";
-      $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
-      $display .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
-      $display .= "<div id=\"display-sc\">";
+      $display  = "<div id='gs4' class=\"bt-row $delclass\">";
+      $display  .= "<div class=\"bt-feature $class \">";
+      $display  .= "<h3 class=\"bt-title-divider\">";
+      $display  .= "<span>";
+      $display  .= __('Network Monitoring', 'mydashboard');
+      $display  .= "</span>";
+      $display  .= "</h3>";
+      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
+      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
+      $display  .= "<div id=\"display-sc\">";
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
          $alerts  = new PluginMydashboardAlert();
          $display .= $alerts->getAlertList(0);
@@ -551,12 +609,12 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      $display = "<div id='gs5' class=\"bt-row $delclass\">";
-      $display .= "<div class=\"bt-feature $class \">";
-      $display .= "<h3 class=\"bt-title-divider\">";
-      $display .= "<span>";
-      $display .= _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard');
-      $display .= "</span>";
+      $display  = "<div id='gs5' class=\"bt-row $delclass\">";
+      $display  .= "<div class=\"bt-feature $class \">";
+      $display  .= "<h3 class=\"bt-title-divider\">";
+      $display  .= "<span>";
+      $display  .= _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard');
+      $display  .= "</span>";
       //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
       $display .= "</h3>";
       $display .= "<div id=\"display-sc\">";
@@ -588,14 +646,14 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      $display = "<div id='gs6' class=\"bt-row $delclass\">";
-      $display .= "<div class=\"bt-feature $class \">";
-      $display .= "<h3 class=\"bt-title-divider\">";
-      $display .= "<span>";
-      $display .= _n('Information', 'Informations', 2, 'mydashboard');
-      $display .= "</span>";
-      $display .= "</h3>";
-      $display .= "<div id='display-sc'>";
+      $display  = "<div id='gs6' class=\"bt-row $delclass\">";
+      $display  .= "<div class=\"bt-feature $class \">";
+      $display  .= "<h3 class=\"bt-title-divider\">";
+      $display  .= "<span>";
+      $display  .= _n('Information', 'Informations', 2, 'mydashboard');
+      $display  .= "</span>";
+      $display  .= "</h3>";
+      $display  .= "<div id='display-sc'>";
       if (PluginMydashboardAlert::countForAlerts(0, 2) > 0) {
 
          $alerts  = new PluginMydashboardAlert();
@@ -711,18 +769,18 @@ class PluginMydashboardWidget extends CommonDBTM {
                $i++;
                //               if (($i == $nb) && (($nb % 2) != 0) && ($nb > 1)) {
 
-//               if ($item_datas['id']
-//                   && Ticket::isPossibleToAssignType($itemtype)
-//                   && Ticket::canCreate()
-//                   && (!isset($item->fields['is_template']) || ($item->fields['is_template'] == 0))) {
-//                  $link = Html::showSimpleForm(Ticket::getFormURL(),
-//                                       '_add_fromitem',
-//                                       __('New ticket for this item...'),
-//                                       ['itemtype' => $itemtype,
-//                                        'items_id' => $item_datas['id']],
-//                     'fa-plus-circle');
-//                  $display .= $link;
-//               }
+               //               if ($item_datas['id']
+               //                   && Ticket::isPossibleToAssignType($itemtype)
+               //                   && Ticket::canCreate()
+               //                   && (!isset($item->fields['is_template']) || ($item->fields['is_template'] == 0))) {
+               //                  $link = Html::showSimpleForm(Ticket::getFormURL(),
+               //                                       '_add_fromitem',
+               //                                       __('New ticket for this item...'),
+               //                                       ['itemtype' => $itemtype,
+               //                                        'items_id' => $item_datas['id']],
+               //                     'fa-plus-circle');
+               //                  $display .= $link;
+               //               }
 
                $display .= "</div>";
                //               }

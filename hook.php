@@ -35,10 +35,11 @@ function plugin_mydashboard_install() {
    include_once(GLPI_ROOT . "/plugins/mydashboard/inc/preference.class.php");
    include_once(GLPI_ROOT . "/plugins/mydashboard/inc/config.class.php");
    include_once(GLPI_ROOT . "/plugins/mydashboard/inc/menu.class.php");
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/widget.class.php");
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.7.2.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.7.5.sql");
 
       PluginMydashboardMenu::installWidgets();
       insertDefaultTitles();
@@ -186,7 +187,8 @@ function plugin_mydashboard_install() {
       $mig = new Migration("1.7.7");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.7.sql");
       $mig->executeMigration();
-      insertDefaultTitles();
+      $widget = new PluginMydashboardWidget();
+      $widget->migrateWidgets();
    }
 
    //If default configuration is not loaded

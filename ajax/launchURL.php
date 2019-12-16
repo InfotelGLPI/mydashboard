@@ -110,7 +110,7 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel1") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar1") {
    //$criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'type'];
    if (isset($_POST["selected_id"])) {
 
@@ -133,8 +133,8 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && ($_POST["params"]["widget"] == "PluginMydashboardInfotel2"
-               || $_POST["params"]["widget"] == "PluginMydashboardInfotel36")) {
+           && ($_POST["params"]["widget"] == "PluginMydashboardReports_Pie2"
+               || $_POST["params"]["widget"] == "PluginMydashboardReports_Bar36")) {
 
 
    if (isset($_POST["selected_id"])) {
@@ -156,7 +156,7 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel25") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Pie25") {
    //    $criterias = ['type'];
    //requester groups;
    if (isset($_POST["selected_id"])) {
@@ -173,14 +173,14 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && ($_POST["params"]["widget"] == "PluginMydashboardInfotel16"
-               || $_POST["params"]["widget"] == "PluginMydashboardInfotel17")) {
+           && ($_POST["params"]["widget"] == "PluginMydashboardReports_Pie16"
+               || $_POST["params"]["widget"] == "PluginMydashboardReports_Pie17")) {
    //$criterias = ['entities_id', 'is_recursive', 'technicians_groups_id'];
    if (isset($_POST["selected_id"])) {
 
       addCriteria(STATUS, 'equals', 'notold', 'AND');
 
-      addCriteria(TYPE, 'equals', (($_POST["params"]["widget"] == "PluginMydashboardInfotel16") ? Ticket::INCIDENT_TYPE : Ticket::DEMAND_TYPE), 'AND');
+      addCriteria(TYPE, 'equals', (($_POST["params"]["widget"] == "PluginMydashboardReports_Pie16") ? Ticket::INCIDENT_TYPE : Ticket::DEMAND_TYPE), 'AND');
 
       addCriteria(CATEGORY, ((empty($_POST["selected_id"])) ? 'contains' : 'equals'), ((empty($_POST["selected_id"])) ? '^$' : $_POST["selected_id"]), 'AND');
 
@@ -195,7 +195,7 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel24") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar24") {
    //$criterias = ['entities_id', 'is_recursive', 'year', 'type'];
    if (isset($_POST["selected_id"])) {
 
@@ -214,7 +214,7 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel27") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Pie27") {
    //   $criterias = ['entities_id', 'is_recursive','type'];
    if (isset($_POST["selected_id"])) {
 
@@ -236,7 +236,7 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel32") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Table32") {
 
    // ENTITY | SONS
    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
@@ -256,7 +256,7 @@ if (isset($_POST["params"]["widget"])
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
         Toolbox::append_params($options, "&");
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel33") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Table33") {
 
    // ENTITY | SONS
    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
@@ -275,7 +275,7 @@ if (isset($_POST["params"]["widget"])
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
         Toolbox::append_params($options, "&");
 } else if (isset($_POST["params"]["widget"])
-           && $_POST["params"]["widget"] == "PluginMydashboardInfotel37") {
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar37") {
 
    // ENTITY | SONS
    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');

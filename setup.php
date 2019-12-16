@@ -30,6 +30,11 @@ define('PLUGIN_MYDASHBOARD_VERSION', '1.7.7');
 function plugin_init_mydashboard() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
+   // manage autoload of plugin custom classes
+   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/autoload.php");
+   $autoloader = new PluginMydasboardAutoloader();
+   $autoloader->register();
+
    $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
 
    $PLUGIN_HOOKS['add_css']['mydashboard'] = [

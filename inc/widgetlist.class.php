@@ -64,12 +64,15 @@ class PluginMydashboardWidgetlist {
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
          $widgets = (isset($PLUGIN_HOOKS['mydashboard'])?$PLUGIN_HOOKS['mydashboard']:[]);
       }
-            
+
       //We add classes from mydashboard
-      $widgets['mydashboard'] = [
-         'PluginMydashboardInfotel',
-         'PluginMydashboardAlert'
-      ];
+      $widgets['mydashboard'] = [];
+
+      $autoloader = new PluginMydasboardAutoloader();
+      $classes = $autoloader->list();
+      foreach ($classes as $class) {
+         $widgets['mydashboard'][] = $class;
+      }
 
       //We add classes for GLPI core widgets
       $widgets['GLPI'] = [
@@ -93,6 +96,7 @@ class PluginMydashboardWidgetlist {
 
          foreach ($pluginclasses as $pluginclass) {
             if (!class_exists($pluginclass)) {
+               Toolbox::logWarning($pluginclass);
                continue;
             }
             $item = $dbu->getItemForItemtype($pluginclass);

@@ -24,35 +24,9 @@
  --------------------------------------------------------------------------
  */
 
-ini_set("memory_limit", "-1");
-ini_set("max_execution_time", "0");
+/**
+ * Class PluginMydashboardInfotel
+ */
+class PluginMydashboardInfotel extends CommonGLPI {
 
-// Can't run on MySQL replicate
-$USEDBREPLICATE = 0;
-$DBCONNECTION_REQUIRED = 1;
-
-chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
-
-include('../../../inc/includes.php');
-
-
-$_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
-
-
-// Chech Memory_limit - sometine cli limit (php-cli.ini) != module limit (php.ini)
-$mem = Toolbox::getMemoryLimit();
-if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
-   die("PHP memory_limit = " . $mem . " - " . "A minimum of 64Mio is commonly required for GLPI.'\n\n");
-}
-
-//Check if plugin is installed
-$plugin = new Plugin();
-//$config = PluginPrintercountersConfig::getInstance();
-
-if ($plugin->isActivated("mydashboard")) {
-   $record = new PluginMydashboardStockTicket();
-   $record->cronMydashboardInfotelUpdateStockTicket();
-} else {
-   echo __('Plugin disabled', 'mydashboard');
-   exit(1);
 }
