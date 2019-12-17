@@ -31,6 +31,7 @@ class PluginMydashboardChange {
 
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -41,7 +42,7 @@ class PluginMydashboardChange {
     * @return array
     */
    function getWidgetsForItem() {
-      $array = [];
+      $array      = [];
       $showchange = Session::haveRightsOr('change', [Change::READALL, Change::READMY]);
 
       if ($showchange) {
@@ -49,9 +50,10 @@ class PluginMydashboardChange {
             PluginMydashboardMenu::$CHANGE_VIEW =>
                [
                   "changeprocesswidget" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                  "changeappliedwidget" => __('Applied changes', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
                ],
-            PluginMydashboardMenu::$GROUP_VIEW =>
+            PluginMydashboardMenu::$GROUP_VIEW  =>
                [
                   "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
                   "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
@@ -68,6 +70,7 @@ class PluginMydashboardChange {
 
    /**
     * @param $widgetId
+    *
     * @return PluginMydashboardDatatable
     */
    function getWidgetContentForItem($widgetId) {
@@ -77,6 +80,9 @@ class PluginMydashboardChange {
          switch ($widgetId) {
             case "changeprocesswidget":
                return self::showCentralList(0, "process", false);
+               break;
+            case "changeappliedwidget":
+               return self::showCentralList(0, "applied", false);
                break;
             case "changeprocesswidgetgroup":
                return self::showCentralList(0, "process", true);
@@ -95,9 +101,10 @@ class PluginMydashboardChange {
    }
 
    /**
-    * @param $start
+    * @param        $start
     * @param string $status
-    * @param bool $showgroupchanges
+    * @param bool   $showgroupchanges
+    *
     * @return PluginMydashboardDatatable
     */
    static function showCentralList($start, $status = "process", $showgroupchanges = true) {
@@ -124,16 +131,16 @@ class PluginMydashboardChange {
 
       $search_users_id = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_changes_users`.`type` = '" . CommonITILActor::REQUESTER . "') ";
-      $search_assign = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
+      $search_assign   = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_changes_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
-      $is_deleted = " `glpi_changes`.`is_deleted` = 0 ";
+      $is_deleted      = " `glpi_changes`.`is_deleted` = 0 ";
 
       if ($showgroupchanges) {
          $search_users_id = " 0 = 1 ";
-         $search_assign = " 0 = 1 ";
+         $search_assign   = " 0 = 1 ";
 
          if (count($_SESSION['glpigroups'])) {
-            $groups = implode("','", $_SESSION['glpigroups']);
+            $groups        = implode("','", $_SESSION['glpigroups']);
             $search_assign = " (`glpi_changes_groups`.`groups_id` IN ('$groups')
                                   AND `glpi_changes_groups`.`type`
                                         = '" . CommonITILActor::ASSIGN . "')";
@@ -143,7 +150,7 @@ class PluginMydashboardChange {
                                         = '" . CommonITILActor::REQUESTER . "') ";
          }
       }
-      $dbu        = new DbUtils();
+      $dbu   = new DbUtils();
       $query = "SELECT DISTINCT `glpi_changes`.`id`
                 FROM `glpi_changes`
                 LEFT JOIN `glpi_changes_users`
@@ -166,6 +173,13 @@ class PluginMydashboardChange {
                       $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
             break;
 
+         case "applied" : // on affiche les changements qui vont être mis en production
+            $query .= "WHERE $is_deleted
+                             AND (`status` IN ('" . implode("','", Change::getSolvedStatusArray()) . "')) 
+                             AND solvedate > DATE_SUB(CURDATE(), interval 30 DAY) " .
+                      $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+            break;
+
          default :
             $query .= "WHERE $is_deleted
                              AND ($search_users_id)
@@ -175,136 +189,148 @@ class PluginMydashboardChange {
                       $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
       }
 
-      $query .= " ORDER BY date_mod DESC";
-      $result = $DB->query($query);
+      $query   .= " ORDER BY date_mod DESC";
+      $result  = $DB->query($query);
       $numrows = $DB->numrows($result);
 
-//      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-//         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-         $result = $DB->query($query);
-         $number = $DB->numrows($result);
-//      } else {
-//         $number = 0;
-//      }
+      //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
+      //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
+      $result = $DB->query($query);
+      $number = $DB->numrows($result);
+      //      } else {
+      //         $number = 0;
+      //      }
 
       if ($numrows > 0) {
-         $output['title'] = "";
+         $output['title']  = "";
          $options['reset'] = 'reset';
-         $forcetab = '';
-         $num = 0;
+         $forcetab         = '';
+         $num              = 0;
          if ($showgroupchanges) {
             switch ($status) {
 
                case "waiting" :
                   foreach ($_SESSION['glpigroups'] as $gID) {
-                     $options['field'][$num] = 8; // groups_id_assign
+                     $options['field'][$num]      = 8; // groups_id_assign
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = $gID;
-                     $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
+                     $options['contains'][$num]   = $gID;
+                     $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
                      $num++;
-                     $options['field'][$num] = 12; // status
+                     $options['field'][$num]      = 12; // status
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = Change::WAITING;
-                     $options['link'][$num] = 'AND';
+                     $options['contains'][$num]   = Change::WAITING;
+                     $options['link'][$num]       = 'AND';
                      $num++;
                   }
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                     Toolbox::append_params($options, '&amp;') . "\">" .
-                     Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
                   break;
 
                case "process" :
                   foreach ($_SESSION['glpigroups'] as $gID) {
-                     $options['field'][$num] = 8; // groups_id_assign
+                     $options['field'][$num]      = 8; // groups_id_assign
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = $gID;
-                     $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
+                     $options['contains'][$num]   = $gID;
+                     $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
                      $num++;
-                     $options['field'][$num] = 12; // status
+                     $options['field'][$num]      = 12; // status
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = 'process';
-                     $options['link'][$num] = 'AND';
+                     $options['contains'][$num]   = 'process';
+                     $options['link'][$num]       = 'AND';
                      $num++;
                   }
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                     Toolbox::append_params($options, '&amp;') . "\">" .
-                     Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
                   break;
 
                default :
                   foreach ($_SESSION['glpigroups'] as $gID) {
-                     $options['field'][$num] = 71; // groups_id
+                     $options['field'][$num]      = 71; // groups_id
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = $gID;
-                     $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
+                     $options['contains'][$num]   = $gID;
+                     $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
                      $num++;
-                     $options['field'][$num] = 12; // status
+                     $options['field'][$num]      = 12; // status
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = 'process';
-                     $options['link'][$num] = 'AND';
+                     $options['contains'][$num]   = 'process';
+                     $options['link'][$num]       = 'AND';
                      $num++;
                   }
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                     Toolbox::append_params($options, '&amp;') . "\">" .
-                     Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
             }
          } else {
             switch ($status) {
                case "waiting" :
-                  $options['field'][0] = 12; // status
+                  $options['field'][0]      = 12; // status
                   $options['searchtype'][0] = 'equals';
-                  $options['contains'][0] = Change::WAITING;
-                  $options['link'][0] = 'AND';
+                  $options['contains'][0]   = Change::WAITING;
+                  $options['link'][0]       = 'AND';
 
-                  $options['field'][1] = 5; // users_id_assign
+                  $options['field'][1]      = 5; // users_id_assign
                   $options['searchtype'][1] = 'equals';
-                  $options['contains'][1] = Session::getLoginUserID();
-                  $options['link'][1] = 'AND';
+                  $options['contains'][1]   = Session::getLoginUserID();
+                  $options['link'][1]       = 'AND';
 
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                     Toolbox::append_params($options, '&amp;') . "\">" .
-                     Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
                   break;
 
                case "process" :
-                  $options['field'][0] = 5; // users_id_assign
+                  $options['field'][0]      = 5; // users_id_assign
                   $options['searchtype'][0] = 'equals';
-                  $options['contains'][0] = Session::getLoginUserID();
-                  $options['link'][0] = 'AND';
+                  $options['contains'][0]   = Session::getLoginUserID();
+                  $options['link'][0]       = 'AND';
 
-                  $options['field'][1] = 12; // status
+                  $options['field'][1]      = 12; // status
                   $options['searchtype'][1] = 'equals';
-                  $options['contains'][1] = 'process';
-                  $options['link'][1] = 'AND';
+                  $options['contains'][1]   = 'process';
+                  $options['link'][1]       = 'AND';
 
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                     Toolbox::append_params($options, '&amp;') . "\">" .
-                     Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                  break;
+
+               case "applied" :
+                  $options['field'][$num]      = 12; // status
+                  $options['searchtype'][$num] = 'equals';
+                  $options['contains'][$num]   = 'solved';
+                  $options['link'][$num]       = 'AND';
+                  $num++;
+                  $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Applied changes', 'mydashboard'), $number, $numrows) . "</a>";
                   break;
 
                default :
-                  $options['field'][0] = 4; // users_id
+                  $options['field'][0]      = 4; // users_id
                   $options['searchtype'][0] = 'equals';
-                  $options['contains'][0] = Session::getLoginUserID();
-                  $options['link'][0] = 'AND';
+                  $options['contains'][0]   = Session::getLoginUserID();
+                  $options['link'][0]       = 'AND';
 
-                  $options['field'][1] = 12; // status
+                  $options['field'][1]      = 12; // status
                   $options['searchtype'][1] = 'equals';
-                  $options['contains'][1] = 'notold';
-                  $options['link'][1] = 'AND';
+                  $options['contains'][1]   = 'notold';
+                  $options['link'][1]       = 'AND';
 
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                     Toolbox::append_params($options, '&amp;') . "\">" .
-                     Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" .
+                                      Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
             }
          }
 
          if ($number) {
-            $output['header'][] = __('');
+            $output['header'][] = __('ID');
             $output['header'][] = __('Requester');
             $output['header'][] = __('Description');
+            $output['header'][] = __('Date of solving');
             for ($i = 0; $i < $number; $i++) {
-               $ID = $DB->result($result, $i, "id");
+               $ID               = $DB->result($result, $i, "id");
                $output['body'][] = self::showVeryShort($ID, $forcetab);
             }
          }
@@ -329,8 +355,9 @@ class PluginMydashboardChange {
    }
 
    /**
-    * @param $ID
+    * @param        $ID
     * @param string $forcetab
+    *
     * @return array
     */
    static function showVeryShort($ID, $forcetab = '') {
@@ -346,29 +373,29 @@ class PluginMydashboardChange {
       $viewusers = Session::haveRight("user", READ);
 
       $change = new Change();
-      $rand = mt_rand();
+      $rand   = mt_rand();
 
       if ($change->getFromDBwithData($ID, 0)) {
          $bgcolor = $_SESSION["glpipriority_" . $change->fields["priority"]];
          //      $rand    = mt_rand();
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(__('%1$s: %2$s'), __('ID'),
-               $change->fields["id"]) . "</div>";
+                                                                                                               $change->fields["id"]) . "</div>";
          $colnum++;
 
          $output[$colnum] = '';
-         $userrequesters = $change->getUsers(CommonITILActor::REQUESTER);
+         $userrequesters  = $change->getUsers(CommonITILActor::REQUESTER);
          if (isset($userrequesters)
-            && count($userrequesters)
+             && count($userrequesters)
          ) {
             foreach ($userrequesters as $d) {
                if ($d["users_id"] > 0) {
                   $userdata = getUserName($d["users_id"], 2);
-                  $name = "<div class='b center'>" . $userdata['name'];
+                  $name     = "<div class='b center'>" . $userdata['name'];
                   if ($viewusers) {
                      $name = sprintf(__('%1$s %2$s'), $name,
-                        Html::showToolTip($userdata["comment"],
-                           ['link' => $userdata["link"],
-                              'display' => false]));
+                                     Html::showToolTip($userdata["comment"],
+                                                       ['link'    => $userdata["link"],
+                                                        'display' => false]));
                   }
                   $output[$colnum] .= $name . "</div>";
                } else {
@@ -379,7 +406,7 @@ class PluginMydashboardChange {
          }
          $grouprequester = $change->getGroups(CommonITILActor::REQUESTER);
          if (isset($grouprequester)
-            && count($grouprequester)
+             && count($grouprequester)
          ) {
             foreach ($grouprequester as $d) {
                $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
@@ -389,7 +416,7 @@ class PluginMydashboardChange {
          $colnum++;
          //$output[$colnum] = '';
          $link = "<a id='change" . $change->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-            "/front/change.form.php?id=" . $change->fields["id"];
+                 "/front/change.form.php?id=" . $change->fields["id"];
          if ($forcetab != '') {
             $link .= "&amp;forcetab=" . $forcetab;
          }
@@ -398,18 +425,20 @@ class PluginMydashboardChange {
          $link .= "<span class='b'>" . $change->fields["name"] . "</span></a>";
 
          $link = sprintf(__('%1$s %2$s'), $link,
-            Html::showToolTip($change->fields['content'],
-               ['applyto' => 'change' . $change->fields["id"] . $rand,
-                  'display' => false]));
+                         Html::showToolTip($change->fields['content'],
+                                           ['applyto' => 'change' . $change->fields["id"] . $rand,
+                                            'display' => false]));
          //echo $link;
-         //$colnum++;
          $output[$colnum] = $link;
+         $colnum++;
+         $output[$colnum] = Html::convDateTime($change->fields['solvedate']);
       }
       return $output;
    }
 
    /**
     * @param bool $foruser
+    *
     * @return PluginMydashboardDatatable
     */
    static function showCentralCount($foruser = false) {
@@ -435,35 +464,35 @@ class PluginMydashboardChange {
                             AND `glpi_changes_users`.`type` = '" . CommonITILActor::REQUESTER . "')";
 
          if (isset($_SESSION["glpigroups"])
-            && count($_SESSION["glpigroups"])
+             && count($_SESSION["glpigroups"])
          ) {
             $query .= " LEFT JOIN `glpi_changes_groups`
                            ON (`glpi_changes`.`id` = `glpi_changes_groups`.`changes_id`
                                AND `glpi_changes_groups`.`type` = '" . CommonITILActor::REQUESTER . "')";
          }
       }
-      $dbu        = new DbUtils();
+      $dbu   = new DbUtils();
       $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_changes");
 
       if ($foruser) {
          $query .= " AND (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "' ";
 
          if (isset($_SESSION["glpigroups"])
-            && count($_SESSION["glpigroups"])
+             && count($_SESSION["glpigroups"])
          ) {
             $groups = implode("','", $_SESSION['glpigroups']);
-            $query .= " OR `glpi_changes_groups`.`groups_id` IN ('$groups') ";
+            $query  .= " OR `glpi_changes_groups`.`groups_id` IN ('$groups') ";
          }
          $query .= ")";
       }
       $query_deleted = $query;
 
-      $query .= " AND NOT `glpi_changes`.`is_deleted`
+      $query         .= " AND NOT `glpi_changes`.`is_deleted`
                          GROUP BY `status`";
       $query_deleted .= " AND `glpi_changes`.`is_deleted`
                          GROUP BY `status`";
 
-      $result = $DB->query($query);
+      $result         = $DB->query($query);
       $result_deleted = $DB->query($query_deleted);
 
       $status = [];
@@ -483,31 +512,31 @@ class PluginMydashboardChange {
             $number_deleted += $data["COUNT"];
          }
       }
-      $options['field'][0] = 12;
+      $options['field'][0]      = 12;
       $options['searchtype'][0] = 'equals';
-      $options['contains'][0] = 'process';
-      $options['link'][0] = 'AND';
-      $options['reset'] = 'reset';
+      $options['contains'][0]   = 'process';
+      $options['link'][0]       = 'AND';
+      $options['reset']         = 'reset';
 
       $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-         Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
+                         Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
 
       $output['header'][] = _n('Change', 'Changes', 2);
       $output['header'][] = _x('quantity', 'Number');
 
       $count = 0;
       foreach ($status as $key => $val) {
-         $options['contains'][0] = $key;
+         $options['contains'][0]    = $key;
          $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" . Change::getStatus($key) . "</a>";
+                                      Toolbox::append_params($options, '&amp;') . "\">" . Change::getStatus($key) . "</a>";
          $output['body'][$count][1] = $val;
          $count++;
       }
 
-      $options['contains'][0] = 'all';
-      $options['is_deleted'] = 1;
+      $options['contains'][0]    = 'all';
+      $options['is_deleted']     = 1;
       $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-         Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
+                                   Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
       $output['body'][$count][1] = $number_deleted;
 
       $widget = new PluginMydashboardDatatable();

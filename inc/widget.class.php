@@ -112,13 +112,8 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
    }
 
+
    /**
-    * Save a new widget Name
-    *
-    * @param string $widgetName
-    *
-    * @return TRUE if the new widget name has been added, FALSE otherwise
-    * @global type  $DB
     *
     */
    function migrateWidgets() {
