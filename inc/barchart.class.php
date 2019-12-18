@@ -632,7 +632,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       $datas           = $graph_datas['data'];
       $ids             = $graph_datas['ids'];
       $labels          = $graph_datas['labels'];
-      $max             = isset($graph_datas['max']) ? "max:".$graph_datas['max'] : "";
+      $max             = isset($graph_datas['max']) ? "max:".$graph_datas['max']."," : "";
 
       $json_criterias = json_encode($graph_criterias);
 
@@ -666,7 +666,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      text:'$name'
                  },
                  tooltips: {
-                     enabled: false,
+                     enabled: true,
                  },
                  scales: {
                      yAxes: [{
@@ -695,12 +695,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                    ctx.fillStyle = '#595959';
                    ctx.textAlign = 'center';
                    ctx.textBaseline = 'bottom';
-                   this.data.datasets.forEach(function (dataset) {
-                       for (var i = 0; i < dataset.data.length; i++) {
-                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
-                       }
-                   });
+//                   this.data.datasets.forEach(function (dataset) {
+//                       for (var i = 0; i < dataset.data.length; i++) {
+//                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+//                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
+//                       }
+//                   });
                      
                     isChartRendered = true;
                   }
