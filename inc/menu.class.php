@@ -35,7 +35,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @var array of array of string
     */
    private $widgets    = [];
-   private $widgetlist = [];
+   public  $widgetlist = [];
    /**
     * Will contain an array of strings with js function needed to add a widget
     * @var array of string
@@ -74,7 +74,7 @@ class PluginMydashboardMenu extends CommonGLPI {
    public static  $PROJECT_VIEW            = 8;
    public static  $TICKET_TECHVIEW         = 9;
    private static $DEFAULT_ID              = 0;
-   private static $_PLUGIN_MYDASHBOARD_CFG = [];
+   public static  $_PLUGIN_MYDASHBOARD_CFG = [];
 
    static $rightname = "plugin_mydashboard";
 
@@ -358,7 +358,7 @@ class PluginMydashboardMenu extends CommonGLPI {
    }
 
    function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0, $rand) {
-
+      global $CFG_GLPI;
       //      if ($this->interface == 1) {
 
       $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
@@ -368,89 +368,102 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "<form id=\"editmode\" class='plugin_mydashboard_header_title' method='post' 
                      action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
 
+         echo "<table class='tab_cadre cadre_edit' width='100%'>";
+         echo "<tr><th colspan='8'>";
          echo __('Edit mode', 'mydashboard');
-
+         if ($edit == 2) {
+            echo " (" . __('Global', 'mydashboard') . ")";
+         }
+         echo "</th></tr>";
          if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
             $edit = 1;
          }
-         if ($edit == 2) {
-            echo "&nbsp;(" . __('Global', 'mydashboard') . ")&nbsp;";
-         }
-         echo "&nbsp;:&nbsp;";
-
-         echo "&nbsp;";
+         echo "<tr>";
+         echo "<td>";
          echo "<a id='load-widgets$rand' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
-         echo __('Load widgets', 'mydashboard') . "</a>&nbsp;";
-         echo "<i class='fas fa-spinner fa-1x'></i>";
+         echo __('Load widgets', 'mydashboard') . "</a>";
+         echo "&nbsp;<i class='fas fa-spinner fa-1x'></i>";
          echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
-         echo "&nbsp;";
+         echo "</td>";
 
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+            echo "<td>";
+            echo "<span class='editmode_test'>" . __('Profile') . "</span>&nbsp;";
             self::dropdownProfiles(['value' => $selected_profile]);
+            echo "</td>";
          } else {
             echo Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
          }
 
-         echo "&nbsp;<span class='plugin_mydashboard_add_button'>
-                <a id='add-widget$rand' href='#'>" . __('Add a widget', 'mydashboard') . "</a>
-                </span>";//(span.plugin_mydashboard_header_title)
+         echo "<td>";
+         echo "<span class='plugin_mydashboard_add_button'>";
+         echo "<a id='add-widget' href='#'>" . __('Add a widget', 'mydashboard') . "</a>";
+         echo "</span>";//(span.plugin_mydashboard_header_title)
+         echo "&nbsp;<i class=\"fa fa-caret-down\"></i>";
+         echo "</td>";
 
-         echo "&nbsp;<i class=\"fa fa-caret-down\"></i></span>";
-
-         echo "&nbsp;";
-         echo __('Load a predefined grid', 'mydashboard') . "&nbsp;<i class='fa fa-tasks fa-1x'></i>";
+         echo "<td>";
+         //         echo "<i class='fa fa-tasks fa-1x'></i>";
+         echo "<span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
          echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
-         echo "&nbsp;";
-
+         //         echo "<br><br>";
          $elements = PluginMydashboardDashboard::getPredefinedDashboardName();
-
          Dropdown::showFromArray("predefined_grid", $elements, [
             'value'               => $predefined_grid,
             'width'               => '170px',
             'display_emptychoice' => true,
             'on_change'           => 'this.form.submit()']);
-         echo "&nbsp;";
+         echo "</td>";
 
          if ($edit == 1) {
-            echo "&nbsp;";
+            echo "<td>";
             echo "<a id='save-grid$rand' href='#' title=\"" . __('Save grid', 'mydashboard') . "\">";
-            echo __('Save grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-save fa-1x'></i>";
+            echo __('Save grid', 'mydashboard') . "</a>";
             echo "<span class='sr-only'>" . __('Save grid', 'mydashboard') . "</span>";
-            echo "&nbsp;";
+            echo "&nbsp;<i class='far fa-save fa-1x'></i>";
+            echo "</td>";
          }
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            echo "&nbsp;";
+            echo "<td>";
             echo "<a id='save-default-grid$rand' href='#' title=\"" . __('Save default grid', 'mydashboard') . "\">";
-            echo __('Save default grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-hdd fa-1x'></i>";
+            echo __('Save default grid', 'mydashboard') . "</a>";
             echo "<span class='sr-only'>" . __('Save default grid', 'mydashboard') . "</span>";
-            echo "&nbsp;";
+            echo "&nbsp;<i class='far fa-hdd fa-1x'></i>";
+            echo "</td>";
          }
 
-         echo "&nbsp;";
+         echo "<td>";
          echo "<a id='clear-grid$rand' href='#' title=\"" . __('Clear grid', 'mydashboard') . "\">";
-         echo __('Clear grid', 'mydashboard') . "</a>&nbsp;<i class='far fa-window-restore  fa-1x'></i>";
+         echo __('Clear grid', 'mydashboard') . "</a>";
          echo "<span class='sr-only'>" . __('Clear grid', 'mydashboard') . "</span>";
-         echo "&nbsp;";
+         echo "&nbsp;<i class='far fa-window-restore  fa-1x'></i>";
+         echo "</td>";
 
-         echo "&nbsp;";
-         echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
-         echo __('Close edit mode', 'mydashboard') . "</a>&nbsp;<i class='far fa-times-circle fa-1x'></i>";
-         echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
-         echo "&nbsp;";
-
+         echo "<td>";
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
             echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-lock md-fa-2x'></i>";
+            echo __('Permit drag / resize widgets', 'mydashboard') . "</a>";
             echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
-            echo "</a>";
+            echo "&nbsp;<i class='fas fa-lock fa-1x'></i>";
+
          }
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
             echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fas fa-unlock md-fa-2x'></i>";
+            echo __('Block drag / resize widgets', 'mydashboard') . "</a>";
             echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
-            echo "</a>";
+            echo "&nbsp;<i class='fas fa-unlock fa-1x'></i>";
          }
+         echo "</td>";
 
+         echo "<td>";
+         echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
+         echo __('Close edit mode', 'mydashboard') . "</a>";
+         echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
+         echo "&nbsp;<i class='far fa-times-circle fa-1x'></i>";
+         echo "</td>";
+
+         echo "</tr>";
+         echo "</table>";
          Html::closeForm();
 
          echo "<div class='bt-alert bt-alert-success' id='success-alert'>
@@ -559,7 +572,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                         $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
                     } else {
                         $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
-                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left - 40);
+                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 25);
                     }
                     $('.plugin_mydashboard_menuDashboard').width(400);
                     $('.plugin_mydashboard_menuDashboard').zIndex(10000);
@@ -666,10 +679,6 @@ class PluginMydashboardMenu extends CommonGLPI {
          $gslist[$widgetclasses['id']] = $gs;
       }
 
-      $widgetslist = PluginMydashboardWidget::getWidgetList();
-      foreach ($widgetslist as $gs => $widgetclasses) {
-         $gslist[$widgetclasses['id']] = $gs;
-      }
       //1) we 'display' GLPI core widgets in the list
       if ($this->getWidgetsListFromGLPICore($used, $wl, $gslist)) {
          $empty = true;
@@ -757,7 +766,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     *
     * @return bool|string is empty ?
     */
-   private function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = []) {
+   public function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = []) {
       $wl = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
       $wl .= "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
       $wl .= "<div class='plugin_mydashboard_menuDashboardListContainer'><ul class=''>";
@@ -841,7 +850,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
     */
-   private function getWidgetsListFromPlugins($used = [], &$html = "", $gslist = []) {
+   public function getWidgetsListFromPlugins($used = [], &$html = "", $gslist = []) {
       $plugin_names                = $this->getPluginsNames();
       $plugin_names["mydashboard"] = __('My Dashboard', 'mydashboard');
       $plugins_is_empty            = true;
@@ -950,7 +959,8 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @return array of string
     */
    private function getDashboardForUser($id) {
-      $user_widget = new PluginMydashboardUserWidget($id, $this->interface);
+      $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+      $user_widget     = new PluginMydashboardUserWidget($id, $this->interface);
       return $user_widget->getWidgets();
    }
 
