@@ -31,7 +31,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
    private $options;
    private $pref;
-   public static $reports = [2, 7, 12, 13, 15, 16, 17, 18, 20, 25, 26, 27, 30];
+   public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30];
    /**
     * PluginMydashboardReports_Pie constructor.
     *
@@ -63,7 +63,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                $this->getType() . "7"  => (($isDebug) ? "7 " : "") . __("Top ten ticket requesters by month", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                $this->getType() . "12" => (($isDebug) ? "12 " : "") . __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                $this->getType() . "13" => (($isDebug) ? "13 " : "") . __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
-               $this->getType() . "15" => (($isDebug) ? "15 " : "") . __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                $this->getType() . "16" => (($isDebug) ? "16 " : "") . __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                $this->getType() . "17" => (($isDebug) ? "17 " : "") . __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                $this->getType() . "18" => (($isDebug) ? "18 " : "") . __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
@@ -444,95 +443,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $widget->setWidgetHtmlContent(
                $graph
             );
-
-            return $widget;
-            break;
-
-         case $this->getType() . "15":
-            $name = 'TopTenTicketCategoriesPieChart';
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() == 'central') {
-               $criterias = ['requesters_groups_id',
-                             'entities_id',
-                             'is_recursive',
-                             'type',
-                             'year'];
-            }
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requesters_groups_id',
-                             'type',
-                             'year'];
-            }
-
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
-
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
-
-            $type_criteria             = $crit['type'];
-            $entities_criteria         = $crit['entities_id'];
-            $requester_groups_criteria = $crit['requesters_groups_id'];
-            $date_criteria             = $crit['date'];
-            $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
-
-            $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
-                     FROM `glpi_tickets`
-                     LEFT JOIN `glpi_itilcategories`
-                        ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
-                     WHERE $date_criteria
-                     $entities_criteria $type_criteria $requester_groups_criteria
-                     AND $is_deleted
-                     GROUP BY `glpi_itilcategories`.`id`
-                     ORDER BY count DESC
-                     LIMIT 10";
-
-            $result   = $DB->query($query);
-            $nb       = $DB->numrows($result);
-            $tabdata  = [];
-            $tabnames = [];
-            if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
-                  $tabdata[]  = $data['count'];
-                  $tabnames[] = $data['itilcategories_id'];
-               }
-            }
-
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Top ten ticket categories by type of ticket", "mydashboard");
-            $widget->setWidgetTitle((($isDebug) ? "15 " : "") . $title);
-            $widget->setWidgetComment(__("Display of Top ten ticket categories by type of ticket"
-               , "mydashboard"));
-            $databacklogset = json_encode($tabdata);
-            $labelsback     = json_encode($tabnames);
-
-            $nbtickets = __('Tickets number', 'mydashboard');
-
-            $palette         = '#1f77b4';
-            $backgroundColor = json_encode($palette);
-
-            $graph_datas = ['name'            => $name,
-                            'ids'             => $labelsback,
-                            'data'            => $databacklogset,
-                            'labels'          => $labelsback,
-                            'label'           => $nbtickets,
-                            'backgroundColor' => $backgroundColor];
-
-            $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, []);
-
-            $params = ["widgetId"  => $widgetId,
-                       "name"      => $name,
-                       "onsubmit"  => true,
-                       "opt"       => $opt,
-                       "criterias" => $criterias,
-                       "export"    => true,
-                       "canvas"    => true,
-                       "nb"        => $nb];
-            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
-            $widget->setWidgetHtmlContent($graph);
 
             return $widget;
             break;

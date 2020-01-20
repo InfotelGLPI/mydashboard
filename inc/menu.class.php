@@ -455,9 +455,9 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          echo "</td>";
 
-         echo "<td>";
-         echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
-         echo __('Close edit mode', 'mydashboard') . "</a>";
+         echo "<td class='red'>";
+         echo "<a id='close-edit$rand' href='#' title=\"" . __('Close edit mode', 'mydashboard') . "\"><span class='red'>";
+         echo __('Close edit mode', 'mydashboard') . "</span></a>";
          echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
          echo "&nbsp;<i class='far fa-times-circle fa-1x'></i>";
          echo "</td>";

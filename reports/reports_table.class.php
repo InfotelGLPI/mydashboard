@@ -621,7 +621,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                            $value            = "";
                            $nbWaitingTickets = $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
-                              $value .= "<a href='#' onclick='" . $widgetId . "_search($groupId, $status, $hasMoreTicket)'>";
+                              $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $status, $hasMoreTicket)'>";
                            }
                            $value .= $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
@@ -644,7 +644,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                            $statusId = $value['id'];
                            if (isset($array[$status][$groupId])) {
                               $value        = '';
-                              $value        .= "<a href='#' onclick='" . $widgetId . "_search($groupId, $statusId , $hasMoreTicket)'>";
+                              $value        .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $statusId , $hasMoreTicket)'>";
                               $value        .= $array[$status][$groupId];
                               $value        .= "</a>";
                               $temp[$i][$j] = $value;
@@ -702,7 +702,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
             $js_sons   = $crit['sons'];
 
             $js = "
-               var " . $widgetId . "_search = function(_group, _status, _hasMoreTicket){
+               var " . $widgetId . "_searchgroup = function(_group, _status, _hasMoreTicket){
                   $.ajax({
                      url: '" . $linkURL . "',
                      type: 'POST',
