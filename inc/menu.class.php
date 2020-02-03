@@ -191,7 +191,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $menu['title']           = self::getTypeName();
       $menu['page']            = $plugin_page;
       $menu['links']['search'] = $plugin_page;
-      if (Session::haveRightsOr("plugin_mydashboard", [CREATE, UPDATE])
+      if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])
           || Session::haveRight("config", UPDATE)) {
          //Entry icon in breadcrumb
          $menu['links']['config'] = PluginMydashboardConfig::getFormURL(false);
