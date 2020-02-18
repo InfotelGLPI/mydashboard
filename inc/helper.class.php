@@ -1266,7 +1266,7 @@ class PluginMydashboardHelper {
       if (!$params) {
          if (isset($prefered_group)
              && !empty($prefered_group)
-             && count($opt) < 1) {
+             && count($opt) <= 1) {
             $res = json_decode($prefered_group, true);
          } else if (isset($opt['requesters_groups_id'])) {
             $res = (is_array($opt['requesters_groups_id']) ? $opt['requesters_groups_id'] : [$opt['requesters_groups_id']]);
@@ -1299,7 +1299,7 @@ class PluginMydashboardHelper {
       if (!$params) {
          if (isset($prefered_group)
              && !empty($prefered_group)
-             && count($opt) < 1) {
+             && count($opt) <= 1) {
             if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])) {
                $res = json_decode($group, true);
             } else {
