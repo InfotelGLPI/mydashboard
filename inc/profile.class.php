@@ -119,7 +119,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       //85
       self::addDefaultProfileInfos($ID,
                                    ['plugin_mydashboard'             => 6,
-                                    'plugin_mydashboard_config'      => 6,
+                                    'plugin_mydashboard_config'      => CREATE + UPDATE + PURGE,
                                     'plugin_mydashboard_edit'        => 6,
                                     'plugin_mydashboard_stockwidget' => READ + CREATE + UPDATE + PURGE], true);
    }
@@ -161,7 +161,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       echo "<tr class='tab_bg_2'>";
       echo "<td>" . __("Configuration Access", "mydashboard") . "</td><td>";
       //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
-      Html::showCheckbox(['name'    => '_plugin_mydashboard_config[6_0]',
+      Html::showCheckbox(['name'    => '_plugin_mydashboard_config[22_0]',
                           'checked' => $effective_rights["plugin_mydashboard_config"]]);
       echo "</td>";
       echo "<td></td>";

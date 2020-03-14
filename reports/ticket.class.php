@@ -103,19 +103,19 @@ class PluginMydashboardTicket {
             }
             break;
          case "ticketlisttoapprovewidget":
-            return self::showCentralList(0, "toapprove", false);;
+            return self::showCentralList(0, "toapprove", false);
             break;
          case "ticketlistrejectedwidget":
-            return self::showCentralList(0, "rejected", false);;
+            return self::showCentralList(0, "rejected", false);
             break;
          case "ticketlistsurveywidget":
-            return self::showCentralList(0, "survey", false);;
+            return self::showCentralList(0, "survey", false);
             break;
          case "ticketlistrequestbyselfwidget":
-            return self::showCentralList(0, "requestbyself", false);;
+            return self::showCentralList(0, "requestbyself", false);
             break;
          case "ticketlistobservedwidget":
-            return self::showCentralList(0, "observed", false);;
+            return self::showCentralList(0, "observed", false);
             break;
          case "ticketlistprocesswidget":
             if ($showticket) {

@@ -198,6 +198,14 @@ function plugin_mydashboard_install() {
       $mig = new Migration("1.7.8");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.8.sql");
       $mig->executeMigration();
+
+      $config = new PluginMydashboardConfig();
+      $input['id']                        = "1";
+      $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
+      $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
+      $input['title_informations_widget'] = _n("Information", "Informations", 2, 'mydashboard');
+      $config->update($input);
+
    }
 
    //If default configuration is not loaded

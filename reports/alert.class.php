@@ -1970,7 +1970,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $style = "color:" . $config->getField('impact_' . $impact);
 
       $div .= "<div class='bt-row weather_public_block'>";
-      $div .= "<div class='center'><h3>" . __("Monitoring", "mydashboard") . "</h3></div>";
+      $div .= "<div class='center'><h3>" . PluginMydashboardConfig::displayField($config, 'title_alerts_widget') . "</h3></div>";
       $div .= "<div class=\"bt-col-xs-4 right \">";
       $div .= "<i style='$style' class='fa $class fa-alert-4'></i>";
       $div .= "</div>";
@@ -2226,7 +2226,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $display .= "<span>";
          $config = new PluginMydashboardConfig();
          $config->getFromDB(1);
-         $display .= PluginServicecatalogConfig::displayField($config, 'title_alerts_widget');;
+         $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
          $display .= "</span>";
          $display .= "</h3>";
          $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";

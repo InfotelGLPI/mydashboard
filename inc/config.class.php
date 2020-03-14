@@ -81,6 +81,19 @@ class PluginMydashboardConfig extends CommonDBTM {
       return (Session::haveRight(self::$rightname, CREATE));
    }
 
+   /**
+    * @param string $interface
+    *
+    * @return array
+    */
+   function getRights($interface = 'central') {
+
+      $values = parent::getRights();
+
+      unset($values[READ], $values[DELETE]);
+      return $values;
+   }
+
 
    /**
     * @param CommonGLPI $item
