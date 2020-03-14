@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -26,31 +27,12 @@
 
 include('../../../inc/includes.php');
 
-Session::checkLoginUser();
-
-if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'PluginMydashboardConfig');
-} else {
-   Html::helpHeader(PluginMydashboardMenu::getTypeName(2));
+$translation = new PluginMydashboardConfigTranslation();
+if (isset($_POST['add'])) {
+   $translation->add($_POST);
+} else if (isset($_POST['update'])) {
+   $translation->update($_POST);
+} else if (isset($_POST['purge'])) {
+   $translation->delete($_POST, 1);
 }
-$plugin = new Plugin();
-
-if (!isset($_GET["id"])) {
-   $_GET["id"] = "1";
-}
-if ($plugin->isActivated("mydashboard")) {
-
-   $config = new PluginMydashboardConfig();
-
-   if (isset($_POST['update'])) {
-
-      $config->update($_POST);
-   }
-
-   $config->display($_GET);
-
-} else {
-   Html::displayRightError();
-}
-
-Html::footer();
+Html::back();

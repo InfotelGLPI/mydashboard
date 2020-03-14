@@ -114,7 +114,7 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
          $types    = [];
-         $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
+         $types[0] = _n('Network alert', 'Network alerts', 1, 'mydashboard');
          $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
          $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
 

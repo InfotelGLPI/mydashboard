@@ -29,8 +29,8 @@
  */
 class PluginMydashboardReports_Bar extends CommonGLPI {
 
-   private $options;
-   private $pref;
+   private       $options;
+   private       $pref;
    public static $reports = [1, 8, 15, 21, 23, 24, 35, 36, 37];
 
    /**
@@ -279,7 +279,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             return $widget;
             break;
-         
+
          case $this->getType() . "15":
             $name = 'TopTenTicketCategoriesBarChart';
             if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -368,7 +368,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             return $widget;
             break;
-            
+
          case $this->getType() . "21":
             $name = 'TicketsByTechChart';
             if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -950,11 +950,14 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             }
             $plugin = new Plugin();
             if ($plugin->isActivated('moreticket')) {
-               $moreTicketToShow = [];
+               $moreTickets = [];
                foreach (self::getAllMoreTicketStatus() as $id => $names) {
-                  $moreTicketToShow[] = $id;
+                  $moreTickets[] = $id;
                }
-               $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTicketToShow) . ')';
+               $moreTicketToShow ='';
+               if (count($moreTickets) > 0) {
+                  $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTickets) . ')';
+               }
                $query_moreticket = "SELECT COUNT(*) AS Total,   
                          `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS status
                           FROM `glpi_plugin_moreticket_waitingtickets`

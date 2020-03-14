@@ -199,6 +199,11 @@ class PluginMydashboardStockWidget extends CommonDBTM {
       echo "<td>" . __('Icon') . "</td>";
       echo "<td>";
       Html::autocompletionTextField($this, "icon");
+      if (isset($this->fields['icon'])
+          && !empty($this->fields['icon'])) {
+         $icon = $this->fields['icon'];
+         echo "<br><br><i class='fas-sc sc-fa-color $icon fa-3x' ></i>";
+      }
       echo "</td>";
 
       echo "<td>" . __('Alert threshold') . "</td>";

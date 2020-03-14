@@ -42,7 +42,7 @@
 #alert-div {
    text-align: left;
    /*margin: 10px 1px 30px 30px;*/
-   min-height: 150px;
+   /*min-height: 150px;*/
 }
 
 .alert-title-div {
@@ -206,32 +206,40 @@ div#tabcontent{
 .cadre_edit {
    border: none !important;
    box-shadow: none;
-   background-color: transparent;
+   background-color: white;
+}
+
+.cadre_edit_button {
+   display: block;
+   background: whitesmoke;
+   padding: 10px;
+   text-align: center;
+   border-radius: 5px;
 }
 
 .cadre_edit th {
-   font-weight: bold;
-   text-align: center;
-   border-radius: 4px;
-   padding: 2px;
-   border-radius: 0;
-   margin: 0;
-   font-size: 1.1em;
-   color: #000;
-   padding: 5px 5px;
-   background-color: #f1f1f1;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 4px;
+  padding: 2px;
+  border-radius: 0;
+  margin: 0;
+  font-size: 1.1em;
+  color: #000;
+  padding: 5px 5px;
+  background-color: white;
 }
 
 .cadre_edit td {
-   border: none !important;
-   box-shadow: none;
-   background-color: transparent;
+  border: none !important;
+  box-shadow: none;
+  background-color: white;
 }
 
 #editmode {
-   border-radius: 5px;
-   border: 1px dashed #CCC;
-   padding: 10px !important;
+  border-radius: 5px;
+  border: 1px dashed #CCC;
+  /*padding: 10px !important;*/
    /*width: 300px;*/
    text-align: center;
 }
@@ -251,7 +259,7 @@ div#tabcontent{
 }
 
 #editmode a:hover {
-   text-decoration: underline;
+   text-decoration: none;
 }
 
 #plugin_mydashboard_container {
@@ -421,7 +429,7 @@ div#tabcontent{
    font-size: 11px;
    font-weight: normal;
    border-bottom: lightgray 1px solid;
-   padding: 5px;
+   padding: 7px;
    /*0.85*/
    margin: 0px;
 }
@@ -432,7 +440,7 @@ div#tabcontent{
 
 .plugin_mydashboard_menuDashboardListTitle1:hover,
 .plugin_mydashboard_menuDashboardListTitle1Opened {
-   background-color: #e8e8e8;
+   background-color: whitesmoke;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1:before,
@@ -1022,6 +1030,11 @@ div.dt-button-background {
 
 .md-grid-stack {
    background: #FFF;
+}
+
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
+   left: 1px!important;
+   right: 1px!important;
 }
 
 .md-grid-stack-item {

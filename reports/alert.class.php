@@ -115,6 +115,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @param $type
     *
     * @return int
+    * @throws \GlpitestSQLError
     */
    static function countForAlerts($public, $type) {
       global $DB;
@@ -152,15 +153,18 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @param array $opt
     *
     * @return PluginMydashboardHtml
+    * @throws \GlpitestSQLError
     */
    function getWidgetContentForItem($widgetId, $opt = []) {
       global $CFG_GLPI, $DB;
       $dbu = new DbUtils();
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
       switch ($widgetId) {
          case $this->getType() . "1":
             $widget = new PluginMydashboardHtml();
             $widget->setWidgetHtmlContent($this->getAlertList(0));
-            $widget->setWidgetTitle(__('Network Monitoring', 'mydashboard'));
+            $widget->setWidgetTitle(PluginMydashboardConfig::displayField($config, 'title_alerts_widget'));
             return $widget;
             break;
 
@@ -170,7 +174,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setWidgetHtmlContent(
                $datas
             );
-            $widget->setWidgetTitle(_n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'));
+            $widget->setWidgetTitle(PluginMydashboardConfig::displayField($config, 'title_maintenances_widget'));
             return $widget;
             break;
 
@@ -180,7 +184,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setWidgetHtmlContent(
                $datas
             );
-            $widget->setWidgetTitle(_n('Information', 'Informations', 2, 'mydashboard'));
+            $widget->setWidgetTitle(PluginMydashboardConfig::displayField($config, 'title_informations_widget'));
             return $widget;
             break;
 
@@ -2167,7 +2171,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
          $types    = [];
-         $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
+         $types[0] = _n('Network alert', 'Network alerts', 1, 'mydashboard');
          $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
          $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
 
@@ -2220,7 +2224,9 @@ class PluginMydashboardAlert extends CommonDBTM {
          $display = "<div class=\"bt-feature $class \">";
          $display .= "<h3 class=\"bt-title-divider\">";
          $display .= "<span>";
-         $display .= __('Network Monitoring', 'mydashboard');
+         $config = new PluginMydashboardConfig();
+         $config->getFromDB(1);
+         $display .= PluginServicecatalogConfig::displayField($config, 'title_alerts_widget');;
          $display .= "</span>";
          $display .= "</h3>";
          $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";

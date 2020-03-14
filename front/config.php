@@ -26,31 +26,24 @@
 
 include('../../../inc/includes.php');
 
-Session::checkLoginUser();
-
-if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'PluginMydashboardConfig');
-} else {
-   Html::helpHeader(PluginMydashboardMenu::getTypeName(2));
-}
 $plugin = new Plugin();
 
-if (!isset($_GET["id"])) {
-   $_GET["id"] = "1";
-}
+global $CFG_GLPI;
+
 if ($plugin->isActivated("mydashboard")) {
+   if (Session::haveRight("plugin_mydashboard_config", UPDATE)) {
 
-   $config = new PluginMydashboardConfig();
+      Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/config.form.php");
 
-   if (isset($_POST['update'])) {
-
-      $config->update($_POST);
+   } else {
+      Html::displayRightError();
    }
 
-   $config->display($_GET);
-
 } else {
-   Html::displayRightError();
-}
+   Html::header(__('Setup'), '', "config", "plugins");
+   echo "<div align='center'><br><br>";
+   echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+   echo "<b>" . __('Please activate the plugin', 'mydashboard') . "</b></div>";
+   Html::footer();
 
-Html::footer();
+}

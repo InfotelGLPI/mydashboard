@@ -38,31 +38,146 @@ class PluginMydashboardConfig extends CommonDBTM {
     *
     * @return translated
     */
+   static $rightname         = "plugin_mydashboard_config";
+   var    $can_be_translated = true;
+
    static function getTypeName($nb = 0) {
-      return __('Dashboard - Configuration', 'mydashboard');
+      return __('Plugin setup', 'mydashboard');
    }
 
    /**
-    * @return bool
+    * PluginMydashboardConfig constructor.
     */
-   static function canUpdate() {
-      return self::canCreate();
+   public function __construct() {
+      global $DB;
+
+      if ($DB->tableExists($this->getTable())) {
+         $this->getFromDB(1);
+      }
    }
 
    /**
-    * @return bool
-    */
-   static function canCreate() {
-      return Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE]);
-   }
-
-   /**
-    * @return bool
-    */
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
-      return Session::haveRight('plugin_mydashboard_config', READ);
+
+      return (Session::haveRight(self::$rightname, UPDATE));
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
+   static function canCreate() {
+
+      return (Session::haveRight(self::$rightname, CREATE));
+   }
+
+
+   /**
+    * @param CommonGLPI $item
+    * @param int        $tabnum
+    * @param int        $withtemplate
+    *
+    * @return bool
+    */
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+
+      if ($item->getType() == __CLASS__) {
+         switch ($tabnum) {
+
+            case 1 :
+               $item->showForm($item->getID());
+               break;
+         }
+      }
+      return true;
+   }
+
+   /**
+    * @param CommonGLPI $item
+    * @param int        $withtemplate
+    *
+    * @return string
+    */
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      if (!$withtemplate) {
+         switch ($item->getType()) {
+            case __CLASS__ :
+               $ong[1] = self::getTypeName();
+               return $ong;
+         }
+
+      }
+      return '';
+   }
+
+   /**
+    * @see CommonGLPI::defineTabs()
+    */
+   function defineTabs($options = []) {
+
+      $ong = [];
+      $this->addStandardTab(__CLASS__, $ong, $options);
+      $this->addStandardTab('PluginMydashboardConfigTranslation', $ong, $options);
+      return $ong;
+   }
+
+   /**
+    * Get the Search options for the given Type
+    *
+    * This should be overloaded in Class
+    *
+    * @return array an *indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
+   function rawSearchOptions() {
+
+      $tab = [];
+
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
+
+      $tab[] = [
+         'id'         => '2',
+         'table'      => $this->getTable(),
+         'field'      => 'title_alerts_widget',
+         'name'       => __("Title of alerts widget", "mydashboard"),
+         'searchtype' => 'equals',
+         'datatype'   => 'text'
+      ];
+
+      $tab[] = [
+         'id'         => '3',
+         'table'      => $this->getTable(),
+         'field'      => 'title_maintenances_widget',
+         'name'       => __("Title of scheduled maintenances widget", "mydashboard"),
+         'searchtype' => 'equals',
+         'datatype'   => 'text'
+      ];
+
+      $tab[] = [
+         'id'         => '4',
+         'table'      => $this->getTable(),
+         'field'      => 'title_informations_widget',
+         'name'       => __("Title of informations widget", "mydashboard"),
+         'searchtype' => 'equals',
+         'datatype'   => 'text'
+      ];
+
+      return $tab;
+   }
 
    /**
     * @param       $ID
@@ -111,7 +226,7 @@ class PluginMydashboardConfig extends CommonDBTM {
       Dropdown::showYesNo("replace_central", $this->fields['replace_central']);
       echo "</td>";
       echo "</tr>";
-      
+
       echo "<tr class='tab_bg_1'><td>" . __("Google API Key", "mydashboard") . "</td>";
       echo "<td>";
       Html::autocompletionTextField($this, "google_api_key");
@@ -119,7 +234,7 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_2'>";
-      echo "<td>" . __('Impact colors for alerts','mydashboard') . "</td>";
+      echo "<td>" . __('Impact colors for alerts', 'mydashboard') . "</td>";
       echo "<td colspan='3'>";
 
       echo "<table><tr>";
@@ -143,10 +258,10 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Level of categories to show', 'mydashboard') . "</td>";
       echo "<td>";
-      $itilCat = new ITILCategory();
+      $itilCat        = new ITILCategory();
       $itilCategories = $itilCat->find();
-      $levelsCat = [];
-      foreach ($itilCategories as $categorie){
+      $levelsCat      = [];
+      foreach ($itilCategories as $categorie) {
          $levelsCat[$categorie['level']] = $categorie['level'];
       }
       ksort($levelsCat);
@@ -154,7 +269,23 @@ class PluginMydashboardConfig extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-      echo "</td></tr>";
+      echo "<tr class='tab_bg_1'><td>" . __("Title of alerts widget", "mydashboard") . "</td>";
+      echo "<td>";
+      Html::autocompletionTextField($this, "title_alerts_widget", ['size' => 100]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'><td>" . __("Title of scheduled maintenances widget", "mydashboard") . "</td>";
+      echo "<td>";
+      Html::autocompletionTextField($this, "title_maintenances_widget", ['size' => 100]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'><td>" . __("Title of informations widget", "mydashboard") . "</td>";
+      echo "<td>";
+      Html::autocompletionTextField($this, "title_informations_widget", ['size' => 100]);
+      echo "</td>";
+      echo "</tr>";
 
       $this->showFormButtons($options);
    }
@@ -171,13 +302,16 @@ class PluginMydashboardConfig extends CommonDBTM {
       $result = $DB->query($query);
       if ($DB->numrows($result) == '0') {
 
-         $input                          = [];
-         $input['id']                    = "1";
-         $input['enable_fullscreen']     = "1";
-         $input['display_menu']          = "1";
-         $input['display_plugin_widget'] = "1";
-         $input['replace_central']       = "1";
-         $input['google_api_key']        = "";
+         $input                              = [];
+         $input['id']                        = "1";
+         $input['enable_fullscreen']         = "1";
+         $input['display_menu']              = "1";
+         $input['display_plugin_widget']     = "1";
+         $input['replace_central']           = "1";
+         $input['google_api_key']            = "";
+         $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
+         $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
+         $input['title_informations_widget'] = _n("Information", "Informations", 2, 'mydashboard');
          $this->add($input);
       }
    }
@@ -192,4 +326,34 @@ class PluginMydashboardConfig extends CommonDBTM {
       }
    }
 
+   /**
+    * Returns the translation of the field
+    *
+    * @param type  $item
+    * @param type  $field
+    *
+    * @return type
+    * @global type $DB
+    *
+    */
+   static function displayField($item, $field) {
+      global $DB;
+
+      // Make new database object and fill variables
+      $iterator = $DB->request([
+                                  'FROM'  => 'glpi_plugin_mydashboard_configtranslations',
+                                  'WHERE' => [
+                                     'itemtype' => 'PluginMydashboardConfig',
+                                     'items_id' => '1',
+                                     'field'    => $field,
+                                     'language' => $_SESSION['glpilanguage']
+                                  ]]);
+
+      if (count($iterator)) {
+         while ($data = $iterator->next()) {
+            return $data['value'];
+         }
+      }
+      return $item->fields[$field];
+   }
 }

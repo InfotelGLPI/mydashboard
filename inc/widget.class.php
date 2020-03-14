@@ -570,11 +570,13 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
-      $display  .= __('Network Monitoring', 'mydashboard');
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
+      $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
       $display  .= "</span>";
       $display  .= "</h3>";
-      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
-      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
+//      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
+//      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
       $display  .= "<div id=\"display-sc\">";
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
          $alerts  = new PluginMydashboardAlert();
@@ -608,7 +610,9 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
-      $display  .= _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard');
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
+      $display .= PluginMydashboardConfig::displayField($config, 'title_maintenances_widget');
       $display  .= "</span>";
       //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
       $display .= "</h3>";
@@ -645,7 +649,9 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
-      $display  .= _n('Information', 'Informations', 2, 'mydashboard');
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
+      $display .= PluginMydashboardConfig::displayField($config, 'title_informations_widget');
       $display  .= "</span>";
       $display  .= "</h3>";
       $display  .= "<div id='display-sc'>";

@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '1.7.7');
+define('PLUGIN_MYDASHBOARD_VERSION', '1.7.8');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mydashboard() {
@@ -66,7 +66,7 @@ function plugin_init_mydashboard() {
       if ($plugin->isActivated("mydashboard")) {
          //If user has right to see configuration
          if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
-            $PLUGIN_HOOKS['config_page']['mydashboard'] = 'front/config.form.php';
+            $PLUGIN_HOOKS['config_page']['mydashboard'] = 'front/config.php';
             //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
          }
 

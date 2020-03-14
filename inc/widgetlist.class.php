@@ -69,7 +69,7 @@ class PluginMydashboardWidgetlist {
       $widgets['mydashboard'] = [];
 
       $autoloader = new PluginMydasboardAutoloader();
-      $classes = $autoloader->list();
+      $classes = $autoloader->listReports();
       foreach ($classes as $class) {
          $widgets['mydashboard'][] = $class;
       }

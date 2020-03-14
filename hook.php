@@ -147,16 +147,19 @@ function plugin_mydashboard_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.2.sql");
       $mig->executeMigration();
    }
+
    if (!$DB->fieldExists("glpi_plugin_mydashboard_dashboards", "grid_statesave")) {
       $mig = new Migration("1.6.3");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
+
    if (!$DB->tableExists("glpi_plugin_mydashboard_stockwidgets")) {
       $mig = new Migration("1.7.0");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.0.sql");
       $mig->executeMigration();
    }
+
    if (!$DB->tableExists("glpi_plugin_mydashboard_customswidgets")) {
       $mig = new Migration("1.7.2");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.2.sql");
@@ -189,6 +192,12 @@ function plugin_mydashboard_install() {
       $mig->executeMigration();
       $widget = new PluginMydashboardWidget();
       $widget->migrateWidgets();
+   }
+
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "title_informations_widget")) {
+      $mig = new Migration("1.7.8");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.8.sql");
+      $mig->executeMigration();
    }
 
    //If default configuration is not loaded
@@ -364,7 +373,8 @@ function plugin_mydashboard_uninstall() {
       "glpi_plugin_mydashboard_changealerts",
       "glpi_plugin_mydashboard_dashboards",
       "glpi_plugin_mydashboard_groupprofiles",
-      "glpi_plugin_mydashboard_customswidgets"];
+      "glpi_plugin_mydashboard_customswidgets",
+      "glpi_plugin_mydashboard_configtranslations"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");

@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -24,33 +25,20 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+$AJAX_INCLUDE = 1;
+include("../../../inc/includes.php");
 
-Session::checkLoginUser();
+header("Content-Type: text/html; charset=UTF-8");
+Html::header_nocache();
 
-if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'PluginMydashboardConfig');
-} else {
-   Html::helpHeader(PluginMydashboardMenu::getTypeName(2));
-}
-$plugin = new Plugin();
+Session::checkRight("plugin_mydashboard_config", UPDATE);
 
-if (!isset($_GET["id"])) {
-   $_GET["id"] = "1";
-}
-if ($plugin->isActivated("mydashboard")) {
-
-   $config = new PluginMydashboardConfig();
-
-   if (isset($_POST['update'])) {
-
-      $config->update($_POST);
+if (isset($_POST['itemtype']) && isset($_POST['language'])) {
+   $item = new $_POST['itemtype'];
+   $item->getFromDB($_POST['items_id']);
+   if ($item->getType() == "PluginMydashboardConfig") {
+      PluginMydashboardConfigTranslation::dropdownFields($item, $_POST['language']);
+   } else {
+      PluginMydashboardConfigTranslation::dropdownFields($item, $_POST['language']);
    }
-
-   $config->display($_GET);
-
-} else {
-   Html::displayRightError();
 }
-
-Html::footer();
