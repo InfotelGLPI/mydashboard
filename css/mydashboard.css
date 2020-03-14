@@ -215,6 +215,12 @@ div#tabcontent{
    padding: 10px;
    text-align: center;
    border-radius: 5px;
+   border: 1px solid whitesmoke;
+}
+
+.cadre_edit_button:hover {
+   background: white;
+   border: 1px solid whitesmoke;
 }
 
 .cadre_edit th {
