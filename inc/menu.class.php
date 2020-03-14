@@ -320,13 +320,6 @@ class PluginMydashboardMenu extends CommonGLPI {
       //(span.plugin_mydashboard_header_right)
       //If administator enabled fullscreen we display the button to toggle fullscreen
       //(maybe we could also only add the js when needed, but jquery is loaded so would be only foolproof)
-      if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
-          && $edit < 1
-          && $this->interface == 1) {
-         echo "<span class='plugin_mydashboard_header_right'> ";
-         echo "<i class=\"fa fa-arrows-alt plugin_mydashboard_header_fullscreen header_fullscreen plugin_mydashboard_discret \" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
-         echo "</span>";
-      }
 
       //end(span.plugin_mydashboard_header_right)
       echo "</div>";//end(div.plugin_mydashboard_header)
@@ -497,37 +490,63 @@ class PluginMydashboardMenu extends CommonGLPI {
          ');
 
       } else {
+
+         echo "<table class='tab_cadre cadre_edit'>";
+         echo "<tr>";
+
          if (Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<a id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-edit md-fa-2x'></i>";
+            echo "<td>";
+            echo "<a class='cadre_edit_button' id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
+            echo "<i class='far fa-edit fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
             echo "</a>";
+            echo "</td>";
          }
 
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<a id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-lock md-fa-2x'></i>";
+            echo "<td>";
+            echo "<a class='cadre_edit_button' id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
+            echo "<i class='fa fa-lock fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
             echo "</a>";
+            echo "</td>";
          }
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-
-            echo "<a id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-unlock-alt md-fa-2x'></i>";
+            echo "<td>";
+            echo "<a class='cadre_edit_button' id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
+            echo "<i class='fa fa-unlock-alt fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
             echo "</a>";
+            echo "</td>";
 
-            echo "<a id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode far fa-save md-fa-2x'></i>";
+            echo "<td>";
+            echo "<a class='cadre_edit_button' id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
+            echo "<i class='far fa-save fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
             echo "</a>";
+            echo "</td>";
          }
          if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-            echo "<a id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
-            echo "<i class='plugin_mydashboard_discret plugin_mydashboard_header_editmode fa fa-cogs md-fa-2x'></i>";
+            echo "<td>";
+            echo "<a class='cadre_edit_button' id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
+            echo "<i class='fa fa-cogs fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Custom and save default grid', 'mydashboard') . "</span>";
             echo "</a>";
+            echo "</td>";
          }
+
+         if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
+             && $edit < 1
+             && $this->interface == 1) {
+            echo "<td>";
+            echo "<a class='cadre_edit_button' href='#' title=\"" . __("Fullscreen", "mydashboard") . "\">";
+            echo "<i class=\"fa fa-arrows-alt fa-lg header_fullscreen\" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
+            echo "</a>";
+            echo "</td>";
+         }
+
+         echo "</tr>";
+         echo "</table>";
       }
       echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
       echo "</div>";

@@ -125,9 +125,9 @@
 }
 
 .plugin_mydashboard_dashboard {
-   width: 100%;
-   border: initial;
-   background: initial;
+   /*width: 100%;*/
+   /*border: initial;*/
+   /*background: initial;*/
 }
 
 /*
@@ -142,10 +142,8 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_header {
-   text-align: left;
-   padding-bottom: 0px !important;
-   padding-top: 0px !important;
-
+   margin-bottom: 5px;
+   margin-top: -10px;
 }
 
 .plugin_mydashboard_header_title {
@@ -207,6 +205,8 @@ div#tabcontent{
    border: none !important;
    box-shadow: none;
    background-color: white;
+   margin-bottom: 5px;
+   margin: initial;
 }
 
 .cadre_edit_button {
