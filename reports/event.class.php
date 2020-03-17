@@ -231,7 +231,10 @@ class PluginMydashboardEvent extends Glpi\Event {
          $widget->setOption("bPaginate", false);
          $widget->setOption("bFilter", false);
          $widget->setOption("bInfo", false);
-         $widget->setOption("bSort", false);
+         if (count($output['body']) > 0){
+            $widget->setOption("bSort", false);
+         }
+
 
          $widget->toggleWidgetRefresh();
          return $widget;

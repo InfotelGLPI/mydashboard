@@ -142,8 +142,7 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_header {
-   margin-bottom: 5px;
-   margin-top: -10px;
+   margin-top: -8px;
 }
 
 .plugin_mydashboard_header_title {
@@ -202,11 +201,12 @@ div#tabcontent{
 }
 
 .cadre_edit {
-   border: none !important;
-   box-shadow: none;
+   /*border: none !important;*/
+   /*box-shadow: none;*/
    background-color: white;
-   margin-bottom: 5px;
-   margin: initial;
+   margin-bottom: 2px;
+   margin-top: 2px;
+   margin-right: 2px;
 }
 
 .cadre_edit_button {
@@ -215,31 +215,65 @@ div#tabcontent{
    padding: 10px;
    text-align: center;
    border-radius: 5px;
-   border: 1px solid whitesmoke;
+   border: none;
 }
 
 .cadre_edit_button:hover {
-   background: white;
-   border: 1px solid whitesmoke;
+   /*background: whitesmoke;*/
+   /*border: 1px solid whitesmoke;*/
 }
 
 .cadre_edit th {
    font-weight: bold;
    text-align: center;
-   border-radius: 4px;
+   border-radius: 5px;
    padding: 2px;
    margin: 0;
    font-size: 1.1em;
    color: #000;
    padding: 5px 5px;
-   background-color: white;
+   background-color: whitesmoke;
    border: none;
 }
 
 .cadre_edit td {
-   border: none !important;
-   box-shadow: none;
+   /*border: none !important;*/
+   /*box-shadow: none;*/
+   /*background-color: white;*/
+}
+
+#zone1 {
+   /*border: 1px solid whitesmoke;*/
+   /*background-color: #CCC;*/
+}
+
+#zone2 {
+   /*border: 1px solid whitesmoke;*/
+   /*background-color: #CCC;*/
+}
+
+#btn_zone1 {
+   cursor: pointer;
+}
+
+#btn_zone2 {
+   /*display: none;*/
+   /*cursor:pointer;*/
+}
+
+/*#zone1_content {*/
+/*   display: none;*/
+/*}*/
+
+#menutop {
+   position: fixed;
+   /*top: 115px;*/
+   right: 10px;
+   /*cursor: pointer;*/
+   z-index: 99;
    background-color: white;
+   /*opacity: .6;*/
+   /* Behind debug panel */
 }
 
 #editmode {
@@ -316,15 +350,15 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_menuDashboard {
-   position: absolute;
-   right: 0px;
-   top: 0px;
-   z-index: 10 !important;
+   position: fixed;
+   /*right: 0px;*/
+   /*top: 0px;*/
+   /*z-index: 99;*/
    display: none;
 }
 
 .plugin_mydashboard_menuWidget {
-   position: absolute;
+   position: fixed;
    display: none;
    border: 1px solid lightgray;
    -webkit-border-radius: 5px;

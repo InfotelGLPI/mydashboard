@@ -316,6 +316,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo "<div class='plugin_mydashboard_header'>";//(div.plugin_mydashboard_header)
 
       $this->displayEditMode($edit, $selected_profile, $predefined_grid, $rand);
+
       //      echo "</span>";//end(span.plugin_mydashboard_header_title)
       //(span.plugin_mydashboard_header_right)
       //If administator enabled fullscreen we display the button to toggle fullscreen
@@ -353,18 +354,47 @@ class PluginMydashboardMenu extends CommonGLPI {
    }
 
    function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0, $rand) {
-      global $CFG_GLPI;
-      //      if ($this->interface == 1) {
 
       $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
+      echo "<script>";
+      echo "$(document).ready(function() {
+              $('#see-menu$rand').click(function () {
+                 var zone2 = document.getElementById('zone2');
+                 var zone1 = document.getElementById('zone1');
+                 if (zone2.style.display === \"none\") {
+                   zone2.style.display = \"block\";
+                   zone1.style.display = \"none\";
+                 }
+             }); 
+             $('#hide-menu$rand').click(function () {
+                 var zone2 = document.getElementById('zone2');
+                 var zone1 = document.getElementById('zone1');
+                 if (zone1.style.display === \"none\") {
+                   zone1.style.display = \"block\";
+                   zone2.style.display = \"none\";
+                 }
+             });
+             $('#see-menu-edit$rand').click(function () {
+                 var zone3 = document.getElementById('zone3');
+                 var zone4 = document.getElementById('zone4');
+                 if (zone3.style.display === \"none\") {
+                   zone3.style.display = \"block\";
+                   zone4.style.display = \"none\";
+                 }
+             }); 
+           });";
+      echo "</script>";
+
       if ($edit > 0) {
 
+         echo "<div id='menutop' align='right'>";
+         echo "<div id=\"zone3\" style=\"display: none;\">";
          echo "<form id=\"editmode\" class='plugin_mydashboard_header_title' method='post' 
                      action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
 
-         echo "<table class='tab_cadre cadre_edit' width='100%'>";
-         echo "<tr><th colspan='8'>";
+         echo "<table class='cadre_edit' width='100%'>";
+         echo "<tr><th>";
          echo __('Edit mode', 'mydashboard');
          if ($edit == 2) {
             echo " (" . __('Global', 'mydashboard') . ")";
@@ -472,6 +502,23 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "</tr>";
          echo "</table>";
          Html::closeForm();
+         echo "</div>";
+
+         echo "<div id=\"zone4\">";
+         echo "<div id=\"btn_zone4\" class=\"btn_open_zone\">";
+         echo "<table class='cadre_edit'>";
+         echo "<tr>";
+         echo "<td>";
+         echo "<a id='see-menu-edit$rand' class='cadre_edit_button' href='#' title=\"" . __('See menu', 'mydashboard') . "\">";
+         echo "<i class='fas fa-ellipsis-v fa-2x'></i>";
+         echo "<span class='sr-only'>" . __('See menu', 'mydashboard') . "</span>";
+         echo "</a>";
+         echo "</td>";
+         echo "</tr>";
+         echo "</table>";
+         echo "</div>";
+         echo "</div>";
+         echo "</div>";
 
          echo "<div class='bt-alert bt-alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
@@ -488,16 +535,20 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo Html::scriptBlock('
                $("#error-alert").hide();
          ');
-
+         
       } else {
 
-         echo "<table class='tab_cadre cadre_edit'>";
+         echo "<div id='menutop' align='right'>";
+
+         echo "<div id=\"zone2\" style=\"display: none;\">";
+         echo "<div id=\"btn_zone2\" class=\"btn_open_zone\">";
+         echo "<table class='cadre_edit'>";
          echo "<tr>";
 
          if (Session::haveRight("plugin_mydashboard_edit", 6)) {
             echo "<td>";
             echo "<a class='cadre_edit_button' id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-            echo "<i class='far fa-edit fa-lg'></i>";
+            echo "<i class='fas fa-edit fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
             echo "</a>";
             echo "</td>";
@@ -506,7 +557,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
             echo "<td>";
             echo "<a class='cadre_edit_button' id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='fa fa-lock fa-lg'></i>";
+            echo "<i class='fas fa-lock fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
             echo "</a>";
             echo "</td>";
@@ -514,14 +565,14 @@ class PluginMydashboardMenu extends CommonGLPI {
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
             echo "<td>";
             echo "<a class='cadre_edit_button' id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='fa fa-unlock-alt fa-lg'></i>";
+            echo "<i class='fas fa-unlock-alt fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
             echo "</a>";
             echo "</td>";
 
             echo "<td>";
             echo "<a class='cadre_edit_button' id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-            echo "<i class='far fa-save fa-lg'></i>";
+            echo "<i class='fas fa-save fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
             echo "</a>";
             echo "</td>";
@@ -529,7 +580,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
             echo "<td>";
             echo "<a class='cadre_edit_button' id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
-            echo "<i class='fa fa-cogs fa-lg'></i>";
+            echo "<i class='fas fa-cogs fa-lg'></i>";
             echo "<span class='sr-only'>" . __('Custom and save default grid', 'mydashboard') . "</span>";
             echo "</a>";
             echo "</td>";
@@ -540,13 +591,40 @@ class PluginMydashboardMenu extends CommonGLPI {
              && $this->interface == 1) {
             echo "<td>";
             echo "<a class='cadre_edit_button' href='#' title=\"" . __("Fullscreen", "mydashboard") . "\">";
-            echo "<i class=\"fa fa-arrows-alt fa-lg header_fullscreen\" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
+            echo "<i class=\"fas fa-arrows-alt fa-lg header_fullscreen\" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
             echo "</a>";
             echo "</td>";
          }
 
+         echo "<td>";
+         echo "<a id='hide-menu$rand' class='cadre_edit_button' href='#' title=\"" . __('Hide menu', 'mydashboard') . "\">";
+         echo "<i class='fas fa-ellipsis-v fa-2x'></i>";
+         echo "<span class='sr-only'>" . __('Hide menu', 'mydashboard') . "</span>";
+         echo "</a>";
+         echo "</td>";
+
          echo "</tr>";
          echo "</table>";
+
+         echo "</div>";
+         echo "</div>";
+
+         echo "<div id=\"zone1\">";
+         echo "<div id=\"btn_zone1\" class=\"btn_open_zone\">";
+         echo "<table class='cadre_edit'>";
+         echo "<tr>";
+         echo "<td>";
+         echo "<a id='see-menu$rand' class='cadre_edit_button' href='#' title=\"" . __('See menu', 'mydashboard') . "\">";
+         echo "<i class='fas fa-ellipsis-v fa-2x'></i>";
+         echo "<span class='sr-only'>" . __('See menu', 'mydashboard') . "</span>";
+         echo "</a>";
+         echo "</td>";
+         echo "</tr>";
+         echo "</table>";
+         echo "</div>";
+         echo "</div>";
+
+         echo "</div>";
       }
       echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
       echo "</div>";
@@ -605,7 +683,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                         $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
                     } else {
                         $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
-                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 25);
+                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 45);
                     }
                     $('.plugin_mydashboard_menuDashboard').width(400);
                     $('.plugin_mydashboard_menuDashboard').zIndex(10000);
