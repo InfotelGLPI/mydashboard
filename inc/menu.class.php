@@ -535,7 +535,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo Html::scriptBlock('
                $("#error-alert").hide();
          ');
-         
+
       } else {
 
          echo "<div id='menutop' align='right'>";
