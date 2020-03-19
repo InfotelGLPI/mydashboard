@@ -358,7 +358,7 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_menuWidget {
-   position: fixed;
+   position: absolute;
    display: none;
    border: 1px solid lightgray;
    -webkit-border-radius: 5px;
