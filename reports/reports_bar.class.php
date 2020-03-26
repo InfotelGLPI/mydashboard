@@ -158,9 +158,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $labelsback     = json_encode($tabnames);
             $tabdatesset    = json_encode($tabdates);
 
-            $nbtickets       = __('Tickets number', 'mydashboard');
-            $js_ancestors    = $crit['ancestors'];
-            $colors          = '#1f77b4';
+            $nbtickets    = __('Tickets number', 'mydashboard');
+            $js_ancestors = $crit['ancestors'];
+            $colors       = PluginMydashboardColor::getColors(1, 0);;
             $backgroundColor = json_encode($colors);
 
             $graph_datas     = ['name'            => $name,
@@ -288,19 +288,21 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                              'entities_id',
                              'is_recursive',
                              'type',
-                             'year'];
+                             'year',
+                             'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
                $criterias = ['requesters_groups_id',
                              'type',
-                             'year'];
+                             'year',
+                             'limit'];
             }
-
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+            $params       = ["preferences" => $this->preferences,
+                             "criterias"   => $criterias,
+                             "opt"         => $opt];
+            $options      = PluginMydashboardHelper::manageCriterias($params);
 
             $opt  = $options['opt'];
             $crit = $options['crit'];
@@ -310,6 +312,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $requester_groups_criteria = $crit['requesters_groups_id'];
             $date_criteria             = $crit['date'];
             $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
+            $limit_query               = "";
+            $limit                     = isset($opt['limit']) ? $opt['limit'] : 10;
+            if ($limit > 0) {
+               $limit_query = "LIMIT $limit";
+            }
 
             $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
@@ -320,7 +327,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                      AND $is_deleted
                      GROUP BY `glpi_itilcategories`.`id`
                      ORDER BY count DESC
-                     LIMIT 10";
+                     $limit_query";
 
             $result   = $DB->query($query);
             $nb       = $DB->numrows($result);
@@ -343,7 +350,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             $nbtickets = __('Tickets number', 'mydashboard');
 
-            $palette         = '#1f77b4';
+            $palette         = PluginMydashboardColor::getColors($nb);
             $backgroundColor = json_encode($palette);
 
             $graph_datas = ['name'            => $name,
@@ -532,7 +539,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             $taskduration = __('Tasks duration (minutes)', 'mydashboard');
 
-            $colors          = '#1f77b4';
+            $colors          = PluginMydashboardColor::getColors(1);
             $backgroundColor = json_encode($colors);
 
             $graph_datas = ['name'            => $name,
@@ -569,18 +576,20 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $criterias = ['entities_id',
                              'is_recursive',
                              'year',
-                             'type'];
+                             'type',
+                             'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
                $criterias = ['year',
-                             'type'];
+                             'type',
+                             'limit'];
             }
-
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+            $params       = ["preferences" => $this->preferences,
+                             "criterias"   => $criterias,
+                             "opt"         => $opt];
+            $options      = PluginMydashboardHelper::manageCriterias($params);
 
             $opt  = $options['opt'];
             $crit = $options['crit'];
@@ -593,6 +602,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $date_criteria        = $crit['date'];
             $year_criteria        = $crit['year'];
             $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
+            $limit_query          = "";
+            $limit                = isset($opt['limit']) ? $opt['limit'] : 10;
+            if ($limit > 0) {
+               $limit_query = "LIMIT $limit";
+            }
 
             $query   = "SELECT IFNULL(`glpi_tickets_users`.`users_id`,-1) as users_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
@@ -603,7 +617,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                      AND $is_deleted
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
-                     LIMIT 10";
+                     $limit_query";
             $results = $DB->query($query);
 
             $tabtickets  = [];
@@ -763,7 +777,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $title = __("Age of tickets", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "35 " : "") . $title);
 
-            $colors          = ['rgb(32, 142, 61)', 'rgb(255, 247, 69)', 'rgb(255, 165, 0)', 'rgb(237, 89, 83)', 'rgb(237, 35, 28)'];
+            $colors = PluginMydashboardColor::getColors(5);
+            //            $colors          = ['rgb(32, 142, 61)', 'rgb(255, 247, 69)', 'rgb(255, 165, 0)', 'rgb(237, 89, 83)', 'rgb(237, 35, 28)'];
             $backgroundColor = json_encode($colors);
 
             $graph_datas = ['name'            => $name,
@@ -954,7 +969,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                foreach (self::getAllMoreTicketStatus() as $id => $names) {
                   $moreTickets[] = $id;
                }
-               $moreTicketToShow ='';
+               $moreTicketToShow = '';
                if (count($moreTickets) > 0) {
                   $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTickets) . ')';
                }

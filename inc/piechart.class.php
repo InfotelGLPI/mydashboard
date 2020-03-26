@@ -136,6 +136,15 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                type: 'pie',
                data: dataPie$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+                     fontColor: '#FFF',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
 //                  tooltips: {
@@ -224,6 +233,15 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                type: 'polarArea',
                data: dataPie$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+                     fontColor: '#fff',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  animation: {
@@ -304,6 +322,15 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                type: 'doughnut',
                data: dataPie$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+                     fontColor: '#fff',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  animation: {

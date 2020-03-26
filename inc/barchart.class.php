@@ -263,6 +263,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                type: 'bar',
                data: dataBar$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+//                     fontColor: '#000',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
@@ -286,20 +295,20 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  },
                  animation: {
                      onComplete: function() {
-                       var chartInstance = this.chart,
-                        ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
-                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'bottom';
-            
-                        this.data.datasets.forEach(function (dataset, i) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar, index) {
-                                var data = dataset.data[index];
-                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                            });
-                        });
+//                       var chartInstance = this.chart,
+//                        ctx = chartInstance.ctx;
+//                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+//                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+//                        ctx.textAlign = 'center';
+//                        ctx.textBaseline = 'bottom';
+//            
+//                        this.data.datasets.forEach(function (dataset, i) {
+//                            var meta = chartInstance.controller.getDatasetMeta(i);
+//                            meta.data.forEach(function (bar, index) {
+//                                var data = dataset.data[index];
+//                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+//                            });
+//                        });
                        isChartRendered = true;
                      }
                    },
@@ -370,6 +379,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                type: 'bar',
                data: dataBar$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+//                     fontColor: '#000',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
@@ -466,6 +484,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                type: 'horizontalBar',
                data: dataBar$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+//                     fontColor: '#000',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
@@ -573,6 +600,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                type: 'bar',
                data: dataBar$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+//                     fontColor: '#000',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  scales: {
@@ -591,17 +627,17 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  },
                  animation: {
                   onComplete: function() {
-                    var ctx = this.chart.ctx;
-                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
-                   ctx.fillStyle = '#595959';
-                   ctx.textAlign = 'center';
-                   ctx.textBaseline = 'bottom';
-                   this.data.datasets.forEach(function (dataset) {
-                       for (var i = 0; i < dataset.data.length; i++) {
-                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
-                       }
-                   });
+//                    var ctx = this.chart.ctx;
+//                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+//                   ctx.fillStyle = '#595959';
+//                   ctx.textAlign = 'center';
+//                   ctx.textBaseline = 'bottom';
+//                   this.data.datasets.forEach(function (dataset) {
+//                       for (var i = 0; i < dataset.data.length; i++) {
+//                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+//                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
+//                       }
+//                   });
                     isChartRendered = true;
                   }
                  },
@@ -659,6 +695,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                 }
               }],
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+//                     fontColor: '#000',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
@@ -690,12 +735,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  },
                  animation: {
                   onComplete: function() {
-                    var ctx = this.chart.ctx;
-                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
-                   ctx.fillStyle = '#595959';
-                   ctx.textAlign = 'center';
-                   ctx.textBaseline = 'bottom';
-//                   this.data.datasets.forEach(function (dataset) {
+//                    var ctx = this.chart.ctx;
+//                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+//                   ctx.fillStyle = '#595959';
+//                   ctx.textAlign = 'center';
+//                   ctx.textBaseline = 'bottom';
+////                   this.data.datasets.forEach(function (dataset) {
 //                       for (var i = 0; i < dataset.data.length; i++) {
 //                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
 //                           ctx.fillText(dataset.data[i], model.x, model.y - 5);

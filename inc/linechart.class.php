@@ -108,7 +108,7 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
       $ids             = $graph_datas['ids'];
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
-
+      $color          = (isset($graph_datas['backgroundColor']))?$graph_datas['backgroundColor']:'#1f77b4';
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -116,8 +116,8 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
               datasets: [{
                 data: $datas,
                 label: \"$label\",
-                borderColor: '#1f77b4',
-                            fill: false,
+                borderColor: '$color',
+//                            fill: false,
                             lineTension: '0.1',
               }],
               labels: $labels
@@ -132,6 +132,15 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                type: 'line',
                data: dataLine$name,
                options: {
+                 plugins: {
+                   labels: {
+                     render: 'value',
+//                     fontSize: 14,
+//                     fontStyle: 'bold',
+                     fontColor: '#000',
+//                     fontFamily: 'Lucida Console, Monaco, monospace'
+                   }
+                },
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
@@ -142,9 +151,9 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
 //                     enabled: false,
 //                 },
                  tooltips: {
-                                    mode: 'index',
-                                    intersect: false
-                                },
+                     mode: 'index',
+                     intersect: false
+                 },
                  scales: {
                      xAxes: [{
                          stacked: true,
@@ -155,6 +164,20 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                  },
                  animation: {
                      onComplete: function() {
+                       var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillStyle = chartInstance.chart.config.options.defaultFontColor;
+                        this.data.datasets.forEach(function (dataset, i) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
                        isChartRendered = true;
                      }
                    },

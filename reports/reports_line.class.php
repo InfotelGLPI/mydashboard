@@ -181,6 +181,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $dataLineset = json_encode($tabdata);
             $labelsLine  = json_encode($tabnames);
+            $colors = PluginMydashboardColor::getColors(1, 0);
 
             $month     = _n('month', 'months', 2);
             $nbtickets = __('Tickets number', 'mydashboard');
@@ -189,7 +190,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                             'ids'    => json_encode([]),
                             'data'   => $dataLineset,
                             'labels' => $labelsLine,
-                            'label'  => $title];
+                            'label'  => $title,
+                            'backgroundColor' => $colors];
 
 
             $graph = PluginMydashboardLineChart::launchGraph($graph_datas, []);
@@ -419,7 +421,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                ['type'        => 'line',
                 'data'        => $tabprogress,
                 'label'       => $titleprogress,
-                'borderColor' => '#ff7f0e',
+                'borderColor' => PluginMydashboardColor::getColors(1, 0),
                 'fill'        => false,
                 'lineTension' => '0.1',
                ];
@@ -428,14 +430,14 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                ["type"            => "bar",
                 "data"            => $tabopened,
                 "label"           => $titleopened,
-                'backgroundColor' => '#1f77b4',
+                'backgroundColor' => PluginMydashboardColor::getColors(1, 1),
                ];
 
             $datasets[] =
                ['type'            => 'bar',
                 'data'            => $tabclosed,
                 'label'           => $titlesolved,
-                'backgroundColor' => '#aec7e8',
+                'backgroundColor' => PluginMydashboardColor::getColors(1, 2),
                ];
 
             $graph_datas = ['name'   => $name,
@@ -671,7 +673,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                ['type'        => 'line',
                 'data'        => $tabprogress,
                 'label'       => $titleprogress,
-                'borderColor' => '#ff7f0e',
+                'borderColor' => PluginMydashboardColor::getColors(1, 0),
                 'fill'        => false,
                 'lineTension' => '0.1',
                ];
@@ -680,14 +682,14 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                ["type"            => "bar",
                 "data"            => $tabopened,
                 "label"           => $titleopened,
-                'backgroundColor' => '#1f77b4',
+                'backgroundColor' => PluginMydashboardColor::getColors(1, 1),
                ];
 
             $datasets[] =
                ['type'            => 'bar',
                 'data'            => $tabresolved,
                 'label'           => $titlesolved,
-                'backgroundColor' => '#aec7e8',
+                'backgroundColor' => PluginMydashboardColor::getColors(1, 2),
                ];
 
             $graph_datas = ['name'   => $name,

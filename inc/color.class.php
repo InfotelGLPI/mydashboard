@@ -32,7 +32,7 @@ class PluginMydashboardColor {
 
    //Colors for 5 series, if there is more series Flotr generates missing colors
    //Those colors are differents from the default colors of Flotr
-   private static $colors = [
+   private static $colors  = [
       '#28BEBD',//blue
       '#8ED8DB',//green
       '#F1AE29',//yellow
@@ -45,9 +45,9 @@ class PluginMydashboardColor {
     * Get a color string "rgb(x,y,z)" randomly generated
     * @return string
     */
-   public static function getRandomColor() {
-      return "rgb(" . rand(0, 255) . "," . rand(0, 255) . "," . rand(0, 255) . ")";
-   }
+   //   public static function getRandomColor() {
+   //      return "rgb(" . rand(0, 255) . "," . rand(0, 255) . "," . rand(0, 255) . ")";
+   //   }
 
    /**
     * Get the fixed opacity
@@ -62,21 +62,52 @@ class PluginMydashboardColor {
     *
     * @return array
     */
-   static function getColors($index = 20) {
+   static function getColors($nb_value = 20, $index = 1) {
 
-      $colors = [
-         "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
-         "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-         "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-         "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
-      ];
+      //            $colors = [
+      //               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+      //               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+      //               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+      //               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+      //               '#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
+      //               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+      //               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+      //               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+      //            ];
 
-      //fill colors on size index
-      $tmp = $colors;
-      while (count($colors) < $index) {
-         $colors = array_merge($tmp, $colors);
+      $colors = ['#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
+                 "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+                 "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+                 "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+                 "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+                 "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+                 "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+                 "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
+      if ($nb_value > 45) {
+         $colors2 = [
+            "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+            "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+            "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+            "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+            '#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
+            "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+            "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+            "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+         ];
+         $colors = array_merge($colors, $colors2);
       }
-      return $colors;
+      //fill colors on size index
+      $palette = [];
+      $i       = 0;
+      if ($nb_value > 1) {
+         while ($i < $nb_value) {
+            $palette[] = $colors[$i];
+            $i++;
+         }
+      } else {
+         $palette = $colors[$index];
+      }
+      return $palette;
    }
 
 }

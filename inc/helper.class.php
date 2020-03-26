@@ -523,6 +523,14 @@ class PluginMydashboardHelper {
          }
       }
 
+      // LIMIT
+      if (in_array("limit", $criterias)) {
+         if (isset($params['opt']['limit'])) {
+            $opt["limit"]          = $params['opt']['limit'];
+            $crit['crit']['limit'] = $params['opt']['limit'];
+         }
+      }
+
       // STATUS
       $default                = array(CommonITILObject::INCOMING,
                                       CommonITILObject::ASSIGNED,
@@ -907,6 +915,22 @@ class PluginMydashboardHelper {
          $form   .= __('Technician');
          $form   .= "&nbsp;";
          $form   .= User::dropdown($params);
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
+      // LIMIT
+      if (in_array("limit", $criterias)) {
+         $params = ['value' => isset($opt['limit']) ? $opt['limit'] : 0,
+                    'min'   => 0,
+                    'max'   => 200,
+                    'step'  => 1,
+                    'display'  => false,
+                    'toadd' => [0 => __('All')]];
+         $form   .= __('Number of results');
+         $form   .= "&nbsp;";
+         $form   .= Dropdown::showNumber("limit", $params);
          if ($count > 1) {
             $form .= "</br></br>";
          }

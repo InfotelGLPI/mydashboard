@@ -29,9 +29,10 @@
  */
 class PluginMydashboardReports_Pie extends CommonGLPI {
 
-   private $options;
-   private $pref;
+   private       $options;
+   private       $pref;
    public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30];
+
    /**
     * PluginMydashboardReports_Pie constructor.
     *
@@ -196,19 +197,21 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                              'is_recursive',
                              'type',
                              'year',
-                             'month'];
+                             'month',
+                             'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
                $criterias = ['type',
                              'year',
-                             'month'];
+                             'month',
+                             'limit'];
             }
-
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+            $params       = ["preferences" => $this->preferences,
+                             "criterias"   => $criterias,
+                             "opt"         => $opt];
+            $options      = PluginMydashboardHelper::manageCriterias($params);
 
             $opt  = $options['opt'];
             $crit = $options['crit'];
@@ -217,7 +220,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $entities_criteria = $crit['entities_id'];
             $date_criteria     = $crit['date'];
             $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
-
+            $limit_query       = "";
+            $limit             = isset($opt['limit']) ? $opt['limit'] : 10;
+            if ($limit > 0) {
+               $limit_query = "LIMIT $limit";
+            }
             $query    = "SELECT IFNULL(`glpi_tickets_users`.`users_id`,-1) as users_id, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_tickets_users`
@@ -227,7 +234,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                      AND $is_deleted
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
-                     LIMIT 10";
+                     $limit_query";
             $widget   = PluginMydashboardHelper::getWidgetsFromDBQuery('piechart', $query);
             $datas    = $widget->getTabDatas();
             $dataspie = [];
@@ -562,7 +569,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                              'is_recursive',
                              'technicians_groups_id',
                              'group_is_recursive',
-                             'requesters_groups_id'];
+                             'requesters_groups_id',
+                             'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
@@ -585,7 +593,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
-
+            $limit_query                = "";
+            $limit                      = isset($opt['limit']) ? $opt['limit'] : 0;
+            if ($limit > 0) {
+               $limit_query = "LIMIT $limit";
+            }
             $query = "SELECT DISTINCT
                            `glpi_itilcategories`.`name` AS name,
                            `glpi_itilcategories`.`id` AS itilcategories_id,
@@ -596,7 +608,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                         WHERE $is_deleted AND  `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'";
             $query .= $entities_criteria . " " . $technician_groups_criteria . " " . $requester_groups_criteria
                       . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                        GROUP BY `glpi_itilcategories`.`id`";
+                        GROUP BY `glpi_itilcategories`.`id` $limit_query";
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
@@ -615,7 +627,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                   $tabcategory[] = $data['itilcategories_id'];
                }
             }
-
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened requests by category", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "17 " : "") . $title);
@@ -697,7 +708,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $closedate_criteria         = $crit['closedate'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
 
-
             $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
                      FROM `glpi_tickets`
                      WHERE $date_criteria
@@ -737,7 +747,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $widget->setWidgetTitle((($isDebug) ? "18 " : "") . $title);
 
             $dataPieset         = json_encode($dataspie);
-            $palette            = PluginMydashboardColor::getColors($nb);
+            $palette            = PluginMydashboardColor::getColors(2);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
@@ -860,18 +870,24 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             break;
 
          case $this->getType() . "25":
-            $name      = 'TicketsByRequesterGroupPieChart';
-            $criterias = ['type'];
-            $params    = ["preferences" => $this->preferences,
-                          "criterias"   => $criterias,
-                          "opt"         => $opt];
-            $options   = PluginMydashboardHelper::manageCriterias($params);
+            $name         = 'TicketsByRequesterGroupPieChart';
+            $criterias    = ['type', 'limit'];
+            $params       = ["preferences" => $this->preferences,
+                             "criterias"   => $criterias,
+                             "opt"         => $opt];
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+            $options      = PluginMydashboardHelper::manageCriterias($params);
 
             $opt           = $options['opt'];
             $crit          = $options['crit'];
             $type          = $opt['type'];
             $type_criteria = $crit['type'];
             $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
+            $limit_query   = "";
+            $limit         = isset($opt['limit']) ? $opt['limit'] : 10;
+            if ($limit > 0) {
+               $limit_query = "LIMIT $limit";
+            }
 
             $query = "SELECT DISTINCT
                            `groups_id` AS `requesters_groups_id`,
@@ -883,7 +899,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                         WHERE $is_deleted $type_criteria ";
             $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-            $query .= " GROUP BY `groups_id` LIMIT 10";
+            $query .= " GROUP BY `groups_id` $limit_query";
 
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
@@ -1037,17 +1053,19 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                              'is_recursive',
                              'type',
                              'technicians_groups_id',
-                             'group_is_recursive'];
+                             'group_is_recursive',
+                             'limit'];
                $onclick   = 1;
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
-               $criterias = ['type'];
+               $criterias = ['type', 'limit'];
             }
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+            $params       = ["preferences" => $this->preferences,
+                             "criterias"   => $criterias,
+                             "opt"         => $opt];
 
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
             $options = PluginMydashboardHelper::manageCriterias($params);
 
             $opt                        = $options['opt'];
@@ -1060,6 +1078,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $technician_group           = $opt['technicians_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
             $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
+            $limit_query                = "";
+            $limit                      = isset($opt['limit']) ? $opt['limit'] : 10;
+            if ($limit > 0) {
+               $limit_query = "LIMIT $limit";
+            }
 
             $query  = "SELECT COUNT(`glpi_tickets`.`id`) AS count, 
                            glpi_locations.id as locations_id
@@ -1068,7 +1091,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $query  .= " WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria ";
             $query  .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query  .= " GROUP BY `glpi_locations`.`id` ORDER BY count DESC";
-            $query  .= " LIMIT 0, 10";
+            $query  .= " $limit_query";
             $result = $DB->query($query);
             $nb     = $DB->numrows($result);
 
