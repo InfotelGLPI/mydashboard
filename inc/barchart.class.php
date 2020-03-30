@@ -249,9 +249,9 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
               datasets: [{
                 data: $datas,
                 label: \"$label\",
-                backgroundColor: $backgroundColor
+                backgroundColor: $backgroundColor,
               }],
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;
@@ -367,7 +367,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       $graph = "<script type='text/javascript'>
             var dataBar$name = {
               datasets: $datas,
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;
@@ -382,6 +382,8 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  plugins: {
                    labels: {
                      render: 'value',
+                     precision: 0,
+                     showZero: false,
 //                     fontSize: 14,
 //                     fontStyle: 'bold',
 //                     fontColor: '#000',
@@ -470,9 +472,9 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
               datasets: [{
                 data: $datas,
                 label: \"$label\",
-                backgroundColor: $backgroundColor
+                backgroundColor: $backgroundColor,
               }],
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;
@@ -582,7 +584,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
             let disp = $isStartedAtZero;
             var dataBar$name = {
               datasets: $datas,
-              labels: $labels
+              labels: $labels,
             };
              var isChartRendered = false;
              var canvas$name = document.getElementById('$name');
@@ -676,7 +678,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
             
             var dataBar$name = {
               datasets: $datas,
-              labels: $labels
+              labels: $labels,
             };
         
              var isChartRendered = false;

@@ -27,8 +27,7 @@
 /**
  * Class PluginMydashboardPreference
  */
-class PluginMydashboardPreference extends CommonDBTM
-{
+class PluginMydashboardPreference extends CommonDBTM {
 
    /**
     * @return bool
@@ -54,7 +53,8 @@ class PluginMydashboardPreference extends CommonDBTM
 
    /**
     * @param CommonGLPI $item
-    * @param int $withtemplate
+    * @param int        $withtemplate
+    *
     * @return string|translated
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -66,8 +66,9 @@ class PluginMydashboardPreference extends CommonDBTM
 
    /**
     * @param CommonGLPI $item
-    * @param int $tabnum
-    * @param int $withtemplate
+    * @param int        $tabnum
+    * @param int        $withtemplate
+    *
     * @return bool
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
@@ -87,7 +88,7 @@ class PluginMydashboardPreference extends CommonDBTM
       }
 
       //Preferences are not deletable
-      $options['candel'] = false;
+      $options['candel']  = false;
       $options['colspan'] = 1;
 
       $this->showFormHeader($options);
@@ -141,7 +142,6 @@ class PluginMydashboardPreference extends CommonDBTM
             'display_emptychoice' => true
          ];
 
-
          $dropdown = Dropdown::showFromArray("prefered_group", $temp, $params);
 
          echo $dropdown;
@@ -158,25 +158,23 @@ class PluginMydashboardPreference extends CommonDBTM
 
       $dbu    = new DbUtils();
       $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
-      $pref = json_decode($this->fields['requester_prefered_group']);
+      $pref   = json_decode($this->fields['requester_prefered_group']);
 
       //      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
-      $temp                         = [];
+      $temp = [];
       foreach ($result as $item) {
          $temp[$item['id']] = $item['name'];
       }
 
       $params = [
          "name"                => 'requester_prefered_group',
-         'entity'    => $_SESSION['glpiactiveentities'],
+         'entity'              => $_SESSION['glpiactiveentities'],
          "display"             => false,
          "multiple"            => true,
          "width"               => '200px',
          'values'              => isset($pref) ? $pref : [],
          'display_emptychoice' => true
       ];
-
-
 
       $dropdown = Dropdown::showFromArray("requester_prefered_group", $temp, $params);
 
@@ -187,10 +185,25 @@ class PluginMydashboardPreference extends CommonDBTM
 
       echo "<tr class='tab_bg_1'><td>" . __("My prefered entity for widget", "mydashboard") . "</td>";
       echo "<td>";
-      $params = ['name'      => 'prefered_entity',
-                 'value'     => $this->fields['prefered_entity'],
-                 'entity'    => $_SESSION['glpiactiveentities']];
+      $params = ['name'   => 'prefered_entity',
+                 'value'  => $this->fields['prefered_entity'],
+                 'entity' => $_SESSION['glpiactiveentities']];
       Entity::dropdown($params);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'><td>" . __("Palette color", "mydashboard") . "</td>";
+      echo "<td>";
+      $palette  = [1 => __("Palette color", "mydashboard") . ' 1',
+                   2 => __("Palette color", "mydashboard") . ' 2'];
+      $selected = $this->fields['color_palette'];
+      Dropdown::showFromArray('color_palette',
+                              $palette,
+                              [
+                                 'id'    => 'color_palette',
+                                 'value' => $selected
+                              ]);
+
       echo "</td>";
       echo "</tr>";
 
@@ -207,17 +220,18 @@ class PluginMydashboardPreference extends CommonDBTM
     */
    public function initPreferences($users_id) {
 
-      $input = [];
-      $input['id'] = $users_id;
-      $input['automatic_refresh'] = "0";
-      $input['automatic_refresh_delay'] = "10";
-      $input['nb_widgets_width'] = "3";
-      $input['replace_central'] = "1";
-      $input['prefered_group'] = "[]";
+      $input                             = [];
+      $input['id']                       = $users_id;
+      $input['automatic_refresh']        = "0";
+      $input['automatic_refresh_delay']  = "10";
+      $input['nb_widgets_width']         = "3";
+      $input['replace_central']          = "1";
+      $input['prefered_group']           = "[]";
       $input['requester_prefered_group'] = "[]";
-      $input['prefered_entity'] = "0";
-      $input['edit_mode'] = "0";
-      $input['drag_mode'] = "0";
+      $input['prefered_entity']          = "0";
+      $input['color_palette']            = "1";
+      $input['edit_mode']                = "0";
+      $input['drag_mode']                = "0";
       $this->add($input);
 
    }
@@ -231,7 +245,7 @@ class PluginMydashboardPreference extends CommonDBTM
    }
 
    public static function checkPreferenceValue($field, $users_id = 0) {
-      $dbu        = new DbUtils();
+      $dbu  = new DbUtils();
       $data = $dbu->getAllDataFromTable($dbu->getTableForItemType(__CLASS__), ["id" => $users_id]);
       if (!empty($data)) {
          $first = array_pop($data);
@@ -239,5 +253,12 @@ class PluginMydashboardPreference extends CommonDBTM
       } else {
          return 0;
       }
+   }
+
+   /**
+    * @return mixed
+    */
+   public static function getPalette($users_id) {
+      return self::checkPreferenceValue('color_palette', $users_id);
    }
 }

@@ -44,5 +44,5 @@ if (isset($_POST["itemtype"])) {
    foreach ($allstates as $k => $v) {
       $states[$v['id']] = $v['name'];
    }
-   Dropdown::showFromArray('states', $states, array('multiple' => true));
+   Dropdown::showFromArray('states', $states, ['multiple' => true]);
 }

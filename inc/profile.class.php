@@ -76,7 +76,7 @@ class PluginMydashboardProfile extends CommonDBTM {
          self::addDefaultProfileInfos($ID,
                                       ['plugin_mydashboard'             => 0,
                                        'plugin_mydashboard_config'      => 0,
-                                       'plugin_mydashboard_edit'      => 0,
+                                       'plugin_mydashboard_edit'        => 0,
                                        'plugin_mydashboard_stockwidget' => 0]);
          $prof->showForm($ID);
       }
@@ -138,7 +138,7 @@ class PluginMydashboardProfile extends CommonDBTM {
          echo "<form method='post' action='" . $profile->getFormURL() . "'>";
       }
 
-      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget','plugin_mydashboard', 'plugin_mydashboard_config','plugin_mydashboard_edit']);
+      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget', 'plugin_mydashboard', 'plugin_mydashboard_config', 'plugin_mydashboard_edit']);
 
       //      Toolbox::logDebug($effective_rights);
       echo "<table class='tab_cadre_fixehov'>";
@@ -170,7 +170,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       echo "<td>" . __("See edit mode", "mydashboard") . "</td><td>";
       //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
       Html::showCheckbox(['name'    => '_plugin_mydashboard_edit[6_0]',
-         'checked' => $effective_rights["plugin_mydashboard_edit"]]);
+                          'checked' => $effective_rights["plugin_mydashboard_edit"]]);
       echo "</td>";
       echo "<td></td>";
       echo "</tr>";
@@ -190,7 +190,7 @@ class PluginMydashboardProfile extends CommonDBTM {
       }
 
       PluginMydashboardGroupprofile::addGroup($profiles_id, $canedit);
-      
+
       PluginMydashboardMenu::installWidgets();
 
       if ($effective_rights["plugin_mydashboard"] == READ) {
@@ -204,7 +204,7 @@ class PluginMydashboardProfile extends CommonDBTM {
     * Initialize profiles
     */
    static function initProfile() {
-      global $DB;
+      global $DB, $GLPI_CACHE;
       $profile = new self();
       $dbu     = new DbUtils();
       //Add new rights in glpi_profilerights table
@@ -232,6 +232,10 @@ class PluginMydashboardProfile extends CommonDBTM {
          unset($_SESSION["glpi_plugin_mydashboard_loaded"]);
          unset($_SESSION["glpi_plugin_mydashboard_activating"]);
       }
+      unset($_SESSION["glpi_plugin_mydashboard_allwidgets"]);
+      $widgetclasse = new PluginMydashboardWidget();
+      $ckey         = 'md_cache_' . md5($widgetclasse->getTable());
+      $GLPI_CACHE->delete($ckey);
    }
 
    /**
@@ -257,8 +261,8 @@ class PluginMydashboardProfile extends CommonDBTM {
                       'field'    => 'plugin_mydashboard_config'];
 
          $rights[] = ['itemtype' => 'PluginMydashboardMenu',
-            'label'    => __('See edit mode', 'mydashboard'),
-            'field'    => 'plugin_mydashboard_edit'];
+                      'label'    => __('See edit mode', 'mydashboard'),
+                      'field'    => 'plugin_mydashboard_edit'];
 
       }
 
@@ -299,12 +303,12 @@ class PluginMydashboardProfile extends CommonDBTM {
    }
 
    /**
-    * @since 0.85
-    * Migration rights from old system to the new one for one profile
-    *
     * @param $profiles_id the profile ID
     *
     * @return bool
+    * @since 0.85
+    * Migration rights from old system to the new one for one profile
+    *
     */
    private static function migrateOneProfile($profiles_id) {
       global $DB;

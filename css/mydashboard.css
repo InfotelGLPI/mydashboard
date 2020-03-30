@@ -367,7 +367,7 @@ div#tabcontent{
    font-size: 12px;
    background-color: #FFF;
    padding: 10px;
-   z-index: 10000 !important;
+   z-index: 999 !important;
 }
 
 /*
@@ -542,7 +542,7 @@ li.plugin_mydashboard_menuDashboardList {
    position: absolute;
    /*    right: 10px;*/
    padding: 10px;
-   z-index: 9992;
+   z-index: 992;
    /*    top: 195px;*/
    top: 25px;
    background-color: white;
@@ -643,7 +643,7 @@ li.plugin_mydashboard_menuDashboardListItem:hover {
    left: 13%;
    top: 13%;
    width: 73%;
-   z-index: 10500;
+   z-index: 999;
    margin-top: 0px;
    margin-left: 0px;
 }

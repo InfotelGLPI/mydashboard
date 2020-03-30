@@ -122,9 +122,9 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
               datasets: [{
                 data: $datas,
                 label: \"$label\",
-                backgroundColor: $backgroundColor
+                backgroundColor: $backgroundColor,
               }],
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;
@@ -219,9 +219,9 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
               datasets: [{
                 data: $datas,
                 label: \"$label\",
-                backgroundColor: $backgroundColor
+                backgroundColor: $backgroundColor,
               }],
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;
@@ -308,9 +308,9 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
               datasets: [{
                 data: $datas,
                 label: \"$label\",
-                backgroundColor: $backgroundColor
+                backgroundColor: $backgroundColor,
               }],
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;

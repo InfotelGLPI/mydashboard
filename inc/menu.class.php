@@ -686,7 +686,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                         $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 45);
                     }
                     $('.plugin_mydashboard_menuDashboard').width(400);
-                    $('.plugin_mydashboard_menuDashboard').zIndex(10000);
+                    $('.plugin_mydashboard_menuDashboard').zIndex(999);
                     $('.plugin_mydashboard_menuDashboard').show();
                 });
                 //Hiding the menu when clicking outside the menu
@@ -1234,7 +1234,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @param int $active_profile
     */
    function loadDashboard($active_profile = -1, $predefined_grid = 0) {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $GLPI_CACHE;
 
       $rand           = mt_rand();
       $this->users_id = Session::getLoginUserID();
@@ -1285,24 +1285,32 @@ class PluginMydashboardMenu extends CommonGLPI {
       $widgets  = [];
       if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
 
-         $widgets = PluginMydashboardWidget::getWidgetList();
+            $widgetclasse = new PluginMydashboardWidget();
+            $ckey         = 'md_cache_' . md5($widgetclasse->getTable());
+            $datas     = $GLPI_CACHE->get($ckey);
+            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
+               $datajson = $datas;
+            } else {
+               $widgets = PluginMydashboardWidget::getWidgetList();
 
-         foreach ($datagrid as $k => $v) {
-            if (isset($v["id"])) {
-               $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+               foreach ($datagrid as $k => $v) {
+                  if (isset($v["id"])) {
+                     $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
 
-               if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
-                  foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-                     if (isset($widgets[$v["id"]]["id"])
-                         && $widgets[$v["id"]]["id"] == $w) {
-                        $optjson[$v["id"]]["enableRefresh"] = $r;
+                     if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+                        foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+                           if (isset($widgets[$v["id"]]["id"])
+                               && $widgets[$v["id"]]["id"] == $w) {
+                              $optjson[$v["id"]]["enableRefresh"] = $r;
+                           }
+                        }
                      }
                   }
                }
+               if ($predefined_grid == 0) {
+                  $GLPI_CACHE->set($ckey, $datajson);
+               }
             }
-         }
-
-
       } else {
          echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
@@ -1314,6 +1322,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          $grid = json_encode($grid);
       }
+
       $datajson = json_encode($datajson);
       $optjson  = json_encode($optjson);
 
@@ -1402,7 +1411,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                          var delbutton = '';
                          var refreshbutton = '';
                          if ($delete_button == 1) {
-                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
+                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
                          }
                          if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-sync-alt\"></i></button>';
@@ -1580,7 +1589,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 var widgetArray = $allwidgetjson; 
                 widget = widgetArray['' + id + ''];
                 var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
-                         '<button class=\"md-button pull-right\" onclick=\"deleteWidget(\'' + id + '\');\">' +
+                         '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + id + '\');\">' +
                           '<i class=\"fa fa-times\"></i></button>' + widget + '<div/><div/>');
                 var grid = $('.grid-stack$rand').data('gridstack');
                 grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);

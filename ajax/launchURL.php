@@ -206,13 +206,15 @@ if (isset($_POST["params"]["widget"])
 
       addCriteria(TECHNICIAN, (($_POST["selected_id"] == -1) ? 'contains' : 'equals'), (($_POST["selected_id"] == -1) ? '^$' : $_POST["selected_id"]), 'AND');
 
-      addCriteria(OPEN_DATE, 'contains', $_POST["params"]["year"], 'AND');
-
       if ($_POST["params"]["type"] > 0) {
          addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
       }
 
       addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+
+      addCriteria(OPEN_DATE, 'morethan', $_POST["params"]["begin"], 'AND');
+
+      addCriteria(OPEN_DATE, 'lessthan', $_POST["params"]["end"], 'AND');
 
       $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
               Toolbox::append_params($options, "&");

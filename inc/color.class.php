@@ -58,33 +58,36 @@ class PluginMydashboardColor {
    }
 
    /**
-    * @param int $index
+    * @param $nb_value
     *
     * @return array
     */
-   static function getColors($nb_value = 20, $index = 1) {
+   static function getPalette($pref = 1, $nb_value) {
 
-      //            $colors = [
-      //               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
-      //               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-      //               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-      //               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
-      //               '#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
-      //               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-      //               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
-      //               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-      //            ];
-
-      $colors = ['#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
-                 "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-                 "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
-                 "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-                 "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
-                 "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-                 "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-                 "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
-      if ($nb_value > 45) {
-         $colors2 = [
+      if ($pref == 2) {
+         $colors = ['#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
+                    "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+                    "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+                    "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+                    "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+                    "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+                    "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+                    "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
+         if ($nb_value > 45) {
+            $colors2 = [
+               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+               '#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
+               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+            ];
+            $colors  = array_merge($colors, $colors2);
+         }
+      } else {
+         $colors = [
             "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
             "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
             "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
@@ -94,8 +97,31 @@ class PluginMydashboardColor {
             "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
             "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
          ];
-         $colors = array_merge($colors, $colors2);
+
+         if ($nb_value > 45) {
+            $colors2 = ['#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
+                        "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+                        "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5",
+                        "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+                        "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+                        "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+                        "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+                        "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
+            $colors  = array_merge($colors, $colors2);
+         }
       }
+      return $colors;
+   }
+
+   /**
+    * @param int $index
+    *
+    * @return array
+    */
+   static function getColors($nb_value = 20, $index = 1) {
+
+      $pref   = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
+      $colors = self::getPalette($pref, $nb_value);
       //fill colors on size index
       $palette = [];
       $i       = 0;

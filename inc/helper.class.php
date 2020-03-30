@@ -478,7 +478,7 @@ class PluginMydashboardHelper {
             $opt["begin"]          = $params['opt']['begin'];
             $crit['crit']['begin'] = $params['opt']['begin'];
          } else {
-            $opt["begin"] = date("Y-m-d");
+            $opt["begin"] = date("Y-m-d H:i:s");
          }
       }
 
@@ -489,7 +489,7 @@ class PluginMydashboardHelper {
             $opt["end"]          = $params['opt']['end'];
             $crit['crit']['end'] = $params['opt']['end'];
          } else {
-            $opt["end"] = date("Y-m-d");
+            $opt["end"] = date("Y-m-d H:i:s");
          }
       }
 
@@ -532,10 +532,10 @@ class PluginMydashboardHelper {
       }
 
       // STATUS
-      $default                = array(CommonITILObject::INCOMING,
+      $default                = [CommonITILObject::INCOMING,
                                       CommonITILObject::ASSIGNED,
                                       CommonITILObject::PLANNED,
-                                      CommonITILObject::WAITING);
+                                      CommonITILObject::WAITING];
       $crit['crit']['status'] = $default;
       $opt['status']          = $default;
       if (in_array("status", $criterias)) {
@@ -868,17 +868,19 @@ class PluginMydashboardHelper {
       if (in_array("begin", $criterias)) {
          $form .= __('Start');
          $form .= "&nbsp;";
-         $form .= Html::showDateField("begin", array('value' => $opt['begin'], 'maybeempty' => false, 'display' => false));
+         $form .= Html::showDateTimeField("begin", ['value' => isset($opt['begin']) ? $opt['begin'] : null, 'maybeempty' => false, 'display' => false]);
          $form .= "&nbsp;";
-         if ($count > 1) {
+         if ($count > 1 && !in_array("end", $criterias)) {
             $form .= "</br></br>";
+         } elseif ($count > 1 && in_array("end", $criterias)) {
+            $form .= "</br>";
          }
       }
       // END DATE
       if (in_array("end", $criterias)) {
          $form .= __('End');
          $form .= "&nbsp;";
-         $form .= Html::showDateField("end", array('value' => $opt['end'], 'maybeempty' => false, 'display' => false));
+         $form .= Html::showDateTimeField("end", ['value' => isset($opt['end']) ? $opt['end'] : null, 'maybeempty' => false, 'display' => false]);
          $form .= "&nbsp;";
          if ($count > 1) {
             $form .= "</br></br>";
@@ -887,14 +889,14 @@ class PluginMydashboardHelper {
 
       // USER
       if (in_array("users_id", $criterias)) {
-         $params = array('name'     => "users_id",
+         $params = ['name'     => "users_id",
                          'value'    => isset($opt['users_id']) ? $opt['users_id'] : null,
                          'right'    => "interface",
                          'comments' => 1,
                          'entity'   => $_SESSION["glpiactiveentities"],
                          'width'    => '50%',
                          'display'  => false
-         );
+         ];
          $form   .= __('User');
          $form   .= "&nbsp;";
          $form   .= User::dropdown($params);
@@ -904,14 +906,14 @@ class PluginMydashboardHelper {
       }
       // TECHNICIAN
       if (in_array("technicians_id", $criterias)) {
-         $params = array('name'     => "technicians_id",
+         $params = ['name'     => "technicians_id",
                          'value'    => isset($opt['technicians_id']) ? $opt['technicians_id'] : null,
                          'right'    => "interface",
                          'comments' => 1,
                          'entity'   => $_SESSION["glpiactiveentities"],
                          'width'    => '50%',
                          'display'  => false
-         );
+      ];
          $form   .= __('Technician');
          $form   .= "&nbsp;";
          $form   .= User::dropdown($params);
@@ -938,10 +940,10 @@ class PluginMydashboardHelper {
       //STATUS
       if (in_array("status", $criterias)) {
          $form    .= _n('Status', 'Statuses', 2) . "&nbsp;";
-         $default = array(CommonITILObject::INCOMING,
+         $default = [CommonITILObject::INCOMING,
                           CommonITILObject::ASSIGNED,
                           CommonITILObject::PLANNED,
-                          CommonITILObject::WAITING);
+                          CommonITILObject::WAITING];
 
          $i = 1;
          foreach (Ticket::getAllStatusArray() as $svalue => $sname) {

@@ -61,7 +61,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          __('Bar charts', "mydashboard") => [
             $this->getType() . "1"  => (($isDebug) ? "1 " : "") . __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "8"  => (($isDebug) ? "8 " : "") . __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "15" => (($isDebug) ? "15 " : "") . __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fa fa-chart-bar'></i>",
+            $this->getType() . "15" => (($isDebug) ? "15 " : "") . __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "21" => (($isDebug) ? "21 " : "") . __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "23" => (($isDebug) ? "23 " : "") . __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "24" => (($isDebug) ? "24 " : "") . __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
@@ -207,14 +207,16 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                              'is_recursive',
                              'technicians_groups_id',
                              'type',
-                             'year'];
+                             'year',
+                             'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
                $criterias = ['type',
-                             'year'];
+                             'year',
+                             'limit'];
             }
-
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
             $params  = ["preferences" => $this->preferences,
                         "criterias"   => $criterias,
                         "opt"         => $opt];
@@ -234,17 +236,17 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $nb_bar++;
             }
             $palette = PluginMydashboardColor::getColors($nb_bar);
-
             $i       = 0;
             $dataset = [];
             foreach ($time_per_tech as $tech_id => $times) {
                unset($time_per_tech[$tech_id]);
-               $username = getUserName($tech_id);
-               $i++;
+               $username  = getUserName($tech_id);
                $dataset[] = [
                   "label"           => $username,
                   "data"            => array_values($times),
-                  "backgroundColor" => $palette[$i]];
+                  "backgroundColor" => $palette[$i]
+               ];
+               $i++;
             }
 
             $widget = new PluginMydashboardHtml();
@@ -318,7 +320,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $limit_query = "LIMIT $limit";
             }
 
-            $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_id, COUNT(`glpi_tickets`.`id`) as count
+            $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_name, COUNT(`glpi_tickets`.`id`) as count
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
@@ -335,8 +337,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabnames = [];
             if ($nb) {
                while ($data = $DB->fetch_assoc($result)) {
-                  $tabdata[]  = $data['count'];
-                  $tabnames[] = $data['itilcategories_id'];
+                  $tabdata[]           = $data['count'];
+                  $itilcategories_name = $data['itilcategories_name'];
+                  if ($data['itilcategories_name'] == NULL) {
+                     $itilcategories_name = __('None');
+                  }
+                  $tabnames[] = $itilcategories_name;
                }
             }
 
@@ -385,19 +391,21 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                              'technicians_groups_id',
                              'group_is_recursive',
                              'type',
-                             'year'];
+                             'year',
+                             'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() != 'central') {
                $criterias = ['type',
-                             'year'];
+                             'year',
+                             'limit'];
             }
-
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
-            $opt     = $options['opt'];
+            $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+            $params       = ["preferences" => $this->preferences,
+                             "criterias"   => $criterias,
+                             "opt"         => $opt];
+            $options      = PluginMydashboardHelper::manageCriterias($params);
+            $opt          = $options['opt'];
 
             $tickets_per_tech = self::getTicketsPerTech($opt);
 
@@ -416,13 +424,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $dataset = [];
             foreach ($tickets_per_tech as $tech_id => $tickets) {
                unset($tickets_per_tech[$tech_id]);
-               $username = getUserName($tech_id);
-               $i++;
-
+               $username  = getUserName($tech_id);
                $dataset[] = [
                   "label"           => $username,
                   "data"            => array_values($tickets),
-                  "backgroundColor" => $palette[$i]];
+                  "backgroundColor" => $palette[$i]
+               ];
+               $i++;
             }
 
             $widget = new PluginMydashboardHtml();
@@ -539,7 +547,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             $taskduration = __('Tasks duration (minutes)', 'mydashboard');
 
-            $colors          = PluginMydashboardColor::getColors(1);
+            $colors          = PluginMydashboardColor::getColors(1, 0);
             $backgroundColor = json_encode($colors);
 
             $graph_datas = ['name'            => $name,
@@ -577,6 +585,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                              'is_recursive',
                              'year',
                              'type',
+                             'begin',
+                             'end',
                              'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -586,10 +596,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                              'limit'];
             }
             $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-            $params       = ["preferences" => $this->preferences,
-                             "criterias"   => $criterias,
-                             "opt"         => $opt];
-            $options      = PluginMydashboardHelper::manageCriterias($params);
+            $opt['begin'] = isset($opt['begin']) ? $opt['begin'] : date('Y-m-d H:i:s', strtotime('-1 year'));;
+            $opt['end'] = isset($opt['end']) ? $opt['end'] : date('Y-m-d H:i:s');
+
+            $params  = ["preferences" => $this->preferences,
+                        "criterias"   => $criterias,
+                        "opt"         => $opt];
+            $options = PluginMydashboardHelper::manageCriterias($params);
 
             $opt  = $options['opt'];
             $crit = $options['crit'];
@@ -599,11 +612,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $entities_criteria    = $crit['entities_id'];
             $entities_id_criteria = $crit['entity'];
             $sons_criteria        = $crit['sons'];
-            $date_criteria        = $crit['date'];
-            $year_criteria        = $crit['year'];
-            $is_deleted           = "`glpi_tickets`.`is_deleted` = 0";
-            $limit_query          = "";
-            $limit                = isset($opt['limit']) ? $opt['limit'] : 10;
+            $date_criteria        = " (`glpi_tickets`.`date` >= '" . $opt['begin'] . "'
+                                               AND `glpi_tickets`.`date` <= ADDDATE('" . $opt['end'] . "' , INTERVAL 1 DAY))";
+            //            $year_criteria        = $crit['year'];
+            $is_deleted  = "`glpi_tickets`.`is_deleted` = 0";
+            $limit_query = "";
+            $limit       = isset($opt['limit']) ? $opt['limit'] : 10;
             if ($limit > 0) {
                $limit_query = "LIMIT $limit";
             }
@@ -659,14 +673,16 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $graph_criterias = ['entities_id' => $entities_id_criteria,
                                 'sons'        => $sons_criteria,
                                 'type'        => $type,
-                                'year'        => $year_criteria,
+                                //                                'year'        => $year_criteria,
+                                'begin'       => $opt['begin'],
+                                'end'         => $opt['end'],
                                 'widget'      => $widgetId];
 
             $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,
-                       "onsubmit"  => false,
+                       "onsubmit"  => true,
                        "opt"       => $opt,
                        "criterias" => $criterias,
                        "export"    => true,
@@ -1071,13 +1087,19 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
       }
 
       $techlist = [];
+      $limit_query = "";
+      $limit       = isset($opt['limit']) ? $opt['limit'] : 10;
+      if ($limit > 0) {
+         $limit_query = "LIMIT $limit";
+      }
       if (count($selected_group) > 0) {
          $groups             = implode(",", $selected_group);
          $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
                                . "FROM `glpi_groups_users` "
                                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
                                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
-                               . " GROUP BY `glpi_groups_users`.`users_id`";
+                               . " GROUP BY `glpi_groups_users`.`users_id`
+                               $limit_query";
 
          $result_gu = $DB->query($query_group_member);
 
@@ -1085,6 +1107,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $techlist[] = $data['users_id'];
          }
       }
+
       $current_month = date("m");
       foreach ($months as $key => $month) {
 
@@ -1092,7 +1115,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             break;
          }
 
-         $next = $key + 1;
+//         $next = $key + 1;
 
          $month_tmp = $key;
          $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
@@ -1100,9 +1123,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          if (strlen($key) == 1) {
             $month_tmp = "0" . $month_tmp;
          }
-         if (strlen($next) == 1) {
-            $next = "0" . $next;
-         }
+//         if (strlen($next) == 1) {
+//            $next = "0" . $next;
+//         }
 
          if ($key == 0) {
             $year      = $year - 1;
@@ -1117,7 +1140,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
          foreach ($techlist as $techid) {
-            $time_per_tech[$techid][$key] = 0;
+//            $time_per_tech[$techid][$key] = 0;
 
             $querym_ai   = "SELECT  DATE(`glpi_tickettasks`.`date`), SUM(`glpi_tickettasks`.`actiontime`) AS actiontime_date
                         FROM `glpi_tickettasks` 
@@ -1143,12 +1166,26 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $result_ai_q = $DB->query($querym_ai);
             while ($data = $DB->fetch_assoc($result_ai_q)) {
                //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
-               $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8), 2);
+               if ($data['actiontime_date'] > 0) {
+                  if (isset($time_per_tech[$techid][$key])) {
+                     $time_per_tech[$techid][$key] += ceil(round(($data['actiontime_date'] / 3600 / 8), 2));
+                  } else {
+                     $time_per_tech[$techid][$key] = ceil(round(($data['actiontime_date'] / 3600 / 8), 2));
+                  }
+               }
             }
          }
 
          if ($key == 0) {
             $year++;
+         }
+      }
+      //drop 0 values
+      foreach ($time_per_tech as $k => $v) {
+         foreach ($v as $d => $n) {
+            if ($n == 0) {
+               $tickets_per_tech[$k][$d] = '';
+            }
          }
       }
       return $time_per_tech;
@@ -1192,14 +1229,20 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          $selected_group = $_SESSION['glpigroups'];
       }
 
-      $techlist = [];
+      $techlist    = [];
+      $limit_query = "";
+      $limit       = isset($params['limit']) ? $params['limit'] : 10;
+      if ($limit > 0) {
+         $limit_query = "LIMIT $limit";
+      }
       if (count($selected_group) > 0) {
          $groups             = implode(",", $selected_group);
          $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
                                . "FROM `glpi_groups_users` "
                                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
                                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
-                               . " GROUP BY `glpi_groups_users`.`users_id`";
+                               . " GROUP BY `glpi_groups_users`.`users_id`
+                               $limit_query";
 
          $result_gu = $DB->query($query_group_member);
 
@@ -1226,7 +1269,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             break;
          }
 
-         $next = $key + 1;
+//         $next = $key + 1;
 
          $month_tmp = $key;
          $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
@@ -1234,9 +1277,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          if (strlen($key) == 1) {
             $month_tmp = "0" . $month_tmp;
          }
-         if (strlen($next) == 1) {
-            $next = "0" . $next;
-         }
+//         if (strlen($next) == 1) {
+//            $next = "0" . $next;
+//         }
 
          if ($key == 0) {
             $year      = $year - 1;
@@ -1277,6 +1320,15 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $year++;
          }
       }
+      //drop 0 values
+      foreach ($tickets_per_tech as $k => $v) {
+         foreach ($v as $d => $n) {
+            if ($n == 0) {
+               $tickets_per_tech[$k][$d] = '';
+            }
+         }
+      }
+
       return $tickets_per_tech;
    }
 

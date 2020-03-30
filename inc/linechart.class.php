@@ -120,7 +120,7 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
 //                            fill: false,
                             lineTension: '0.1',
               }],
-              labels: $labels
+              labels: $labels,
             };
              var id$name = $ids;
              var isChartRendered = false;

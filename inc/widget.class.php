@@ -121,8 +121,8 @@ class PluginMydashboardWidget extends CommonDBTM {
       $dbu     = new DbUtils();
       $reports = $dbu->getAllDataFromTable($this->getTable());
       foreach ($reports as $report) {
-         $name      = $report['name'];
-         if (strpos($report['name'], "PluginMydashboardInfotel")!== false && strpos($report['name'], "PluginMydashboardInfotelcw") === false) {
+         $name = $report['name'];
+         if (strpos($report['name'], "PluginMydashboardInfotel") !== false && strpos($report['name'], "PluginMydashboardInfotelcw") === false) {
             $widgettmp = preg_match_all('!\d+!', $name, $matches);
             if ($widgettmp == 1) {
                $widgetName = "";
@@ -165,11 +165,11 @@ class PluginMydashboardWidget extends CommonDBTM {
    /**
     * @return array
     */
-   static function getWidgetList() {
+   static function getWidgetList($preload = false) {
 
       $list = new PluginMydashboardWidgetlist();
       //Load widgets
-      $widgetlist = $list->getList();
+      $widgetlist = $list->getList(true, -1, "central", $preload);
       $i          = 1;
       $self       = new self();
       $widgets    = [];
@@ -570,14 +570,14 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
-      $config = new PluginMydashboardConfig();
+      $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
-      $display  .= "</span>";
-      $display  .= "</h3>";
-//      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
-//      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
-      $display  .= "<div id=\"display-sc\">";
+      $display .= "</span>";
+      $display .= "</h3>";
+      //      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
+      //      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
+      $display .= "<div id=\"display-sc\">";
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
          $alerts  = new PluginMydashboardAlert();
          $display .= $alerts->getAlertList(0);
@@ -610,10 +610,10 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
-      $config = new PluginMydashboardConfig();
+      $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_maintenances_widget');
-      $display  .= "</span>";
+      $display .= "</span>";
       //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
       $display .= "</h3>";
       $display .= "<div id=\"display-sc\">";
@@ -649,12 +649,12 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
-      $config = new PluginMydashboardConfig();
+      $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_informations_widget');
-      $display  .= "</span>";
-      $display  .= "</h3>";
-      $display  .= "<div id='display-sc'>";
+      $display .= "</span>";
+      $display .= "</h3>";
+      $display .= "<div id='display-sc'>";
       if (PluginMydashboardAlert::countForAlerts(0, 2) > 0) {
 
          $alerts  = new PluginMydashboardAlert();

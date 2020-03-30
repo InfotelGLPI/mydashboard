@@ -28,17 +28,16 @@ include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
-
 $data      = stripslashes($_POST['data']);
 $dashboard = new PluginMydashboardDashboard();
 
 $profile = $_POST['profiles_id'];
 $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
-$id = PluginMydashboardDashboard::checkIfPreferenceExists($options);
+$id      = PluginMydashboardDashboard::checkIfPreferenceExists($options);
 
 if (isset($_POST['users_id']) && $_POST['users_id'] == 0) {
-   $options = ["users_id" => 0, "profiles_id" => $profile];
-   $id = PluginMydashboardDashboard::checkIfPreferenceExists($options);
+   $options              = ["users_id" => 0, "profiles_id" => $profile];
+   $id                   = PluginMydashboardDashboard::checkIfPreferenceExists($options);
    $input['profiles_id'] = $profile;
    if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
       if ($id) {
@@ -62,6 +61,32 @@ if (isset($_POST['users_id']) && $_POST['users_id'] == 0) {
       $input["grid"]     = $data;
       $dashboard->add($input);
    }
+}
+//Save in CACHE
+$widgets      = PluginMydashboardWidget::getWidgetList();
+$widgetclasse = new PluginMydashboardWidget();
+$ckey         = 'md_cache_' . md5($widgetclasse->getTable());
+$datas        = $GLPI_CACHE->get($ckey);
+
+if (isset($data)
+    && is_array($data)
+      && count($data) > 0) {
+   $datajson = [];
+   foreach ($data as $k => $v) {
+      if (isset($v["id"])) {
+         $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+
+         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+               if (isset($widgets[$v["id"]]["id"])
+                   && $widgets[$v["id"]]["id"] == $w) {
+                  $optjson[$v["id"]]["enableRefresh"] = $r;
+               }
+            }
+         }
+      }
+   }
+   $GLPI_CACHE->set($ckey, $datajson);
 }
 
 echo Session::getNewCSRFToken();

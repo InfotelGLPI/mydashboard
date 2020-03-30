@@ -93,6 +93,11 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/countUp-jquery.js"></script>
 
           <?php
+            echo Html::css('lib/jqueryplugins/fullcalendar/fullcalendar.css',
+                     ['media' => '']);
+            echo Html::css('/lib/jqueryplugins/fullcalendar/fullcalendar.print.css',
+                     ['media' => 'print']);
+            Html::requireJs('fullcalendar');
           //$apikey = PluginMydashboardHelper::getGoogleApiKey();
           //if (!empty($apikey)) {
           //   echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";

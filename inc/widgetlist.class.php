@@ -56,12 +56,12 @@ class PluginMydashboardWidgetlist {
     *
     * @return mixed array
     */
-   public function getList($filtered = true, $active_profile = -1, $profile_interface = "central") {
+   public function getList($filtered = true, $active_profile = -1, $profile_interface = "central", $preload = false) {
       global $PLUGIN_HOOKS;
       $widgets = [];
 
       //        We get hooked plugin widgets
-      if (isset($PLUGIN_HOOKS['mydashboard'])) {
+      if (isset($PLUGIN_HOOKS['mydashboard']) && $preload != 1) {
          $widgets = (isset($PLUGIN_HOOKS['mydashboard'])?$PLUGIN_HOOKS['mydashboard']:[]);
       }
 
