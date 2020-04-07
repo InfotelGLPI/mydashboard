@@ -2,6 +2,7 @@ ALTER TABLE `glpi_plugin_mydashboard_configs` ADD `title_alerts_widget` VARCHAR(
 ALTER TABLE `glpi_plugin_mydashboard_configs` ADD `title_maintenances_widget` VARCHAR(255) COLLATE utf8_unicode_ci;
 ALTER TABLE `glpi_plugin_mydashboard_configs` ADD `title_informations_widget` VARCHAR(255) COLLATE utf8_unicode_ci;
 ALTER TABLE `glpi_plugin_mydashboard_preferences` ADD `color_palette` INT(11) NOT NULL DEFAULT '1';
+ALTER TABLE `glpi_plugin_mydashboard_alerts` ADD `itilcategories_id` INT(11) NOT NULL DEFAULT '0';
 
 CREATE TABLE `glpi_plugin_mydashboard_configtranslations`
 (

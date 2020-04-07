@@ -559,9 +559,9 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardAlert($class, $hidewidget = false) {
+   static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = 0) {
 
-      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 0) < 1) {
+      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 0, $itilcategories_id) < 1) {
          $display = false;
          return $display;
       }
@@ -578,9 +578,9 @@ class PluginMydashboardWidget extends CommonDBTM {
       //      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
       //      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
       $display .= "<div id=\"display-sc\">";
-      if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
+      if (PluginMydashboardAlert::countForAlerts(0, 0, $itilcategories_id) > 0) {
          $alerts  = new PluginMydashboardAlert();
-         $display .= $alerts->getAlertList(0);
+         $display .= $alerts->getAlertList(0, $itilcategories_id);
       } else {
          $display .= "<div align='center'><h3><span class ='alert-color'>";
          $display .= __("No problem detected", "mydashboard");
@@ -598,9 +598,9 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardMaintenance($class, $hidewidget = false) {
+   static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = 0) {
 
-      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 1) < 1) {
+      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 1, $itilcategories_id) < 1) {
          $display = false;
          return $display;
       }
@@ -617,9 +617,9 @@ class PluginMydashboardWidget extends CommonDBTM {
       //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
       $display .= "</h3>";
       $display .= "<div id=\"display-sc\">";
-      if (PluginMydashboardAlert::countForAlerts(0, 1) > 0) {
+      if (PluginMydashboardAlert::countForAlerts(0, 1, $itilcategories_id) > 0) {
          $alerts  = new PluginMydashboardAlert();
-         $display .= $alerts->getMaintenanceList();
+         $display .= $alerts->getMaintenanceList($itilcategories_id);
       } else {
          $display .= "<div align='center'><h3><span class ='alert-color'>";
          $display .= __("No scheduled maintenance", "mydashboard");
@@ -637,9 +637,9 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardInformation($class, $hidewidget = false) {
+   static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = 0) {
 
-      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 2) < 1) {
+      if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) < 1) {
          $display = false;
          return $display;
       }
@@ -655,10 +655,10 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display .= "</span>";
       $display .= "</h3>";
       $display .= "<div id='display-sc'>";
-      if (PluginMydashboardAlert::countForAlerts(0, 2) > 0) {
+      if (PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) > 0) {
 
          $alerts  = new PluginMydashboardAlert();
-         $display .= $alerts->getInformationList();
+         $display .= $alerts->getInformationList($itilcategories_id);
 
       } else {
          $display .= "<div align='center'><h3><span class ='alert-color'>";

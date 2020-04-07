@@ -99,15 +99,17 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          $alert->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
          if (isset($alert->fields['id'])) {
-            $id        = $alert->fields['id'];
-            $impact    = $alert->fields['impact'];
-            $type      = $alert->fields['type'];
-            $is_public = $alert->fields['is_public'];
+            $id                = $alert->fields['id'];
+            $impact            = $alert->fields['impact'];
+            $itilcategories_id = $alert->fields['itilcategories_id'];
+            $type              = $alert->fields['type'];
+            $is_public         = $alert->fields['is_public'];
          } else {
-            $id        = -1;
-            $type      = 0;
-            $impact    = 0;
-            $is_public = 0;
+            $id                = -1;
+            $type              = 0;
+            $impact            = 0;
+            $itilcategories_id = 0;
+            $is_public         = 0;
          }
          echo "<form action='" . $alert->getFormURL() . "' method='post' >";
          echo "<table class='tab_cadre_fixe'>";
@@ -137,13 +139,25 @@ class PluginMydashboardItilAlert extends CommonDBTM {
                                          ]
          );
          echo "</td></tr>";
+
+         echo "<tr class='tab_bg_2'>";
+         echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
+         echo "<td>";
+         $opt = ['name'        => 'itilcategories_id',
+                 'value'       => $itilcategories_id,
+                 'entity'      => $_SESSION['glpiactiveentities'],
+                 'entity_sons' => true];
+         ITILCategory::dropdown($opt);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
          Dropdown::showYesNo('is_public', $is_public);
-
          echo "</td></tr>";
+
          if (Session::haveRight("reminder_public", UPDATE)) {
             echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-            echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+            echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
             echo Html::hidden("id", ['value' => $id]);
             echo Html::hidden("reminders_id", ['value' => $reminders_id]);
             echo "</td></tr>";

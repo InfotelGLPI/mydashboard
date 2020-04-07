@@ -33,12 +33,7 @@ if (isset($_POST['update'])) {
          unset($_POST['id']);
          $alert->add($_POST);
       } else {
-         if ($_POST['impact'] == 0) {
-            $alert->getFromDB($_POST['id']);
-            $alert->deleteFromDB();
-         } else {
-            $alert->update($_POST);
-         }
+         $alert->update($_POST);
       }
    }
 }

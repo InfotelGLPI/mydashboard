@@ -66,7 +66,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return bool
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      $alert  = new self();
+      $alert      = new self();
       $itil_alert = new PluginMydashboardItilAlert();
       switch ($item->getType()) {
          case "Reminder":
@@ -117,7 +117,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return int
     * @throws \GlpitestSQLError
     */
-   static function countForAlerts($public, $type) {
+   static function countForAlerts($public, $type, $itilcategories_id = 0) {
       global $DB;
 
       $now                 = date('Y-m-d H:i:s');
@@ -125,13 +125,17 @@ class PluginMydashboardAlert extends CommonDBTM {
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
                               AND (`glpi_reminders`.`end_view_date` IS NULL
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
-
+      $addwhere            = "";
+      if ($itilcategories_id > 0) {
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      }
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
                . PluginMydashboardReminder::addVisibilityJoins()
                . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
                . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
                . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
+                         $addwhere
                          $restrict_visibility ";
 
       if ($public == 0) {
@@ -157,7 +161,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    function getWidgetContentForItem($widgetId, $opt = []) {
       global $CFG_GLPI, $DB;
-      $dbu = new DbUtils();
+      $dbu    = new DbUtils();
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
       switch ($widgetId) {
@@ -189,12 +193,12 @@ class PluginMydashboardAlert extends CommonDBTM {
             break;
 
          case $this->getType() . "4":
-            $widget = $this->displayTicketsAlertsWidgets('PluginMydashboardAlert4', $widgetId, $opt,Ticket::INCIDENT_TYPE);
+            $widget = $this->displayTicketsAlertsWidgets('PluginMydashboardAlert4', $widgetId, $opt, Ticket::INCIDENT_TYPE);
             return $widget;
             break;
 
          case $this->getType() . "5":
-            $widget = $this->displaySLATicketsAlertsWidgets('PluginMydashboardAlert5', $widgetId, $opt,Ticket::INCIDENT_TYPE);
+            $widget = $this->displaySLATicketsAlertsWidgets('PluginMydashboardAlert5', $widgetId, $opt, Ticket::INCIDENT_TYPE);
             return $widget;
             break;
 
@@ -659,13 +663,13 @@ class PluginMydashboardAlert extends CommonDBTM {
             break;
 
          case $this->getType() . "12":
-            $widget = $this->displaySLATicketsAlertsWidgets('PluginMydashboardAlert12',$widgetId, $opt,Ticket::DEMAND_TYPE);
+            $widget = $this->displaySLATicketsAlertsWidgets('PluginMydashboardAlert12', $widgetId, $opt, Ticket::DEMAND_TYPE);
             return $widget;
             break;
 
          case $this->getType() . "13":
 
-            $widget = $this->displayTicketsAlertsWidgets('PluginMydashboardAlert13',$widgetId, $opt,Ticket::DEMAND_TYPE);
+            $widget = $this->displayTicketsAlertsWidgets('PluginMydashboardAlert13', $widgetId, $opt, Ticket::DEMAND_TYPE);
             return $widget;
             break;
       }
@@ -684,7 +688,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       global $CFG_GLPI, $DB;
 
       $widget = new PluginMydashboardHtml();
-      $dbu = new DbUtils();
+      $dbu    = new DbUtils();
 
       $colorstats1 = "#CCC";
       $colorstats2 = "#CCC";
@@ -851,7 +855,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
       }
       $table .= "<i style='color:$colorstats3' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_tickets3'></span></h3>";
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets3'></span></h3>";
 
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<p class=\"count-text \">" . __('New incidents', 'mydashboard') . "</p>";
@@ -923,7 +927,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
 
       $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fa fa-user-times fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_tickets4'></span></h3>";
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets4'></span></h3>";
 
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<p class=\"count-text \">" . __('Opened incidents without assigned technicians', 'mydashboard') . "</p>";
@@ -995,7 +999,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
       }
       $table .= "<i style='color:$colorstats1' class=\"fa fa-exclamation-triangle fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_tickets1'></span></h3>";
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<p class=\"count-text \">" . __('Incidents with very high or major priority', 'mydashboard') . "</p>";
       } else {
@@ -1038,7 +1042,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __('Problems with very high or major priority', 'mydashboard') . "'>";
          }
          $table .= "<i style='color:$colorstats2' class=\"fa fa-bug fa-3x fa-border\"></i>
-                           <h3><span class=\"counter count-number\" id='stats_".$type."_tickets2'></span></h3>";
+                           <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets2'></span></h3>";
          $table .= "<p class=\"count-text \">" . __('Problems with very high or major priority', 'mydashboard') . "</p>";
          if ($stats_tickets2 > 0) {
             $table .= "</a>";
@@ -1050,18 +1054,18 @@ class PluginMydashboardAlert extends CommonDBTM {
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<script type='text/javascript'>
                          $(function(){
-                            $('#stats_".$type."_tickets1').countup($stats_tickets1);
-                            $('#stats_".$type."_tickets2').countup($stats_tickets2);
-                            $('#stats_".$type."_tickets3').countup($stats_tickets3);
-                            $('#stats_".$type."_tickets4').countup($stats_tickets4);
+                            $('#stats_" . $type . "_tickets1').countup($stats_tickets1);
+                            $('#stats_" . $type . "_tickets2').countup($stats_tickets2);
+                            $('#stats_" . $type . "_tickets3').countup($stats_tickets3);
+                            $('#stats_" . $type . "_tickets4').countup($stats_tickets4);
                          });
                   </script>";
       } else {
          $table .= "<script type='text/javascript'>
                          $(function(){
-                            $('#stats_".$type."_tickets1').countup($stats_tickets1);
-                            $('#stats_".$type."_tickets3').countup($stats_tickets3);
-                            $('#stats_".$type."_tickets4').countup($stats_tickets4);
+                            $('#stats_" . $type . "_tickets1').countup($stats_tickets1);
+                            $('#stats_" . $type . "_tickets3').countup($stats_tickets3);
+                            $('#stats_" . $type . "_tickets4').countup($stats_tickets4);
                          });
                   </script>";
       }
@@ -1087,7 +1091,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       global $CFG_GLPI, $DB;
 
       $widget = new PluginMydashboardHtml();
-      $dbu = new DbUtils();
+      $dbu    = new DbUtils();
 
       $colorstats2 = "#CCC";
       $colorstats3 = "#CCC";
@@ -1174,9 +1178,9 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
 
       /*Stats4*/
-      $search_assign                = "1=1";
-      $left                         = "";
-      $stats4                       = 0;
+      $search_assign = "1=1";
+      $left          = "";
+      $stats4        = 0;
 
       if (count($technicians_groups_id) > 0) {
 
@@ -1208,9 +1212,9 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
 
       /*Stats5*/
-      $search_assign                = "1=1";
-      $left                         = "";
-      $stats5                       = 0;
+      $search_assign = "1=1";
+      $left          = "";
+      $stats5        = 0;
 
       if (count($technicians_groups_id) > 0) {
 
@@ -1302,11 +1306,11 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<i style='color:$colorstats2' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_sla2'></span></h3>
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla2'></span></h3>
                <p class=\"count-text \">" . __('Incidents where time to own will be exceeded', 'mydashboard') . "</p>";
       } else {
          $table .= "<i style='color:$colorstats2' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_sla2'></span></h3>
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla2'></span></h3>
                <p class=\"count-text \">" . __('Requests where time to own will be exceeded', 'mydashboard') . "</p>";
       }
 
@@ -1374,11 +1378,11 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<i style='color:$colorstats3' class=\"fa fa-times-circle fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_sla3'></span></h3>
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __('Incidents where time to resolve will be exceeded', 'mydashboard') . "</p>";
       } else {
          $table .= "<i style='color:$colorstats3' class=\"fa fa-times-circle fa-3x fa-border\"></i>
-               <h3><span class=\"counter count-number\" id='stats_".$type."_sla3'></span></h3>
+               <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __('Requests where time to resolve will be exceeded', 'mydashboard') . "</p>";
       }
       if ($stats3 > 0) {
@@ -1446,11 +1450,11 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<i style='color:$colorstats4' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
-                           <h3><span class=\"counter count-number\" id='stats_".$type."_sla4'></span></h3>
+                           <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __('Incidents where time to own is exceeded', 'mydashboard') . "</p>";
       } else {
          $table .= "<i style='color:$colorstats4' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
-                           <h3><span class=\"counter count-number\" id='stats_".$type."_sla4'></span></h3>
+                           <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __('Requests where time to own is exceeded', 'mydashboard') . "</p>";
       }
 
@@ -1519,11 +1523,11 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<i style='color:$colorstats5' class=\"fa fa-times-circle fa-3x fa-border\"></i>
-                           <h3><span class=\"counter count-number\" id='stats_".$type."_sla5'></span></h3>
+                           <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __('Incidents where time to resolve is exceeded', 'mydashboard') . "</p>";
       } else {
          $table .= "<i style='color:$colorstats5' class=\"fa fa-times-circle fa-3x fa-border\"></i>
-                           <h3><span class=\"counter count-number\" id='stats_".$type."_sla5'></span></h3>
+                           <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __('Requests where time to resolve is exceeded', 'mydashboard') . "</p>";
       }
 
@@ -1534,10 +1538,10 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $table .= "<script type='text/javascript'>
                          $(function(){
-                            $('#stats_".$type."_sla2').countup($stats2);
-                            $('#stats_".$type."_sla3').countup($stats3);
-                            $('#stats_".$type."_sla4').countup($stats4);
-                            $('#stats_".$type."_sla5').countup($stats5);
+                            $('#stats_" . $type . "_sla2').countup($stats2);
+                            $('#stats_" . $type . "_sla3').countup($stats3);
+                            $('#stats_" . $type . "_sla4').countup($stats4);
+                            $('#stats_" . $type . "_sla5').countup($stats5);
                          });
                   </script>";
 
@@ -1557,6 +1561,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       return $widget;
    }
+
    /**
     * @param bool $public
     *
@@ -1571,18 +1576,22 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * @return string
     */
-   function getMaintenanceList() {
+   function getMaintenanceList($itilcategories_id = 0) {
       global $DB;
 
       $now = date('Y-m-d H:i:s');
       $wl  = "";
 
-      $wl            .= "<div class='weather_block'>";
+      $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
       $restrict_user = '1';
       // Only personal on central so do not keep it
       //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
+      $addwhere            = "";
+      if ($itilcategories_id > 0) {
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -1600,6 +1609,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
+                        $addwhere
                          $restrict_visibility ";
 
       $query .= "AND " . Reminder::addVisibilityRestrict() . "";
@@ -1616,10 +1626,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          while ($row = $DB->fetch_array($result)) {
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-4 center alert-title-div \">";
+            $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \">";
             $wl .= "<i class='fa fa-exclamation-triangle fa-alert-5 fa-alert-orange' aria-hidden='true'></i>";
             $wl .= "</div>";
-            $wl .= "<div class=\"bt-col-xs-8 alert-title-div \">";
+            $wl .= "<div class=\"bt-col-xs-8 alert-title-div \" style=\"margin-top: 30px;\">";
             $wl .= "<h3>";
             $wl .= $row['name'];
             $wl .= "</h3>";
@@ -1633,7 +1643,8 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</ul>";
          $wl .= "</div>";
-         $wl .= "<script type='text/javascript'>
+         if ($nb > 1) {
+            $wl .= "<script type='text/javascript'>
                   $(function() {
                      $('#maint-div').vTicker({
                         speed: 500,
@@ -1646,6 +1657,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                      });
                   });
                </script>";
+         }
       } else {
 
          $wl .= "<div align='center'><br><br><h3><span class ='maint-color'>";
@@ -1660,18 +1672,22 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * @return string
     */
-   function getInformationList() {
+   function getInformationList($itilcategories_id = 0) {
       global $DB;
 
       $now = date('Y-m-d H:i:s');
       $wl  = "";
 
-      $wl            .= "<div class='weather_block'>";
+      $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
       $restrict_user = '1';
       // Only personal on central so do not keep it
       //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
+      $addwhere            = "";
+      if ($itilcategories_id > 0) {
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -1689,6 +1705,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
+                        $addwhere
                          $restrict_visibility ";
 
       $query .= "AND " . Reminder::addVisibilityRestrict() . "";
@@ -1719,7 +1736,8 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</ul>";
          $wl .= "</div>";
-         $wl .= "<script type='text/javascript'>
+         if ($nb > 1) {
+            $wl .= "<script type='text/javascript'>
                   $(function() {
                      $('#info-div').vTicker({
                         speed: 500,
@@ -1732,7 +1750,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                      });
                   });
                </script>";
-
+         }
       } else {
 
          $wl .= "<div align='center'><br><br><h3><span class ='maint-color'>";
@@ -1750,7 +1768,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
-   function getAlertList($public = 0) {
+   function getAlertList($public = 0, $itilcategories_id = 0) {
       global $DB;
 
       $config = new PluginMydashboardConfig();
@@ -1758,8 +1776,13 @@ class PluginMydashboardAlert extends CommonDBTM {
       $now = date('Y-m-d H:i:s');
 
       $wl            = "";
-      $wl            .= "<div class='weather_block'>";
+      $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
       $restrict_user = '1';
+
+      $addwhere            = "";
+      if ($itilcategories_id > 0) {
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -1779,6 +1802,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                . "LEFT JOIN `" . $this->getTable() . "`"
                . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
                . "WHERE $restrict_user
+                        $addwhere
                          $restrict_visibility ";
 
       if ($public == 0) {
@@ -1803,14 +1827,14 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "<li>";
 
             $wl    .= "<div class='bt-row'>";
-            $wl    .= "<div class=\"bt-col-xs-4 center alert-title-div\">";
+            $wl    .= "<div class=\"bt-col-xs-3 center alert-title-div\">";
             $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
             $style = "color:" . $config->getField('impact_' . $row['impact']);
             $wl    .= "<i style='$style' class='fa $class fa-alert-5'></i>";
 
             $wl .= "</div>";
 
-            $wl .= "<div class=\"bt-col-xs-8 alert-title-div\">";
+            $wl .= "<div class=\"bt-col-xs-8 alert-title-div\" style=\"margin-top: 30px;\">";
             $wl .= "<h3>";
 
             $rand = mt_rand();
@@ -1833,8 +1857,8 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</ul>";
          $wl .= "</div>";
-
-         $wl .= "<script type='text/javascript'>
+         if ($nb > 1) {
+            $wl .= "<script type='text/javascript'>
                   $(function() {
                      $('#alert-div').vTicker({
                         speed: 500,
@@ -1847,6 +1871,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                      });
                   });
                </script>";
+         }
       } else {
 
          $wl .= "<div align='center'><br><br><h3><span class ='alert-color'>";
@@ -1971,10 +1996,10 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $div .= "<div class='bt-row weather_public_block'>";
       $div .= "<div class='center'><h3>" . PluginMydashboardConfig::displayField($config, 'title_alerts_widget') . "</h3></div>";
-      $div .= "<div class=\"bt-col-xs-4 right \">";
+      $div .= "<div class=\"bt-col-xs-3 right \">";
       $div .= "<i style='$style' class='fa $class fa-alert-4'></i>";
       $div .= "</div>";
-      $div .= "<div class=\"bt-col-xs-8 alert-title-div\">";
+      $div .= "<div class=\"bt-col-xs-8 alert-title-div\" style=\"margin-top: 30px;\">";
       $div .= "<div class='weather_msg'>";
       $div .= $this->getMessage($list, $public);
       $div .= "</div>";
@@ -2032,22 +2057,23 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * @param Reminder $item
     */
-   private
-   function showForm(Reminder $item) {
+   private function showForm(Reminder $item) {
       $reminders_id = $item->getID();
 
       $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
       if (isset($this->fields['id'])) {
-         $id        = $this->fields['id'];
-         $impact    = $this->fields['impact'];
-         $type      = $this->fields['type'];
-         $is_public = $this->fields['is_public'];
+         $id                = $this->fields['id'];
+         $impact            = $this->fields['impact'];
+         $itilcategories_id = $this->fields['itilcategories_id'];
+         $type              = $this->fields['type'];
+         $is_public         = $this->fields['is_public'];
       } else {
-         $id        = -1;
-         $type      = 0;
-         $impact    = 0;
-         $is_public = 0;
+         $id                = -1;
+         $type              = 0;
+         $impact            = 0;
+         $itilcategories_id = 0;
+         $is_public         = 0;
       }
       echo "<form action='" . $this->getFormURL() . "' method='post' >";
       echo "<table class='tab_cadre_fixe'>";
@@ -2076,10 +2102,22 @@ class PluginMydashboardAlert extends CommonDBTM {
                                       ]
       );
       echo "</td></tr>";
+
+      echo "<tr class='tab_bg_2'>";
+      echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
+      echo "<td>";
+      $opt = ['name'        => 'itilcategories_id',
+              'value'       => $itilcategories_id,
+              'entity'      => $_SESSION['glpiactiveentities'],
+              'entity_sons' => true];
+      ITILCategory::dropdown($opt);
+      echo "</td>";
+      echo "</tr>";
+
       echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
       Dropdown::showYesNo('is_public', $is_public);
-
       echo "</td></tr>";
+
       if (Session::haveRight("reminder_public", UPDATE)) {
          echo "<tr class='tab_bg_1 center'><td colspan='2'>";
          echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
@@ -2156,15 +2194,17 @@ class PluginMydashboardAlert extends CommonDBTM {
          $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
          if (isset($this->fields['id'])) {
-            $id        = $this->fields['id'];
-            $impact    = $this->fields['impact'];
-            $type      = $this->fields['type'];
-            $is_public = $this->fields['is_public'];
+            $id                = $this->fields['id'];
+            $impact            = $this->fields['impact'];
+            $itilcategories_id = $this->fields['itilcategories_id'];
+            $type              = $this->fields['type'];
+            $is_public         = $this->fields['is_public'];
          } else {
-            $id        = -1;
-            $type      = 0;
-            $impact    = 0;
-            $is_public = 0;
+            $id                = -1;
+            $type              = 0;
+            $impact            = 0;
+            $itilcategories_id = 0;
+            $is_public         = 0;
          }
          echo "<form action='" . $this->getFormURL() . "' method='post' >";
          echo "<table class='tab_cadre_fixe'>";
@@ -2194,10 +2234,22 @@ class PluginMydashboardAlert extends CommonDBTM {
                                          ]
          );
          echo "</td></tr>";
+
+         echo "<tr class='tab_bg_2'>";
+         echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
+         echo "<td>";
+         $opt = ['name'        => 'itilcategories_id',
+                 'value'       => $itilcategories_id,
+                 'entity'      => $_SESSION['glpiactiveentities'],
+                 'entity_sons' => true];
+         ITILCategory::dropdown($opt);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
          Dropdown::showYesNo('is_public', $is_public);
-
          echo "</td></tr>";
+
          if (Session::haveRight("reminder_public", UPDATE)) {
             echo "<tr class='tab_bg_1 center'><td colspan='2'>";
             echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
@@ -2224,7 +2276,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $display = "<div class=\"bt-feature $class \">";
          $display .= "<h3 class=\"bt-title-divider\">";
          $display .= "<span>";
-         $config = new PluginMydashboardConfig();
+         $config  = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
          $display .= "</span>";

@@ -160,7 +160,7 @@ class PluginMydashboardStockWidget extends CommonDBTM {
                   }
                }
             }
-            Dropdown::showFromArray('types', $types, array('multiple' => true, 'values' => $stypes));
+            Dropdown::showFromArray('types', $types, ['multiple' => true, 'values' => $stypes]);
          }
       }
       echo "</span>";
@@ -189,7 +189,7 @@ class PluginMydashboardStockWidget extends CommonDBTM {
                }
             }
          }
-         Dropdown::showFromArray('states', $states, array('multiple' => true, 'values' => $svalues));
+         Dropdown::showFromArray('states', $states, ['multiple' => true, 'values' => $svalues]);
       }
       echo "</span>";
       echo "</td>";
