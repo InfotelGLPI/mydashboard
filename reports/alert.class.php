@@ -126,7 +126,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                               AND (`glpi_reminders`.`end_view_date` IS NULL
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
       $addwhere            = "";
-      if ($itilcategories_id > 0) {
+      if ($itilcategories_id != 0) {
          $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
       }
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
@@ -1589,7 +1589,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
       $addwhere            = "";
-      if ($itilcategories_id > 0) {
+      if ($itilcategories_id != 0) {
          $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
       }
 
@@ -1685,7 +1685,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
       $addwhere            = "";
-      if ($itilcategories_id > 0) {
+      if ($itilcategories_id != 0) {
          $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
       }
 
@@ -1780,7 +1780,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $restrict_user = '1';
 
       $addwhere            = "";
-      if ($itilcategories_id > 0) {
+      if ($itilcategories_id != 0) {
          $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
       }
 
@@ -2109,7 +2109,8 @@ class PluginMydashboardAlert extends CommonDBTM {
       $opt = ['name'        => 'itilcategories_id',
               'value'       => $itilcategories_id,
               'entity'      => $_SESSION['glpiactiveentities'],
-              'entity_sons' => true];
+              'entity_sons' => true,
+         'toadd' => [-1 => __('All categories', 'mydashboard')]];
       ITILCategory::dropdown($opt);
       echo "</td>";
       echo "</tr>";
