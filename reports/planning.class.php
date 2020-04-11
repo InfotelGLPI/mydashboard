@@ -64,7 +64,7 @@ class PluginMydashboardPlanning {
          return [
             PluginMydashboardMenu::$TICKET_TECHVIEW =>
                [
-                  "planningwidget" => __('Your planning') . "&nbsp;<i class='fa fa-calendar'></i>",
+                  "planningwidget" => __('Your planning') . "&nbsp;<i class='fas fa-calendar'></i>",
                ]
          ];
       }

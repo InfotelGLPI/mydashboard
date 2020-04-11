@@ -219,7 +219,7 @@ class PluginMydashboardWidget extends CommonDBTM {
          $message .= " - " . $id;
       }
       $msg = "<div class='center'><br><br>";
-      $msg .= "<i style='color:orange' class='fa fa-exclamation-triangle fa-3x'></i>";
+      $msg .= "<i style='color:orange' class='fas fa-exclamation-triangle fa-3x'></i>";
       $msg .= "<br><br><span class='b'>$message</span></div>";
 
       return $msg;
@@ -566,7 +566,11 @@ class PluginMydashboardWidget extends CommonDBTM {
          return $display;
       }
       $delclass = "";
-      $display  = "<div id='gs4' class=\"bt-row $delclass\">";
+      $addclass = "";
+      if ($itilcategories_id != 0) {
+         $addclass = "details";
+      }
+      $display  = "<div id='gs4' class=\"bt-row $delclass $addclass\">";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
@@ -606,7 +610,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      $display  = "<div id='gs5' class=\"bt-row $delclass\">";
+      $addclass = "";
+      if ($itilcategories_id != 0) {
+         $addclass = "details";
+      }
+      $display  = "<div id='gs5' class=\"bt-row $delclass $addclass\">";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
@@ -645,7 +653,11 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
 
       $delclass = "";
-      $display  = "<div id='gs6' class=\"bt-row $delclass\">";
+      $addclass = "";
+      if ($itilcategories_id != 0) {
+         $addclass = "details";
+      }
+      $display  = "<div id='gs6' class=\"bt-row $delclass $addclass\">";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3 class=\"bt-title-divider\">";
       $display  .= "<span>";
@@ -734,11 +746,11 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense','PluginBadgesBadge'];
                if ($itemtype == 'Computer') {
-                  $icon = 'fa fa-laptop';
+                  $icon = 'fas fa-laptop';
                } else if ($itemtype == 'Monitor') {
                   $icon = 'fas fa-desktop';
                } else if ($itemtype == 'Peripheral') {
-                  $icon = 'fa fa-hdd';
+                  $icon = 'fas fa-hdd';
                } else if ($itemtype == 'Phone') {
                   $icon = 'fas fa-mobile-alt';
                } else if ($itemtype == 'Printer') {

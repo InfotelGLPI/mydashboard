@@ -91,19 +91,19 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getWidgetsForItem() {
       return [
          _n('Alert', 'Alerts', 2, 'mydashboard') => [
-            $this->getType() . "1"  => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "2"  => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "3"  => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "4"  => __("Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "5"  => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "6"  => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "7"  => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-            $this->getType() . "10" => __("Inventory stock alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "11" => __('Your equipments', 'mydashboard') . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "12" => __("SLA Requests alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
-            $this->getType() . "13" => __("Requests alerts", "mydashboard") . "&nbsp;<i class='fa fa-info-circle'></i>",
+            $this->getType() . "1"  => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "2"  => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "3"  => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "4"  => __("Incidents alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "5"  => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "6"  => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "7"  => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
+            $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
+            $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
+            $this->getType() . "10" => __("Inventory stock alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "11" => __('Your equipments', 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "12" => __("SLA Requests alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "13" => __("Requests alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
          ]
       ];
    }
@@ -411,7 +411,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->toggleWidgetRefresh();
 
-            $widget->setWidgetTitle("<span style='color:orange'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<span style='color:orange'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
 
             return $widget;
@@ -457,7 +457,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
 
             return $widget;
             break;
@@ -499,7 +499,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fa fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<span style='color:indianred'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
             return $widget;
@@ -637,7 +637,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                   </script>";
             } else {
 
-               $table .= "<i style='color:orange' class='fa fa-exclamation-triangle fa-3x'></i>";
+               $table .= "<i style='color:orange' class='fas fa-exclamation-triangle fa-3x'></i>";
                $table .= "<br><br><span class='b'>" . __("No alerts are setup", "mydashboard") . "</span>";
             }
             $table .= "</div>";
@@ -854,7 +854,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __('New requests', 'mydashboard') . "'>";
          }
       }
-      $table .= "<i style='color:$colorstats3' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
+      $table .= "<i style='color:$colorstats3' class=\"fas fa-exclamation-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets3'></span></h3>";
 
       if ($type == Ticket::INCIDENT_TYPE) {
@@ -926,7 +926,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
       }
 
-      $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fa fa-user-times fa-3x fa-border\"></i>
+      $table .= "<i style='color:$colorstats4;font-size:34px' class=\"fas fa-user-times fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets4'></span></h3>";
 
       if ($type == Ticket::INCIDENT_TYPE) {
@@ -998,7 +998,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Requests with very high or major priority', 'mydashboard') . "'>";
          }
       }
-      $table .= "<i style='color:$colorstats1' class=\"fa fa-exclamation-triangle fa-3x fa-border\"></i>
+      $table .= "<i style='color:$colorstats1' class=\"fas fa-exclamation-triangle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
       if ($type == Ticket::INCIDENT_TYPE) {
          $table .= "<p class=\"count-text \">" . __('Incidents with very high or major priority', 'mydashboard') . "</p>";
@@ -1041,7 +1041,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          if ($stats_tickets2 > 0) {
             $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __('Problems with very high or major priority', 'mydashboard') . "'>";
          }
-         $table .= "<i style='color:$colorstats2' class=\"fa fa-bug fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats2' class=\"fas fa-bug fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id='stats_" . $type . "_tickets2'></span></h3>";
          $table .= "<p class=\"count-text \">" . __('Problems with very high or major priority', 'mydashboard') . "</p>";
          if ($stats_tickets2 > 0) {
@@ -1305,11 +1305,11 @@ class PluginMydashboardAlert extends CommonDBTM {
          $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\">";
       }
       if ($type == Ticket::INCIDENT_TYPE) {
-         $table .= "<i style='color:$colorstats2' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats2' class=\"fas fa-exclamation-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla2'></span></h3>
                <p class=\"count-text \">" . __('Incidents where time to own will be exceeded', 'mydashboard') . "</p>";
       } else {
-         $table .= "<i style='color:$colorstats2' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats2' class=\"fas fa-exclamation-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla2'></span></h3>
                <p class=\"count-text \">" . __('Requests where time to own will be exceeded', 'mydashboard') . "</p>";
       }
@@ -1377,11 +1377,11 @@ class PluginMydashboardAlert extends CommonDBTM {
          $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\">";
       }
       if ($type == Ticket::INCIDENT_TYPE) {
-         $table .= "<i style='color:$colorstats3' class=\"fa fa-times-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats3' class=\"fas fa-times-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __('Incidents where time to resolve will be exceeded', 'mydashboard') . "</p>";
       } else {
-         $table .= "<i style='color:$colorstats3' class=\"fa fa-times-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats3' class=\"fas fa-times-circle fa-3x fa-border\"></i>
                <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __('Requests where time to resolve will be exceeded', 'mydashboard') . "</p>";
       }
@@ -1449,11 +1449,11 @@ class PluginMydashboardAlert extends CommonDBTM {
          $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\">";
       }
       if ($type == Ticket::INCIDENT_TYPE) {
-         $table .= "<i style='color:$colorstats4' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats4' class=\"fas fa-exclamation-circle fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __('Incidents where time to own is exceeded', 'mydashboard') . "</p>";
       } else {
-         $table .= "<i style='color:$colorstats4' class=\"fa fa-exclamation-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats4' class=\"fas fa-exclamation-circle fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __('Requests where time to own is exceeded', 'mydashboard') . "</p>";
       }
@@ -1643,7 +1643,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</ul>";
          $wl .= "</div>";
-         if ($nb > 1) {
+         if ($nb) {
             $wl .= "<script type='text/javascript'>
                   $(function() {
                      $('#maint-div').vTicker({
@@ -1736,7 +1736,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</ul>";
          $wl .= "</div>";
-         if ($nb > 1) {
+         if ($nb) {
             $wl .= "<script type='text/javascript'>
                   $(function() {
                      $('#info-div').vTicker({
@@ -1820,7 +1820,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       if ($nb) {
 
          $wl .= "<div id='alert-div'>";
-         $wl .= "<ul  class='alert-div'>";
+         $wl .= "<ul class='alert-div'>";
 
          while ($row = $DB->fetch_array($result)) {
 
@@ -1857,7 +1857,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</ul>";
          $wl .= "</div>";
-         if ($nb > 1) {
+         if ($nb) {
             $wl .= "<script type='text/javascript'>
                   $(function() {
                      $('#alert-div').vTicker({

@@ -58,7 +58,7 @@ class PluginMydashboardReports_Map extends CommonGLPI {
 
       $widgets = [
          __('Map', "mydashboard") => [
-            $this->getType() . "29" => (($isDebug) ? "29 " : "") . __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
+            $this->getType() . "29" => (($isDebug) ? "29 " : "") . __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fas fa-map'></i>",
          ]
       ];
       return $widgets;
@@ -228,7 +228,7 @@ class PluginMydashboardReports_Map extends CommonGLPI {
 
                $graph .= "<script>                    
                 var _loadMap = function(map_elt, itemtype) {
-                  L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
+                  L.AwesomeMarkers.Icon.prototype.options.prefix = 'fas';
                   var _micon = 'circle';
       
                   var stdMarker = L.AwesomeMarkers.icon({
