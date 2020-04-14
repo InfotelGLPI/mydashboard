@@ -111,13 +111,15 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * Alert counter
     *
-    * @param $public
-    * @param $type
+    * @param       $public
+    * @param       $type
+    *
+    * @param array $itilcategories_id
     *
     * @return int
     * @throws \GlpitestSQLError
     */
-   static function countForAlerts($public, $type, $itilcategories_id = 0) {
+   static function countForAlerts($public, $type, $itilcategories_id = []) {
       global $DB;
 
       $now                 = date('Y-m-d H:i:s');
@@ -126,8 +128,9 @@ class PluginMydashboardAlert extends CommonDBTM {
                               AND (`glpi_reminders`.`end_view_date` IS NULL
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
       $addwhere            = "";
-      if ($itilcategories_id != 0) {
-         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      if (count($itilcategories_id) > 0) {
+         $cats     = implode("','", $itilcategories_id);
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
       }
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
@@ -1576,7 +1579,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * @return string
     */
-   function getMaintenanceList($itilcategories_id = 0) {
+   function getMaintenanceList($itilcategories_id = []) {
       global $DB;
 
       $now = date('Y-m-d H:i:s');
@@ -1588,9 +1591,10 @@ class PluginMydashboardAlert extends CommonDBTM {
       //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
-      $addwhere            = "";
-      if ($itilcategories_id != 0) {
-         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      $addwhere = "";
+      if (count($itilcategories_id) > 0) {
+         $cats     = implode("','", $itilcategories_id);
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
       }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
@@ -1672,7 +1676,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * @return string
     */
-   function getInformationList($itilcategories_id = 0) {
+   function getInformationList($itilcategories_id = []) {
       global $DB;
 
       $now = date('Y-m-d H:i:s');
@@ -1684,9 +1688,10 @@ class PluginMydashboardAlert extends CommonDBTM {
       //      if (Session::getCurrentInterface() == 'central') {
       //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
       //      }
-      $addwhere            = "";
-      if ($itilcategories_id != 0) {
-         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      $addwhere = "";
+      if (count($itilcategories_id) > 0) {
+         $cats     = implode("','", $itilcategories_id);
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
       }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
@@ -1768,7 +1773,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
-   function getAlertList($public = 0, $itilcategories_id = 0) {
+   function getAlertList($public = 0, $itilcategories_id = []) {
       global $DB;
 
       $config = new PluginMydashboardConfig();
@@ -1779,9 +1784,10 @@ class PluginMydashboardAlert extends CommonDBTM {
       $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
       $restrict_user = '1';
 
-      $addwhere            = "";
-      if ($itilcategories_id != 0) {
-         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = $itilcategories_id";
+      $addwhere = "";
+      if (count($itilcategories_id) > 0) {
+         $cats     = implode("','", $itilcategories_id);
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
       }
 
       $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
@@ -2110,7 +2116,7 @@ class PluginMydashboardAlert extends CommonDBTM {
               'value'       => $itilcategories_id,
               'entity'      => $_SESSION['glpiactiveentities'],
               'entity_sons' => true,
-         'toadd' => [-1 => __('All categories', 'mydashboard')]];
+              'toadd'       => [-1 => __('All categories', 'mydashboard')]];
       ITILCategory::dropdown($opt);
       echo "</td>";
       echo "</tr>";

@@ -558,7 +558,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = 0) {
+   static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = []) {
 
       if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 0, $itilcategories_id) < 1) {
          $display = false;
@@ -566,7 +566,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
       $delclass = "";
       $addclass = "";
-      if ($itilcategories_id != 0) {
+      if (count($itilcategories_id) > 0) {
          $addclass = "details";
       }
       $display  = "<div id='gs4' class=\"bt-row $delclass $addclass\">";
@@ -601,7 +601,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = 0) {
+   static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = []) {
 
       if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 1, $itilcategories_id) < 1) {
          $display = false;
@@ -610,7 +610,7 @@ class PluginMydashboardWidget extends CommonDBTM {
 
       $delclass = "";
       $addclass = "";
-      if ($itilcategories_id != 0) {
+      if (count($itilcategories_id) > 0) {
          $addclass = "details";
       }
       $display  = "<div id='gs5' class=\"bt-row $delclass $addclass\">";
@@ -643,8 +643,9 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @param $class
     *
     * @return string
+    * @throws \GlpitestSQLError
     */
-   static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = 0) {
+   static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = []) {
 
       if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) < 1) {
          $display = false;
@@ -653,7 +654,7 @@ class PluginMydashboardWidget extends CommonDBTM {
 
       $delclass = "";
       $addclass = "";
-      if ($itilcategories_id != 0) {
+      if (count($itilcategories_id) > 0) {
          $addclass = "details";
       }
       $display  = "<div id='gs6' class=\"bt-row $delclass $addclass\">";
