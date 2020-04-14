@@ -287,7 +287,6 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                //Then its scripts (non evaluated, have to be evaluated client-side)
                $scripts = $widget->getWidgetScripts();
-               $scripts = implode($scripts, "");
 
                //We prepare a "JSon object" compatible with sDashboard
                $widgetTitle                                                         = $widget->getWidgetTitle();
