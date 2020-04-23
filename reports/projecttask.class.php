@@ -195,7 +195,7 @@ class PluginMydashboardProjecttask {
          }
 
          if ($number) {
-            $output['header'][] = __('');
+            $output['header'][] = __('ID');
             $output['header'][] = __('Requester');
             $output['header'][] = __('Description');
             for ($i = 0; $i < $number; $i++) {
