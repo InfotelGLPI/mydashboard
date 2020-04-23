@@ -65,28 +65,30 @@ if (isset($_POST['users_id']) && $_POST['users_id'] == 0) {
 //Save in CACHE
 $widgets      = PluginMydashboardWidget::getWidgetList();
 $widgetclasse = new PluginMydashboardWidget();
-$ckey         = 'md_cache_' . md5($widgetclasse->getTable());
-$datas        = $GLPI_CACHE->get($ckey);
 
-if (isset($data)
-    && is_array($data)
-      && count($data) > 0) {
-   $datajson = [];
-   foreach ($data as $k => $v) {
-      if (isset($v["id"])) {
-         $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+if (isset($data)) {
+   $widgetdata = json_decode($data, true);
+   if (isset($widgetdata)
+       && is_array($widgetdata)
+       && count($widgetdata) > 0) {
+      $datajson = [];
+      foreach ($widgetdata as $k => $v) {
+         if (isset($v["id"])) {
+            $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
 
-         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
-            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-               if (isset($widgets[$v["id"]]["id"])
-                   && $widgets[$v["id"]]["id"] == $w) {
-                  $optjson[$v["id"]]["enableRefresh"] = $r;
-               }
-            }
+            //         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+            //            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+            //               if (isset($widgets[$v["id"]]["id"])
+            //                   && $widgets[$v["id"]]["id"] == $w) {
+            //                  $optjson[$v["id"]]["enableRefresh"] = $r;
+            //               }
+            //            }
+            //         }
          }
       }
+      $ckey = 'md_cache_' . md5($widgetclasse->getTable());
+      $GLPI_CACHE->set($ckey, $datajson);
    }
-   $GLPI_CACHE->set($ckey, $datajson);
 }
 
 echo Session::getNewCSRFToken();
