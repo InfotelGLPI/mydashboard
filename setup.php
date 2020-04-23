@@ -93,7 +93,8 @@ function plugin_init_mydashboard() {
             if (isset($_SESSION["glpi_plugin_mydashboard_loaded"])
                 && $_SESSION["glpi_plugin_mydashboard_loaded"] == 0) {
 
-               if (strpos($_SERVER['REQUEST_URI'], 'central.php?redirect') === false) {
+               if (strpos($_SERVER['REQUEST_URI'], 'central.php?redirect') === false
+                   && strpos($_SERVER['REQUEST_URI'], 'apirest.php') === false) {
                   if(Session::getCurrentInterface() == 'central'){
                      if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
@@ -104,9 +105,6 @@ function plugin_init_mydashboard() {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
                         Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
 
-                     } else if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
-                        $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                        Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
                      }
                   }
                }
