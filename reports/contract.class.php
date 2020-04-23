@@ -170,7 +170,7 @@ class PluginMydashboardContract {
          __('Contracts expired in the last 30 days') . "</a>",
          $contract0
       ];
-      $options['criteria'][0]['value'] = 0;
+      $options['criteria'][0]['value'] = '>0';
       $options['criteria'][1]['value'] = '<7';
       $body[] = ["<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
          Toolbox::append_params($options, '&amp;') . "\">" .
