@@ -38,6 +38,9 @@ class PluginMydasboardAutoloader {
       spl_autoload_register([$this, 'autoload'], false, true);
    }
 
+   /**
+    * @return array
+    */
    public function listReports() {
 
       $reportsFiles = scandir(GLPI_ROOT . '/plugins/mydashboard/reports');

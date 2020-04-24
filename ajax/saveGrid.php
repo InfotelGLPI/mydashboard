@@ -87,6 +87,7 @@ if (isset($data)) {
          }
       }
       $ckey = 'md_cache_' . md5($widgetclasse->getTable());
+      $GLPI_CACHE->delete($ckey);
       $GLPI_CACHE->set($ckey, $datajson);
    }
 }

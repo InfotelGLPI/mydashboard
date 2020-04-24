@@ -1288,6 +1288,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             $widgetclasse = new PluginMydashboardWidget();
             $ckey         = 'md_cache_' . md5($widgetclasse->getTable());
             $datas     = $GLPI_CACHE->get($ckey);
+            //UNACTIVATE IT FOR DEBUG
             if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
                $datajson = $datas;
             } else {
@@ -1335,9 +1336,9 @@ class PluginMydashboardMenu extends CommonGLPI {
              && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
             $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
          } else {
-            if (empty($grid) && count($widgets) < 1) {
+//            if (empty($grid) && count($widgets) < 1) {
                $widgets = PluginMydashboardWidget::getWidgetList();
-            }
+//            }
             foreach ($widgets as $k => $val) {
                $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
                //NOT LOAD ALL WIDGETS FOR PERF

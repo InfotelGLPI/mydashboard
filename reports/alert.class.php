@@ -2336,7 +2336,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       } else {
          $alert .= "<div class='md-title-status' style='color:orange'><i class='fa fa-exclamation-triangle fa-4x'></i><br><br>";
          $alert .= "<b>";
-         $alert .= __("Alert is not properly configured or is not reachable", "mydashboard");
+         $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
          $alert .= "</b>";
          $alert .= "<br><br><a href='$url' target='_blank'>" . $url . "</a></div>";
       }
@@ -2374,7 +2374,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_HEADER, 1);
+//      curl_setopt($ch, CURLOPT_HEADER, 1);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
