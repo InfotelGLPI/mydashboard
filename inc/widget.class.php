@@ -708,7 +708,12 @@ class PluginMydashboardWidget extends CommonDBTM {
 
       if (count($allUsedItemsForUser) > 0) {
          if ($fromsc == true) {
-            $display .= "<div class=\"bt-feature bt-col-md-12 count-title \">";
+            $class ="";
+            $config = new PluginServicecatalogConfig();
+            if ($config->getLayout() == PluginServicecatalogConfig::THUMBNAIL) {
+               $class = "visitedchildbg widgetrow";
+            }
+            $display .= "<div class=\"bt-feature bt-col-md-12 count-title\">";
          }
          foreach ($allUsedItemsForUser as $itemtype => $used_items) {
 
@@ -716,7 +721,14 @@ class PluginMydashboardWidget extends CommonDBTM {
 
 
             //            if ($i % 2 == 0 && $nb > 1) {
-            $display .= "<div class=\"bt-feature bt-col-md-11 center equip-text\">";
+            $class  = "";
+            if ($fromsc == true) {
+               $config = new PluginServicecatalogConfig();
+               if ($config->getLayout() == PluginServicecatalogConfig::THUMBNAIL) {
+                  $class = "visitedchildbg widgetrow";
+               }
+            }
+            $display .= "<div class=\"bt-feature bt-col-md-3 center equip-text $class\">";
             //            }
             //            if ($nb == 1) {
             //               $display .= "<div class=\"bt-feature bt-col-md-6 center equip-text\">";
@@ -729,9 +741,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                //                  $display .= "<div class=\"bt-col-md-6 center\">";
                //               }
                if ($nb == 1) {
-                  $display .= "<div class=\"bt-feature bt-col-md-11 equip-item center\">";
+                  $display .= "<div class=\"equip-item\">";
                } else {
-                  $display .= "<div class=\"bt-feature bt-col-md-5 equip-item center\">";
+                  $display .= "<div class=\"equip-item\">";
                }
 
                //               $display .= "<div class=\"nbstock\" style=\"color:$color\">";

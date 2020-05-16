@@ -57,11 +57,11 @@ class PluginMydashboardReports_Table extends CommonGLPI {
       $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 
       $widgets = [
-         __('Tables', "mydashboard") => [$this->getType() . "3"  => (($isDebug) ? "3 " : "") . __("Internal annuary", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "5"  => (($isDebug) ? "5 " : "") . __("Fields unicity") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "14" => (($isDebug) ? "14 " : "") . __("All unpublished articles") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "32" => (($isDebug) ? "32 " : "") . __("Number of opened tickets by technician and by status", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
-                                         $this->getType() . "33" => (($isDebug) ? "33 " : "") . __("Number of opened tickets by group and by status", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+         __('Tables', "mydashboard") => [$this->getType() . "3"  => (($isDebug) ? "3 " : "") . __("Internal annuary", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
+                                         $this->getType() . "5"  => (($isDebug) ? "5 " : "") . __("Fields unicity") . "&nbsp;<i class='fas fa-table'></i>",
+                                         $this->getType() . "14" => (($isDebug) ? "14 " : "") . __("All unpublished articles") . "&nbsp;<i class='fas fa-table'></i>",
+                                         $this->getType() . "32" => (($isDebug) ? "32 " : "") . __("Number of opened tickets by technician and by status", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
+                                         $this->getType() . "33" => (($isDebug) ? "33 " : "") . __("Number of opened tickets by group and by status", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
          ]
       ];
 

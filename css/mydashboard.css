@@ -100,6 +100,12 @@
    /*width: 80%;*/
 }
 
+/*#info-div,*/
+/*#maint-div,*/
+/*#alert-div {*/
+/*   overflow: inherit !important;*/
+/*}*/
+
 .weather_public_block {
    text-align: left;
    padding-bottom: 10px;
@@ -160,9 +166,8 @@ div#tabcontent{
    right: 0px;
 }
 
-.plugin_mydashboard_header_info {
+.pull-right {
    float: right;
-   margin-right: 5px;
 }
 
 .plugin_mydashboard_header_fullscreen {
@@ -884,7 +889,7 @@ div.dt-button-background {
 
 .tickets-stats .nbstock {
    display: inline-block;
-   margin: 0 30px 0 10px;
+   margin: 20px;
    position: relative;
    vertical-align: top;
    text-align: center;
@@ -919,10 +924,13 @@ div.dt-button-background {
    border-style: dashed;
    float: left;
    /*width: 90% !important;*/
+   min-height: 100px!important;
+   margin-right: 10px;
 }
 
 .equip-item {
-   float: left;
+   min-height: 100px!important;
+   margin-right: 10px;
 }
 
 .md-fa-2x {
@@ -1107,7 +1115,7 @@ div.dt-button-background {
    left: 0;
    height: 100%;
    width: 100%;
-   background: rgba(255, 255, 255, .8) url(../../../pics/spinner.48.gif) 50% 50% no-repeat;
+   background: rgba(255, 255, 255, .8) url(../pics/spinner.gif) 50% 50% no-repeat;
 }
 
 .hidden {

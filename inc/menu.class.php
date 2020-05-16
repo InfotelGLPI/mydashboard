@@ -426,13 +426,13 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          echo "<a id='add-widget' class='cadre_edit_button' href='#'>";
          echo "<span class='plugin_mydashboard_add_button'>" . __('Add a widget', 'mydashboard');
-         echo "&nbsp;<i class=\"fa fa-caret-down\"></i>";
+         echo "&nbsp;<i class=\"fas fa-caret-down\"></i>";
          echo "</span>";//(span.plugin_mydashboard_header_title)
          echo "</a>";
          echo "</td>";
 
          echo "<td>";
-         //         echo "<i class='fa fa-tasks fa-lg'></i>";
+         //         echo "<i class='fas fa-tasks fa-lg'></i>";
          echo "<a class='cadre_edit_button' href='#' style='padding: 6px;'>";
          echo "<span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
          echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
@@ -1289,9 +1289,9 @@ class PluginMydashboardMenu extends CommonGLPI {
             $ckey         = 'md_cache_' . md5($widgetclasse->getTable());
             $datas     = $GLPI_CACHE->get($ckey);
             //UNACTIVATE IT FOR DEBUG
-            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
+//            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
                $datajson = $datas;
-            } else {
+//            } else {
                $widgets = PluginMydashboardWidget::getWidgetList();
 
                foreach ($datagrid as $k => $v) {
@@ -1311,7 +1311,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                if ($predefined_grid == 0) {
                   $GLPI_CACHE->set($ckey, $datajson);
                }
-            }
+//            }
       } else {
          echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
@@ -1412,10 +1412,10 @@ class PluginMydashboardMenu extends CommonGLPI {
                          var delbutton = '';
                          var refreshbutton = '';
                          if ($delete_button == 1) {
-                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fa fa-times\"></i></button>';
+                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fas fa-times\"></i></button>';
                          }
                          if (refreshopt == 1) {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fa fa-sync-alt\"></i></button>';
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fas fa-sync-alt\"></i></button>';
                          }
                          if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
@@ -1591,7 +1591,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 widget = widgetArray['' + id + ''];
                 var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
                          '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + id + '\');\">' +
-                          '<i class=\"fa fa-times\"></i></button>' + widget + '<div/><div/>');
+                          '<i class=\"fas fa-times\"></i></button>' + widget + '<div/><div/>');
                 var grid = $('.grid-stack$rand').data('gridstack');
                 grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);
                 return true;

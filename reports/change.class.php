@@ -49,19 +49,19 @@ class PluginMydashboardChange {
          $array = [
             PluginMydashboardMenu::$CHANGE_VIEW =>
                [
-                  "changeprocesswidget" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                  "changeappliedwidget" => __('Applied changes', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
+                  "changeprocesswidget" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
+                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
+                  "changeappliedwidget" => __('Applied changes', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
                ],
             PluginMydashboardMenu::$GROUP_VIEW  =>
                [
-                  "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>",
-                  "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
+                  "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>"
 
                ],
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "changecountwidget" => __('Change followup', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "changecountwidget" => __('Change followup', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }

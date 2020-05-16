@@ -48,9 +48,9 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
    public function getWidgetsForItem() {
       return [
          PluginMydashboardMenu::$GLOBAL_VIEW => [
-            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions') . "&nbsp;<i class='fa fa-table'></i>",
-            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries') . "&nbsp;<i class='fa fa-table'></i>",
-            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries') . "&nbsp;<i class='fa fa-table'></i>"
+            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions') . "&nbsp;<i class='fas fa-table'></i>",
+            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries') . "&nbsp;<i class='fas fa-table'></i>",
+            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries') . "&nbsp;<i class='fas fa-table'></i>"
          ]
 
       ];

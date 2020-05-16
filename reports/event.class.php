@@ -63,7 +63,7 @@ class PluginMydashboardEvent extends Glpi\Event {
          //               ),
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "&nbsp;<i class='fa fa-table'></i>"
+                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }

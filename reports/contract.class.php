@@ -45,7 +45,7 @@ class PluginMydashboardContract {
          return [
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "contractwidget" => Contract::getTypeName(1) . "&nbsp;<i class='fa fa-table'></i>"
+                  "contractwidget" => Contract::getTypeName(1) . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }

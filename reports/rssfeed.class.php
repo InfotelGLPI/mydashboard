@@ -48,12 +48,12 @@ class PluginMydashboardRSSFeed {
          $array = [
             PluginMydashboardMenu::$RSS_VIEW =>
                [
-                  "rssfeedpersonalwidget" => _n('Personal RSS feed', 'Personal RSS feeds', 2) . "&nbsp;<i class='fa fa-table'></i>"
+                  "rssfeedpersonalwidget" => _n('Personal RSS feed', 'Personal RSS feeds', 2) . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }
       if (Session::haveRight("rssfeed_public", READ)) {
-         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = _n('Public RSS feed', 'Public RSS feeds', 2) . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = _n('Public RSS feed', 'Public RSS feeds', 2) . "&nbsp;<i class='fas fa-table'></i>";
       }
       return $array;
    }
@@ -153,7 +153,7 @@ class PluginMydashboardRSSFeed {
       if (RSSFeed::canCreate()) {
          $output['title'] .= "<span class=\"rssfeed_right\">";
          $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.form.php\">";
-         $output['title'] .= "<i class='fa fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a></span>";
+         $output['title'] .= "<i class='fas fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a></span>";
       }
 
       $count = 0;

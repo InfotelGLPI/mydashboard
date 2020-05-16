@@ -48,11 +48,11 @@ class PluginMydashboardProject {
          $array = [
             PluginMydashboardMenu::$PROJECT_VIEW =>
                [
-                  "projectprocesswidget" => __('projects to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "projectprocesswidget" => __('projects to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>"
                ],
             PluginMydashboardMenu::$GROUP_VIEW =>
                [
-                  "projectprocesswidgetgroup" => __('projects to be processed', 'mydashboard') . "&nbsp;<i class='fa fa-table'></i>"
+                  "projectprocesswidgetgroup" => __('projects to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }

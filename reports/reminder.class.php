@@ -41,12 +41,12 @@ class PluginMydashboardReminder {
          $array = [
             PluginMydashboardMenu::$MY_VIEW =>
                [
-                  "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2) . "&nbsp;<i class='fa fa-table'></i>"
+                  "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2) . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }
       if (Session::haveRight("reminder_public", READ)) {
-         $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2) . "&nbsp;<i class='fa fa-table'></i>";
+         $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2) . "&nbsp;<i class='fas fa-table'></i>";
       }
       return $array;
    }
@@ -183,7 +183,7 @@ class PluginMydashboardReminder {
       if (Reminder::canCreate()) {
          $output['title'] .= "&nbsp;<span>";
          $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php\">";
-         $output['title'] .= "<i class='fa fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a>";
+         $output['title'] .= "<i class='fas fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a>";
       }
 
       $output['title'] .= "";
@@ -214,7 +214,7 @@ class PluginMydashboardReminder {
                $date_url = $tab[0];
                $output['body'][$count][0] .= "<span class=\"reminder_right\">";
                $output['body'][$count][0] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?date=" . $date_url . "&amp;type=day\">";
-               $output['body'][$count][0] .= "<i class='fa fa-clock-o' title=\"" . sprintf(__s('From %1$s to %2$s'),
+               $output['body'][$count][0] .= "<i class='fas fa-clock-o' title=\"" . sprintf(__s('From %1$s to %2$s'),
                                                                                                  Html::convDateTime($data["begin"]),
                                                                                                  Html::convDateTime($data["end"])) . "\"></i><span class='sr-only'></span>";
                $output['body'][$count][0] .= "</a></span>";

@@ -49,17 +49,17 @@ class PluginMydashboardProblem {
          $array = [
             PluginMydashboardMenu::$PROBLEM_VIEW =>
                [
-                  "problemprocesswidget" => __('Problems to be processed') . "&nbsp;<i class='fa fa-table'></i>",
-                  "problemwaitingwidget" => __('Problems on pending status') . "&nbsp;<i class='fa fa-table'></i>"
+                  "problemprocesswidget" => __('Problems to be processed') . "&nbsp;<i class='fas fa-table'></i>",
+                  "problemwaitingwidget" => __('Problems on pending status') . "&nbsp;<i class='fas fa-table'></i>"
                ],
             PluginMydashboardMenu::$GROUP_VIEW =>
                [
-                  "problemprocesswidgetgroup" => __('Problems to be processed') . "&nbsp;<i class='fa fa-table'></i>",
-                  "problemwaitingwidgetgroup" => __('Problems on pending status') . "&nbsp;<i class='fa fa-table'></i>"
+                  "problemprocesswidgetgroup" => __('Problems to be processed') . "&nbsp;<i class='fas fa-table'></i>",
+                  "problemwaitingwidgetgroup" => __('Problems on pending status') . "&nbsp;<i class='fas fa-table'></i>"
                ],
             PluginMydashboardMenu::$GLOBAL_VIEW =>
                [
-                  "problemcountwidget" => __('Problem followup') . "&nbsp;<i class='fa fa-table'></i>"
+                  "problemcountwidget" => __('Problem followup') . "&nbsp;<i class='fas fa-table'></i>"
                ]
          ];
       }

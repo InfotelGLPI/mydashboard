@@ -1525,11 +1525,11 @@ class PluginMydashboardAlert extends CommonDBTM {
          $table .= "<a style='color:$colorstats5' target='_blank' href=\"" . $stats5link . "\">";
       }
       if ($type == Ticket::INCIDENT_TYPE) {
-         $table .= "<i style='color:$colorstats5' class=\"fa fa-times-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats5' class=\"fas fa-times-circle fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __('Incidents where time to resolve is exceeded', 'mydashboard') . "</p>";
       } else {
-         $table .= "<i style='color:$colorstats5' class=\"fa fa-times-circle fa-3x fa-border\"></i>
+         $table .= "<i style='color:$colorstats5' class=\"fas fa-times-circle fa-3x fa-border\"></i>
                            <h3><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __('Requests where time to resolve is exceeded', 'mydashboard') . "</p>";
       }
@@ -1631,7 +1631,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \">";
-            $wl .= "<i class='fa fa-exclamation-triangle fa-alert-5 fa-alert-orange' aria-hidden='true'></i>";
+            $wl .= "<i class='fas fa-exclamation-triangle fa-alert-5 fa-alert-orange' aria-hidden='true'></i>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-8 alert-title-div \" style=\"margin-top: 30px;\">";
             $wl .= "<h3>";
@@ -1639,7 +1639,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "</h3>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-12 alert-content-div \">";
-            $wl .= Toolbox::unclean_html_cross_side_scripting_deep($row["text"]);
+            $wl .= Toolbox::getHtmlToDisplay($row["text"]);
             $wl .= "</div>";
             $wl .= "</div>";
             $wl .= "</li>";
@@ -1654,6 +1654,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         speed: 500,
                         pause: 6000,
                         showItems: 1,
+                        padding: 10,
                         animate: 'fade',
                         mousePause: true,
                         height: 0,
@@ -1734,7 +1735,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "</h3>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-12 center \">";
-            $wl .= Toolbox::unclean_html_cross_side_scripting_deep($row["text"]);
+            $wl .= Toolbox::getHtmlToDisplay($row["text"]);
             $wl .= "</div>";
             $wl .= "</div>";
             $wl .= "</li>";
@@ -1748,6 +1749,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         speed: 500,
                         pause: 6000,
                         showItems: 1,
+                        padding: 10,
                         animate: false,
                         mousePause: true,
                         height: 0,
@@ -1855,7 +1857,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-12 alert-content-div\">";
-            $wl .= Toolbox::unclean_html_cross_side_scripting_deep($row["text"]);
+            $wl .= Toolbox::getHtmlToDisplay($row["text"]);
             $wl .= "</div>";
             $wl .= "</div>";
 
@@ -1870,6 +1872,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         speed: 500,
                         pause: 6000,
                         showItems: 1,
+                        padding: 10,
                         animation: 'fade',
                         mousePause: true,
                         height: 0,
@@ -2020,8 +2023,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     *
     * @return string
     */
-   private
-   function getMessage($list, $public) {
+   private function getMessage($list, $public) {
 
       $l      = "";
       $config = new PluginMydashboardConfig();
@@ -2313,7 +2315,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $alert = "";
       if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
-         $alert .= "<div class='center' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br>";
+         $alert .= "<div class='center' style='color:darkred'><i class='fas fa-exclamation-circle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __('Service is down for maintenance. It will be back shortly.');
          $alert .= "</b></div>";
@@ -2324,7 +2326,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $message = "";
       } else if (preg_match('/PROBLEM/is', $message)) {
-         $alert .= "<div class='md-title-status' style='color:darkred'><i class='fa fa-exclamation-circle fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:darkred'><i class='fas fa-exclamation-circle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "</b></div>";
@@ -2334,7 +2336,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $alert .= __("GLPI is OK", "mydashboard");
          $alert .= "</b></div>";
       } else {
-         $alert .= "<div class='md-title-status' style='color:orange'><i class='fa fa-exclamation-triangle fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:orange'><i class='fas fa-exclamation-triangle fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
          $alert .= "</b>";
