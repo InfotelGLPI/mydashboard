@@ -24,6 +24,14 @@
     </authors>
     <versions>
         <version>
+            <num>1.7.7</num>
+            <compatibility>9.4</compatibility>
+        </version>
+        <version>
+            <num>1.7.6</num>
+            <compatibility>9.4</compatibility>
+        </version>
+        <version>
             <num>1.7.5</num>
             <compatibility>9.4</compatibility>
         </version>
