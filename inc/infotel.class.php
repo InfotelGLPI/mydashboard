@@ -95,6 +95,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $this->getType() . "35" => (($isDebug) ? "35 " : "") . __("Age of tickets", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "36" => (($isDebug) ? "36 " : "") . __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "37" => (($isDebug) ? "37 " : "") . __("Stock of tickets by status", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+            $this->getType() . "38" => (($isDebug) ? "38 " : "") . __("Number of opened ticket and average satisfaction per trimester","mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
          ]
       ];
 
@@ -3953,6 +3954,138 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
             $widget->setWidgetHtmlContent($graph);
 
+            return $widget;
+            break;
+            
+         case $this->getType() . "38":
+            $name = 'NumberOfOpenedTicketAndAverageSatisfactionPerTrimester';
+            $criterias = [];
+            $params  = ["preferences" => $this->preferences,
+               "criterias"   => $criterias,
+               "opt"         => $opt];
+            $options = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt                        = $options['opt'];
+            $crit                       = $options['crit'];
+            $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
+            $opened_tickets_data = [];
+            $satisfaction_data = [];
+            $tabnames = [];
+            $starting_year = 2018;
+            $ending_year = date('Y');
+            for($starting_year; $starting_year <= $ending_year; $starting_year++){
+               // Checking T1
+               array_push($tabnames, 'Trimestre 1 '.$starting_year);
+               // Number of tickets opened
+               $query_openedTicketT1 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
+                                        WHERE $is_deleted
+                                        AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
+               $result = $DB->query($query_openedTicketT1);
+               $dataT1 = $DB->fetch_array($result);
+               array_push($opened_tickets_data, $dataT1[0]);
+               // Average Satisfaction
+               $query_satisfatcionT1 = "SELECT AVG(satisfaction)
+                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
+                                        WHERE `glpi_tickets`.`is_deleted` = 0 
+                                        AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
+               $result = $DB->query($query_satisfatcionT1);
+               $data_satisfactionT1 = $DB->fetch_array($result);
+               array_push($satisfaction_data, round($data_satisfactionT1[0],2));
+               // Checking T2
+
+               array_push($tabnames, 'Trimestre 2 '.$starting_year);
+               $query_openedTicketT2 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
+                                        WHERE $is_deleted
+                                        AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
+               $result = $DB->query($query_openedTicketT2);
+               $dataT2 = $DB->fetch_array($result);
+               array_push($opened_tickets_data, $dataT2[0]);
+               // Average Satisfaction
+               $query_satisfatcionT2 = "SELECT AVG(satisfaction)
+                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
+                                        WHERE `glpi_tickets`.`is_deleted` = 0 
+                                        AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
+               $result = $DB->query($query_satisfatcionT2);
+               $data_satisfactionT2 = $DB->fetch_array($result);
+               array_push($satisfaction_data, round($data_satisfactionT2[0],2));
+               // Checking T3
+               array_push($tabnames, 'Trimestre 3 '.$starting_year);
+               $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
+                                        WHERE $is_deleted
+                                        AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
+               $result = $DB->query($query_openedTicketT3);
+               $dataT3 = $DB->fetch_array($result);
+               array_push($opened_tickets_data, $dataT3[0]);
+               // Average Satisfaction
+               $query_satisfatcionT3 = "SELECT AVG(satisfaction)
+                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
+                                        WHERE `glpi_tickets`.`is_deleted` = 0 
+                                        AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
+               $result = $DB->query($query_satisfatcionT3);
+               $data_satisfactionT3 = $DB->fetch_array($result);
+               array_push($satisfaction_data, round($data_satisfactionT3[0],2));
+               // Checking T4
+               array_push($tabnames, 'Trimestre 4 '.$starting_year);
+               $query_openedTicketT4 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
+                                        WHERE $is_deleted
+                                        AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
+               $result = $DB->query($query_openedTicketT4);
+               $dataT4 = $DB->fetch_array($result);
+               array_push($opened_tickets_data, $dataT4[0]);
+               // Average Satisfaction
+               $query_satisfatcionT4 = "SELECT AVG(satisfaction)
+                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
+                                        WHERE `glpi_tickets`.`is_deleted` = 0 
+                                        AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
+               $result = $DB->query($query_satisfatcionT4);
+               $data_satisfactionT4 = $DB->fetch_array($result);
+               array_push($satisfaction_data, round($data_satisfactionT4[0],2));
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened ticket and average satisfaction per trimester", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "37 " : "") . $title);
+            $widget->toggleWidgetRefresh();
+
+            $params = ["widgetId"  => $widgetId,
+               "name"      => $name,
+               "onsubmit"  => true,
+               "opt"       => $opt,
+               "criterias" => $criterias,
+               "export"    => true,
+               "canvas"    => true,
+               "nb"        => 1];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+            $titleOpenedTicket = __("Opened Ticket","mydashboard");
+            $titleSatisfactionTicket = __("Average Satisfaction","mydashboad");
+            $labels = json_encode($tabnames);
+
+            $datasets[] =
+               ['type'        => 'bar',
+                  'data'        => $opened_tickets_data,
+                  'label'       => $titleOpenedTicket,
+                  'borderColor' => '#ff7f0e',
+               ];
+
+            $datasets[] =
+               ['type'        => 'line',
+                  'data'        => $satisfaction_data,
+                  'label'       => $titleSatisfactionTicket,
+                  'borderColor' => '#ff7f0e',
+                  'fill'        => false,
+                  'lineTension' => '0.1',
+               ];
+
+            $graph_datas = ['name'            => $name,
+               'ids'             => json_encode([]),
+               'data'            => json_encode($datasets),
+               'labels'          => $labels,
+               'label'           => $title,
+               'backgroundColor' => "#1f77b4"];
+
+            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, []);
+            $widget->setWidgetHtmlContent($graph);
             return $widget;
             break;
 
