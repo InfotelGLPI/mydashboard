@@ -1603,11 +1603,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
 
       $query = "SELECT `glpi_reminders`.`id`,
-                       `glpi_reminders`.`name`,
-                       `glpi_reminders`.`text`,
-                       `glpi_reminders`.`date`,
-                       `glpi_reminders`.`begin_view_date`,
-                       `glpi_reminders`.`end_view_date`
+                       `glpi_reminders`.`name`
                    FROM `glpi_reminders` "
                . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
@@ -1628,6 +1624,8 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='maint-div'>";
          $wl .= "<ul>";
          while ($row = $DB->fetchArray($result)) {
+            $note = new Reminder();
+            $note->getFromDB($row["id"]);
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \">";
@@ -1635,11 +1633,11 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-8 alert-title-div \" style=\"margin-top: 30px;\">";
             $wl .= "<h3>";
-            $wl .= $row['name'];
+            $wl .= ReminderTranslation::getTranslatedValue($note, 'name');
             $wl .= "</h3>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-12 alert-content-div \">";
-            $wl .= Toolbox::getHtmlToDisplay($row["text"]);
+            $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
             $wl .= "</div>";
             $wl .= "</div>";
             $wl .= "</li>";
@@ -1701,11 +1699,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
 
       $query = "SELECT `glpi_reminders`.`id`,
-                       `glpi_reminders`.`name`,
-                       `glpi_reminders`.`text`,
-                       `glpi_reminders`.`date`,
-                       `glpi_reminders`.`begin_view_date`,
-                       `glpi_reminders`.`end_view_date`
+                       `glpi_reminders`.`name`
                    FROM `glpi_reminders` "
                . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
@@ -1727,15 +1721,17 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='info-div'>";
          $wl .= "<ul>";
          while ($row = $DB->fetchArray($result)) {
+            $note = new Reminder();
+            $note->getFromDB($row["id"]);
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-12 center \">";
             $wl .= "<h3>";
-            $wl .= $row['name'];
+            $wl .= ReminderTranslation::getTranslatedValue($note, 'name');
             $wl .= "</h3>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-12 center \">";
-            $wl .= Toolbox::getHtmlToDisplay($row["text"]);
+            $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
             $wl .= "</div>";
             $wl .= "</div>";
             $wl .= "</li>";
@@ -1799,12 +1795,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query = "SELECT `glpi_reminders`.`id`,
                        `glpi_reminders`.`name`,
-                       `glpi_reminders`.`text`,
-                       `glpi_reminders`.`date`,
-                       `glpi_reminders`.`begin_view_date`,
-                       `glpi_reminders`.`end_view_date`,
-                       `" . $this->getTable() . "`.`impact`,
-                       `" . $this->getTable() . "`.`is_public`
+                       `" . $this->getTable() . "`.`impact`
                    FROM `glpi_reminders` "
                . PluginMydashboardReminder::addVisibilityJoins()
                . "LEFT JOIN `" . $this->getTable() . "`"
@@ -1832,6 +1823,9 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          while ($row = $DB->fetchArray($result)) {
 
+            $note = new Reminder();
+            $note->getFromDB($row["id"]);
+
             $wl .= "<li>";
 
             $wl    .= "<div class='bt-row'>";
@@ -1848,7 +1842,9 @@ class PluginMydashboardAlert extends CommonDBTM {
             $rand = mt_rand();
             $name = $row['name'];
             $wl   .= "<div id='alert$rand'>";
-            $wl   .= "<span style='$style' class='left'>" . $name . "</span>";
+            $wl   .= "<span style='$style' class='left'>";
+            $wl   .= ReminderTranslation::getTranslatedValue($note, 'name');
+            $wl   .= "</span>";
             $wl   .= "</div>";
             $wl   .= "</h3>";
 
@@ -1857,7 +1853,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-12 alert-content-div\">";
-            $wl .= Toolbox::getHtmlToDisplay($row["text"]);
+            $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
             $wl .= "</div>";
             $wl .= "</div>";
 
@@ -2376,7 +2372,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//      curl_setopt($ch, CURLOPT_HEADER, 1);
+      //      curl_setopt($ch, CURLOPT_HEADER, 1);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
