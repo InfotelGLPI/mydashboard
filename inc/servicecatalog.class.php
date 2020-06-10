@@ -43,25 +43,24 @@ class PluginMydashboardServicecatalog extends CommonGLPI
       return Session::haveRightsOr("plugin_mydashboard", [CREATE, READ]);
    }
 
-   static function getMenuLogo() {
+   /**
+    * @return string
+    */
+   static function getMenuLink() {
       global $CFG_GLPI;
-      
-      $display =  "<a class='bt-interface' href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php'>";
-      $fasize  = "fa-6x";
-      $display .= "<div class='bt-img-responsive center'>";
-      $display .= "<i class='fa-menu-sc fas fa-tachometer-alt $fasize'></i>";//$style
-      $display .= "</div>";
-      $display .= "</a>";
 
-      return $display;
+      return $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php";
+   }
+
+   static function getMenuLogo() {
+
+      return "fas fa-tachometer-alt";
 
    }
 
    static function getMenuTitle() {
-      global $CFG_GLPI;
 
-      return "<a class='bt-buttons' href='".$CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php' class='de-em'>
-      <span class='de-em'>" . __('Access', 'mydashboard') . " </span><span class='em'>" . __('Dashboard', 'mydashboard')."</span></a>";
+      return __('Dashboard access', 'mydashboard');
 
    }
 

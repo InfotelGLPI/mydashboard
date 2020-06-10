@@ -78,7 +78,7 @@
 }
 
 #display-sc {
-   /*width: 95%;*/
+   width: 95% !important;
    /*text-align: left;*/
    /*padding-left: 1%;*/
 }
