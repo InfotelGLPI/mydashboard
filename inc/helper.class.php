@@ -1170,7 +1170,7 @@ class PluginMydashboardHelper {
          $result = $DB->query($query);
          $tab    = [];
          if ($result) {
-            while ($row = $DB->fetch_assoc($result)) {
+            while ($row = $DB->fetchAssoc($result)) {
                $tab[] = $row;
             }
             $linechart = false;

@@ -148,7 +148,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       }
 
       $result = $DB->query($query);
-      $ligne  = $DB->fetch_assoc($result);
+      $ligne  = $DB->fetchAssoc($result);
       $nb     = $ligne['cpt'];
 
       return $nb;
@@ -266,7 +266,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             if ($nb) {
                $i = 0;
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
 
                   $ticket = new Ticket();
                   $ticket->getFromDB($data['tickets_id']);
@@ -438,7 +438,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $datas = [];
             $i     = 0;
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
 
                   $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
 
@@ -481,7 +481,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $datas = [];
             $i     = 0;
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
 
                   $datas[$i]["date"] = Html::convDateTime($data['date']);
 
@@ -1627,7 +1627,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          $wl .= "<div id='maint-div'>";
          $wl .= "<ul>";
-         while ($row = $DB->fetch_array($result)) {
+         while ($row = $DB->fetchArray($result)) {
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \">";
@@ -1726,7 +1726,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          $wl .= "<div id='info-div'>";
          $wl .= "<ul>";
-         while ($row = $DB->fetch_array($result)) {
+         while ($row = $DB->fetchArray($result)) {
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-12 center \">";
@@ -1830,7 +1830,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='alert-div'>";
          $wl .= "<ul class='alert-div'>";
 
-         while ($row = $DB->fetch_array($result)) {
+         while ($row = $DB->fetchArray($result)) {
 
             $wl .= "<li>";
 
@@ -1902,7 +1902,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getAlertSummary($public = 0, $force = 0) {
       global $DB;
 
-      echo Html::css("/lib/font-awesome/css/all.min.css");
+      echo Html::css("/public/lib/base.css");
       echo Html::css("/plugins/mydashboard/css/mydashboard.css");
       echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
       $now = date('Y-m-d H:i:s');
@@ -1947,7 +1947,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $nb     = $DB->numrows($result);
 
       if ($nb) {
-         while ($row = $DB->fetch_array($result)) {
+         while ($row = $DB->fetchArray($result)) {
 
             if ($row['impact'] == 1) {
                $f1[]   = $row;

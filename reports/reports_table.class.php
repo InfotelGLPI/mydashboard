@@ -139,7 +139,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
             $datas = [];
             $i     = 0;
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
 
                   $unicity = new FieldUnicity();
                   $unicity->getFromDB($data["id"]);
@@ -236,7 +236,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
 
             $knowbaseitem = new KnowbaseItem();
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
                   $knowbaseitem->getFromDB($data['id']);
 
                   $datas[$i]["name"] = $knowbaseitem->getLink();
@@ -341,7 +341,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                $result                                    = $DB->query($query_moreticket_type);
                $i                                         = 0;
                $moreTicketTypeName                        = [];
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $moreTicketType[$i]['name'] = $data['typename'];
                   $moreTicketType[$i]['id']   = $data['typeid'];
                   array_push($moreTicketTypeName, $data['typename']);
@@ -371,7 +371,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                                   _x('status', 'Solved')];
             if ($nb) {
                $i = 0;
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $nbWaitingTickets = "";
                   $hasMoreTicket    = 0;
                   $userId           = $data['users_id'];
@@ -384,7 +384,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                      $result2      = $DB->query($query);
                      $nb2          = $DB->numrows($result2);
                      if ($nb2) {
-                        while ($data = $DB->fetch_assoc($result2)) {
+                        while ($data = $DB->fetchAssoc($result2)) {
                            $value            = "";
                            $nbWaitingTickets = $data['nbtickets'];
                            if ($data['nbtickets'] != "0") {
@@ -403,7 +403,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                      $result3       = $DB->query($query_moretickets_by_technician_by_status);
                      $hasMoreTicket = 1;
                      if ($DB->numrows($result3) > 0) {
-                        while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
+                        while ($dataMoreTicket = $DB->fetchAssoc($result3)) {
                            $array[$dataMoreTicket['statusname']][$dataMoreTicket['userid']] = $dataMoreTicket['nb'];
                         }
 
@@ -567,7 +567,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                $result                = $DB->query($query_moreticket_type);
                $i                     = 0;
                $moreTicketTypeName    = [];
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $moreTicketType[$i]['name'] = $data['typename'];
                   $moreTicketType[$i]['id']   = $data['typeid'];
                   array_push($moreTicketTypeName, $data['typename']);
@@ -616,7 +616,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
 
                      if ($nb2) {
 
-                        while ($data = $DB->fetch_assoc($result2)) {
+                        while ($data = $DB->fetchAssoc($result2)) {
 
                            $value            = "";
                            $nbWaitingTickets = $data['nbtickets'];
@@ -636,7 +636,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                      $result3       = $DB->query($query_moretickets_by_group_by_status);
                      $hasMoreTicket = 1;
                      if ($DB->numrows($result3) > 0) {
-                        while ($dataMoreTicket = $DB->fetch_assoc($result3)) {
+                        while ($dataMoreTicket = $DB->fetchAssoc($result3)) {
                            $array[$dataMoreTicket['statusname']][$dataMoreTicket['groups_id']] = $dataMoreTicket['nb'];
                         }
                         foreach ($moreTicketType as $key => $value) {

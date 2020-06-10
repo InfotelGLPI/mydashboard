@@ -581,7 +581,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
-            let disp = $isStartedAtZero;
+            var disp = $isStartedAtZero;
             var dataBar$name = {
               datasets: $datas,
               labels: $labels,

@@ -132,7 +132,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $maxcount   = 0;
             $i          = 0;
             $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-            while ($data = $DB->fetch_array($results2)) {
+            while ($data = $DB->fetchArray($results2)) {
                $tabdata[$i] = $data["nbStockTickets"];
                $tabnames[]  = $data['monthname'];
                if ($data["nbStockTickets"] > $maxcount) {
@@ -152,7 +152,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
             $results = $DB->query($query);
-            while ($data = $DB->fetch_array($results)) {
+            while ($data = $DB->fetchArray($results)) {
 
                list($year, $month) = explode('-', $data['month']);
 
@@ -165,7 +165,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                      AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
 
                $results_1 = $DB->query($query_1);
-               $data_1    = $DB->fetch_array($results_1);
+               $data_1    = $DB->fetchArray($results_1);
 
                $tabdata[$i] = $data_1['count'];
 
@@ -290,7 +290,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $tabprogress         = [];
             $tabnames            = [];
             if ($nbStockTickets) {
-               while ($data = $DB->fetch_array($resultsStockTickets)) {
+               while ($data = $DB->fetchArray($resultsStockTickets)) {
                   $tabprogress[] = $data["nbStockTickets"];
                   if ($data["nbStockTickets"] > $maxcount) {
                      $maxcount = $data["nbStockTickets"];
@@ -319,7 +319,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $nbResults = $DB->numrows($results);
             $i         = 0;
             if ($nbResults) {
-               while ($data = $DB->fetch_array($results)) {
+               while ($data = $DB->fetchArray($results)) {
 
                   $tabnames[] = $data['monthname'];
 
@@ -344,7 +344,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   $results_1 = $DB->query($query_1);
 
                   if ($DB->numrows($results_1)) {
-                     $data_1      = $DB->fetch_array($results_1);
+                     $data_1      = $DB->fetchArray($results_1);
                      $tabopened[] = $data_1['count'];
                   } else {
                      $tabopened[] = 0;
@@ -367,7 +367,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   $results_2 = $DB->query($query_2);
 
                   if ($DB->numrows($results_2)) {
-                     $data_2      = $DB->fetch_array($results_2);
+                     $data_2      = $DB->fetchArray($results_2);
                      $tabclosed[] = $data_2['count'];
                   } else {
                      $tabclosed[] = 0;
@@ -396,7 +396,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                      $results_3 = $DB->query($query_3);
 
                      if ($DB->numrows($results_3)) {
-                        $data_3        = $DB->fetch_array($results_3);
+                        $data_3        = $DB->fetchArray($results_3);
                         $tabprogress[] = $data_3['count'];
                      } else {
                         $tabprogress[] = 0;
@@ -541,7 +541,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $tabprogress         = [];
             $tabnames            = [];
             if ($nbStockTickets) {
-               while ($data = $DB->fetch_array($resultsStockTickets)) {
+               while ($data = $DB->fetchArray($resultsStockTickets)) {
                   $tabprogress[] = $data["nbStockTickets"];
                   if ($data["nbStockTickets"] > $maxcount) {
                      $maxcount = $data["nbStockTickets"];
@@ -570,7 +570,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $nbResults = $DB->numrows($results);
             $i         = 0;
             if ($nbResults) {
-               while ($data = $DB->fetch_array($results)) {
+               while ($data = $DB->fetchArray($results)) {
 
                   $tabnames[] = $data['monthname'];
 
@@ -595,7 +595,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   $results_1 = $DB->query($query_1);
 
                   if ($DB->numrows($results_1)) {
-                     $data_1      = $DB->fetch_array($results_1);
+                     $data_1      = $DB->fetchArray($results_1);
                      $tabopened[] = $data_1['count'];
                   } else {
                      $tabopened[] = 0;
@@ -619,7 +619,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   $results_2 = $DB->query($query_2);
 
                   if ($DB->numrows($results_2)) {
-                     $data_2        = $DB->fetch_array($results_2);
+                     $data_2        = $DB->fetchArray($results_2);
                      $tabresolved[] = $data_2['count'];
                   } else {
                      $tabresolved[] = 0;
@@ -648,7 +648,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                      $results_3 = $DB->query($query_3);
 
                      if ($DB->numrows($results_3)) {
-                        $data_3        = $DB->fetch_array($results_3);
+                        $data_3        = $DB->fetchArray($results_3);
                         $tabprogress[] = $data_3['count'];
                      } else {
                         $tabprogress[] = 0;

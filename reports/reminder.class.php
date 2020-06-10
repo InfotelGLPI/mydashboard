@@ -197,7 +197,7 @@ class PluginMydashboardReminder {
       if ($nb) {
          $rand = mt_rand();
 
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $output['body'][$count] = [];
             $output['body'][$count][0] = '';
             $output['body'][$count][0] .= "<div class=\"relative reminder_list\">";
@@ -282,7 +282,7 @@ class PluginMydashboardReminder {
          echo "<div id='wrap-treetable3'>";
          echo "<div id='fibnews-div'>";
          echo "<ul>";
-         while ($data = $DB->fetch_array($result)) {
+         while ($data = $DB->fetchArray($result)) {
             echo "<li>";
             echo '<h1>' . $data["name"] . '</h1>';
             echo Toolbox::unclean_html_cross_side_scripting_deep($data["text"]);

@@ -62,7 +62,7 @@ if ($plugin->isActivated("mydashboard")) {
                    . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
 
    $results      = $DB->query($query);
-   while ($data = $DB->fetch_array($results)) {
+   while ($data = $DB->fetchArray($results)) {
       list($year, $month) = explode('-', $data['month']);
       $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
       $entities_id = $data["entities_id"];
@@ -73,7 +73,7 @@ if ($plugin->isActivated("mydashboard")) {
                   OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
       $results2    = $DB->query($query);
-      $data2       = $DB->fetch_array($results2);
+      $data2       = $DB->fetchArray($results2);
       $countTicket = $data2['count'];
       if ($countTicket > 0) {
          $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) 

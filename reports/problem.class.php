@@ -474,14 +474,14 @@ class PluginMydashboardProblem {
       }
 
       if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $status[$data["status"]] = $data["COUNT"];
          }
       }
 
       $number_deleted = 0;
       if ($DB->numrows($result_deleted) > 0) {
-         while ($data = $DB->fetch_assoc($result_deleted)) {
+         while ($data = $DB->fetchAssoc($result_deleted)) {
             $number_deleted += $data["COUNT"];
          }
       }

@@ -134,7 +134,7 @@ class PluginMydashboardRSSFeed {
       $items = [];
       $rssfeed = new RSSFeed();
       if ($nb = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             if ($rssfeed->getFromDB($data['id'])) {
                // Force fetching feeds
                if ($feed = RSSFeed::getRSSFeed($data['url'], $data['refresh_rate'])) {

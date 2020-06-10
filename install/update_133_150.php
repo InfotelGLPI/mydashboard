@@ -39,7 +39,7 @@ function update133to150() {
 
    //   if ($result_userwidgets = $DB->query($query_userwidgets)) {
    //      if ($DB->numrows($result_userwidgets) > 0) {
-   //         while ($data_userwidgets = $DB->fetch_assoc($result_userwidgets)) {
+   //         while ($data_userwidgets = $DB->fetchAssoc($result_userwidgets)) {
    //
    //            $user_id        = $data_userwidgets['users_id'];
    //
@@ -75,7 +75,7 @@ function update133to150() {
 
    if ($result_userwidgets = $DB->query($query_userwidgets)) {
       if ($DB->numrows($result_userwidgets) > 0) {
-         while ($data_userwidgets = $DB->fetch_assoc($result_userwidgets)) {
+         while ($data_userwidgets = $DB->fetchAssoc($result_userwidgets)) {
 
             $user_id        = $data_userwidgets['users_id'];
 
@@ -87,7 +87,7 @@ function update133to150() {
 
             if ($result_profiles_users = $DB->query($query_profiles_users)) {
                if ($DB->numrows($result_profiles_users) > 0) {
-                  while ($data_profiles_users = $DB->fetch_assoc($result_profiles_users)) {
+                  while ($data_profiles_users = $DB->fetchAssoc($result_profiles_users)) {
                       $profiles_id = $data_profiles_users['profiles_id'];
 
                      //Check if profile has rights on the plugin

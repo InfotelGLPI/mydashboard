@@ -58,12 +58,10 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
                  rel="stylesheet">
 
            <!--GLPI-->
-           <link type="text/css" href="../../../lib/font-awesome/css/all.min.css" rel="stylesheet">
-           <link type="text/css" href="../../../lib/gridstack/src/gridstack.css" rel="stylesheet">
-           <link type="text/css" href="../../../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
-           <script src="../../../lib/lodash.min.js"></script>
-           <script src="../../../lib/gridstack/src/gridstack.js"></script>
-           <script src="../../../lib/gridstack/src/gridstack.jQueryUI.js"></script>
+           <link type="text/css" href="../../../public/lib/base.css" rel="stylesheet">
+           <link type="text/css" href="../../../public/lib/gridstack.css" rel="stylesheet">
+           <script src="../../../public/lib/gridstack.js"></script>
+
 
            <!--DATATABLES-->
            <script src="../lib/datatables/datatables.min.js"></script>
@@ -78,7 +76,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
            <script src="../lib/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
            <!--MOMENT FOR DATATABLES-->
-           <script src="../lib/moment.min.js"></script>
+           <script src="../lib/fullcalendar/lib/moment.min.js"></script>
            <script src="../lib/datetime-moment.js"></script>
            <!--CHARTJS-->
            <script src="../lib/chartjs/Chart.bundle.min.js"></script>
@@ -92,12 +90,21 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/countUp.min.js"></script>
            <script src="../lib/countUp-jquery.js"></script>
 
+           <!--FULLCALENDAR-->
+           <link type="text/css" href="../lib/fullcalendar/fullcalendar.min.css" rel="stylesheet">
+           <script src="../lib/fullcalendar/fullcalendar.min.js"></script>
+
           <?php
-            echo Html::css('lib/jqueryplugins/fullcalendar/fullcalendar.css',
-                     ['media' => '']);
-            echo Html::css('/lib/jqueryplugins/fullcalendar/fullcalendar.print.css',
-                     ['media' => 'print']);
-            Html::requireJs('fullcalendar');
+          if (isset($_SESSION['glpilanguage'])) {
+             foreach ([2, 3] as $loc) {
+                $filename = "../lib/fullcalendar/locale/".
+                            strtolower($CFG_GLPI["languages"][$_SESSION['glpilanguage']][$loc]).".js";
+//                if (file_exists('../lib/fullcalendar/locale/' . $filename)) {
+                   echo " <script src='$filename'></script>" ;
+                   break;
+//                }
+             }
+          }
           //$apikey = PluginMydashboardHelper::getGoogleApiKey();
           //if (!empty($apikey)) {
           //   echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";

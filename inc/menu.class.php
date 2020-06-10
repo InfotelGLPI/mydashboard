@@ -206,7 +206,16 @@ class PluginMydashboardMenu extends CommonGLPI {
          ]
       ];
 
+      $menu['icon']    = self::getIcon();
+
       return $menu;
+   }
+
+   /**
+    * @return string
+    */
+   static function getIcon() {
+      return "fas fa-tachometer-alt";
    }
 
    /**
@@ -413,7 +422,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
             echo "<td>";
-            echo "<a class='cadre_edit_button' href='#' style='padding: 6px;'>";
+            echo "<a class='cadre_edit_button' href='#' style='padding: 3px;'>";
             echo "<span class='editmode_test'>" . __('Profile') . "</span>&nbsp;";
             self::dropdownProfiles(['value' => $selected_profile]);
             echo "</a>";
@@ -433,7 +442,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          echo "<td>";
          //         echo "<i class='fas fa-tasks fa-lg'></i>";
-         echo "<a class='cadre_edit_button' href='#' style='padding: 6px;'>";
+         echo "<a class='cadre_edit_button' href='#' style='padding: 3px;'>";
          echo "<span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
          echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
          //         echo "<br><br>";
@@ -686,7 +695,6 @@ class PluginMydashboardMenu extends CommonGLPI {
                         $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 45);
                     }
                     $('.plugin_mydashboard_menuDashboard').width(400);
-                    $('.plugin_mydashboard_menuDashboard').zIndex(999);
                     $('.plugin_mydashboard_menuDashboard').show();
                 });
                 //Hiding the menu when clicking outside the menu

@@ -114,7 +114,7 @@ class PluginMydashboardUserWidget extends CommonDBTM {
       $result = $DB->query($query);
 
       $tab = [];
-      while ($row = $DB->fetch_array($result)) {
+      while ($row = $DB->fetchArray($result)) {
          array_push($tab, $row['name']);
       }
       if (!$canbeempty && count($tab) == 0) {

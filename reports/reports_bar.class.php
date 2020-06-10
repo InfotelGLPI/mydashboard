@@ -144,7 +144,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabnames = [];
             $tabdates = [];
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
                   $tabdata[]  = $data['nb'];
                   $tabnames[] = $data['period_name'];
                   $tabdates[] = $data['period'];
@@ -336,7 +336,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabdata  = [];
             $tabnames = [];
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
                   $tabdata[]           = $data['count'];
                   $itilcategories_name = $data['itilcategories_name'];
                   if ($data['itilcategories_name'] == NULL) {
@@ -512,7 +512,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabduration = [];
             $tabdates    = [];
             $tabnames    = [];
-            while ($data = $DB->fetch_array($results)) {
+            while ($data = $DB->fetchArray($results)) {
 
                list($year, $month) = explode('-', $data['month']);
 
@@ -525,7 +525,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                            AND `glpi_tickettasks`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
 
                $results_1         = $DB->query($query_1);
-               $data_1            = $DB->fetch_array($results_1);
+               $data_1            = $DB->fetchArray($results_1);
                $average_by_ticket = 0;
 
                if ($data_1['nb_tickets'] > 0
@@ -638,7 +638,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabtech     = [];
             $tabtechName = [];
             $tabtechid   = [];
-            while ($data = $DB->fetch_array($results)) {
+            while ($data = $DB->fetchArray($results)) {
                $tabtickets[] = $data['count'];
                $tabtech[]    = $data['users_id'];
                $users_id     = getUserName($data['users_id']);
@@ -779,7 +779,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $results  = $DB->query($query);
             $tabage   = [];
             $tabnames = [];
-            while ($data = $DB->fetch_array($results)) {
+            while ($data = $DB->fetchArray($results)) {
                $percent    = round($data['Percent'], 2);
                $tabnames[] = $data['Age']; //" (".$percent."%)";
                $tabage[]   = $data['Total'];
@@ -870,7 +870,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $datas         = [];
             $tabpriority   = [];
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $name_priority[] = CommonITILObject::getPriorityName($data['priority']);
                   $colors[]        = $_SESSION["glpipriority_" . $data['priority']];
                   $datas[]         = $data['nb'];
@@ -969,7 +969,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabstatus   = [];
             $colors      = PluginMydashboardColor::getColors(10);
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   foreach (Ticket::getAllStatusArray() as $value => $names) {
                      if ($data['status'] == $value) {
                         $datas[]       = $data['Total'];
@@ -1003,7 +1003,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $result_more_ticket = $DB->query($query_moreticket);
                $rows               = $DB->numrows($result_more_ticket);
                if ($rows) {
-                  while ($ticket = $DB->fetch_assoc($result_more_ticket)) {
+                  while ($ticket = $DB->fetchAssoc($result_more_ticket)) {
                      foreach (self::getAllMoreTicketStatus() as $value => $names) {
                         if ($ticket['status'] == $value) {
                            $datas[]       = $ticket['Total'];
@@ -1103,7 +1103,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
          $result_gu = $DB->query($query_group_member);
 
-         while ($data = $DB->fetch_assoc($result_gu)) {
+         while ($data = $DB->fetchAssoc($result_gu)) {
             $techlist[] = $data['users_id'];
          }
       }
@@ -1164,7 +1164,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $querym_ai   .= "GROUP BY DATE(`glpi_tickettasks`.`date`);
                         ";
             $result_ai_q = $DB->query($querym_ai);
-            while ($data = $DB->fetch_assoc($result_ai_q)) {
+            while ($data = $DB->fetchAssoc($result_ai_q)) {
                //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                if ($data['actiontime_date'] > 0) {
                   if (isset($time_per_tech[$techid][$key])) {
@@ -1246,7 +1246,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
          $result_gu = $DB->query($query_group_member);
 
-         while ($data = $DB->fetch_assoc($result_gu)) {
+         while ($data = $DB->fetchAssoc($result_gu)) {
             $techlist[] = $data['users_id'];
          }
       }
@@ -1258,7 +1258,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
       //
       //         $result_gu = $DB->query($query);
       //
-      //         while ($data = $DB->fetch_assoc($result_gu)) {
+      //         while ($data = $DB->fetchAssoc($result_gu)) {
       //            $techlist[] = $data['users_id'];
       //         }
       //      }
@@ -1311,7 +1311,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $querym_ai   .= "GROUP BY DATE(`glpi_tickets`.`date`);
                         ";
             $result_ai_q = $DB->query($querym_ai);
-            while ($data = $DB->fetch_assoc($result_ai_q)) {
+            while ($data = $DB->fetchAssoc($result_ai_q)) {
                $tickets_per_tech[$techid][$key] += $data['nbtickets'];
             }
          }
@@ -1341,7 +1341,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          $query  = "SELECT `glpi_plugin_moreticket_waitingtypes`.`completename` as name, 
                    `glpi_plugin_moreticket_waitingtypes`.`id` as id  FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY id";
          $result = $DB->query($query);
-         while ($type = $DB->fetch_assoc($result)) {
+         while ($type = $DB->fetchAssoc($result)) {
             $tabs[$type['id']] = $type['name'];
          }
       }

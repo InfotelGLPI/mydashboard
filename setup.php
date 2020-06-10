@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '1.7.8');
+define('PLUGIN_MYDASHBOARD_VERSION', '1.8.0');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mydashboard() {
@@ -70,7 +70,7 @@ function plugin_init_mydashboard() {
             //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
          }
 
-         if (class_exists('PluginServicecatalogMain')) {
+         if ($plugin->isActivated('servicecatalog')) {
             $PLUGIN_HOOKS['servicecatalog']['mydashboard'] = ['PluginMydashboardServicecatalog'];
          }
 
@@ -79,9 +79,9 @@ function plugin_init_mydashboard() {
             $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => 'PluginMydashboardMenu'];
             $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = '/front/menu.php';
 
-            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];
+//            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];
 
-            if (class_exists('PluginServicecatalogMain')
+            if ($plugin->isActivated('servicecatalog')
                 && Session::haveRight("plugin_servicecatalog", READ)) {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
@@ -150,7 +150,7 @@ function plugin_version_mydashboard() {
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
       'requirements'   => [
          'glpi' => [
-            'min' => '9.4',
+            'min' => '9.5',
             'dev' => false
          ]
       ]];
@@ -162,10 +162,10 @@ function plugin_version_mydashboard() {
  * @return bool
  */
 function plugin_mydashboard_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.4', 'lt') 
-         || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+   if (version_compare(GLPI_VERSION, '9.5', 'lt')
+         || version_compare(GLPI_VERSION, '9.6', 'ge')) {
       if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.4');
+         echo Plugin::messageIncompatible('core', '9.6');
       }
       return false;
    }

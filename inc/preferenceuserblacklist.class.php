@@ -158,7 +158,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
       $result = $DB->query($query);
 
       $tab = [];
-      while ($row = $DB->fetch_array($result)) {
+      while ($row = $DB->fetchArray($result)) {
          $tab[$row['plugin_name']] = $row['plugin_name'];
       }
       return $tab;

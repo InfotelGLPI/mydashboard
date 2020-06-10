@@ -69,7 +69,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
 
       $result = $DB->query($query);
 
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          $customsWidgets[] = $data;
       }
 
@@ -84,7 +84,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
 
       $result = $DB->query($query);
 
-      $data2       = $DB->fetch_array($result);
+      $data2       = $DB->fetchArray($result);
       return $data2['count'] > 0;
    }
 
@@ -96,7 +96,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
 
       $result = $DB->query($query);
 
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          return $data;
       }
       return null;

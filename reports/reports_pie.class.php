@@ -138,7 +138,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $datas         = [];
             $tabpriority   = [];
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $name_priority[] = CommonITILObject::getPriorityName($data['priority']);
                   $colors[]        = $_SESSION["glpipriority_" . $data['priority']];
                   $datas[]         = $data['nb'];
@@ -314,7 +314,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                               . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
-            $total  = $DB->fetch_assoc($result);
+            $total  = $DB->fetchAssoc($result);
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
@@ -328,7 +328,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
             $result       = $DB->query($query);
-            $sum          = $DB->fetch_assoc($result);
+            $sum          = $DB->fetchAssoc($result);
             $nb           = $DB->numrows($result);
             $notrespected = 0;
             $respected    = 0;
@@ -395,7 +395,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                     . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $result = $DB->query($all);
-            $total  = $DB->fetch_assoc($result);
+            $total  = $DB->fetchAssoc($result);
 
             $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
@@ -411,7 +411,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                       . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
             $result       = $DB->query($query);
-            $sum          = $DB->fetch_assoc($result);
+            $sum          = $DB->fetchAssoc($result);
             $nb           = $DB->numrows($result);
             $notrespected = 0;
             $respected    = 0;
@@ -506,7 +506,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $datas               = [];
             $tabincidentcategory = [];
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   if ($data['name'] == NULL) {
                      $name_category[] = __('None');
                   } else {
@@ -617,7 +617,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $datas           = [];
             $tabcategory     = [];
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   if ($data['name'] == NULL) {
                      $name_categories[] = __('None');
                   } else {
@@ -719,7 +719,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $dataspie = [];
             $namespie = [];
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
                   $dataspie[] = $data['nb'];
                   $namespie[] = __("Opened tickets", "mydashboard");
                }
@@ -736,7 +736,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $nb     = $DB->numrows($result);
 
             if ($nb) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
                   $dataspie[] = $data['nb'];
                   $namespie[] = __("Closed tickets", "mydashboard");
                }
@@ -825,7 +825,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $tabsolution   = [];
 
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $name_solution[] = $data['name'];
                   //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
                   $datas[]       = intval($data['nb']);
@@ -908,7 +908,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $datas       = [];
             $tabgroup    = [];
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   if (!empty($data['requesters_groups_id'])) {
                      $name_groups[] = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
                   } else {
@@ -1001,7 +1001,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                         AND `glpi_ticketsatisfactions`.`date_answered` IS NOT NULL ";
 
             $result = $DB->query($query);
-            $sum    = $DB->fetch_assoc($result);
+            $sum    = $DB->fetchAssoc($result);
             $nb     = $DB->numrows($result);
 
             $notsatisfy = 0;
@@ -1099,7 +1099,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $datas         = [];
             $tablocation   = [];
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   if (!empty($data['locations_id'])) {
                      $name_location[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
                   } else {
@@ -1203,7 +1203,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $tabrequest        = [];
 
             if ($nb) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   if ($data['name'] == NULL) {
                      $name_requesttypes[] = __('None');
                   } else{

@@ -111,7 +111,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
 
       $result = $DB->query($query);
       $tab = [];
-      while ($row = $DB->fetch_assoc($result)) {
+      while ($row = $DB->fetchAssoc($result)) {
          if ($widgetId == "knowbaseitemrecent") {
             $date = $row["date"];
          } else {

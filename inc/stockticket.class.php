@@ -38,7 +38,7 @@ class PluginMydashboardStockTicket extends CommonDBTM {
       $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stocktickets 
                   WHERE glpi_plugin_mydashboard_stocktickets.date = '$year-$month-$nbdays'";
       $results = $DB->query($query);
-      $data    = $DB->fetch_array($results);
+      $data    = $DB->fetchArray($results);
       if ($data["count"] > 0) {
          die("stock tickets of $year-$month is already filled");
       }
@@ -49,7 +49,7 @@ class PluginMydashboardStockTicket extends CommonDBTM {
       //                  WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
       //                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
       //      $results = $DB->query($query);
-      //      while ($data = $DB->fetch_array($results)) {
+      //      while ($data = $DB->fetchArray($results)) {
       //         $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`)
       //                  VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ")";
       //         $DB->query($query);
@@ -59,7 +59,7 @@ class PluginMydashboardStockTicket extends CommonDBTM {
                   WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
       $results = $DB->query($query);
-      while ($data = $DB->fetch_array($results)) {
+      while ($data = $DB->fetchArray($results)) {
          $groups_id = $data["groups_id"];
          if (!empty($groups_id)) {
             $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`,`groups_id`) 

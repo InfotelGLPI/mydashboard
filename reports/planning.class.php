@@ -80,7 +80,7 @@ class PluginMydashboardPlanning {
       switch ($widgetId) {
          case "planningwidget":
             $who_group = "";
-            $who = 0;
+            $who       = 0;
             if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
                $who = Session::getLoginUserID();
             }
@@ -111,12 +111,6 @@ class PluginMydashboardPlanning {
       $widget = new PluginMydashboardHtml();
       $title  = __("Your planning");
       $widget->setWidgetTitle($title);
-
-      echo Html::css('lib/jqueryplugins/fullcalendar/fullcalendar.css',
-                     ['media' => '']);
-      echo Html::css('/lib/jqueryplugins/fullcalendar/fullcalendar.print.css',
-                     ['media' => 'print']);
-      Html::requireJs('fullcalendar');
 
       $when = strftime("%Y-%m-%d");
 
@@ -149,41 +143,37 @@ class PluginMydashboardPlanning {
             }
             $title = $val['name'];
             if ($val['users_id'] > 0) {
-               $title .= " (".getUserName($val['users_id']).")";
+               $title .= " (" . getUserName($val['users_id']) . ")";
             }
-            $events[] = ['title'   => $title,
-                         'tooltip' => isset($val['content']) ? Html::clean($val['content']) : "",
-                         'start'   => $val["begin"],
-                         'end'     => $val["end"],
-                         'url'     => isset($val['url']) ? $val['url'] : "",
-                         'ajaxurl' => isset($val['ajaxurl']) ? $val['ajaxurl'] : "",
+            $events[] = ['title'    => $title,
+                         'tooltip'  => isset($val['content']) ? Html::clean($val['content']) : "",
+                         'start'    => $val["begin"],
+                         'end'      => $val["end"],
+                         'url'      => isset($val['url']) ? $val['url'] : "",
+                         'ajaxurl'  => isset($val['ajaxurl']) ? $val['ajaxurl'] : "",
+                         'editable' => false
             ];
          }
       }
       $events    = json_encode($events);
-      $list_day  = __('List by day', 'mydashboard');
-      $list_week = __('List by week', 'mydashboard');
       $today     = date("Y-m-d");
       $graph     = "<script>
             $(document).ready(function() {
                 $('#calendar').fullCalendar({
                   height:      400,
-                  theme:       true,
+//                  theme:       true,
                   header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'listDay,listWeek,month'
+                    right: 'month,agendaWeek,agendaDay,listMonth'
                   },
-                  views: {
-                    listDay: { buttonText: '$list_day' },
-                    listWeek: { buttonText: '$list_week' }
-                  },
-
                   defaultView: 'listWeek',
                   defaultDate: '$today',
+                  buttonIcons: true, // show the prev/next text
+                  weekNumbers: true,
                   navLinks: true, // can click day/week names to navigate views
                   editable: false,
-                  eventLimit: true, // allow 'more' link when too many events
+                  eventLimit: true, // allow \"more\" link when too many events
                   events: $events,
                   eventClick: function(event) {
                       if (event.url) {

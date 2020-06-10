@@ -358,7 +358,7 @@ div#tabcontent{
    position: fixed;
    /*right: 0px;*/
    /*top: 0px;*/
-   z-index: 99;
+   /*z-index: 99;*/
    display: none;
 }
 
@@ -372,22 +372,21 @@ div#tabcontent{
    font-size: 12px;
    background-color: #FFF;
    padding: 10px;
-   z-index: 999 !important;
+   z-index: 1001!important;
 }
 
-/*
+/**/
 .plugin_mydashboard_menuDashboard {
     position: fixed;
     right : 0px;
     width: 27px;
     height:100%;
     top:0px;
-    overflow: hidden;
-    z-index: 0;
-    float: right
+    z-index: 1000;
+    float: right;
     margin-bottom: 3%;
     padding-bottom: 3%;
-}*/
+}
 
 .plugin_mydashboard_menuSlider {
    /* position: relative; */
@@ -918,10 +917,8 @@ div.dt-button-background {
    font-size: 11px;
    font-weight: bold;
    text-align: center;
-   border: #8080804d;
-   border-width: 2px;
    padding: 5px;
-   border-style: dashed;
+   border: 2px dashed #8080804d;
    float: left;
    /*width: 90% !important;*/
    min-height: 100px!important;
