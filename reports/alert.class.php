@@ -29,6 +29,8 @@
  */
 class PluginMydashboardAlert extends CommonDBTM {
 
+
+   static $types = ['Reminder', 'Problem', 'Change', 'PluginEventsmanagerEvent','PluginReleasesRelease'];
    /**
     * PluginMydashboardAlert constructor.
     *
@@ -49,13 +51,40 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string|translated
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      if ($item->getType() == 'Reminder'
-          || $item->getType() == 'Problem'
-          || $item->getType() == 'Change'
-          || $item->getType() == 'PluginEventsmanagerEvent') {
+//      if ($item->getType() == 'Reminder'
+//          || $item->getType() == 'Problem'
+//          || $item->getType() == 'Change'
+//          || $item->getType() == 'PluginEventsmanagerEvent'
+//          || $item->getType() == 'PluginReleasesRelease') {
+//         return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
+//      }
+      if(in_array( $item->getType(),self::getTypes())){
          return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
       }
       return '';
+   }
+
+   /**
+    * @param bool        $withtemplate
+    *
+    * @return array of allowed type
+    */
+   static function getTypes($all = false) {
+      if ($all) {
+         return self::$types;
+      }
+      // Only allowed types
+      $types = self::$types;
+      foreach ($types as $key => $type) {
+         if (!class_exists($type)) {
+            continue;
+         }
+         $item = new $type();
+         if (!$item->canView()) {
+            unset($types[$key]);
+         }
+      }
+      return $types;
    }
 
    /**
@@ -74,6 +103,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             break;
          case "Problem":
          case "Change":
+         case "PluginReleasesRelease":
             $itil_alert->showForItem($item);
             break;
          default :

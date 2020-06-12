@@ -49,14 +49,29 @@ if (isset($_POST['itemtype'])) {
    } else if ($class == 'Problem' || $class == 'Change') {
       if (isset($_POST['items_id'])) {
          if ($item->getFromDB($_POST['items_id'])) {
+            $reminder = new Reminder();
+            $reminders_id = $reminder->add(['name' => addslashes($item->fields['name']),
+               'text' => addslashes($item->fields['content']),
+               'users_id' => $_SESSION['glpiID']]);
+            $alert = new PluginMydashboardItilAlert();
+            $alert->add(['items_id' => $_POST['items_id'],
+               'itemtype' => $_POST['itemtype'],
+               'reminders_id' => $reminders_id]);
+         }
+      }
+   } else if (in_array($class,PluginMydashboardAlert::getTypes())){
+      if (isset($_POST['items_id'])) {
+         if ($item->getFromDB($_POST['items_id'])) {
+            $name = method_exists($item,"getNameAlert")?$item->getNameAlert():$item->fields["name"];
+            $content = method_exists($item,"getContentAlert")?$item->getContentAlert():$item->fields["content"];
             $reminder     = new Reminder();
-            $reminders_id = $reminder->add(['name'     => addslashes($item->fields['name']),
-                                                 'text'     => addslashes($item->fields['content']),
-                                                 'users_id' => $_SESSION['glpiID']]);
+            $reminders_id = $reminder->add(['name'     => addslashes($name),
+               'text'     => addslashes($content),
+               'users_id' => $_SESSION['glpiID']]);
             $alert        = new PluginMydashboardItilAlert();
             $alert->add(['items_id'  => $_POST['items_id'],
-                         'itemtype'  => $_POST['itemtype'],
-                              'reminders_id' => $reminders_id]);
+               'itemtype'  => $_POST['itemtype'],
+               'reminders_id' => $reminders_id]);
          }
       }
    }
