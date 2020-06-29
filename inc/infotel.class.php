@@ -88,7 +88,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
                                          $this->getType() . "29" => (($isDebug)?"29 ":"").__("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fa fa-map'></i>",
                                          $this->getType() . "30" => (($isDebug)?"30 ":"").__("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fa fa-chart-pie'></i>",
                                          $this->getType() . "31" => (($isDebug)?"31 ":"").__("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
-                                         $this->getType() . "32" => (($isDebug)?"32 ":"").__("Number of tickets open by technician and by status", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>"
+                                         $this->getType() . "32" => (($isDebug)?"32 ":"").__("Number of tickets open by technician and by status", "mydashboard") . "&nbsp;<i class='fa fa-table'></i>",
+                                         $this->getType() . "33" => (($isDebug)?"33 ":"").__("Responsiveness over 12 rolling and pending by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>"
          ]
       ];
 
@@ -2096,10 +2097,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   }
 
                   if ($month == date("m") && $year == date("Y")) {
-                     
+
                      $nbdays        = date("t", mktime(0, 0, 0, $month, 1, $year));
                      //nbstock : cannot use tech or group criteria
-                     
+
                      $query_3 =
                         "SELECT COUNT(*) as count FROM `glpi_tickets`".
                         //" $ticket_users_join".
@@ -3670,6 +3671,522 @@ class PluginMydashboardInfotel extends CommonGLPI {
                return $widget;
                break;
 
+         case $this->getType() . "33":
+
+            $name = 'ResponsivenessRollingPendingByYear';
+            $criterias = ['requester_groups_id', 'year', 'type'];
+            $params    = ["preferences" => $this->preferences,
+                          "criterias"   => $criterias,
+                          "opt"         => $opt];
+
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+
+            $crit = $options['crit'];
+            $opt  = $options['opt'];
+
+            $type_criteria             = $crit['type'];
+            $requester_groups_criteria = $crit['requester_groups_id'];
+            $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
+            $status                    = " AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
+            $running_status            = " AND `glpi_tickets`.`status`  IN (" . CommonITILObject::ASSIGNED . "," . CommonITILObject::PLANNED . ")";
+            $computer                  = " AND `glpi_items_tickets`.`itemtype` LIKE '" . Computer::getType() . "' ";
+
+
+            $datasets                           = [];
+
+
+            $currentyear = date("Y");
+            $currentmonth = date("m");
+
+            if (isset($opt["year"]) && $opt["year"] > 0) {
+               $currentyear = $opt["year"];
+            }
+
+            $previousyear = $currentyear - 1;
+
+
+            $datesTab  = self::getAllMonthAndYear($currentyear,$currentmonth, $previousyear);
+
+
+            $query_tickets = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM 
+                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
+                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
+                                 {$requester_groups_criteria}  {$status} 
+                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01' 
+                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' 
+                                    AND `glpi_tickets`.`solve_delay_stat` <=  86400 GROUP BY month) t1 
+                                         ";
+
+            $results                            = $DB->query($query_tickets);
+            $nbResults                          = $DB->numrows($results);
+            $tabTicketsLessThanOneDay           = [];
+            $tabTicketsLessThanOneDay['month_name'] = [];
+            $tabTicketsLessThanOneDay['total'] = [];
+
+            $i = 0;
+
+            if ($nbResults) {
+               while ($data = $DB->fetch_array($results)) {
+                  $i++;
+                  foreach ($datesTab as $datePeriod) {
+                     if (!array_key_exists('month', $tabTicketsLessThanOneDay)) {
+                        if (!in_array($data['Monthname'],$tabTicketsLessThanOneDay['month_name']) && !in_array($datePeriod, $tabTicketsLessThanOneDay['month_name'])) {
+                           if ($data['Monthname'] !== $datePeriod)  {
+                              $tabTicketsLessThanOneDay['month_name'][] = $datePeriod;
+                              $tabTicketsLessThanOneDay['total'][] = 0;
+
+                           }
+                           else {
+                              $tabTicketsLessThanOneDay['month_name'][] = $data['Monthname'];
+                              $tabTicketsLessThanOneDay['total'][] = $data['Total'];
+                           }
+                        }
+                     }
+                  }
+                  if ( $i  == $nbResults) {
+                     foreach ($datesTab as $datePeriod) {
+                        if (!in_array($datePeriod, $tabTicketsLessThanOneDay['month_name'])) {
+                           $tabTicketsLessThanOneDay['month_name'][] = $datePeriod;
+                           $tabTicketsLessThanOneDay['total'][] = 0;
+                        }
+                     }
+                  }
+               }
+            }
+
+            $query_tickets2 = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM 
+                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
+                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
+                                {$requester_groups_criteria}  {$status} 
+                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01' 
+                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' 
+                                    AND `glpi_tickets`.`solve_delay_stat` >=  86400 AND  `glpi_tickets`.`solve_delay_stat` <=  604800 GROUP BY month) t1 
+                                         ";
+
+            $results = $DB->query($query_tickets2);
+            $nbResults = $DB->numrows($results);
+            $tabTicketsBetweenOneDayAndOneWeek = [];
+            $tabTicketsBetweenOneDayAndOneWeek['month_name'] = [];
+            $tabTicketsBetweenOneDayAndOneWeek['total'] = [];
+            $i = 0;
+
+            if ($nbResults) {
+               while ($data = $DB->fetch_array($results)) {
+                  $i++;
+                  foreach ($datesTab as $datePeriod) {
+                     if (!array_key_exists('month', $tabTicketsBetweenOneDayAndOneWeek)) {
+                        if (!in_array($data['Monthname'],$tabTicketsBetweenOneDayAndOneWeek['month_name']) && !in_array($datePeriod, $tabTicketsBetweenOneDayAndOneWeek['month_name'])) {
+                           if ($data['Monthname'] !== $datePeriod)  {
+                              $tabTicketsBetweenOneDayAndOneWeek['month_name'][] = $datePeriod;
+                              $tabTicketsBetweenOneDayAndOneWeek['total'][] = 0;
+
+                           }
+                           else {
+                              $tabTicketsBetweenOneDayAndOneWeek['month_name'][] = $data['Monthname'];
+                              $tabTicketsBetweenOneDayAndOneWeek['total'][] = $data['Total'];
+                           }
+                        }
+                     }
+                  }
+                  if ( $i  == $nbResults) {
+                     foreach ($datesTab as $datePeriod) {
+                        if (!in_array($datePeriod, $tabTicketsBetweenOneDayAndOneWeek['month_name'])) {
+                           $tabTicketsBetweenOneDayAndOneWeek['month_name'][] = $datePeriod;
+                           $tabTicketsBetweenOneDayAndOneWeek['total'][] = 0;
+                        }
+                     }
+                  }
+               }
+            }
+
+            $query_tickets3 = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM 
+                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
+                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
+                                 {$requester_groups_criteria}  {$status} 
+                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01' 
+                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' 
+                                    AND `glpi_tickets`.`solve_delay_stat` >=  604800 GROUP BY month) t1 
+                                         ";
+
+            $results = $DB->query($query_tickets3);
+            $nbResults = $DB->numrows($results);
+            $tabTicketsMoreThanOneWeek= [];
+            $tabTicketsMoreThanOneWeek['month_name'] = [];
+            $tabTicketsMoreThanOneWeek['total'] = [];
+            $i = 0;
+
+            if ($nbResults) {
+               while ($data = $DB->fetch_array($results)) {
+                  $i++;
+                  foreach ($datesTab as $datePeriod) {
+                     if (!array_key_exists('month', $tabTicketsMoreThanOneWeek)) {
+                        if (!in_array($data['Monthname'],$tabTicketsMoreThanOneWeek['month_name']) && !in_array($datePeriod, $tabTicketsMoreThanOneWeek['month_name'])) {
+                           if ($data['Monthname'] !== $datePeriod)  {
+                              $tabTicketsMoreThanOneWeek['month_name'][] = $datePeriod;
+                              $tabTicketsMoreThanOneWeek['total'][] = 0;
+
+                           }
+                           else {
+                              $tabTicketsMoreThanOneWeek['month_name'][] = $data['Monthname'];
+                              $tabTicketsMoreThanOneWeek['total'][] = $data['Total'];
+                           }
+                        }
+                     }
+                  }
+                  if ( $i  == $nbResults) {
+                     foreach ($datesTab as $datePeriod) {
+                        if (!in_array($datePeriod, $tabTicketsMoreThanOneWeek['month_name'])) {
+                           $tabTicketsMoreThanOneWeek['month_name'][] = $datePeriod;
+                           $tabTicketsMoreThanOneWeek['total'][] = 0;
+                        }
+                     }
+                  }
+               }
+            }
+
+            $query_average_total = "SELECT t1.Total_Running AS Total , t1.monthname as Monthname, t1.month  
+                            FROM (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
+                               COUNT(*) Total_Running FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
+                                {$requester_groups_criteria}  {$running_status}
+                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
+                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' GROUP BY month) t1";
+
+            $results = $DB->query($query_average_total);
+            $nbResults = $DB->numrows($results);
+            $i = 0;
+            $tabAverageTotalRunningByMonth               = [];
+            $tabAverageTotalRunningByMonth['month_name'] = [];
+            $tabAverageTotalRunningByMonth['average'] = [];
+            $tabAverageTotalRunningByDay                 = [];
+            $tabAverageTotalRunningByDay['month_name']   = [];
+            $tabAverageTotalRunningByDay['average']   = [];
+
+
+            if ($nbResults) {
+               while ($data = $DB->fetch_array($results)) {
+                  foreach ($datesTab as $datePeriod) {
+                     if (!array_key_exists('month', $tabAverageTotalRunningByMonth)) {
+                        if (!in_array($data['Monthname'],$tabAverageTotalRunningByMonth['month_name']) && !in_array($datePeriod, $tabAverageTotalRunningByMonth['month_name'])) {
+                           if ($data['Monthname'] !== $datePeriod)  {
+                              $tabAverageTotalRunningByMonth['month_name'][] = $datePeriod;
+                              $tabAverageTotalRunningByMonth['average'][] = 0;
+                              $tabAverageTotalRunningByDay['average'][] = 0;
+                           } else {
+                              $data['average_by_month'] = $data['Total'] / 4;
+                              $data['average_by_day'] = $data['Total'] / 30;
+                              $tabAverageTotalRunningByMonth['average'][] = round($data['average_by_month'], 2);
+                              $tabAverageTotalRunningByDay['average'][] = round($data['average_by_day'], 2);
+                           }
+                        }
+                     }
+                  }
+                  if ( $i  == $nbResults) {
+                     foreach ($datesTab as $datePeriod) {
+                        if (!in_array($datePeriod, $tabAverageTotalRunningByMonth['month_name'])) {
+                           $tabAverageTotalRunningByMonth['month_name'][] = $datePeriod;
+                           $tabAverageTotalRunningByMonth['average'][] = 0;
+                           $tabAverageTotalRunningByDay['average'][] = 0;
+                        }
+                     }
+                  }
+               }
+            }
+
+            $query_average_total_infra = "SELECT t1.Total_Running AS Total , t1.monthname as Monthname, t1.month  
+                            FROM (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
+                               COUNT(*) Total_Running FROM `glpi_tickets` LEFT JOIN `glpi_items_tickets` ON `glpi_items_tickets`.`tickets_id` =
+                                  `glpi_tickets`.`id` WHERE {$is_deleted} {$type_criteria}
+                                  {$requester_groups_criteria}  {$running_status} {$computer}
+                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
+                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' GROUP BY month) t1";
+
+            $results = $DB->query($query_average_total_infra);
+            $nbResults = $DB->numrows($results);
+            $tabAverageTotalRunningInfraByDay   = [];
+            $tabAverageTotalRunningInfraByMonth = [];
+            $tabAverageTotalRunningInfraByMonth['month_name']   = [];
+            $tabAverageTotalRunningInfraByDay['month_name']   = [];
+            $tabAverageTotalRunningInfraByMonth['average']   = [];
+            $tabAverageTotalRunningInfraByDay['average']   = [];
+
+            if ($nbResults) {
+               while ($data = $DB->fetch_array($results)) {
+                  foreach ($datesTab as $datePeriod) {
+                     if (!array_key_exists('month', $tabAverageTotalRunningInfraByMonth)) {
+                        if (!in_array($data['Monthname'],$tabAverageTotalRunningInfraByMonth['month_name']) && !in_array($datePeriod, $tabAverageTotalRunningInfraByMonth['month_name'])) {
+                           if ($data['Monthname'] !== $datePeriod)  {
+                              $tabAverageTotalRunningInfraByMonth['month_name'][] = $datePeriod;
+                              $tabAverageTotalRunningInfraByMonth['average'][] = 0;
+                              $tabAverageTotalRunningInfraByDay['average'][] = 0;
+                           } else {
+                              $data['average_by_month'] = $data['Total'] / 4;
+                              $data['average_by_day'] = $data['Total'] / 30;
+                              $tabAverageTotalRunningInfraByMonth['average'][] = round($data['average_by_month'], 2);
+                              $tabAverageTotalRunningInfraByDay['average'][] = round($data['average_by_day'], 2);
+                           }
+                        }
+                     }
+                  }
+                  if ( $i  == $nbResults) {
+                     foreach ($datesTab as $datePeriod) {
+                        if (!in_array($datePeriod, $tabAverageTotalRunningInfraByMonth['month_name'])) {
+                           $tabAverageTotalRunningInfraByMonth['month_name'][] = $datePeriod;
+                           $tabAverageTotalRunningInfraByMonth['average'][] = 0;
+                           $tabAverageTotalRunningInfraByDay['average'][] = 0;
+                        }
+                     }
+                  }
+               }
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title = __("Responsiveness over 12 rolling and pending by month", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "33 " : "") . $title);
+            $widget->toggleWidgetRefresh();
+
+            $labels = json_encode($datesTab);
+
+            $max = '';
+            $max2 = '';
+            $max3 = '';
+            $max_tab = [];
+
+            if(!empty($tabTicketsLessThanOneDay['total'])) {
+               array_push($max_tab, $max = max($tabTicketsLessThanOneDay['total']) + 100);
+            }
+
+            if(!empty($tabTicketsBetweenOneDayAndOneWeek['total'])) {
+               array_push($max_tab, $max = max($tabTicketsBetweenOneDayAndOneWeek['total']) + 100);
+            }
+
+            if(!empty($tabTicketsMoreThanOneWeek['total'])) {
+               array_push($max_tab, $max = max($tabTicketsMoreThanOneWeek['total']) + 100);
+            }
+
+            $maxFinal = max($max_tab);
+
+
+            $datasets[] =
+               ['type' => 'line',
+                  'data' => $tabAverageTotalRunningByMonth['average'],
+                  'label' => __('Sum of pending by month', "mydashboard"),
+                  'borderColor' => '#00BFFF',
+                  'fill' => false,
+                  'lineTension' => '0.1',
+                  'yAxisID' => 'left-y-axis'
+               ];
+
+            $datasets[] =
+               ['type' => 'line',
+                  'data' => $tabAverageTotalRunningByDay['average'],
+                  'label' => __('Sum of pending by day', "mydashboard"),
+                  'borderColor' => '#87CEFA',
+                  'fill' => false,
+                  'lineTension' => '0.1',
+                  'yAxisID' => 'left-y-axis'
+               ];
+
+            $datasets[] =
+               ['type' => 'line',
+                  'data' => $tabAverageTotalRunningInfraByMonth['average'],
+                  'label' => __('Sum of pending_infra by month', "mydashboard"),
+                  'borderColor' => '#787878',
+                  'fill' => false,
+                  'lineTension' => '0.1',
+                  'yAxisID' => 'left-y-axis'
+               ];
+
+            $datasets[] =
+               ['type' => 'line',
+                  'data' => $tabAverageTotalRunningInfraByDay['average'],
+                  'label' => __('Sum of pending_infra by day', "mydashboard"),
+                  'borderColor' => '#696969',
+                  'fill' => false,
+                  'lineTension' => '0.1',
+                  'yAxisID' => 'left-y-axis'
+               ];
+
+
+            $datasets[] =
+               [
+                  "type" => "bar",
+                  "data" => $tabTicketsLessThanOneDay['total'],
+                  "label" => __('sum of less_24_h', "mydashboard"),
+                  'backgroundColor' => '#BBD4F9',
+                  'yAxisID' => 'bar-y-axis'
+               ];
+
+            $datasets[] =
+               [
+                  "type" => "bar",
+                  "data" => $tabTicketsBetweenOneDayAndOneWeek['total'],
+                  "label" => __('sum of less_1_week', "mydashboard"),
+                  'backgroundColor' => '#2B68C4',
+                  'yAxisID' => 'bar-y-axis'
+               ];
+
+            $datasets[] =
+               [
+                  "type" => "bar",
+                  "data" => $tabTicketsMoreThanOneWeek['total'],
+                  "label" => __('sum of more_1_week', "mydashboard"),
+                  'backgroundColor' => '#033A5F',
+                  'yAxisID' => 'bar-y-axis'
+               ];
+
+            $graph_datas = ['name' => $name,
+               'ids' => json_encode([]),
+               'data' => json_encode($datasets),
+               'labels' => $labels,
+               'label' => $title,
+                ];
+
+
+            $graph = PluginMydashboardBarChart::launchMultipleAxisAndGroupableBar($graph_datas, []);
+
+            $params = ["widgetId" => $widgetId,
+               "name" => $name,
+               "onsubmit" => true,
+               "opt" => $opt,
+               "criterias" => $criterias,
+               "export" => true,
+               "canvas" => true,
+               "nb" => 1];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "34":
+            $name = 'ProcessingApplicationRateBarChart';
+            if (isset($_SESSION['glpiactiveprofile']['interface'])
+               && Session::getCurrentInterface() == 'central') {
+               $criterias = ['technicians_groups_id',
+                  'entities_id',
+                  'is_recursive',
+                  'year'];
+            }
+            if (isset($_SESSION['glpiactiveprofile']['interface'])
+               && Session::getCurrentInterface() != 'central') {
+               $criterias = [];
+            }
+
+            $params = ["preferences" => $this->preferences,
+               "criterias" => $criterias,
+               "opt" => $opt];
+            $options = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt = $options['opt'];
+            $crit = $options['crit'];
+            $entities_criteria = $crit['entities_id'];
+            $tech_groups_crit = $crit['technicians_groups_id'];
+            $isDeleted = "AND `glpi_tickets`.`is_deleted` = 0 ";
+            $type = " `glpi_tickets`.`type` = " . Ticket::DEMAND_TYPE ;
+            $status = "`glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
+
+            $currentmonth = date("m");
+            $currentyear = date("Y");
+
+            if (isset($opt["year"]) && $opt["year"] > 0) {
+               $currentyear = $opt["year"];
+            }
+            $previousyear = $currentyear - 1;
+            $query_tickets = "SELECT t1.monthname as Monthname, t1.month, CONCAT(t2.ticketsResolved * 100 / t1.Total, ' %') as Rate FROM 
+                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
+                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$type} 
+                                 {$entities_criteria} {$tech_groups_crit} {$isDeleted} AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01' 
+                                 AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01 00:00:01' GROUP BY month) t1
+                                 LEFT JOIN (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month, COUNT(*) ticketsResolved  FROM `glpi_tickets`
+                                   WHERE `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01' AND `glpi_tickets`.`date` <=  '$currentyear-$currentmonth-01 00:00:01'
+                                    AND {$status} AND {$type} {$entities_criteria} {$tech_groups_crit} {$isDeleted} 
+                                     AND `glpi_tickets`.`solve_delay_stat` <=  604800 
+                                      GROUP BY month) t2 ON t1.month = t2.month";
+
+
+            $results = $DB->query($query_tickets);
+            $nbResults = $DB->numrows($results);
+            $tabprogress = [];
+            $tabnames = [];
+            $datasets = [];
+
+            if ($nbResults) {
+               while ($data = $DB->fetch_array($results)) {
+                  $tabnames[] = $data['Monthname'];
+                  $tabprogress[] = round($data['Rate'], 2);
+               }
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title = __("Rate of", "mydashboard") . " " . __("processing application", "mydashboard") . " " . __( "in less than seven days", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "5 " : "") . $title);
+            $widget->toggleWidgetRefresh();
+
+
+            $titleprogress = __("Closed rate", "mydashboard");
+            $objective = __("Objective", "mydashboard");
+            $labels = json_encode($tabnames);
+
+            $datasets[] =
+               ['type' => 'bar',
+                  'data' => $tabprogress,
+                  'label' => $titleprogress,
+                  'backgroundColor' => '#6B8E23',
+                  'fill' => false,
+                  'lineTension' => '0.1',
+               ];
+
+            $datasets[] =
+               ['type' => 'line',
+                  'data' => ['90', '90', '90', '90', '90', '90', '90', '90', '90', '90', '90', '90'],
+                  'label' => $objective,
+                  'borderColor' => '#FF0000',
+                  'fill' => false,
+                  'lineTension' => '0.1',
+               ];
+
+
+            $max = 100;
+            if(!empty($tabTickets)){
+               $max = max($tabTickets)*10;
+            }
+            $graph_datas = ['name' => $name,
+               'ids' => json_encode([]),
+               'data' => json_encode($datasets),
+               'labels' => $labels,
+               'label' => $title,
+               'max' => $max];
+
+
+            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, [], $startedAtZero = true);
+
+            $params = ["widgetId" => $widgetId,
+               "name" => $name,
+               "onsubmit" => true,
+               "opt" => $opt,
+               "criterias" => $criterias,
+               "export" => true,
+               "canvas" => true,
+               "nb" => 1];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+
+
          default:{
             // It's a custom widget
             if(strpos($widgetId, "cw")){
@@ -3975,6 +4492,9 @@ class PluginMydashboardInfotel extends CommonGLPI {
       return $tickets_per_tech;
    }
 
+
+
+
    /**
     * @param $a_arrondir
     *
@@ -4010,5 +4530,19 @@ class PluginMydashboardInfotel extends CommonGLPI {
       }
 
       return $result;
+   }
+
+   function getAllMonthAndYear($currentYear, $currentMonth, $previousYear) {
+
+      $begin = new DateTime( $previousYear.'-'.$currentMonth.'-'.'01' );
+      $end = new DateTime( $currentYear.'-'.$currentMonth.'-'.'01' );
+      $period = new DatePeriod($begin, new DateInterval('P1M'),$end);
+      $datesTab = [];
+
+
+      foreach($period as $date){
+         array_push($datesTab, $date->format("M Y"));
+      }
+      return $datesTab;
    }
 }
