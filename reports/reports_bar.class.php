@@ -1239,6 +1239,18 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          while ($data = $DB->fetchAssoc($result_gu)) {
             $techlist[] = $data['users_id'];
          }
+      }else{
+
+         $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
+            . "FROM `glpi_tickettasks` "
+            . " GROUP BY `glpi_tickettasks`.`users_id_tech`
+                               $limit_query";
+
+         $result_gu = $DB->query($query_group_member);
+
+         while ($data = $DB->fetchAssoc($result_gu)) {
+            $techlist[] = $data['users_id_tech'];
+         }
       }
 
       $current_month = date("m");
@@ -1273,7 +1285,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          $is_deleted         = "`glpi_tickets`.`is_deleted` = 0";
 
          foreach ($techlist as $techid) {
-//            $time_per_tech[$techid][$key] = 0;
+            $time_per_tech[$techid][$key] = 0;
 
             $querym_ai   = "SELECT  DATE(`glpi_tickettasks`.`date`), SUM(`glpi_tickettasks`.`actiontime`) AS actiontime_date
                         FROM `glpi_tickettasks` 
@@ -1301,12 +1313,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                if ($data['actiontime_date'] > 0) {
                   if (isset($time_per_tech[$techid][$key])) {
-                     $time_per_tech[$techid][$key] += ceil(round(($data['actiontime_date'] / 3600 / 8), 2));
+                     $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8), 2);
                   } else {
-                     $time_per_tech[$techid][$key] = ceil(round(($data['actiontime_date'] / 3600 / 8), 2));
+                     $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8), 2);
                   }
                }
             }
+            $time_per_tech[$techid][$key] = (self::TotalTpsPassesArrondis( $time_per_tech[$techid][$key]));
          }
 
          if ($key == 0) {
@@ -1381,6 +1394,18 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
          while ($data = $DB->fetchAssoc($result_gu)) {
             $techlist[] = $data['users_id'];
+         }
+      }else{
+
+         $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
+            . "FROM `glpi_tickettasks` "
+            . " GROUP BY `glpi_tickettasks`.`users_id_tech`
+                               $limit_query";
+
+         $result_gu = $DB->query($query_group_member);
+
+         while ($data = $DB->fetchAssoc($result_gu)) {
+            $techlist[] = $data['users_id_tech'];
          }
       }
       //      else {
