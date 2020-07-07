@@ -3677,8 +3677,8 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $name = 'ResponsivenessRollingPendingByYear';
             $criterias = ['requester_groups_id', 'year', 'type'];
             $params    = ["preferences" => $this->preferences,
-               "criterias"   => $criterias,
-               "opt"         => $opt];
+                          "criterias"   => $criterias,
+                           "opt"         => $opt];
 
             $options   = PluginMydashboardHelper::manageCriterias($params);
 
@@ -3689,9 +3689,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
             $requester_groups_criteria = $crit['requester_groups_id'];
             $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
             $status                    = " AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
-            $running_status            = " AND `glpi_tickets`.`status`  IN (" . CommonITILObject::ASSIGNED . "," . CommonITILObject::PLANNED . ")";
-            $computer                  = " AND `glpi_items_tickets`.`itemtype` LIKE '" . Computer::getType() . "' ";
-
 
             $datasets                           = [];
 
@@ -3848,102 +3845,98 @@ class PluginMydashboardInfotel extends CommonGLPI {
                }
             }
 
-            $query_average_total = "SELECT t1.Total_Running AS Total , t1.monthname as Monthname, t1.month  
-                            FROM (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
-                               COUNT(*) Total_Running FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
-                                {$requester_groups_criteria}  {$running_status}
-                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
-                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' GROUP BY month) t1";
+
+            $datesTab  = self::getAllMonthAndYear($currentyear,$currentmonth, $previousyear, true);
+
+            foreach ($datesTab as $dateTab) {
+               $year  = strstr($dateTab, '-', true);
+               $month = strstr($dateTab, '-');
+               $month = str_replace('-', '', $month);
+             $monthDays[$dateTab] = self::getAllFirstDayOfWeeksInAMonth($year, $month);
+            }
+
+            $parcCat = 163;
+
+            $tabTotalRunningByDayAndMonth               = [];
+            $tabTotalRunningInfraByDayAndMonth          = [];
+            $computerCat                                = self::getCategorySonsOf($parcCat);
+
+            foreach($monthDays as $key => $month ) {
+               foreach($month as $day) {
+                  $query_average_total = "SELECT COUNT(`glpi_tickets`.`id`) AS Total FROM `glpi_tickets`
+                                      WHERE {$is_deleted} {$type_criteria}
+                                         {$requester_groups_criteria}  
+                                        AND `glpi_tickets`.date<=date_add('{$day}', interval 3*7 DAY)
+                                        AND (`glpi_tickets`.solvedate>=date_add('{$day}', interval 3*7 DAY) OR `glpi_tickets`.solvedate is null)
+                                    ";
+
 
             $results = $DB->query($query_average_total);
             $nbResults = $DB->numrows($results);
-            $i = 0;
-            $tabAverageTotalRunningByMonth               = [];
-            $tabAverageTotalRunningByMonth['month_name'] = [];
-            $tabAverageTotalRunningByMonth['average'] = [];
-            $tabAverageTotalRunningByDay                 = [];
-            $tabAverageTotalRunningByDay['month_name']   = [];
-            $tabAverageTotalRunningByDay['average']   = [];
 
 
             if ($nbResults) {
                while ($data = $DB->fetch_array($results)) {
-                  foreach ($datesTab as $datePeriod) {
-                     if (!array_key_exists('month', $tabAverageTotalRunningByMonth)) {
-                        if (!in_array($data['Monthname'],$tabAverageTotalRunningByMonth['month_name']) && !in_array($datePeriod, $tabAverageTotalRunningByMonth['month_name'])) {
-                           if ($data['Monthname'] !== $datePeriod)  {
-                              $tabAverageTotalRunningByMonth['month_name'][] = $datePeriod;
-                              $tabAverageTotalRunningByMonth['average'][] = 0;
-                              $tabAverageTotalRunningByDay['average'][] = 0;
-                           } else {
-                              $data['average_by_month'] = $data['Total'] / 4;
-                              $data['average_by_day'] = $data['Total'] / 30;
-                              $tabAverageTotalRunningByMonth['average'][] = round($data['average_by_month'], 2);
-                              $tabAverageTotalRunningByDay['average'][] = round($data['average_by_day'], 2);
-                           }
-                        }
-                     }
-                  }
-                  if ( $i  == $nbResults) {
-                     foreach ($datesTab as $datePeriod) {
-                        if (!in_array($datePeriod, $tabAverageTotalRunningByMonth['month_name'])) {
-                           $tabAverageTotalRunningByMonth['month_name'][] = $datePeriod;
-                           $tabAverageTotalRunningByMonth['average'][] = 0;
-                           $tabAverageTotalRunningByDay['average'][] = 0;
-                        }
+                 if (strpos($day, $key) !== false) {
+                    $tabTotalRunningByDayAndMonth[$key][$day]['total'] = $data['Total'];
+                 }
+               }
+            }
+
+               $query_average_total_infra = "SELECT COUNT(`glpi_tickets`.`id`) AS Total FROM `glpi_tickets`
+                                WHERE {$is_deleted} {$type_criteria}
+                                   {$requester_groups_criteria}  
+                                  AND `glpi_tickets`.date <= date_add('{$day}', interval 3*7 DAY)
+                                  AND (`glpi_tickets`.solvedate >= date_add('{$day}', interval 3*7 DAY) OR `glpi_tickets`.solvedate is null)
+                                  AND {$computerCat};
+                              ";
+
+
+               $results = $DB->query($query_average_total_infra);
+               $nbResults = $DB->numrows($results);
+
+               if ($nbResults) {
+                  while ($data = $DB->fetch_array($results)) {
+                     if (strpos($day, $key) !== false) {
+                        $tabTotalRunningInfraByDayAndMonth[$key][$day]['total'] = $data['Total'];
                      }
                   }
                }
             }
+         }
 
-            $query_average_total_infra = "SELECT t1.Total_Running AS Total , t1.monthname as Monthname, t1.month  
-                            FROM (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,  
-                               COUNT(*) Total_Running FROM `glpi_tickets` LEFT JOIN `glpi_items_tickets` ON `glpi_items_tickets`.`tickets_id` =
-                                  `glpi_tickets`.`id` WHERE {$is_deleted} {$type_criteria}
-                                  {$requester_groups_criteria}  {$running_status} {$computer}
-                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
-                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01' GROUP BY month) t1";
-
-            $results = $DB->query($query_average_total_infra);
-            $nbResults = $DB->numrows($results);
-            $tabAverageTotalRunningInfraByDay   = [];
-            $tabAverageTotalRunningInfraByMonth = [];
-            $tabAverageTotalRunningInfraByMonth['month_name']   = [];
-            $tabAverageTotalRunningInfraByDay['month_name']   = [];
-            $tabAverageTotalRunningInfraByMonth['average']   = [];
-            $tabAverageTotalRunningInfraByDay['average']   = [];
-
-            if ($nbResults) {
-               while ($data = $DB->fetch_array($results)) {
-                  foreach ($datesTab as $datePeriod) {
-                     if (!array_key_exists('month', $tabAverageTotalRunningInfraByMonth)) {
-                        if (!in_array($data['Monthname'],$tabAverageTotalRunningInfraByMonth['month_name']) && !in_array($datePeriod, $tabAverageTotalRunningInfraByMonth['month_name'])) {
-                           if ($data['Monthname'] !== $datePeriod)  {
-                              $tabAverageTotalRunningInfraByMonth['month_name'][] = $datePeriod;
-                              $tabAverageTotalRunningInfraByMonth['average'][] = 0;
-                              $tabAverageTotalRunningInfraByDay['average'][] = 0;
-                           } else {
-                              $data['average_by_month'] = $data['Total'] / 4;
-                              $data['average_by_day'] = $data['Total'] / 30;
-                              $tabAverageTotalRunningInfraByMonth['average'][] = round($data['average_by_month'], 2);
-                              $tabAverageTotalRunningInfraByDay['average'][] = round($data['average_by_day'], 2);
-                           }
-                        }
-                     }
-                  }
-                  if ( $i  == $nbResults) {
-                     foreach ($datesTab as $datePeriod) {
-                        if (!in_array($datePeriod, $tabAverageTotalRunningInfraByMonth['month_name'])) {
-                           $tabAverageTotalRunningInfraByMonth['month_name'][] = $datePeriod;
-                           $tabAverageTotalRunningInfraByMonth['average'][] = 0;
-                           $tabAverageTotalRunningInfraByDay['average'][] = 0;
-                        }
-                     }
-                  }
+            $tabTotalRunningByMonth = [];
+            //Reformat datas by calculate total by month
+            foreach ($tabTotalRunningByDayAndMonth as $month => $runningMouth) {
+               $i = 0;
+               foreach ($runningMouth as $day => $value) {
+                  $i++;
+                  $tabTotalRunningByMonth[$month]['total'] += $value['total'];
+                  $tabTotalRunningByMonth[$month]['nbWeek'] = $i;
                }
             }
+            $tabAverageTotalRunningByMonth = [];
+            foreach($tabTotalRunningByMonth as  $runningMouth) {
+                  $tabAverageTotalRunningByMonth[] = $runningMouth['total'] / $runningMouth['nbWeek'];
+               }
+
+            $tabTotalInfraRunningByMonth = [];
+            //Reformat datas by calculate total by month
+            foreach ($tabTotalRunningInfraByDayAndMonth as $month => $runningMouth) {
+               $i = 0;
+               foreach ($runningMouth as $day => $value) {
+                  $i++;
+                     $tabTotalInfraRunningByMonth[$month]['total'] += $value['total'];
+                     $tabTotalInfraRunningByMonth[$month]['nbWeek'] = $i;
+
+               }
+            }
+
+            $tabAverageTotalInfraRunningByMonth = [];
+            foreach($tabTotalInfraRunningByMonth as  $runningMouth) {
+               $tabAverageTotalInfraRunningByMonth[] = $runningMouth['total'] / $runningMouth['nbWeek'];
+            }
+
 
             $widget = new PluginMydashboardHtml();
             $title = __("Responsiveness over 12 rolling and pending by month", "mydashboard");
@@ -3974,7 +3967,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
             $datasets[] =
                ['type' => 'line',
-                  'data' => $tabAverageTotalRunningByMonth['average'],
+                  'data' => $tabAverageTotalRunningByMonth,
                   'label' => __('Sum of pending by month', "mydashboard"),
                   'borderColor' => '#00BFFF',
                   'fill' => false,
@@ -3982,19 +3975,10 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   'yAxisID' => 'left-y-axis'
                ];
 
-            $datasets[] =
-               ['type' => 'line',
-                  'data' => $tabAverageTotalRunningByDay['average'],
-                  'label' => __('Sum of pending by day', "mydashboard"),
-                  'borderColor' => '#87CEFA',
-                  'fill' => false,
-                  'lineTension' => '0.1',
-                  'yAxisID' => 'left-y-axis'
-               ];
 
             $datasets[] =
                ['type' => 'line',
-                  'data' => $tabAverageTotalRunningInfraByMonth['average'],
+                  'data' => $tabAverageTotalInfraRunningByMonth,
                   'label' => __('Sum of pending_infra by month', "mydashboard"),
                   'borderColor' => '#787878',
                   'fill' => false,
@@ -4002,15 +3986,6 @@ class PluginMydashboardInfotel extends CommonGLPI {
                   'yAxisID' => 'left-y-axis'
                ];
 
-            $datasets[] =
-               ['type' => 'line',
-                  'data' => $tabAverageTotalRunningInfraByDay['average'],
-                  'label' => __('Sum of pending_infra by day', "mydashboard"),
-                  'borderColor' => '#696969',
-                  'fill' => false,
-                  'lineTension' => '0.1',
-                  'yAxisID' => 'left-y-axis'
-               ];
 
 
             $datasets[] =
@@ -4048,7 +4023,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
             ];
 
 
-            $graph = PluginMydashboardBarChart::launchMultipleAxisAndGroupableBar($graph_datas, []);
+            $graph = PluginMydashboardBarChart::launchMultipleAxisAndGroupableBar($graph_datas, [], $maxFinal);
 
             $params = ["widgetId" => $widgetId,
                "name" => $name,
@@ -4100,6 +4075,17 @@ class PluginMydashboardInfotel extends CommonGLPI {
             }
          }
       }
+   }
+
+   private  static function getCategorySonsOf($id) {
+      $categories  = getSonsOf("glpi_itilcategories", $id);
+
+      if (count($categories) > 1) {
+         $categories = " `glpi_tickets`.`itilcategories_id` IN  (" . implode(",", $categories) . ") ";
+      } else {
+         $categories = " `glpi_tickets`.`itilcategories_id` = " . implode(",", $categories);
+      }
+      return $categories;
    }
 
    /**
@@ -4409,7 +4395,7 @@ class PluginMydashboardInfotel extends CommonGLPI {
       return $result;
    }
 
-   function getAllMonthAndYear($currentYear, $currentMonth, $previousYear) {
+   function getAllMonthAndYear($currentYear, $currentMonth, $previousYear, $otherFormat =false) {
 
       $begin = new DateTime( $previousYear.'-'.$currentMonth.'-'.'01' );
       $end = new DateTime( $currentYear.'-'.$currentMonth.'-'.'01' );
@@ -4418,8 +4404,37 @@ class PluginMydashboardInfotel extends CommonGLPI {
 
 
       foreach($period as $date){
-         array_push($datesTab, $date->format("M Y"));
+         if ($otherFormat) {
+            array_push($datesTab, $date->format("Y-m"));
+         } else {
+            array_push($datesTab, $date->format("M Y"));
+         }
+
       }
       return $datesTab;
+   }
+
+   function getAllFirstDayOfWeeksInAMonth($year, $month, $day = 'Monday', $daysError = 3) {
+      $dateString  = 'first '.$day.' of '.$year.'-'.$month;
+
+      $startDay    = new \DateTime($dateString);
+      $datesString = [];
+
+      if ($startDay->format('j') > $daysError) {
+         $startDay->modify('- 7 days');
+      }
+
+      $days = array();
+
+      while ($startDay->format('Y-m') <= $year.'-'.str_pad($month, 2, 0, STR_PAD_LEFT)) {
+         $days[] = clone($startDay);
+         $startDay->modify('+ 7 days');
+      }
+
+      foreach ($days as $day) {
+         $datesString[] = $day->format('Y-m-d');
+      }
+
+      return $datesString;
    }
 }

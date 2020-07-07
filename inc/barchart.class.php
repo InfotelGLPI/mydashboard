@@ -218,7 +218,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       return $cumul;
    }
 
-   static function launchMultipleAxisAndGroupableBar($graph_datas = [], $graph_criterias = []) {
+   static function launchMultipleAxisAndGroupableBar($graph_datas = [], $graph_criterias = [], $max) {
       global $CFG_GLPI;
 
       $onclick = 0;
