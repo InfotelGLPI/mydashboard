@@ -670,7 +670,8 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       $datas           = $graph_datas['data'];
       $ids             = $graph_datas['ids'];
       $labels          = $graph_datas['labels'];
-      $max             = isset($graph_datas['max']) ? "max:".$graph_datas['max']."," : "";
+      $max_right             = isset($graph_datas['max_right']) ? "max:".$graph_datas['max_right']."," : "";
+      $max_left             = isset($graph_datas['max_left']) ? "max:".$graph_datas['max_left']."," : "";
 
       $json_criterias = json_encode($graph_criterias);
 
@@ -721,7 +722,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                          type: 'linear',
                          position: 'left',
                          ticks: {
-                             max:100,
+                             $max_left
                              beginAtZero: true
                          }
                         
@@ -730,7 +731,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                          type: 'linear',
                          position: 'right',
                          ticks: {
-                             $max
+                             $max_right
                              beginAtZero: true
                          }
                       }]
