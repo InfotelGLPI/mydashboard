@@ -1157,7 +1157,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                "nb"        => 1];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
 
-            $titleOpenedTicket = __("Opened ticket","mydashboard");
+            $titleOpenedTicket = __("Opened tickets","mydashboard");
             $titleSatisfactionTicket = __("Average Satisfaction","mydashboad");
             $labels = json_encode($tabnames);
 
