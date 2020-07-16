@@ -66,7 +66,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                $this->getType() . "13" => (($isDebug) ? "13 " : "") . __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "16" => (($isDebug) ? "16 " : "") . __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "17" => (($isDebug) ? "17 " : "") . __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "18" => (($isDebug) ? "18 " : "") . __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
+               $this->getType() . "18" => (($isDebug) ? "18 " : "") . __("Number of opened, closed and unplanned tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "20" => (($isDebug) ? "20 " : "") . __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "25" => (($isDebug) ? "25 " : "") . __("Top ten of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "26" => (($isDebug) ? "26 " : "") . __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
@@ -742,8 +742,27 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                }
             }
 
+            $whereUnplanned = " AND `glpi_tickettasks`.`actiontime` IS NULL ";
+
+            $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
+                     FROM `glpi_tickets`
+                     LEFT JOIN `glpi_tickettasks` ON `glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`
+                     WHERE $date_criteria
+                     $entities_criteria $type_criteria $requester_groups_criteria
+                     AND $is_deleted $whereUnplanned";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            if ($nb) {
+               while ($data = $DB->fetchAssoc($result)) {
+                  $dataspie[] = $data['nb'];
+                  $namespie[] = __("Not planned", "mydashboard");
+               }
+            }
+
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened and closed tickets by month", "mydashboard");
+            $title  = __("Number of opened, closed and unplanned tickets by month", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "18 " : "") . $title);
 
             $dataPieset         = json_encode($dataspie);
