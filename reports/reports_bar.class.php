@@ -1144,7 +1144,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened ticket and average satisfaction per trimester", "mydashboard");
-            $widget->setWidgetTitle((($isDebug) ? "37 " : "") . $title);
+            $widget->setWidgetTitle((($isDebug) ? "38 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
             $params = ["widgetId"  => $widgetId,
@@ -1166,6 +1166,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                   'data'        => $opened_tickets_data,
                   'label'       => $titleOpenedTicket,
                   'borderColor' => '#ff7f0e',
+                  'yAxisID' => 'right-y-axis'
                ];
 
             $datasets[] =
@@ -1175,16 +1176,18 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                   'borderColor' => '#ff7f0e',
                   'fill'        => false,
                   'lineTension' => '0.1',
+                  'yAxisID' => 'left-y-axis'
                ];
-
+            $max_left = 10;
             $graph_datas = ['name'            => $name,
                'ids'             => json_encode([]),
                'data'            => json_encode($datasets),
                'labels'          => $labels,
                'label'           => $title,
-               'backgroundColor' => "#1f77b4"];
+               'backgroundColor' => "#1f77b4",
+               'max_left' => $max_left];
 
-            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, []);
+            $graph = PluginMydashboardBarChart::launchMultipleGraphWithMultipleAxis($graph_datas, []);
             $widget->setWidgetHtmlContent($graph);
             return $widget;
             break;
