@@ -1081,8 +1081,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
                $result = $DB->query($query_openedTicketT1);
-               //$dataT1 = $DB->fetchArray($result);
-               $dataT1 = $DB->fetch_array($result);
+               $dataT1 = $DB->fetchArray($result);
                array_push($opened_tickets_data, $dataT1[0]);
                // Average Satisfaction
                $query_satisfactionT1 = "SELECT AVG(satisfaction)
@@ -1090,8 +1089,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
                $result = $DB->query($query_satisfactionT1);
-               //$data_satisfactionT1 = $DB->fetchArray($result);
-               $data_satisfactionT1 = $DB->fetch_array($result);
+               $data_satisfactionT1 = $DB->fetchArray($result);
                array_push($satisfaction_data, round($data_satisfactionT1[0],2));
                // Checking T2
 
@@ -1100,8 +1098,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
                $result = $DB->query($query_openedTicketT2);
-               //$dataT2 = $DB->fetchArray($result);
-               $dataT2 = $DB->fetch_array($result);
+               $dataT2 = $DB->fetchArray($result);
                array_push($opened_tickets_data, $dataT2[0]);
                // Average Satisfaction
                $query_satisfactionT2 = "SELECT AVG(satisfaction)
@@ -1109,8 +1106,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
                $result = $DB->query($query_satisfactionT2);
-               //$data_satisfactionT2 = $DB->fetchArray($result);
-               $data_satisfactionT2 = $DB->fetch_array($result);
+               $data_satisfactionT2 = $DB->fetchArray($result);
                array_push($satisfaction_data, round($data_satisfactionT2[0],2));
                // Checking T3
                array_push($tabnames, __('Trimester 3', 'mydashboard').' '.$starting_year);
@@ -1118,8 +1114,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
                $result = $DB->query($query_openedTicketT3);
-               //$dataT3 = $DB->fetchArray($result);
-               $dataT3 = $DB->fetch_array($result);
+               $dataT3 = $DB->fetchArray($result);
                array_push($opened_tickets_data, $dataT3[0]);
                // Average Satisfaction
                $query_satisfactionT3 = "SELECT AVG(satisfaction)
@@ -1127,8 +1122,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
                $result = $DB->query($query_satisfactionT3);
-               //$data_satisfactionT3 = $DB->fetchArray($result);
-               $data_satisfactionT3 = $DB->fetch_array($result);
+               $data_satisfactionT3 = $DB->fetchArray($result);
                array_push($satisfaction_data, round($data_satisfactionT3[0],2));
                // Checking T4
                array_push($tabnames, __('Trimester 4', 'mydashboard').' '.$starting_year);
@@ -1136,8 +1130,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
                $result = $DB->query($query_openedTicketT4);
-               //$dataT4 = $DB->fetchArray($result);
-               $dataT4 = $DB->fetch_array($result);
+               $dataT4 = $DB->fetchArray($result);
                array_push($opened_tickets_data, $dataT4[0]);
                // Average Satisfaction
                $query_satisfactionT4 = "SELECT AVG(satisfaction)
@@ -1145,8 +1138,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
                $result = $DB->query($query_satisfactionT4);
-               //$data_satisfactionT4 = $DB->fetchArray($result);
-               $data_satisfactionT4 = $DB->fetch_array($result);
+               $data_satisfactionT4 = $DB->fetchArray($result);
                array_push($satisfaction_data, round($data_satisfactionT4[0],2));
             }
 
@@ -1195,7 +1187,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                'backgroundColor' => "#1f77b4",
                'max_left' => $max_left];
 
-            //$graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, []);
             $graph = PluginMydashboardBarChart::launchMultipleGraphWithMultipleAxis($graph_datas, []);
             $widget->setWidgetHtmlContent($graph);
             return $widget;
