@@ -282,7 +282,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                " FROM `glpi_plugin_mydashboard_stocktickets`" .
                " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
                " " . $mdentities . $tech_groups_crit .
-               " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` >= 0 GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+               " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $resultsStockTickets = $DB->query($query_stockTickets);
             $nbStockTickets      = $DB->numrows($resultsStockTickets);
@@ -532,7 +532,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                " FROM `glpi_plugin_mydashboard_stocktickets`" .
                " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
                " " . $mdentities . $tech_groups_crit .
-               " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` >= 0 GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+               "  GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $resultsStockTickets = $DB->query($query_stockTickets);
             $nbStockTickets      = $DB->numrows($resultsStockTickets);
