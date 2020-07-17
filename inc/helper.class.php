@@ -273,7 +273,7 @@ class PluginMydashboardHelper {
     * @return mixed
     */
    static function manageCriterias($params) {
-
+      global $CFG_GLPI;
       $criterias = $params['criterias'];
 
 
@@ -327,9 +327,11 @@ class PluginMydashboardHelper {
       if (in_array("requesters_groups_id", $criterias)) {
          if (isset($params['opt']['requesters_groups_id'])) {
             $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
-         } else {
+         } else if($_SERVER["REQUEST_URI"]== $CFG_GLPI['root_doc']."/plugins/mydashboard/front/menu.php"){
             $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $opt, $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID());
             $opt['requesters_groups_id'] = $groups_id;
+         }else{
+            $opt['requesters_groups_id'] = [];
          }
 
          $params['opt']['requesters_groups_id'] = $opt['requesters_groups_id'];
@@ -368,9 +370,11 @@ class PluginMydashboardHelper {
       if (in_array("technicians_groups_id", $criterias)) {
          if (isset($params['opt']['technicians_groups_id'])) {
             $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id'])?$params['opt']['technicians_groups_id']:[$params['opt']['technicians_groups_id']];
-         } else {
+         } else if($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc']."/plugins/mydashboard/front/menu.php"){
             $groups_id                    = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
             $opt['technicians_groups_id'] = $groups_id;
+         }else {
+            $opt['technicians_groups_id'] = [];
          }
          $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
          if (isset($params['opt']['technicians_groups_id'])

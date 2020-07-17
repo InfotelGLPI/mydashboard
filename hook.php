@@ -197,7 +197,11 @@ function plugin_mydashboard_install() {
    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "title_informations_widget")) {
       $mig = new Migration("1.7.8");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.8.sql");
+      $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stockwidgets`";
+      $DB->query($queryTruncate);
       $mig->executeMigration();
+      fillTableMydashboardStocktickets();
+      fillTableMydashboardStockticketsGroup();
 
       $config = new PluginMydashboardConfig();
       $input['id']                        = "1";
