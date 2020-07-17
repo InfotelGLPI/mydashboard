@@ -103,6 +103,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $entities_criteria     = $crit['entities_id'];
             $tech_groups_crit      = "";
+            $technician_groups_criteria = $crit['technicians_groups_id'];
             $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
             if (count($opt['technicians_groups_id']) > 0) {
                $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
@@ -160,7 +161,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
                $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
                $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                  WHERE $is_deleted " . $entities_criteria . "
+                  WHERE $is_deleted " . $entities_criteria . $technician_groups_criteria . "
                   AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))";
 
