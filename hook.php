@@ -197,7 +197,11 @@ function plugin_mydashboard_install() {
    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "title_informations_widget")) {
       $mig = new Migration("1.7.8");
       $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.8.sql");
+      $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stockwidgets`";
+      $DB->query($queryTruncate);
       $mig->executeMigration();
+      fillTableMydashboardStocktickets();
+      fillTableMydashboardStockticketsGroup();
 
       $config = new PluginMydashboardConfig();
       $input['id']                        = "1";
@@ -302,9 +306,7 @@ function fillTableMydashboardStockticketsGroup() {
                   LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_groups_tickets`.`groups_id` = $groups_id
                   AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")))";
          $results2    = $DB->query($query);
          $data2       = $DB->fetch_array($results2);
          $countTicket = $data2['count'];
@@ -318,9 +320,7 @@ function fillTableMydashboardStockticketsGroup() {
                   LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_tickets`.`id` NOT IN  (SELECT tickets_id FROM `glpi_groups_tickets`)
                   AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")))";
          $results2    = $DB->query($query);
          $data2       = $DB->fetch_array($results2);
          $countTicket = $data2['count'];
