@@ -57,7 +57,7 @@ class PluginMydashboardStockTicket extends CommonDBTM {
       $query   = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id`,`glpi_groups_tickets`.`groups_id` FROM `glpi_tickets`
                  LEFT JOIN `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
       $results = $DB->query($query);
       while ($data = $DB->fetch_array($results)) {
          $groups_id = $data["groups_id"];
