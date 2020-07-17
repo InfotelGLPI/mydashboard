@@ -142,7 +142,7 @@ class PluginMydashboardPlanning {
                $val["end"] = $end;
             }
             $title = $val['name'];
-            if ($val['users_id'] > 0) {
+            if (isset($val['users_id']) && $val['users_id'] > 0) {
                $title .= " (" . getUserName($val['users_id']) . ")";
             }
             $events[] = ['title'    => $title,

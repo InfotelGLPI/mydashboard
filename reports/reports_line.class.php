@@ -106,6 +106,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
             if (count($opt['technicians_groups_id']) > 0) {
                $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
+            } else {
+               $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
             }
             $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
@@ -123,7 +125,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                                     WHERE  (`glpi_plugin_mydashboard_stocktickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
                                     AND (`glpi_plugin_mydashboard_stocktickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')
                                     " . $mdentities . $tech_groups_crit . "
-                                    AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` >= 0
                                     GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $tabdata    = [];
@@ -141,15 +142,16 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                $i++;
             }
 
+
             $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') AS month, 
-                        DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') AS monthname, 
-                        DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
-                        FROM `glpi_tickets`
-                        WHERE $is_deleted ";
+                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') AS monthname, 
+                     DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
+                     FROM `glpi_tickets`
+                     WHERE $is_deleted ";
             $query .= $entities_criteria . " 
-                     AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
-                     AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
-                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                  AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
+                  AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
+                  GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
             $results = $DB->query($query);
             while ($data = $DB->fetchArray($results)) {
@@ -158,11 +160,11 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
                $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
                $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                     WHERE $is_deleted " . $entities_criteria . "
-                     AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                     AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
-                     OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                     AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+                  WHERE $is_deleted " . $entities_criteria . "
+                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
+                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
 
                $results_1 = $DB->query($query_1);
                $data_1    = $DB->fetchArray($results_1);
@@ -387,11 +389,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                         //                        " $requester_groups_criteria".
                         //                        " $locations_criteria" .
                         // Tickets open in the month
-                        " AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) " .
-                        // Tickets solved in the month
-                        "OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                           AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+                        " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
                      $results_3 = $DB->query($query_3);
 
@@ -639,11 +638,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                         //                        " $requester_groups_criteria".
                         //                        " $locations_criteria" .
                         // Tickets open in the month
-                        " AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) " .
-                        // Tickets solved in the month
-                        "OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                           AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+                        " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
                      $results_3 = $DB->query($query_3);
 
