@@ -31,7 +31,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
    private       $options;
    private       $pref;
-   public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30];
+   public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30, 31];
 
    /**
     * PluginMydashboardReports_Pie constructor.
@@ -66,12 +66,13 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                $this->getType() . "13" => (($isDebug) ? "13 " : "") . __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "16" => (($isDebug) ? "16 " : "") . __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "17" => (($isDebug) ? "17 " : "") . __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "18" => (($isDebug) ? "18 " : "") . __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
+               $this->getType() . "18" => (($isDebug) ? "18 " : "") . __("Number of opened, closed and unplanned tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "20" => (($isDebug) ? "20 " : "") . __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "25" => (($isDebug) ? "25 " : "") . __("Top ten of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "26" => (($isDebug) ? "26 " : "") . __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "27" => (($isDebug) ? "27 " : "") . __("Top ten of opened tickets by location", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
                $this->getType() . "30" => (($isDebug) ? "30 " : "") . __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
+               $this->getType() . "31" => (($isDebug) ? "31 " : "") . __("Number of tickets per location per period", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
             ]
          ];
       return $widgets;
@@ -742,8 +743,27 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                }
             }
 
+            $whereUnplanned = " AND `glpi_tickettasks`.`actiontime` IS NULL ";
+
+            $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
+                     FROM `glpi_tickets`
+                     LEFT JOIN `glpi_tickettasks` ON `glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`
+                     WHERE $date_criteria
+                     $entities_criteria $type_criteria $requester_groups_criteria
+                     AND $is_deleted $whereUnplanned";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            if ($nb) {
+               while ($data = $DB->fetchAssoc($result)) {
+                  $dataspie[] = $data['nb'];
+                  $namespie[] = __("Not planned", "mydashboard");
+               }
+            }
+
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened and closed tickets by month", "mydashboard");
+            $title  = __("Number of opened, closed and unplanned tickets by month", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "18 " : "") . $title);
 
             $dataPieset         = json_encode($dataspie);
@@ -1206,7 +1226,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                while ($data = $DB->fetchArray($result)) {
                   if ($data['name'] == NULL) {
                      $name_requesttypes[] = __('None');
-                  } else{
+                  } else {
                      $name_requesttypes[] = $data['name'];
                   }
                   //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
@@ -1251,6 +1271,103 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             return $widget;
             break;
 
+         case $this->getType() . "31":
+            $name = 'TicketsByLocationPolarChart';
+            if (isset($_SESSION['glpiactiveprofile']['interface'])
+                && Session::getCurrentInterface() == 'central') {
+               $criterias = ['entities_id',
+                             'is_recursive',
+                             'type',
+                             'year',
+                             'month',
+                             'technicians_groups_id'];
+            }
+            $params  = ["preferences" => $this->preferences,
+                        "criterias"   => $criterias,
+                        "opt"         => $opt];
+            $options = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt                        = $options['opt'];
+            $crit                       = $options['crit'];
+            $type                       = $opt['type'];
+            $type_criteria              = $crit['type'];
+            $entities_criteria          = $crit['entities_id'];
+            $entities_id_criteria       = $crit['entity'];
+            $sons_criteria              = $crit['sons'];
+            $technician_group           = $opt['technicians_groups_id'];
+            $technician_groups_criteria = $crit['technicians_groups_id'];
+            $is_deleted                 = " AND `glpi_tickets`.`is_deleted` = 0";
+            $date_criteria              = $crit['date'];
+
+            $query = "SELECT DISTINCT
+                           `glpi_tickets`.`locations_id`,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets` ";
+            $query .= " WHERE $date_criteria $is_deleted  $type_criteria $entities_criteria $technician_groups_criteria ";
+            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " GROUP BY `locations_id`";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name_location = [];
+            $datas         = [];
+            $tablocation   = [];
+            if ($nb) {
+               while ($data = $DB->fetchArray($result)) {
+                  if (!empty($data['locations_id'])) {
+                     $name_location[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
+                  } else {
+                     $name_location[] = __('None');
+                  }
+                  $datas[] = $data['nb'];
+                  if (!empty($data['locations_id'])) {
+                     $tablocation[] = $data['locations_id'];
+                  } else {
+                     $tablocation[] = 0;
+                  }
+               }
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of tickets per location per period", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "40 " : "") . $title);
+
+            $dataPolarset         = json_encode($datas);
+            $palette              = PluginMydashboardColor::getColors($nb);
+            $backgroundPolarColor = json_encode($palette);
+            $labelsPolar          = json_encode($name_location);
+            $tablocationset       = json_encode($tablocation);
+            $graph_datas          = ['name'            => $name,
+                                     'ids'             => $tablocationset,
+                                     'data'            => $dataPolarset,
+                                     'labels'          => $labelsPolar,
+                                     'label'           => $title,
+                                     'backgroundColor' => $backgroundPolarColor];
+
+            $graph_criterias = ['entities_id'      => $entities_id_criteria,
+                                'sons'             => $sons_criteria,
+                                'technician_group' => $technician_group,
+                                'type'             => $type,
+                                'widget'           => $widgetId];
+
+            $graph = PluginMydashboardPieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => $name,
+                       "onsubmit"  => false,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => $nb];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
          default:
             break;
       }
