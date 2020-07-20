@@ -103,6 +103,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $entities_criteria     = $crit['entities_id'];
             $tech_groups_crit      = "";
+            $technician_groups_criteria = $crit['technicians_groups_id'];
             $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
             if (count($opt['technicians_groups_id']) > 0) {
                $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
@@ -122,8 +123,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                                     FROM `glpi_plugin_mydashboard_stocktickets`
                                     WHERE  (`glpi_plugin_mydashboard_stocktickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
                                     AND (`glpi_plugin_mydashboard_stocktickets`.`date` <= '$currentyear-$currentmonth-01 00:00:00')
-                                    " . $mdentities . $tech_groups_crit . "
-                                    AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` >= 0
+                                    " . $mdentities . $tech_groups_crit . " 
                                     GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $tabdata    = [];
@@ -158,7 +158,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
                $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
                $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                     WHERE $is_deleted " . $entities_criteria . "
+                     WHERE $is_deleted " . $entities_criteria.$technician_groups_criteria . "
                      AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                      AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))";
 
@@ -279,7 +279,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                " FROM `glpi_plugin_mydashboard_stocktickets`" .
                " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
                " " . $mdentities . $tech_groups_crit .
-               " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` >= 0 GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+               " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $resultsStockTickets = $DB->query($query_stockTickets);
             $nbStockTickets      = $DB->numrows($resultsStockTickets);
@@ -529,7 +529,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                " FROM `glpi_plugin_mydashboard_stocktickets`" .
                " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
                " " . $mdentities . $tech_groups_crit .
-               " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` >= 0 GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+               " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
             $resultsStockTickets = $DB->query($query_stockTickets);
             $nbStockTickets      = $DB->numrows($resultsStockTickets);
