@@ -60,6 +60,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $this->getType() . "6"  => (($isDebug) ? "6 " : "") . __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
             $this->getType() . "22" => (($isDebug) ? "22 " : "") . __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
             $this->getType() . "34" => (($isDebug) ? "34 " : "") . __("Number of opened and resolved / closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
+            $this->getType() . "40" => (($isDebug) ? "40 " : "") . __("Number of tickets per location per period", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
          ]
       ];
       return $widgets;
@@ -707,6 +708,153 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                        "export"    => true,
                        "canvas"    => true,
                        "nb"        => 1];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+            $widget->setWidgetHtmlContent(
+               $graph
+            );
+
+            return $widget;
+            break;
+
+         case $this->getType() . "40":
+
+            $criterias = ['entities_id', 'is_recursive', 'type', 'groups_id', 'year' ,'month'];
+            $params    = ["preferences" => $this->preferences,
+               "criterias"   => $criterias,
+               "opt"         => $opt];
+            $options   = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt                  = $options['opt'];
+            $crit                 = $options['crit'];
+            $type                 = $opt['type'];
+            $type_criteria        = $crit['type'];
+            $entities_criteria    = $crit['entities_id'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $groups_criteria      = $crit['technicians_groups_id'];
+            $is_deleted           = " AND `glpi_tickets`.`is_deleted` = 0";
+            $date_criteria        = $crit['date'];
+
+            $query = "SELECT DISTINCT
+                           `glpi_tickets`.`locations_id`,
+                           COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets` ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " LEFT JOIN `glpi_groups_tickets` 
+                        ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id`
+                            AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "') ";
+            }
+            $query .= " WHERE $date_criteria $is_deleted $type_criteria $entities_criteria ";
+            if (isset($opt['groups_id']) && ($opt['groups_id'] != 0)) {
+               $query .= " AND `glpi_groups_tickets`.`groups_id` = " . $groups_criteria;
+            }
+            $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            $query .= " GROUP BY `locations_id`";
+
+            $result = $DB->query($query);
+            $nb     = $DB->numrows($result);
+
+            $name        = [];
+            $datas       = [];
+            $tablocation = [];
+            if ($nb) {
+               while ($data = $DB->fetchArray($result)) {
+                  if (!empty($data['locations_id'])) {
+                     $name[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
+                  } else {
+                     $name[] = __('None');
+                  }
+                  $datas[] = $data['nb'];
+                  if (!empty($data['locations_id'])) {
+                     $tablocation[] = $data['locations_id'];
+                  } else {
+                     $tablocation[] = 0;
+                  }
+               }
+            }
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Number of opened tickets by location", "mydashboard");
+            $widget->setWidgetTitle((($isDebug)?"40 ":"").$title);
+
+            $dataPieset         = json_encode($datas);
+            $palette            = PluginMydashboardColor::getColors($nb);
+            $backgroundPieColor = json_encode($palette);
+            $labelsPie          = json_encode($name);
+            $tablocationset     = json_encode($tablocation);
+            $graph              = "<script type='text/javascript'>
+         
+            var dataLocationPie = {
+              datasets: [{
+                data: $dataPieset,
+                backgroundColor: $backgroundPieColor
+              }],
+              labels: $labelsPie
+            };
+            var locationset = $tablocationset;
+            $(document).ready(
+              function() {
+                var isChartRendered = false;
+                var canvas = document.getElementById('TicketsByLocationPieChart');
+                var ctx = canvas.getContext('2d');
+                ctx.canvas.width = 700;
+                ctx.canvas.height = 400;
+                var TicketsByLocationPieChart = new Chart(ctx, {
+                  type: 'polarArea',
+                  data: dataLocationPie,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        onComplete: function() {
+                          isChartRendered = true
+                        }
+                      },
+                      hover: {
+                         onHover: function(event,elements) {
+                            $('#TicketsByLocationPieChart').css('cursor', elements[0] ? 'pointer' : 'default');
+                          }
+                       }
+                   }
+                });
+            
+                canvas.onclick = function(evt) {
+                     var activePoints = TicketsByLocationPieChart.getElementsAtEvent(evt);
+                     if (activePoints[0]) {
+                       var chartData = activePoints[0]['_chart'].config.data;
+                       var idx = activePoints[0]['_index'];
+                       var label = chartData.labels[idx];
+                       var value = chartData.datasets[0].data[idx];
+                       var locations_id = locationset[idx];
+         //              var url = \"http://example.com/?label=\" + label + \"&value=\" + value;
+                       $.ajax({
+                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                          type: 'POST',
+                          data:{locations_id:locations_id, 
+                                entities_id:$entities_id_criteria, 
+                                sons:$sons_criteria, 
+                                type:$type, 
+                                groups_id:$groups_criteria, 
+                                widget:'$widgetId'},
+                          success:function(response) {
+                                  window.open(response);
+                                }
+                       });
+                     }
+                   };
+              }
+            );
+                
+             </script>";
+
+            $params = ["widgetId"  => $widgetId,
+               "name"      => 'TicketsByLocationPieChart',
+               "onsubmit"  => false,
+               "opt"       => $opt,
+               "criterias" => $criterias,
+               "export"    => true,
+               "canvas"    => true,
+               "nb"        => $nb];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
             $widget->setWidgetHtmlContent(
                $graph
