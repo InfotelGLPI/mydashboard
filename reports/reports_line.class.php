@@ -107,6 +107,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
             if (count($opt['technicians_groups_id']) > 0) {
                $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
+            }else {
+               $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
             }
             $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
