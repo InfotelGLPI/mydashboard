@@ -24,6 +24,11 @@
     </authors>
     <versions>
         <version>
+            <num>1.8.7</num>
+            <compatibility>~9.5</compatibility>
+            <!--<download_url>https://github.com/InfotelGLPI/mydashboard/releases/download/1.8.0/glpi-mydashboard-1.8.0.tar.gz</download_url>-->
+        </version>
+        <version>
             <num>1.7.7</num>
             <compatibility>9.4</compatibility>
         </version>
