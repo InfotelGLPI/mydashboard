@@ -436,23 +436,28 @@ div#tabcontent{
    height: 90%;
 }
 
-.plugin_mydashboard_fa-thermometer-1:before {
+.plugin_mydashboard_fa-thermometer-0:before {
    content: "\f2cb";
    font-family: "Font Awesome 5 Free";
 }
 
-.plugin_mydashboard_fa-thermometer-2:before {
+.plugin_mydashboard_fa-thermometer-1:before {
    content: "\f2ca";
    font-family: "Font Awesome 5 Free";
 }
 
-.plugin_mydashboard_fa-thermometer-3:before {
+.plugin_mydashboard_fa-thermometer-2:before {
    content: "\f2c9";
    font-family: "Font Awesome 5 Free";
 }
 
-.plugin_mydashboard_fa-thermometer-4:before {
+.plugin_mydashboard_fa-thermometer-3:before {
    content: "\f2c8";
+   font-family: "Font Awesome 5 Free";
+}
+
+.plugin_mydashboard_fa-thermometer-4:before {
+   content: "\f2c7";
    font-family: "Font Awesome 5 Free";
 }
 
