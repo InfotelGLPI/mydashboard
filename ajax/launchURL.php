@@ -40,7 +40,8 @@ define("TECHNICIAN", 5);
 define("REQUESTER_GROUP", 71);
 define("TECHNICIAN_GROUP", 8);
 define("LOCATIONS_ID", 83);
-
+define("CLOSE_DATE", 16);
+define("SOLVE_DATE", 17);
 //Case PluginMydashboardReports_Table32 / PluginMydashboardReports_Table33
 if (isset($_POST['widget'])) {
    foreach ($_POST as $k => $v){

@@ -133,6 +133,10 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                data: dataLine$name,
                options: {
                  plugins: {
+                     datalabels: {
+                     display:false,
+                     color: '#000',
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,

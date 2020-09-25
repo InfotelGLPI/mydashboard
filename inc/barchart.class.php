@@ -264,6 +264,9 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                data: dataBar$name,
                options: {
                  plugins: {
+                     datalabels: {
+                     color: 'white',
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,
@@ -350,6 +353,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       return $graph;
    }
 
+   /**
+    * @param array $graph_datas
+    * @param array $graph_criterias
+    *
+    * @return string
+    */
    static function launchStackedGraph($graph_datas = [], $graph_criterias = []) {
       global $CFG_GLPI;
 
@@ -357,10 +366,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       if (count($graph_criterias) > 0) {
          $onclick = 1;
       }
-      $name            = $graph_datas['name'];
-      $datas           = $graph_datas['data'];
-      $ids             = $graph_datas['ids'];
-      $labels          = $graph_datas['labels'];
+      $name   = $graph_datas['name'];
+      $datas  = $graph_datas['data'];
+      $ids    = $graph_datas['ids'];
+      $labels = $graph_datas['labels'];
 
       $json_criterias = json_encode($graph_criterias);
 
@@ -376,10 +385,20 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
              ctx.canvas.width = 700;
              ctx.canvas.height = 400;
              var $name = new Chart(ctx, {
+                 plugins: [{
+                         beforeInit: function(ctx, options) {
+                         ctx.legend.afterFit = function() {
+                         this.height = this.height + 15;
+                     };
+                   }
+                 }],
                type: 'bar',
                data: dataBar$name,
                options: {
                  plugins: {
+                    datalabels: {
+                     color: 'white',
+                   },
                    labels: {
                      render: 'value',
                      precision: 0,
@@ -458,22 +477,20 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       if (count($graph_criterias) > 0) {
          $onclick = 1;
       }
-      $name            = $graph_datas['name'];
-      $datas           = $graph_datas['data'];
-      $ids             = $graph_datas['ids'];
-      $label           = $graph_datas['label'];
-      $labels          = $graph_datas['labels'];
-      $backgroundColor = $graph_datas['backgroundColor'];
+      $name  = $graph_datas['name'];
+      $datas = $graph_datas['data'];
+      $ids   = $graph_datas['ids'];
+      //      $label           = $graph_datas['label'];
+      $labels = $graph_datas['labels'];
+      //      $backgroundColor = $graph_datas['backgroundColor'];
 
+      $linkURL = isset($graph_criterias['url']) ? $graph_criterias['url'] : $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+      unset($graph_criterias['url']);
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
             var dataBar$name = {
-              datasets: [{
-                data: $datas,
-                label: \"$label\",
-                backgroundColor: $backgroundColor,
-              }],
+              datasets: $datas,
               labels: $labels,
             };
              var id$name = $ids;
@@ -487,6 +504,11 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                data: dataBar$name,
                options: {
                  plugins: {
+                   datalabels: {
+                     color: '#000',
+                     align: 'end', 
+                     anchor: 'end',
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,
@@ -518,13 +540,13 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                         ctx.textBaseline = 'middle';
                         ctx.fillStyle = '#333';
             
-                        this.data.datasets.forEach(function (dataset, i) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar, index) {
-                                var data = dataset.data[index];                            
-                                ctx.fillText(data, bar._model.x + 40, bar._model.y);
-                            });
-                        });
+//                        this.data.datasets.forEach(function (dataset, i) {
+//                            var meta = chartInstance.controller.getDatasetMeta(i);
+//                            meta.data.forEach(function (bar, index) {
+//                                var data = dataset.data[index];                            
+//                                ctx.fillText(data, bar._model.x + 40, bar._model.y);
+//                            });
+//                        });
                        isChartRendered = true;
                      }
                    },
@@ -547,7 +569,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    url: '$linkURL',
                     type: 'POST',
                     data:
                     {
@@ -573,10 +595,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       if (count($graph_criterias) > 0) {
          $onclick = 1;
       }
-      $name            = $graph_datas['name'];
-      $datas           = $graph_datas['data'];
-      $ids             = $graph_datas['ids'];
-      $labels          = $graph_datas['labels'];
+      $name   = $graph_datas['name'];
+      $datas  = $graph_datas['data'];
+      $ids    = $graph_datas['ids'];
+      $labels = $graph_datas['labels'];
 
       $json_criterias = json_encode($graph_criterias);
 
@@ -603,6 +625,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                data: dataBar$name,
                options: {
                  plugins: {
+                   datalabels: {
+                     color: '#000',
+                     display: false,
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,
@@ -629,17 +655,17 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  },
                  animation: {
                   onComplete: function() {
-//                    var ctx = this.chart.ctx;
-//                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
-//                   ctx.fillStyle = '#595959';
-//                   ctx.textAlign = 'center';
-//                   ctx.textBaseline = 'bottom';
-//                   this.data.datasets.forEach(function (dataset) {
-//                       for (var i = 0; i < dataset.data.length; i++) {
-//                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-//                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
-//                       }
-//                   });
+                    var ctx = this.chart.ctx;
+                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+                   ctx.fillStyle = '#000';
+                   ctx.textAlign = 'center';
+                   ctx.textBaseline = 'bottom';
+                   this.data.datasets.forEach(function (dataset) {
+                       for (var i = 0; i < dataset.data.length; i++) {
+                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
+                       }
+                   });
                     isChartRendered = true;
                   }
                  },
@@ -666,11 +692,11 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
          $onclick = 1;
       }
 
-      $name            = $graph_datas['name'];
-      $datas           = $graph_datas['data'];
-      $ids             = $graph_datas['ids'];
-      $labels          = $graph_datas['labels'];
-      $max             = isset($graph_datas['max']) ? "max:".$graph_datas['max']."," : "";
+      $name   = $graph_datas['name'];
+      $datas  = $graph_datas['data'];
+      $ids    = $graph_datas['ids'];
+      $labels = $graph_datas['labels'];
+      $max    = isset($graph_datas['max']) ? "max:" . $graph_datas['max'] . "," : "";
 
       $json_criterias = json_encode($graph_criterias);
 
@@ -698,6 +724,9 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
               }],
                options: {
                  plugins: {
+                   datalabels: {
+                     color: 'white',
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,

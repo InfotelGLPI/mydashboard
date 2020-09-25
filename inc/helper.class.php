@@ -327,10 +327,10 @@ class PluginMydashboardHelper {
       if (in_array("requesters_groups_id", $criterias)) {
          if (isset($params['opt']['requesters_groups_id'])) {
             $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
-         } else if($_SERVER["REQUEST_URI"]== $CFG_GLPI['root_doc']."/plugins/mydashboard/front/menu.php"){
+         } else if ($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php") {
             $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $opt, $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID());
             $opt['requesters_groups_id'] = $groups_id;
-         } else{
+         } else {
             $opt['requesters_groups_id'] = [];
          }
 
@@ -369,11 +369,11 @@ class PluginMydashboardHelper {
       $crit['crit']['ancestors']             = 0;
       if (in_array("technicians_groups_id", $criterias)) {
          if (isset($params['opt']['technicians_groups_id'])) {
-            $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id'])?$params['opt']['technicians_groups_id']:[$params['opt']['technicians_groups_id']];
-         } else if($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc']."/plugins/mydashboard/front/menu.php"){
+            $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
+         } else if ($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php") {
             $groups_id                    = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
             $opt['technicians_groups_id'] = $groups_id;
-         }else {
+         } else {
             $opt['technicians_groups_id'] = [];
          }
          $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
@@ -381,7 +381,7 @@ class PluginMydashboardHelper {
              && is_array($params['opt']['technicians_groups_id'])
              && count($params['opt']['technicians_groups_id']) > 0) {
             $none = false;
-            if($params['opt']['technicians_groups_id'][0]=="0"){
+            if ($params['opt']['technicians_groups_id'][0] == "0") {
                $none = true;
             }
             if (in_array("group_is_recursive", $criterias) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
@@ -390,34 +390,34 @@ class PluginMydashboardHelper {
                foreach ($opt['technicians_groups_id'] as $k => $v) {
                   $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
                }
-               if($none){
+               if ($none) {
                   $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
                   $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . ")))";
-               }else{
+               } else {
                   $crit['crit']['technicians_groups_id'] .= " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . "))";
                }
-               $opt['ancestors']                      = $params['opt']['ancestors'];
-               $crit['crit']['ancestors']             = $opt['ancestors'];
+               $opt['ancestors']          = $params['opt']['ancestors'];
+               $crit['crit']['ancestors'] = $opt['ancestors'];
             } else {
-               if($none){
+               if ($none) {
                   $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
                   $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $params['opt']['technicians_groups_id']) . ")))";
-               }else{
+               } else {
                   $crit['crit']['technicians_groups_id'] .= " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
             WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $params['opt']['technicians_groups_id']) . "))";
                }
-               $opt['ancestors']                      = 0;
-               $crit['crit']['ancestors']             = 0;
+               $opt['ancestors']          = 0;
+               $crit['crit']['ancestors'] = 0;
             }
          }
       }
 
       //LOCATION
       $opt['locations_id']          = 0;
-      $crit['crit']['locations_id'] = "AND 1 = 1";
+      $crit['crit']['locations_id'] = " AND 1 = 1 ";
       $user                         = new User();
       if (in_array("locations_id", $criterias)) {
          if (isset($params['opt']["locations_id"])
@@ -431,9 +431,45 @@ class PluginMydashboardHelper {
          }
       }
 
+      // LOCATIONS
+      $opt['multiple_locations_id']          = [];
+      $crit['crit']['multiple_locations_id'] = " AND 1 = 1 ";
+      $opt['loc_ancestors']                  = 0;
+      $crit['crit']['loc_ancestors']         = 0;
+      if (in_array("multiple_locations_id", $criterias)) {
+
+         if (isset($params['opt']['multiple_locations_id'])) {
+            $opt['multiple_locations_id'] = is_array($params['opt']['multiple_locations_id']) ? $params['opt']['multiple_locations_id'] : [$params['opt']['multiple_locations_id']];
+            //            $crit['crit']['multiple_locations_id'] = " AND `glpi_tickets`.`locations_id` IN  (" . implode(",", $opt['multiple_locations_id']) . ") ";
+
+         } else {
+            $crit['crit']['multiple_locations_id'] = "";
+         }
+         $params['opt']['multiple_locations_id'] = $opt['multiple_locations_id'];
+
+         if (isset($params['opt']['multiple_locations_id'])
+             && is_array($params['opt']['multiple_locations_id'])
+             && count($params['opt']['multiple_locations_id']) > 0) {
+            if (isset($params['opt']['loc_ancestors']) && $params['opt']['loc_ancestors'] != 0) {
+               $dbu    = new DbUtils();
+               $childs = [];
+               foreach ($opt['multiple_locations_id'] as $k => $v) {
+                  $childs = $dbu->getSonsAndAncestorsOf('glpi_locations', $v);
+               }
+               $crit['crit']['multiple_locations_id'] .= " AND `locations_id` IN (" . implode(",", $childs) . ")";
+               $opt['loc_ancestors']                  = $params['opt']['loc_ancestors'];
+               $crit['crit']['loc_ancestors']         = $opt['loc_ancestors'];
+            } else {
+               $crit['crit']['multiple_locations_id'] .= " AND `locations_id` IN (" . implode(",", $params['opt']['multiple_locations_id']) . ")";
+               $opt['loc_ancestors']                  = 0;
+               $crit['crit']['loc_ancestors']         = 0;
+            }
+         }
+      }
+
       //TYPE
       $opt['type']          = 0;
-      $crit['crit']['type'] = "AND 1 = 1";
+      $crit['crit']['type'] = " AND 1 = 1 ";
       if (in_array("type", $criterias)) {
          if (isset($params['opt']["type"])
              && $params['opt']["type"] > 0) {
@@ -527,6 +563,26 @@ class PluginMydashboardHelper {
          }
       }
 
+      // TECHNICIAN MULTIPLE
+      $opt['multiple_technicians_id']          = [];
+      $crit['crit']['multiple_technicians_id'] = " AND 1 = 1 ";
+      if (in_array("multiple_technicians_id", $criterias)) {
+
+         if (isset($params['opt']['multiple_technicians_id'])) {
+            $opt['multiple_technicians_id'] = is_array($params['opt']['multiple_technicians_id']) ? $params['opt']['multiple_technicians_id'] : [$params['opt']['multiple_technicians_id']];
+         } else {
+            $crit['crit']['multiple_technicians_id'] = [];
+         }
+         $params['opt']['multiple_technicians_id'] = $opt['multiple_technicians_id'];
+
+         if (isset($params['opt']['multiple_technicians_id'])
+             && is_array($params['opt']['multiple_technicians_id'])
+             && count($params['opt']['multiple_technicians_id']) > 0) {
+            $crit['crit']['multiple_technicians_id'] = $params['opt']['multiple_technicians_id'];
+         }
+      }
+
+
       // LIMIT
       if (in_array("limit", $criterias)) {
          if (isset($params['opt']['limit'])) {
@@ -537,9 +593,9 @@ class PluginMydashboardHelper {
 
       // STATUS
       $default                = [CommonITILObject::INCOMING,
-                                      CommonITILObject::ASSIGNED,
-                                      CommonITILObject::PLANNED,
-                                      CommonITILObject::WAITING];
+                                 CommonITILObject::ASSIGNED,
+                                 CommonITILObject::PLANNED,
+                                 CommonITILObject::WAITING];
       $crit['crit']['status'] = $default;
       $opt['status']          = $default;
       if (in_array("status", $criterias)) {
@@ -647,6 +703,19 @@ class PluginMydashboardHelper {
          }
       }
 
+      if (isset($opt['multiple_locations_id'])) {
+         $opt['multiple_locations_id'] = is_array($opt['multiple_locations_id']) ? $opt['multiple_locations_id'] : [$opt['multiple_locations_id']];
+         if (count($opt['multiple_locations_id']) > 0) {
+            $form .= "&nbsp;/&nbsp;" . _n('Location', 'Locations', count($opt['multiple_locations_id'])) . "&nbsp;:&nbsp;";
+            foreach ($opt['multiple_locations_id'] as $k => $v) {
+               $form .= Dropdown::getDropdownName('glpi_locations', $v);
+               if (count($opt['multiple_locations_id']) > 1) {
+                  $form .= "&nbsp;-&nbsp;";
+               }
+            }
+         }
+      }
+
       if (isset($opt['type']) && $opt['type'] > 0) {
          $form .= "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . Ticket::getTicketTypeName($opt['type']);
       }
@@ -655,6 +724,29 @@ class PluginMydashboardHelper {
          $monthsarray = Toolbox::getMonthsOfYearArray();
          $form        .= "&nbsp;/&nbsp;" . __('Date') . "&nbsp;:&nbsp;" . sprintf(__('%1$s %2$s'), $monthsarray[$opt['month']], $opt['year']);
       }
+
+      if (isset($opt['year'])) {
+         $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt['year'];
+      }
+
+      // TECHNICIAN MULTIPLE
+      if (isset($opt['multiple_technicians_id'])) {
+         $opt['multiple_technicians_id'] = is_array($opt['multiple_technicians_id']) ? $opt['multiple_technicians_id'] : [$opt['multiple_technicians_id']];
+         if (count($opt['multiple_technicians_id']) > 0) {
+            $form .= "&nbsp;/&nbsp;" . _n('Technician', 'Technicians', count($opt['multiple_technicians_id']), 'mydashboard') . "&nbsp;:&nbsp;";
+            foreach ($opt['multiple_technicians_id'] as $k => $v) {
+               $form .= getUserName($v);
+               if (count($opt['multiple_technicians_id']) > 1) {
+                  $form .= "&nbsp;-&nbsp;";
+               }
+            }
+         }
+      }
+      // TECHNICIAN
+      if (isset($opt['technicians_id']) && $opt['technicians_id'] > 0) {
+         $form .= "&nbsp;/&nbsp;" . __('Technician') . "&nbsp;:&nbsp;" . getUserName($opt['technicians_id']);
+      }
+
       $form .= "</span>";
       $form .= "</div>";
       $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
@@ -731,12 +823,63 @@ class PluginMydashboardHelper {
             $form .= "</br></br>";
          }
       }
+
+      // MULTIPLE LOCATIONS
+      if (in_array("multiple_locations_id", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+         $dbu    = new DbUtils();
+         $result = $dbu->getAllDataFromTable(Location::getTable(), [], false, "completename");
+
+         if (isset($opt['multiple_locations_id'])) {
+            $multiple_locations_id = (is_array($opt['multiple_locations_id']) ? $opt['multiple_locations_id'] : [$opt['multiple_locations_id']]);
+         } else {
+            $multiple_locations_id = [];
+         }
+
+         $temp = [];
+         foreach ($result as $item) {
+            $temp[$item['id']] = $item['completename'];
+         }
+
+         $params = [
+            "name"                => 'multiple_locations_id',
+            "display"             => false,
+            "multiple"            => true,
+            "width"               => '200px',
+            'values'              => $multiple_locations_id,
+            'display_emptychoice' => true
+         ];
+
+         $form .= _n('Location', 'Locations', 2);
+         $form .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("multiple_locations_id", $temp, $params);
+
+         $form .= $dropdown;
+
+         $form .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
+         $form      .= "<span class='md-widgetcrit'>";
+         $form      .= __('Child locations', 'mydashboard') . "&nbsp;";
+         $paramsy   = ['display' => false];
+         $ancestors = isset($opt['loc_ancestors']) ? $opt['loc_ancestors'] : 0;
+         $form      .= Dropdown::showYesNo('loc_ancestors', $ancestors, -1, $paramsy);
+         $form      .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
       // REQUESTER GROUPS
       if (in_array("requesters_groups_id", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
 
          $dbu    = new DbUtils();
-         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1], false, "completename");
 
          if (isset($opt['requesters_groups_id'])) {
             $requesters_groups_id = (is_array($opt['requesters_groups_id']) ? $opt['requesters_groups_id'] : [$opt['requesters_groups_id']]);
@@ -776,7 +919,7 @@ class PluginMydashboardHelper {
          $form .= "<span class='md-widgetcrit'>";
 
          $dbu    = new DbUtils();
-         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
+         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1], false, "completename");
 
          if (isset($opt['technicians_groups_id'])) {
             $technicians_groups_id = (is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']]);
@@ -786,7 +929,7 @@ class PluginMydashboardHelper {
 
          $temp = [];
          foreach ($result as $item) {
-            $temp[$item['id']] = $item['name'];
+            $temp[$item['id']] = $item['completename'];
          }
 
          $params = [
@@ -860,20 +1003,22 @@ class PluginMydashboardHelper {
       }
       // MONTH
       if (in_array("month", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
          $form .= __('Month', 'mydashboard');
          $form .= "&nbsp;";
          $form .= self::monthDropdown("month", (isset($opt['month']) ? $opt['month'] : 0));
-         $form .= "&nbsp;";
+         $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
       }
       // START DATE
       if (in_array("begin", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
          $form .= __('Start');
          $form .= "&nbsp;";
          $form .= Html::showDateTimeField("begin", ['value' => isset($opt['begin']) ? $opt['begin'] : null, 'maybeempty' => false, 'display' => false]);
-         $form .= "&nbsp;";
+         $form .= "</span>";
          if ($count > 1 && !in_array("end", $criterias)) {
             $form .= "</br></br>";
          } elseif ($count > 1 && in_array("end", $criterias)) {
@@ -882,10 +1027,11 @@ class PluginMydashboardHelper {
       }
       // END DATE
       if (in_array("end", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
          $form .= __('End');
          $form .= "&nbsp;";
          $form .= Html::showDateTimeField("end", ['value' => isset($opt['end']) ? $opt['end'] : null, 'maybeempty' => false, 'display' => false]);
-         $form .= "&nbsp;";
+         $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
@@ -893,17 +1039,19 @@ class PluginMydashboardHelper {
 
       // USER
       if (in_array("users_id", $criterias)) {
+         $form   .= "<span class='md-widgetcrit'>";
          $params = ['name'     => "users_id",
-                         'value'    => isset($opt['users_id']) ? $opt['users_id'] : null,
-                         'right'    => "interface",
-                         'comments' => 1,
-                         'entity'   => $_SESSION["glpiactiveentities"],
-                         'width'    => '50%',
-                         'display'  => false
+                    'value'    => isset($opt['users_id']) ? $opt['users_id'] : null,
+                    'right'    => "interface",
+                    'comments' => 1,
+                    'entity'   => $_SESSION["glpiactiveentities"],
+                    'width'    => '50%',
+                    'display'  => false
          ];
          $form   .= __('User');
          $form   .= "&nbsp;";
          $form   .= User::dropdown($params);
+         $form   .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
@@ -911,16 +1059,71 @@ class PluginMydashboardHelper {
       // TECHNICIAN
       if (in_array("technicians_id", $criterias)) {
          $params = ['name'     => "technicians_id",
-                         'value'    => isset($opt['technicians_id']) ? $opt['technicians_id'] : null,
-                         'right'    => "interface",
-                         'comments' => 1,
-                         'entity'   => $_SESSION["glpiactiveentities"],
-                         'width'    => '50%',
-                         'display'  => false
-      ];
+                    'value'    => isset($opt['technicians_id']) ? $opt['technicians_id'] : null,
+                    'right'    => "interface",
+                    'comments' => 1,
+                    'entity'   => $_SESSION["glpiactiveentities"],
+                    'width'    => '50%',
+                    'display'  => false
+         ];
+         $form   .= "<span class='md-widgetcrit'>";
          $form   .= __('Technician');
          $form   .= "&nbsp;";
          $form   .= User::dropdown($params);
+         $form   .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
+      // TECHNICIAN MULTIPLE
+      if (in_array("multiple_technicians_id", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+         $params['entity']    = $_SESSION['glpiactive_entity'];
+         $params['right']     = ['groups'];
+         $data_users          = [];
+         $users               = [];
+         $param['values']     = [];
+         $params['groups_id'] = 0;
+         if (isset($opt['technicians_groups_id'])) {
+            $technicians_groups_id = (is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']]);
+         } else {
+            $technicians_groups_id = [];
+         }
+         $technicians_groups_id = 1;
+         $list                  = [];
+         $restrict              = [];
+         $res                   = User::getSqlSearchResult(false, $params['right'], $params['entity']);
+         while ($data = $res->next()) {
+            $list[] = $data['id'];
+         }
+         if (count($list) > 0) {
+            $restrict = ['glpi_users.id' => $list];
+         }
+         $restrict["glpi_users.is_deleted"] = 0;
+         $restrict["glpi_users.is_active"] = 1;
+
+         $data_users = Group_user::getGroupUsers($technicians_groups_id, $restrict);
+
+         foreach ($data_users as $data) {
+            $users[$data['id']] = formatUserName($data['id'], $data['name'], $data['realname'],
+                                                 $data['firstname']);
+            $params['values'][]  = $data['id'];
+         }
+         $users             = Toolbox::stripslashes_deep($users);
+         $params['multiple'] = true;
+         $params['display']  = false;
+         $params['size']     = count($users);
+
+         $form .= _n('Technician', 'Technicians', 2, 'mydashboard');
+         $form .= "&nbsp;";
+
+         $dropdownusers = Dropdown::showFromArray("multiple_technicians_id", $users, $params);
+
+         $form .= $dropdownusers;
+
+         $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
@@ -928,26 +1131,29 @@ class PluginMydashboardHelper {
 
       // LIMIT
       if (in_array("limit", $criterias)) {
-         $params = ['value' => isset($opt['limit']) ? $opt['limit'] : 0,
-                    'min'   => 0,
-                    'max'   => 200,
-                    'step'  => 1,
-                    'display'  => false,
-                    'toadd' => [0 => __('All')]];
+         $params = ['value'   => isset($opt['limit']) ? $opt['limit'] : 0,
+                    'min'     => 0,
+                    'max'     => 200,
+                    'step'    => 1,
+                    'display' => false,
+                    'toadd'   => [0 => __('All')]];
+         $form   .= "<span class='md-widgetcrit'>";
          $form   .= __('Number of results');
          $form   .= "&nbsp;";
          $form   .= Dropdown::showNumber("limit", $params);
+         $form   .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }
       }
       //STATUS
       if (in_array("status", $criterias)) {
+         $form    .= "<span class='md-widgetcrit'>";
          $form    .= _n('Status', 'Statuses', 2) . "&nbsp;";
          $default = [CommonITILObject::INCOMING,
-                          CommonITILObject::ASSIGNED,
-                          CommonITILObject::PLANNED,
-                          CommonITILObject::WAITING];
+                     CommonITILObject::ASSIGNED,
+                     CommonITILObject::PLANNED,
+                     CommonITILObject::WAITING];
 
          $i = 1;
          foreach (Ticket::getAllStatusArray() as $svalue => $sname) {
@@ -970,6 +1176,7 @@ class PluginMydashboardHelper {
             }
             $i++;
          }
+         $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
          }

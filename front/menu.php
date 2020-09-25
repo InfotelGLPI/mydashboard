@@ -82,7 +82,8 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/datetime-moment.js"></script>
            <!--CHARTJS-->
            <script src="../lib/chartjs/Chart.bundle.min.js"></script>
-           <script src="../lib/chartjs/chartjs-plugin-labels.min.js"></script>
+<!--           <script src="../lib/chartjs/chartjs-plugin-labels.min.js"></script>-->
+          <script src="../lib/chartjs/chartjs-plugin-datalabels.js"></script>
            <!--EXPORT CHARTJS-->
            <script src="../lib/html2canvas.min.js"></script>
            <script src="../lib/fileSaver.min.js"></script>

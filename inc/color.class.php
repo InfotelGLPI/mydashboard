@@ -114,6 +114,7 @@ class PluginMydashboardColor {
    }
 
    /**
+    * @param int $nb_value
     * @param int $index
     *
     * @return array

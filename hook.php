@@ -203,7 +203,7 @@ function plugin_mydashboard_install() {
       fillTableMydashboardStocktickets();
       fillTableMydashboardStockticketsGroup();
 
-      $config = new PluginMydashboardConfig();
+      $config                             = new PluginMydashboardConfig();
       $input['id']                        = "1";
       $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
       $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
@@ -253,6 +253,10 @@ function insertDefaultTitles() {
 
 function fillTableMydashboardStocktickets() {
    global $DB;
+
+   ini_set("memory_limit", "-1");
+   ini_set("max_execution_time", "0");
+
    $currentmonth = date("m");
    $currentyear  = date("Y");
    $previousyear = $currentyear - 1;
@@ -288,14 +292,17 @@ function fillTableMydashboardStocktickets() {
 function fillTableMydashboardStockticketsGroup() {
    global $DB;
 
-   $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+   ini_set("memory_limit", "-1");
+   ini_set("max_execution_time", "0");
+
+   $query   = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
                      DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id`,
                       `glpi_groups_tickets`.`groups_id` as groups_id
       FROM `glpi_tickets` 
       LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
       WHERE `glpi_tickets`.`is_deleted`= 0 
       GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
-   $results      = $DB->query($query);
+   $results = $DB->query($query);
    while ($data = $DB->fetch_array($results)) {
       list($year, $month) = explode('-', $data['month']);
       $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));

@@ -29,8 +29,7 @@
  * It sets basical parameters to display a pie chart with Flotr2
  * This widget class is meant to display data as a pie chart
  */
-class PluginMydashboardPieChart extends PluginMydashboardChart
-{
+class PluginMydashboardPieChart extends PluginMydashboardChart {
 
 
    /**
@@ -43,8 +42,8 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
       $this->setOption('yaxis', ['showLabels' => false]);
       $this->setOption('mouse', ['track' => true, 'trackFormatter' => self::getTrackFormatter()]);
       $this->setOption('legend', ['position' => 'ne', 'backgroundColor' => '#D2E8FF']);
-      $this->setOption('pie', ['show' => true, 'explode' => 0,
-         'fillOpacity' => PluginMydashboardColor::getOpacity()]);
+      $this->setOption('pie', ['show'        => true, 'explode' => 0,
+                               'fillOpacity' => PluginMydashboardColor::getOpacity()]);
    }
 
 
@@ -68,14 +67,16 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
 
    /**
     * Get a custom label format
-    * @param int $id , the id of the format within {1,2,3,x}
+    *
+    * @param int    $id , the id of the format within {1,2,3,x}
     *      1: $prefix+<percentage>+% (+<value>+)+$suffix
     *      2: $prefix+<value>+$suffix
     *      3: empty
     *      x:(default) $prefix+<percentage>+%+$suffix
     * @param string $prefix , a custom $prefix
     * @param string $suffix , a custom $suffix
-    * @param int $minvalue
+    * @param int    $minvalue
+    *
     * @return string
     */
    static function getLabelFormatter($id = 0, $prefix = "", $suffix = "", $minvalue = 0) {
@@ -137,6 +138,9 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                data: dataPie$name,
                options: {
                  plugins: {
+                   datalabels: {
+                     color: 'white',
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,
@@ -234,6 +238,9 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                data: dataPie$name,
                options: {
                  plugins: {
+                   datalabels: {
+                     color: 'white',
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,
@@ -300,8 +307,8 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-
-      $json_criterias = json_encode($graph_criterias);
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : "";
+      $json_criterias  = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
             var dataPie$name = {
@@ -313,6 +320,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
               labels: $labels,
             };
              var id$name = $ids;
+             var format = $format;
              var isChartRendered = false;
              var canvas$name = document.getElementById('$name');
              var ctx = canvas$name.getContext('2d');
@@ -323,6 +331,17 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                data: dataPie$name,
                options: {
                  plugins: {
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                           let datasets = ctx.chart.data.datasets;
+                           let display = value + format;
+                           return display;
+                        },
+                        color: 'white',
+                        labels: {
+                          color: 'white'
+                      }
+                   },
                    labels: {
                      render: 'value',
 //                     fontSize: 14,
@@ -338,19 +357,16 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                        isChartRendered = true;
                      }
                    },
-                 tooltips: {
-                     callbacks: {
-                       label: function(tooltipItem, data) {
-                        var dataset = data.datasets[tooltipItem.datasetIndex];
-                         var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
-                           return previousValue + currentValue;
-                         });
-                         var currentValue = dataset.data[tooltipItem.index];
-                         var percentage = Math.floor(((currentValue/total) * 100)+0.5);
-                         return percentage + \"%\";
-                       }
-                     }
-                   }
+//                 tooltips: {
+//                     callbacks: {
+//                       label: function(tooltipItem, data) {
+//                        var dataset = data.datasets[tooltipItem.datasetIndex];
+//                         var currentValue = dataset.data[tooltipItem.index];
+//                         var percentage = currentValue;
+//                         return percentage + \"%\";
+//                       }
+//                     }
+//                   }
                 }
              });
 //             canvas$name.onclick = function(evt) {
