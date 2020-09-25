@@ -347,26 +347,29 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                   $tabnames[] = $itilcategories_name;
                }
             }
+            $backgroundColor         = PluginMydashboardColor::getColors(1);
+            $nbtickets = __('Tickets number', 'mydashboard');
+            $dataset[] = ["type"            => 'horizontalBar',
+                          "label"           => $nbtickets,
+                          "data"            => $tabdata,
+                          "backgroundColor" => $backgroundColor,
+                          "datalabels"      => json_encode(["align"  => "end",
+                                                            "anchor" => "end"])
+                          //                          'fill'            => false
+            ];
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Top ten ticket categories by type of ticket", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "15 " : "") . $title);
             $widget->setWidgetComment(__("Display of Top ten ticket categories by type of ticket"
                , "mydashboard"));
-            $databacklogset = json_encode($tabdata);
+            $databacklogset = json_encode($dataset);
             $labelsback     = json_encode($tabnames);
-
-            $nbtickets = __('Tickets number', 'mydashboard');
-
-            $palette         = PluginMydashboardColor::getColors($nb);
-            $backgroundColor = json_encode($palette);
 
             $graph_datas = ['name'            => $name,
                             'ids'             => $labelsback,
                             'data'            => $databacklogset,
-                            'labels'          => $labelsback,
-                            'label'           => $nbtickets,
-                            'backgroundColor' => $backgroundColor];
+                            'labels'          => $labelsback];
 
             $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, []);
 
@@ -658,19 +661,28 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $widget->setWidgetTitle((($isDebug) ? "24 " : "") . __("Top ten technicians (by tickets number)", "mydashboard"));
             $widget->setWidgetComment(__("Display of number of tickets by technicians", "mydashboard"));
 
-            $dataticketset   = json_encode($tabtickets);
+            $ticketsnumber   = __('Tickets number', 'mydashboard');
+            $palette         = PluginMydashboardColor::getColors(1);
+            $backgroundColor = json_encode($palette);
+            $dataset[] = ["type"            => 'horizontalBar',
+                          "label"           => $ticketsnumber,
+                          "data"            => $tabtickets,
+                          "backgroundColor" => $palette,
+                          //                          'fill'            => false
+            ];
+
+            $dataticketset   = json_encode($dataset);
             $tabNamesset     = json_encode($tabtechName);
             $tabIdTechset    = json_encode($tabtechid);
-            $ticketsnumber   = __('Tickets number', 'mydashboard');
-            $palette         = PluginMydashboardColor::getColors(10);
-            $backgroundColor = json_encode($palette);
+
 
             $graph_datas = ['name'            => $name,
                             'ids'             => $tabIdTechset,
                             'data'            => $dataticketset,
                             'labels'          => $tabNamesset,
-                            'label'           => $ticketsnumber,
-                            'backgroundColor' => $backgroundColor];
+                            //                            'label'           => $ticketsnumber,
+                            //                            'backgroundColor' => $backgroundColor
+            ];
 
             $graph_criterias = ['entities_id' => $entities_id_criteria,
                                 'sons'        => $sons_criteria,
