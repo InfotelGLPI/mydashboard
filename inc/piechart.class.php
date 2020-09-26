@@ -115,7 +115,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -139,6 +139,11 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                    datalabels: {
+                      formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },
                      color: 'white',
                    },
                    labels: {
@@ -202,6 +207,12 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       return $graph;
    }
 
+   /**
+    * @param array $graph_datas
+    * @param array $graph_criterias
+    *
+    * @return string
+    */
    static function launchPolarAreaGraph($graph_datas = [], $graph_criterias = []) {
       global $CFG_GLPI;
 
@@ -215,7 +226,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -239,6 +250,11 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                    datalabels: {
+                       formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },
                      color: 'white',
                    },
                    labels: {
@@ -294,6 +310,12 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       return $graph;
    }
 
+   /**
+    * @param array $graph_datas
+    * @param array $graph_criterias
+    *
+    * @return string
+    */
    static function launchDonutGraph($graph_datas = [], $graph_criterias = []) {
       global $CFG_GLPI;
 
@@ -307,7 +329,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : "";
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias  = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -332,21 +354,18 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                     datalabels: {
-                        formatter: (value, ctx) => {
-                           let datasets = ctx.chart.data.datasets;
-                           let display = value + format;
-                           return display;
-                        },
-                        color: 'white',
-                        labels: {
-                          color: 'white'
-                      }
+                        formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },
+                      color: 'white',
                    },
                    labels: {
-                     render: 'value',
+//                     render: 'value',
 //                     fontSize: 14,
 //                     fontStyle: 'bold',
-                     fontColor: '#fff',
+//                     fontColor: '#fff',
 //                     fontFamily: 'Lucida Console, Monaco, monospace'
                    }
                 },

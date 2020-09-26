@@ -1289,9 +1289,9 @@ class PluginMydashboardMenu extends CommonGLPI {
             $ckey         = 'md_cache_' . md5($widgetclasse->getTable());
             $datas     = $GLPI_CACHE->get($ckey);
             //UNACTIVATE IT FOR DEBUG
-            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
-               $datajson = $datas;
-            } else {
+//            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
+//               $datajson = $datas;
+//            } else {
                $widgets = PluginMydashboardWidget::getWidgetList();
 
                foreach ($datagrid as $k => $v) {
@@ -1311,7 +1311,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                if ($predefined_grid == 0) {
                   $GLPI_CACHE->set($ckey, $datajson);
                }
-            }
+//            }
       } else {
          echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
