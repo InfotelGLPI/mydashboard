@@ -346,13 +346,14 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $palette            = PluginMydashboardColor::getColors(2);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode([__("Respected TTR", "mydashboard"), __("Not respected TTR", "mydashboard")]);
-
+            $format             = json_encode('%');
             $graph_datas = ['name'            => $name,
                             'ids'             => json_encode([]),
                             'data'            => $dataPieset,
                             'labels'          => $labelsPie,
                             'label'           => $title,
-                            'backgroundColor' => $backgroundPieColor];
+                            'backgroundColor' => $backgroundPieColor,
+                            'format'          => $format];
 
             $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, []);
 
@@ -429,13 +430,14 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $palette            = PluginMydashboardColor::getColors(2);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode([__("Respected TTO", "mydashboard"), __("Not respected TTO", "mydashboard")]);
-
+            $format             = json_encode('%');
             $graph_datas = ['name'            => $name,
                             'ids'             => json_encode([]),
                             'data'            => $dataPieset,
                             'labels'          => $labelsPie,
                             'label'           => $title,
-                            'backgroundColor' => $backgroundPieColor];
+                            'backgroundColor' => $backgroundPieColor,
+                            'format'          => $format];
 
             $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, []);
 
@@ -822,6 +824,27 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
             $is_ticket         = " AND `glpi_itilsolutions`.`itemtype` = 'Ticket'";
 
+            $total             = 0;
+            $query_tot = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_itilsolutions`
+                        ON (`glpi_itilsolutions`.`items_id` = `glpi_tickets`.`id`)
+                        LEFT JOIN `glpi_solutiontypes`
+                        ON (`glpi_solutiontypes`.`id` = `glpi_itilsolutions`.`solutiontypes_id`)
+                        WHERE $is_deleted $is_ticket $type_criteria ";
+            $query_tot .= $entities_criteria
+                          . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                      AND `glpi_itilsolutions`.`solutiontypes_id` > 0
+                      GROUP BY `glpi_solutiontypes`.`id`";
+
+            $result_tot = $DB->query($query_tot);
+            $nb_tot     = $DB->numrows($result_tot);
+            if ($nb_tot) {
+               while ($tot = $DB->fetchArray($result_tot)) {
+                  $total += $tot['nb'];
+               }
+            }
+
             $query = "SELECT DISTINCT
                            `glpi_solutiontypes`.`name` AS name,
                            `glpi_solutiontypes`.`id` AS solutiontypes_id,
@@ -847,9 +870,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             if ($nb) {
                while ($data = $DB->fetchArray($result)) {
                   $name_solution[] = $data['name'];
-                  //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
-                  $datas[]       = intval($data['nb']);
-                  $tabsolution[] = $data['solutiontypes_id'];
+                  $datas[]         = Html::formatNumber(($data['nb'] * 100) / $total);
+                  $tabsolution[]   = $data['solutiontypes_id'];
                }
             }
             $widget = new PluginMydashboardHtml();
@@ -862,13 +884,15 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($name_solution);
             $tabsolutionset     = json_encode($tabsolution);
+            $format             = json_encode('%');
 
             $graph_datas = ['name'            => $name,
                             'ids'             => $tabsolutionset,
                             'data'            => $dataPieset,
                             'labels'          => $labelsPie,
                             'label'           => $title,
-                            'backgroundColor' => $backgroundPieColor];
+                            'backgroundColor' => $backgroundPieColor,
+                            'format'          => $format];
 
             $graph = PluginMydashboardPieChart::launchDonutGraph($graph_datas, []);
 
@@ -1038,13 +1062,15 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $palette            = PluginMydashboardColor::getColors(2);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode([__("Satisfy percent", "mydashboard"), __("Not satisfy percent", "mydashboard")]);
+            $format             = json_encode('%');
 
             $graph_datas = ['name'            => $name,
                             'ids'             => json_encode([]),
                             'data'            => $dataPieset,
                             'labels'          => $labelsPie,
                             'label'           => $title,
-                            'backgroundColor' => $backgroundPieColor];
+                            'backgroundColor' => $backgroundPieColor,
+                            'format'          => $format];
 
             $graph = PluginMydashboardPieChart::launchPolarAreaGraph($graph_datas, []);
 
@@ -1201,6 +1227,24 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $type_criteria     = $crit['type'];
             $entities_criteria = $crit['entities_id'];
             $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
+            $total             = 0;
+            $query_tot = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
+                        FROM `glpi_tickets`
+                        LEFT JOIN `glpi_requesttypes`
+                        ON (`glpi_requesttypes`.`id` = `glpi_tickets`.`requesttypes_id`)
+                        WHERE $is_deleted $type_criteria ";
+            $query_tot .= $entities_criteria
+                          . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                      AND `glpi_tickets`.`requesttypes_id` > 0
+                      GROUP BY `glpi_requesttypes`.`id`";
+
+            $result_tot = $DB->query($query_tot);
+            $nb_tot     = $DB->numrows($result_tot);
+            if ($nb_tot) {
+               while ($tot = $DB->fetchArray($result_tot)) {
+                  $total += $tot['nb'];
+               }
+            }
 
             $query = "SELECT DISTINCT
                            `glpi_requesttypes`.`name` AS name,
@@ -1229,8 +1273,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                   } else {
                      $name_requesttypes[] = $data['name'];
                   }
-                  //                  $datas[]       = Html::formatNumber(($data['nb']*100)/$total);
-                  $datas[]      = intval($data['nb']);
+                  $datas[]      = Html::formatNumber(($data['nb'] * 100) / $total);
                   $tabrequest[] = $data['requesttypes_id'];
                }
             }
@@ -1244,13 +1287,14 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($name_requesttypes);
             $tabrequestset      = json_encode($tabrequest);
-
+            $format             = json_encode('%');
             $graph_datas = ['name'            => $name,
                             'ids'             => $tabrequestset,
                             'data'            => $dataPieset,
                             'labels'          => $labelsPie,
                             'label'           => $title,
-                            'backgroundColor' => $backgroundPieColor];
+                            'backgroundColor' => $backgroundPieColor,
+                            'format'          => $format];
 
             $graph = PluginMydashboardPieChart::launchDonutGraph($graph_datas, []);
 

@@ -121,7 +121,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -145,6 +145,11 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                     datalabels: {
+                      formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },
                      color: 'white',
                    },
                    labels: {
@@ -227,7 +232,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -251,6 +256,11 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                     datalabels: {
+                       formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },
                      color: 'white',
                    },
                    labels: {
@@ -325,7 +335,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $label           = $graph_datas['label'];
       $labels          = $graph_datas['labels'];
       $backgroundColor = $graph_datas['backgroundColor'];
-      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : "";
+      $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias  = json_encode($graph_criterias);
 
       $graph = "<script type='text/javascript'>
@@ -350,23 +360,16 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                     datalabels: {
-                        formatter: (value, ctx) => {
-                           let datasets = ctx.chart.data.datasets;
-                           let display = value + format;
-                           return display;
-                        },
+                        formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },
                         color: 'white',
                         labels: {
                           color: 'white'
                       }
                    },
-                   labels: {
-                     render: 'value',
-//                     fontSize: 14,
-//                     fontStyle: 'bold',
-                     fontColor: '#fff',
-//                     fontFamily: 'Lucida Console, Monaco, monospace'
-                   }
                 },
                  responsive: true,
                  maintainAspectRatio: true,
