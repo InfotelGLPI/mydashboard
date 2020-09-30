@@ -130,7 +130,8 @@ function plugin_init_mydashboard() {
             Plugin::registerClass('PluginMydashboardHTMLEditor', ['addtabon' => 'PluginMydashboardCustomswidget']);
 
          }
-
+         $PLUGIN_HOOKS['pre_item_purge']['mydashboard'] = ['Reminder' => ['PluginMydashboardItilAlert',
+                                                                       'purgeAlerts']];
       }
       $PLUGIN_HOOKS['post_init']['mydashboard'] = 'plugin_mydashboard_postinit';
    }

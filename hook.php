@@ -446,6 +446,10 @@ function plugin_mydashboard_getDatabaseRelations() {
    return ["glpi_groups" => [
       'glpi_plugin_mydashboard_stocktickets' => "groups_id",
    ],
+           "glpi_reminders" => [
+              'glpi_plugin_mydashboard_itilalerts' => "reminders_id",
+              'glpi_plugin_mydashboard_alerts' => "reminders_id",
+           ],
    ];
 }
 
