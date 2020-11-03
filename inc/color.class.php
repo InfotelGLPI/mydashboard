@@ -58,11 +58,13 @@ class PluginMydashboardColor {
    }
 
    /**
-    * @param $nb_value
+    * @param     $nb_value
+    *
+    * @param int $pref
     *
     * @return array
     */
-   static function getPalette($pref = 1, $nb_value) {
+   static function getPalette($nb_value, $pref = 1) {
 
       if ($pref == 2) {
          $colors = ['#208e3d', '#fff745', '#ffa500', '#ed5953', '#ed231c',
@@ -114,6 +116,7 @@ class PluginMydashboardColor {
    }
 
    /**
+    * @param int $nb_value
     * @param int $index
     *
     * @return array
@@ -121,7 +124,7 @@ class PluginMydashboardColor {
    static function getColors($nb_value = 20, $index = 1) {
 
       $pref   = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
-      $colors = self::getPalette($pref, $nb_value);
+      $colors = self::getPalette($nb_value, $pref);
       //fill colors on size index
       $palette = [];
       $i       = 0;

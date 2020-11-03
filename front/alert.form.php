@@ -26,15 +26,20 @@
 
 include('../../../inc/includes.php');
 
+$alert = new PluginMydashboardAlert();
+
 if (isset($_POST['update'])) {
    if (isset($_POST['id'])) {
-      $alert = new PluginMydashboardAlert();
       if ($_POST['id'] == -1) {
          unset($_POST['id']);
          $alert->add($_POST);
       } else {
          $alert->update($_POST);
       }
+   }
+} else if (isset($_POST['delete'])) {
+   if (isset($_POST['id'])) {
+      $alert->delete($_POST, true);
    }
 }
 Html::back();

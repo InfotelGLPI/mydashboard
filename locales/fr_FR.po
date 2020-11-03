@@ -4,8 +4,6 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Mathieu Templier <mathieu.templier@infotel.com>, 2019
-# Kevin HAINRY <kevin.hainry@infotel.com>, 2019
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # 
 #, fuzzy
@@ -14,7 +12,7 @@ msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-20 14:17+0200\n"
-"PO-Revision-Date: 2016-07-28 07:50+0000\n"
+"PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2020\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
 "MIME-Version: 1.0\n"

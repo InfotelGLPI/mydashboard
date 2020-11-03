@@ -30,7 +30,8 @@
 class PluginMydashboardAlert extends CommonDBTM {
 
 
-   static $types = ['Reminder', 'Problem', 'Change', 'PluginEventsmanagerEvent','PluginReleasesRelease'];
+   static $types = ['Reminder', 'Problem', 'Change', 'PluginEventsmanagerEvent', 'PluginReleasesRelease'];
+
    /**
     * PluginMydashboardAlert constructor.
     *
@@ -51,21 +52,21 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string|translated
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-//      if ($item->getType() == 'Reminder'
-//          || $item->getType() == 'Problem'
-//          || $item->getType() == 'Change'
-//          || $item->getType() == 'PluginEventsmanagerEvent'
-//          || $item->getType() == 'PluginReleasesRelease') {
-//         return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
-//      }
-      if(in_array( $item->getType(),self::getTypes())){
+      //      if ($item->getType() == 'Reminder'
+      //          || $item->getType() == 'Problem'
+      //          || $item->getType() == 'Change'
+      //          || $item->getType() == 'PluginEventsmanagerEvent'
+      //          || $item->getType() == 'PluginReleasesRelease') {
+      //         return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
+      //      }
+      if (in_array($item->getType(), self::getTypes())) {
          return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
       }
       return '';
    }
 
    /**
-    * @param bool        $withtemplate
+    * @param bool $withtemplate
     *
     * @return array of allowed type
     */
@@ -1670,6 +1671,41 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
             $wl .= "</div>";
             $wl .= "</div>";
+
+            $iterator = $DB->request([
+                                        'FIELDS' => 'documents_id',
+                                        'FROM'   => 'glpi_documents_items',
+                                        'WHERE'  => [
+                                           'items_id' => $row["id"],
+                                           'itemtype' => 'Reminder'
+                                        ]
+                                     ]);
+
+            $numrows = count($iterator);
+
+            if ($numrows > 0) {
+               $wl .= "<div class=\"bt-row\">";
+
+               $wl .= "<div class=\"form-sc-group\">";
+               $wl .= "<label class=\"bt-col-md-11 control-label\">";
+               $wl .= "<div id='display-sc'>";
+
+               $j = 0;
+
+               while ($docs = $iterator->next()) {
+                  $doc = new Document();
+                  $doc->getFromDB($docs["documents_id"]);
+                  $wl .= $doc->getDownloadLink();
+                  $j++;
+                  if ($j > 1) {
+                     $wl .= "<br>";
+                  }
+               }
+
+               $wl .= "</div>";
+               $wl .= "</label>";
+               $wl .= "</div>";
+            }
             $wl .= "</li>";
 
          }
@@ -1764,10 +1800,48 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
             $wl .= "</div>";
             $wl .= "</div>";
+
+            $iterator = $DB->request([
+                                        'FIELDS' => 'documents_id',
+                                        'FROM'   => 'glpi_documents_items',
+                                        'WHERE'  => [
+                                           'items_id' => $row["id"],
+                                           'itemtype' => 'Reminder'
+                                        ]
+                                     ]);
+
+            $numrows = count($iterator);
+
+            if ($numrows > 0) {
+               $wl .= "<div class=\"bt-row\">";
+
+               $wl .= "<div class=\"form-sc-group\">";
+               $wl .= "<label class=\"bt-col-md-11 control-label\">";
+               $wl .= "<div id='display-sc'>";
+
+               $j = 0;
+
+               while ($docs = $iterator->next()) {
+                  $doc = new Document();
+                  $doc->getFromDB($docs["documents_id"]);
+                  $wl .= $doc->getDownloadLink();
+                  $j++;
+                  if ($j > 1) {
+                     $wl .= "<br>";
+                  }
+               }
+
+               $wl .= "</div>";
+               $wl .= "</label>";
+               $wl .= "</div>";
+            }
+
             $wl .= "</li>";
          }
          $wl .= "</ul>";
          $wl .= "</div>";
+
+
          if ($nb) {
             $wl .= "<script type='text/javascript'>
                   $(function() {
@@ -1862,7 +1936,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl    .= "<div class=\"bt-col-xs-3 center alert-title-div\">";
             $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
             $style = "color:" . $config->getField('impact_' . $row['impact']);
-            $wl    .= "<i style='$style' class='fa $class fa-alert-5'></i>";
+            $wl    .= "<i style='$style' class='fas $class fa-alert-5'></i>";
 
             $wl .= "</div>";
 
@@ -1887,6 +1961,40 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "</div>";
             $wl .= "</div>";
 
+            $iterator = $DB->request([
+                                        'FIELDS' => 'documents_id',
+                                        'FROM'   => 'glpi_documents_items',
+                                        'WHERE'  => [
+                                           'items_id' => $row["id"],
+                                           'itemtype' => 'Reminder'
+                                        ]
+                                     ]);
+
+            $numrows = count($iterator);
+
+            if ($numrows > 0) {
+               $wl .= "<div class=\"bt-row\">";
+
+               $wl .= "<div class=\"form-sc-group\">";
+               $wl .= "<label class=\"bt-col-md-11 control-label\">";
+               $wl .= "<div id='display-sc'>";
+
+               $j = 0;
+
+               while ($docs = $iterator->next()) {
+                  $doc = new Document();
+                  $doc->getFromDB($docs["documents_id"]);
+                  $wl .= $doc->getDownloadLink();
+                  $j++;
+                  if ($j > 1) {
+                     $wl .= "<br>";
+                  }
+               }
+
+               $wl .= "</div>";
+               $wl .= "</label>";
+               $wl .= "</div>";
+            }
             $wl .= "</li>";
          }
          $wl .= "</ul>";
@@ -2032,7 +2140,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $div .= "<div class='bt-row weather_public_block'>";
       $div .= "<div class='center'><h3>" . PluginMydashboardConfig::displayField($config, 'title_alerts_widget') . "</h3></div>";
       $div .= "<div class=\"bt-col-xs-3 right \">";
-      $div .= "<i style='$style' class='fa $class fa-alert-4'></i>";
+      $div .= "<i style='$style' class='fas $class fa-alert-4'></i>";
       $div .= "</div>";
       $div .= "<div class=\"bt-col-xs-8 alert-title-div\" style=\"margin-top: 30px;\">";
       $div .= "<div class='weather_msg'>";

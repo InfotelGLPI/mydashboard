@@ -38,12 +38,12 @@ class PluginMydashboardItilAlert extends CommonDBTM {
       $items_id = $item->getID();
       $item->getFromDB($items_id);
       $itemtype = $item->getType();
-      $this->getFromDBByCrit(['items_id' => $items_id, 'itemtype' => $itemtype]);
-
+      $this->getFromDBByCrit(['items_id' => $items_id,
+                              'itemtype' => $itemtype]);
 
       $reminder = new Reminder();
 
-      if (!isset($this->fields['reminders_id'])) {
+      if (!isset($this->fields['reminders_id']) || $this->fields['reminders_id']== 0) {
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<th>" . PluginMydashboardMenu::getTypeName(2) . "</th>";
@@ -72,7 +72,8 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          $reminders_id = $this->fields['reminders_id'];
       }
 
-      if (isset($this->fields['reminders_id'])) {
+      if (isset($this->fields['reminders_id'])
+          && $this->fields['reminders_id'] > 0) {
          $reminder->getFromDB($reminders_id);
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr>";
@@ -156,10 +157,18 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          echo "</td></tr>";
 
          if (Session::haveRight("reminder_public", UPDATE)) {
-            echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
             echo Html::hidden("id", ['value' => $id]);
             echo Html::hidden("reminders_id", ['value' => $reminders_id]);
+            echo "<tr class='tab_bg_1 center'><td>";
+            if ($id > 0) {
+               echo Html::submit(_sx('button', 'Update'), ['name' => 'update']);
+            } else {
+               echo Html::submit(_sx('button', 'Add'), ['name' => 'update']);
+            }
+            echo "</td><td>";
+            if ($id > 0) {
+               echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete']);
+            }
             echo "</td></tr>";
          }
          echo "</table>";
@@ -167,5 +176,14 @@ class PluginMydashboardItilAlert extends CommonDBTM {
 
          $reminder->showVisibility();
       }
+   }
+
+   static function purgeAlerts(Reminder $reminder) {
+
+      $alert = new PluginMydashboardAlert();
+      $alert->deleteByCriteria(['reminders_id' => $reminder->getField("id")]);
+
+      $itilalert = new self();
+      $itilalert->deleteByCriteria(['reminders_id' => $reminder->getField("id")]);
    }
 }
