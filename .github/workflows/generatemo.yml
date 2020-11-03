@@ -1,0 +1,37 @@
+name: Generate MO
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - '**.po'
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs: 
+  run:
+    
+    name: Generate mo
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Checkout repo
+      uses: actions/checkout@v2 
+      
+    - name: Setup Perl environment
+      # You may pin to the exact commit or the version.
+      # uses: shogo82148/actions-setup-perl@8d2e3d59a9516b785ed32169d48a4888eaa9b514
+      uses: shogo82148/actions-setup-perl@v1.7.2
+    - name: msgfmt
+      # You may pin to the exact commit or the version.
+      # uses: whtsky/msgfmt-action@6b2181f051b002182d01a1e1f1aff216230c5a4d
+      uses: whtsky/msgfmt-action@20190305
+    - name: Generate mo
+      run:  perl tools/update_mo.pl;
+
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v5.1.0
+      with:
+       
+        message: "Generate mo"
+    - name: Push changes
+ 
+      uses: actions-go/push@v1
+  
