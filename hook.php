@@ -435,10 +435,6 @@ function plugin_mydashboard_postinit() {
 function plugin_mydashboard_display_login() {
    $alerts = new PluginMydashboardAlert();
    echo $alerts->getAlertSummary(1);
-   echo "<br>";
-   echo "<div class='red'>";
-   echo $alerts->getMaintenanceMessage(1);
-   echo "</div>";
 }
 
 // Define dropdown relations

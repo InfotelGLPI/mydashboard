@@ -28,10 +28,10 @@
    text-align: center;
 }
 
-#maint-div {
+ {
    text-align: left;
    /*margin: 10px 1px 30px 30px;*/
-   min-height: 150px;
+   /*min-height: 150px;*/
 }
 
 .maint-color {
@@ -39,10 +39,16 @@
    color: #D4D7DA;
 }
 
-#alert-div {
+#alert-div,
+#maint-div {
    text-align: left;
    /*margin: 10px 1px 30px 30px;*/
    /*min-height: 150px;*/
+}
+
+.alert-div,
+.maint-div {
+   position: relative !important;
 }
 
 .alert-title-div {
@@ -61,9 +67,7 @@
    font-style: italic;
 }
 
-.alert-div {
-   position: relative !important;
-}
+
 
 .fa-alert-orange {
    color: orange;
@@ -148,7 +152,7 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_header {
-   margin-top: -8px;
+   /*margin-top: -8px;*/
 }
 
 .plugin_mydashboard_header_title {

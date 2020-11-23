@@ -1603,7 +1603,9 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    static function getMaintenanceMessage($public = false) {
       if (self::countForAlerts($public, 1) > 0) {
+         echo "<div class='red'>";
          echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
+         echo "</div>";
       }
    }
 
@@ -1654,19 +1656,28 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          $wl .= "<div id='maint-div'>";
          $wl .= "<ul>";
+         $rand = mt_rand();
          while ($row = $DB->fetchArray($result)) {
             $note = new Reminder();
             $note->getFromDB($row["id"]);
             $wl .= "<li>";
             $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \">";
-            $wl .= "<i class='fas fa-exclamation-triangle fa-alert-5 fa-alert-orange' aria-hidden='true'></i>";
+            $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \" style=\"margin-right: 20px;\">";
+            $wl .= "<i class='fas fa-exclamation-triangle fa-alert-5 fa-alert-orange'></i>";
             $wl .= "</div>";
             $wl .= "<div class=\"bt-col-xs-8 alert-title-div \" style=\"margin-top: 30px;\">";
             $wl .= "<h3>";
+            $wl   .= "<div id='maint$rand'>";
+            $wl   .= "<span class='left'>";
             $wl .= ReminderTranslation::getTranslatedValue($note, 'name');
-            $wl .= "</h3>";
+            $wl   .= "</span>";
+            $wl   .= "</div>";
+            $wl   .= "</h3>";
+
             $wl .= "</div>";
+            $wl .= "</div>";
+
+            $wl .= "<div class='bt-row'>";
             $wl .= "<div class=\"bt-col-xs-12 alert-content-div \">";
             $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
             $wl .= "</div>";
@@ -2034,11 +2045,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string
     */
    function getAlertSummary($public = 0, $force = 0) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
-      echo Html::css("/public/lib/base.css");
-      echo Html::css("/plugins/mydashboard/css/mydashboard.css");
-      echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
       $now = date('Y-m-d H:i:s');
 
       $restrict_user = '1';
@@ -2078,9 +2086,42 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $wl     = "";
       $result = $DB->query($query);
-      $nb     = $DB->numrows($result);
 
-      if ($nb) {
+      $nb     = $DB->numrows($result);
+      $nb_maintenance = self::countForAlerts($public, 1);
+      if ($nb || $nb_maintenance > 0) {
+
+         $wl .= Html::css("/public/lib/base.css");
+         $wl .= Html::css("/plugins/mydashboard/css/mydashboard.css");
+         $wl .= Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
+
+         $css_file = GLPI_ROOT . "/plugins/mydashboard/css/info.css";
+         if (file_exists($css_file) && $public == 1) {
+            $wl .= Html::css("/plugins/mydashboard/css/info.css");
+            $wl .= "<div id='info_img'>&nbsp;</div>";
+            $wl .= "<div class='bt-row info_weather_public_block'>";
+         } else {
+            $wl .= "<div class='bt-row weather_public_block'>";
+         }
+         $min = 160 + $nb * 20;
+         if ($nb > 0 && $nb_maintenance > 0) {
+            $min = $min + 60;
+         }
+
+         $min = $min . 'px';
+         $wl  .= "<script type='text/javascript'>
+            $(document).ready( function() {
+                $('#form-login').css('min-height', '$min');
+            });
+            </script>";
+
+         if ($nb > 1 || ($nb > 0 && $nb_maintenance > 0)) {
+            $wl  .= "<script type='text/javascript'>
+            $(document).ready( function() {
+                $('#form-login').css('margin-top', '60px');
+            });
+            </script>";
+         }
          while ($row = $DB->fetchArray($result)) {
 
             if ($row['impact'] == 1) {
@@ -2112,11 +2153,27 @@ class PluginMydashboardAlert extends CommonDBTM {
          } else if (!empty($f1)) {
             $wl .= $this->displayContent('1', $list, $public);
          }
+
+         //maintenance message
+         if ($nb_maintenance > 0) {
+            $wl .= "<div class='red bt-col-xs-11 alert-title-div red '>";
+            $wl .= __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
+            $wl .= "</div>";
+         }
+         $wl .= "</div>";
       }
+
       if (!$nb && ($public == 0 || $force == 1)) {
          $wl .= $this->displayContent('1', [], 0);
       }
 
+      $css_file = GLPI_ROOT . "/plugins/mydashboard/css/hideinfo.css";
+      if (file_exists($css_file)
+          && !$nb
+          && $nb_maintenance == 0
+          && $public == 1) {
+         $wl .= Html::css("/plugins/mydashboard/css/hideinfo.css");
+      }
       return $wl;
    }
 
@@ -2129,7 +2186,7 @@ class PluginMydashboardAlert extends CommonDBTM {
     */
    private
    function displayContent($impact, $list = [], $public = 0) {
-
+      global $CFG_GLPI;
       $div    = "";
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
@@ -2137,17 +2194,16 @@ class PluginMydashboardAlert extends CommonDBTM {
       $class = "plugin_mydashboard_fa-thermometer-" . ($impact - 1);
       $style = "color:" . $config->getField('impact_' . $impact);
 
-      $div .= "<div class='bt-row weather_public_block'>";
       $div .= "<div class='center'><h3>" . PluginMydashboardConfig::displayField($config, 'title_alerts_widget') . "</h3></div>";
       $div .= "<div class=\"bt-col-xs-3 right \">";
       $div .= "<i style='$style' class='fas $class fa-alert-4'></i>";
       $div .= "</div>";
-      $div .= "<div class=\"bt-col-xs-8 alert-title-div\" style=\"margin-top: 30px;\">";
+      $div .= "<div class=\"bt-col-xs-7 alert-title-div\">";
       $div .= "<div class='weather_msg'>";
       $div .= $this->getMessage($list, $public);
       $div .= "</div>";
       $div .= "</div>";
-      $div .= "</div>";
+
       return $div;
    }
 

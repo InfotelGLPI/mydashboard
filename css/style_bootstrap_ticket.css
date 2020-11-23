@@ -489,7 +489,7 @@ a.label:focus {
     padding: 10px 15px;
     margin-bottom: -1px;
     background-color: #fff;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
 }
 .list-group-item:first-child {
     border-top-left-radius: 4px;
@@ -1229,9 +1229,9 @@ input[type="button"].btn-block {
   width: 100%;
 }
 
-.btn span.fa {
+.btn span.glyphicon {
    opacity: 0;
 }
-.btn.active span.fa {
+.btn.active span.glyphicon {
    opacity: 1;
 }
