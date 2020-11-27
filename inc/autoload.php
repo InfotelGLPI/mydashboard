@@ -35,7 +35,7 @@ class PluginMydasboardAutoloader {
    }
 
    public function register() {
-      spl_autoload_register([$this, 'autoload'], false, true);
+      spl_autoload_register([$this, 'autoload'], true, true);
    }
 
    /**
