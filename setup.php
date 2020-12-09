@@ -38,8 +38,8 @@ function plugin_init_mydashboard() {
    $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
 
    $PLUGIN_HOOKS['add_css']['mydashboard'] = [
-      "lib/sdashboard/sDashboard.css",
       "css/mydashboard.css",
+      "css/jquery.newsTicker.css",
    ];
 
    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
@@ -48,7 +48,8 @@ function plugin_init_mydashboard() {
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
       "scripts/mydashboard.js",
-      "lib/vticker/vticker.js"
+
+      "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
    ];
 
    $PLUGIN_HOOKS["javascript"]['mydashboard'] = [

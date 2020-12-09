@@ -1022,6 +1022,14 @@ div.dt-button-background {
    padding-bottom: 30px;
 }
 
+.ind-widget-validate {
+   background: #FFA830;
+   padding-top: 15px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
+}
+
 .dem-widget-process {
    background: #337AB7;
    padding-top: 15px;

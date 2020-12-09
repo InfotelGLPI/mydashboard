@@ -124,6 +124,11 @@ class PluginMydashboardHelper {
       return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
    }
 
+   /**
+    * @param $params
+    *
+    * @return string
+    */
    static function getGraphHeader($params) {
 
       $name  = $params['name'];
@@ -134,7 +139,7 @@ class PluginMydashboardHelper {
          $graph .= "<div class='bt-col-md-12 left'>";
       }
       if (count($params["criterias"]) > 0) {
-         $graph .= self::getForm($params["widgetId"], $params["onsubmit"], $params["opt"], $params["criterias"]);
+         $graph .= self::getForm($params["widgetId"], $params["opt"], $params["criterias"], $params["onsubmit"]);
       }
       $graph .= "</div>";
       if ($params["export"] == true) {
@@ -226,6 +231,11 @@ class PluginMydashboardHelper {
    }
 
 
+   /**
+    * @param $params
+    *
+    * @return string
+    */
    static function getGraphFooter($params) {
 
       $graph = "<div class='bt-row'>";
@@ -328,7 +338,7 @@ class PluginMydashboardHelper {
          if (isset($params['opt']['requesters_groups_id'])) {
             $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
          } else if ($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php") {
-            $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $opt, $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID());
+            $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID(), $opt);
             $opt['requesters_groups_id'] = $groups_id;
          } else {
             $opt['requesters_groups_id'] = [];
@@ -640,9 +650,11 @@ class PluginMydashboardHelper {
     * Get a form header, this form header permit to update data of the widget
     * with parameters of this form
     *
-    * @param int  $widgetId
-    * @param      $gsid
-    * @param bool $onsubmit
+    * @param int   $widgetId
+    * @param       $gsid
+    * @param bool  $onsubmit
+    *
+    * @param array $opt
     *
     * @return string , like '<form id=...>'
     */
@@ -759,7 +771,15 @@ class PluginMydashboardHelper {
       return $form;
    }
 
-   static function getForm($widgetId, $onsubmit = false, $opt, $criterias) {
+   /**
+    * @param       $widgetId
+    * @param false $onsubmit
+    * @param       $opt
+    * @param       $criterias
+    *
+    * @return string
+    */
+   static function getForm($widgetId, $opt, $criterias, $onsubmit = false) {
 
       $gsid = PluginMydashboardWidget::getGsID($widgetId);
 
@@ -1187,6 +1207,9 @@ class PluginMydashboardHelper {
       return $form . self::getFormFooter();
    }
 
+   /**
+    * @return string
+    */
    static function getFormFooter() {
 
       $form = "</form>";
@@ -1443,6 +1466,11 @@ class PluginMydashboardHelper {
     * @return string
     *
     */
+   /**
+    * @param null $selected
+    *
+    * @return int|string
+    */
    static function YearDropdown($selected = null) {
 
       $year = date("Y") - 3;
@@ -1468,6 +1496,12 @@ class PluginMydashboardHelper {
     * @return string
     *
     */
+   /**
+    * @param string $name
+    * @param null   $selected
+    *
+    * @return int|string
+    */
    static function monthDropdown($name = "month", $selected = null) {
 
       $monthsarray = Toolbox::getMonthsOfYearArray();
@@ -1479,7 +1513,16 @@ class PluginMydashboardHelper {
    }
 
 
-   static public function getRequesterGroup($prefered_group, $opt, $params = false, $entity, $userid) {
+   /**
+    * @param       $prefered_group
+    * @param       $opt
+    * @param false $params
+    * @param       $entity
+    * @param       $userid
+    *
+    * @return array|mixed
+    */
+   static public function getRequesterGroup($prefered_group, $opt, $entity, $userid, $params = false) {
       global $DB;
 
       $dbu = new DbUtils();

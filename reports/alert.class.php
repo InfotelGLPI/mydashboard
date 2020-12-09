@@ -1613,12 +1613,11 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string
     */
    function getMaintenanceList($itilcategories_id = []) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       $now = date('Y-m-d H:i:s');
       $wl  = "";
 
-      $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
       $restrict_user = '1';
       // Only personal on central so do not keep it
       //      if (Session::getCurrentInterface() == 'central') {
@@ -1654,88 +1653,81 @@ class PluginMydashboardAlert extends CommonDBTM {
       $nb     = $DB->numrows($result);
       if ($nb) {
 
-         $wl .= "<div id='maint-div'>";
-         $wl .= "<ul>";
-         $rand = mt_rand();
+         $wl               .= '<div id="nt_maint-container">';
+         $wl               .= '<ul id="nt_maint">';
+         $i                = 1;
+         $firstdescription = "";
+
          while ($row = $DB->fetchArray($result)) {
             $note = new Reminder();
             $note->getFromDB($row["id"]);
-            $wl .= "<li>";
-            $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-3 center alert-title-div \" style=\"margin-right: 20px;\">";
-            $wl .= "<i class='fas fa-exclamation-triangle fa-alert-5 fa-alert-orange'></i>";
-            $wl .= "</div>";
-            $wl .= "<div class=\"bt-col-xs-8 alert-title-div \" style=\"margin-top: 30px;\">";
-            $wl .= "<h3>";
-            $wl   .= "<div id='maint$rand'>";
-            $wl   .= "<span class='left'>";
-            $wl .= ReminderTranslation::getTranslatedValue($note, 'name');
-            $wl   .= "</span>";
-            $wl   .= "</div>";
-            $wl   .= "</h3>";
 
-            $wl .= "</div>";
-            $wl .= "</div>";
+            $name = "<i class='fas fa-exclamation-triangle fa-alert-orange'></i>";
+            $name .= ReminderTranslation::getTranslatedValue($note, 'name');
 
-            $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-12 alert-content-div \">";
-            $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $iterator = $DB->request([
-                                        'FIELDS' => 'documents_id',
-                                        'FROM'   => 'glpi_documents_items',
-                                        'WHERE'  => [
-                                           'items_id' => $row["id"],
-                                           'itemtype' => 'Reminder'
-                                        ]
-                                     ]);
-
-            $numrows = count($iterator);
-
-            if ($numrows > 0) {
-               $wl .= "<div class=\"bt-row\">";
-
-               $wl .= "<div class=\"form-sc-group\">";
-               $wl .= "<label class=\"bt-col-md-11 control-label\">";
-               $wl .= "<div id='display-sc'>";
-
-               $j = 0;
-
-               while ($docs = $iterator->next()) {
-                  $doc = new Document();
-                  $doc->getFromDB($docs["documents_id"]);
-                  $wl .= $doc->getDownloadLink();
-                  $j++;
-                  if ($j > 1) {
-                     $wl .= "<br>";
-                  }
-               }
-
-               $wl .= "</div>";
-               $wl .= "</label>";
-               $wl .= "</div>";
+            $style_title         = "text-align:center;color:orange";
+            $description         = ReminderTranslation::getTranslatedValue($note, 'text');
+            $cleaned_description = Html::entity_decode_deep($description);
+            if ($i == 1) {
+               $firstdescription = $cleaned_description;
             }
+            $i++;
+            $wl .= "<li style='$style_title' data-maint='" . $row["id"] . "'>";
+            $wl .= $name;
             $wl .= "</li>";
 
          }
          $wl .= "</ul>";
+         $wl .= "<div id='nt_maint-infos-container'>";
+         $wl .= "<div id='nt-infos-triangle'></div>";
+         $wl .= "<div id='nt_maint-infos' class='row'>";
+         $wl .= "<div class='col-xs-4 centered'>";
+         if ($nb > 1) {
+            $wl .= "<i class='fas fa-caret-left' id='nt_maint-prev'></i>";
+            $wl .= "<i class='fas fa-caret-right' id='nt_maint-next'></i>";
+         }
          $wl .= "</div>";
-         if ($nb) {
-            $wl .= "<script type='text/javascript'>
-                  $(function() {
-                     $('#maint-div').vTicker({
-                        speed: 500,
-                        pause: 6000,
-                        showItems: 1,
-                        padding: 10,
-                        animate: 'fade',
-                        mousePause: true,
-                        height: 0,
-                        direction: 'up'
+
+         $wl .= "<div class='col-xs-4'>";
+         $wl .= "<div class='infos-text' style='color:orange;'>";
+         $wl .= $firstdescription;
+         $wl .= "</div>";
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+         if ($nb > 1) {
+            $urlalert = $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/showalert.php';
+            $wl       .= "<script type='text/javascript'>
+                    var nt_maint = $('#nt_maint').newsTicker({
+                        row_height: 60,
+                        max_rows: 1,
+                        speed: 300,
+                        duration: 6000,
+                        prevButton: $('#nt_maint-prev'),
+                        nextButton: $('#nt_maint-next'),
+                        hasMoved: function() {
+                         $('#nt_maint-infos-container').fadeOut(200, function(){
+                               var maint_id = $('#nt_maint li:first').data('maint');
+                              $('#nt_maint-infos .infos-text').load('$urlalert?id='+maint_id);
+                              $(this).fadeIn(400);
+                             });
+                         },
+//                         pause: function() {
+//                           $('#nt_maint li i').removeClass('fa-play').addClass('fa-pause');
+//                         },
+//                         unpause: function() {
+//                         $('#nt_maint li i').removeClass('fa-pause').addClass('fa-play');
+//                         }
                      });
-                  });
+                     $('#nt_maint-infos').hover(function() {
+                         nt_maint.newsTicker('pause');
+                     }, function() {
+                         nt_maint.newsTicker('unpause');
+                     });
                </script>";
          }
       } else {
@@ -1749,16 +1741,57 @@ class PluginMydashboardAlert extends CommonDBTM {
    }
 
 
+   static function displayTickerDescription($id) {
+      global $DB;
+
+      $note = new Reminder();
+      $note->getFromDB($id);
+
+      $config = new PluginMydashboardConfig();
+      $config->getFromDB(1);
+
+      $alert = new self();
+      $alert->getFromDBByCrit(['reminders_id' => $id]);
+      if ($alert->fields['impact'] > 0) {
+         $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
+         echo "<span style='$style_description'>";
+      }
+      echo html_entity_decode(ReminderTranslation::getTranslatedValue($note, 'text'));
+      if ($alert->fields['impact'] > 0) {
+         echo "</span>";
+      }
+      $iterator = $DB->request([
+                                  'FIELDS' => 'documents_id',
+                                  'FROM'   => 'glpi_documents_items',
+                                  'WHERE'  => [
+                                     'items_id' => $id,
+                                     'itemtype' => 'Reminder'
+                                  ]
+                               ]);
+
+      $numrows = count($iterator);
+      if ($numrows > 0) {
+         $j = 0;
+         while ($docs = $iterator->next()) {
+            $doc = new Document();
+            $doc->getFromDB($docs["documents_id"]);
+            echo $doc->getDownloadLink();
+            $j++;
+            if ($j > 1) {
+               echo "<br>";
+            }
+         }
+      }
+   }
+
    /**
     * @return string
     */
    function getInformationList($itilcategories_id = []) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       $now = date('Y-m-d H:i:s');
       $wl  = "";
-
-      $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
       $restrict_user = '1';
       // Only personal on central so do not keep it
       //      if (Session::getCurrentInterface() == 'central') {
@@ -1795,78 +1828,85 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       if ($nb) {
 
-         $wl .= "<div id='info-div'>";
-         $wl .= "<ul>";
+         $wl               .= '<div id="nt_info-container">';
+         $wl               .= '<ul id="nt_info">';
+         $i                = 1;
+         $firstdescription = "";
+
          while ($row = $DB->fetchArray($result)) {
             $note = new Reminder();
             $note->getFromDB($row["id"]);
-            $wl .= "<li>";
-            $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-12 center \">";
-            $wl .= "<h3>";
-            $wl .= ReminderTranslation::getTranslatedValue($note, 'name');
-            $wl .= "</h3>";
-            $wl .= "</div>";
-            $wl .= "<div class=\"bt-col-xs-12 center \">";
-            $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
-            $wl .= "</div>";
-            $wl .= "</div>";
 
-            $iterator = $DB->request([
-                                        'FIELDS' => 'documents_id',
-                                        'FROM'   => 'glpi_documents_items',
-                                        'WHERE'  => [
-                                           'items_id' => $row["id"],
-                                           'itemtype' => 'Reminder'
-                                        ]
-                                     ]);
+            $name = "<i class='fas fa-info-circle'></i>";
+            $name .= ReminderTranslation::getTranslatedValue($note, 'name');
 
-            $numrows = count($iterator);
+            $style_title         = "text-align:center;color:black";
+            $description         = ReminderTranslation::getTranslatedValue($note, 'text');
+            $cleaned_description = Html::entity_decode_deep($description);
 
-            if ($numrows > 0) {
-               $wl .= "<div class=\"bt-row\">";
-
-               $wl .= "<div class=\"form-sc-group\">";
-               $wl .= "<label class=\"bt-col-md-11 control-label\">";
-               $wl .= "<div id='display-sc'>";
-
-               $j = 0;
-
-               while ($docs = $iterator->next()) {
-                  $doc = new Document();
-                  $doc->getFromDB($docs["documents_id"]);
-                  $wl .= $doc->getDownloadLink();
-                  $j++;
-                  if ($j > 1) {
-                     $wl .= "<br>";
-                  }
-               }
-
-               $wl .= "</div>";
-               $wl .= "</label>";
-               $wl .= "</div>";
+            if ($i == 1) {
+               $firstdescription = $cleaned_description;
             }
-
+            $i++;
+            $wl .= "<li style='$style_title' data-info='" . $row["id"] . "'>";
+            $wl .= $name;
             $wl .= "</li>";
          }
          $wl .= "</ul>";
+         $wl .= "<div id='nt_info-infos-container'>";
+         $wl .= "<div id='nt-infos-triangle'></div>";
+         $wl .= "<div id='nt_info-infos' class='row'>";
+         $wl .= "<div class='col-xs-4 centered'>";
+         if ($nb > 1) {
+            $wl .= "<i class='fas fa-caret-left' id='nt_info-prev'></i>";
+            $wl .= "<i class='fas fa-caret-right' id='nt_info-next'></i>";
+         }
+         $wl .= "</div>";
+
+         $wl .= "<div class='col-xs-4'>";
+         $wl .= "<div class='infos-text' style='color:black;'>";
+         $wl .= $firstdescription;
+         $wl .= "</div>";
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+
          $wl .= "</div>";
 
 
-         if ($nb) {
-            $wl .= "<script type='text/javascript'>
-                  $(function() {
-                     $('#info-div').vTicker({
-                        speed: 500,
-                        pause: 6000,
-                        showItems: 1,
-                        padding: 10,
-                        animate: false,
-                        mousePause: true,
-                        height: 0,
-                        direction: 'right'
+         if ($nb > 1) {
+            $urlalert = $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/showalert.php';
+            $wl       .= "<script type='text/javascript'>
+                    var nt_info = $('#nt_info').newsTicker({
+                        row_height: 60,
+                        max_rows: 1,
+                        speed: 300,
+                        duration: 6000,
+                        prevButton: $('#nt_info-prev'),
+                        nextButton: $('#nt_info-next'),
+                        hasMoved: function() {
+                         $('#nt_info-infos-container').fadeOut(200, function(){
+//                               $('#nt_info-infos .infos-text').html($('#nt_info li:first').data('info'));
+                              var info_id = $('#nt_info li:first').data('info');
+                              $('#nt_info-infos .infos-text').load('$urlalert?id='+info_id);
+
+                              $(this).fadeIn(400);
+                             });
+                         },
+//                         pause: function() {
+//                           $('#nt_info li i').removeClass('fa-play').addClass('fa-pause');
+//                         },
+//                         unpause: function() {
+//                           $('#nt_info li i').removeClass('fa-pause').addClass('fa-play');
+//                         }
                      });
-                  });
+                     $('#nt_info-infos').hover(function() {
+                         nt_info.newsTicker('pause');
+                     }, function() {
+                         nt_info.newsTicker('unpause');
+                     });
                </script>";
          }
       } else {
@@ -1887,14 +1927,13 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return string
     */
    function getAlertList($public = 0, $itilcategories_id = []) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       $config = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $now = date('Y-m-d H:i:s');
 
-      $wl            = "";
-      $wl            .= "<div class='weather_block visitedchildbg widgetrow'>";
+      $wl = "";
       $restrict_user = '1';
 
       $addwhere = "";
@@ -1910,6 +1949,8 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $query = "SELECT `glpi_reminders`.`id`,
                        `glpi_reminders`.`name`,
+                       `glpi_reminders`.`begin_view_date`,
+                       `glpi_reminders`.`end_view_date`,
                        `" . $this->getTable() . "`.`impact`
                    FROM `glpi_reminders` "
                . PluginMydashboardReminder::addVisibilityJoins()
@@ -1933,97 +1974,87 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       if ($nb) {
 
-         $wl .= "<div id='alert-div'>";
-         $wl .= "<ul class='alert-div'>";
-
+         $wl               .= '<div id="nt_alert-container">';
+         $wl               .= '<ul id="nt_alert">';
+         $i                = 1;
+         $firstdescription = "";
          while ($row = $DB->fetchArray($result)) {
 
             $note = new Reminder();
             $note->getFromDB($row["id"]);
 
-            $wl .= "<li>";
-
-            $wl    .= "<div class='bt-row'>";
-            $wl    .= "<div class=\"bt-col-xs-3 center alert-title-div\">";
             $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
-            $style = "color:" . $config->getField('impact_' . $row['impact']);
-            $wl    .= "<i style='$style' class='fas $class fa-alert-5'></i>";
+            $name  = "<i class='fas $class'></i>";
+            $name  .= ReminderTranslation::getTranslatedValue($note, 'name');
 
-            $wl .= "</div>";
+            $description = "";
+            //            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
+            $style_title       = "text-align: center;color:" . $config->getField('impact_' . $row['impact']);
+            $style_description = "color:" . $config->getField('impact_' . $row['impact']);
+            $description       .= "<span style='$style_description'>";
+            $description       .= ReminderTranslation::getTranslatedValue($note, 'text');
+            $description       .= "</span>";
 
-            $wl .= "<div class=\"bt-col-xs-8 alert-title-div\" style=\"margin-top: 30px;\">";
-            $wl .= "<h3>";
-
-            $rand = mt_rand();
-            $name = $row['name'];
-            $wl   .= "<div id='alert$rand'>";
-            $wl   .= "<span style='$style' class='left'>";
-            $wl   .= ReminderTranslation::getTranslatedValue($note, 'name');
-            $wl   .= "</span>";
-            $wl   .= "</div>";
-            $wl   .= "</h3>";
-
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "<div class='bt-row'>";
-            $wl .= "<div class=\"bt-col-xs-12 alert-content-div\">";
-            $wl .= Toolbox::getHtmlToDisplay(ReminderTranslation::getTranslatedValue($note, 'text'));
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $iterator = $DB->request([
-                                        'FIELDS' => 'documents_id',
-                                        'FROM'   => 'glpi_documents_items',
-                                        'WHERE'  => [
-                                           'items_id' => $row["id"],
-                                           'itemtype' => 'Reminder'
-                                        ]
-                                     ]);
-
-            $numrows = count($iterator);
-
-            if ($numrows > 0) {
-               $wl .= "<div class=\"bt-row\">";
-
-               $wl .= "<div class=\"form-sc-group\">";
-               $wl .= "<label class=\"bt-col-md-11 control-label\">";
-               $wl .= "<div id='display-sc'>";
-
-               $j = 0;
-
-               while ($docs = $iterator->next()) {
-                  $doc = new Document();
-                  $doc->getFromDB($docs["documents_id"]);
-                  $wl .= $doc->getDownloadLink();
-                  $j++;
-                  if ($j > 1) {
-                     $wl .= "<br>";
-                  }
-               }
-
-               $wl .= "</div>";
-               $wl .= "</label>";
-               $wl .= "</div>";
+            $cleaned_description = Html::entity_decode_deep($description);
+            if ($i == 1) {
+               $firstdescription = $cleaned_description;
             }
+            $i++;
+            $wl .= "<li style='$style_title' data-alert='" . $row["id"] . "'>";
+            $wl .= $name;
             $wl .= "</li>";
          }
          $wl .= "</ul>";
+         $wl .= "<div id='nt_alert-infos-container'>";
+         $wl .= "<div id='nt-infos-triangle'></div>";
+         $wl .= "<div id='nt_alert-infos' class='row'>";
+         $wl .= "<div class='col-xs-4 centered'>";
+         if ($nb > 1) {
+            $wl .= "<i class='fas fa-caret-left' id='nt_alert-prev'></i>";
+            $wl .= "<i class='fas fa-caret-right' id='nt_alert-next'></i>";
+         }
          $wl .= "</div>";
-         if ($nb) {
-            $wl .= "<script type='text/javascript'>
-                  $(function() {
-                     $('#alert-div').vTicker({
-                        speed: 500,
-                        pause: 6000,
-                        showItems: 1,
-                        padding: 10,
-                        animation: 'fade',
-                        mousePause: true,
-                        height: 0,
-                        direction: 'up'
+
+         $wl .= "<div class='col-xs-4'>";
+         $wl .= "<div class='infos-text'>";
+         $wl .= $firstdescription;
+         $wl .= "</div>";
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+
+         $wl .= "</div>";
+         if ($nb > 1) {
+            $urlalert = $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/showalert.php';
+            $wl       .= "<script type='text/javascript'>
+                     var nt_alert = $('#nt_alert').newsTicker({
+                        row_height: 60,
+                        max_rows: 1,
+                        speed: 300,
+                        duration: 6000,
+                        prevButton: $('#nt_alert-prev'),
+                        nextButton: $('#nt_alert-next'),
+                        hasMoved: function() {
+                         $('#nt_alert-infos-container').fadeOut(200, function(){
+                              var alert_id = $('#nt_alert li:first').data('alert');
+                              $('#nt_alert-infos .infos-text').load('$urlalert?id='+alert_id);
+                              $(this).fadeIn(400);
+                             });
+                         },
+//                         pause: function() {
+//                           $('#nt_alert li i').removeClass('fa-play').addClass('fa-pause');
+//                         },
+//                         unpause: function() {
+//                            $('#nt_alert li i').removeClass('fa-pause').addClass('fa-play');
+//                         }
                      });
-                  });
+                     $('#nt_alert-infos').hover(function() {
+                         nt_alert.newsTicker('pause');
+                     }, function() {
+                         nt_alert.newsTicker('unpause');
+                     });
                </script>";
          }
       } else {
@@ -2087,7 +2118,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $wl     = "";
       $result = $DB->query($query);
 
-      $nb     = $DB->numrows($result);
+      $nb             = $DB->numrows($result);
       $nb_maintenance = self::countForAlerts($public, 1);
       if ($nb || $nb_maintenance > 0) {
 
@@ -2116,7 +2147,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             </script>";
 
          if ($nb > 1 || ($nb > 0 && $nb_maintenance > 0)) {
-            $wl  .= "<script type='text/javascript'>
+            $wl .= "<script type='text/javascript'>
             $(document).ready( function() {
                 $('#form-login').css('margin-top', '60px');
             });

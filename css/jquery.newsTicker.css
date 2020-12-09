@@ -1,0 +1,127 @@
+/*
+NEWSTICKERS
+*/
+
+
+/* nt-title */
+
+#nt-title-container {
+    background: #F2F2F2;
+}
+
+#nt-title {
+}
+
+#nt-title li {
+    font-size: 28px;
+    color: #4E4E4E;
+    white-space: nowrap;
+    list-style: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* nt */
+
+#nt_maint,
+#nt_alert,
+#nt_info {
+    max-width: 620px;
+    margin: auto;
+}
+
+#nt_maint-container,
+#nt_alert-container,
+#nt_info-container {
+    text-align: center;
+    /*height: 300px;*/
+}
+
+#nt_maint-container i,
+#nt_alert-container i,
+#nt_info-container i {
+    font-size: 36px;
+    margin: 8px;
+    cursor: pointer;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -ms-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+#nt_maint-container i:hover,
+#nt_alert-container i:hover,
+#nt_info-container i:hover{
+    color: #333;
+}
+
+#nt_maint li,
+#nt_alert li,
+#nt_info li {
+    color: #f2f2f2;
+    background: #cccccc1f ;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 60px;
+    padding: 10px 16px 10px 16px;
+    line-height: 40px;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+}
+
+/*#nt_maint,*/
+/*#nt_alert li .state {*/
+/*    font-size: inherit;*/
+/*    margin: 0;*/
+/*}*/
+
+/*#nt_maint,*/
+/*#nt_alert span.hour {*/
+/*    font-weight: 700;*/
+/*}*/
+
+#nt-infos-triangle {
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 15px 16px 15px;
+    border-color: transparent transparent #cccccc1f  transparent;
+    margin: 6px auto 0;
+}
+
+#nt_maint-infos,
+#nt_alert-infos,
+#nt_info-infos {
+    max-width: 620px;
+    margin: auto;
+    padding-top: 12px;
+    color: #f2f2f2;
+    background: #cccccc1f ;
+}
+
+#nt_maint-infos .infos-hour,
+#nt_alert-infos .infos-hour,
+#nt_info-infos .infos-hour {
+    font-size: 50px;
+    font-weight: 700;
+}
+
+i#nt_main-next,
+i#nt_maint-prev,
+i#nt_alert-next,
+i#nt_alert-prev,
+i#nt_info-next,
+i#nt_info-prev {
+    color: #969292;
+    font-weight: 500;
+}
+
+.infos-text {
+    text-align: left;
+    font-size: 12px;
+    font-weight: normal;
+}

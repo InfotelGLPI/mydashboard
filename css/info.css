@@ -1,0 +1,32 @@
+#info_img {
+    background: url(../../../pics/logo_white.png) center no-repeat #2f85b1;
+    /*background: url(../../../pics/login_logo_glpi.png) center no-repeat #2f85b1;*/
+    height: 90px;
+    /*background-size: 50%;*/
+}
+
+.info_weather_public_block {
+    text-align: left;
+    padding-bottom: 10px;
+    margin-bottom: 1px;
+    color: #000;
+    font-size: 12px;
+    /*border-radius: 5px 10px 0 5px;*/
+    border: 1px solid #e6e6e6;
+    /*-webkit-border-radius: 8px;*/
+    /*-moz-border-radius: 8px;*/
+    /*border-radius: 8px;*/
+    background-color: #FFF;
+    /*width: 50%;*/
+    box-sizing: border-box;
+}
+
+.bt-row {
+    /* min-height: 120px; */
+    margin-right: unset;
+    margin-left: unset;
+    margin-top: unset;
+    /*-webkit-box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    box-sizing: border-box;
+}
