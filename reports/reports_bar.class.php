@@ -31,7 +31,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
    private       $options;
    private       $pref;
-   public static $reports = [1, 8, 15, 21, 23, 24, 35, 36, 37, 38, 39, 40, 41];
+   public static $reports = [1, 8, 15, 21, 23, 24, 35, 36, 37, 38, 39, 40, 41, 42];
 
    /**
     * PluginMydashboardReports_Bar constructor.
@@ -73,6 +73,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             //            $this->getType() . "39" => (($isDebug) ? "39 " : "") . __("Responsiveness over 12 rolling and pending by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "40" => (($isDebug) ? "40 " : "") . __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             $this->getType() . "41" => (($isDebug) ? "41 " : "") . __("Tickets solution types evolution", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
+            $this->getType() . "42" => (($isDebug) ? "42 " : "") . __("Solve delay and take into account of tickets", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
             ]
       ];
       return $widgets;
@@ -1007,12 +1008,17 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                   $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTickets) . ')';
                }
                $query_moreticket = "SELECT COUNT(*) AS Total,   
-                         `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS status
+                         `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS status,
+                         `glpi_plugin_moreticket_waitingtypes`.`completename` AS name
                           FROM `glpi_plugin_moreticket_waitingtickets`
-                          INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`
-                          INNER JOIN `glpi_plugin_moreticket_waitingtypes` ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`
-                          WHERE $is_deleted
+                          LEFT JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`
+                          LEFT JOIN `glpi_plugin_moreticket_waitingtypes` ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`
+                          WHERE `glpi_tickets`.`status` = " . CommonITILObject::WAITING . " 
+                          AND `glpi_plugin_moreticket_waitingtickets`.`date_end_suspension` IS NULL 
+                          AND `glpi_plugin_moreticket_waitingtickets`.`id` = (SELECT MAX(`id`) FROM glpi_plugin_moreticket_waitingtickets WHERE `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`)
+                          AND $is_deleted
                           $type_criteria
+                          $technician_groups_criteria
                           $moreTicketToShow
                           $entities_criteria
                           GROUP BY status";
@@ -1021,13 +1027,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $rows               = $DB->numrows($result_more_ticket);
                if ($rows) {
                   while ($ticket = $DB->fetchAssoc($result_more_ticket)) {
-                     foreach (self::getAllMoreTicketStatus() as $value => $names) {
-                        if ($ticket['status'] == $value) {
-                           $datas[]       = $ticket['Total'];
-                           $name_status[] = $names;
-                           $tabstatus[]   = 'moreticket_' . $ticket['status'];
-                        }
-                     }
+                     //foreach (self::getAllMoreTicketStatus() as $value => $names) {
+                     //   if ($ticket['status'] == $value) {
+                     $datas[]       = $ticket['Total'];
+                     $name_status[] = $ticket['name'];
+                     $tabstatus[]   = 'moreticket_' . $ticket['status'];
+                     //}
+                     //}
                   }
                }
             }
@@ -1817,6 +1823,104 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             return $widget;
             break;
+
+         case $this->getType() . "42" :
+            $name = 'reportLineLifeTimeAndTakenAccountAverageByMonthHelpdesk';
+
+            $lifetime           = __('Solve delay average (hour)', 'mydashboard');
+            $taken_into_account = __('Take into account average (hour)', 'mydashboard');
+
+            $criterias = ['entities_id',
+                          'is_recursive',
+                          'type',
+                          'year',
+                          'multiple_locations_id',
+                          'technicians_groups_id'];
+
+            $params = ["preferences" => $this->preferences,
+                       "criterias"   => $criterias,
+                       "opt"         => $opt];
+
+            $options = PluginMydashboardHelper::manageCriterias($params);
+
+            $opt  = $options['opt'];
+            $crit = $options['crit'];
+
+            $technician_group           = $opt['technicians_groups_id'];
+            $technician_groups_criteria = $crit['technicians_groups_id'];
+
+            $lifetime_avg_ticket = self::getLifetimeOrTakeIntoAccountTicketAverage($crit, $technician_groups_criteria);
+
+            $months_t = Toolbox::getMonthsOfYearArray();
+            $months   = [];
+            foreach ($months_t as $key => $month) {
+               $months[] = $month;
+            }
+
+            $dataset                         = [];
+            $avg_lifetime_ticket_data        = [];
+            $avg_takeintoaccount_ticket_data = [];
+
+            foreach ($lifetime_avg_ticket as $avg_tickets_d) {
+               if ($avg_tickets_d['nb'] > 0) {
+                  $avg_lifetime_ticket_data []        = round($avg_tickets_d['lifetime'] / $avg_tickets_d['nb'], 2);
+                  $avg_takeintoaccount_ticket_data [] = round($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb'], 2);
+               }
+            }
+
+            $avg_lifetime_ticket_data        = array_values($avg_lifetime_ticket_data);
+            $avg_takeintoaccount_ticket_data = array_values($avg_takeintoaccount_ticket_data);
+
+            $dataset[] = ["type"        => 'line',
+                          "label"       => $lifetime,
+                          "data"        => $avg_lifetime_ticket_data,
+                          "borderColor" => PluginMydashboardColor::getColors(1, 0),
+                          'fill'        => false,
+                          'lineTension' => '0.1',
+            ];
+
+            $dataset[] = ["type"        => 'line',
+                          "label"       => $taken_into_account,
+                          "data"        => $avg_takeintoaccount_ticket_data,
+                          "borderColor" => PluginMydashboardColor::getColors(1, 1),
+                          'fill'        => false,
+                          'lineTension' => '0.1',
+            ];
+
+            $widget = new PluginMydashboardHtml();
+            $title  = __("Solve delay and take into account of tickets", "mydashboard");
+            $widget->setWidgetTitle((($isDebug) ? "42 " : "") . $title);
+
+            $widget->toggleWidgetRefresh();
+
+            $dataLineset = json_encode($dataset);
+            $labelsLine  = json_encode($months);
+            $colors      = PluginMydashboardColor::getColors(2, 0);
+            $graph_datas = ['name'            => $name,
+                            'ids'             => json_encode([]),
+                            'data'            => $dataLineset,
+                            'labels'          => $labelsLine,
+                            'label'           => $title,
+                            'backgroundColor' => $colors];
+
+
+            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, []);
+
+            $params = ["widgetId"  => $widgetId,
+                       "name"      => $name,
+                       "onsubmit"  => true,
+                       "opt"       => $opt,
+                       "criterias" => $criterias,
+                       "export"    => true,
+                       "canvas"    => true,
+                       "nb"        => count($dataset)];
+            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+            $widget->setWidgetHtmlContent($graph);
+
+            return $widget;
+
+            break;
+
          default:
             break;
       }
@@ -2223,5 +2327,113 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
       }
 
       return $datesString;
+   }
+
+   /**
+    * @param $params
+    * @param $groups_id
+    *
+    * @return array
+    * @throws \GlpitestSQLError
+    */
+   private static function getLifetimeOrTakeIntoAccountTicketAverage($params, $groups_id) {
+      global $DB;
+
+      $entities_criteria   = $params['entities_id'];
+      $locations_criteria  = $params['multiple_locations_id'];
+      $type_criteria       = "AND 1 = 1";
+      $groups_sql_criteria = "";
+
+
+      if (isset($params["type"]) && $params["type"] > 0) {
+         $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
+      }
+
+      $tickets_helpdesk = [];
+      $months           = Toolbox::getMonthsOfYearArray();
+
+      $mois = intval(strftime("%m") - 1);
+      $year = intval(strftime("%Y") - 1);
+
+      if ($mois > 0) {
+         $year = date("Y");
+      }
+
+      if (isset($params["year"]) && $params["year"] > 0) {
+         $year = $params["year"];
+      }
+
+      if (isset($params["type"]) && $params["type"] > 0) {
+         $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
+      }
+
+      $locations_criteria = $params['multiple_locations_id'];
+
+      $current_month = date("m");
+      foreach ($months as $key => $month) {
+         $tickets_helpdesk[$key]['nb']              = 0;
+         $tickets_helpdesk[$key]['lifetime']        = 0;
+         $tickets_helpdesk[$key]['takeintoaccount'] = 0;
+
+         if ($key > $current_month && $year == date("Y")) {
+            break;
+         }
+
+         $next = $key + 1;
+
+         $month_tmp = $key;
+         $nb_jours  = date("t", mktime(0, 0, 0, $key, 1, $year));
+
+         if (strlen($key) == 1) {
+            $month_tmp = "0" . $month_tmp;
+         }
+         if (strlen($next) == 1) {
+            $next = "0" . $next;
+         }
+
+         if ($key == 0) {
+            $year      = $year - 1;
+            $month_tmp = "12";
+            $nb_jours  = date("t", mktime(0, 0, 0, 12, 1, $year));
+         }
+
+         $month_deb_date     = "$year-$month_tmp-01";
+         $month_deb_datetime = $month_deb_date . " 00:00:00";
+         $month_end_date     = "$year-$month_tmp-$nb_jours";
+         $month_end_datetime = $month_end_date . " 23:59:59";
+         $is_deleted         = " AND `glpi_tickets`.`is_deleted` = 0 ";
+         $assign             = Group_Ticket::ASSIGN;
+         $date               = "`glpi_tickets`.`date`";
+
+         $queryavg = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets, 
+                             SUM(`glpi_tickets`.`solve_delay_stat` / 3600) as lifetime,
+                             SUM(`glpi_tickets`.`takeintoaccount_delay_stat` / 3600) as takeintoaccount
+                        FROM `glpi_tickets` 
+                        INNER JOIN `glpi_groups_tickets` 
+                        ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`
+                          AND `glpi_groups_tickets`.`type` = {$assign}) ";
+         $queryavg .= "WHERE ";
+         $queryavg .= "{$date} >= '{$month_deb_datetime}' 
+                          AND {$date} <= '{$month_end_datetime}'
+                          {$groups_sql_criteria} {$type_criteria} 
+                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted} {$locations_criteria}";
+
+         $queryavg   .= "GROUP BY DATE(`glpi_tickets`.`date`);
+                        ";
+         $result_avg = $DB->query($queryavg);
+         while ($data = $DB->fetchAssoc($result_avg)) {
+            $tickets_helpdesk[$key]['takeintoaccount'] += $data['takeintoaccount'];
+            $tickets_helpdesk[$key]['lifetime']        += $data['lifetime'];
+            $tickets_helpdesk[$key]['nb']              += $data['nbtickets'];
+         }
+      }
+
+      if ($key == 0) {
+         $year++;
+      }
+
+      return $tickets_helpdesk;
+
+
    }
 }
