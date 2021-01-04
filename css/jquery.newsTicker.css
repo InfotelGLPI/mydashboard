@@ -60,7 +60,7 @@ NEWSTICKERS
 #nt_maint li,
 #nt_alert li,
 #nt_info li {
-    color: #f2f2f2;
+    /*color: #f2f2f2;*/
     background: #cccccc1f ;
     white-space: nowrap;
     overflow: hidden;
@@ -99,7 +99,7 @@ NEWSTICKERS
     max-width: 620px;
     margin: auto;
     padding-top: 12px;
-    color: #f2f2f2;
+    /*color: #f2f2f2;*/
     background: #cccccc1f ;
 }
 

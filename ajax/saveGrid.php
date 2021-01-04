@@ -86,9 +86,9 @@ if (isset($data)) {
             //         }
          }
       }
-      $ckey = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-      $GLPI_CACHE->delete($ckey);
-      $GLPI_CACHE->set($ckey, $datajson);
+//      $ckey = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
+//      $GLPI_CACHE->delete($ckey);
+//      $GLPI_CACHE->set($ckey, $datajson);
    }
 }
 

@@ -233,9 +233,9 @@ class PluginMydashboardProfile extends CommonDBTM {
          unset($_SESSION["glpi_plugin_mydashboard_activating"]);
       }
       unset($_SESSION["glpi_plugin_mydashboard_allwidgets"]);
-      $widgetclasse = new PluginMydashboardWidget();
-      $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-      $GLPI_CACHE->delete($ckey);
+//      $widgetclasse = new PluginMydashboardWidget();
+//      $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
+//      $GLPI_CACHE->delete($ckey);
    }
 
    /**

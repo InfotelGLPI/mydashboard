@@ -212,7 +212,7 @@ div#tabcontent{
 .cadre_edit {
    /*border: none !important;*/
    /*box-shadow: none;*/
-   background-color: white;
+   /*background-color: white;*/
    margin-bottom: 2px;
    margin-top: 2px;
    margin-right: 2px;
@@ -220,7 +220,7 @@ div#tabcontent{
 
 .cadre_edit_button {
    display: block;
-   background: whitesmoke;
+   /*background: whitesmoke;*/
    padding: 10px;
    text-align: center;
    border-radius: 5px;
@@ -239,9 +239,9 @@ div#tabcontent{
    padding: 2px;
    margin: 0;
    font-size: 1.1em;
-   color: #000;
+   /*color: #000;*/
    padding: 5px 5px;
-   background-color: whitesmoke;
+   /*background-color: whitesmoke;*/
    border: none;
 }
 
@@ -280,7 +280,7 @@ div#tabcontent{
    right: 10px;
    /*cursor: pointer;*/
    z-index: 99;
-   background-color: white;
+   /*background-color: white;*/
    /*opacity: .6;*/
    /* Behind debug panel */
 }
@@ -294,14 +294,14 @@ div#tabcontent{
 }
 
 .editmode_test {
-   color: #000;
+   /*color: #000;*/
    text-decoration: none;
    font-size: 11px;
    font-weight: 500;
 }
 
 #editmode a {
-   color: #000;
+   /*color: #000;*/
    text-decoration: none;
    font-size: 11px;
    font-weight: 500;
@@ -760,7 +760,7 @@ svg:hover {
 /*****Chartjs******/
 
 #chart-container {
-   background: white;
+   /*background: white;*/
 }
 
 .md-button {
@@ -770,7 +770,7 @@ svg:hover {
    outline: none;
    cursor: pointer;
    border-radius: 0;
-   background-color: #FFF;
+   /*background: white;*/
    border-style: none;
 }
 
@@ -981,9 +981,10 @@ div.dt-button-background {
    vertical-align: top;
    text-align: center;
    border: 1px solid #e6e6e6;
-   width: 70px;
+   width: 85px;
    min-height: 85px;
    font-size: 12px;
+   color: #000;
 }
 
 .ind-link {
@@ -1090,7 +1091,7 @@ div.dt-button-background {
 }
 
 .md-grid-stack {
-   background: #FFF;
+   /*background: #FFF;*/
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
@@ -1113,13 +1114,13 @@ div.dt-button-background {
    -moz-border-radius: 5px;
    border-radius: 5px;
    font-size: 12px;
-   background-color: #FFF !important;
+   /*background-color: #FFF !important;*/
    padding: 5px 5px 5px 5px;
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
    border: 1px dashed #000 !important;
-   background-color: #FFF !important;
+   /*background-color: #FFF !important;*/
 }
 
 .ajax_loader {

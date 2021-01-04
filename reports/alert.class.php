@@ -1688,7 +1688,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</div>";
 
-         $wl .= "<div class='col-xs-4'>";
+         $wl .= "<div class='col'>";
          $wl .= "<div class='infos-text' style='color:orange;'>";
          $wl .= $firstdescription;
          $wl .= "</div>";
@@ -1840,7 +1840,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $name = "<i class='fas fa-info-circle'></i>";
             $name .= ReminderTranslation::getTranslatedValue($note, 'name');
 
-            $style_title         = "text-align:center;color:black";
+            $style_title         = "text-align:center;";
             $description         = ReminderTranslation::getTranslatedValue($note, 'text');
             $cleaned_description = Html::entity_decode_deep($description);
 
@@ -1863,8 +1863,8 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</div>";
 
-         $wl .= "<div class='col-xs-4'>";
-         $wl .= "<div class='infos-text' style='color:black;'>";
+         $wl .= "<div class='col'>";
+         $wl .= "<div class='infos-text'>";
          $wl .= $firstdescription;
          $wl .= "</div>";
          $wl .= "</div>";
@@ -2015,7 +2015,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $wl .= "</div>";
 
-         $wl .= "<div class='col-xs-4'>";
+         $wl .= "<div class='col'>";
          $wl .= "<div class='infos-text'>";
          $wl .= $firstdescription;
          $wl .= "</div>";

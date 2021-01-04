@@ -91,14 +91,14 @@ body {
 }
 
 .bt-title-divider {
-    background: #fff url("../pics/bg_divider.png") repeat-x scroll left center;
+    /*background: #fff url("../pics/bg_divider.png") repeat-x scroll left center;*/
     margin-bottom: 0.5em;
     margin-top: 0.5em;
     padding: 0;
     text-align: left;
 }
 .bt-title-divider span {
-    background: #fff none repeat scroll 0 0;
+    /*background: #fff none repeat scroll 0 0;*/
     padding-right: 0.5em;
 }
 .bt-title-divider small {
