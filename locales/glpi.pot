@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-04 10:41+0000\n"
+"POT-Creation-Date: 2021-02-19 15:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,25 +166,37 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: inc/helper.class.php:740 inc/helper.class.php:1014
+#: inc/helper.class.php:751 inc/helper.class.php:1025
 msgid "Year"
 msgstr ""
 
-#: inc/helper.class.php:747 inc/helper.class.php:1137
+#: inc/helper.class.php:758 inc/helper.class.php:1148
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/helper.class.php:886
+#: inc/helper.class.php:897
 msgid "Child locations"
 msgstr ""
 
-#: inc/helper.class.php:1025
+#: inc/helper.class.php:1036 inc/helper.class.php:1222
 msgid "Month"
 msgstr ""
 
-#: inc/helper.class.php:1452
+#: inc/helper.class.php:1220
+msgid "Day"
+msgstr ""
+
+#: inc/helper.class.php:1221
+msgid "Week"
+msgstr ""
+
+#: inc/helper.class.php:1233
+msgid "Time display"
+msgstr ""
+
+#: inc/helper.class.php:1498
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
@@ -801,49 +813,49 @@ msgstr ""
 msgid "Process time by technicians by month"
 msgstr ""
 
-#: reports/reports_bar.class.php:64 reports/reports_bar.class.php:366
+#: reports/reports_bar.class.php:64 reports/reports_bar.class.php:368
 msgid "Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: reports/reports_bar.class.php:65 reports/reports_bar.class.php:446
+#: reports/reports_bar.class.php:65 reports/reports_bar.class.php:463
 msgid "Number of tickets affected by technicians by month"
 msgstr ""
 
-#: reports/reports_bar.class.php:66 reports/reports_bar.class.php:551
+#: reports/reports_bar.class.php:66 reports/reports_bar.class.php:568
 msgid "Average real duration of treatment of the ticket"
 msgstr ""
 
-#: reports/reports_bar.class.php:67 reports/reports_bar.class.php:665
+#: reports/reports_bar.class.php:67 reports/reports_bar.class.php:682
 msgid "Top ten technicians (by tickets number)"
 msgstr ""
 
-#: reports/reports_bar.class.php:69 reports/reports_bar.class.php:807
-#: reports/reports_bar.class.php:811
+#: reports/reports_bar.class.php:69 reports/reports_bar.class.php:824
+#: reports/reports_bar.class.php:828
 msgid "Age of tickets"
 msgstr ""
 
-#: reports/reports_bar.class.php:70 reports/reports_bar.class.php:900
+#: reports/reports_bar.class.php:70 reports/reports_bar.class.php:917
 #: reports/reports_pie.class.php:63 reports/reports_pie.class.php:151
 msgid "Number of opened tickets by priority"
 msgstr ""
 
-#: reports/reports_bar.class.php:71 reports/reports_bar.class.php:1042
+#: reports/reports_bar.class.php:71 reports/reports_bar.class.php:1059
 msgid "Stock of tickets by status"
 msgstr ""
 
-#: reports/reports_bar.class.php:72 reports/reports_bar.class.php:1168
+#: reports/reports_bar.class.php:72 reports/reports_bar.class.php:1185
 msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr ""
 
-#: reports/reports_bar.class.php:74 reports/reports_bar.class.php:1678
+#: reports/reports_bar.class.php:74 reports/reports_bar.class.php:1695
 msgid "Tickets request sources evolution"
 msgstr ""
 
-#: reports/reports_bar.class.php:75 reports/reports_bar.class.php:1793
+#: reports/reports_bar.class.php:75 reports/reports_bar.class.php:1810
 msgid "Tickets solution types evolution"
 msgstr ""
 
-#: reports/reports_bar.class.php:76 reports/reports_bar.class.php:1891
+#: reports/reports_bar.class.php:76 reports/reports_bar.class.php:1908
 msgid "Solve delay and take into account of tickets"
 msgstr ""
 
@@ -851,8 +863,8 @@ msgstr ""
 msgid "Display of opened tickets by month"
 msgstr ""
 
-#: reports/reports_bar.class.php:167 reports/reports_bar.class.php:355
-#: reports/reports_bar.class.php:668 reports/reports_line.class.php:190
+#: reports/reports_bar.class.php:167 reports/reports_bar.class.php:357
+#: reports/reports_bar.class.php:685 reports/reports_line.class.php:190
 msgid "Tickets number"
 msgstr ""
 
@@ -860,67 +872,67 @@ msgstr ""
 msgid "Sum of ticket tasks duration by technicians"
 msgstr ""
 
-#: reports/reports_bar.class.php:368
+#: reports/reports_bar.class.php:370
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: reports/reports_bar.class.php:447
+#: reports/reports_bar.class.php:464
 msgid "Sum of ticket affected by technicians"
 msgstr ""
 
-#: reports/reports_bar.class.php:552
+#: reports/reports_bar.class.php:569
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
 msgstr ""
 
-#: reports/reports_bar.class.php:557
+#: reports/reports_bar.class.php:574
 msgid "Tasks duration (minutes)"
 msgstr ""
 
-#: reports/reports_bar.class.php:666
+#: reports/reports_bar.class.php:683
 msgid "Display of number of tickets by technicians"
 msgstr ""
 
-#: reports/reports_bar.class.php:1100
+#: reports/reports_bar.class.php:1117
 msgid "Trimester 1"
 msgstr ""
 
-#: reports/reports_bar.class.php:1118
+#: reports/reports_bar.class.php:1135
 msgid "Trimester 2"
 msgstr ""
 
-#: reports/reports_bar.class.php:1134
+#: reports/reports_bar.class.php:1151
 msgid "Trimester 3"
 msgstr ""
 
-#: reports/reports_bar.class.php:1150
+#: reports/reports_bar.class.php:1167
 msgid "Trimester 4"
 msgstr ""
 
-#: reports/reports_bar.class.php:1182 reports/reports_line.class.php:417
+#: reports/reports_bar.class.php:1199 reports/reports_line.class.php:417
 #: reports/reports_line.class.php:668 reports/reports_line.class.php:943
 #: reports/reports_pie.class.php:727
 msgid "Opened tickets"
 msgstr ""
 
-#: reports/reports_bar.class.php:1183
+#: reports/reports_bar.class.php:1200
 msgid "Average Satisfaction"
 msgstr ""
 
-#: reports/reports_bar.class.php:1679
+#: reports/reports_bar.class.php:1696
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:1794
+#: reports/reports_bar.class.php:1811
 msgid "Evolution of solution types by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:1830
+#: reports/reports_bar.class.php:1847
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: reports/reports_bar.class.php:1831
+#: reports/reports_bar.class.php:1848
 msgid "Take into account average (hour)"
 msgstr ""
 
