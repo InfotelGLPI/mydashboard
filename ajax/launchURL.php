@@ -313,4 +313,30 @@ if (isset($_POST["params"]["widget"])
 
    echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
         Toolbox::append_params($options, "&");
+
+}else if (isset($_POST["params"]["widget"])
+          && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar15") {
+   //$criterias = ['entities_id', 'is_recursive', 'technicians_groups_id', 'type'];
+   if (isset($_POST["selected_id"])) {
+
+      if($_POST["selected_id"] == ""){
+         $_POST["selected_id"] = 0;
+      }
+//      addCriteria(STATUS, 'equals', 'notold', 'AND');
+      // open date
+      addCriteria(OPEN_DATE, 'contains', $_POST["params"]["year"], 'AND');
+
+      groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
+
+
+      if ($_POST["params"]["type"] > 0) {
+         addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+      }
+      addCriteria(CATEGORY, 'equals', $_POST["selected_id"], 'AND');
+      addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+
+      $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+              Toolbox::append_params($options, "&");
+      echo $link;
+   }
 }

@@ -600,6 +600,17 @@ class PluginMydashboardHelper {
          }
       }
 
+      // MULTIPLE TIME
+      if (in_array("multiple_time", $criterias)) {
+         if (isset($params['opt']['multiple_time'])) {
+            $opt["multiple_time"]          = $params['opt']['multiple_time'];
+            $crit['crit']['multiple_time'] = $params['opt']['multiple_time'];
+         } else {
+            $opt["multiple_time"]          = "MONTH";
+            $crit['crit']['multiple_time'] = "MONTH";
+         }
+      }
+
       // STATUS
       $default                = [CommonITILObject::INCOMING,
                                  CommonITILObject::ASSIGNED,
@@ -1198,6 +1209,41 @@ class PluginMydashboardHelper {
          if ($count > 1) {
             $form .= "</br></br>";
          }
+      }
+
+      if (in_array("multiple_time", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+
+
+         $temp = [];
+         $temp["DAY"] = __("Day",'mydashboard');
+         $temp["WEEK"] = __("Week",'mydashboard');
+         $temp["MONTH"] = __("Month",'mydashboard');
+
+         $params = [
+            "name"                => 'multiple_time',
+            "display"             => false,
+            "multiple"            => false,
+            "width"               => '200px',
+            'value'              => isset($opt['multiple_time'])?$opt['multiple_time']:null,
+            'display_emptychoice' => false
+         ];
+
+         $form .= __('Time display', 'mydashboard');
+         $form .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("multiple_time", $temp, $params);
+
+         $form .= $dropdown;
+
+         $form .= "</span>";
+
+
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
       }
 
       if ($onsubmit) {

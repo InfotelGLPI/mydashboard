@@ -326,7 +326,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $limit_query = "LIMIT $limit";
             }
 
-            $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_name, COUNT(`glpi_tickets`.`id`) as count
+            $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_name, COUNT(`glpi_tickets`.`id`) as count,`glpi_itilcategories`.`id` as catID
                      FROM `glpi_tickets`
                      LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
@@ -341,6 +341,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $nb       = $DB->numrows($result);
             $tabdata  = [];
             $tabnames = [];
+            $tabcat   = [];
             if ($nb) {
                while ($data = $DB->fetchAssoc($result)) {
                   $tabdata[]           = $data['count'];
@@ -349,6 +350,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                      $itilcategories_name = __('None');
                   }
                   $tabnames[] = $itilcategories_name;
+                  $tabcat[] = $data["catID"];
                }
             }
             $backgroundColor = PluginMydashboardColor::getColors(1);
@@ -369,13 +371,28 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                , "mydashboard"));
             $databacklogset = json_encode($dataset);
             $labelsback     = json_encode($tabnames);
+            $idsback     = json_encode($tabcat);
 
             $graph_datas = ['name'   => $name,
-                            'ids'    => $labelsback,
+                            'ids'    => $idsback,
                             'data'   => $databacklogset,
                             'labels' => $labelsback];
 
-            $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, []);
+            $js_ancestors       = $crit['ancestors'];
+
+
+            $type                       = $opt['type'];
+            $entities_id_criteria       = $crit['entity'];
+            $sons_criteria              = $crit['sons'];
+            $year                       = $opt['year'];
+            $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                'sons'               => $sons_criteria,
+                                'group_is_recursive' => $js_ancestors,
+                                'type'               => $type,
+                                'year'               => $year,
+                                'widget'             => $widgetId];
+
+            $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,
