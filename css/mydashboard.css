@@ -212,10 +212,14 @@ div#tabcontent{
 .cadre_edit {
    /*border: none !important;*/
    /*box-shadow: none;*/
-   /*background-color: white;*/
+   background-color: white;
    margin-bottom: 2px;
    margin-top: 2px;
    margin-right: 2px;
+}
+
+.mygrid {
+   background-color: white;
 }
 
 .cadre_edit_button {
@@ -771,6 +775,8 @@ svg:hover {
    cursor: pointer;
    border-radius: 0;
    /*background: white;*/
+   background-color: unset;
+   color: unset;
    border-style: none;
 }
 

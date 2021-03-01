@@ -36,14 +36,14 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
    if (isset($_POST['params']) && is_array($_POST['params'])) {
       $opt = $_POST['params'];
    }
-   $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
+   $widget = PluginMydashboardWidget::getWidget($gsid, $widgets, $opt);
    echo $widget;
 } else {
    $gsid    = $_POST['gsid'];
    $data = [];
    if (isset($widgets[$gsid])) {
       $opt    = [];
-      $widget = PluginMydashboardWidget::getWidget($gsid, $opt, $widgets);
+      $widget = PluginMydashboardWidget::getWidget($gsid, $widgets, $opt);
       $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
    }
 

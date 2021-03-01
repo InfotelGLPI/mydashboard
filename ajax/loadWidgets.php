@@ -32,6 +32,6 @@ if (!isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
     || count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) < 1) {
    $widgets = PluginMydashboardWidget::getWidgetList(true);
    foreach ($widgets as $k => $val) {
-      $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = PluginMydashboardWidget::getWidget($k, [], $widgets);
+      $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = PluginMydashboardWidget::getWidget($k, $widgets, []);
    }
 }

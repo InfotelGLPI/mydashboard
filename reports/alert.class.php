@@ -2581,7 +2581,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $timeout     = 15;
       $proxy_host  = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
       $proxy_ident = $CFG_GLPI["proxy_user"] . ":" .
-                     Toolbox::decrypt($CFG_GLPI["proxy_passwd"], GLPIKEY); // username:password
+                     Toolbox::sodiumDecrypt($CFG_GLPI["proxy_passwd"]); // username:password
 
       $url = $options["url"];
 

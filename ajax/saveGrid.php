@@ -74,7 +74,7 @@ if (isset($data)) {
       $datajson = [];
       foreach ($widgetdata as $k => $v) {
          if (isset($v["id"])) {
-            $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+            $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
 
             //         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
             //            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {

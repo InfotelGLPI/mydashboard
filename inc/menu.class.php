@@ -227,7 +227,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @return FALSE if the user haven't the right to see Dashboard
     * @internal param type $user_id
     */
-   public function showMenu($users_id = -1, $active_profile = -1, $predefined_grid = 0, $rand) {
+   public function showMenu($rand, $users_id = -1, $active_profile = -1, $predefined_grid = 0) {
 
       //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
       $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
@@ -243,7 +243,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       }
 
       //Now the mydashboard
-      $this->showDashboard($active_profile, $predefined_grid, $rand);
+      $this->showDashboard($rand, $active_profile, $predefined_grid);
 
    }
 
@@ -306,7 +306,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     *
     * @param int $selected_profile
     */
-   private function showDashboard($selected_profile = -1, $predefined_grid = 0, $rand) {
+   private function showDashboard($rand, $selected_profile = -1, $predefined_grid = 0) {
 
       //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
       //      $_SESSION['plugin_mydashboard_editmode'] = false;
@@ -324,7 +324,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       //This first div is the header of the mydashboard, basically it display a name, informations and a button to toggle full screen
       echo "<div class='plugin_mydashboard_header'>";//(div.plugin_mydashboard_header)
 
-      $this->displayEditMode($edit, $selected_profile, $predefined_grid, $rand);
+      $this->displayEditMode($rand, $edit, $selected_profile, $predefined_grid);
 
       //      echo "</span>";//end(span.plugin_mydashboard_header_title)
       //(span.plugin_mydashboard_header_right)
@@ -362,7 +362,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       }
    }
 
-   function displayEditMode($edit = 0, $selected_profile = -1, $predefined_grid = 0, $rand) {
+   function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0) {
 
       $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
@@ -1246,7 +1246,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $rand           = mt_rand();
       $this->users_id = Session::getLoginUserID();
-      $this->showMenu($this->users_id, $active_profile, $predefined_grid, $rand);
+      $this->showMenu($rand, $this->users_id, $active_profile, $predefined_grid);
 
       $this->initDBWidgets();
       $grid = [];
@@ -1304,7 +1304,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
                foreach ($datagrid as $k => $v) {
                   if (isset($v["id"])) {
-                     $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], [], $widgets);
+                     $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
 
                      if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
                         foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {

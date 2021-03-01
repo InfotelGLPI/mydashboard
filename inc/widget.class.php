@@ -208,7 +208,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidget($id, $opt = [], $widgets) {
+   static function getWidget($id, $widgets, $opt = []) {
       $class = "bt-col-md-11";
 
       if (isset($widgets[$id])) {
