@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class ticket to add the functions to display widgets on Dashboard
  */
-class PluginMydashboardTicket {
+class PluginMydashboardTicket extends CommonGLPI {
 
    /**
     * @param int $nb

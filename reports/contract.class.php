@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class contract to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardContract {
+class PluginMydashboardContract extends CommonGLPI {
 
    /**
     * @param int $nb

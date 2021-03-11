@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class rssfeed to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardRSSFeed {
+class PluginMydashboardRSSFeed extends CommonGLPI {
 
    /**
     * @param int $nb

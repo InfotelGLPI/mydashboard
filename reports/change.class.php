@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class change to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardChange {
+class PluginMydashboardChange extends CommonGLPI {
 
    /**
     * @param int $nb

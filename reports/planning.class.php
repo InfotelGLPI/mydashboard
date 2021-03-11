@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class planning to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardPlanning {
+class PluginMydashboardPlanning extends CommonGLPI {
 
    // Should return the localized name of the type
    /**

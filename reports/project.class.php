@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class project to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardProject {
+class PluginMydashboardProject extends CommonGLPI {
 
    /**
     * @param int $nb
