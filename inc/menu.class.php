@@ -794,6 +794,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $empty       = false;
       $widgetslist = PluginMydashboardWidget::getWidgetList();
+      $gslist = [];
       foreach ($widgetslist as $gs => $widgetclasses) {
          $gslist[$widgetclasses['id']] = $gs;
       }

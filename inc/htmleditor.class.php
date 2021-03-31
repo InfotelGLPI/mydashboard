@@ -30,8 +30,8 @@
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
-class PluginMydashboardHTMLEditor extends CommonDBTM
-{
+
+class PluginMydashboardHTMLEditor extends CommonDBTM {
    public $itemtype = 'PluginMydashboardCustomswidget';
    public $items_id = 'id';
 
@@ -43,12 +43,12 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
       $tab = [];
 
       $tab[] = [
-          'id'            => '66',
-          'table'         => $this->getTable(),
-          'field'         => 'content',
-          'name'          => __('Content'),
-          'datatype'      => 'text',
-          'itemlink_type' => $this->getType()
+         'id'            => '66',
+         'table'         => $this->getTable(),
+         'field'         => 'content',
+         'name'          => __('Content'),
+         'datatype'      => 'text',
+         'itemlink_type' => $this->getType()
       ];
    }
 
@@ -56,7 +56,8 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
     * Display tab for each users
     *
     * @param CommonGLPI $item
-    * @param int $withtemplate
+    * @param int        $withtemplate
+    *
     * @return array|string
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -66,8 +67,8 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
          if ($item->getType() == 'PluginMydashboardCustomswidget') {
             if ($_SESSION['glpishow_count_on_tabs']) {
                return PluginMydashboardCustomswidget::createTabEntry(PluginMydashboardCustomswidget::getTypeName(),
-                   $dbu->countElementsInTable(PluginMydashboardCustomswidget::getTable(),
-                       ["`id`" => $item->getID()]));
+                                                                     $dbu->countElementsInTable(PluginMydashboardCustomswidget::getTable(),
+                                                                                                ["`id`" => $item->getID()]));
             }
             return PluginMydashboardCustomswidget::getTypeName();
          }
@@ -79,9 +80,11 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
     * Display content for each users
     *
     * @static
+    *
     * @param CommonGLPI $item
-    * @param int $tabnum
-    * @param int $withtemplate
+    * @param int        $tabnum
+    * @param int        $withtemplate
+    *
     * @return bool|true
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
@@ -93,28 +96,57 @@ class PluginMydashboardHTMLEditor extends CommonDBTM
       return true;
    }
 
-   function showForm($item, $openform = true, $closeform = true ){
+   function showForm($item, $openform = true, $closeform = true) {
 
-      Html::requireJs('tinymce');
-      
-      $options = [];
-      $options['name'] = 'content';
-      $options['value'] = $item->fields['content'];
-      $options['enable_richtext'] = true;
-      $options['display'] = false;
-
+      // Codemirror lib
+      echo Html::css('public/lib/codemirror.css');
+      echo Html::script("public/lib/codemirror.js");
 
       echo "<div class='firstbloc'>";
-      if($openform){
-         echo "<form method='post' action='".Toolbox::getItemTypeFormURL('PluginMydashboardHTMLEditor')."'>";
+      if ($openform) {
+         echo "<form method='post' action='" . Toolbox::getItemTypeFormURL('PluginMydashboardHTMLEditor') . "'>";
       }
 
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr class='tab_bg_1'>";
-      echo "<th>".$item->fields['name']."</th></tr>";
+      echo "<th>" . $item->fields['name'] . "</th></tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo HTML::textarea($options);
+
+      $rand = mt_rand();
+
+      echo '<textarea id="custom_css_code_' . $rand . '" name="content" ';
+      echo '>';
+      echo Html::entities_deep($item->fields['content']);
+      echo '</textarea>';
+
+      $editor_options = [
+         'mode'         => 'text/css',
+         'lineNumbers'  => true,
+         'lineWrapping' => true,
+         // Autocomplete with CTRL+SPACE
+         'extraKeys'    => [
+            'Ctrl-Space' => 'autocomplete',
+         ],
+
+         // Code folding configuration
+         'foldGutter'   => true,
+         'gutters'      => [
+            'CodeMirror-linenumbers',
+            'CodeMirror-foldgutter'
+         ],
+      ];
+
+      echo Html::scriptBlock('
+      $(function() {
+         var textarea = document.getElementById("custom_css_code_' . $rand . '");
+         var editor = CodeMirror.fromTextArea(textarea, ' . json_encode($editor_options) . ');
+
+         // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
+         setTimeout(function () {editor.refresh();}, 10);
+      });
+   ');
+
       echo "</td></tr>\n";
 
       if ($closeform) {

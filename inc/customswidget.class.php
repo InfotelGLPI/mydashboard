@@ -34,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginMydashboardCustomswidgets
  */
-class PluginMydashboardCustomswidget extends CommonDropdown{
+class PluginMydashboardCustomswidget extends CommonDropdown {
 
    /**
     * @param int $nb
@@ -42,7 +42,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
     * @return translated
     * @override
     */
-   static function getTypeName($nb = 0){
+   static function getTypeName($nb = 0) {
 
       return __('Custom Widgets', 'mydashboard');
    }
@@ -59,13 +59,17 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
       return $ong;
    }
 
-   static function listCustomsWidgets(){
+   /**
+    * @return array
+    * @throws \GlpitestSQLError
+    */
+   static function listCustomsWidgets() {
 
       $customsWidgets = [];
 
       global $DB;
 
-      $query = "SELECT * from ".PluginMydashboardCustomswidget::getTable();
+      $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
 
       $result = $DB->query($query);
 
@@ -76,23 +80,35 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
       return $customsWidgets;
    }
 
-   static function checkCustomWidgetExist($id){
+   /**
+    * @param $id
+    *
+    * @return bool
+    * @throws \GlpitestSQLError
+    */
+   static function checkCustomWidgetExist($id) {
       global $DB;
 
-      $query = "SELECT count(*) as count from ".PluginMydashboardCustomswidget::getTable();
-      $query .= " WHERE id=".$id;
+      $query = "SELECT count(*) as count from " . PluginMydashboardCustomswidget::getTable();
+      $query .= " WHERE id=" . $id;
 
       $result = $DB->query($query);
 
-      $data2       = $DB->fetchArray($result);
+      $data2 = $DB->fetchArray($result);
       return $data2['count'] > 0;
    }
 
-   static private function getCustomWidgetById($id){
+   /**
+    * @param $id
+    *
+    * @return string[]|null
+    * @throws \GlpitestSQLError
+    */
+   static private function getCustomWidgetById($id) {
       global $DB;
 
-      $query = "SELECT * from ".PluginMydashboardCustomswidget::getTable();
-      $query .= " WHERE id=".$id;
+      $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
+      $query .= " WHERE id=" . $id;
 
       $result = $DB->query($query);
 
@@ -102,7 +118,13 @@ class PluginMydashboardCustomswidget extends CommonDropdown{
       return null;
    }
 
-   static function getCustomWidget($id){
+   /**
+    * @param $id
+    *
+    * @return string[]|null
+    * @throws \GlpitestSQLError
+    */
+   static function getCustomWidget($id) {
       $temp = self::getCustomWidgetById($id);
 
       return $temp;
