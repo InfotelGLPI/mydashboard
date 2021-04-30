@@ -500,7 +500,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
+            $widget->setWidgetTitle("<i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard'));
 
             return $widget;
             break;
@@ -545,7 +545,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard"));
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
             return $widget;
@@ -692,8 +692,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                $table
             );
             $widget->toggleWidgetRefresh();
-
-            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Inventory stock alerts", "mydashboard") . "</span>");
+            $widget->setWidgetHeaderType('danger');
+            $widget->setWidgetTitle( __("Inventory stock alerts", "mydashboard"));
             $widget->setWidgetComment(__("Display alerts for inventory stocks", "mydashboard"));
 
             return $widget;
