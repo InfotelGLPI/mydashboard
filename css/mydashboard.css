@@ -23,6 +23,13 @@
  --------------------------------------------------------------------------
  */
 
+.refresh-icon-disabled {
+   cursor: not-allowed;
+   pointer-events: none;
+   color: #c0c0c0 !important;
+   background-color: #ffffff;
+}
+
 .addItemTD {
    width: 150px;
    text-align: center;

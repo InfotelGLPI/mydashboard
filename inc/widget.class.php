@@ -218,7 +218,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          $message .= " - " . $id;
       }
-      $msg = "<div class='center'><br><br>";
+      $msg = "<div class='center alert alert-warning' role='alert'><br><br>";
       $msg .= "<i style='color:orange' class='fas fa-exclamation-triangle fa-3x'></i>";
       $msg .= "<br><br><span class='b'>$message</span></div>";
 
@@ -477,7 +477,7 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                $widgetdisplay .= "<div id='$widgetindex'>";
                $widgetdisplay .= "<div class=\"bt-row $delclass\">";
-               $widgetdisplay .= "<div class=\"bt-feature $class \">";
+               $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 96%'>";
 
                if ($widget->getTitleVisibility()) {
                   $widgetdisplay .= "<h5>";

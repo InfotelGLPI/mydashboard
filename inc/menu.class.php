@@ -1429,7 +1429,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                          if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fas fa-sync-alt\"></i></button>';
                          } else {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\"></button>';
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"fas fa-sync-alt\"></i></button>';
                          }
                          if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
