@@ -52,6 +52,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
        <!--<!DOCTYPE html>-->
        <html>
        <head>
+           <link type="text/css" href="../css/bootstrap4.css" rel="stylesheet">
            <link type="text/css" href="../css/style_bootstrap_main.css" rel="stylesheet">
            <link type="text/css" href="../css/style_bootstrap_ticket.css" rel="stylesheet">
            <!--DATATABLES CSS-->

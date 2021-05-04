@@ -201,6 +201,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       switch ($widgetId) {
          case $this->getType() . "1":
             $widget = new PluginMydashboardHtml();
+            $widget->setWidgetHeaderType('danger');
             $widget->setWidgetHtmlContent($this->getAlertList(0));
             $widget->setWidgetTitle(PluginMydashboardConfig::displayField($config, 'title_alerts_widget'));
             return $widget;
@@ -209,6 +210,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          case $this->getType() . "2":
             $widget = new PluginMydashboardHtml();
             $datas  = $this->getMaintenanceList();
+            $widget->setWidgetHeaderType('warning');
             $widget->setWidgetHtmlContent(
                $datas
             );
@@ -219,6 +221,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          case $this->getType() . "3":
             $widget = new PluginMydashboardHtml();
             $datas  = $this->getInformationList();
+            $widget->setWidgetHeaderType('info');
             $widget->setWidgetHtmlContent(
                $datas
             );
@@ -285,9 +288,15 @@ class PluginMydashboardAlert extends CommonDBTM {
             $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('ID and priority', 'mydashboard'), _n('Requester', 'Requesters', 2), __('Status'),
-                        __('Last update'), __('Assigned to'), __('Action'),
-                        __('ID'), __('Priority'), __('Category')];
+            $headers = [__('ID and priority', 'mydashboard'),
+                        _n('Requester', 'Requesters', 2),
+                        __('Status'),
+                        __('Last update'),
+                        __('Assigned to'),
+                        __('Action'),
+                        __('ID'),
+                        __('Priority'),
+                        __('Category')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
@@ -444,8 +453,8 @@ class PluginMydashboardAlert extends CommonDBTM {
             $widget->setOption("bSort", [3, 'desc']);
             $widget->setOption("bDate", ["DH"]);
             $widget->toggleWidgetRefresh();
-
-            $widget->setWidgetTitle("<span style='color:orange'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard") . "</span>");
+            $widget->setWidgetHeaderType('warning');
+            $widget->setWidgetTitle("<i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard"));
             $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
 
             return $widget;
@@ -486,12 +495,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                }
 
             }
-
+            $widget->setWidgetHeaderType('danger');
             $widget->setTabDatas($datas);
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [1, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard') . "</span>");
+            $widget->setWidgetTitle("<i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard'));
 
             return $widget;
             break;
@@ -503,7 +512,10 @@ class PluginMydashboardAlert extends CommonDBTM {
                         ORDER BY `date` ASC";
 
             $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-            $headers = [__('Date'), __('From email header'), __('Reason of rejection'), __('Mails receiver')];
+            $headers = [__('Date'),
+                        __('From email header'),
+                        __('Reason of rejection'),
+                        __('Mails receiver')];
             $widget->setTabNames($headers);
 
             $result = $DB->query($query);
@@ -528,12 +540,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                }
 
             }
-
+            $widget->setWidgetHeaderType('danger');
             $widget->setTabDatas($datas);
             $widget->setOption("bDate", ["DH"]);
             $widget->setOption("bSort", [0, 'desc']);
             $widget->toggleWidgetRefresh();
-            $widget->setWidgetTitle("<span style='color:indianred'><i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard") . "</span>");
+            $widget->setWidgetTitle("<i class='fas fa-exclamation-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard"));
             $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
             return $widget;
@@ -680,8 +692,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                $table
             );
             $widget->toggleWidgetRefresh();
-
-            $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Inventory stock alerts", "mydashboard") . "</span>");
+            $widget->setWidgetHeaderType('danger');
+            $widget->setWidgetTitle( __("Inventory stock alerts", "mydashboard"));
             $widget->setWidgetComment(__("Display alerts for inventory stocks", "mydashboard"));
 
             return $widget;
@@ -1109,12 +1121,12 @@ class PluginMydashboardAlert extends CommonDBTM {
          $table
       );
       $widget->toggleWidgetRefresh();
-
+      $widget->setWidgetHeaderType('danger');
       if ($type == Ticket::INCIDENT_TYPE) {
-         $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Incidents alerts", "mydashboard") . "</span>");
+         $widget->setWidgetTitle(__("Incidents alerts", "mydashboard"));
          $widget->setWidgetComment(__("Display alerts for incidents and problems", "mydashboard"));
       } else {
-         $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("Requests alerts", "mydashboard") . "</span>");
+         $widget->setWidgetTitle(__("Requests alerts", "mydashboard"));
          $widget->setWidgetComment(__("Display alerts for requests", "mydashboard"));
       }
       return $widget;
@@ -1585,12 +1597,12 @@ class PluginMydashboardAlert extends CommonDBTM {
          $table
       );
       $widget->toggleWidgetRefresh();
-
+      $widget->setWidgetHeaderType('danger');
       if ($type == Ticket::INCIDENT_TYPE) {
-         $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("SLA Incidents alerts", "mydashboard") . "</span>");
+         $widget->setWidgetTitle(__("SLA Incidents alerts", "mydashboard"));
          $widget->setWidgetComment(__("Display alerts for SLA of Incidents tickets", "mydashboard"));
       } else {
-         $widget->setWidgetTitle("<span style='color:indianred'>&nbsp;" . __("SLA Requests alerts", "mydashboard") . "</span>");
+         $widget->setWidgetTitle(__("SLA Requests alerts", "mydashboard"));
          $widget->setWidgetComment(__("Display alerts for SLA of Requests tickets", "mydashboard"));
       }
       return $widget;
@@ -1790,8 +1802,8 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getInformationList($itilcategories_id = []) {
       global $DB, $CFG_GLPI;
 
-      $now = date('Y-m-d H:i:s');
-      $wl  = "";
+      $now           = date('Y-m-d H:i:s');
+      $wl            = "";
       $restrict_user = '1';
       // Only personal on central so do not keep it
       //      if (Session::getCurrentInterface() == 'central') {
@@ -1933,7 +1945,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $config->getFromDB(1);
       $now = date('Y-m-d H:i:s');
 
-      $wl = "";
+      $wl            = "";
       $restrict_user = '1';
 
       $addwhere = "";
@@ -2504,12 +2516,12 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
          $display = "<div class=\"bt-feature $class \">";
-         $display .= "<h3 class=\"bt-title-divider\">";
-         $display .= "<span>";
+         $display .= "<h3>";
+         $display .= "<div class='alert alert-danger' role='alert'>";
          $config  = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
-         $display .= "</span>";
+         $display .= "</div>";
          $display .= "</h3>";
          $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
          $display .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";

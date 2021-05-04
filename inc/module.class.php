@@ -34,6 +34,7 @@ abstract class PluginMydashboardModule extends CommonGLPI {
    private $widgetType = "chart";
    private $widgetTitle;
    private $widgetHeader;
+   private $widgetHeaderType;
    private $widgetComment;
    private $widgetListTitle;
    private $widgetScripts = [];
@@ -101,6 +102,10 @@ abstract class PluginMydashboardModule extends CommonGLPI {
       return !isset($this->widgetHeader) ? "" : $this->widgetHeader;
    }
 
+   function getWidgetHeaderType(){
+      return !isset($this->widgetHeaderType) ? "" : $this->widgetHeaderType;
+   }
+
    /**
     * @return string
     */
@@ -151,9 +156,12 @@ abstract class PluginMydashboardModule extends CommonGLPI {
    function getWidgetHtmlContent() {
       //Internal debug is append to the widget as HTML content
       //Different colors depending on type of debug from white, information to red , error
-      $bgcolors = [__('notice', 'mydashboard') => 'white', __('warning', 'mydashboard') => 'orange', __('error', 'mydashboard') => 'red'];
+      $bgcolors = [__('notice', 'mydashboard') => 'white',
+                   __('warning', 'mydashboard') => 'orange',
+                   __('error', 'mydashboard') => 'red'];
       //Internal debug is only shown when GLPI is in debug mode
-      if (($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) && !empty($this->widgetDebug)) {
+      if (($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE)
+          && !empty($this->widgetDebug)) {
          foreach ($this->widgetDebug as $type => $msg) {
             if (strlen($msg) > 0) {
                $this->appendWidgetHtmlContent("<span style='background-color:" . $bgcolors[$type] . ";'><b>" . ucfirst($type) . " : </b>" . $msg . "</span><br>");
@@ -194,10 +202,23 @@ abstract class PluginMydashboardModule extends CommonGLPI {
       return $this->widgetTitle = str_replace(["\""], ["'"], $nTitle);
    }
 
+   /**
+    * @param $header
+    *
+    * @return mixed
+    */
    function setWidgetHeader($header){
       return $this->widgetHeader = $header;
    }
 
+   /**
+    * @param $header
+    *
+    * @return mixed
+    */
+   function setWidgetHeaderType($header){
+      return $this->widgetHeaderType = $header;
+   }
    /**
     * @param $nComment
     *

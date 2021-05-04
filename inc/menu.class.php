@@ -529,7 +529,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "</div>";
          echo "</div>";
 
-         echo "<div class='bt-alert bt-alert-success' id='success-alert'>
+         echo "<div class='alert alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
                 " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
             </div>";
@@ -1349,7 +1349,10 @@ class PluginMydashboardMenu extends CommonGLPI {
                $widgets = PluginMydashboardWidget::getWidgetList();
 //            }
             foreach ($widgets as $k => $val) {
-               $allwidgetjson[$k] = [__('Save grid to see widget', 'mydashboard')];
+               $allwidgetjson[$k] = ["<div class='alert alert-success' id='success-alert'>
+                <strong>" . __('Success', 'mydashboard') . "</strong> - 
+                " . __('Save grid to see widget', 'mydashboard') . "
+            </div>"];
                //NOT LOAD ALL WIDGETS FOR PERF
                //               $allwidgetjson[$k] = PluginMydashboardWidget::getWidget($k, [], $widgets);
 
@@ -1425,6 +1428,8 @@ class PluginMydashboardMenu extends CommonGLPI {
                          }
                          if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fas fa-sync-alt\"></i></button>';
+                         } else {
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"fas fa-sync-alt\"></i></button>';
                          }
                          if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
@@ -1449,11 +1454,13 @@ class PluginMydashboardMenu extends CommonGLPI {
                     }, this);
                     var sData = JSON.stringify(this.serializedData);
                     var profiles_id = -1;
+                    $('#ajax_loader').show();
                      $.ajax({
                        url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
                        type: 'POST',
                        data:{data:sData,profiles_id:$active_profile},
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                            }
                        });
@@ -1474,12 +1481,14 @@ class PluginMydashboardMenu extends CommonGLPI {
                     var sData = JSON.stringify(this.serializedData);
                     var users_id = 0;
                     var profiles_id = -1;
+                    $('#ajax_loader').show();
                      $.ajax({
                           url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
                           type: 'POST',
                           data:{data:sData,users_id:users_id,profiles_id:$active_profile},
                           success:function(data) {
-                              var redirectUrl = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                             $('#ajax_loader').hide();
+                             var redirectUrl = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                              var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
                              '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
                              '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
@@ -1491,65 +1500,77 @@ class PluginMydashboardMenu extends CommonGLPI {
                     return false;
                 }.bind(this);
                 this.clearGrid = function () {
+                  $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/clearGrid.php',
                        type: 'POST',
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                            }
                        });
                     return false;
                 }.bind(this);
                 this.dragGrid = function () {
+                  $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
                        type: 'POST',
                        data:{drag_mode:1},
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                           }
                        });
                     return false;
                 }.bind(this);
                 this.undragGrid = function () {
+                  $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
                        type: 'POST',
                        data:{drag_mode:0},
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                           }
                        });
                     return false;
                 }.bind(this);
                 this.editGrid = function () {
+                  $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
                        type: 'POST',
                        data:{edit_mode:1},
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                           }
                        });
                     return false;
                 }.bind(this);
                 this.editDefaultGrid = function () {
+                  $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
                        type: 'POST',
                        data:{edit_mode:2},
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                           }
                        });
                     return false;
                 }.bind(this);
                 this.closeEdit = function () {
+                  $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
                        type: 'POST',
                        data:{edit_mode:0},
                        success:function(data) {
+                              $('#ajax_loader').hide();
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                           }
                        });
