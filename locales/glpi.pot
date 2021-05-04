@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-01 09:59+0000\n"
+"POT-Creation-Date: 2021-05-04 09:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,37 +166,63 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: inc/helper.class.php:751 inc/helper.class.php:1025
+#: inc/helper.class.php:805 inc/helper.class.php:1104
 msgid "Year"
 msgstr ""
 
-#: inc/helper.class.php:758 inc/helper.class.php:1148
+#: inc/helper.class.php:812 inc/helper.class.php:1227
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/helper.class.php:897
-msgid "Child locations"
-msgstr ""
-
-#: inc/helper.class.php:1036 inc/helper.class.php:1222
-msgid "Month"
-msgstr ""
-
-#: inc/helper.class.php:1220
-msgid "Day"
-msgstr ""
-
-#: inc/helper.class.php:1221
-msgid "Week"
-msgstr ""
-
-#: inc/helper.class.php:1233
+#: inc/helper.class.php:832 inc/helper.class.php:835 inc/helper.class.php:838
+#: inc/helper.class.php:841 inc/helper.class.php:1312 inc/helper.class.php:1350
 msgid "Time display"
 msgstr ""
 
-#: inc/helper.class.php:1498
+#: inc/helper.class.php:832 inc/helper.class.php:1336
+msgid "Last month"
+msgstr ""
+
+#: inc/helper.class.php:835
+msgid "Last year"
+msgstr ""
+
+#: inc/helper.class.php:838 inc/helper.class.php:1334
+msgid "Year to date"
+msgstr ""
+
+#: inc/helper.class.php:841 inc/helper.class.php:1115 inc/helper.class.php:1301
+#: inc/helper.class.php:1337 inc/helper.class.php:1363
+msgid "Month"
+msgstr ""
+
+#: inc/helper.class.php:847 inc/helper.class.php:1392
+msgid "Category"
+msgstr ""
+
+#: inc/helper.class.php:976
+msgid "Child locations"
+msgstr ""
+
+#: inc/helper.class.php:1299
+msgid "Day"
+msgstr ""
+
+#: inc/helper.class.php:1300
+msgid "Week"
+msgstr ""
+
+#: inc/helper.class.php:1335
+msgid "year"
+msgstr ""
+
+#: inc/helper.class.php:1421
+msgid "Tag"
+msgstr ""
+
+#: inc/helper.class.php:1707
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
