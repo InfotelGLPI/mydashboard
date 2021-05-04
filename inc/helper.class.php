@@ -611,6 +611,22 @@ class PluginMydashboardHelper {
          }
       }
 
+      // MULTIPLE YEAR TIME
+      if (in_array("multiple_year_time", $criterias)) {
+         if (isset($params['opt']['multiple_year_time'])) {
+            $opt["multiple_year_time"]          = $params['opt']['multiple_year_time'];
+            $crit['crit']['multiple_year_time'] = $params['opt']['multiple_year_time'];
+         } else {
+            $opt["multiple_year_time"]          = "LASTMONTH";
+            $crit['crit']['multiple_year_time'] = "LASTMONTH";
+         }
+         if (isset($params['opt']['month_year'])) {
+            $opt["month_year"]          = $params['opt']['month_year'];
+            $crit['crit']['month_year'] = $params['opt']['month_year'];
+         }
+      }
+
+
       // STATUS
       $default                = [CommonITILObject::INCOMING,
                                  CommonITILObject::ASSIGNED,
@@ -651,6 +667,44 @@ class PluginMydashboardHelper {
             $crit['crit']['status'] = $status;
          }
       }
+      //TYPE
+      $opt['itilcategorielvl1']          = 0;
+      $crit['crit']['itilcategorielvl1'] = "AND 1 = 1";
+      if (in_array("itilcategorielvl1", $criterias)) {
+         if (isset($params['opt']["itilcategorielvl1"])
+             && $params['opt']["itilcategorielvl1"] > 0) {
+            $opt['itilcategorielvl1']          = $params['opt']['itilcategorielvl1'];
+            $categorie = new ITILCategory();
+            $catlvl2 = $categorie->find(['itilcategories_id'=>$opt['itilcategorielvl1']]);
+            $i = 0;
+            $listcat = "";
+            foreach ($catlvl2 as $cat){
+               if($i !=0){
+                  $listcat .= ",".$cat['id'];
+               }else{
+                  $listcat .= $cat['id'];
+               }
+               $i++;
+            }
+            if(empty($listcat)){
+               $listcat = "0";
+            }
+            $crit['crit']['itilcategorielvl1'] = " AND `glpi_tickets`.`itilcategories_id` IN ( " . $listcat . ") ";
+         }
+      }
+
+      //TAG
+      $opt['tag']          = 0;
+      $crit['crit']['tag'] = "AND 1 = 1";
+      if (in_array("tag", $criterias)) {
+         if (isset($params['opt']["tag"])
+             && $params['opt']["tag"] > 0) {
+            $opt['tag']          = $params['opt']['tag'];
+
+            $crit['crit']['tag'] = " AND `glpi_plugin_tag_tagitems`.`plugin_tag_tags_id` = " . $opt['tag'] . " ";
+         }
+      }
+
       $crit['opt'] = $opt;
 
       return $crit;
@@ -767,6 +821,31 @@ class PluginMydashboardHelper {
       // TECHNICIAN
       if (isset($opt['technicians_id']) && $opt['technicians_id'] > 0) {
          $form .= "&nbsp;/&nbsp;" . __('Technician') . "&nbsp;:&nbsp;" . getUserName($opt['technicians_id']);
+      }
+
+      if (isset($opt['tag']) && $opt['tag'] > 0) {
+         $form .= "&nbsp;/&nbsp;" .PluginTagTag::getTypeName() . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_plugin_tag_tags', $opt['tag']);
+      }
+      if (isset($opt['multiple_year_time'])) {
+         switch ($opt['multiple_year_time']){
+            case "LASTMONTH":
+               $form .= "&nbsp;/&nbsp;".__('Time display', 'mydashboard')."&nbsp;/&nbsp;" .__("Last month",'mydashboard');
+               break;
+            case "LASTYEAR":
+               $form .= "&nbsp;/&nbsp;".__('Time display', 'mydashboard')."&nbsp;/&nbsp;" .__("Last year",'mydashboard');
+               break;
+            case "YEARTODATE":
+               $form .= "&nbsp;/&nbsp;".__('Time display', 'mydashboard')."&nbsp;/&nbsp;" .__("Year to date",'mydashboard');
+               break;
+            case "MONTH":
+               $form .= "&nbsp;/&nbsp;".__('Time display', 'mydashboard')."&nbsp;/&nbsp;" .__("Month",'mydashboard');
+               break;
+         }
+
+      }
+      if (isset($opt['itilcategorielvl1']) && $opt['itilcategorielvl1'] > 0) {
+         $form .= "&nbsp;/&nbsp;" . __("Category",'mydashobard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_itilcategories', $opt['itilcategorielvl1']);
+
       }
 
       $form .= "</span>";
@@ -1234,6 +1313,136 @@ class PluginMydashboardHelper {
          $form .= "&nbsp;";
 
          $dropdown = Dropdown::showFromArray("multiple_time", $temp, $params);
+
+         $form .= $dropdown;
+
+         $form .= "</span>";
+
+
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
+      }
+
+      if (in_array("multiple_year_time", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+
+
+         $temp = [];
+         $temp["YEARTODATE"] = __("Year to date",'mydashboard');
+         $temp["LASTYEAR"] = __("year",'mydashboard');
+         $temp["LASTMONTH"] = __("Last month",'mydashboard');
+         $temp["MONTH"] = __("Month",'mydashboard');
+
+         $rand = mt_rand();
+         $params = [
+            "name"                => 'multiple_year_time',
+            "display"             => false,
+            "multiple"            => false,
+            "width"               => '200px',
+            "rand"               => $rand,
+            'value'              => isset($opt['multiple_year_time'])?$opt['multiple_year_time']:null,
+            'display_emptychoice' => false
+         ];
+
+         $form .= __('Time display', 'mydashboard');
+         $form .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("multiple_year_time", $temp, $params);
+
+         $form .= $dropdown;
+
+
+         $form .= "</span>";
+         if(isset($opt['multiple_year_time']) && $opt['multiple_year_time'] == 'MONTH'){
+
+            $form .= "<span id='month_crit$rand' name= 'month_crit$rand' class='md-widgetcrit'>";
+            $form .= "</br></br>";
+            $form .= __('Month', 'mydashboard');
+            $form .= "&nbsp;";
+            $form .= PluginMydashboardHelper::monthDropdown("month_year", (isset($opt['month_year']) ? $opt['month_year'] : 0));
+            $form .= "</span>";
+         }else{
+            $form .= "<span id='month_crit$rand' name= 'month_crit$rand' class='md-widgetcrit'></span>";
+         }
+
+         $params2=['value'=>'__VALUE__',
+
+         ];
+         $form .= Ajax::updateItemOnSelectEvent('dropdown_multiple_year_time'.$rand,
+                                                "month_crit$rand",
+                                                Plugin::getWebDir('mydashboard')."/ajax/dropdownMonth.php",
+                                                $params2,
+                                                false);
+
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
+      }
+      if (in_array("itilcategorielvl1", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+
+
+         //
+
+         $form .= __('Category', 'mydashboard');
+         $form .= "&nbsp;";
+         $dbu = new DbUtils();
+         if(isset($_POST["params"]['entities_id'])){
+            $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $_POST["params"]['entities_id'], $_POST["params"]['sons']);
+         }else{
+            $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $opt['entities_id'], $opt['sons']);
+         }
+
+         $dropdown = ITILCategory::dropdown(['name'=>'itilcategorielvl1','value'=>$opt['itilcategorielvl1'],'display'=>false,'condition'=>['level'=>1,['OR'=>['is_request'=>1,'is_incident'=>1]]]]+$restrict);
+
+         $form .= $dropdown;
+
+         $form .= "</span>";
+
+
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
+      }
+
+      if (in_array("tag", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+
+
+         //
+
+         $form .= __('Tag', 'mydashboard');
+         $form .= "&nbsp;";
+         $dbu = new DbUtils();
+         if(isset($_POST["params"]['entities_id'])){
+            $restrict = $dbu->getEntitiesRestrictCriteria('glpi_plugin_tag_tags', '', $_POST["params"]['entities_id'], $_POST["params"]['sons']);
+         }else{
+            $restrict = $dbu->getEntitiesRestrictCriteria('glpi_plugin_tag_tags', '', $opt['entities_id'], $opt['sons']);
+         }
+         $tag = new PluginTagTag();
+         $data_tags = $tag->find([$restrict]);
+         foreach ($data_tags as $data) {
+            $types = json_decode($data['type_menu']);
+            if(in_array('Ticket',$types)){
+               $tags[$data['id']] = $data['name'];
+            }
+         }
+         $params['multiple'] = false;
+         $params['display']  = false;
+         $params['value']  = isset($opt['tag'])?$opt['tag']:null;
+         $params['size']     = count($tags);
+
+
+         $dropdown = Dropdown::showFromArray("tag", $tags, $params);
+
+
 
          $form .= $dropdown;
 

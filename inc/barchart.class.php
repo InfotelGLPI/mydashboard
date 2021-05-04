@@ -567,6 +567,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                          stacked: true
                      }]
                  },
+                 legend: { position: 'top'},
                  animation: {
                      onComplete: function() {
                        isChartRendered = true;
@@ -624,6 +625,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
          $onclick = 1;
       }
       $name  = $graph_datas['name'];
+      $title = $name;
+      $disp = false;
+      if(isset($graph_datas['title'])){
+         $title = $graph_datas['title'];
+         $disp = true;
+      }
       $datas = $graph_datas['data'];
       $ids   = $graph_datas['ids'];
       //      $label           = $graph_datas['label'];
@@ -666,8 +673,8 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
-                     display:false,
-                     text:'$name'
+                     display:$disp,
+                     text:'$title'
                  },
                  legend: {
                      display:false,
@@ -676,6 +683,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  tooltips: {
                      enabled: true,
                  },
+                 legend: { position: 'top'},
                  animation: {
                      onComplete: function() {
                        var chartInstance = this.chart;
@@ -804,7 +812,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      text:'$name'
                  },
                  tooltips: {
-                     enabled: false,
+                     enabled: true,
                  },
 //                 animation: {
 //                  onComplete: function() {

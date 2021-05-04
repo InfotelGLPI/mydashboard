@@ -124,6 +124,32 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $format          = isset($graph_datas['format']) ? $graph_datas['format'] : json_encode("");
       $json_criterias = json_encode($graph_criterias);
 
+      $formatter = "formatter: function(value) {
+                           let piformat = $format;
+                           let percentage = value + piformat;
+                           return  percentage;
+                         },";
+      if(isset($graph_datas["percentage"]) && $graph_datas["percentage"] == true ){
+         $formatter = "formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value*100 / sum).toFixed(1)+\"%\";
+                            return percentage;
+                        },";
+      }
+      $title = "";
+      $disp = true;
+      if(isset($graph_datas['title']) && !empty($graph_datas['title'])){
+         $title =" title:{
+            display:true,
+                     text:'".$graph_datas['title']."'
+                 },";
+
+      }
+
       $graph = "<script type='text/javascript'>
             var dataPie$name = {
               datasets: [{
@@ -145,12 +171,8 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                     datalabels: {
-                      formatter: function(value) {
-                           let piformat = $format;
-                           let percentage = value + piformat;
-                           return  percentage;
-                         },
-                     color: 'white',
+                        $formatter
+                     color: 'black',
                    },
                    labels: {
                      render: 'value',
@@ -160,6 +182,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
 //                     fontFamily: 'Lucida Console, Monaco, monospace'
                    }
                 },
+                $title
                  responsive: true,
                  maintainAspectRatio: true,
 //                  tooltips: {
