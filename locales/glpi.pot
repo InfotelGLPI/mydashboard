@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-18 07:14+0000\n"
+"POT-Creation-Date: 2021-05-18 07:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1109,6 +1109,7 @@ msgid "Number of tickets per location per period"
 msgstr ""
 
 #: reports/reports_pie.class.php:78 reports/reports_pie.class.php:1421
+#: reports/reports_pie.class.php:1852
 msgid "Global indicators by week"
 msgstr ""
 
@@ -1175,10 +1176,6 @@ msgstr ""
 
 #: reports/reports_pie.class.php:1784
 msgid "Ticket closed"
-msgstr ""
-
-#: reports/reports_pie.class.php:1852
-msgid "Global indicators"
 msgstr ""
 
 #: reports/reports_pie.class.php:1894
