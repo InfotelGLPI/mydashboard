@@ -1561,7 +1561,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
       ];
 
 
-      $href_new = "<a $target style='color:#D9534F !important;$size' title='" . __('New tickets', 'servicecatalog') . "' \
+      $href_new = "<a $target style='color:#D9534F !important;$size' title='" . __('New tickets', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   Toolbox::append_params($options_new, '&amp;') . "' ><span class='$span'>" .
                   $total_new . "</span></a>";
@@ -1602,7 +1602,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
       ];
 
 
-      $href_due = "<a $target style='$size' title='" . __('Tickets late', 'servicecatalog') . "' \
+      $href_due = "<a $target style='$size' title='" . __('Tickets late', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   Toolbox::append_params($options_due, '&amp;') . "' ><span class='$span'>" .
                   $total_due . "</span></a>";
@@ -1635,7 +1635,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
          $options_pend['criteria'][] = $criterias;
       }
 
-      $href_pend = "<a $target style='$size' title='" . __('Pending tickets', 'servicecatalog') . "' \
+      $href_pend = "<a $target style='$size' title='" . __('Pending tickets', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                    Toolbox::append_params($options_pend, '&amp;') . "' ><span class='$span'>" .
                    $total_pend . "</span></a>";
@@ -1686,7 +1686,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
          }
       }
 
-         $href_incpro = "<a $target style='$size' title='" . __('Incidents in progress', 'servicecatalog') . "' \
+         $href_incpro = "<a $target style='$size' title='" . __('Incidents in progress', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         Toolbox::append_params($options_incpro, '&amp;') . "' ><span class='$span'>" .
                         $total_incpro . "</span></a>";
@@ -1737,7 +1737,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
          }
       }
 
-         $href_dempro = "<a $target style='$size' title='" . __('Requests in progress', 'servicecatalog') . "' \
+         $href_dempro = "<a $target style='$size' title='" . __('Requests in progress', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         Toolbox::append_params($options_dempro, '&amp;') . "' ><span class='$span'>" .
                         $total_dempro . "</span></a>";
@@ -1781,7 +1781,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
          }
       }
 
-      $href_closed = "<a $target style='$size' title='" . __('Ticket closed', 'servicecatalog') . "' \
+      $href_closed = "<a $target style='$size' title='" . __('Ticket closed', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                      Toolbox::append_params($options_closed, '&amp;') . "' ><span class='$span'>" .
                      $total_closed . "</span></a>";
@@ -1849,7 +1849,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             $stats .= "<div class=\"bt-feature $class \">";
             $stats .= "<h3 class=\"bt-title-divider\">";
             $stats .= "<span>";
-            $stats .= __("Global indicators", "servicecatalog");
+            $stats .= __("Global indicators by week", "mydashboard");
             $stats .= "</span>";
             $stats .= "</h3>";
          }
@@ -1861,37 +1861,37 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             $stats .= "<div class='nb ind-widget-new'>";
             $stats .= $href_new;
             $stats .= "<br><br>";
-            $stats .= __('New tickets', 'servicecatalog');
+            $stats .= __('New tickets', 'mydashboard');
             $stats .= "</div>";
 
 //            $stats .= "<div class='nb ind-widget-late'>";
 //            $stats .= $href_due;
 //            $stats .= "<br><br>";
-//            $stats .= __('Tickets late', 'servicecatalog');
+//            $stats .= __('Tickets late', 'mydashboard');
 //            $stats .= "</div>";
 
             $stats .= "<div class='nb ind-widget-pending'>";
             $stats .= $href_pend;
             $stats .= "<br><br>";
-            $stats .= __('Pending tickets', 'servicecatalog');
+            $stats .= __('Pending tickets', 'mydashboard');
             $stats .= "</div>";
 
             $stats .= "<div class='nb ind-widget-process'>";
             $stats .= $href_incpro;
             $stats .= "<br><br>";
-            $stats .= __('Incidents in progress', 'servicecatalog');
+            $stats .= __('Incidents in progress', 'mydashboard');
             $stats .= "</div>";
 
             $stats .= "<div class='nb dem-widget-process'>";
             $stats .= $href_dempro;
             $stats .= "<br><br>";
-            $stats .= __('Requests in progress', 'servicecatalog');
+            $stats .= __('Requests in progress', 'mydashboard');
             $stats .= "</div>";
 
             $stats .= "<div class='nb ind-widget-late'>";
             $stats .= $href_closed;
             $stats .= "<br><br>";
-            $stats .= __('Tickets closed', 'servicecatalog');
+            $stats .= __('Tickets closed', 'mydashboard');
             $stats .= "</div>";
 
          }
