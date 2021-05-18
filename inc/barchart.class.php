@@ -626,10 +626,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       }
       $name  = $graph_datas['name'];
       $title = $name;
-      $disp = false;
+      $disp = 'false';
       if(isset($graph_datas['title'])){
          $title = $graph_datas['title'];
-         $disp = true;
+         $disp = 'true';
       }
       $datas = $graph_datas['data'];
       $ids   = $graph_datas['ids'];

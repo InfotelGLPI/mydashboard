@@ -212,6 +212,17 @@ function plugin_mydashboard_install() {
 
    }
 
+   //fix bug about widget
+   if (!$DB->tableExists("glpi_plugin_mydashboard_stockticketindicators")) {
+      $mig = new Migration("1.7.9");
+
+      //new table to fix bug about stock tickets
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.9.sql");
+      
+
+      $mig->executeMigration();
+   }
+
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
    if (!$config->getFromDB("1")) {

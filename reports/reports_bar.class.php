@@ -293,10 +293,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             if (isset($_SESSION['glpiactiveprofile']['interface'])
                 && Session::getCurrentInterface() == 'central') {
                $criterias = ['requesters_groups_id',
+                             'technicians_groups_id',
+                             'filter_date',
                              'entities_id',
                              'is_recursive',
                              'type',
-                             'year',
+
                              'limit'];
             }
             if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -318,6 +320,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $type_criteria             = $crit['type'];
             $entities_criteria         = $crit['entities_id'];
             $requester_groups_criteria = $crit['requesters_groups_id'];
+            $technician_groups_criteria = $crit['technicians_groups_id'];
             $date_criteria             = $crit['date'];
             $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
             $limit_query               = "";
@@ -331,7 +334,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                      LEFT JOIN `glpi_itilcategories`
                         ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
                      WHERE $date_criteria
-                     $entities_criteria $type_criteria $requester_groups_criteria
+                     $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria
                      AND $is_deleted
                      GROUP BY `glpi_itilcategories`.`id`
                      ORDER BY count DESC
@@ -384,12 +387,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $type                       = $opt['type'];
             $entities_id_criteria       = $crit['entity'];
             $sons_criteria              = $crit['sons'];
-            $year                       = $opt['year'];
+            $year                       = $opt['year'] ?? '';
             $graph_criterias = ['entities_id'        => $entities_id_criteria,
                                 'sons'               => $sons_criteria,
                                 'group_is_recursive' => $js_ancestors,
+                                'technician_groups' =>  $opt['technicians_groups_id'] ?? [],
                                 'type'               => $type,
-                                'year'               => $year,
+                                'year'               => $year ?? '',
                                 'widget'             => $widgetId];
 
             $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, $graph_criterias);

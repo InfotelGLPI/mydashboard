@@ -327,6 +327,7 @@ if (isset($_POST["params"]["widget"])
       addCriteria(OPEN_DATE, 'contains', $_POST["params"]["year"], 'AND');
 
       groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
+      groupCriteria(TECHNICIAN_GROUP, 'equals', $_POST["params"]["technician_group"]);
 
 
       if ($_POST["params"]["type"] > 0) {

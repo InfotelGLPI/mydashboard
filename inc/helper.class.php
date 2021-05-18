@@ -521,6 +521,119 @@ class PluginMydashboardHelper {
          $crit['crit']['year'] = $opt['year'];
       }
 
+      // DISPLAY DATA
+
+      if (in_array("display_data", $criterias)) {
+         if (isset($params['opt']['display_data'])) {
+            $opt["display_data"]          = $params['opt']['display_data'];
+            $crit['crit']['display_data'] = $params['opt']['display_data'];
+         } else {
+            $opt["display_data"]          = "YEAR";
+            $crit['crit']['display_data'] = "YEAR";
+         }
+
+         if($opt["display_data"] == "YEAR"){
+            $year                 = intval(strftime("%Y"));
+            if (isset($params['opt']["year"])
+                && $params['opt']["year"] > 0) {
+               $year        = $params['opt']["year"];
+               $opt['year'] = $params['opt']['year'];
+            } else {
+               $opt["year"] = $year;
+            }
+            $crit['crit']['year'] = $opt['year'];
+         } else if ($opt["display_data"] == "START_END") {
+            if (isset($params['opt']["start_month"])
+                && $params['opt']["start_month"] > 0) {
+               $opt['start_month'] = $params['opt']['start_month'];
+               $crit['crit']['start_month'] = $params['opt']['start_month'];
+            } else {
+               $opt["start_month"] = date("m");
+               $crit['crit']['start_month'] = date("m");
+            }
+
+            if (isset($params['opt']["start_year"])
+                && $params['opt']["start_year"] > 0) {
+               $opt['start_year'] = $params['opt']['start_year'];
+               $crit['crit']['start_year'] = $params['opt']['start_year'];
+            } else {
+               $opt["start_year"] = date("Y");
+               $crit['crit']['start_year'] = date("Y");
+            }
+
+            if (isset($params['opt']["end_month"])
+                && $params['opt']["end_month"] > 0) {
+               $opt['end_month'] = $params['opt']['end_month'];
+               $crit['crit']['end_month'] = $params['opt']['end_month'];
+            } else {
+               $opt["end_month"] = date("m");
+               $crit['crit']['end_month'] = date("m");
+            }
+
+            if (isset($params['opt']["end_year"])
+                && $params['opt']["end_year"] > 0) {
+               $opt['end_year'] = $params['opt']['end_year'];
+               $crit['crit']['end_year'] = $params['opt']['end_year'];
+            } else {
+               $opt["end_year"] = date("Y");
+               $crit['crit']['end_year'] = date("Y");
+            }
+         }
+
+      }
+
+      if (in_array("filter_date", $criterias)) {
+         if (isset($params['opt']['filter_date'])) {
+            $opt["filter_date"]          = $params['opt']['filter_date'];
+            $crit['crit']['filter_date'] = $params['opt']['filter_date'];
+         } else {
+            $opt["filter_date"]          = "YEAR";
+            $crit['crit']['filter_date'] = "YEAR";
+         }
+
+         if($opt["filter_date"] == "YEAR"){
+            $year                 = intval(strftime("%Y"));
+            if (isset($params['opt']["year"])
+                && $params['opt']["year"] > 0) {
+               $year        = $params['opt']["year"];
+               $opt['year'] = $params['opt']['year'];
+            } else {
+               $opt["year"] = $year;
+            }
+            $crit['crit']['year'] = $opt['year'];
+
+            $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01' 
+                              AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
+            $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
+                              AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
+         } else if ($opt["filter_date"] == "BEGIN_END") {
+
+            if (isset($params['opt']['begin'])
+                && $params['opt']["begin"] > 0) {
+               $opt["begin"]          = $params['opt']['begin'];
+               $crit['crit']['begin'] = $params['opt']['begin'];
+            } else {
+               $opt["begin"] = date("Y-m-d H:i:s");
+            }
+
+            if (isset($params['opt']['end'])
+                && $params['opt']["end"] > 0) {
+               $opt["end"]          = $params['opt']['end'];
+               $crit['crit']['end'] = $params['opt']['end'];
+            } else {
+               $opt["end"] = date("Y-m-d H:i:s");
+            }
+            $end =  $opt["end"];
+            $start = $opt["begin"];
+
+            $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$start' 
+                              AND `glpi_tickets`.`date` <= '$end' )";
+            $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$start' 
+                              AND `glpi_tickets`.`closedate` <= '$end' )";
+         }
+
+      }
+
       // BEGIN DATE
       if (in_array("begin", $criterias)) {
          if (isset($params['opt']['begin'])
@@ -543,13 +656,17 @@ class PluginMydashboardHelper {
          }
       }
 
-      $nbdays                    = date("t", mktime(0, 0, 0, $month, 1, $year));
-      $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' 
-                              AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
-      $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' 
-                              AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+      if(!in_array('filter_date',$criterias)) {
 
-      if (!in_array("month", $criterias)) {
+
+         $nbdays                    = date("t", mktime(0, 0, 0, $month, 1, $year));
+         $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' 
+                              AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+         $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' 
+                              AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+      }
+
+      if (!in_array("month", $criterias) && !in_array('filter_date',$criterias)) {
          $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01' 
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
          $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
@@ -625,6 +742,8 @@ class PluginMydashboardHelper {
             $crit['crit']['month_year'] = $params['opt']['month_year'];
          }
       }
+
+
 
 
       // STATUS
@@ -842,6 +961,10 @@ class PluginMydashboardHelper {
                break;
          }
 
+      }
+
+      if (isset($opt['display_data']) && $opt['display_data'] == "SLIDING") {
+               $form .= "&nbsp;/&nbsp;".sprintf(__('sliding %s-month period', 'mydashboard'),$opt['period_time']);
       }
       if (isset($opt['itilcategorielvl1']) && $opt['itilcategorielvl1'] > 0) {
          $form .= "&nbsp;/&nbsp;" . __("Category",'mydashobard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_itilcategories', $opt['itilcategorielvl1']);
@@ -1104,6 +1227,22 @@ class PluginMydashboardHelper {
          $form .= __('Year', 'mydashboard');
          $form .= "&nbsp;";
          $form .= self::YearDropdown($annee_courante);
+         $form .= "</span>";
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+      }
+
+      if (in_array("week", $criterias)) {
+         $form           .= "<span class='md-widgetcrit'>";
+         $semaine_courante = strftime("%W");
+         if (isset($opt["week"])
+             && $opt["week"] > 0) {
+            $semaine_courante = $opt["week"];
+         }
+         $form .= __('Week', 'mydashboard');
+         $form .= "&nbsp;";
+         $form .= self::WeekDropdown($semaine_courante);
          $form .= "</span>";
          if ($count > 1) {
             $form .= "</br></br>";
@@ -1382,6 +1521,211 @@ class PluginMydashboardHelper {
          }
 
       }
+
+      if (in_array("display_data", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+
+
+         $temp = [];
+         $temp["YEAR"] = __("year",'mydashboard');
+         $temp["START_END"] = __("Start end",'mydashboard');
+
+
+         $rand = mt_rand();
+         $params = [
+            "name"                => 'display_data',
+            "display"             => false,
+            "multiple"            => false,
+            "width"               => '200px',
+            "rand"               => $rand,
+            'value'              => isset($opt['display_data'])?$opt['display_data']:'YEAR',
+            'display_emptychoice' => false
+         ];
+
+         $form .= __('Display', 'mydashboard');
+         $form .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("display_data", $temp, $params);
+
+         $form .= $dropdown;
+
+
+         $form .= "</span>";
+         if(isset($opt['display_data']) && $opt['display_data'] == 'START_END'){
+
+            $form .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
+            $form .= "<span class='md-widgetcrit'>";
+            $form .= "</br></br>";
+            $form .= __('Start month', 'mydashboard');
+            $form .= "&nbsp;";
+            $options = [];
+            $options['value'] = $opt['start_month'] ?? date('m');
+            $options['rand'] = $rand;
+            $options['min'] = 1;
+            $options['max'] = 12;
+            $options['display'] = false;
+            $options['width'] = '200px';
+            $form .= Dropdown::showNumber('start_month',$options);
+            $form .= "</span>";
+
+            $form .= "<span class='md-widgetcrit'>";
+            $form .= "</br>";
+            $form .= __('Start year', 'mydashboard');
+            $form .= "&nbsp;";
+            $options = [];
+            $options['value'] = $opt['start_year'] ?? date('Y');
+            $options['rand'] = $rand;
+            $options['display'] = false;
+            $year = date("Y") - 3;
+            for ($i = 0; $i <= 3; $i++) {
+               $elements[$year] = $year;
+
+               $year++;
+            }
+
+            $form .= Dropdown::showFromArray("start_year", $elements, $options);
+            $form .= "</span>";
+
+            $form .= "<span class='md-widgetcrit'>";
+            $form .= "</br></br>";
+            $form .= __('End month', 'mydashboard');
+            $form .= "&nbsp;";
+            $options = [];
+            $options['value'] = $opt['end_month'] ?? date('m');
+            $options['rand'] = $rand;
+            $options['min'] = 1;
+            $options['max'] = 12;
+            $options['display'] = false;
+            $options['width'] = '200px';
+            $form .= Dropdown::showNumber('end_month',$options);
+            $form .= "</span>";
+
+            $form .= "<span class='md-widgetcrit'>";
+            $form .= "</br>";
+            $form .= __('End year', 'mydashboard');
+            $form .= "&nbsp;";
+            $options = [];
+            $options['value'] = $opt['end_year'] ?? date('Y');
+            $options['rand'] = $rand;
+            $options['display'] = false;
+            $year = date("Y") - 3;
+            for ($i = 0; $i <= 3; $i++) {
+               $elements[$year] = $year;
+
+               $year++;
+            }
+
+            $form .= Dropdown::showFromArray("end_year", $elements, $options);
+//            $form .= Dropdown::showNumber('end_year',$options);
+            $form .= "</span>";
+            $form .= "</span>";
+         }else{
+            $form .= "</br></br>";
+            $form           .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $form .= __('Year', 'mydashboard');
+            $form .= "&nbsp;";
+            $form .= self::YearDropdown($annee_courante);
+            $form .= "</span>";
+
+         }
+
+         $params2=['value'=>'__VALUE__',
+
+         ];
+         $form .= Ajax::updateItemOnSelectEvent('dropdown_display_data'.$rand,
+                                                "display_data_crit$rand",
+                                                Plugin::getWebDir('mydashboard')."/ajax/dropdownUpdateDisplaydata.php",
+                                                $params2,
+                                                false);
+
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
+      }
+
+      if (in_array("filter_date", $criterias)) {
+         $form .= "<span class='md-widgetcrit'>";
+
+
+
+         $temp = [];
+         $temp["YEAR"] = __("year",'mydashboard');
+         $temp["BEGIN_END"] = __("begin and end date",'mydashboard');
+
+
+         $rand = mt_rand();
+         $params = [
+            "name"                => 'filter_date',
+            "display"             => false,
+            "multiple"            => false,
+            "width"               => '200px',
+            "rand"               => $rand,
+            'value'              => isset($opt['filter_date'])?$opt['filter_date']:'YEAR',
+            'display_emptychoice' => false
+         ];
+
+         $form .= __('Filter date', 'mydashboard');
+         $form .= "&nbsp;";
+
+         $dropdown = Dropdown::showFromArray("filter_date", $temp, $params);
+
+         $form .= $dropdown;
+
+
+         $form .= "</span>";
+         if(isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END'){
+
+            $form .= "<span id='filter_date_crit$rand' name= 'filter_date_crit$rand' class='md-widgetcrit'>";
+            $form .= "<span class='md-widgetcrit'>";
+
+            $form .= __('Start');
+            $form .= "&nbsp;";
+            $form .= Html::showDateTimeField("begin", ['value' => isset($opt['begin']) ? $opt['begin'] : null, 'maybeempty' => false, 'display' => false]);
+            $form .= "</span>";
+            $form .= "</br>";
+            $form .= "<span class='md-widgetcrit'>";
+            $form .= __('End');
+            $form .= "&nbsp;";
+            $form .= Html::showDateTimeField("end", ['value' => isset($opt['end']) ? $opt['end'] : null, 'maybeempty' => false, 'display' => false]);
+            $form .= "</span>";
+            $form .= "</span>";
+         }else{
+            $form .= "</br></br>";
+            $form           .= "<span id='filter_date_crit$rand' name= 'filter_date_crit$rand' class='md-widgetcrit'>";
+            $annee_courante = strftime("%Y");
+            if (isset($opt["year"])
+                && $opt["year"] > 0) {
+               $annee_courante = $opt["year"];
+            }
+            $form .= __('Year', 'mydashboard');
+            $form .= "&nbsp;";
+            $form .= self::YearDropdown($annee_courante);
+            $form .= "</span>";
+
+         }
+
+         $params2=['value'=>'__VALUE__',
+
+         ];
+         $form .= Ajax::updateItemOnSelectEvent('dropdown_filter_date'.$rand,
+                                                "filter_date_crit$rand",
+                                                Plugin::getWebDir('mydashboard')."/ajax/dropdownUpdateDisplaydata.php",
+                                                $params2,
+                                                false);
+
+         if ($count > 1) {
+            $form .= "</br></br>";
+         }
+
+      }
+
       if (in_array("itilcategorielvl1", $criterias)) {
          $form .= "<span class='md-widgetcrit'>";
 
@@ -1738,6 +2082,23 @@ class PluginMydashboardHelper {
               'display' => false];
 
       return Dropdown::showFromArray("year", $elements, $opt);
+   }
+
+   /**
+    * @param null $selected
+    *
+    * @return int|string
+    */
+   static function WeekDropdown($selected = null) {
+
+
+      $opt = [
+         'value'   => $selected,
+         'min'   => 1,
+         'max'   => 53,
+              'display' => false];
+
+      return Dropdown::showNumber("week", $opt);
    }
 
    /*
