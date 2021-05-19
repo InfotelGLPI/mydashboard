@@ -324,7 +324,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                }
 
                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-
+			   $q = "SET lc_time_names = '".$_SESSION['glpilanguage']."';";
+               $r  = $DB->query($q);
                $query_tickets =
                   "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
                   " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
@@ -342,6 +343,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                $results   = $DB->query($query_tickets);
                $nbResults = $DB->numrows($results);
                $i         = 0;
+			   $q = "SET lc_time_names = 'en_GB';";
+               $r   = $DB->query($q);
                if ($nbResults) {
                   while ($data = $DB->fetchArray($results)) {
 
