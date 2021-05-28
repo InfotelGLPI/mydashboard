@@ -847,7 +847,13 @@ class PluginMydashboardWidget extends CommonDBTM {
    static function getAllUsedItemsForUser() {
       $items = [];
 
-      $types = ['Computer', 'Monitor', 'Peripheral', 'Phone', 'Printer', 'SoftwareLicense', 'PluginBadgesBadge'];
+      $types = ['Computer',
+                'Monitor',
+                'Peripheral',
+                'Phone',
+                'Printer',
+                'SoftwareLicense',
+                'PluginBadgesBadge'];
 
       $users_id = Session::getLoginUserID();
       foreach ($types as $itemtype) {
