@@ -15,6 +15,9 @@
             if (window.location.href.indexOf('plugins') > 0) {
                 url = window.location.href.replace(/plugins\/.*/, path);
             }
+            if (window.location.href.indexOf('marketplace') > 0) {
+                url = window.location.href.replace(/marketplace\/.*/, path);
+            }
 
               var hrefs = $("a[href$='/front/central.php']");//, a[href$='/front/helpdesk.public.php']
               hrefs.each(function (href, value) {
