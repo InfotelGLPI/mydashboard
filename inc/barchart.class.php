@@ -317,7 +317,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                          }
                         }, 
                         {
-                         id: 'right-y-axis',
+                         id: 'bar-y-axis',
                          type: 'linear',
                          position: 'left',
                          stacked: true, 
