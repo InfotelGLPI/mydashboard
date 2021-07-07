@@ -564,7 +564,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = []) {
+   static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = [], $style="") {
 
       if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 0, $itilcategories_id) < 1) {
          $display = false;
@@ -575,7 +575,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if (count($itilcategories_id) > 0) {
          $addclass = "details";
       }
-      $display  = "<div id='gs4' class=\"bt-row $delclass $addclass\">";
+      $display  = "<div id='gs4' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3>";
       $display  .= "<div class='alert alert-danger' role='alert'>";
@@ -607,7 +607,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     *
     * @return string
     */
-   static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = []) {
+   static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = [], $style="") {
 
       if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 1, $itilcategories_id) < 1) {
          $display = false;
@@ -619,7 +619,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if (count($itilcategories_id) > 0) {
          $addclass = "details";
       }
-      $display  = "<div id='gs5' class=\"bt-row $delclass $addclass\">";
+      $display  = "<div id='gs5' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3>";
       $display  .= "<div class='alert alert-warning' role='alert'>";
@@ -651,7 +651,7 @@ class PluginMydashboardWidget extends CommonDBTM {
     * @return string
     * @throws \GlpitestSQLError
     */
-   static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = []) {
+   static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = [], $style="") {
 
       if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) < 1) {
          $display = false;
@@ -663,7 +663,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if (count($itilcategories_id) > 0) {
          $addclass = "details";
       }
-      $display  = "<div id='gs6' class=\"bt-row $delclass $addclass\">";
+      $display  = "<div id='gs6' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3>";
       $display  .= "<div class='alert alert-info' role='alert'>";

@@ -172,7 +172,7 @@ class PluginMydashboardPlanning extends CommonGLPI {
                   buttonIcons: true, // show the prev/next text
                   weekNumbers: true,
                   navLinks: true, // can click day/week names to navigate views
-                  editable: false,
+                  editable: true,
                   eventLimit: true, // allow \"more\" link when too many events
                   events: $events,
                   eventClick: function(event) {

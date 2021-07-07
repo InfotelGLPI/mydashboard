@@ -108,9 +108,9 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
          foreach ($_tabDatas as &$line) {
             //For future, maybe use those custom keys to match with order of the header and not use order of the array
             //Could be done like this :
-            if ($this->tabNamesSet) {
-               $line = $this->sortArrayByArray($line, $this->tabNames);
-            }
+//            if ($this->tabNamesSet) {
+//               $line = $this->sortArrayByArray($line, $this->tabNames);
+//            }
             $line = array_values($line);
 
          }

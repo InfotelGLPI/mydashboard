@@ -69,6 +69,137 @@ class PluginMydashboardReminder extends CommonGLPI {
    }
 
    /**
+    * Return visibility SQL restriction to add
+    *
+    * @return string restrict to add
+    **/
+   static function addVisibilityRestrict() {
+      //not deprecated because used in Search
+
+      //get and clean criteria
+      $criteria = self::getVisibilityCriteria();
+      unset($criteria['LEFT JOIN']);
+      $criteria['FROM'] = Reminder::getTable();
+
+      $it = new \DBmysqlIterator(null);
+      $it->buildQuery($criteria);
+      $sql = $it->getSql();
+      $sql = preg_replace('/.*WHERE /', '', $sql);
+
+      return $sql;
+   }
+
+
+   /**
+    * Return visibility joins to add to DBIterator parameters
+    *
+    * @since 9.4
+    *
+    * @param boolean $forceall force all joins (false by default)
+    *
+    * @return array
+    */
+   static public function getVisibilityCriteria(bool $forceall = false): array {
+      if (!Session::haveRight(Reminder::$rightname, READ)) {
+         return [
+            'WHERE' => ['glpi_reminders.users_id' => Session::getLoginUserID()],
+         ];
+      }
+
+      $join = [];
+      $where = [];
+
+      // Users
+      $join['glpi_reminders_users'] = [
+         'FKEY' => [
+            'glpi_reminders_users'  => 'reminders_id',
+            'glpi_reminders'        => 'id'
+         ]
+      ];
+//disabled for plugin
+
+      //      if (Session::getLoginUserID()) {
+      //         $where['OR'] = [
+      //               'glpi_reminders.users_id'        => Session::getLoginUserID(),
+      //               'glpi_reminders_users.users_id'  => Session::getLoginUserID(),
+      //         ];
+      //      } else {
+      //         $where = [
+      //            0
+      //         ];
+      //      }
+
+      // Groups
+      if ($forceall
+          || (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"]))) {
+         $join['glpi_groups_reminders'] = [
+            'FKEY' => [
+               'glpi_groups_reminders' => 'reminders_id',
+               'glpi_reminders'        => 'id'
+            ]
+         ];
+
+         $or = ['glpi_groups_reminders.entities_id' => ['<', 0]];
+         $restrict = getEntitiesRestrictCriteria('glpi_groups_reminders', '', '', true);
+         if (count($restrict)) {
+            $or = $or + $restrict;
+         }
+         $where['OR'][] = [
+            'glpi_groups_reminders.groups_id' => count($_SESSION["glpigroups"])
+               ? $_SESSION["glpigroups"]
+               : [-1],
+            'OR' => $or
+         ];
+      }
+
+      // Profiles
+      if ($forceall
+          || (isset($_SESSION["glpiactiveprofile"])
+              && isset($_SESSION["glpiactiveprofile"]['id']))) {
+         $join['glpi_profiles_reminders'] = [
+            'FKEY' => [
+               'glpi_profiles_reminders'  => 'reminders_id',
+               'glpi_reminders'           => 'id'
+            ]
+         ];
+
+         $or = ['glpi_profiles_reminders.entities_id' => ['<', 0]];
+         $restrict = getEntitiesRestrictCriteria('glpi_profiles_reminders', '', '', true);
+         if (count($restrict)) {
+            $or = $or + $restrict;
+         }
+         $where['OR'][] = [
+            'glpi_profiles_reminders.profiles_id' => $_SESSION["glpiactiveprofile"]['id'],
+            'OR' => $or
+         ];
+      }
+
+      // Entities
+      if ($forceall
+          || (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"]))) {
+         $join['glpi_entities_reminders'] = [
+            'FKEY' => [
+               'glpi_entities_reminders'  => 'reminders_id',
+               'glpi_reminders'           => 'id'
+            ]
+         ];
+      }
+      if (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"])) {
+         $restrict = getEntitiesRestrictCriteria('glpi_entities_reminders', '', '', true, true);
+         if (count($restrict)) {
+            $where['OR'] = $where['OR'] + $restrict;
+         }
+      }
+
+      $criteria = [
+         'LEFT JOIN' => $join,
+         'WHERE'     => $where
+      ];
+
+      return $criteria;
+   }
+
+   /**
     * Return visibility joins to add to SQL
     *
     * @param $forceall force all joins (false by default)

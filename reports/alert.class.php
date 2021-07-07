@@ -173,7 +173,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                          $restrict_visibility ";
 
       if ($public == 0) {
-         $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+         $query .= "AND " . PluginMydashboardReminder::addVisibilityRestrict() . "";
       } else {
          $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
       }
@@ -1656,7 +1656,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $addwhere
                          $restrict_visibility ";
 
-      $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+      $query .= "AND " . PluginMydashboardReminder::addVisibilityRestrict() . "";
 
       $query .= "AND `" . $this->getTable() . "`.`type` = 1
                    ORDER BY `glpi_reminders`.`name`";
@@ -1694,10 +1694,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='nt-infos-triangle'></div>";
          $wl .= "<div id='nt_maint-infos' class='row'>";
          $wl .= "<div class='col-xs-4 centered'>";
-         if ($nb > 1) {
+//         if ($nb > 1) {
             $wl .= "<i class='fas fa-caret-left' id='nt_maint-prev'></i>";
             $wl .= "<i class='fas fa-caret-right' id='nt_maint-next'></i>";
-         }
+//         }
          $wl .= "</div>";
 
          $wl .= "<div class='col'>";
@@ -1830,7 +1830,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                         $addwhere
                          $restrict_visibility ";
 
-      $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+      $query .= "AND " . PluginMydashboardReminder::addVisibilityRestrict() . "";
 
       $query .= "AND `" . $this->getTable() . "`.`type` = 2
                    ORDER BY `glpi_reminders`.`name`";
@@ -1869,10 +1869,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='nt-infos-triangle'></div>";
          $wl .= "<div id='nt_info-infos' class='row'>";
          $wl .= "<div class='col-xs-4 centered'>";
-         if ($nb > 1) {
+//         if ($nb > 1) {
             $wl .= "<i class='fas fa-caret-left' id='nt_info-prev'></i>";
             $wl .= "<i class='fas fa-caret-right' id='nt_info-next'></i>";
-         }
+//         }
          $wl .= "</div>";
 
          $wl .= "<div class='col'>";
@@ -1973,7 +1973,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                          $restrict_visibility ";
 
       if ($public == 0) {
-         $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+         $query .= "AND " . PluginMydashboardReminder::addVisibilityRestrict() . "";
       } else {
          $query .= "AND `" . $this->getTable() . "`.`is_public`";
       }
@@ -2021,10 +2021,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='nt-infos-triangle'></div>";
          $wl .= "<div id='nt_alert-infos' class='row'>";
          $wl .= "<div class='col-xs-4 centered'>";
-         if ($nb > 1) {
+//         if ($nb > 1) {
             $wl .= "<i class='fas fa-caret-left' id='nt_alert-prev'></i>";
             $wl .= "<i class='fas fa-caret-right' id='nt_alert-next'></i>";
-         }
+//         }
          $wl .= "</div>";
 
          $wl .= "<div class='col'>";
@@ -2119,7 +2119,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                          $restrict_visibility ";
 
       if ($public == 0) {
-         $query .= "AND " . Reminder::addVisibilityRestrict() . "";
+         $query .= "AND " . PluginMydashboardReminder::addVisibilityRestrict() . "";
       } else {
          $query .= "AND `" . $this->getTable() . "`.`is_public`";
       }
