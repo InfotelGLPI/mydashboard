@@ -1,4 +1,4 @@
-Welcome to the mydashboard plugin page !
+# Welcome to the mydashboard plugin page !
 
 ## Français
 
