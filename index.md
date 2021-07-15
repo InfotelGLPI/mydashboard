@@ -2,10 +2,6 @@
 
 ## Français
 
-Vous pouvez proposer de nouveaux widgets : http://blogglpi.infotel.com/liste-des-widgets-proposes/
-
-Une video vous permettant de comprendre son fonctionnement : http://blogglpi.infotel.com/wp-content/uploads/2014/11/dashboard.mp4
-
 L'article du blog Infotel : http://blogglpi.infotel.com/une-creation-infotel-le-plugin-my-dashboard/
 
 * Concernant le widget alertes : 
@@ -17,10 +13,6 @@ L'article du blog Infotel : http://blogglpi.infotel.com/une-creation-infotel-le-
   * Une alerte peut être publique et dans ce cas, est visible sur la page d’authentification de GLPI.
 
 ## English
-
-You can propose new widgets: http://blogglpi.infotel.com/liste-des-widgets-proposes/
-
-A video for how to use it: http://blogglpi.infotel.com/wp-content/uploads/2014/11/dashboard.mp4
 
 Infotel blog article: http://blogglpi.infotel.com/une-creation-infotel-le-plugin-my-dashboard/
 
