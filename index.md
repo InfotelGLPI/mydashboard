@@ -1,37 +1,34 @@
-## Welcome to GitHub Pages
+Welcome to the mydashboard plugin page !
 
-You can use the [editor on GitHub](https://github.com/InfotelGLPI/mydashboard/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Français
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Vous pouvez proposer de nouveaux widgets : http://blogglpi.infotel.com/liste-des-widgets-proposes/
 
-### Markdown
+Une video vous permettant de comprendre son fonctionnement : http://blogglpi.infotel.com/wp-content/uploads/2014/11/dashboard.mp4
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+L'article du blog Infotel : http://blogglpi.infotel.com/une-creation-infotel-le-plugin-my-dashboard/
 
-```markdown
-Syntax highlighted code block
+* Concernant le widget alertes : 
 
-# Header 1
-## Header 2
-### Header 3
+  * Afin que des alertes apparaissent, il faut créer des notes, les cibler (afin de filtrer à qui elles sont affichées) et les tagger comme alertes avec l’impact de l’alerte (onglet spécifique sur la note créée).
 
-- Bulleted
-- List
+  * S’il y a moins de 2 alertes et que l’impact est inférieur à Moyen, le widget affiche un icone avec un soleil et des nuages. S’il y a plus de 2 alertes ou si l’impact est égal à Moyen, le widget affiche un icone avec des nuages, et si l’impact est supérieur à Moyen, le widget affiche un icone avec de la pluie.
 
-1. Numbered
-2. List
+  * Une alerte peut être publique et dans ce cas, est visible sur la page d’authentification de GLPI.
 
-**Bold** and _Italic_ and `Code` text
+## English
 
-[Link](url) and ![Image](src)
-```
+You can propose new widgets: http://blogglpi.infotel.com/liste-des-widgets-proposes/
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+A video for how to use it: http://blogglpi.infotel.com/wp-content/uploads/2014/11/dashboard.mp4
 
-### Jekyll Themes
+Infotel blog article: http://blogglpi.infotel.com/une-creation-infotel-le-plugin-my-dashboard/
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/InfotelGLPI/mydashboard/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+* Concerning the alerts widget:
 
-### Support or Contact
+  * In order for alerts to appear, you must create notes, target them (in order to filter to whom they are displayed) and tag them as alerts with the impact of the alert (specific tab on the created note).
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+  * If there are less than 2 alerts and the impact is less than Medium, the widget displays an icon with sun and clouds. If there are more than 2 alerts or if the impact is equal to Medium, the widget displays an icon with clouds, and if the impact is greater than Medium, the widget displays an icon with rain.
+
+  * An alert can be public and in this case is visible on the GLPI login page.
+
