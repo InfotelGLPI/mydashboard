@@ -139,16 +139,41 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
             echo "</td>";
             echo "</tr>";
          } else {
-            $newcategory = "";
-            if ($category != '') {
-               $newcategory .= $category . ' > ';
+
+            if (isset($widgetTitle['title'])) {
+               echo "<tr class='tab_bg_1 $pluginname'>";
+               $yesno = 0;
+               if (isset($this->authorized[$widgetId])) {
+                  echo "<td class='plugin_mydashboard_authorized' >";
+                  $yesno = 1;
+               } else {
+                  echo "<td class='plugin_mydashboard_unauthorized'>";
+               }
+
+               echo $widgetTitle['title'];
+               if ($category != '') {
+                  echo "<span class='plugin_mydashboard_discret' style='color:gray'>&nbsp;&nbsp;$category</span>";
+               }
+               echo "</td>";
+               echo "<td>";
+
+               Dropdown::showYesNo($widgetId, $yesno);
+               echo "</td>";
+               echo "</tr>";
+            } else {
+               $newcategory = "";
+               if ($category != '') {
+                  $newcategory .= $category . ' > ';
+               }
+
+               if (is_numeric($widgetId)) {
+                  $widgetId = isset($viewNames[$widgetId])?$viewNames[$widgetId]:0;
+               }
+               $newcategory .= $widgetId;
+               $this->displayList($widgetTitle, $newcategory, $pluginname);
             }
 
-            if (is_numeric($widgetId)) {
-               $widgetId = isset($viewNames[$widgetId])?$viewNames[$widgetId]:0;
-            }
-            $newcategory .= $widgetId;
-            $this->displayList($widgetTitle, $newcategory, $pluginname);
+
          }
       }
    }

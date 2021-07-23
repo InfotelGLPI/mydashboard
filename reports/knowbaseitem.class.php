@@ -27,8 +27,7 @@
 /**
  * Class PluginMydashboardKnowbaseItem
  */
-class PluginMydashboardKnowbaseItem extends CommonGLPI
-{
+class PluginMydashboardKnowbaseItem extends CommonGLPI {
    static $rightname = 'knowbase';
 
    /**
@@ -42,22 +41,32 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
    static function getTypeName($nb = 0) {
       return __('Knowledge base');
    }
+
    /**
     * @return array
     */
    public function getWidgetsForItem() {
-      return [
-         PluginMydashboardMenu::$GLOBAL_VIEW => [
-            "knowbaseitempopular" => __('FAQ') . " - " . __('Most popular questions') . "&nbsp;<i class='fas fa-table'></i>",
-            "knowbaseitemrecent" => __('FAQ') . " - " . __('Recent entries') . "&nbsp;<i class='fas fa-table'></i>",
-            "knowbaseitemlastupdate" => __('FAQ') . " - " . __('Last updated entries') . "&nbsp;<i class='fas fa-table'></i>"
-         ]
 
+      $widgets = [
+         PluginMydashboardMenu::$GLOBAL_VIEW => [
+            "knowbaseitempopular"    => ["title"   => __('FAQ') . " - " . __('Most popular questions'),
+                                         "icon"    => "fas fa-table",
+                                         "comment" => ""],
+            "knowbaseitemrecent"     => ["title"   => __('FAQ') . " - " . __('Recent entries'),
+                                         "icon"    => "fas fa-table",
+                                         "comment" => ""],
+            "knowbaseitemlastupdate" => ["title"   => __('FAQ') . " - " . __('Last updated entries'),
+                                         "icon"    => "fas fa-table",
+                                         "comment" => ""],
+         ]
       ];
+
+      return $widgets;
    }
 
    /**
     * @param $widgetId
+    *
     * @return PluginMydashboardDatatable
     */
    public function getWidgetContentForItem($widgetId) {
@@ -67,13 +76,13 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
 
       if ($widgetId == "knowbaseitemrecent") {
          $orderby = "ORDER BY `date` DESC";
-         $title = __('FAQ') . " - " . __('Recent entries');
+         $title   = __('FAQ') . " - " . __('Recent entries');
       } else if ($widgetId == 'knowbaseitemlastupdate') {
          $orderby = "ORDER BY `date_mod` DESC";
-         $title = __('FAQ') . " - " . __('Last updated entries');
+         $title   = __('FAQ') . " - " . __('Last updated entries');
       } else {
          $orderby = "ORDER BY `view` DESC";
-         $title = __('FAQ') . " - " . __('Most popular questions');
+         $title   = __('FAQ') . " - " . __('Most popular questions');
       }
 
       $faq_limit = "";
@@ -110,7 +119,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
                 LIMIT 10";
 
       $result = $DB->query($query);
-      $tab = [];
+      $tab    = [];
       while ($row = $DB->fetchAssoc($result)) {
          if ($widgetId == "knowbaseitemrecent") {
             $date = $row["date"];

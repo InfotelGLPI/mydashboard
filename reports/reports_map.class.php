@@ -29,9 +29,10 @@
  */
 class PluginMydashboardReports_Map extends CommonGLPI {
 
-   private $options;
-   private $pref;
+   private       $options;
+   private       $pref;
    public static $reports = [29];
+
    /**
     * PluginMydashboardReports_Map constructor.
     *
@@ -54,11 +55,11 @@ class PluginMydashboardReports_Map extends CommonGLPI {
     */
    public function getWidgetsForItem() {
 
-      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-
       $widgets = [
          __('Map', "mydashboard") => [
-            $this->getType() . "29" => (($isDebug) ? "29 " : "") . __("OpenStreetMap - Opened tickets by location", "mydashboard") . "&nbsp;<i class='fas fa-map'></i>",
+            $this->getType() . "29" => ["title"   => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
+                                        "icon"    => "fas fa-map",
+                                        "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")],
          ]
       ];
       return $widgets;

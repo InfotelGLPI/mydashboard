@@ -32,27 +32,31 @@ class PluginMydashboardReminder extends CommonGLPI {
    static function getTypeName($nb = 0) {
       return __('Reminder');
    }
+
    /**
     * @return array
     */
    function getWidgetsForItem() {
-      $array = [];
+
+      $widgets = [];
       if (Session::getCurrentInterface() != 'helpdesk') {
-         $array = [
-            PluginMydashboardMenu::$MY_VIEW =>
-               [
-                  "reminderpersonalwidget" => _n('Personal reminder', 'Personal reminders', 2) . "&nbsp;<i class='fas fa-table'></i>"
-               ]
-         ];
+         $widgets[PluginMydashboardMenu::$MY_VIEW]["reminderpersonalwidget"] = ["title"   => _n('Personal reminder', 'Personal reminders', 2),
+                                                                                "icon"    => "fas fa-table",
+                                                                                "comment" => ""];
       }
       if (Session::haveRight("reminder_public", READ)) {
-         $array[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = _n('Public reminder', 'Public reminders', 2) . "&nbsp;<i class='fas fa-table'></i>";
+
+         $widgets[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = ["title"   => _n('Public reminder', 'Public reminders', 2),
+                                                                                                         "icon"    => "fas fa-table",
+                                                                                                         "comment" => ""];
       }
-      return $array;
+
+      return $widgets;
    }
 
    /**
     * @param $widgetId
+    *
     * @return Nothing
     */
    function getWidgetContentForItem($widgetId) {
@@ -93,11 +97,11 @@ class PluginMydashboardReminder extends CommonGLPI {
    /**
     * Return visibility joins to add to DBIterator parameters
     *
-    * @since 9.4
-    *
     * @param boolean $forceall force all joins (false by default)
     *
     * @return array
+    * @since 9.4
+    *
     */
    static public function getVisibilityCriteria(bool $forceall = false): array {
       if (!Session::haveRight(Reminder::$rightname, READ)) {
@@ -106,17 +110,17 @@ class PluginMydashboardReminder extends CommonGLPI {
          ];
       }
 
-      $join = [];
+      $join  = [];
       $where = [];
 
       // Users
       $join['glpi_reminders_users'] = [
          'FKEY' => [
-            'glpi_reminders_users'  => 'reminders_id',
-            'glpi_reminders'        => 'id'
+            'glpi_reminders_users' => 'reminders_id',
+            'glpi_reminders'       => 'id'
          ]
       ];
-//disabled for plugin
+      //disabled for plugin
 
       //      if (Session::getLoginUserID()) {
       //         $where['OR'] = [
@@ -139,7 +143,7 @@ class PluginMydashboardReminder extends CommonGLPI {
             ]
          ];
 
-         $or = ['glpi_groups_reminders.entities_id' => ['<', 0]];
+         $or       = ['glpi_groups_reminders.entities_id' => ['<', 0]];
          $restrict = getEntitiesRestrictCriteria('glpi_groups_reminders', '', '', true);
          if (count($restrict)) {
             $or = $or + $restrict;
@@ -148,7 +152,7 @@ class PluginMydashboardReminder extends CommonGLPI {
             'glpi_groups_reminders.groups_id' => count($_SESSION["glpigroups"])
                ? $_SESSION["glpigroups"]
                : [-1],
-            'OR' => $or
+            'OR'                              => $or
          ];
       }
 
@@ -158,19 +162,19 @@ class PluginMydashboardReminder extends CommonGLPI {
               && isset($_SESSION["glpiactiveprofile"]['id']))) {
          $join['glpi_profiles_reminders'] = [
             'FKEY' => [
-               'glpi_profiles_reminders'  => 'reminders_id',
-               'glpi_reminders'           => 'id'
+               'glpi_profiles_reminders' => 'reminders_id',
+               'glpi_reminders'          => 'id'
             ]
          ];
 
-         $or = ['glpi_profiles_reminders.entities_id' => ['<', 0]];
+         $or       = ['glpi_profiles_reminders.entities_id' => ['<', 0]];
          $restrict = getEntitiesRestrictCriteria('glpi_profiles_reminders', '', '', true);
          if (count($restrict)) {
             $or = $or + $restrict;
          }
          $where['OR'][] = [
             'glpi_profiles_reminders.profiles_id' => $_SESSION["glpiactiveprofile"]['id'],
-            'OR' => $or
+            'OR'                                  => $or
          ];
       }
 
@@ -179,8 +183,8 @@ class PluginMydashboardReminder extends CommonGLPI {
           || (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"]))) {
          $join['glpi_entities_reminders'] = [
             'FKEY' => [
-               'glpi_entities_reminders'  => 'reminders_id',
-               'glpi_reminders'           => 'id'
+               'glpi_entities_reminders' => 'reminders_id',
+               'glpi_reminders'          => 'id'
             ]
          ];
       }
@@ -240,6 +244,7 @@ class PluginMydashboardReminder extends CommonGLPI {
       return $join;
 
    }
+
    /**
     * Show list for central view
     *
@@ -253,8 +258,8 @@ class PluginMydashboardReminder extends CommonGLPI {
       $output = [];
 
       $users_id = Session::getLoginUserID();
-      $today = date('Y-m-d');
-      $now = date('Y-m-d H:i:s');
+      $today    = date('Y-m-d');
+      $now      = date('Y-m-d H:i:s');
 
       $restrict_visibility = " AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -292,7 +297,7 @@ class PluginMydashboardReminder extends CommonGLPI {
 
          $query = "SELECT `glpi_reminders`.*
                    FROM `glpi_reminders` " .
-            self::addVisibilityJoins() . "
+                  self::addVisibilityJoins() . "
                    WHERE $restrict_user
                          $restrict_visibility
                          AND " . Reminder::addVisibilityRestrict() . "
@@ -300,21 +305,21 @@ class PluginMydashboardReminder extends CommonGLPI {
 
          if (Session::getCurrentInterface() != 'helpdesk') {
             $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" .
-               _n('Public reminder', 'Public reminders', 2) . "</a>";
+                     _n('Public reminder', 'Public reminders', 2) . "</a>";
          } else {
             $titre = _n('Public reminder', 'Public reminders', 2);
          }
       }
 
       $result = $DB->query($query);
-      $nb = $DB->numrows($result);
+      $nb     = $DB->numrows($result);
 
       $output['title'] = "<span>$titre</span>";
 
       if (Reminder::canCreate()) {
          $output['title'] .= "&nbsp;<span>";
          $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php\">";
-         $output['title'] .= "<i class='fas fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a>";
+         $output['title'] .= "<i class='fas fa-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
       }
 
       $output['title'] .= "";
@@ -329,25 +334,25 @@ class PluginMydashboardReminder extends CommonGLPI {
          $rand = mt_rand();
 
          while ($data = $DB->fetchAssoc($result)) {
-            $output['body'][$count] = [];
+            $output['body'][$count]    = [];
             $output['body'][$count][0] = '';
             $output['body'][$count][0] .= "<div class=\"relative reminder_list\">";
-            $link = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
+            $link                      = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
 
             $tooltip = Html::showToolTip(Toolbox::unclean_html_cross_side_scripting_deep($data["text"]),
-               ['applyto' => "content_reminder_" . $data["id"] . $rand,
-                  'display' => false]);
+                                         ['applyto' => "content_reminder_" . $data["id"] . $rand,
+                                          'display' => false]);
 
             $output['body'][$count][0] .= $link . ' ' . $tooltip;
 
             if ($data["is_planned"]) {
-               $tab = explode(" ", $data["begin"]);
-               $date_url = $tab[0];
+               $tab                       = explode(" ", $data["begin"]);
+               $date_url                  = $tab[0];
                $output['body'][$count][0] .= "<span class=\"reminder_right\">";
                $output['body'][$count][0] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?date=" . $date_url . "&amp;type=day\">";
                $output['body'][$count][0] .= "<i class='fas fa-clock-o' title=\"" . sprintf(__s('From %1$s to %2$s'),
-                                                                                                 Html::convDateTime($data["begin"]),
-                                                                                                 Html::convDateTime($data["end"])) . "\"></i><span class='sr-only'></span>";
+                                                                                            Html::convDateTime($data["begin"]),
+                                                                                            Html::convDateTime($data["end"])) . "\"></i><span class='sr-only'></span>";
                $output['body'][$count][0] .= "</a></span>";
             }
 
@@ -404,7 +409,7 @@ class PluginMydashboardReminder extends CommonGLPI {
       $titre = _n('Public reminder', 'Public reminders', 2);
 
       $result = $DB->query($query);
-      $nb = $DB->numrows($result);
+      $nb     = $DB->numrows($result);
 
       if ($nb) {
          echo "<table class='treetable'>";

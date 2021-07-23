@@ -35,6 +35,7 @@ class PluginMydashboardEvent extends Glpi\Event {
 
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -43,6 +44,7 @@ class PluginMydashboardEvent extends Glpi\Event {
 
    /**
     * PluginMydashboardEvent constructor.
+    *
     * @param array $options
     */
    function __construct($options = []) {
@@ -54,24 +56,24 @@ class PluginMydashboardEvent extends Glpi\Event {
     * @return array
     */
    function getWidgetsForItem() {
-      $array = [];
+      $widgets = [];
       if (Session::haveRight("logs", READ)) {
-         $array = [
-         //            PluginMydashboardMenu::$MY_VIEW =>
-         //               array(
-         //                  "eventwidgetpersonnal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit'])
-         //               ),
-            PluginMydashboardMenu::$GLOBAL_VIEW =>
-               [
-                  "eventwidgetglobal" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "&nbsp;<i class='fas fa-table'></i>"
-               ]
+
+         $widgets = [
+            PluginMydashboardMenu::$GLOBAL_VIEW => [
+               "eventwidgetglobal" => ["title"   => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
+                                       "icon"    => "fas fa-table",
+                                       "comment" => ""],
+            ]
          ];
+
       }
-      return $array;
+      return $widgets;
    }
 
    /**
     * @param $widgetId
+    *
     * @return PluginMydashboardDatatable|void
     */
    function getWidgetContentForItem($widgetId) {
@@ -102,13 +104,13 @@ class PluginMydashboardEvent extends Glpi\Event {
          switch ($type) {
             case "rules" :
                $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rule.generic.form.php?id=" .
-                  $items_id . "\">" . $items_id . "</a>";
+                       $items_id . "\">" . $items_id . "</a>";
                break;
 
             case "infocom" :
                $out .= "<a href='#' onClick=\"window.open('" . $CFG_GLPI["root_doc"] .
-                  "/front/infocom.form.php?id=" . $items_id . "','infocoms','location=infocoms,width=" .
-                  "1000,height=400,scrollbars=no')\">" . $items_id . "</a>";
+                       "/front/infocom.form.php?id=" . $items_id . "','infocoms','location=infocoms,width=" .
+                       "1000,height=400,scrollbars=no')\">" . $items_id . "</a>";
                break;
 
             case "devices" :
@@ -117,12 +119,12 @@ class PluginMydashboardEvent extends Glpi\Event {
 
             case "reservationitem" :
                $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reservation.php?reservationitems_id=" .
-                  $items_id . "\">" . $items_id . "</a>";
+                       $items_id . "\">" . $items_id . "</a>";
                break;
 
             default :
                $type = getSingular($type);
-               $url = '';
+               $url  = '';
                if ($item = getItemForItemtype($type)) {
                   $url = $item->getFormURL();
                }
@@ -177,13 +179,13 @@ class PluginMydashboardEvent extends Glpi\Event {
          $output['title'] .= "<tr><th>" . __('No Event') . "</th></tr>";
          $output['title'] .= "</table></div>";
       }
-
+      $logService["Impersonate"] = "Impersonate";
       // Output events
       $i = 0;
 
       //TRANS: %d is the number of item to display
       $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
-         sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
+                         sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
 
       $output['header'][] = __('Source');
       $output['header'][] = __('id');
@@ -196,10 +198,10 @@ class PluginMydashboardEvent extends Glpi\Event {
       while ($i < $number) {
          $DB->result($result, $i, "id");
          $items_id = $DB->result($result, $i, "items_id");
-         $type = $DB->result($result, $i, "type");
-         $date = $DB->result($result, $i, "date");
-         $service = $DB->result($result, $i, "service");
-         $message = $DB->result($result, $i, "message");
+         $type     = $DB->result($result, $i, "type");
+         $date     = $DB->result($result, $i, "date");
+         $service  = $DB->result($result, $i, "service");
+         $message  = $DB->result($result, $i, "message");
 
          $itemtype = "&nbsp;";
          if (isset($logItemtype[$type])) {
@@ -221,7 +223,7 @@ class PluginMydashboardEvent extends Glpi\Event {
       }
       if (!empty($output)) {
          $personnal = ($user == "") ? "global" : "personnal";
-         $widget = new PluginMydashboardDatatable();
+         $widget    = new PluginMydashboardDatatable();
          $widget->setWidgetTitle($output['title']);
          $widget->setWidgetId("eventwidget" . $personnal);
          //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
@@ -231,7 +233,7 @@ class PluginMydashboardEvent extends Glpi\Event {
          $widget->setOption("bPaginate", false);
          $widget->setOption("bFilter", false);
          $widget->setOption("bInfo", false);
-         if (count($output['body']) > 0){
+         if (count($output['body']) > 0) {
             $widget->setOption("bSort", false);
          }
 

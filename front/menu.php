@@ -41,6 +41,13 @@ if (Session::getCurrentInterface() == 'central') {
    }
 }
 
+if (isset($_POST["profiles_id"])) {
+   $_SESSION['plugin_mydashboard_profiles_id'] = $_POST["profiles_id"];
+}
+if (isset($_POST["predefined_grid"])) {
+   $_SESSION['plugin_mydashboard_predefined_grid'] = $_POST["predefined_grid"];
+};
+
 if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
    if (isset($_POST["add_ticket"])) {
 

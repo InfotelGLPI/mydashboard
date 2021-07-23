@@ -42,20 +42,20 @@ class PluginMydashboardRSSFeed extends CommonGLPI {
     */
    function getWidgetsForItem() {
 
-      $array = [];
-
+      $widgets = [];
       if (Session::getCurrentInterface() != 'helpdesk') {
-         $array = [
-            PluginMydashboardMenu::$RSS_VIEW =>
-               [
-                  "rssfeedpersonalwidget" => _n('Personal RSS feed', 'Personal RSS feeds', 2) . "&nbsp;<i class='fas fa-table'></i>"
-               ]
-         ];
+         $widgets[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpersonalwidget"] = ["title"   =>  _n('Personal RSS feed', 'Personal RSS feeds', 2),
+                                                                                "icon"    => "fas fa-table",
+                                                                                "comment" => ""];
       }
       if (Session::haveRight("rssfeed_public", READ)) {
-         $array[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = _n('Public RSS feed', 'Public RSS feeds', 2) . "&nbsp;<i class='fas fa-table'></i>";
+
+         $widgets[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = ["title"   => _n('Public RSS feed', 'Public RSS feeds', 2),
+                                                                              "icon"    => "fas fa-table",
+                                                                              "comment" => ""];
       }
-      return $array;
+
+      return $widgets;
    }
 
    /**

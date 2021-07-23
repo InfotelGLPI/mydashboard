@@ -57,29 +57,54 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
     */
    public function getWidgetsForItem() {
 
-      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-
-      $widgets =
-         [
-            __('Pie charts', "mydashboard") => [
-               $this->getType() . "2"  => (($isDebug) ? "2 " : "") . __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "7"  => (($isDebug) ? "7 " : "") . __("Top ten ticket requesters by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "12" => (($isDebug) ? "12 " : "") . __("TTR Compliance", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "13" => (($isDebug) ? "13 " : "") . __("TTO Compliance", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "16" => (($isDebug) ? "16 " : "") . __("Number of opened incidents by category", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "17" => (($isDebug) ? "17 " : "") . __("Number of opened requests by category", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "18" => (($isDebug) ? "18 " : "") . __("Number of opened, closed and unplanned tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "20" => (($isDebug) ? "20 " : "") . __("Percent of use of solution types", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "25" => (($isDebug) ? "25 " : "") . __("Top ten of opened tickets by requester groups", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "26" => (($isDebug) ? "26 " : "") . __("Global satisfaction level", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "27" => (($isDebug) ? "27 " : "") . __("Top ten of opened tickets by location", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "30" => (($isDebug) ? "30 " : "") . __("Number of use of request sources", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "31" => (($isDebug) ? "31 " : "") . __("Number of tickets per location per period", "mydashboard") . "&nbsp;<i class='fas fa-chart-pie'></i>",
-               $this->getType() . "SC32" => (($isDebug) ? "31 " : "") . __("Global indicators by week", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
-
-               ]
-         ];
+      $widgets = [
+         __('Pie charts', "mydashboard") => [
+            $this->getType() . "2"  => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "7" => ["title"   => __("Top ten ticket requesters by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "12" => ["title"   => __("TTR Compliance", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => __("Display tickets where time to resolve is respected (percent)", "mydashboard")],
+            $this->getType() . "13" => ["title"   => __("TTO Compliance", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => __("Display tickets where time to own is respected (percent)", "mydashboard")],
+            $this->getType() . "16" => ["title"   => __("Number of opened incidents by category", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "17" => ["title"   =>  __("Number of opened requests by category", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "18" => ["title"   => __("Number of opened, closed and unplanned tickets by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "20" => ["title"   => __("Percent of use of solution types", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => __("Display percent of solution types for tickets", "mydashboard")],
+            $this->getType() . "25" => ["title"   => __("Top ten of opened tickets by requester groups", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "26" => ["title"   => __("Global satisfaction level", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "27" => ["title"   => __("Top ten of opened tickets by location", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "30" => ["title"   => __("Number of use of request sources", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => __("Display percent of request sources for closed tickets", "mydashboard")],
+            $this->getType() . "31" => ["title"   => __("Number of tickets per location per period", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+            $this->getType() . "SC32" => ["title"   => __("Global indicators by week", "mydashboard"),
+                                        "icon"    => "fas fa-chart-pie",
+                                        "comment" => ""],
+         ]
+      ];
       return $widgets;
+
    }
 
 

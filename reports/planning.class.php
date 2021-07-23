@@ -60,15 +60,17 @@ class PluginMydashboardPlanning extends CommonGLPI {
     */
    function getWidgetsForItem() {
 
+      $widgets = [];
       if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
-         return [
-            PluginMydashboardMenu::$TICKET_TECHVIEW =>
-               [
-                  "planningwidget" => __('Your planning') . "&nbsp;<i class='fas fa-calendar'></i>",
-               ]
+         $widgets = [
+            PluginMydashboardMenu::$TICKET_TECHVIEW => [
+               "planningwidget"    => ["title"   => __('Your planning'),
+                                            "icon"    => "fas fa-calendar",
+                                            "comment" => ""],
+            ]
          ];
       }
-      return [];
+      return $widgets;
    }
 
    /**

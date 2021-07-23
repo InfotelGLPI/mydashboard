@@ -120,23 +120,52 @@ class PluginMydashboardAlert extends CommonDBTM {
     * @return array
     */
    function getWidgetsForItem() {
-      return [
+
+      $widgets = [
          _n('Alert', 'Alerts', 2, 'mydashboard') => [
-            $this->getType() . "1"  => _n('Network alert', 'Network alerts', 2, 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "2"  => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "3"  => _n('Information', 'Informations', 2, 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "4"  => __("Incidents alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "5"  => __("SLA Incidents alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "6"  => __("GLPI Status", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "7"  => __("User ticket alerts", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
-            $this->getType() . "8"  => __('Automatic actions in error', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
-            $this->getType() . "9"  => __("Not imported mails in collectors", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
-            $this->getType() . "10" => __("Inventory stock alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "11" => __('Your equipments', 'mydashboard') . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "12" => __("SLA Requests alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
-            $this->getType() . "13" => __("Requests alerts", "mydashboard") . "&nbsp;<i class='fas fa-info-circle'></i>",
+            $this->getType() . "1"  => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("See alert information block", "mydashboard")],
+            $this->getType() . "2"  => ["title"   => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("See scheduled maintenances information block", "mydashboard")],
+            $this->getType() . "3"  => ["title"   => _n('Information', 'Informations', 2, 'mydashboard'),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("See informations block", "mydashboard")],
+            $this->getType() . "4"  => ["title"   => __("Incidents alerts", "mydashboard"),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display alerts for incidents and problems", "mydashboard")],
+            $this->getType() . "5"  => ["title"   => __("SLA Incidents alerts", "mydashboard"),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard")],
+            $this->getType() . "6"  => ["title"   => __("GLPI Status", "mydashboard"),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Check if GLPI have no problem", "mydashboard")],
+            $this->getType() . "7"  => ["title"   => __("User ticket alerts", "mydashboard"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => __("Display tickets where last modification is a user action", "mydashboard")],
+            $this->getType() . "8"  => ["title"   => __('Automatic actions in error', 'mydashboard'),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display automatic actions in error", "mydashboard")],
+            $this->getType() . "9"  => ["title"   => __("Not imported mails in collectors", "mydashboard"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => __("Display of mails which are not imported", "mydashboard")],
+            $this->getType() . "10" => ["title"   => __("Inventory stock alerts", "mydashboard"),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display alerts for inventory stocks", "mydashboard")],
+            $this->getType() . "11" => ["title"   => __('Your equipments', 'mydashboard'),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display your equipments", "mydashboard")],
+            $this->getType() . "12" => ["title"   => __("SLA Requests alerts", "mydashboard"),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard")],
+            $this->getType() . "13" => ["title"   => __("Requests alerts", "mydashboard"),
+                                        "icon"    => "fas fa-info-circle",
+                                        "comment" => __("Display alerts for requests", "mydashboard")],
          ]
       ];
+      return $widgets;
+
    }
 
    /**
@@ -693,7 +722,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             );
             $widget->toggleWidgetRefresh();
             $widget->setWidgetHeaderType('danger');
-            $widget->setWidgetTitle( __("Inventory stock alerts", "mydashboard"));
+            $widget->setWidgetTitle(__("Inventory stock alerts", "mydashboard"));
             $widget->setWidgetComment(__("Display alerts for inventory stocks", "mydashboard"));
 
             return $widget;
@@ -1694,10 +1723,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='nt-infos-triangle'></div>";
          $wl .= "<div id='nt_maint-infos' class='row'>";
          $wl .= "<div class='col-xs-4 centered'>";
-//         if ($nb > 1) {
-            $wl .= "<i class='fas fa-caret-left' id='nt_maint-prev'></i>";
-            $wl .= "<i class='fas fa-caret-right' id='nt_maint-next'></i>";
-//         }
+         //         if ($nb > 1) {
+         $wl .= "<i class='fas fa-caret-left' id='nt_maint-prev'></i>";
+         $wl .= "<i class='fas fa-caret-right' id='nt_maint-next'></i>";
+         //         }
          $wl .= "</div>";
 
          $wl .= "<div class='col'>";
@@ -1869,10 +1898,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='nt-infos-triangle'></div>";
          $wl .= "<div id='nt_info-infos' class='row'>";
          $wl .= "<div class='col-xs-4 centered'>";
-//         if ($nb > 1) {
-            $wl .= "<i class='fas fa-caret-left' id='nt_info-prev'></i>";
-            $wl .= "<i class='fas fa-caret-right' id='nt_info-next'></i>";
-//         }
+         //         if ($nb > 1) {
+         $wl .= "<i class='fas fa-caret-left' id='nt_info-prev'></i>";
+         $wl .= "<i class='fas fa-caret-right' id='nt_info-next'></i>";
+         //         }
          $wl .= "</div>";
 
          $wl .= "<div class='col'>";
@@ -2021,10 +2050,10 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "<div id='nt-infos-triangle'></div>";
          $wl .= "<div id='nt_alert-infos' class='row'>";
          $wl .= "<div class='col-xs-4 centered'>";
-//         if ($nb > 1) {
-            $wl .= "<i class='fas fa-caret-left' id='nt_alert-prev'></i>";
-            $wl .= "<i class='fas fa-caret-right' id='nt_alert-next'></i>";
-//         }
+         //         if ($nb > 1) {
+         $wl .= "<i class='fas fa-caret-left' id='nt_alert-prev'></i>";
+         $wl .= "<i class='fas fa-caret-right' id='nt_alert-next'></i>";
+         //         }
          $wl .= "</div>";
 
          $wl .= "<div class='col'>";

@@ -31,6 +31,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
 
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -41,27 +42,32 @@ class PluginMydashboardProjecttask extends CommonGLPI {
     * @return array
     */
    function getWidgetsForItem() {
-      $array = [];
+      $widgets         = [];
       $showprojecttask = Session::haveRightsOr('projecttask', [Projecttask::READMY]);
 
       if ($showprojecttask) {
-         $array = [
+
+         $widgets = [
             PluginMydashboardMenu::$PROJECT_VIEW =>
                [
-                  "projecttaskprocesswidget" => __('projects tasks to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
+                  "projecttaskprocesswidget" => ["title"   => __('projects tasks to be processed', 'mydashboard'),
+                                                 "icon"    => "fas fa-table",
+                                                 "comment" => ""],
                ],
-            PluginMydashboardMenu::$GROUP_VIEW =>
+            PluginMydashboardMenu::$GROUP_VIEW   =>
                [
-                  "projecttaskprocesswidgetgroup" => __('projects tasks to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
-
+                  "projectprocesswidgetgroup" => ["title"   => __('projects tasks to be processed', 'mydashboard'),
+                                                  "icon"    => "fas fa-table",
+                                                  "comment" => ""],
                ]
          ];
       }
-      return $array;
+      return $widgets;
    }
 
    /**
     * @param $widgetId
+    *
     * @return PluginMydashboardDatatable
     */
    function getWidgetContentForItem($widgetId) {
@@ -80,9 +86,10 @@ class PluginMydashboardProjecttask extends CommonGLPI {
    }
 
    /**
-    * @param $start
+    * @param        $start
     * @param string $status
-    * @param bool $showgroupprojecttasks
+    * @param bool   $showgroupprojecttasks
+    *
     * @return PluginMydashboardDatatable
     */
    static function showCentralList($start, $status = "process", $showgroupprojecttasks = true) {
@@ -117,7 +124,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
                                      AND `glpi_projecttaskteams`.`itemtype` = 'Group') ";
          }
       }
-      $dbu        = new DbUtils();
+      $dbu   = new DbUtils();
       $query = "SELECT DISTINCT `glpi_projecttasks`.`id`
                 FROM `glpi_projecttasks`
                 LEFT JOIN `glpi_projecttaskteams`
@@ -126,45 +133,45 @@ class PluginMydashboardProjecttask extends CommonGLPI {
                      ON glpi_projecttasks.projectstates_id = glpi_projectstates.id";
 
       switch ($status) {
-        case "process" : // on affiche les projets assignés au user
-           $query .= " WHERE ($search_assign) 
+         case "process" : // on affiche les projets assignés au user
+            $query .= " WHERE ($search_assign) 
                       AND (glpi_projectstates.is_finished = 0  OR glpi_projecttasks.projectstates_id = 0)";
-           $dbu->getEntitiesRestrictRequest("AND", "glpi_projects");
+            $dbu->getEntitiesRestrictRequest("AND", "glpi_projects");
             break;
       }
 
       $query .= " ORDER BY glpi_projecttasks.date_mod DESC";
 
-      $result = $DB->query($query);
+      $result  = $DB->query($query);
       $numrows = $DB->numrows($result);
 
-//      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-//         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-         $result = $DB->query($query);
-         $number = $DB->numrows($result);
-//      } else {
-//         $number = 0;
-//      }
+      //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
+      //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
+      $result = $DB->query($query);
+      $number = $DB->numrows($result);
+      //      } else {
+      //         $number = 0;
+      //      }
 
       if ($numrows > 0) {
-         $output['title'] = "";
+         $output['title']  = "";
          $options['reset'] = 'reset';
-         $forcetab = '';
-         $num = 0;
+         $forcetab         = '';
+         $num              = 0;
          if ($showgroupprojecttasks) {
             switch ($status) {
 
                case "process" :
                   foreach ($_SESSION['glpigroups'] as $gID) {
-                     $options['field'][$num] = 8; // groups_id_assign
+                     $options['field'][$num]      = 8; // groups_id_assign
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = $gID;
-                     $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
+                     $options['contains'][$num]   = $gID;
+                     $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
                      $num++;
-                     $options['field'][$num] = 12; // status
+                     $options['field'][$num]      = 12; // status
                      $options['searchtype'][$num] = 'equals';
-                     $options['contains'][$num] = 'process';
-                     $options['link'][$num] = 'AND';
+                     $options['contains'][$num]   = 'process';
+                     $options['link'][$num]       = 'AND';
                      $num++;
                   }
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?" .
@@ -177,15 +184,15 @@ class PluginMydashboardProjecttask extends CommonGLPI {
             switch ($status) {
 
                case "process" :
-                  $options['field'][0] = 5; // users_id_assign
+                  $options['field'][0]      = 5; // users_id_assign
                   $options['searchtype'][0] = 'equals';
-                  $options['contains'][0] = Session::getLoginUserID();
-                  $options['link'][0] = 'AND';
+                  $options['contains'][0]   = Session::getLoginUserID();
+                  $options['link'][0]       = 'AND';
 
-                  $options['field'][1] = 12; // status
+                  $options['field'][1]      = 12; // status
                   $options['searchtype'][1] = 'equals';
-                  $options['contains'][1] = 'process';
-                  $options['link'][1] = 'AND';
+                  $options['contains'][1]   = 'process';
+                  $options['link'][1]       = 'AND';
 
                   $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?" .
                                       Toolbox::append_params($options, '&amp;') . "\">" .
@@ -199,7 +206,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
             $output['header'][] = __('Requester');
             $output['header'][] = __('Description');
             for ($i = 0; $i < $number; $i++) {
-               $ID = $DB->result($result, $i, "id");
+               $ID               = $DB->result($result, $i, "id");
                $output['body'][] = self::showVeryShort($ID, $forcetab);
             }
          }
@@ -224,8 +231,9 @@ class PluginMydashboardProjecttask extends CommonGLPI {
    }
 
    /**
-    * @param $ID
+    * @param        $ID
     * @param string $forcetab
+    *
     * @return array
     */
    static function showVeryShort($ID, $forcetab = '') {
@@ -241,7 +249,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
       $viewusers = Session::haveRight("user", READ);
 
       $projecttask = new Projecttask();
-      $rand = mt_rand();
+      $rand        = mt_rand();
 
       if ($projecttask->getFromDB($ID)) {
          $project = new Project();
@@ -252,16 +260,16 @@ class PluginMydashboardProjecttask extends CommonGLPI {
                                                                                                                $projecttask->fields["id"]) . "</div>";
          $colnum++;
 
-         $output[$colnum] = '';
+         $output[$colnum]    = '';
          $projecttasksFields = $projecttask->fields;
          if (isset($projecttasksFields["users_id"])) {
             if ($projecttasksFields["users_id"] > 0) {
                $userdata = getUserName($projecttasksFields["users_id"], 2);
-               $name = "<div class='b center'>" . $userdata['name'];
+               $name     = "<div class='b center'>" . $userdata['name'];
                if ($viewusers) {
                   $name = sprintf(__('%1$s %2$s'), $name,
                                   Html::showToolTip($userdata["comment"],
-                                                    ['link' => $userdata["link"],
+                                                    ['link'    => $userdata["link"],
                                                      'display' => false]));
                }
                $output[$colnum] .= $name . "</div>";
@@ -269,9 +277,9 @@ class PluginMydashboardProjecttask extends CommonGLPI {
          }
 
          if (isset($projecttasksFields["groups_id"])
-             && $projecttasksFields["groups_id"]!=0
+             && $projecttasksFields["groups_id"] != 0
          ) {
-               $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $projecttasksFields["groups_id"]);
+            $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $projecttasksFields["groups_id"]);
          }
 
          $colnum++;

@@ -42,30 +42,43 @@ class PluginMydashboardChange extends CommonGLPI {
     * @return array
     */
    function getWidgetsForItem() {
-      $array      = [];
+      $widgets      = [];
       $showchange = Session::haveRightsOr('change', [Change::READALL, Change::READMY]);
 
       if ($showchange) {
-         $array = [
+
+         $widgets = [
             PluginMydashboardMenu::$CHANGE_VIEW =>
                [
-                  "changeprocesswidget" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
-                  "changewaitingwidget" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
-                  "changeappliedwidget" => __('Applied changes', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
+                  "changeprocesswidget" => ["title"   => __('Changes to be processed', 'mydashboard'),
+                                             "icon"    => "fas fa-table",
+                                             "comment" => ""],
+                  "changewaitingwidget" => ["title"   => __('Changes on pending status', 'mydashboard'),
+                                            "icon"    => "fas fa-table",
+                                            "comment" => ""],
+                  "changeappliedwidget" => ["title"   => __('Applied changes', 'mydashboard'),
+                                            "icon"    => "fas fa-table",
+                                            "comment" => ""],
                ],
-            PluginMydashboardMenu::$GROUP_VIEW  =>
+            PluginMydashboardMenu::$GROUP_VIEW   =>
                [
-                  "changeprocesswidgetgroup" => __('Changes to be processed', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
-                  "changewaitingwidgetgroup" => __('Changes on pending status', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>"
-
+                  "changeprocesswidgetgroup" => ["title"   => __('Changes to be processed', 'mydashboard'),
+                                                  "icon"    => "fas fa-table",
+                                                  "comment" => ""],
+                  "changewaitingwidgetgroup" => ["title"   => __('Changes on pending status', 'mydashboard'),
+                                            "icon"    => "fas fa-table",
+                                            "comment" => ""],
                ],
-            PluginMydashboardMenu::$GLOBAL_VIEW =>
+            PluginMydashboardMenu::$GLOBAL_VIEW   =>
                [
-                  "changecountwidget" => __('Change followup', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>"
+                  "changecountwidget" => ["title"   =>  __('Change followup', 'mydashboard'),
+                                                  "icon"    => "fas fa-table",
+                                                  "comment" => ""],
                ]
          ];
+
       }
-      return $array;
+      return $widgets;
    }
 
    /**

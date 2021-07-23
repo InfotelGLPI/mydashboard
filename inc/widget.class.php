@@ -214,7 +214,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if (isset($widgets[$id])) {
          return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
       }
-      $message = __('No data available', 'mydashboard');
+      $message = __("This widget doesn't exist anymore", 'mydashboard');
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          $message .= " - " . $id;
       }

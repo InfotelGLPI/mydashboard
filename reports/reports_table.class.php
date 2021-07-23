@@ -29,9 +29,10 @@
  */
 class PluginMydashboardReports_Table extends CommonGLPI {
 
-   private $options;
-   private $pref;
+   private       $options;
+   private       $pref;
    public static $reports = [3, 5, 14, 32, 33];
+
    /**
     * PluginMydashboardReports_Table constructor.
     *
@@ -54,16 +55,26 @@ class PluginMydashboardReports_Table extends CommonGLPI {
     */
    public function getWidgetsForItem() {
 
-      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-
       $widgets = [
-         __('Tables', "mydashboard") => [$this->getType() . "3"  => (($isDebug) ? "3 " : "") . __("Internal annuary", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
-                                         $this->getType() . "5"  => (($isDebug) ? "5 " : "") . __("Fields unicity") . "&nbsp;<i class='fas fa-table'></i>",
-                                         $this->getType() . "14" => (($isDebug) ? "14 " : "") . __("All unpublished articles") . "&nbsp;<i class='fas fa-table'></i>",
-                                         $this->getType() . "32" => (($isDebug) ? "32 " : "") . __("Number of opened tickets by technician and by status", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
-                                         $this->getType() . "33" => (($isDebug) ? "33 " : "") . __("Number of opened tickets by group and by status", "mydashboard") . "&nbsp;<i class='fas fa-table'></i>",
+         __('Tables', "mydashboard") => [
+            $this->getType() . "3"  => ["title"   => __("Internal annuary", "mydashboard"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => __("Search users of your organisation", "mydashboard")],
+            $this->getType() . "5"  => ["title"   => __("Fields unicity"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => __("Display if you have duplicates into inventory", "mydashboard")],
+            $this->getType() . "14" => ["title"   => __("All unpublished articles"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => ""],
+            $this->getType() . "32" => ["title"   => __("Number of opened tickets by technician and by status", "mydashboard"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => ""],
+            $this->getType() . "33" => ["title"   => __("Number of opened tickets by group and by status", "mydashboard"),
+                                        "icon"    => "fas fa-table",
+                                        "comment" => ""],
          ]
       ];
+
 
       return $widgets;
    }

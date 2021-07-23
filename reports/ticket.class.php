@@ -37,6 +37,7 @@ class PluginMydashboardTicket extends CommonGLPI {
    static function getTypeName($nb = 0) {
       return __('Tickets');
    }
+
    /**
     * @return array
     */
@@ -44,46 +45,101 @@ class PluginMydashboardTicket extends CommonGLPI {
       $showticket   = Session::haveRightsOr("ticket", [Ticket::READMY, Ticket::READALL, Ticket::READASSIGN]);
       $createticket = Session::haveRight("ticket", CREATE);
 
-      $array = [];
+      $widgets = [
+         PluginMydashboardMenu::$TICKET_REQUESTERVIEW => [
+            "ticketlistrequestbyselfwidget" => ["title"   => __('Your tickets in progress'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+            "ticketlistobservedwidget"      => ["title"   => __('Your observed tickets'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+            "ticketlistrejectedwidget"      => ["title"   => __('Your rejected tickets', 'mydashboard'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+            "ticketlisttoapprovewidget"     => ["title"   => __('Your tickets to close'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+            "ticketlistsurveywidget"        => ["title"   => __('Satisfaction survey'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+         ]
+      ];
 
-      $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW] =
-         [
-            "ticketlistrequestbyselfwidget" => __('Your tickets in progress') . "&nbsp;<i class='fas fa-table'></i>",
-            "ticketlistobservedwidget"      => __('Your observed tickets') . "&nbsp;<i class='fas fa-table'></i>",
-            "ticketlistrejectedwidget"      => __('Your rejected tickets', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>",
-            "ticketlisttoapprovewidget"     => __('Your tickets to close') . "&nbsp;<i class='fas fa-table'></i>",
-            "ticketlistsurveywidget"        => __('Satisfaction survey') . "&nbsp;<i class='fas fa-table'></i>",
-         ];
 
       if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
-         $array[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = __('Your tickets to validate') . "&nbsp;<i class='fas fa-table'></i>";
+         $widgets = [
+            PluginMydashboardMenu::$TICKET_REQUESTERVIEW => [
+               "ticketlisttovalidatewidget" => ["title"   => __('Your tickets to validate'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+            ]
+         ];
+
       }
 
       if ($showticket) {
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketcountwidget2"] = __('New tickets', 'mydashboard') . "&nbsp;<i class='fas fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = __('Tickets to be processed') . "&nbsp;<i class='fas fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = __('Tickets on pending status') . "&nbsp;<i class='fas fa-table'></i>";
-         $array[PluginMydashboardMenu::$TICKET_TECHVIEW]["tickettaskstodowidget"]   = __("Ticket tasks to do") . "&nbsp;<i class='fas fa-table'></i>";
+         $widgets = [
+            PluginMydashboardMenu::$TICKET_TECHVIEW => [
+               "ticketcountwidget2"      => ["title"   => __('New tickets', 'mydashboard'),
+                                             "icon"    => "fas fa-table",
+                                             "comment" => ""],
+               "ticketlistprocesswidget" => ["title"   => __('Tickets to be processed'),
+                                             "icon"    => "fas fa-table",
+                                             "comment" => ""],
+               "ticketlistwaitingwidget" => ["title"   => __('Tickets on pending status'),
+                                             "icon"    => "fas fa-table",
+                                             "comment" => ""],
+               "tickettaskstodowidget"   => ["title"   => __("Ticket tasks to do"),
+                                             "icon"    => "fas fa-table",
+                                             "comment" => ""],
+            ]
+         ];
       }
 
       if (Session::haveRight('ticket', Ticket::READGROUP)) {
-         $array[PluginMydashboardMenu::$GROUP_VIEW] =
-            [
-               "ticketlistwaitingwidgetgroup"       => __('Tickets on pending status') . "&nbsp;<i class='fas fa-table'></i>",
-               "ticketlisttoapprovewidgetgroup"     => __('Your tickets to close') . "&nbsp;<i class='fas fa-table'></i>",
-               "ticketlistrequestbyselfwidgetgroup" => __('Your tickets in progress') . "&nbsp;<i class='fas fa-table'></i>",
-               "ticketlistobservedwidgetgroup"      => __('Your observed tickets') . "&nbsp;<i class='fas fa-table'></i>"
-            ];
+
+         $widgets = [
+            PluginMydashboardMenu::$GROUP_VIEW => [
+               "ticketlistwaitingwidgetgroup" => ["title"   => __('Tickets on pending status'),
+                                                  "icon"    => "fas fa-table",
+                                                  "comment" => ""],
+               "ticketlisttoapprovewidgetgroup" => ["title"   => __('Your tickets to close'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+               "ticketlistrequestbyselfwidgetgroup" => ["title"   => __('Your tickets in progress'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+               "ticketlistobservedwidgetgroup" => ["title"   => __('Your observed tickets'),
+                                                "icon"    => "fas fa-table",
+                                                "comment" => ""],
+            ]
+         ];
+
       }
       if ($showticket) {
-         $array[PluginMydashboardMenu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = __('Tickets to be processed') . "&nbsp;<i class='fas fa-table'></i>";
-         $array[PluginMydashboardMenu::$GROUP_VIEW]["tickettaskstodowidgetgroup"]   = __("Ticket tasks to do") . "&nbsp;<i class='fas fa-table'></i>";
+         $widgets = [
+            PluginMydashboardMenu::$GROUP_VIEW => [
+               "ticketlistprocesswidgetgroup" => ["title"   => __('Tickets to be processed'),
+                                       "icon"    => "fas fa-table",
+                                       "comment" => ""],
+               "tickettaskstodowidgetgroup" => ["title"   => __("Ticket tasks to do"),
+                                       "icon"    => "fas fa-table",
+                                       "comment" => ""],
+            ]
+         ];
       }
       if ($showticket || $createticket) {
-         $array[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = __('Ticket followup') . "&nbsp;<i class='fas fa-table'></i>";
+         $widgets = [
+            PluginMydashboardMenu::$GLOBAL_VIEW => [
+               "ticketcountwidget" => ["title"   => __('Ticket followup'),
+                                       "icon"    => "fas fa-table",
+                                       "comment" => ""],
+            ]
+         ];
       }
 
-      return $array;
+      return $widgets;
+
    }
 
    /**
@@ -223,7 +279,7 @@ class PluginMydashboardTicket extends CommonGLPI {
             }
          }
       }
-      $dbu        = new DbUtils();
+      $dbu   = new DbUtils();
       $query = "SELECT DISTINCT `glpi_tickets`.`id`
                 FROM `glpi_tickets`
                 LEFT JOIN `glpi_tickets_users`
@@ -316,15 +372,15 @@ class PluginMydashboardTicket extends CommonGLPI {
       $result  = $DB->query($query);
       $numrows = $DB->numrows($result);
 
-//      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-//         $query  .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-         $result = $DB->query($query);
-         $number = $DB->numrows($result);
-//      } else {
-//         $number = 0;
-//      }
+      //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
+      //         $query  .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
+      $result = $DB->query($query);
+      $number = $DB->numrows($result);
+      //      } else {
+      //         $number = 0;
+      //      }
 
-      $output['header'][] = __('ID and priority','mydashboard');
+      $output['header'][] = __('ID and priority', 'mydashboard');
       $output['header'][] = __('Requester');
       $output['header'][] = __('Associated element');
       $output['header'][] = __('Description');
@@ -631,11 +687,11 @@ class PluginMydashboardTicket extends CommonGLPI {
       }
 
       $number = 0;
-//      $_SESSION['glpidisplay_count_on_home'] > 0 &&
+      //      $_SESSION['glpidisplay_count_on_home'] > 0 &&
       if ($req !== false) {
-         $start  = (int)$start;
+         $start = (int)$start;
          $limit = "";
-//         $limit  = (int)$_SESSION['glpidisplay_count_on_home'];
+         //         $limit  = (int)$_SESSION['glpidisplay_count_on_home'];
          $req    = TicketTask::getTaskList($status, $showgrouptickets, $start, $limit);
          $number = $req->numrows();
       }
@@ -648,7 +704,7 @@ class PluginMydashboardTicket extends CommonGLPI {
          $type = Problem::getTypeName();
       }
 
-      $output['header'][] = __('ID and priority','mydashboard');
+      $output['header'][] = __('ID and priority', 'mydashboard');
       $output['header'][] = __('Title') . " (" . strtolower($type) . ")";
       $output['header'][] = __('Description');
       $output['header'][] = __('ID');
@@ -686,9 +742,9 @@ class PluginMydashboardTicket extends CommonGLPI {
             $options['criteria'][2]['link']       = 'AND';
 
             if ($itemtype == "TicketTask") {
-               $title    = __("Ticket tasks to do");
+               $title = __("Ticket tasks to do");
             } else if ($itemtype == "ProblemTask") {
-               $title    = __("Problem tasks to do");
+               $title = __("Problem tasks to do");
             }
             $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                Toolbox::append_params($options, '&amp;') . "\">" .
@@ -743,22 +799,22 @@ class PluginMydashboardTicket extends CommonGLPI {
       $job  = new Ticket();
       $rand = mt_rand();
       if ($job->getFromDBwithData($ID, 0)) {
-         $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
+         $bgcolor   = $_SESSION["glpipriority_" . $job->fields["priority"]];
          $textColor = "color:black!important;";
-         if ($bgcolor=='#000000') {
-            $textColor =  "color:white!important;";
+         if ($bgcolor == '#000000') {
+            $textColor = "color:white!important;";
          }
 
          $link = "<a style='$textColor' id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-             "/front/ticket.form.php?id=" . $job->fields["id"];
+                 "/front/ticket.form.php?id=" . $job->fields["id"];
          if ($forcetab != '') {
             $link .= "&amp;forcetab=" . $forcetab;
          }
-         $link            .= "'>";
+         $link .= "'>";
 
 
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" .
-                            $link.
+                            $link .
                             sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</a></div>";
 
          $colnum++;
@@ -774,7 +830,7 @@ class PluginMydashboardTicket extends CommonGLPI {
                   $name     = sprintf(__('%1$s %2$s'), $name,
                                       Html::showToolTip($userdata["comment"],
                                                         ['link'    => $userdata["link"],
-                                                              'display' => false]));
+                                                         'display' => false]));
 
                   $output[$colnum] .= $name . "</div>";
                } else {
@@ -819,39 +875,39 @@ class PluginMydashboardTicket extends CommonGLPI {
          $link            = sprintf(__('%1$s %2$s'), $link,
                                     Html::showToolTip(nl2br(Html::clean($job->fields['content'])),
                                                       ['applyto' => 'ticket' . $job->fields["id"] . $rand,
-                                                            'display' => false]));
+                                                       'display' => false]));
          $output[$colnum] = $link;
 
          //Ticket ID
          $colnum++;
          $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-             "/front/ticket.form.php?id=" . $job->fields["id"];
+                 "/front/ticket.form.php?id=" . $job->fields["id"];
          if ($forcetab != '') {
             $link .= "&amp;forcetab=" . $forcetab;
          }
-         $link .= "'>";
-         $output[$colnum] = $link . "<span class='b'>". $job->fields["id"] . "</span></a>" ;
+         $link            .= "'>";
+         $output[$colnum] = $link . "<span class='b'>" . $job->fields["id"] . "</span></a>";
 
          //Priority
          $colnum++;
          $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>
-                                <span class='b'>".$job->fields["priority"] . " - " . Ticket::getPriorityName($job->fields["priority"])."</span>
+                                <span class='b'>" . $job->fields["priority"] . " - " . Ticket::getPriorityName($job->fields["priority"]) . "</span>
                              </div>";
          //Categories
          $colnum++;
          $config = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $itilCategory = new ITILCategory();
-         if($itilCategory->getFromDB($job->fields['itilcategories_id'])) {
+         if ($itilCategory->getFromDB($job->fields['itilcategories_id'])) {
             $haystack = $itilCategory->getField('completename');
-            $needle = '>';
-            $offset = 0;
-            $allpos = [];
+            $needle   = '>';
+            $offset   = 0;
+            $allpos   = [];
 
             while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
-               $offset = $pos + 1;
+               $offset   = $pos + 1;
                $allpos[] = $pos;
             }
 
@@ -861,14 +917,14 @@ class PluginMydashboardTicket extends CommonGLPI {
                $pos = strlen($haystack);
             }
             $output[$colnum] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
-         } else{
+         } else {
             $output[$colnum] = "<span></span>";
          }
 
          //status
          $colnum++;
-         $statusId = $job->fields["status"];
-         $statusArray = Ticket::getAllowedStatusArray($statusId);
+         $statusId        = $job->fields["status"];
+         $statusArray     = Ticket::getAllowedStatusArray($statusId);
          $output[$colnum] = $statusArray[$statusId];
       }
       return $output;
@@ -878,12 +934,12 @@ class PluginMydashboardTicket extends CommonGLPI {
    /**
     * Very short table to display the task
     *
-    * @since 9.2
-    *
     * @param integer $ID The ID of the task
     * @param string  $itemtype The itemtype (TicketTask, ProblemTask)
     *
     * @return void
+    * @since 9.2
+    *
     */
    static function showVeryShortTask($ID, $itemtype) {
       global $DB, $CFG_GLPI;
@@ -931,17 +987,17 @@ class PluginMydashboardTicket extends CommonGLPI {
          //Ticket ID
          $colnum++;
          $link = "<a id='ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-             "/front/ticket.form.php?id=" . $item_link->fields["id"];
+                 "/front/ticket.form.php?id=" . $item_link->fields["id"];
 
-         $link .= "'>";
-         $output[$colnum] = $link . "<span class='b'>". $item_link->fields["id"] . "</span></a>" ;
+         $link            .= "'>";
+         $output[$colnum] = $link . "<span class='b'>" . $item_link->fields["id"] . "</span></a>";
 
          //Priority
          $colnum++;
          $bgcolor = $_SESSION["glpipriority_" . $item_link->fields["priority"]];
 
          $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>
-                                <span>".Ticket::getPriorityName($item_link->fields["priority"])."</span>
+                                <span>" . Ticket::getPriorityName($item_link->fields["priority"]) . "</span>
                              </div>";
 
          //Categories
@@ -952,21 +1008,21 @@ class PluginMydashboardTicket extends CommonGLPI {
          $itilCategory->getFromDB($item_link->fields['itilcategories_id']);
 
          $haystack = $itilCategory->getField('completename');
-         $needle = '>';
-         $offset = 0;
-         $allpos = [];
+         $needle   = '>';
+         $offset   = 0;
+         $allpos   = [];
 
          while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
             $offset   = $pos + 1;
             $allpos[] = $pos;
          }
 
-         if(isset($allpos[$config->getField('levelCat')-1])){
-            $pos = $allpos[$config->getField('levelCat')-1];
-         } else{
+         if (isset($allpos[$config->getField('levelCat') - 1])) {
+            $pos = $allpos[$config->getField('levelCat') - 1];
+         } else {
             $pos = strlen($haystack);
          }
-         $output[$colnum] = "<span class='b'>". substr($haystack,0,$pos) . "</span>";
+         $output[$colnum] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
 
       }
       return $output;
@@ -1010,7 +1066,7 @@ class PluginMydashboardTicket extends CommonGLPI {
                                AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')";
          }
       }
-      $dbu        = new DbUtils();
+      $dbu   = new DbUtils();
       $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_tickets");
 
       if ($foruser) {
@@ -1060,8 +1116,8 @@ class PluginMydashboardTicket extends CommonGLPI {
       $options['reset']                     = 'reset';
 
       if (Session::getCurrentInterface() != "central") {
-         $output['title'] = "<a href=\"".$CFG_GLPI["root_doc"]."/front/helpdesk.public.php?create_ticket=1\" class='pointer'>".
-              __('Create a ticket')."&nbsp;<i class='fas fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a>";
+         $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1\" class='pointer'>" .
+                            __('Create a ticket') . "&nbsp;<i class='fas fa-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
       } else {
          $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                             Toolbox::append_params($options, '&amp;') . "\">" . __('Ticket followup') . "</a>";
@@ -1093,7 +1149,7 @@ class PluginMydashboardTicket extends CommonGLPI {
       $widget->setTabDatas($output['body']);
 
       //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
-      if (count($output['body']) > 0){
+      if (count($output['body']) > 0) {
          $widget->setOption("bSort", false);
       }
       $widget->setOption("bPaginate", false);
@@ -1114,7 +1170,7 @@ class PluginMydashboardTicket extends CommonGLPI {
       }
 
       $output = [];
-      $dbu        = new DbUtils();
+      $dbu    = new DbUtils();
       $query  = "SELECT " . Ticket::getCommonSelect() . "
                 FROM `glpi_tickets` " . Ticket::getCommonLeftJoin() . "
                 WHERE `status` = '" . Ticket::INCOMING . "' " .
@@ -1214,14 +1270,14 @@ class PluginMydashboardTicket extends CommonGLPI {
       $showprivate = Session::haveRight('followup', ItilFollowup::SEEPRIVATE);
 
       if ($job->getFromDB($id)) {
-         $bgcolor  = $_SESSION["glpipriority_" . $job->fields["priority"]];
+         $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
          // ID
          $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
          if ($output_type == Search::HTML_OUTPUT) {
 
-            $class = CommonITILObject::getStatusClass($job->fields["status"]);
-            $label = CommonITILObject::getStatus($job->fields["status"]);
+            $class     = CommonITILObject::getStatusClass($job->fields["status"]);
+            $label     = CommonITILObject::getStatus($job->fields["status"]);
             $first_col .= "<br><i class='" . $class . "'
                                 alt=\"" . $label . "\">";
          } else {
@@ -1279,7 +1335,7 @@ class PluginMydashboardTicket extends CommonGLPI {
                                       "<span class='b'>" . $userdata['name'] . "</span>",
                                       Html::showToolTip($userdata["comment"],
                                                         ['link'    => $userdata["link"],
-                                                              'display' => false]));
+                                                         'display' => false]));
                $fourth_col .= "<br>";
             }
          }
@@ -1348,8 +1404,8 @@ class PluginMydashboardTicket extends CommonGLPI {
             $eigth_column = sprintf(__('%1$s %2$s'), $eigth_column,
                                     Html::showToolTip($job->fields['content'],
                                                       ['display' => false,
-                                                            'applyto' => "ticket" . $job->fields["id"] .
-                                                                         $rand]));
+                                                       'applyto' => "ticket" . $job->fields["id"] .
+                                                                    $rand]));
          }
 
          $colnum++;

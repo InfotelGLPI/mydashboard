@@ -206,7 +206,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          ]
       ];
 
-      $menu['icon']    = self::getIcon();
+      $menu['icon'] = self::getIcon();
 
       return $menu;
    }
@@ -310,10 +310,10 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
       //      $_SESSION['plugin_mydashboard_editmode'] = false;
-      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
-      if ($edit > 0) {
-         echo $this->getWidgetsList($selected_profile, $edit);
-      }
+      //      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+      //      if ($edit > 0) {
+      //         echo $this->getWidgetsList($selected_profile, $edit);
+      //      }
 
       //Now we have a widget list menu, but, it does nothing, we have to bind
       //list item click with the adding on the mydashboard, and we need to display
@@ -323,15 +323,6 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       //This first div is the header of the mydashboard, basically it display a name, informations and a button to toggle full screen
       echo "<div class='plugin_mydashboard_header'>";//(div.plugin_mydashboard_header)
-
-      $this->displayEditMode($rand, $edit, $selected_profile, $predefined_grid);
-
-      //      echo "</span>";//end(span.plugin_mydashboard_header_title)
-      //(span.plugin_mydashboard_header_right)
-      //If administator enabled fullscreen we display the button to toggle fullscreen
-      //(maybe we could also only add the js when needed, but jquery is loaded so would be only foolproof)
-
-      //end(span.plugin_mydashboard_header_right)
       echo "</div>";//end(div.plugin_mydashboard_header)
       //Now the content
       //      echo "<div class='plugin_mydashboard_content'>";//(div.plugin_mydashboard_content)
@@ -366,168 +357,143 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
-      echo "<script>";
-      echo "$(document).ready(function() {
-              $('#see-menu$rand').click(function () {
-                 var zone2 = document.getElementById('zone2');
-                 var zone1 = document.getElementById('zone1');
-                 if (zone2.style.display === \"none\") {
-                   zone2.style.display = \"block\";
-                   zone1.style.display = \"none\";
-                 }
-             }); 
-             $('#hide-menu$rand').click(function () {
-                 var zone2 = document.getElementById('zone2');
-                 var zone1 = document.getElementById('zone1');
-                 if (zone1.style.display === \"none\") {
-                   zone1.style.display = \"block\";
-                   zone2.style.display = \"none\";
-                 }
-             });
-             $('#see-menu-edit$rand').click(function () {
-                 var zone3 = document.getElementById('zone3');
-                 var zone4 = document.getElementById('zone4');
-                 if (zone3.style.display === \"none\") {
-                   zone3.style.display = \"block\";
-                   zone4.style.display = \"none\";
-                 }
-             }); 
-           });";
-      echo "</script>";
+      echo $this->getscripts();
 
       if ($edit > 0) {
 
-         echo "<div id='menutop' align='right'>";
-         echo "<div id=\"zone3\" style=\"display: none;\">";
-         echo "<form id=\"editmode\" class='plugin_mydashboard_header_title' method='post' 
+         echo "<div class='center'>";
+
+         echo "<form method='post' 
                      action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
 
-         echo "<table class='cadre_edit' width='100%'>";
+         echo "<table class='tab_cadre_fixe' width='100%'>";
+
+
+         echo "<tr><th>";
+         echo "&nbsp;" . __('Availables widgets', 'mydashboard');
+         echo "</th>";
+         echo "</tr>";
+         echo "<tr>";
+         echo "<td class='left'>";
+         echo $this->getWidgetsList($selected_profile, $edit);
+         echo "</th>";
+         echo "</tr>";
+
          echo "<tr><th>";
          echo __('Edit mode', 'mydashboard');
          if ($edit == 2) {
             echo " (" . __('Global', 'mydashboard') . ")";
          }
          echo "</th>";
-         if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            $edit = 1;
-         }
-         echo "<td>";
-         echo "<a id='load-widgets$rand' class='cadre_edit_button' href='#' title=\"" . __('Load widgets', 'mydashboard') . "\">";
-         //         echo __('Load widgets', 'mydashboard');
-         echo "&nbsp;<i class='fas fa-spinner fa-lg'></i>";
-         echo "<span class='sr-only'>" . __('Load widgets', 'mydashboard') . "</span>";
-         echo "</a>";
-         echo "</td>";
+         echo "</tr>";
 
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            echo "<td>";
-            echo "<a class='cadre_edit_button' href='#' style='padding: 3px;'>";
+            echo "<tr>";
+            echo "<td class='center'>";
             echo "<span class='editmode_test'>" . __('Profile') . "</span>&nbsp;";
+            echo "<br><br>";
             self::dropdownProfiles(['value' => $selected_profile]);
-            echo "</a>";
             echo "</td>";
+            echo "<tr>";
          } else {
             echo Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
          }
 
-         echo "<td>";
 
-         echo "<a id='add-widget' class='cadre_edit_button' href='#'>";
-         echo "<span class='plugin_mydashboard_add_button'>" . __('Add a widget', 'mydashboard');
-         echo "&nbsp;<i class=\"fas fa-caret-down\"></i>";
-         echo "</span>";//(span.plugin_mydashboard_header_title)
-         echo "</a>";
-         echo "</td>";
+         echo "<tr>";
+         echo "<td class='center'>";
 
-         echo "<td>";
-         //         echo "<i class='fas fa-tasks fa-lg'></i>";
-         echo "<a class='cadre_edit_button' href='#' style='padding: 3px;'>";
          echo "<span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
          echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
-         //         echo "<br><br>";
+         echo "<br><br>";
          $elements = PluginMydashboardDashboard::getPredefinedDashboardName();
          Dropdown::showFromArray("predefined_grid", $elements, [
             'value'               => $predefined_grid,
             'width'               => '170px',
             'display_emptychoice' => true,
             'on_change'           => 'this.form.submit()']);
+
+         echo "<br><br>";
+
+         if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+            $edit = 1;
+         }
+
+         echo "<a id='load-widgets' class='btn btn-info btn-sm btn-mydashboard'>";
+         echo "<i class='fas fa-1x fa-spinner pointer btn-mydashboard' title='" . __('Load widgets', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+         echo "<br>" . __('Load widgets', 'mydashboard');
          echo "</a>";
-         echo "</td>";
+         echo "<br><br>";
 
          if ($edit == 1) {
-            echo "<td>";
-            echo "<a id='save-grid$rand' class='cadre_edit_button' href='#' title=\"" . __('Save grid', 'mydashboard') . "\">";
-            //            echo __('Save grid', 'mydashboard');
-            echo "<span class='sr-only'>" . __('Save grid', 'mydashboard') . "</span>";
-            echo "&nbsp;<i class='far fa-save fa-lg'></i>";
+            echo "<a id='save-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-save pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Save grid', 'mydashboard');
             echo "</a>";
-            echo "</td>";
+            echo "<br><br>";
          }
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            echo "<td>";
-            echo "<a id='save-default-grid$rand' class='cadre_edit_button' href='#' title=\"" . __('Save default grid', 'mydashboard') . "\">";
-            //            echo __('Save default grid', 'mydashboard');
-            echo "<span class='sr-only'>" . __('Save default grid', 'mydashboard') . "</span>";
-            echo "&nbsp;<i class='far fa-hdd fa-lg'></i>";
+            echo "<a id='save-default-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-hdd pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Save default grid', 'mydashboard');
             echo "</a>";
-            echo "</td>";
+            echo "<br><br>";
          }
 
-         echo "<td>";
-         echo "<a id='clear-grid$rand' href='#' class='cadre_edit_button' title=\"" . __('Clear grid', 'mydashboard') . "\">";
-         //         echo __('Clear grid', 'mydashboard');
-         echo "<span class='sr-only'>" . __('Clear grid', 'mydashboard') . "</span>";
-         echo "&nbsp;<i class='far fa-window-restore  fa-lg'></i>";
+         echo "<a id='clear-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+         echo "<i class='fas fa-1x fa-window-restore pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+         echo "<br>" . __('Clear grid', 'mydashboard');
          echo "</a>";
-         echo "</td>";
+         echo "<br><br>";
 
-         echo "<td>";
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<a id='drag-grid$rand' href='#' class='cadre_edit_button' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-            //            echo __('Permit drag / resize widgets', 'mydashboard');
-            echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
-            echo "&nbsp;<i class='fas fa-lock fa-lg'></i>";
+            echo "<a id='drag-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Permit drag / resize widgets', 'mydashboard');
             echo "</a>";
+            echo "<br><br>";
 
          }
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<a id='undrag-grid$rand' href='#' class='cadre_edit_button' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-            //            echo __('Block drag / resize widgets', 'mydashboard');
-            echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
-            echo "&nbsp;<i class='fas fa-unlock fa-lg'></i>";
+
+            echo "<a id='undrag-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-unlock-alt pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Block drag / resize widgets', 'mydashboard');
+            echo "</a>";
+            echo "<br><br>";
          }
-         echo "</a>";
-         echo "</td>";
 
-         echo "<td>";
-         echo "<a id='close-edit$rand' href='#' class='cadre_edit_button' title=\"" . __('Close edit mode', 'mydashboard') . "\">";
-         //         echo "<span class='red'>".__('Close edit mode', 'mydashboard') . "</span>";
-         echo "<span class='sr-only'>" . __('Close edit mode', 'mydashboard') . "</span>";
-         echo "&nbsp;<i class='far fa-times-circle fa-lg' style='color: red;'></i>";
-         echo "</a>";
-         echo "</td>";
+         $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+         if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
+             && $edit < 1
+             && $this->interface == 1) {
+            echo "<a id='header_fullscreen' class='btn btn-info btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-arrows-alt pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __("Fullscreen", "mydashboard");
+            echo "</a>";
+            echo "<br><br>";
+         }
 
+         echo "<a id='close-edit' class='btn btn-success btn-sm btn-mydashboard' style='color: red;'>";
+         echo "<i class='fas fa-1x fa-times-circle pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+         echo "<br>" . __("Close edit mode", "mydashboard");
+         echo "</a>";
+
+         echo "</td>";
          echo "</tr>";
+
          echo "</table>";
          Html::closeForm();
          echo "</div>";
 
-         echo "<div id=\"zone4\">";
-         echo "<div id=\"btn_zone4\" class=\"btn_open_zone\">";
-         echo "<table class='cadre_edit'>";
-         echo "<tr>";
-         echo "<td>";
-         echo "<a id='see-menu-edit$rand' class='cadre_edit_button' href='#' title=\"" . __('See menu', 'mydashboard') . "\">";
-         echo "<i class='fas fa-ellipsis-v fa-2x'></i>";
-         echo "<span class='sr-only'>" . __('See menu', 'mydashboard') . "</span>";
-         echo "</a>";
-         echo "</td>";
-         echo "</tr>";
-         echo "</table>";
-         echo "</div>";
-         echo "</div>";
-         echo "</div>";
 
          echo "<div class='alert alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
@@ -546,98 +512,71 @@ class PluginMydashboardMenu extends CommonGLPI {
          ');
 
       } else {
+         echo "<div class='center'>";
+         echo "<br>";
 
-         echo "<div id='menutop' align='right'>";
+         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
 
-         echo "<div id=\"zone2\" style=\"display: none;\">";
-         echo "<div id=\"btn_zone2\" class=\"btn_open_zone\">";
-         echo "<table class='cadre_edit'>";
-         echo "<tr>";
-
-         if (Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<td>";
-            echo "<a class='cadre_edit_button' id='edit-grid$rand' href='#' title=\"" . __('Switch to edit mode', 'mydashboard') . "\">";
-            echo "<i class='fas fa-edit fa-lg'></i>";
-            echo "<span class='sr-only'>" . __('Switch to edit mode', 'mydashboard') . "</span>";
+            echo "<a id='save-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-save pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Save grid', 'mydashboard');
             echo "</a>";
-            echo "</td>";
+            echo "<br><br>";
+
+            echo "<a id='undrag-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-unlock-alt pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Block drag / resize widgets', 'mydashboard');
+            echo "</a>";
+            echo "<br><br>";
+
          }
 
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<td>";
-            echo "<a class='cadre_edit_button' id='drag-grid$rand' href='#' title=\"" . __('Permit drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='fas fa-lock fa-lg'></i>";
-            echo "<span class='sr-only'>" . __('Permit drag / resize widgets', 'mydashboard') . "</span>";
-            echo "</a>";
-            echo "</td>";
-         }
-         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<td>";
-            echo "<a class='cadre_edit_button' id='undrag-grid$rand' href='#' title=\"" . __('Block drag / resize widgets', 'mydashboard') . "\">";
-            echo "<i class='fas fa-unlock-alt fa-lg'></i>";
-            echo "<span class='sr-only'>" . __('Block drag / resize widgets', 'mydashboard') . "</span>";
-            echo "</a>";
-            echo "</td>";
 
-            echo "<td>";
-            echo "<a class='cadre_edit_button' id='save-grid$rand' href='#' title=\"" . __('Save positions', 'mydashboard') . "\">";
-            echo "<i class='fas fa-save fa-lg'></i>";
-            echo "<span class='sr-only'>" . __('Save positions', 'mydashboard') . "</span>";
+            echo "<a id='drag-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Permit drag / resize widgets', 'mydashboard');
             echo "</a>";
-            echo "</td>";
+            echo "<br><br>";
          }
+
+         if (Session::haveRight("plugin_mydashboard_edit", 6)) {
+
+            echo "<a id='edit-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Switch to edit mode', 'mydashboard');
+            echo "</a>";
+            echo "<br><br>";
+         }
+
          if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-            echo "<td>";
-            echo "<a class='cadre_edit_button' id='edit-default-grid$rand' href='#' title=\"" . __('Custom and save default grid', 'mydashboard') . "\">";
-            echo "<i class='fas fa-cogs fa-lg'></i>";
-            echo "<span class='sr-only'>" . __('Custom and save default grid', 'mydashboard') . "</span>";
+
+            echo "<a id='edit-default-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-cogs pointer btn-mydashboard' title='" . __('Custom and save default grid', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __('Custom and save default grid', 'mydashboard');
             echo "</a>";
-            echo "</td>";
+            echo "<br><br>";
          }
 
+         $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
          if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
              && $edit < 1
              && $this->interface == 1) {
-            echo "<td>";
-            echo "<a class='cadre_edit_button' href='#' title=\"" . __("Fullscreen", "mydashboard") . "\">";
-            echo "<i class=\"fas fa-arrows-alt fa-lg header_fullscreen\" alt='" . __("Fullscreen", "mydashboard") . "' title='" . __("Fullscreen", "mydashboard") . "'></i>";
+
+            echo "<a id='header_fullscreen' class='btn btn-info btn-sm btn-mydashboard'>";
+            echo "<i class='fas fa-1x fa-arrows-alt pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "<br>" . __("Fullscreen", "mydashboard");
             echo "</a>";
-            echo "</td>";
          }
-
-         echo "<td>";
-         echo "<a id='hide-menu$rand' class='cadre_edit_button' href='#' title=\"" . __('Hide menu', 'mydashboard') . "\">";
-         echo "<i class='fas fa-ellipsis-v fa-2x'></i>";
-         echo "<span class='sr-only'>" . __('Hide menu', 'mydashboard') . "</span>";
-         echo "</a>";
-         echo "</td>";
-
-         echo "</tr>";
-         echo "</table>";
-
-         echo "</div>";
-         echo "</div>";
-
-         echo "<div id=\"zone1\">";
-         echo "<div id=\"btn_zone1\" class=\"btn_open_zone\">";
-         echo "<table class='cadre_edit'>";
-         echo "<tr>";
-         echo "<td>";
-         echo "<a id='see-menu$rand' class='cadre_edit_button' href='#' title=\"" . __('See menu', 'mydashboard') . "\">";
-         echo "<i class='fas fa-ellipsis-v fa-2x'></i>";
-         echo "<span class='sr-only'>" . __('See menu', 'mydashboard') . "</span>";
-         echo "</a>";
-         echo "</td>";
-         echo "</tr>";
-         echo "</table>";
-         echo "</div>";
-         echo "</div>";
-
-         echo "</div>";
       }
       echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
       echo "</div>";
-      //      }
    }
 
    /**
@@ -648,7 +587,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     *
     * @return string, HTML
     */
-   private function getWidgetsList($profile, $edit = 0) {
+   public function getWidgetsList($profile, $edit = 0) {
 
       $list             = new PluginMydashboardWidgetlist();
       $this->widgetlist = $list->getList(true, $profile);
@@ -659,14 +598,16 @@ class PluginMydashboardMenu extends CommonGLPI {
       $dashboard = new PluginMydashboardDashboard();
 
       if ($edit == 2) {
-         $options = ["users_id" => 0, "profiles_id" => $profile];
+         $options = ["users_id"    => 0,
+                     "profiles_id" => $profile];
          $id      = PluginMydashboardDashboard::checkIfPreferenceExists($options);
          if ($dashboard->getFromDB($id)) {
             $grid = stripslashes($dashboard->fields['grid']);
          }
       }
       if ($edit == 1) {
-         $option_users = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
+         $option_users = ["users_id"    => Session::getLoginUserID(),
+                          "profiles_id" => $profile];
          $id           = PluginMydashboardDashboard::checkIfPreferenceExists($option_users);
          if ($dashboard->getFromDB($id)) {
             $grid = stripslashes($dashboard->fields['grid']);
@@ -686,15 +627,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 //===================Start:Showing Menu=====================================
                 //Showing the menu on click
                 $('.plugin_mydashboard_add_button').on('click', function (e) {
-                    //For tabs
-                    if (layout == 'vsplit') {
-                        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top - 100);
-                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 20);
-                    } else {
-                        $('.plugin_mydashboard_menuDashboard').css('top', $(this).offset().top + 25);
-                        $('.plugin_mydashboard_menuDashboard').css('left', $(this).offset().left + 45);
-                    }
-                    $('.plugin_mydashboard_menuDashboard').width(400);
+//                    $('.plugin_mydashboard_menuDashboard').width(400);
                     $('.plugin_mydashboard_menuDashboard').show();
                 });
                 //Hiding the menu when clicking outside the menu
@@ -707,7 +640,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                   if (!menu) {
                       $('.plugin_mydashboard_menuDashboard').hide();
                   } else {
-                      menu = false
+                      menu = false;
                   }
                 });
             
@@ -724,8 +657,8 @@ class PluginMydashboardMenu extends CommonGLPI {
                   if (!isOpened) {
                      $(this).addClass(\"plugin_mydashboard_menuDashboardListTitle1Opened\");
                   }
-                    $('.plugin_mydashboard_menuDashboardListTitle1').not(this).next(\"div\").slideUp('fast');
-                    plugin_mydashboard_slideToggle_title1(this);
+                    $('.plugin_mydashboard_menuDashboardListTitle1').not(this).next(\"table\").slideUp('fast');
+                    $(this).next(\"table\").slideToggle('fast');
                 });
             
                 //This part is about lists of lists of widgets (when there are much widgets)
@@ -738,15 +671,14 @@ class PluginMydashboardMenu extends CommonGLPI {
                   if (!isOpened) {
                      $(this).addClass(\"plugin_mydashboard_menuDashboardListTitle1Opened\");
                   }
-                    $('.plugin_mydashboard_menuDashboardListTitle2').not(this).next(\"ul\").slideUp('fast');
-                    $(this).next(\"ul\").slideToggle('fast');
+                    $('.plugin_mydashboard_menuDashboardListTitle2').not(this).next(\"table\").slideUp('fast');
+                    $(this).next(\"table\").slideToggle('fast');
                 });
                 //===================Stop:AccordionEffect=================================
                 //===================Start:ListItem click=================================
                 //handling click on all listitem (button to add a specific widget), -> getWidget with data stored in a custom attribute (html5 prefixed as data-*)
                 //XACA
                 $('.plugin_mydashboard_menuDashboardListItem').click(function () {
-            
                     var dashboardId = $(this).parents('.plugin_mydashboard_menuDashboard').attr('data-dashboardid');
                     var widgetId = $(this).attr('data-widgetid');
                     var classname = $(this).attr('data-classname');
@@ -756,45 +688,33 @@ class PluginMydashboardMenu extends CommonGLPI {
                      view = \"<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;\" + attrview + \"</span>\";
                   }
                   if (addNewWidget(widgetId) === true) {
-                      $(\"#success-alert\").fadeTo(2000, 500).slideUp(500, function () {
-                          $(\"#success-alert\").slideUp(500);
-                      });
+//                      $(\"#success-alert\").fadeTo(2000, 500).slideUp(500, function () {
+//                          $(\"#success-alert\").slideUp(500);
+//                      });
                       $('.plugin_mydashboard_menuDashboard').hide();
                   } else {
                       //error
-                      $(\"#error-alert\").fadeTo(2000, 500).slideUp(500, function () {
-                          $(\"#error-alert\").slideUp(500);
-                      });
+//                      $(\"#error-alert\").fadeTo(2000, 500).slideUp(500, function () {
+//                          $(\"#error-alert\").slideUp(500);
+//                      });
                   }
                 });
-                //===================Start:Fullscreen mode=================================
-                //handling click on the 'fullscreen' button
-                $('.plugin_mydashboard_header_fullscreen').click(
-                     function () {
-                        $('#plugin_mydashboard_container').toggleFullScreen();
-                        var overlay = $('.sDashboard-overlay');
-                        $('#plugin_mydashboard_container').append(overlay);
-                        $('#plugin_mydashboard_container').toggleClass('plugin_mydashboard_fullscreen_view');
-                     });
-                //===================Stop:Fullscreen mode=================================
             });
-             var plugin_mydashboard_slideToggle_title1 = function (element) {
-                $(element).next(\"div\").slideToggle('fast');
-            };
+
         </script>";
       //menuMyDashboard is the non moving part (it's just it width that changes)
-      $wl .= "<div class='plugin_mydashboard_menuDashboard' "
-             . " data-dashboardid='" . self::DASHBOARD_NAME . "'"
-             . ">";//(div.plugin_mydashboard_menuDashboard)
+      //      $wl .= "<table class='plugin_mydashboard_menuDashboard' "
+      //             . " data-dashboardid='" . self::DASHBOARD_NAME . "'"
+      //             . ">";//(div.plugin_mydashboard_menuDashboard)
       //      menuSlider is the moving part (jQuery changing the css property margin-right)
-      $wl .= "<div class='plugin_mydashboard_menuSlider' style='float:right;' >";  //(div.plugin_mydashboard_menuSlider)
+      //      $wl .= "<table class='plugin_mydashboard_menuSlider'>";  //(div.plugin_mydashboard_menuSlider)
       //        $wl .= "<div class='plugin_mydashboard_menuSliderHeader'>".$this->getTypeName()."</div>";
       //menuSliderContent contains the lists of widgets
-      $wl .= "<div class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
+      //      $wl .= "<table class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
 
       $empty       = false;
       $widgetslist = PluginMydashboardWidget::getWidgetList();
-      $gslist = [];
+      $gslist      = [];
       foreach ($widgetslist as $gs => $widgetclasses) {
          $gslist[$widgetclasses['id']] = $gs;
       }
@@ -813,13 +733,60 @@ class PluginMydashboardMenu extends CommonGLPI {
       }
 
       if ($empty) {
-         $wl .= __('No data available', 'mydashboard');
+         $wl .= __('No widgets available', 'mydashboard');
       }
       //-------------------------------------------------------
-      $wl .= "</div>"; //end(div.plugin_mydashboard_menuSliderContent)
+      //      $wl .= "</table>"; //end(div.plugin_mydashboard_menuSliderContent)
 
-      $wl .= "</div>"; //end(div.plugin_mydashboard_menuSlider)
-      $wl .= "</div>"; //end(div.plugin_mydashboard_menuDashboard)
+      //      $wl .= "</table>"; //end(div.plugin_mydashboard_menuSlider)
+      //      $wl .= "</table>"; //end(div.plugin_mydashboard_menuDashboard)
+
+      return $wl;
+   }
+
+
+   /**
+    * @return string
+    */
+   public function getscripts() {
+
+      $wl = "<script>
+
+            $(document).ready(function () {
+
+                 $('#load-widgets').click(function () {
+                    launchloadWidgets();
+                });
+                 $('#clear-grid').click(function () {
+                    launchClearGrid();
+                });
+                 $('#header_fullscreen').click(function () {
+                    launchFullscreen();
+                });
+                 $('#edit-grid').click(function () {
+                    launchEditMode();
+                });
+                 $('#edit-default-grid').click(function () {
+                    launchEditDefaultMode();
+                });
+                 $('#close-edit').click(function () {
+                    launchCloseEditMode();
+                });
+                 $('#save-grid').click(function () {
+                    launchSaveGrid();
+                });
+                 $('#save-default-grid').click(function () {
+                    launchSaveDefaultGrid();
+                });
+                 $('#drag-grid').click(function () {
+                    launchDragGrid();
+                });
+                 $('#undrag-grid').click(function () {
+                    launchUndragGrid();
+                });
+            });
+
+        </script>";
 
       return $wl;
    }
@@ -887,9 +854,9 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @return bool|string is empty ?
     */
    public function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = []) {
-      $wl = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
-      $wl .= "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
-      $wl .= "<div class='plugin_mydashboard_menuDashboardListContainer'><ul class=''>";
+
+      $wl = "<h5 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h5>";
+      $wl .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'><tr><td>";
 
       //GLPI core classes doesn't display the same thing in each view, we need to provide all views available
       $views = [self::$TICKET_REQUESTERVIEW,
@@ -917,22 +884,53 @@ class PluginMydashboardMenu extends CommonGLPI {
       foreach ($widgetclasses as $widgetclass => $widgets) {
          foreach ($widgets as $widgetview => $widgetlist) {
             foreach ($widgetlist as $widgetId => $widgetTitle) {
-               if (is_numeric($widgetId)) {
-                  $widgetId = $widgetTitle;
-               }
-               $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
-               $gsid                                   = $gslist[$widgetId];
-               if (!in_array($gsid, $used)) {
-                  $viewContent[$widgetview] .= "<li "/*."id='btnAddWidgete".$widgetId."'"*/
-                                               . " class='plugin_mydashboard_menuDashboardListItem'"
-                                               . " data-widgetid='" . $gsid . "'"
-                                               . " data-classname='" . $widgetclass . "'"
-                                               . " data-view='" . $viewsNames[$widgetview] . "'>";
-                  $viewContent[$widgetview] .= $widgetTitle;
-                  if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                     $viewContent[$widgetview] .= " (" . $gsid . ")";
+
+               if (!is_array($widgetTitle)) {
+                  if (is_numeric($widgetId)) {
+                     $widgetId = $widgetTitle;
                   }
-                  $viewContent[$widgetview] .= "</li>\n";
+                  $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
+                  $gsid                                   = $gslist[$widgetId];
+                  if (!in_array($gsid, $used)) {
+                     $viewContent[$widgetview] .= "<tr><td class='plugin_mydashboard_menuDashboardListItem'"
+                                                  . " data-widgetid='" . $gsid . "'"
+                                                  . " data-classname='" . $widgetclass . "'"
+                                                  . " data-view='" . $viewsNames[$widgetview] . "'>";
+                     $viewContent[$widgetview] .= $widgetTitle;
+                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                        $viewContent[$widgetview] .= " (" . $gsid . ")";
+                     }
+                     $viewContent[$widgetview] .= "</td></tr>";
+                  }
+               } else {
+
+                  if (is_numeric($widgetId)) {
+                     $widgetId = $widgetTitle;
+                  }
+                  $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
+                  $gsid                                   = $gslist[$widgetId];
+                  if (!in_array($gsid, $used)) {
+
+                     $viewContent[$widgetview] .= "<tr><td class='media plugin_mydashboard_menuDashboardListItem'"
+                                                  . " data-widgetid='" . $gsid . "'"
+                                                  . " data-classname='" . $widgetclass . "'"
+                                                  . " data-view='" . $viewsNames[$widgetview] . "'>";
+                     $icon                     = $widgetTitle['icon'] ?? "";
+                     if (!empty($icon)) {
+                        $viewContent[$widgetview] .= "<div class='media-left'><i class='$icon fa-3x'></i></div>";
+                     }
+                     $viewContent[$widgetview] .= "<div class='media-body' style='margin: 10px;'>";
+                     $viewContent[$widgetview] .= $widgetTitle['title'];
+                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                        $viewContent[$widgetview] .= " (" . $gsid . ")";
+                     }
+                     $comment = $widgetTitle['comment'] ?? "";
+                     if (!empty($comment)) {
+                        $viewContent[$widgetview] .= "<br><span class='widget-comment'>$comment</span>";
+                     }
+                     $viewContent[$widgetview] .= "</div></td></tr>";
+
+                  }
                }
             }
          }
@@ -941,18 +939,18 @@ class PluginMydashboardMenu extends CommonGLPI {
       //Now we display each group (view) as a list
       foreach ($viewContent as $view => $vContent) {
          if ($vContent != '') {
-            $wl .= "<li class='plugin_mydashboard_menuDashboardList'>";
+            $wl .= "<tr><td class='plugin_mydashboard_menuDashboardList'>";
             $wl .= "<h6 class='plugin_mydashboard_menuDashboardListTitle2'>" . $viewsNames[$view] . "</h6>";
-            $wl .= "<ul class='plugin_mydashboard_menuDashboardList2'>";
-
-            $wl       .= $vContent;
-            $wl       .= "</ul></li>";
+            $wl .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardList2'>";
+            if (!empty($vContent)) {
+               $wl .= $vContent;
+            }
+            $wl       .= "</table></td></tr>";
             $is_empty = false;
          }
       }
 
-      $wl .= "</ul></div>";
-      $wl .= "</div>";
+      $wl .= "</td></tr></table>";
       if ($is_empty) {
          return true;
       } else {
@@ -979,12 +977,12 @@ class PluginMydashboardMenu extends CommonGLPI {
             continue;
          }
          $is_empty = true;
-         $tmp      = "<div class='plugin_mydashboard_menuDashboardListOfPlugin'>";
-         //
-         $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h6>";
+
+         $tmp = "<h5 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h5>";
          //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
-         $tmp .= "<div class='plugin_mydashboard_menuDashboardListContainer'>";
-         $tmp .= "<ul>";
+         $tmp .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'>";
+         //         $tmp .= "<tr>";
+
          foreach ($widgetclasses as $widgetclass => $widgetlist) {
             $res = $this->getWidgetsListFromWidgetsArray($widgetlist, $widgetclass, 2, $used, $gslist);
             if (!empty($widgetlist) && $res != '') {
@@ -992,9 +990,9 @@ class PluginMydashboardMenu extends CommonGLPI {
                $is_empty = false;
             }
          }
-         $tmp .= "</ul>";
-         $tmp .= "</div>";
-         $tmp .= "</div>";
+
+         $tmp .= "</table>";
+
          //If there is now widgets available from this plugins we don't display menu entry
          if (!$is_empty) {
             $html .= $tmp;
@@ -1008,16 +1006,6 @@ class PluginMydashboardMenu extends CommonGLPI {
 
 
    /**
-    * Get all listitems (<li> tags) for an array of widgets ($widgetsarray)
-    * In case items of the array ($widgetsarray) is an array of widgets it's recursive
-    * It can result as :
-    * <li></li>
-    * <li><ul>
-    *   <li></li>
-    *  </ul></li>
-    * The class of each li, ul or h3 (title/category), is linked to the javascript for accordion purpose
-    * Accordion is only available for level 2, (level 3 and more won't be folded (by default))
-    * ATTENTION : it doesn't handle level 1 items (Plugin names, GLPI ...)
     *
     * @param type  $widgetsarray , an arry of widgets (or array of array ... of widgets)
     * @param type  $classname , name of the class containing the widget
@@ -1029,8 +1017,11 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = []) {
       $wl = "";
+
       if (is_array($widgetsarray) && count($widgetsarray) > 0) {
+
          foreach ($widgetsarray as $widgetId => $widgetTitle) {
+
             //We check if this widget is a real widget
             if (!is_array($widgetTitle)) {
                //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
@@ -1041,29 +1032,63 @@ class PluginMydashboardMenu extends CommonGLPI {
                if (isset($gslist[$widgetId])) {
                   $gsid = $gslist[$widgetId];
                   if (!in_array($gsid, $used)) {
-                     $wl .= "<li id='btnAddWidgete" . $widgetId . "'"
+                     $wl .= "<tr><td id='btnAddWidgete" . $widgetId . "'"
                             . " class='plugin_mydashboard_menuDashboardListItem' "
                             . " data-widgetid='" . $gsid . "'"
                             . " data-classname='" . $classname . "'>";
                      $wl .= $widgetTitle;
+
                      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
                         $wl .= " (" . $gsid . ")";
                      }/*->getWidgetListTitle()*/
-                     $wl .= "</li>";
+                     $wl .= "</td></tr>";
                   }
                }
             } else { //If it's not a real widget
                //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
-               $tmp = "<li class='plugin_mydashboard_menuDashboardList'>";
-               $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
-               $tmp .= "<ul class='plugin_mydashboard_menuDashboardList$depth'>";
-               $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
-               if ($res != '') {
-                  $tmp .= $res;
-               }
-               $tmp .= "</ul></li>";
-               if ($res != '') {
-                  $wl .= $tmp;
+
+               if (isset($widgetTitle['title'])) {
+                  //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
+                  if (is_numeric($widgetId)) {
+                     $widgetId = $widgetTitle;
+                  }
+                  $this->widgets[$classname][$widgetId] = -1;
+                  if (isset($gslist[$widgetId])) {
+                     $gsid = $gslist[$widgetId];
+                     if (!in_array($gsid, $used)) {
+                        $wl .= "<tr><td id='btnAddWidgete" . $widgetId . "'"
+                               . " class='media plugin_mydashboard_menuDashboardListItem' "
+                               . " data-widgetid='" . $gsid . "'"
+                               . " data-classname='" . $classname . "'>";
+
+                        $icon = $widgetTitle['icon'] ?? "";
+                        if (!empty($icon)) {
+                           $wl .= "<div class='media-left'><i class='$icon fa-3x'></i></div>";
+                        }
+                        $wl .= "<div class='media-body' style='margin: 10px;'>";
+                        $wl .= $widgetTitle['title'];
+                        if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                           $wl .= " (" . $gsid . ")";
+                        }
+                        $comment = $widgetTitle['comment'] ?? "";
+                        if (!empty($comment)) {
+                           $wl .= "<br><span class='widget-comment'>$comment</span>";
+                        }
+                        $wl .= "</div></td></tr>";
+                     }
+                  }
+               } else {
+                  $tmp = "<tr><td class='plugin_mydashboard_menuDashboardList'>";
+                  $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
+                  $tmp .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardList$depth'>";
+                  $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
+                  if ($res != '') {
+                     $tmp .= $res;
+                  }
+                  $tmp .= "</table></td></tr>";
+                  if ($res != '') {
+                     $wl .= $tmp;
+                  }
                }
             }
          }
@@ -1294,41 +1319,41 @@ class PluginMydashboardMenu extends CommonGLPI {
       $widgets  = [];
       if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
 
-            $widgetclasse = new PluginMydashboardWidget();
-//            $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-//            $datas     = $GLPI_CACHE->get($ckey);
-            //UNACTIVATE IT FOR DEBUG
-//            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
-//               $datajson = $datas;
-//            } else {
-               $widgets = PluginMydashboardWidget::getWidgetList();
+         $widgetclasse = new PluginMydashboardWidget();
+         //            $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
+         //            $datas     = $GLPI_CACHE->get($ckey);
+         //UNACTIVATE IT FOR DEBUG
+         //            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
+         //               $datajson = $datas;
+         //            } else {
+         $widgets = PluginMydashboardWidget::getWidgetList();
 
-               foreach ($datagrid as $k => $v) {
-                  if (isset($v["id"])) {
-                     $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
+         foreach ($datagrid as $k => $v) {
+            if (isset($v["id"])) {
+               $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
 
-                     if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
-                        foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-                           if (isset($widgets[$v["id"]]["id"])
-                               && $widgets[$v["id"]]["id"] == $w) {
-                              $optjson[$v["id"]]["enableRefresh"] = $r;
-                           }
-                        }
+               if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+                  foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+                     if (isset($widgets[$v["id"]]["id"])
+                         && $widgets[$v["id"]]["id"] == $w) {
+                        $optjson[$v["id"]]["enableRefresh"] = $r;
                      }
                   }
                }
-//               if ($predefined_grid == 0) {
-//                  $GLPI_CACHE->set($ckey, $datajson);
-//               }
-//            }
+            }
+         }
+         //               if ($predefined_grid == 0) {
+         //                  $GLPI_CACHE->set($ckey, $datajson);
+         //               }
+         //            }
       } else {
-         echo "<div class='bt-alert bt-alert-warning' id='warning-alert'>
+         echo "<div class='alert alert-warning' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
                 " . __('No widgets founded, please add widgets', 'mydashboard') . "
             </div>";
-         echo Html::scriptBlock('$("#warning-alert").fadeTo(2000, 500).slideUp(500, function(){
-            $("#success-alert").slideUp(500);
-         });');
+         //         echo Html::scriptBlock('$("#warning-alert").fadeTo(2000, 500).slideUp(500, function(){
+         //            $("#success-alert").slideUp(500);
+         //         });');
 
          $grid = json_encode($grid);
       }
@@ -1345,9 +1370,9 @@ class PluginMydashboardMenu extends CommonGLPI {
              && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
             $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
          } else {
-//            if (empty($grid) && count($widgets) < 1) {
-               $widgets = PluginMydashboardWidget::getWidgetList();
-//            }
+            //            if (empty($grid) && count($widgets) < 1) {
+            $widgets = PluginMydashboardWidget::getWidgetList();
+            //            }
             foreach ($widgets as $k => $val) {
                $allwidgetjson[$k] = ["<div class='alert alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> - 
@@ -1438,120 +1463,58 @@ class PluginMydashboardMenu extends CommonGLPI {
                     }, this);
                     return false;
                 }.bind(this);
-                this.saveGrid = function () {
-                    this.serializedData = _.map($('.grid-stack$rand > .grid-stack-item:visible'), function (el) {
-                        el = $(el);
-                        var node = el.data('_gridstack_node');
-                        if ( node.id !== undefined ) {
-                           return {
-                                id: node.id,
-                               x: node.x,
-                               y: node.y,
-                               width: node.width,
-                               height: node.height
-                           };
-                        }
-                    }, this);
-                    var sData = JSON.stringify(this.serializedData);
-                    var profiles_id = -1;
-                    $('#ajax_loader').show();
-                     $.ajax({
-                       url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
-                       type: 'POST',
-                       data:{data:sData,profiles_id:$active_profile},
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                           }
-                       });
-                    return false;
-                }.bind(this);
-                this.saveDefaultGrid = function () {
-                    this.serializedData = _.map($('.grid-stack$rand > .grid-stack-item:visible'), function (el) {
-                        el = $(el);
-                        var node = el.data('_gridstack_node');
-                        return {
-                             id: node.id,
-                            x: node.x,
-                            y: node.y,
-                            width: node.width,
-                            height: node.height
-                        };
-                    }, this);
-                    var sData = JSON.stringify(this.serializedData);
-                    var users_id = 0;
-                    var profiles_id = -1;
-                    $('#ajax_loader').show();
-                     $.ajax({
-                          url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
-                          type: 'POST',
-                          data:{data:sData,users_id:users_id,profiles_id:$active_profile},
-                          success:function(data) {
-                             $('#ajax_loader').hide();
-                             var redirectUrl = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                             var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
-                             '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
-                             '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
-                            '</form>');
-                             $('body').append(form);
-                             $(form).submit();
-                          }
-                       });
-                    return false;
-                }.bind(this);
-                this.clearGrid = function () {
-                  $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/clearGrid.php',
-                       type: 'POST',
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                           }
-                       });
-                    return false;
-                }.bind(this);
-                this.dragGrid = function () {
-                  $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
-                       type: 'POST',
-                       data:{drag_mode:1},
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                          }
-                       });
-                    return false;
-                }.bind(this);
-                this.undragGrid = function () {
-                  $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
-                       type: 'POST',
-                       data:{drag_mode:0},
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                          }
-                       });
-                    return false;
-                }.bind(this);
-                this.editGrid = function () {
-                  $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
-                       type: 'POST',
-                       data:{edit_mode:1},
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                          }
-                       });
-                    return false;
-                }.bind(this);
-                this.editDefaultGrid = function () {
-                  $('#ajax_loader').show();
+
+                this.loadGrid();
+            };
+        });
+        
+     
+    </script>";
+      echo "<script type='text/javascript'>
+        function launchloadWidgets() {
+           var modal = $('<div>').dialog({ modal: true });
+            modal.dialog('widget').hide();
+            $('#ajax_loader').show();
+            $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/loadWidgets.php',
+                 type: 'POST',
+                 complete: function () {
+                          //back to normal!
+                          $('#ajax_loader').hide();
+                          modal.dialog('close');
+                          window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                      }
+                 });
+        }
+        function launchClearGrid() {
+           $('#ajax_loader').show();
+            $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/clearGrid.php',
+                 type: 'POST',
+                 success:function(data) {
+                        $('#ajax_loader').hide();
+                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                     }
+                 });
+        }
+        function launchFullscreen() {
+           $('#mygrid$rand').toggleFullScreen();
+           $('#mygrid$rand').toggleClass('fullscreen_view');
+        }
+        function launchEditMode() {
+          $('#ajax_loader').show();
+            $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
+                 type: 'POST',
+                 data:{edit_mode:1},
+                 success:function(data) {
+                        $('#ajax_loader').hide();
+                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                    }
+                 });
+        }
+        function launchEditDefaultMode() {
+          $('#ajax_loader').show();
                   $.ajax({
                     url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
                        type: 'POST',
@@ -1561,59 +1524,111 @@ class PluginMydashboardMenu extends CommonGLPI {
                               window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
                           }
                        });
-                    return false;
-                }.bind(this);
-                this.closeEdit = function () {
-                  $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
-                       type: 'POST',
-                       data:{edit_mode:0},
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                          }
-                       });
-                    return false;
-                }.bind(this);
-                this.loadWidgets = function () {
-                  var modal = $('<div>').dialog({ modal: true });
-                  modal.dialog('widget').hide();
-                  $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/loadWidgets.php',
-                       type: 'POST',
-                       complete: function () {
-                                //back to normal!
-                                $('#ajax_loader').hide();
-                                modal.dialog('close');
-                                window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
-                            }
-                       });
-                    return false;
-                }.bind(this);
-                $('#save-grid$rand').click(this.saveGrid);
-                $('#edit-grid$rand').click(this.editGrid);
-                $('#drag-grid$rand').click(this.dragGrid);
-                $('#undrag-grid$rand').click(this.undragGrid);
-                $('#edit-default-grid$rand').click(this.editDefaultGrid);
-                $('#close-edit$rand').click(this.closeEdit);
-                $('#save-default-grid$rand').click(this.saveDefaultGrid);
-                $('#remove-widget$rand').click(this.removewidget);
-                $('#clear-grid$rand').click(this.clearGrid);
-                $('#load-widgets$rand').click(this.loadWidgets);
-                this.loadGrid();
+        }
+        function launchCloseEditMode() {
+           $('#ajax_loader').show();
+            $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
+                 type: 'POST',
+                 data:{edit_mode:0},
+                 success:function(data) {
+                        $('#ajax_loader').hide();
+                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                    }
+                 });
+        }
+        function launchDragGrid() {
+           $('#ajax_loader').show();
+            $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
+                 type: 'POST',
+                 data:{drag_mode:1},
+                 success:function(data) {
+                        $('#ajax_loader').hide();
+                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                    }
+                 });
+        }
+        function launchUndragGrid() {
+           $('#ajax_loader').show();
+            $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
+                 type: 'POST',
+                 data:{drag_mode:0},
+                 success:function(data) {
+                        $('#ajax_loader').hide();
+                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                    }
+                 });
+        }
+        function launchSaveGrid() {
+           this.serializedData = _.map($('.grid-stack$rand > .grid-stack-item:visible'), function (el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if ( node.id !== undefined ) {
+               return {
+                    id: node.id,
+                   x: node.x,
+                   y: node.y,
+                   width: node.width,
+                   height: node.height
+               };
+            }
+        }, this);
+        var sData = JSON.stringify(this.serializedData);
+        var profiles_id = -1;
+        $('#ajax_loader').show();
+         $.ajax({
+           url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
+           type: 'POST',
+           data:{data:sData,profiles_id:$active_profile},
+           success:function(data) {
+                  $('#ajax_loader').hide();
+                  window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+               }
+           });
+        }
+        function launchSaveDefaultGrid() {
+           this.serializedData = _.map($('.grid-stack$rand > .grid-stack-item:visible'), function (el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            return {
+                 id: node.id,
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height
             };
-        });
-        
-     
-    </script>";
-      echo "<script type='text/javascript'>
-        $('.header_fullscreen').click(
-        function () {
-           $('#mygrid$rand').toggleFullScreen();
-           $('#mygrid$rand').toggleClass('fullscreen_view');
-        });
+        }, this);
+        var sData = JSON.stringify(this.serializedData);
+        var users_id = 0;
+        var profiles_id = -1;
+        $('#ajax_loader').show();
+         $.ajax({
+              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
+              type: 'POST',
+              data:{data:sData,users_id:users_id,profiles_id:$active_profile},
+              success:function(data) {
+                 $('#ajax_loader').hide();
+                 var redirectUrl = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                 var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
+                 '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
+                 '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
+                '</form>');
+                 $('body').append(form);
+                 $(form).submit();
+              }
+           });
+        }
+        function deleteWidget(id) {
+           this.grid = $('.grid-stack$rand').data('gridstack');
+           widget = $('div[data-gs-id='+ id + ']');
+//             if (confirm('$msg_delete') == true)
+//             { 
+                 this.grid.removeWidget(widget);
+//             }
+             return false;
+           };
         function addNewWidget(value) {
              var id = value;
              if (id != 0){
@@ -1685,15 +1700,7 @@ class PluginMydashboardMenu extends CommonGLPI {
            });
            return false;
         };
-         function deleteWidget (id) {
-           this.grid = $('.grid-stack$rand').data('gridstack');
-           widget = $('div[data-gs-id='+ id + ']');
-//             if (confirm('$msg_delete') == true)
-//             { 
-                 this.grid.removeWidget(widget);
-//             }
-             return false;
-           };
+         
           
          function downloadGraph(id) {
 //             if (!isChartRendered) return; // return if chart not rendered

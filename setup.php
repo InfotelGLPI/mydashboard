@@ -47,14 +47,32 @@ function plugin_init_mydashboard() {
       "lib/fileSaver.min.js",
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
+//      "scripts/mydashboard_load_scripts.js",
       "scripts/mydashboard.js",
-
       "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
    ];
+
+   if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
+      $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+         "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
+         "lib/fileSaver.min.js",
+         //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
+         //"lib/sdashboard/lib/flotr2/flotr2.min.js",
+         "scripts/mydashboard_load_scripts.js",
+         "scripts/mydashboard.js",
+         "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
+      ];
+   }
 
    $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
       "/plugins/mydashboard/scripts/mydashboard.js",
    ];
+   if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
+      $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
+         "/plugins/mydashboard/scripts/mydashboard.js",
+         "/plugins/mydashboard/scripts/mydashboard_load_scripts.js",
+      ];
+   }
 
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
    $PLUGIN_HOOKS['change_profile']['mydashboard'] = ['PluginMydashboardProfile', 'initProfile'];
@@ -183,6 +201,6 @@ function plugin_mydashboard_check_prerequisites() {
  */
 function plugin_mydashboard_check_config() {
    //To prevent redirecting when activating Dashboard
-   $_SESSION['glpi_plugin_mydashboard_activating'] = 1;
+//   $_SESSION['glpi_plugin_mydashboard_activating'] = 1;
    return true;
 }

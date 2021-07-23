@@ -55,13 +55,20 @@ class PluginMydashboardReports_Line extends CommonGLPI {
     */
    public function getWidgetsForItem() {
 
-      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
       $widgets = [
          __('Line charts', "mydashboard") => [
-            $this->getType() . "6"  => (($isDebug) ? "6 " : "") . __("Tickets stock by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
-            $this->getType() . "22" => (($isDebug) ? "22 " : "") . __("Number of opened and closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
-            $this->getType() . "34" => (($isDebug) ? "34 " : "") . __("Number of opened and resolved / closed tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
-            $this->getType() . "35" => (($isDebug) ? "35 " : "") . __("Number of opened, closed, unplanned tickets by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-line'></i>",
+            $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-line",
+                                        "comment" => __("Sum of not solved tickets by month", "mydashboard")],
+            $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-line",
+                                        "comment" => ""],
+            $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-line",
+                                        "comment" => ""],
+            $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-line",
+                                        "comment" => ""],
          ]
       ];
       return $widgets;
@@ -272,164 +279,164 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $currentyear = date("Y");
 
-            if(isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
+            if (isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
                if (isset($opt["year"]) && $opt["year"] > 0) {
                   $currentyear = $opt["year"];
                }
-               $date_crit = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
+               $date_crit        = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
                $date_crit_ticket = "`glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
             } else {
-               $end_year = $opt['end_year'] ?? date("Y");
-               $end_month = $opt['end_month'] ?? date("m");
+               $end_year    = $opt['end_year'] ?? date("Y");
+               $end_month   = $opt['end_month'] ?? date("m");
                $start_month = $opt['start_month'] ?? date('m');
-               $start_year = $opt['start_year'] ?? date("Y");
-//               if($start_month <= 0) {
-//                  $start_month = 12 + $start_month;
-//                  $start_year = $start_year -1 ;
-//               }
-               if(strlen($start_month) == 1) {
-                  $start_month = "0".$start_month;
+               $start_year  = $opt['start_year'] ?? date("Y");
+               //               if($start_month <= 0) {
+               //                  $start_month = 12 + $start_month;
+               //                  $start_year = $start_year -1 ;
+               //               }
+               if (strlen($start_month) == 1) {
+                  $start_month = "0" . $start_month;
                }
-               $nbdays = date("t", mktime(0, 0, 0, $end_month, 1, $end_year));
-               $date_crit = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
+               $nbdays           = date("t", mktime(0, 0, 0, $end_month, 1, $end_year));
+               $date_crit        = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
                $date_crit_ticket = "`glpi_tickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
             }
-               $currentmonth = date("m");
+            $currentmonth = date("m");
 
-               $query_stockTickets =
-                  "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
-                  " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
-                  " SUM(nbStockTickets) as nbStockTickets" .
-                  " FROM `glpi_plugin_mydashboard_stocktickets`" .
-                  " WHERE $date_crit " .
-                  " " . $mdentities . $tech_groups_crit .
-                  " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+            $query_stockTickets =
+               "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
+               " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
+               " SUM(nbStockTickets) as nbStockTickets" .
+               " FROM `glpi_plugin_mydashboard_stocktickets`" .
+               " WHERE $date_crit " .
+               " " . $mdentities . $tech_groups_crit .
+               " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-               $resultsStockTickets = $DB->query($query_stockTickets);
-               $nbStockTickets      = $DB->numrows($resultsStockTickets);
-               $maxcount            = 0;
-               $i                   = 0;
-               $tabopened           = [];
-               $tabclosed           = [];
-               $tabprogress         = [];
-               $tabnames            = [];
-               if ($nbStockTickets) {
-                  while ($data = $DB->fetchArray($resultsStockTickets)) {
-                     $tabprogress[] = $data["nbStockTickets"];
-                     if ($data["nbStockTickets"] > $maxcount) {
-                        $maxcount = $data["nbStockTickets"];
-                     }
-                     $i++;
+            $resultsStockTickets = $DB->query($query_stockTickets);
+            $nbStockTickets      = $DB->numrows($resultsStockTickets);
+            $maxcount            = 0;
+            $i                   = 0;
+            $tabopened           = [];
+            $tabclosed           = [];
+            $tabprogress         = [];
+            $tabnames            = [];
+            if ($nbStockTickets) {
+               while ($data = $DB->fetchArray($resultsStockTickets)) {
+                  $tabprogress[] = $data["nbStockTickets"];
+                  if ($data["nbStockTickets"] > $maxcount) {
+                     $maxcount = $data["nbStockTickets"];
                   }
+                  $i++;
                }
+            }
 
-               $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-			   $q = "SET lc_time_names = '".$_SESSION['glpilanguage']."';";
-               $r  = $DB->query($q);
-               $query_tickets =
-                  "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
-                  " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
-                  " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))" .
-                  " FROM `glpi_tickets`" .
-                  " WHERE $is_deleted" .
-                  " AND $date_crit_ticket " .
-                  " $entities_criteria" .
-                  " $requester_groups_criteria" .
-                  " $technician_groups_criteria" .
-                  " $locations_criteria" .
-                  " $type_criteria" .
-                  " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+            $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
+            $q             = "SET lc_time_names = '" . $_SESSION['glpilanguage'] . "';";
+            $r             = $DB->query($q);
+            $query_tickets =
+               "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
+               " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
+               " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))" .
+               " FROM `glpi_tickets`" .
+               " WHERE $is_deleted" .
+               " AND $date_crit_ticket " .
+               " $entities_criteria" .
+               " $requester_groups_criteria" .
+               " $technician_groups_criteria" .
+               " $locations_criteria" .
+               " $type_criteria" .
+               " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-               $results   = $DB->query($query_tickets);
-               $nbResults = $DB->numrows($results);
-               $i         = 0;
-			   $q = "SET lc_time_names = 'en_GB';";
-               $r   = $DB->query($q);
-               if ($nbResults) {
-                  while ($data = $DB->fetchArray($results)) {
+            $results   = $DB->query($query_tickets);
+            $nbResults = $DB->numrows($results);
+            $i         = 0;
+            $q         = "SET lc_time_names = 'en_GB';";
+            $r         = $DB->query($q);
+            if ($nbResults) {
+               while ($data = $DB->fetchArray($results)) {
 
-                     $tabnames[] = $data['monthname'];
+                  $tabnames[] = $data['monthname'];
 
-                     list($year, $month) = explode('-', $data['month']);
+                  list($year, $month) = explode('-', $data['month']);
+
+                  $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+
+                  $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+
+                  $query_1 =
+                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                     " $ticket_users_join" .
+                     " WHERE $date_criteria" .
+                     " $technician_criteria" .
+                     " $entities_criteria" .
+                     " $requester_groups_criteria" .
+                     " $technician_groups_criteria" .
+                     " $locations_criteria" .
+                     " $type_criteria" .
+                     " AND $is_deleted";
+
+                  $results_1 = $DB->query($query_1);
+
+                  if ($DB->numrows($results_1)) {
+                     $data_1      = $DB->fetchArray($results_1);
+                     $tabopened[] = $data_1['count'];
+                  } else {
+                     $tabopened[] = 0;
+                  }
+
+                  $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+
+                  $query_2 =
+                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                     " $ticket_users_join" .
+                     " WHERE $closedate_criteria" .
+                     " $technician_criteria" .
+                     " $entities_criteria" .
+                     " $requester_groups_criteria" .
+                     " $technician_groups_criteria" .
+                     " $locations_criteria" .
+                     " $type_criteria" .
+                     " AND $is_deleted";
+
+                  $results_2 = $DB->query($query_2);
+
+                  if ($DB->numrows($results_2)) {
+                     $data_2      = $DB->fetchArray($results_2);
+                     $tabclosed[] = $data_2['count'];
+                  } else {
+                     $tabclosed[] = 0;
+                  }
+
+                  if ($month == date("m") && $year == date("Y")) {
 
                      $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                     //nbstock : cannot use tech or group criteria
 
-                     $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
-
-                     $query_1 =
+                     $query_3 =
                         "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                        " $ticket_users_join" .
-                        " WHERE $date_criteria" .
-                        " $technician_criteria" .
-                        " $entities_criteria" .
-                        " $requester_groups_criteria" .
+                        //                        " $ticket_users_join".
+                        " WHERE $is_deleted" .
                         " $technician_groups_criteria" .
-                        " $locations_criteria" .
-                        " $type_criteria" .
-                        " AND $is_deleted";
-
-                     $results_1 = $DB->query($query_1);
-
-                     if ($DB->numrows($results_1)) {
-                        $data_1      = $DB->fetchArray($results_1);
-                        $tabopened[] = $data_1['count'];
-                     } else {
-                        $tabopened[] = 0;
-                     }
-
-                     $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
-
-                     $query_2 =
-                        "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                        " $ticket_users_join" .
-                        " WHERE $closedate_criteria" .
-                        " $technician_criteria" .
                         " $entities_criteria" .
-                        " $requester_groups_criteria" .
-                        " $technician_groups_criteria" .
-                        " $locations_criteria" .
-                        " $type_criteria" .
-                        " AND $is_deleted";
-
-                     $results_2 = $DB->query($query_2);
-
-                     if ($DB->numrows($results_2)) {
-                        $data_2      = $DB->fetchArray($results_2);
-                        $tabclosed[] = $data_2['count'];
-                     } else {
-                        $tabclosed[] = 0;
-                     }
-
-                     if ($month == date("m") && $year == date("Y")) {
-
-                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                        //nbstock : cannot use tech or group criteria
-
-                        $query_3 =
-                           "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                           //                        " $ticket_users_join".
-                           " WHERE $is_deleted" .
-                           " $technician_groups_criteria" .
-                           " $entities_criteria" .
-                           //                        " $requester_groups_criteria".
-                           //                        " $locations_criteria" .
-                           // Tickets open in the month
-                           " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                        //                        " $requester_groups_criteria".
+                        //                        " $locations_criteria" .
+                        // Tickets open in the month
+                        " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                            AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
-                        $results_3 = $DB->query($query_3);
+                     $results_3 = $DB->query($query_3);
 
-                        if ($DB->numrows($results_3)) {
-                           $data_3        = $DB->fetchArray($results_3);
-                           $tabprogress[] = $data_3['count'];
-                        } else {
-                           $tabprogress[] = 0;
-                        }
+                     if ($DB->numrows($results_3)) {
+                        $data_3        = $DB->fetchArray($results_3);
+                        $tabprogress[] = $data_3['count'];
+                     } else {
+                        $tabprogress[] = 0;
                      }
-
-                     $i++;
                   }
+
+                  $i++;
                }
+            }
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened and closed tickets by month", "mydashboard");

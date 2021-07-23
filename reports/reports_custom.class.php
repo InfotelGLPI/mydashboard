@@ -60,7 +60,9 @@ class PluginMydashboardReports_Custom extends CommonGLPI {
       $customsWidgets = PluginMydashboardCustomswidget::listCustomsWidgets();
       if (!empty($customsWidgets)) {
          foreach ($customsWidgets as $customWidget) {
-            $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw" . $customWidget['id']] = $customWidget['name'];
+            $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
+                                                                                                            "icon"    => "fas fa-info",
+                                                                                                            "comment" => ""];
          }
       }
       return $widgets;
@@ -95,15 +97,15 @@ class PluginMydashboardReports_Custom extends CommonGLPI {
 
                // Edit style to avoid padding, margin, and limited width
 
-//               $htmlContent .= "<script>
-//                $( document ).ready(function() {
-//                    let $widgetId = document.getElementById('$widgetId');
-//                    " . $widgetId . ".children[0].style.marginTop = '-5px';
-//                    " . $widgetId . ".children[0].children[0].classList.remove('bt-col-md-11');
-//                    " . $widgetId . ".children[0].children[0].classList.add('bt-col-md-12');
-//                    " . $widgetId . ".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';
-//                });
-//                </script>";
+               //               $htmlContent .= "<script>
+               //                $( document ).ready(function() {
+               //                    let $widgetId = document.getElementById('$widgetId');
+               //                    " . $widgetId . ".children[0].style.marginTop = '-5px';
+               //                    " . $widgetId . ".children[0].children[0].classList.remove('bt-col-md-11');
+               //                    " . $widgetId . ".children[0].children[0].classList.add('bt-col-md-12');
+               //                    " . $widgetId . ".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';
+               //                });
+               //                </script>";
 
                if (isset($opt["is_widget"]) && $opt["is_widget"] == false) {
                   return $htmlContent;

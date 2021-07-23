@@ -55,28 +55,54 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
     */
    public function getWidgetsForItem() {
 
-      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-
       $widgets = [
          __('Bar charts', "mydashboard") => [
-            $this->getType() . "1"  => (($isDebug) ? "1 " : "") . __("Opened tickets backlog", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "8"  => (($isDebug) ? "8 " : "") . __("Process time by technicians by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "15" => (($isDebug) ? "15 " : "") . __("Top ten ticket categories by type of ticket", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "21" => (($isDebug) ? "21 " : "") . __("Number of tickets affected by technicians by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "23" => (($isDebug) ? "23 " : "") . __("Average real duration of treatment of the ticket", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "24" => (($isDebug) ? "24 " : "") . __("Top ten technicians (by tickets number)", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-
-            $this->getType() . "35" => (($isDebug) ? "35 " : "") . __("Age of tickets", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "36" => (($isDebug) ? "36 " : "") . __("Number of opened tickets by priority", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "37" => (($isDebug) ? "37 " : "") . __("Stock of tickets by status", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "38" => (($isDebug) ? "38 " : "") . __("Number of opened ticket and average satisfaction per trimester", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            //            $this->getType() . "39" => (($isDebug) ? "39 " : "") . __("Responsiveness over 12 rolling and pending by month", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "40" => (($isDebug) ? "40 " : "") . __("Tickets request sources evolution", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "41" => (($isDebug) ? "41 " : "") . __("Tickets solution types evolution", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            $this->getType() . "42" => (($isDebug) ? "42 " : "") . __("Solve delay and take into account of tickets", "mydashboard") . "&nbsp;<i class='fas fa-chart-bar'></i>",
-            ]
+            $this->getType() . "1"  => ["title"   => __("Opened tickets backlog", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Display of opened tickets by month", "mydashboard")],
+            $this->getType() . "8"  => ["title"   => __("Process time by technicians by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Sum of ticket tasks duration by technicians", "mydashboard")],
+            $this->getType() . "15" => ["title"   => __("Top ten ticket categories by type of ticket", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Display of Top ten ticket categories by type of ticket", "mydashboard")],
+            $this->getType() . "21" => ["title"   => __("Number of tickets affected by technicians by month", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Sum of ticket affected by technicians", "mydashboard")],
+            $this->getType() . "21" => ["title"   => __("Average real duration of treatment of the ticket", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Display of average real duration of treatment of tickets (actiontime of tasks)", "mydashboard")],
+            $this->getType() . "21" => ["title"   => __("Top ten technicians (by tickets number)", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Display of number of tickets by technicians", "mydashboard")],
+            $this->getType() . "23" => ["title"   => __("Age of tickets", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => ""],
+            $this->getType() . "35" => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => ""],
+            $this->getType() . "36" => ["title"   => __("Stock of tickets by status", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => ""],
+            $this->getType() . "37" => ["title"   => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => ""],
+//            $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling and pending by month", "mydashboard"),
+//                                        "icon"    => "fas fa-chart-bar",
+//                                        "comment" => ""],
+            $this->getType() . "40" => ["title"   => __("Tickets request sources evolution", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Evolution of tickets request sources types by year", "mydashboard")],
+            $this->getType() . "41" => ["title"   => __("Tickets solution types evolution", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => __("Evolution of solution types by year", "mydashboard")],
+            $this->getType() . "42" => ["title"   => __("Solve delay and take into account of tickets", "mydashboard"),
+                                        "icon"    => "fas fa-chart-bar",
+                                        "comment" => ""],
+         ]
       ];
       return $widgets;
+
    }
 
 
@@ -317,14 +343,14 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $opt  = $options['opt'];
             $crit = $options['crit'];
 
-            $type_criteria             = $crit['type'];
-            $entities_criteria         = $crit['entities_id'];
-            $requester_groups_criteria = $crit['requesters_groups_id'];
+            $type_criteria              = $crit['type'];
+            $entities_criteria          = $crit['entities_id'];
+            $requester_groups_criteria  = $crit['requesters_groups_id'];
             $technician_groups_criteria = $crit['technicians_groups_id'];
-            $date_criteria             = $crit['date'];
-            $is_deleted                = "`glpi_tickets`.`is_deleted` = 0";
-            $limit_query               = "";
-            $limit                     = isset($opt['limit']) ? $opt['limit'] : 10;
+            $date_criteria              = $crit['date'];
+            $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
+            $limit_query                = "";
+            $limit                      = isset($opt['limit']) ? $opt['limit'] : 10;
             if ($limit > 0) {
                $limit_query = "LIMIT $limit";
             }
@@ -353,7 +379,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                      $itilcategories_name = __('None');
                   }
                   $tabnames[] = $itilcategories_name;
-                  $tabcat[] = $data["catID"];
+                  $tabcat[]   = $data["catID"];
                }
             }
             $backgroundColor = PluginMydashboardColor::getColors(1);
@@ -374,27 +400,27 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                , "mydashboard"));
             $databacklogset = json_encode($dataset);
             $labelsback     = json_encode($tabnames);
-            $idsback     = json_encode($tabcat);
+            $idsback        = json_encode($tabcat);
 
             $graph_datas = ['name'   => $name,
                             'ids'    => $idsback,
                             'data'   => $databacklogset,
                             'labels' => $labelsback];
 
-            $js_ancestors       = $crit['ancestors'];
+            $js_ancestors = $crit['ancestors'];
 
 
-            $type                       = $opt['type'];
-            $entities_id_criteria       = $crit['entity'];
-            $sons_criteria              = $crit['sons'];
-            $year                       = $opt['year'] ?? '';
-            $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                'sons'               => $sons_criteria,
-                                'group_is_recursive' => $js_ancestors,
-                                'technician_groups' =>  $opt['technicians_groups_id'] ?? [],
-                                'type'               => $type,
-                                'year'               => $year ?? '',
-                                'widget'             => $widgetId];
+            $type                 = $opt['type'];
+            $entities_id_criteria = $crit['entity'];
+            $sons_criteria        = $crit['sons'];
+            $year                 = $opt['year'] ?? '';
+            $graph_criterias      = ['entities_id'        => $entities_id_criteria,
+                                     'sons'               => $sons_criteria,
+                                     'group_is_recursive' => $js_ancestors,
+                                     'technician_groups'  => $opt['technicians_groups_id'] ?? [],
+                                     'type'               => $type,
+                                     'year'               => $year ?? '',
+                                     'widget'             => $widgetId];
 
             $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
@@ -1204,16 +1230,16 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $titleSatisfactionTicket = __("Average Satisfaction", "mydashboad");
             $labels                  = json_encode($tabnames);
 
-            $colors       = PluginMydashboardColor::getColors(1, 0);;
-//            $backgroundColor = json_encode($colors);
+            $colors = PluginMydashboardColor::getColors(1, 0);;
+            //            $backgroundColor = json_encode($colors);
 
             $datasets[] =
-               ['type'        => 'bar',
-                'data'        => $opened_tickets_data,
-                'label'       => $titleOpenedTicket,
+               ['type'            => 'bar',
+                'data'            => $opened_tickets_data,
+                'label'           => $titleOpenedTicket,
                 'backgroundColor' => $colors,
-                'yAxisID'     => 'right-y-axis',
-                'order' => 2
+                'yAxisID'         => 'right-y-axis',
+                'order'           => 2
                ];
 
             $datasets[]  =
@@ -1224,15 +1250,15 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 'fill'        => false,
                 'lineTension' => '0.1',
                 'yAxisID'     => 'left-y-axis',
-                'order' => 1
+                'order'       => 1
                ];
             $max_left    = 10;
-            $graph_datas = ['name'            => $name,
-                            'ids'             => json_encode([]),
-                            'data'            => json_encode($datasets),
-                            'labels'          => $labels,
-                            'label'           => $title,
-                            'max_left'        => $max_left];
+            $graph_datas = ['name'     => $name,
+                            'ids'      => json_encode([]),
+                            'data'     => json_encode($datasets),
+                            'labels'   => $labels,
+                            'label'    => $title,
+                            'max_left' => $max_left];
 
             $graph = PluginMydashboardBarChart::launchMultipleGraphWithMultipleAxis($graph_datas, []);
             $widget->setWidgetHtmlContent($graph);
@@ -1701,7 +1727,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $widget->setWidgetTitle((($isDebug) ? "40 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
-            $name      = 'RequestTypeEvolutionLineChart';
+            $name = 'RequestTypeEvolutionLineChart';
 
             $jsonsets = json_encode($datasets);
 
@@ -1816,7 +1842,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $widget->setWidgetTitle((($isDebug) ? "41 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
-            $name      = 'SolutionTypeEvolutionLineChart';
+            $name = 'SolutionTypeEvolutionLineChart';
 
             $jsonsets = json_encode($datasets);
 

@@ -35,10 +35,11 @@
    text-align: center;
 }
 
- {
-   text-align: left;
-   /*margin: 10px 1px 30px 30px;*/
-   /*min-height: 150px;*/
+{
+   text-align: left
+;
+/*margin: 10px 1px 30px 30px;*/
+/*min-height: 150px;*/
 }
 
 .maint-color {
@@ -73,7 +74,6 @@
 .alert_date {
    font-style: italic;
 }
-
 
 
 .fa-alert-orange {
@@ -160,10 +160,6 @@ div#tabcontent{
 
 .plugin_mydashboard_header {
    /*margin-top: -8px;*/
-}
-
-.plugin_mydashboard_header_title {
-   font-size: 12px;
 }
 
 .plugin_mydashboard_header_right {
@@ -285,17 +281,6 @@ div#tabcontent{
 /*   display: none;*/
 /*}*/
 
-#menutop {
-   position: fixed;
-   /*top: 115px;*/
-   right: 10px;
-   /*cursor: pointer;*/
-   z-index: 99;
-   /*background-color: white;*/
-   /*opacity: .6;*/
-   /* Behind debug panel */
-}
-
 #editmode {
    border-radius: 5px;
    border: 1px dashed #CCC;
@@ -369,14 +354,6 @@ div#tabcontent{
    /*margin-left: 10px;*/
 }
 
-.plugin_mydashboard_menuDashboard {
-   position: fixed;
-   /*right: 0px;*/
-   /*top: 0px;*/
-   /*z-index: 99;*/
-   display: none;
-}
-
 .plugin_mydashboard_menuWidget {
    position: absolute;
    display: none;
@@ -387,68 +364,7 @@ div#tabcontent{
    font-size: 12px;
    background-color: #FFF;
    padding: 10px;
-   z-index: 1001!important;
-}
-
-/**/
-.plugin_mydashboard_menuDashboard {
-    position: fixed;
-    right : 0px;
-    width: 27px;
-    height:100%;
-    top:0px;
-    z-index: 1000;
-    float: right;
-    margin-bottom: 3%;
-    padding-bottom: 3%;
-}
-
-.plugin_mydashboard_menuSlider {
-   /* position: relative; */
-   /*background-color: #476E95;*/
-   /*    background-color: #68BD80;
-       margin-right:-369px;
-       margin-top: -25px;
-       height:100%;
-       width:364px;
-       cursor:pointer;
-       border-left:2px solid black;
-       padding-bottom: 5%;
-       color:white;
-       text-align:left;
-       opacity:0.7;
-       -webkit-transition: opacity .15s ease-in-out;
-           -moz-transition: opacity .15s ease-in-out;
-           -ms-transition: opacity .15s ease-in-out;
-           -o-transition: opacity .15s ease-in-out;
-           transition: opacity .15s ease-in-out;*/
-
-   background-color: white;
-   width: 450px;
-   cursor: pointer;
-   color: black;
-   text-align: left;
-   -webkit-transition: opacity .15s ease-in-out;
-   -moz-transition: opacity .15s ease-in-out;
-   -ms-transition: opacity .15s ease-in-out;
-   -o-transition: opacity .15s ease-in-out;
-   transition: opacity .15s ease-in-out;
-   border: lightgrey 1px solid;
-   /*box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);*/
-}
-
-.plugin_mydashboard_menuDashboard:hover .plugin_mydashboard_menuSlider {
-   /*opacity:1;*/
-}
-
-/*.plugin_mydashboard_menuSliderHeader {
-    border-bottom: 2px black solid;
-    padding: 3px;
-    font-size: large;
-}*/
-
-.plugin_mydashboard_menuSliderContent {
-   height: 90%;
+   z-index: 1001 !important;
 }
 
 .plugin_mydashboard_fa-thermometer-0:before {
@@ -481,21 +397,18 @@ div#tabcontent{
    font-family: "Font Awesome 5 Free";
 }
 
-.plugin_mydashboard_menuSliderButtonClose:hover {
-   content: "\f0d9";
-   font-weight: 900;
-   font-family: "Font Awesome 5 Free";
-
+.plugin_mydashboard_menuDashboardListTitle1 {
+   font-size: 12px;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1,
 .plugin_mydashboard_menuDashboardListTitle2 {
-   font-size: 11px;
+   /*font-size: 11px;*/
    font-weight: normal;
-   border-bottom: lightgray 1px solid;
    padding: 7px;
    /*0.85*/
    margin: 0px;
+   cursor: pointer;
 }
 
 .plugin_mydashboard_menuDashboardListTitle2 {
@@ -522,27 +435,13 @@ div#tabcontent{
    font-family: "Font Awesome 5 Free";
 }
 
-.plugin_mydashboard_menuDashboard li {
-   font-size: 11px;
-   margin-left: 5px;
-   /*background: #476E95;*/
-   /*padding-left: 3px;*/
+td.plugin_mydashboard_menuDashboardListItem {
+   font-size: 12px;
 }
 
-.plugin_mydashboard_menuDashboardListOfPlugin {
-   max-height: 90%;
-   /* overflow-y: auto;*/
-}
-
-.plugin_mydashboard_menuDashboardListContainer {
-   max-height: 600px;
-   overflow-y: auto;
-   /*border-bottom: white 1px dashed;*/
-}
-
-li.plugin_mydashboard_menuDashboardList {
-   /*border: #476E95 1px solid;*/
-   border-bottom: 1px solid dashed;
+td.plugin_mydashboard_menuDashboardListItem:hover {
+   background-color: #E7E7E7;
+   cursor: pointer;
 }
 
 .plugin_mydashboard_html_content {
@@ -588,14 +487,6 @@ li.plugin_mydashboard_menuDashboardList {
    border-bottom: 1px lightgrey dashed;
 }
 
-/*
-li.plugin_mydashboard_menuDashboardList:hover{
-    border: lightgray 1px solid;
-}*/
-
-li.plugin_mydashboard_menuDashboardListItem:hover {
-   background-color: #E7E7E7;
-}
 
 /*END===plugin_mydashboard_menu============================*/
 /*STA===sDashboard============================*/
@@ -781,7 +672,7 @@ svg:hover {
    outline: none;
    cursor: pointer;
    border-radius: 0;
-   /*background: white;*/
+   z-index: 100;
    background-color: unset;
    color: unset;
    border-style: none;
@@ -943,12 +834,12 @@ div.dt-button-background {
    border: 2px dashed #8080804d;
    float: left;
    /*width: 90% !important;*/
-   min-height: 100px!important;
+   min-height: 100px !important;
    margin-right: 10px;
 }
 
 .equip-item {
-   min-height: 100px!important;
+   min-height: 100px !important;
    margin-right: 10px;
 }
 
@@ -1148,4 +1039,28 @@ div.dt-button-background {
 
 .hidden {
    display: none;
+}
+
+a#showMyDashboardLateralMenuLink {
+   float: right;
+   margin-right: 10px;
+   display: inline-block;
+   margin-top: 5px;
+   font-size: 1.6em;
+   color: white;
+
+}
+
+.btn-mydashboard {
+   font-size: 13px !important;
+   color: white !important;
+   clear: both;
+   white-space: normal !important;
+   width: 50%;
+}
+
+.widget-comment {
+   font-size: 9px;
+   color: grey;
+   font-style: italic;
 }

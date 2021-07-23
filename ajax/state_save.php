@@ -33,62 +33,66 @@
 include('../../../inc/includes.php');
 Session::checkLoginUser();
 
-$result = [];
+$result      = [];
 $grids_saved = [];
-$arrayFinal = [];
+$arrayFinal  = [];
 if (!isset($_POST)) {
    $result = [
-      'success'   => false,
-      'message'   => __('Required argument missing!')
+      'success' => false,
+      'message' => __('Required argument missing!')
    ];
-} else if(!empty($_POST)){
+} else if (!empty($_POST)) {
    $gsIdName = $_POST['gsId'];
    unset($_POST['gsId']);
    $dashboardWidgets = new PluginMydashboardWidget();
    $dashboardWidgets->getFromDBByCrit(['name' => $gsIdName]);
-   $gsId = "gs".$dashboardWidgets->fields['id'];
-   $gsExist = false;
-   $result = [
-      'success'   => true,
-      'message'   =>$dashboardWidgets->fields['id']
-   ];
 
-   $idUser = $_SESSION['glpiID'];
-   $idProfile = $_SESSION['glpiactiveprofile']['id'];
+   if (isset($dashboardWidgets->fields['id'])) {
+      $gsId    = "gs" . $dashboardWidgets->fields['id'];
+      $gsExist = false;
+      $result  = [
+         'success' => true,
+         'message' => $dashboardWidgets->fields['id']
+      ];
 
-   $dashboard = new  PluginMydashboardDashboard();
+      $idUser    = $_SESSION['glpiID'];
+      $idProfile = $_SESSION['glpiactiveprofile']['id'];
 
-   $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
-   if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-      $idUser = 0;
-      $idProfile = $_POST['profiles_id'];
-   }
+      $dashboard = new  PluginMydashboardDashboard();
 
-   if($dashboard->getFromDBByCrit(['users_id' => $idUser,'profiles_id'=> $idProfile])){
-      if(!is_null($dashboard->fields['grid_statesave'])){
-         $grids_saved = json_decode($dashboard->fields['grid_statesave']);
-         foreach ($grids_saved as $key => $grid_saved) {
-            $arrayFinal[$key] = $grid_saved;
-            if($key == $gsId){
-               $gsExist = true;
+      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+      if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+         $idUser    = 0;
+         $idProfile = $_SESSION['plugin_mydashboard_profiles_id'] ?? $idProfile;
+      }
+
+      if ($dashboard->getFromDBByCrit(['users_id'    => $idUser,
+                                       'profiles_id' => $idProfile])) {
+         if (!is_null($dashboard->fields['grid_statesave'])) {
+            $grids_saved = json_decode($dashboard->fields['grid_statesave']);
+            foreach ($grids_saved as $key => $grid_saved) {
+               $arrayFinal[$key] = $grid_saved;
+               if ($key == $gsId) {
+                  $gsExist           = true;
+                  $arrayFinal[$gsId] = $_POST;
+               }
+            }
+            if (!$gsExist) {
                $arrayFinal[$gsId] = $_POST;
             }
-         }
-         if(!$gsExist){
+         } else {
             $arrayFinal[$gsId] = $_POST;
          }
-      } else{
-         $arrayFinal[$gsId] = $_POST;
+         $res = json_encode($arrayFinal, JSON_NUMERIC_CHECK);
+         $res = str_replace(['"true"', '"false"'], ['true', 'false'], $res);
+         $dashboard->update(['id'             => $dashboard->fields['id'],
+                             'grid'           => $dashboard->fields['grid'],
+                             'grid_statesave' => $res]);
+         $result = [
+            'success' => true,
+            'message' => $_POST
+         ];
       }
-      $res = json_encode($arrayFinal,JSON_NUMERIC_CHECK);
-      $res = str_replace( ['"true"', '"false"'], ['true', 'false'], $res );
-      $dashboard->update(['id'=> $dashboard->fields['id'],
-                          'grid'=> $dashboard->fields['grid'],
-                          'grid_statesave' => $res]);
-      $result = [
-         'success'   => true,
-         'message'   => $_POST
-      ];
    }
 }
 

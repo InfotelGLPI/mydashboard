@@ -35,8 +35,10 @@ $profile = $_POST['profiles_id'];
 $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
 $id      = PluginMydashboardDashboard::checkIfPreferenceExists($options);
 
-if (isset($_POST['users_id']) && $_POST['users_id'] == 0) {
-   $options              = ["users_id" => 0, "profiles_id" => $profile];
+if (isset($_POST['users_id'])
+    && $_POST['users_id'] == 0) {
+   $options              = ["users_id" => 0,
+                            "profiles_id" => $profile];
    $id                   = PluginMydashboardDashboard::checkIfPreferenceExists($options);
    $input['profiles_id'] = $profile;
    if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
@@ -86,9 +88,9 @@ if (isset($data)) {
             //         }
          }
       }
-//      $ckey = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-//      $GLPI_CACHE->delete($ckey);
-//      $GLPI_CACHE->set($ckey, $datajson);
+      //      $ckey = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
+      //      $GLPI_CACHE->delete($ckey);
+      //      $GLPI_CACHE->set($ckey, $datajson);
    }
 }
 
