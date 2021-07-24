@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-23 16:23+0000\n"
+"POT-Creation-Date: 2021-07-24 11:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -609,7 +609,7 @@ msgstr "Gestion du widget"
 
 #: inc/widget.class.php:217
 msgid "This widget doesn't exist anymore"
-msgstr "The widget n'existe plus"
+msgstr "Le widget n'existe plus ou n'est plus disponible"
 
 #: inc/widget.class.php:391
 msgid "5 rows"
