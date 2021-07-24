@@ -903,33 +903,33 @@ class PluginMydashboardMenu extends CommonGLPI {
                      $viewContent[$widgetview] .= "</td></tr>";
                   }
                } else {
-
-                  if (is_numeric($widgetId)) {
-                     $widgetId = $widgetTitle;
-                  }
-                  $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
-                  $gsid                                   = $gslist[$widgetId];
-                  if (!in_array($gsid, $used)) {
-
-                     $viewContent[$widgetview] .= "<tr><td class='media plugin_mydashboard_menuDashboardListItem'"
-                                                  . " data-widgetid='" . $gsid . "'"
-                                                  . " data-classname='" . $widgetclass . "'"
-                                                  . " data-view='" . $viewsNames[$widgetview] . "'>";
-                     $icon                     = $widgetTitle['icon'] ?? "";
-                     if (!empty($icon)) {
-                        $viewContent[$widgetview] .= "<div class='media-left'><i class='$icon fa-3x'></i></div>";
+                  if (isset($widgetTitle['title'])) {
+                     if (is_numeric($widgetId)) {
+                        $widgetId = $widgetTitle;
                      }
-                     $viewContent[$widgetview] .= "<div class='media-body' style='margin: 10px;'>";
-                     $viewContent[$widgetview] .= $widgetTitle['title'];
-                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                        $viewContent[$widgetview] .= " (" . $gsid . ")";
-                     }
-                     $comment = $widgetTitle['comment'] ?? "";
-                     if (!empty($comment)) {
-                        $viewContent[$widgetview] .= "<br><span class='widget-comment'>$comment</span>";
-                     }
-                     $viewContent[$widgetview] .= "</div></td></tr>";
+                     $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
+                     $gsid                                   = $gslist[$widgetId];
+                     if (!in_array($gsid, $used)) {
 
+                        $viewContent[$widgetview] .= "<tr><td class='media plugin_mydashboard_menuDashboardListItem'"
+                                                     . " data-widgetid='" . $gsid . "'"
+                                                     . " data-classname='" . $widgetclass . "'"
+                                                     . " data-view='" . $viewsNames[$widgetview] . "'>";
+                        $icon                     = $widgetTitle['icon'] ?? "";
+                        if (!empty($icon)) {
+                           $viewContent[$widgetview] .= "<div class='media-left'><i class='$icon fa-3x'></i></div>";
+                        }
+                        $viewContent[$widgetview] .= "<div class='media-body' style='margin: 10px;'>";
+                        $viewContent[$widgetview] .= $widgetTitle['title'];
+                        if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+                           $viewContent[$widgetview] .= " (" . $gsid . ")";
+                        }
+                        $comment = $widgetTitle['comment'] ?? "";
+                        if (!empty($comment)) {
+                           $viewContent[$widgetview] .= "<br><span class='widget-comment'>$comment</span>";
+                        }
+                        $viewContent[$widgetview] .= "</div></td></tr>";
+                     }
                   }
                }
             }

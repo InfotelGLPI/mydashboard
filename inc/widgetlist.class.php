@@ -167,7 +167,7 @@ class PluginMydashboardWidgetlist {
    private function cleanList($authorized, $widgetlist) {
 
       foreach ($widgetlist as $widgetId => $widgetTitle) {
-         if (is_array($widgetTitle)) {
+         if (is_array($widgetTitle) && !isset($widgetTitle['title'])) {
             $widgetlist[$widgetId] = $this->cleanList($authorized, $widgetTitle);
          } else {
             if (!isset($authorized[$widgetId])) {
