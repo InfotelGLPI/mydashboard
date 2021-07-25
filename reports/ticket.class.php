@@ -64,78 +64,55 @@ class PluginMydashboardTicket extends CommonGLPI {
                                                 "comment" => ""],
          ]
       ];
-
-
       if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
-         $widgets = [
-            PluginMydashboardMenu::$TICKET_REQUESTERVIEW => [
-               "ticketlisttovalidatewidget" => ["title"   => __('Your tickets to validate'),
-                                                "icon"    => "fas fa-table",
-                                                "comment" => ""],
-            ]
-         ];
-
+         $widgets[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = ["title"   => __('Your tickets to validate'),
+                                                                                                 "icon"    => "fas fa-table",
+                                                                                                 "comment" => ""];
       }
-
       if ($showticket) {
-         $widgets = [
-            PluginMydashboardMenu::$TICKET_TECHVIEW => [
-               "ticketcountwidget2"      => ["title"   => __('New tickets', 'mydashboard'),
-                                             "icon"    => "fas fa-table",
-                                             "comment" => ""],
-               "ticketlistprocesswidget" => ["title"   => __('Tickets to be processed'),
-                                             "icon"    => "fas fa-table",
-                                             "comment" => ""],
-               "ticketlistwaitingwidget" => ["title"   => __('Tickets on pending status'),
-                                             "icon"    => "fas fa-table",
-                                             "comment" => ""],
-               "tickettaskstodowidget"   => ["title"   => __("Ticket tasks to do"),
-                                             "icon"    => "fas fa-table",
-                                             "comment" => ""],
-            ]
-         ];
-      }
 
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketcountwidget2"]      = ["title"   => __('New tickets', 'mydashboard'),
+                                                                                         "icon"    => "fas fa-table",
+                                                                                         "comment" => ""];
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = ["title"   => __('Tickets to be processed'),
+                                                                                         "icon"    => "fas fa-table",
+                                                                                         "comment" => ""];
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = ["title"   => __('Tickets on pending status'),
+                                                                                         "icon"    => "fas fa-table",
+                                                                                         "comment" => ""];
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["tickettaskstodowidget"]   = ["title"   => __("Ticket tasks to do"),
+                                                                                         "icon"    => "fas fa-table",
+                                                                                         "comment" => ""];
+      }
       if (Session::haveRight('ticket', Ticket::READGROUP)) {
 
-         $widgets = [
-            PluginMydashboardMenu::$GROUP_VIEW => [
-               "ticketlistwaitingwidgetgroup" => ["title"   => __('Tickets on pending status'),
-                                                  "icon"    => "fas fa-table",
-                                                  "comment" => ""],
-               "ticketlisttoapprovewidgetgroup" => ["title"   => __('Your tickets to close'),
-                                                "icon"    => "fas fa-table",
-                                                "comment" => ""],
-               "ticketlistrequestbyselfwidgetgroup" => ["title"   => __('Your tickets in progress'),
-                                                "icon"    => "fas fa-table",
-                                                "comment" => ""],
-               "ticketlistobservedwidgetgroup" => ["title"   => __('Your observed tickets'),
-                                                "icon"    => "fas fa-table",
-                                                "comment" => ""],
-            ]
-         ];
-
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Tickets on pending status'),
+                                                                                                    "icon"    => "fas fa-table",
+                                                                                                    "comment" => ""];
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Your tickets to close'),
+                                                                                                    "icon"    => "fas fa-table",
+                                                                                                    "comment" => ""];
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistrequestbyselfwidgetgroup"] = ["title"   => __('Your tickets in progress'),
+                                                                                                    "icon"    => "fas fa-table",
+                                                                                                    "comment" => ""];
+         $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistobservedwidgetgroup"]      = ["title"   => __('Your observed tickets'),
+                                                                                                    "icon"    => "fas fa-table",
+                                                                                                    "comment" => ""];
       }
       if ($showticket) {
-         $widgets = [
-            PluginMydashboardMenu::$GROUP_VIEW => [
-               "ticketlistprocesswidgetgroup" => ["title"   => __('Tickets to be processed'),
-                                       "icon"    => "fas fa-table",
-                                       "comment" => ""],
-               "tickettaskstodowidgetgroup" => ["title"   => __("Ticket tasks to do"),
-                                       "icon"    => "fas fa-table",
-                                       "comment" => ""],
-            ]
-         ];
+
+         $widgets[PluginMydashboardMenu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = ["title"   => __('Tickets to be processed'),
+                                                                                         "icon"    => "fas fa-table",
+                                                                                         "comment" => ""];
+         $widgets[PluginMydashboardMenu::$GROUP_VIEW]["tickettaskstodowidgetgroup"]   = ["title"   => __("Ticket tasks to do"),
+                                                                                         "icon"    => "fas fa-table",
+                                                                                         "comment" => ""];
       }
       if ($showticket || $createticket) {
-         $widgets = [
-            PluginMydashboardMenu::$GLOBAL_VIEW => [
-               "ticketcountwidget" => ["title"   => __('Ticket followup'),
-                                       "icon"    => "fas fa-table",
-                                       "comment" => ""],
-            ]
-         ];
+
+         $widgets[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = ["title"   => __('Ticket followup'),
+                                                                               "icon"    => "fas fa-table",
+                                                                               "comment" => ""];
       }
 
       return $widgets;

@@ -122,7 +122,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    function getWidgetsForItem() {
 
       $widgets = [
-         _n('Alert', 'Alerts', 2, 'mydashboard') => [
+         __('Indicators', 'mydashboard') => [
             $this->getType() . "1"  => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
                                         "icon"    => "fas fa-info-circle",
                                         "comment" => __("See alert information block", "mydashboard")],

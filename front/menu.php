@@ -90,7 +90,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
            <script src="../lib/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
            <!--MOMENT FOR DATATABLES-->
-           <script src="../lib//moment.min.js"></script>
+           <script src="../lib/moment.min.js"></script>
            <script src="../lib/datetime-moment.js"></script>
            <!--CHARTJS-->
            <script src="../lib/chartjs/Chart.bundle.min.js"></script>
