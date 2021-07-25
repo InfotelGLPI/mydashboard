@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-24 11:21+0000\n"
+"POT-Creation-Date: 2021-07-25 09:26+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -280,9 +280,8 @@ msgstr "Créer un nouvelle alerte"
 msgid "Linked reminder"
 msgstr "Note liée"
 
-#: inc/itilalert.class.php:117 reports/alert.class.php:125
-#: reports/alert.class.php:2350 reports/alert.class.php:2353
-#: reports/alert.class.php:2482
+#: inc/itilalert.class.php:117 reports/alert.class.php:2350
+#: reports/alert.class.php:2353 reports/alert.class.php:2482
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Alerte"
@@ -506,7 +505,7 @@ msgstr "erreur"
 
 #: inc/piechart.class.php:58
 msgid "You can't have more than one serie for a pie chart"
-msgstr "Vous ne pouvez pas avoir plus d'un série pour un diagramme circulaire"
+msgstr "Vous ne pouvez pas avoir plus d'un série pour un camembert"
 
 #: inc/preference.class.php:96
 msgid "Automatic refreshing of the widgets that can be refreshed"
@@ -655,9 +654,13 @@ msgid_plural "Alerts Dashboard"
 msgstr[0] "Alerte Dashboard"
 msgstr[1] "Alertes Dashboard"
 
+#: reports/alert.class.php:125
+msgid "Indicators"
+msgstr "Indicateurs"
+
 #: reports/alert.class.php:128
 msgid "See alert information block"
-msgstr "Voir le bloc d'alerte"
+msgstr "Voir le bloc d'alertes"
 
 #: reports/alert.class.php:131
 msgid "See scheduled maintenances information block"
@@ -743,8 +746,8 @@ msgstr "Alertes demandes"
 msgid "Display alerts for requests"
 msgstr "Affiche les alertes pour les demandes"
 
-#: reports/alert.class.php:320 reports/ticket.class.php:383
-#: reports/ticket.class.php:707
+#: reports/alert.class.php:320 reports/ticket.class.php:360
+#: reports/ticket.class.php:684
 msgid "ID and priority"
 msgstr "ID et priorité"
 
@@ -895,7 +898,7 @@ msgstr "Tâches de projets à traiter"
 
 #: reports/reports_bar.class.php:59
 msgid "Bar charts"
-msgstr "Diagramme en barres"
+msgstr "Graphiques en barres"
 
 #: reports/reports_bar.class.php:60 reports/reports_bar.class.php:187
 #: reports/reports_line.class.php:448 reports/reports_line.class.php:699
@@ -1034,7 +1037,7 @@ msgstr "Moyenne de prise en charge (heures)"
 
 #: reports/reports_line.class.php:59
 msgid "Line charts"
-msgstr "Diagramme en ligne"
+msgstr "Graphiques en ligne"
 
 #: reports/reports_line.class.php:60
 msgid "Tickets stock by month"
@@ -1087,7 +1090,7 @@ msgstr "Affiche les tickets par lieu (Latitude / Longitude)"
 
 #: reports/reports_pie.class.php:61
 msgid "Pie charts"
-msgstr "Diagramme circulaire"
+msgstr "Camemberts"
 
 #: reports/reports_pie.class.php:65 reports/reports_pie.class.php:289
 msgid "Top ten ticket requesters by month"
@@ -1185,7 +1188,7 @@ msgid "Not satisfy percent"
 msgstr "Pourcentage de non satisfaction"
 
 #: reports/reports_pie.class.php:1589 reports/reports_pie.class.php:1889
-#: reports/ticket.class.php:83 reports/ticket.class.php:1205
+#: reports/ticket.class.php:74 reports/ticket.class.php:1182
 msgid "New tickets"
 msgstr "Nouveaux Tickets"
 
