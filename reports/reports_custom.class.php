@@ -89,9 +89,9 @@ class PluginMydashboardReports_Custom extends CommonGLPI {
 
                $content = PluginMydashboardCustomswidget::getCustomWidget($id);
 
-               $widget = new PluginMydashboardHtml(false);
+               $widget = new PluginMydashboardHtml(true);
 
-               $widget->setWidgetTitle("");
+               $widget->setWidgetTitle($content['name']);
 
                $htmlContent = html_entity_decode($content['content']);
 

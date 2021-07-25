@@ -69,22 +69,22 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $this->getType() . "21" => ["title"   => __("Number of tickets affected by technicians by month", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => __("Sum of ticket affected by technicians", "mydashboard")],
-            $this->getType() . "21" => ["title"   => __("Average real duration of treatment of the ticket", "mydashboard"),
+            $this->getType() . "23" => ["title"   => __("Average real duration of treatment of the ticket", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => __("Display of average real duration of treatment of tickets (actiontime of tasks)", "mydashboard")],
-            $this->getType() . "21" => ["title"   => __("Top ten technicians (by tickets number)", "mydashboard"),
+            $this->getType() . "24" => ["title"   => __("Top ten technicians (by tickets number)", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => __("Display of number of tickets by technicians", "mydashboard")],
-            $this->getType() . "23" => ["title"   => __("Age of tickets", "mydashboard"),
+            $this->getType() . "35" => ["title"   => __("Age of tickets", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => ""],
-            $this->getType() . "35" => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
+            $this->getType() . "36" => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => ""],
-            $this->getType() . "36" => ["title"   => __("Stock of tickets by status", "mydashboard"),
+            $this->getType() . "37" => ["title"   => __("Stock of tickets by status", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => ""],
-            $this->getType() . "37" => ["title"   => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
+            $this->getType() . "38" => ["title"   => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
                                         "icon"    => "fas fa-chart-bar",
                                         "comment" => ""],
 //            $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling and pending by month", "mydashboard"),
@@ -1227,7 +1227,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
 
             $titleOpenedTicket       = __("Opened tickets", "mydashboard");
-            $titleSatisfactionTicket = __("Average Satisfaction", "mydashboad");
+            $titleSatisfactionTicket = __("Average Satisfaction", "mydashboard");
             $labels                  = json_encode($tabnames);
 
             $colors = PluginMydashboardColor::getColors(1, 0);;

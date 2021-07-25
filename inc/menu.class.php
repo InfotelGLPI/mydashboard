@@ -374,7 +374,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "</th>";
          echo "</tr>";
          echo "<tr>";
-         echo "<td class='left'>";
+         echo "<td class='left' style='padding: 0px;'>";
          echo $this->getWidgetsList($selected_profile, $edit);
          echo "</th>";
          echo "</tr>";
@@ -401,7 +401,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
 
          echo "<tr>";
-         echo "<td class='center'>";
+         echo "<td class='center' style='border: 0;'>";
 
          echo "<span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
          echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
@@ -939,8 +939,17 @@ class PluginMydashboardMenu extends CommonGLPI {
       //Now we display each group (view) as a list
       foreach ($viewContent as $view => $vContent) {
          if ($vContent != '') {
-            $wl .= "<tr><td class='plugin_mydashboard_menuDashboardList'>";
-            $wl .= "<h6 class='plugin_mydashboard_menuDashboardListTitle2'>" . $viewsNames[$view] . "</h6>";
+            $wl .= "<tr><td class='media plugin_mydashboard_menuDashboardList'>";
+//            $wl .= "<span class='media'>";
+            $wl .= "<span class='media-left'>";
+            $wl .= "<i class='far fa-folder fa-2x'></i>";
+            $wl .= "</span>";
+//            $wl .= "<span class=''>";
+            $wl .= "<h6 class='media-body plugin_mydashboard_menuDashboardListTitle2'>";
+            $wl .= $viewsNames[$view];
+            $wl .= "</h6>";
+//            $wl .= "</span>";
+//            $wl .= "</span>";
             $wl .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardList2'>";
             if (!empty($vContent)) {
                $wl .= $vContent;
@@ -1078,8 +1087,13 @@ class PluginMydashboardMenu extends CommonGLPI {
                      }
                   }
                } else {
-                  $tmp = "<tr><td class='plugin_mydashboard_menuDashboardList'>";
-                  $tmp .= "<h6 class='plugin_mydashboard_menuDashboardListTitle$depth'>" . $widgetId . "</h6>";
+                  $tmp = "<tr><td class='media plugin_mydashboard_menuDashboardList'>";
+                  $tmp .= "<span class='media-left'>";
+                  $tmp .= "<i class='far fa-folder fa-2x'></i>";
+                  $tmp .= "</span>";
+                  $tmp .= "<h6 class='media-body plugin_mydashboard_menuDashboardListTitle$depth'>";
+                  $tmp .= $widgetId;
+                  $tmp .= "</h6>";
                   $tmp .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardList$depth'>";
                   $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
                   if ($res != '') {

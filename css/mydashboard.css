@@ -420,16 +420,14 @@ div#tabcontent{
    background-color: whitesmoke;
 }
 
-.plugin_mydashboard_menuDashboardListTitle1:before,
-.plugin_mydashboard_menuDashboardListTitle2:before {
+.plugin_mydashboard_menuDashboardListTitle1:before {
    content: "\f0da";
    font-weight: 900;
    font-family: "Font Awesome 5 Free";
    margin-right: 5px;
 }
 
-.plugin_mydashboard_menuDashboardListTitle1.plugin_mydashboard_menuDashboardListTitle1Opened:before,
-.plugin_mydashboard_menuDashboardListTitle2.plugin_mydashboard_menuDashboardListTitle1Opened:before {
+.plugin_mydashboard_menuDashboardListTitle1.plugin_mydashboard_menuDashboardListTitle1Opened:before {
    content: "\f0d7";
    font-weight: 900;
    font-family: "Font Awesome 5 Free";

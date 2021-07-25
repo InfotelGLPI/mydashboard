@@ -65,7 +65,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                                         "comment" => __("Display if you have duplicates into inventory", "mydashboard")],
             $this->getType() . "14" => ["title"   => __("All unpublished articles"),
                                         "icon"    => "fas fa-table",
-                                        "comment" => ""],
+                                        "comment" => __("Display unpublished articles of Knowbase", "mydashboard")],
             $this->getType() . "32" => ["title"   => __("Number of opened tickets by technician and by status", "mydashboard"),
                                         "icon"    => "fas fa-table",
                                         "comment" => ""],

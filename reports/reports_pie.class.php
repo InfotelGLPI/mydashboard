@@ -1099,7 +1099,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                             'backgroundColor' => $backgroundPieColor,
                             'format'          => $format];
 
-            $graph = PluginMydashboardPieChart::launchPolarAreaGraph($graph_datas, []);
+            $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, []);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,
