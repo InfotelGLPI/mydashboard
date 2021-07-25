@@ -61,7 +61,7 @@ class PluginMydashboardReports_Custom extends CommonGLPI {
       if (!empty($customsWidgets)) {
          foreach ($customsWidgets as $customWidget) {
             $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
-                                                                                                            "icon"    => "fas fa-info",
+                                                                                                            "icon"    => "fas fa-edit",
                                                                                                             "comment" => ""];
          }
       }

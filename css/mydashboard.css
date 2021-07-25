@@ -399,6 +399,7 @@ div#tabcontent{
 
 .plugin_mydashboard_menuDashboardListTitle1 {
    font-size: 12px;
+   border-bottom: 1px #CCC dashed;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1,
