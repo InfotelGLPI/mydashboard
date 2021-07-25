@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-24 11:21+0000\n"
+"POT-Creation-Date: 2021-07-25 09:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -275,9 +275,8 @@ msgstr ""
 msgid "Linked reminder"
 msgstr ""
 
-#: inc/itilalert.class.php:117 reports/alert.class.php:125
-#: reports/alert.class.php:2350 reports/alert.class.php:2353
-#: reports/alert.class.php:2482
+#: inc/itilalert.class.php:117 reports/alert.class.php:2350
+#: reports/alert.class.php:2353 reports/alert.class.php:2482
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
@@ -650,6 +649,10 @@ msgid_plural "Alerts Dashboard"
 msgstr[0] ""
 msgstr[1] ""
 
+#: reports/alert.class.php:125
+msgid "Indicators"
+msgstr ""
+
 #: reports/alert.class.php:128
 msgid "See alert information block"
 msgstr ""
@@ -738,8 +741,8 @@ msgstr ""
 msgid "Display alerts for requests"
 msgstr ""
 
-#: reports/alert.class.php:320 reports/ticket.class.php:383
-#: reports/ticket.class.php:707
+#: reports/alert.class.php:320 reports/ticket.class.php:360
+#: reports/ticket.class.php:684
 msgid "ID and priority"
 msgstr ""
 
@@ -1170,7 +1173,7 @@ msgid "Not satisfy percent"
 msgstr ""
 
 #: reports/reports_pie.class.php:1589 reports/reports_pie.class.php:1889
-#: reports/ticket.class.php:83 reports/ticket.class.php:1205
+#: reports/ticket.class.php:74 reports/ticket.class.php:1182
 msgid "New tickets"
 msgstr ""
 
