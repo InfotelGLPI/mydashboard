@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-25 18:24+0000\n"
+"POT-Creation-Date: 2021-07-26 07:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1145,35 +1145,35 @@ msgstr ""
 msgid "Number of opened, closed and unplanned tickets by month"
 msgstr ""
 
-#: reports/reports_pie.class.php:83 reports/reports_pie.class.php:905
+#: reports/reports_pie.class.php:83 reports/reports_pie.class.php:906
 msgid "Percent of use of solution types"
 msgstr ""
 
-#: reports/reports_pie.class.php:85 reports/reports_pie.class.php:906
+#: reports/reports_pie.class.php:85 reports/reports_pie.class.php:907
 msgid "Display percent of solution types for tickets"
 msgstr ""
 
-#: reports/reports_pie.class.php:86 reports/reports_pie.class.php:998
+#: reports/reports_pie.class.php:86 reports/reports_pie.class.php:999
 msgid "Top ten of opened tickets by requester groups"
 msgstr ""
 
-#: reports/reports_pie.class.php:89 reports/reports_pie.class.php:1086
+#: reports/reports_pie.class.php:89 reports/reports_pie.class.php:1087
 msgid "Global satisfaction level"
 msgstr ""
 
-#: reports/reports_pie.class.php:92 reports/reports_pie.class.php:1191
+#: reports/reports_pie.class.php:92 reports/reports_pie.class.php:1192
 msgid "Top ten of opened tickets by location"
 msgstr ""
 
-#: reports/reports_pie.class.php:95 reports/reports_pie.class.php:1308
+#: reports/reports_pie.class.php:95
 msgid "Number of use of request sources"
 msgstr ""
 
-#: reports/reports_pie.class.php:97 reports/reports_pie.class.php:1309
+#: reports/reports_pie.class.php:97 reports/reports_pie.class.php:1310
 msgid "Display percent of request sources for closed tickets"
 msgstr ""
 
-#: reports/reports_pie.class.php:98 reports/reports_pie.class.php:1404
+#: reports/reports_pie.class.php:98 reports/reports_pie.class.php:1405
 msgid "Number of tickets per location per period"
 msgstr ""
 
@@ -1193,12 +1193,16 @@ msgstr ""
 msgid "Not respected TTO"
 msgstr ""
 
-#: reports/reports_pie.class.php:1091
+#: reports/reports_pie.class.php:1092
 msgid "Satisfy percent"
 msgstr ""
 
-#: reports/reports_pie.class.php:1091
+#: reports/reports_pie.class.php:1092
 msgid "Not satisfy percent"
+msgstr ""
+
+#: reports/reports_pie.class.php:1309
+msgid "Percent of use of request sources"
 msgstr ""
 
 #: reports/reports_table.class.php:59
