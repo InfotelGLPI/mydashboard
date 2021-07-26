@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-26 07:24+0000\n"
+"POT-Creation-Date: 2021-07-26 09:40+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -89,6 +89,16 @@ msgstr "Année de fin"
 #: inc/helper.class.php:1707
 msgid "Year"
 msgstr "Année"
+
+#: ajax/loadscripts.php:43
+msgid "Go to mydashboard actions"
+msgstr "Accéder aux actions de Mydashboard"
+
+#: ajax/loadscripts.php:48
+msgid "Edit mode is enabled, please close it for better performance"
+msgstr ""
+"Le mode édition est activé, veuillez le fermer pour de meilleures "
+"performances"
 
 #: front/config.php:46
 msgid "Please activate the plugin"
