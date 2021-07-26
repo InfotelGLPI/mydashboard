@@ -897,10 +897,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             if ($nb) {
                while ($data = $DB->fetchArray($result)) {
                   $name_solution[] = $data['name'];
-                  $datas[]         = Html::formatNumber(($data['nb'] * 100) / $total);
+                  $datas[] = round(($data['nb'] * 100) / $total, 2);
                   $tabsolution[]   = $data['solutiontypes_id'];
                }
             }
+
             $widget = new PluginMydashboardHtml();
             $title  = __("Percent of use of solution types", "mydashboard");
             $widget->setWidgetComment(__("Display percent of solution types for tickets", "mydashboard"));
@@ -919,7 +920,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                             'labels'          => $labelsPie,
                             'label'           => $title,
                             'backgroundColor' => $backgroundPieColor,
-                            'format'          => $format];
+                            'format'          => $format
+            ];
 
             $graph = PluginMydashboardPieChart::launchDonutGraph($graph_datas, []);
 
@@ -932,7 +934,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                        "canvas"    => true,
                        "nb"        => $nb];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
-
             $widget->setWidgetHtmlContent(
                $graph
             );
@@ -1300,12 +1301,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                   } else {
                      $name_requesttypes[] = $data['name'];
                   }
-                  $datas[]      = Html::formatNumber(($data['nb'] * 100) / $total);
+                  $datas[] = round(($data['nb'] * 100) / $total, 2);
                   $tabrequest[] = $data['requesttypes_id'];
                }
             }
             $widget = new PluginMydashboardHtml();
-            $title  = __("Number of use of request sources", "mydashboard");
+            $title  = __("Percent of use of request sources", "mydashboard");
             $widget->setWidgetComment(__("Display percent of request sources for closed tickets", "mydashboard"));
             $widget->setWidgetTitle((($isDebug) ? "30 " : "") . $title);
 
