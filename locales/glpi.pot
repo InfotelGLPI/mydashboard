@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-26 07:24+0000\n"
+"POT-Creation-Date: 2021-07-26 09:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,6 +84,14 @@ msgstr ""
 #: inc/helper.class.php:1227 inc/helper.class.php:1631
 #: inc/helper.class.php:1707
 msgid "Year"
+msgstr ""
+
+#: ajax/loadscripts.php:43
+msgid "Go to mydashboard actions"
+msgstr ""
+
+#: ajax/loadscripts.php:48
+msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
 #: front/config.php:46
