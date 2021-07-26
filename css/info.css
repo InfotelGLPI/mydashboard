@@ -1,6 +1,6 @@
 #info_img {
-    /*background: url(../../../pics/login_logo_glpi.png) center no-repeat #2f85b1;*/
-    /*height: 90px;*/
+    background: url(../../../pics/login_logo_glpi.png) center no-repeat #2f85b1;
+    height: 90px;
     /*background-size: 50%;*/
 }
 
@@ -23,19 +23,19 @@
 
 .bt-row {
     /* min-height: 120px; */
-    margin-right: unset;
-    margin-left: unset;
-    margin-top: unset;
-    /*-webkit-box-sizing: border-box;*/
-    /*-moz-box-sizing: border-box;*/
-    box-sizing: border-box;
-    width: 50%;
-    margin: 0 auto;
-    border-left: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    border-bottom: 1px solid #CCC;
-    border-top: 1px solid #CCC;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #f8f7f3;
+    /*margin-right: unset;*/
+    /*margin-left: unset;*/
+    /*margin-top: unset;*/
+    /*!*-webkit-box-sizing: border-box;*!*/
+    /*!*-moz-box-sizing: border-box;*!*/
+    /*box-sizing: border-box;*/
+    /*width: 50%;*/
+    /*margin: 0 auto;*/
+    /*border-left: 1px solid #CCC;*/
+    /*border-right: 1px solid #CCC;*/
+    /*border-bottom: 1px solid #CCC;*/
+    /*border-top: 1px solid #CCC;*/
+    /*padding: 20px;*/
+    /*border-radius: 5px;*/
+    /*background-color: #f8f7f3;*/
 }

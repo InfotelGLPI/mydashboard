@@ -18,7 +18,7 @@
 
          // Send data
          $.ajax({
-            url: url+'ajax/loadscripts.php',
+            url: url + 'ajax/loadscripts.php',
             type: 'POST',
             dataType: 'html',
             data: 'action=load',
@@ -29,9 +29,6 @@
                }
             }
          });
-         if($("#showMyDashboardLateralMenu").length === 0) {
-            $("#menu_all_button").after("\<a class='fas fa-tachometer-alt fa-2x' href='#' id='showMyDashboardLateralMenuLink'></a>");
-         }
       }
 
       init();

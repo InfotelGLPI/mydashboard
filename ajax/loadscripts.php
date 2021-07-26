@@ -39,6 +39,14 @@ if (isset($_POST['action'])) {
          $param['position'] = 'right';
          $param['url']      = $CFG_GLPI["root_doc"] . '/plugins/mydashboard/ajax/lateralmenu.php';
 
+         $style = "white";
+         $title = __("Go to mydashboard actions", "mydashboard");
+
+         $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+         if ($edit > 0) {
+            $style = "red";
+            $title = __("Edit mode is enabled, please close it for better performance", "mydashboard");
+         }
          $out = "<script type='text/javascript'>\n";
          $out .= "$(function() {";
          $out .= "$( '.mygrid' ).append('<div id=\'$name\' class=\'slidepanel on{$param['position']}\'><div class=\"header\">" .
@@ -85,8 +93,14 @@ if (isset($_POST['action'])) {
             });
          };\n";
          }
+
+         $out .= "if ($('#showMyDashboardLateralMenu').length === 0) {
+            $('#menu_all_button').after(\"<a class='fas fa-tachometer-alt fa-2x red' title='$title' href='#' style='color:$style;' id='showMyDashboardLateralMenuLink'></a>\");
+         };";
+         
          $out .= "</script>";
          echo $out;
+         
          break;
    }
 } else {
