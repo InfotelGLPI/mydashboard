@@ -223,6 +223,16 @@ function plugin_mydashboard_install() {
       $mig->executeMigration();
    }
 
+   //Add config for prefered type
+   if (!$DB->fieldExists("glpi_plugin_mydashboard_preferences","prefered_type")) {
+      $mig = new Migration("1.8.2");
+
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.8.2.sql");
+
+
+      $mig->executeMigration();
+   }
+
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
    if (!$config->getFromDB("1")) {
