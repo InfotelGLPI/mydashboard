@@ -481,8 +481,13 @@ class PluginMydashboardHelper {
       $opt['type']          = 0;
       $crit['crit']['type'] = "AND 1 = 1";
       if (in_array("type", $criterias)) {
-         if (isset($params['opt']["type"])
-             && $params['opt']["type"] > 0) {
+         if (isset($params['preferences']['prefered_type'])
+             && $params['preferences']['prefered_type'] > 0
+             && !isset($params['opt']['type'])) {
+            $opt['type'] = $params['preferences']['prefered_type'];
+            $crit['crit']['type'] = " AND `glpi_tickets`.`type` = '" . $opt['type'] . "' ";
+         } elseif (isset($params['opt']['type'])
+                   && $params['opt']['type'] > 0) {
             $opt['type']          = $params['opt']['type'];
             $crit['crit']['type'] = " AND `glpi_tickets`.`type` = '" . $params['opt']["type"] . "' ";
          }

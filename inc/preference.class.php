@@ -192,6 +192,13 @@ class PluginMydashboardPreference extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
+      echo "<tr class='tab_bg_1'><td>" . __("My prefered type for widget", "mydashboard") . "</td>";
+      echo "<td>";
+      $params = ['value'  => $this->fields['prefered_type'],'toadd' =>[0 => Dropdown::EMPTY_VALUE]];
+      Ticket::dropdownType('prefered_type', $params);
+      echo "</td>";
+      echo "</tr>";
+
       echo "<tr class='tab_bg_1'><td>" . __("Palette color", "mydashboard") . "</td>";
       echo "<td>";
       $palette  = [1 => __("Palette color", "mydashboard") . ' 1',
