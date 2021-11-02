@@ -149,7 +149,7 @@ class PluginMydashboardEvent extends Glpi\Event {
     *
     * @return PluginMydashboardDatatable|void
     */
-   static function showForUser($user = "") {
+   static function showForUser(string $user = "", bool $display = true) {
       global $DB, $CFG_GLPI;
 
       // Show events from $result in table form

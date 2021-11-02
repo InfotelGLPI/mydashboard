@@ -125,7 +125,7 @@ class PluginMydashboardConfigTranslation extends CommonDBChild {
          echo "};";
          echo "</script>\n";
          echo "<div class='center'>" .
-              "<a class='vsubmit' href='javascript:addTranslation" .
+              "<a class='btn btn-primary' href='javascript:addTranslation" .
               $item->getType() . $item->getID() . "$rand();'>" . __('Add a new translation') .
               "</a></div><br>";
       }
@@ -155,7 +155,7 @@ class PluginMydashboardConfigTranslation extends CommonDBChild {
          echo "<th>" . __("Language") . "</th>";
          echo "<th>" . __("Field") . "</th>";
          echo "<th>" . __("Value") . "</th></tr>";
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             $onhover = '';
             if ($canedit) {
                $onhover = "style='cursor:pointer'
@@ -305,7 +305,7 @@ class PluginMydashboardConfigTranslation extends CommonDBChild {
                                      ]
                                   ]);
          if (count($iterator) > 0) {
-            while ($data = $iterator->next()) {
+            foreach ($iterator as $data) {
                $used[$data['field']] = $data['field'];
             }
          }

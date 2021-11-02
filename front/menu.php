@@ -59,9 +59,9 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
        <!--<!DOCTYPE html>-->
        <html>
        <head>
-           <link type="text/css" href="../css/bootstrap4.css" rel="stylesheet">
-           <link type="text/css" href="../css/style_bootstrap_main.css" rel="stylesheet">
-           <link type="text/css" href="../css/style_bootstrap_ticket.css" rel="stylesheet">
+<!--           <link type="text/css" href="../css/bootstrap4.css" rel="stylesheet">-->
+<!--           <link type="text/css" href="../css/style_bootstrap_main.css" rel="stylesheet">-->
+<!--           <link type="text/css" href="../css/style_bootstrap_ticket.css" rel="stylesheet">-->
            <!--DATATABLES CSS-->
            <link type="text/css" href="../lib/datatables/datatables.min.css" rel="stylesheet">
            <link type="text/css" href="../lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css"
@@ -72,9 +72,9 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
                  rel="stylesheet">
 
            <!--GLPI-->
-           <link type="text/css" href="../../../public/lib/base.css" rel="stylesheet">
-           <link type="text/css" href="../../../public/lib/gridstack.css" rel="stylesheet">
-           <script src="../../../public/lib/gridstack.js"></script>
+<!--           <link type="text/css" href="../../../public/lib/base.css" rel="stylesheet">-->
+<!--           <link type="text/css" href="../../../public/lib/gridstack.css" rel="stylesheet">-->
+<!--           <script src="../../../public/lib/gridstack.js"></script>-->
 
 
            <!--DATATABLES-->
@@ -107,6 +107,13 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <!--FULLCALENDAR-->
            <link type="text/css" href="../lib/fullcalendar/fullcalendar.min.css" rel="stylesheet">
            <script src="../lib/fullcalendar/fullcalendar.min.js"></script>
+
+          <script src="../lib/lodash.min.js"></script>
+          <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+          <script src="../lib/gridstack/src/gridstack.js"></script>
+          <script src="../lib/gridstack/src/gridstack.jQueryUI.js"></script>
+          <link type="text/css" href="../lib/gridstack/src/gridstack.css" rel="stylesheet">
+          <link type="text/css" href="../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
 
           <?php
           if (isset($_SESSION['glpilanguage'])) {

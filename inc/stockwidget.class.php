@@ -102,7 +102,7 @@ class PluginMydashboardStockWidget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name");
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>" . __("Item type");
@@ -198,7 +198,7 @@ class PluginMydashboardStockWidget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Icon') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "icon");
+      echo Html::input('icon', ['value' => $this->fields['icon'], 'size' => 40]);
       if (isset($this->fields['icon'])
           && !empty($this->fields['icon'])) {
          $icon = $this->fields['icon'];

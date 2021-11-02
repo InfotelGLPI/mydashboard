@@ -218,7 +218,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          $message .= " - " . $id;
       }
-      $msg = "<div class='center alert alert-warning' role='alert'><br><br>";
+      $msg = "<div class='center alert alert-warning alert-important' role='alert'><br><br>";
       $msg .= "<i style='color:orange' class='fas fa-exclamation-triangle fa-3x'></i>";
       $msg .= "<br><br><span class='b'>$message</span></div>";
 
@@ -480,14 +480,14 @@ class PluginMydashboardWidget extends CommonDBTM {
                $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 96%'>";
 
                if ($widget->getTitleVisibility()) {
-                  $widgetdisplay .= "<h5>";
+                  $widgetdisplay .= "<h3>";
                   $titletype = $widget->getWidgetHeaderType();
                   if (!empty($titletype)) {
                      $titletype = $widget->getWidgetHeaderType();
                   } else {
                      $titletype = 'info';
                   }
-                  $widgetdisplay .= "<div class='alert alert-$titletype' role='alert'>";
+                  $widgetdisplay .= "<div class='alert alert-$titletype alert-important' role='alert'>";
                   $widgetdisplay .= $title;
                   if ($comment != "") {
                      $widgetdisplay .= "&nbsp;";
@@ -497,7 +497,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                   }
                   $widgetdisplay .= "</div>";
                   //         $widget .= "<small>" . __('A comment') . "</small>";
-                  $widgetdisplay .= "</h5>";
+                  $widgetdisplay .= "</h3>";
                }
 
                $widgetdisplay .= "<div id=\"display-sc\">";
@@ -578,7 +578,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  = "<div id='gs4' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3>";
-      $display  .= "<div class='alert alert-danger' role='alert'>";
+      $display  .= "<div class='alert alert-danger alert-important' role='alert'>";
       $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
@@ -622,7 +622,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  = "<div id='gs5' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3>";
-      $display  .= "<div class='alert alert-warning' role='alert'>";
+      $display  .= "<div class='alert alert-warning alert-important' role='alert'>";
       $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_maintenances_widget');
@@ -666,7 +666,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       $display  = "<div id='gs6' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
       $display  .= "<h3>";
-      $display  .= "<div class='alert alert-info' role='alert'>";
+      $display  .= "<div class='alert alert-info alert-important' role='alert'>";
       $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_informations_widget');
@@ -704,7 +704,7 @@ class PluginMydashboardWidget extends CommonDBTM {
       if ($fromsc == true) {
          $display .= "<div class=\"bt-feature $class\">";
          $display .= "<h3>";
-         $display .= "<div class='alert alert-light' role='alert'>";
+         $display .= "<div class='alert alert-light alert-important' role='alert'>";
          $display .= __('Your equipments', 'mydashboard');
          $display .= "</div>";
          $display .= "</h3>";

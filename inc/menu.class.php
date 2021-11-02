@@ -290,7 +290,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          ]);
 
       //New rule -> get the next free ranking
-      while ($data = $iterator->next()) {
+      foreach ($iterator as $data) {
          $profiles[$data['id']] = $data['name'];
       }
 
@@ -358,7 +358,7 @@ class PluginMydashboardMenu extends CommonGLPI {
       $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
       echo $this->getscripts();
-
+      echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
       if ($edit > 0) {
 
          echo "<div class='center'>";
@@ -419,7 +419,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             $edit = 1;
          }
 
-         echo "<a id='load-widgets' class='btn btn-info btn-sm btn-mydashboard'>";
+         echo "<a id='load-widgets' class='btn btn-info btn-sm'>";
          echo "<i class='fas fa-1x fa-spinner pointer btn-mydashboard' title='" . __('Load widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __('Load widgets', 'mydashboard');
@@ -427,7 +427,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "<br><br>";
 
          if ($edit == 1) {
-            echo "<a id='save-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<a id='save-grid' class='btn btn-success btn-sm'>";
             echo "<i class='fas fa-1x fa-save pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save grid', 'mydashboard');
@@ -435,7 +435,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<br><br>";
          }
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            echo "<a id='save-default-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<a id='save-default-grid' class='btn btn-success btn-sm'>";
             echo "<i class='fas fa-1x fa-hdd pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save default grid', 'mydashboard');
@@ -443,7 +443,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<br><br>";
          }
 
-         echo "<a id='clear-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+         echo "<a id='clear-grid' class='btn btn-danger btn-sm'>";
          echo "<i class='fas fa-1x fa-window-restore pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __('Clear grid', 'mydashboard');
@@ -451,7 +451,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "<br><br>";
 
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<a id='drag-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
+            echo "<a id='drag-grid' class='btn btn-danger btn-sm'>";
             echo "<i class='fas fa-1x fa-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Permit drag / resize widgets', 'mydashboard');
@@ -461,7 +461,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
 
-            echo "<a id='undrag-grid' class='btn btn-success btn-sm btn-mydashboard'>";
+            echo "<a id='undrag-grid' class='btn btn-success btn-sm'>";
             echo "<i class='fas fa-1x fa-unlock-alt pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Block drag / resize widgets', 'mydashboard');
@@ -473,7 +473,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
              && $edit < 1
              && $this->interface == 1) {
-            echo "<a id='header_fullscreen' class='btn btn-info btn-sm btn-mydashboard'>";
+            echo "<a id='header_fullscreen' class='btn btn-info btn-sm'>";
             echo "<i class='fas fa-1x fa-arrows-alt pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __("Fullscreen", "mydashboard");
@@ -481,7 +481,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<br><br>";
          }
 
-         echo "<a id='close-edit' class='btn btn-success btn-sm btn-mydashboard' style='color: red;'>";
+         echo "<a id='close-edit' class='btn btn-success btn-sm'>";
          echo "<i class='fas fa-1x fa-times-circle pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __("Close edit mode", "mydashboard");
@@ -619,11 +619,11 @@ class PluginMydashboardMenu extends CommonGLPI {
             $used[] = $v["id"];
          }
       }
-      $layout = $_SESSION['glpilayout'];
+
       $wl     = "<script>
 
             $(document).ready(function () {
-                var layout = '$layout';
+
                 //===================Start:Showing Menu=====================================
                 //Showing the menu on click
                 $('.plugin_mydashboard_add_button').on('click', function (e) {
@@ -855,7 +855,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     */
    public function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = []) {
 
-      $wl = "<h5 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h5>";
+      $wl = "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
       $wl .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'>";
 
       //GLPI core classes doesn't display the same thing in each view, we need to provide all views available
@@ -987,7 +987,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          $is_empty = true;
 
-         $tmp = "<h5 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h5>";
+         $tmp = "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h3>";
          //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
          $tmp .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'>";
          //         $tmp .= "<tr>";
@@ -1361,7 +1361,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          //               }
          //            }
       } else {
-         echo "<div class='alert alert-warning' id='warning-alert'>
+         echo "<div class='alert alert-warning alert-important' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
                 " . __('No widgets founded, please add widgets', 'mydashboard') . "
             </div>";
@@ -1752,6 +1752,105 @@ class PluginMydashboardMenu extends CommonGLPI {
     </script>";
 
       echo "</div>";
+   }
+
+   /**
+    * Create a side slide panel
+    *
+    * @param string $name    name of the js object
+    * @param array  $options Possible options:
+    *          - title       Title to display
+    *          - position    position (either left or right - defaults to right)
+    *          - display     display or get string? (default true)
+    *          - icon        Path to aditional icon
+    *          - icon_url    Link for aditional icon
+    *          - icon_txt    Alternative text and title for aditional icon_
+    *
+    * @return void|string (see $options['display'])
+    */
+   static function createSlidePanel($name, $options = []) {
+      global $CFG_GLPI;
+
+      $param = [
+         'title'     => '',
+         'position'  => 'right',
+         'url'       => '',
+         'display'   => true,
+         'icon'      => false,
+         'icon_url'  => false,
+         'icon_txt'  => false
+      ];
+
+      if (count($options)) {
+         foreach ($options as $key => $val) {
+            if (isset($param[$key])) {
+               $param[$key] = $val;
+            }
+         }
+      }
+
+      $out  =  "<script type='text/javascript'>\n";
+      $out .= "$(function() {";
+      $out .= "$('<div id=\'$name\' class=\'slidepanel on{$param['position']}\'><div class=\"header\">" .
+              "<button type=\'button\' class=\'close ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close\' title=\'". __s('Close') . "\'><span class=\'ui-button-icon-primary ui-icon ui-icon-closethick\'></span><span class=\'ui-button-text\'>X</span></button>";
+
+      if ($param['icon']) {
+         $icon = "<img class=\'icon\' src=\'{$CFG_GLPI['root_doc']}{$param['icon']}\' alt=\'{$param['icon_txt']}\' title=\'{$param['icon_txt']}\'/>";
+         if ($param['icon_url']) {
+            $out .= "<a href=\'{$param['icon_url']}\'>$icon</a>";
+         } else {
+            $out .= $icon;
+         }
+      }
+
+      if ($param['title'] != '') {
+         $out .= "<h3>{$param['title']}</h3>";
+      }
+
+      $out .= "</div><div class=\'contents\'></div></div>')
+         .hide()
+         .appendTo('body');\n";
+      $out .= "$('#{$name} .close').on('click', function() {
+         $('#$name').hide(
+            'slow',
+            function () {
+               $(this).find('.contents').empty();
+            }
+         );
+       });\n";
+      $out .= "$('#{$name}Link').on('click', function() {
+         $('#$name').show(
+            'slow',
+            function() {
+               _load$name();
+            }
+         );
+      });\n";
+      $out .= "});";
+      if ($param['url'] != null) {
+         $out .= "var _load$name = function() {
+            $.ajax({
+               url: '{$param['url']}',
+               beforeSend: function() {
+                  var _loader = $('<div id=\'loadingslide\'><div class=\'loadingindicator\'>" . __s('Loading...') . "</div></div>');
+                  $('#$name .contents').html(_loader);
+               }
+            })
+            .always( function() {
+               $('#loadingslide').remove();
+            })
+            .done(function(res) {
+               $('#$name .contents').html(res);
+            });
+         };\n";
+      }
+      $out .= "</script>";
+
+      if ($param['display']) {
+         echo $out;
+      } else {
+         return $out;
+      }
    }
 }
 

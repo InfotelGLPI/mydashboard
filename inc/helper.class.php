@@ -1347,7 +1347,7 @@ class PluginMydashboardHelper {
          $list                  = [];
          $restrict              = [];
          $res                   = User::getSqlSearchResult(false, $params['right'], $params['entity']);
-         while ($data = $res->next()) {
+         foreach ($res as $data) {
             $list[] = $data['id'];
          }
          if (count($list) > 0) {
@@ -1805,7 +1805,7 @@ class PluginMydashboardHelper {
       }
 
       if ($onsubmit) {
-         $form .= "<input type='submit' class='submit' value='" . _x('button', 'Send') . "'>";
+         $form .= "<input type='submit' class='btn btn-primary btn-sm' value='" . _x('button', 'Send') . "'>";
       }
 
       return $form . self::getFormFooter();

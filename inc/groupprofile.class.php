@@ -49,8 +49,7 @@ class PluginMydashboardGroupprofile extends CommonDBTM {
       if ($canedit) {
 
          echo "<form method='post' action='" . $CFG_GLPI["root_doc"] . "/plugins/mydashboard/front/groupprofile.form.php" . "'>";
-         echo "<input type='hidden' name='profiles_id' value='".$profiles_id."' >";
-
+         echo Html::hidden('profiles_id', ['value' => $profiles_id]);
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_1'><th colspan='4'>";
          echo __('Default dashboard group', 'mydashboard');

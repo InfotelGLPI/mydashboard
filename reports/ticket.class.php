@@ -850,7 +850,7 @@ class PluginMydashboardTicket extends CommonGLPI {
                                     sprintf(__('%1$s - %2$s'), $job->numberOfFollowups($showprivate),
                                             $job->numberOfTasks($showprivate)));
          $link            = sprintf(__('%1$s %2$s'), $link,
-                                    Html::showToolTip(nl2br(Html::clean($job->fields['content'])),
+                                    Html::showToolTip(nl2br(Glpi\Toolbox\RichText::getSafeHtml($job->fields['content'])),
                                                       ['applyto' => 'ticket' . $job->fields["id"] . $rand,
                                                        'display' => false]));
          $output[$colnum] = $link;

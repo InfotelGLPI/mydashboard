@@ -73,14 +73,14 @@ class PluginMydashboardPreference extends CommonDBTM {
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       $pref = new PluginMydashboardPreference();
-      $pref->showForm(Session::getLoginUserID());
+      $pref->showPreferencesForm(Session::getLoginUserID());
       return true;
    }
 
    /**
     * @param $user_id
     */
-   function showForm($user_id) {
+   function showPreferencesForm($user_id) {
       //If user has no preferences yet, we set default values
       if (!$this->getFromDB($user_id)) {
          $this->initPreferences($user_id);
@@ -218,7 +218,7 @@ class PluginMydashboardPreference extends CommonDBTM {
 
       if (PluginMydashboardHelper::getDisplayPlugins()) {
          $blacklist = new PluginMydashboardPreferenceUserBlacklist();
-         $blacklist->showForm(Session::getLoginUserID());
+         $blacklist->showUserForm(Session::getLoginUserID());
       }
    }
 

@@ -100,7 +100,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $itil_alert = new PluginMydashboardItilAlert();
       switch ($item->getType()) {
          case "Reminder":
-            $alert->showForm($item);
+            $alert->showReminderForm($item);
             break;
          case "Problem":
          case "Change":
@@ -1827,7 +1827,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $numrows = count($iterator);
       if ($numrows > 0) {
          $j = 0;
-         while ($docs = $iterator->next()) {
+         foreach ($iterator as $data) {
             $doc = new Document();
             $doc->getFromDB($docs["documents_id"]);
             echo $doc->getDownloadLink();
@@ -2341,7 +2341,7 @@ class PluginMydashboardAlert extends CommonDBTM {
    /**
     * @param Reminder $item
     */
-   private function showForm(Reminder $item) {
+   private function showReminderForm(Reminder $item) {
       $reminders_id = $item->getID();
 
       $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
@@ -2560,7 +2560,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
          $display = "<div class=\"bt-feature $class \">";
          $display .= "<h3>";
-         $display .= "<div class='alert alert-danger' role='alert'>";
+         $display .= "<div class='alert alert-danger alert-important' role='alert'>";
          $config  = new PluginMydashboardConfig();
          $config->getFromDB(1);
          $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');

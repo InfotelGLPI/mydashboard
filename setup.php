@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '1.8.2');
+define('PLUGIN_MYDASHBOARD_VERSION', '2.0.0');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mydashboard() {
@@ -170,7 +170,7 @@ function plugin_version_mydashboard() {
       'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
       'requirements'   => [
          'glpi' => [
-            'min' => '9.5',
+            'min' => '10.0',
             'dev' => false
          ]
       ]];
@@ -182,10 +182,10 @@ function plugin_version_mydashboard() {
  * @return bool
  */
 function plugin_mydashboard_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.5', 'lt')
-         || version_compare(GLPI_VERSION, '9.6', 'ge')) {
+   if (version_compare(GLPI_VERSION, '10.0', 'lt')
+         || version_compare(GLPI_VERSION, '11.0', 'ge')) {
       if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.6');
+         echo Plugin::messageIncompatible('core', '10.0');
       }
       return false;
    }

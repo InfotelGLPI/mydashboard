@@ -242,7 +242,7 @@ class PluginMydashboardConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>" . __("Google API Key", "mydashboard") . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "google_api_key");
+      echo Html::input('google_api_key', ['value' => $this->fields['google_api_key'], 'size' => 40]);
       echo "</td>";
       echo "</tr>";
 
@@ -284,19 +284,19 @@ class PluginMydashboardConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>" . __("Title of alerts widget", "mydashboard") . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "title_alerts_widget", ['size' => 100]);
+      echo Html::input('title_alerts_widget', ['value' => $this->fields['title_alerts_widget'], 'size' => 100]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'><td>" . __("Title of scheduled maintenances widget", "mydashboard") . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "title_maintenances_widget", ['size' => 100]);
+      echo Html::input('title_maintenances_widget', ['value' => $this->fields['title_maintenances_widget'], 'size' => 100]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'><td>" . __("Title of informations widget", "mydashboard") . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "title_informations_widget", ['size' => 100]);
+      echo Html::input('title_informations_widget', ['value' => $this->fields['title_informations_widget'], 'size' => 100]);
       echo "</td>";
       echo "</tr>";
 
@@ -363,7 +363,7 @@ class PluginMydashboardConfig extends CommonDBTM {
                                   ]]);
 
       if (count($iterator)) {
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             return $data['value'];
          }
       }

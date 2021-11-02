@@ -607,7 +607,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
             if ($nb) {
                $i = 0;
 
-               while ($data = $iterator->next()) {
+               foreach ($iterator as $data) {
                   $nbWaitingTickets = "";
                   $hasMoreTicket    = 0;
                   $groupId          = $data['id'];

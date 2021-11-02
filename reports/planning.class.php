@@ -148,7 +148,7 @@ class PluginMydashboardPlanning extends CommonGLPI {
                $title .= " (" . getUserName($val['users_id']) . ")";
             }
             $events[] = ['title'    => $title,
-                         'tooltip'  => isset($val['content']) ? Html::clean($val['content']) : "",
+                         'tooltip'  => isset($val['content']) ? Glpi\Toolbox\RichText::getSafeHtml($val['content']) : "",
                          'start'    => $val["begin"],
                          'end'      => $val["end"],
                          'url'      => isset($val['url']) ? $val['url'] : "",

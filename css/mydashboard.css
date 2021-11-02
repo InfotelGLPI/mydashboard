@@ -23,6 +23,18 @@
  --------------------------------------------------------------------------
  */
 
+.slidepanel {
+   z-index:  9999;
+   position: absolute;
+   width: 30em;
+   max-width: 40%;
+   background: white;
+   top: 0;
+   min-height: 100vh;
+   height: calc(100% - 28px); /* Without footer */
+   border: none;
+}
+
 .refresh-icon-disabled {
    cursor: not-allowed;
    pointer-events: none;
@@ -1040,12 +1052,12 @@ div.dt-button-background {
 }
 
 a#showMyDashboardLateralMenuLink {
-   float: right;
-   margin-right: 10px;
-   display: inline-block;
-   margin-top: 5px;
-   font-size: 1.6em;
-   color: white;
+   /*float: right;*/
+   margin-left: 10px;
+   /*display: inline-block;*/
+   /*margin-top: 5px;*/
+   /*font-size: 1.6em;*/
+   /*color: white;*/
 
 }
 

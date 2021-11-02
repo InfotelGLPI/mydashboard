@@ -35,7 +35,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
     * @param int $user_id , id of the user concerned
     * @return bool
     */
-   public function showForm($user_id) {
+   public function showUserForm($user_id) {
       global $CFG_GLPI, $PLUGIN_HOOKS;
       $options['candel'] = false;
       $options['colspan'] = 1;
