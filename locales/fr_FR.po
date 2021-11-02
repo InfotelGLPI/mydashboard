@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-26 09:40+0000\n"
+"POT-Creation-Date: 2021-11-02 14:36+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -45,16 +45,16 @@ msgid_plural "Informations"
 msgstr[0] "Information"
 msgstr[1] "Informations"
 
-#: hook.php:245 hook.php:246
+#: hook.php:255 hook.php:256
 msgid "Incidents"
 msgstr "Incidents"
 
-#: hook.php:252 hook.php:253
+#: hook.php:262 hook.php:263
 msgid "Requests"
 msgstr "Demandes"
 
-#: setup.php:166 ajax/loadscripts.php:38 inc/menu.class.php:87
-#: inc/menu.class.php:982 inc/preference.class.php:62
+#: setup.php:166 ajax/loadscripts.php:38 ajax/loadscripts.php:107
+#: inc/menu.class.php:87 inc/menu.class.php:982 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr "Dashboard"
 
@@ -62,31 +62,31 @@ msgstr "Dashboard"
 msgid "Grid cleared"
 msgstr "Dashboard réinitialisé"
 
-#: ajax/dropdownMonth.php:41 inc/helper.class.php:960
-#: inc/helper.class.php:1254 inc/helper.class.php:1440
-#: inc/helper.class.php:1476 inc/helper.class.php:1502
+#: ajax/dropdownMonth.php:41 inc/helper.class.php:965
+#: inc/helper.class.php:1259 inc/helper.class.php:1445
+#: inc/helper.class.php:1481 inc/helper.class.php:1507
 msgid "Month"
 msgstr "Mois"
 
-#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1560
+#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1565
 msgid "Start month"
 msgstr "Mois de début"
 
-#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1574
+#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1579
 msgid "Start year"
 msgstr "Année de début"
 
-#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1592
+#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1597
 msgid "End month"
 msgstr "Mois de fin"
 
-#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1606
+#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1611
 msgid "End year"
 msgstr "Année de fin"
 
-#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:924
-#: inc/helper.class.php:1227 inc/helper.class.php:1631
-#: inc/helper.class.php:1707
+#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:929
+#: inc/helper.class.php:1232 inc/helper.class.php:1636
+#: inc/helper.class.php:1712
 msgid "Year"
 msgstr "Année"
 
@@ -195,89 +195,89 @@ msgstr "Technicien Helpdesk"
 msgid "No column defined"
 msgstr "Pas de colonne définie"
 
-#: inc/groupprofile.class.php:56
+#: inc/groupprofile.class.php:55
 msgid "Default dashboard group"
 msgstr "Groupe des dashboards par défaut"
 
-#: inc/groupprofile.class.php:66
+#: inc/groupprofile.class.php:65
 msgid "Use profile group"
 msgstr "Utiliser le groupe du profil"
 
-#: inc/groupprofile.class.php:68
+#: inc/groupprofile.class.php:67
 msgid "Default groups"
 msgstr "Groupes par défaut"
 
-#: inc/helper.class.php:931 inc/helper.class.php:1366
+#: inc/helper.class.php:936 inc/helper.class.php:1371
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] "Technicien"
 msgstr[1] "Techniciens"
 
-#: inc/helper.class.php:951 inc/helper.class.php:954 inc/helper.class.php:957
-#: inc/helper.class.php:960 inc/helper.class.php:1451
-#: inc/helper.class.php:1489
+#: inc/helper.class.php:956 inc/helper.class.php:959 inc/helper.class.php:962
+#: inc/helper.class.php:965 inc/helper.class.php:1456
+#: inc/helper.class.php:1494
 msgid "Time display"
 msgstr "Affichage du temps"
 
-#: inc/helper.class.php:951 inc/helper.class.php:1475
+#: inc/helper.class.php:956 inc/helper.class.php:1480
 msgid "Last month"
 msgstr "Dernier mois"
 
-#: inc/helper.class.php:954
+#: inc/helper.class.php:959
 msgid "Last year"
 msgstr "Dernière année"
 
-#: inc/helper.class.php:957 inc/helper.class.php:1473
+#: inc/helper.class.php:962 inc/helper.class.php:1478
 msgid "Year to date"
 msgstr "Année jusqu'à aujourd'hui"
 
-#: inc/helper.class.php:967
+#: inc/helper.class.php:972
 #, php-format
 msgid "sliding %s-month period"
 msgstr "Période de %s mois glissant"
 
-#: inc/helper.class.php:970 inc/helper.class.php:1736
+#: inc/helper.class.php:975 inc/helper.class.php:1741
 msgid "Category"
 msgstr "Catégorie"
 
-#: inc/helper.class.php:1099
+#: inc/helper.class.php:1104
 msgid "Child locations"
 msgstr "Lieux enfants"
 
-#: inc/helper.class.php:1243 inc/helper.class.php:1439
+#: inc/helper.class.php:1248 inc/helper.class.php:1444
 msgid "Week"
 msgstr "Semaine"
 
-#: inc/helper.class.php:1438
+#: inc/helper.class.php:1443
 msgid "Day"
 msgstr "Jour"
 
-#: inc/helper.class.php:1474 inc/helper.class.php:1531
-#: inc/helper.class.php:1659
+#: inc/helper.class.php:1479 inc/helper.class.php:1536
+#: inc/helper.class.php:1664
 msgid "year"
 msgstr "année"
 
-#: inc/helper.class.php:1532
+#: inc/helper.class.php:1537
 msgid "Start end"
 msgstr "Début - fin"
 
-#: inc/helper.class.php:1546
+#: inc/helper.class.php:1551
 msgid "Display"
 msgstr "Affichage"
 
-#: inc/helper.class.php:1660
+#: inc/helper.class.php:1665
 msgid "begin and end date"
 msgstr "Date de début et fin"
 
-#: inc/helper.class.php:1674
+#: inc/helper.class.php:1679
 msgid "Filter date"
 msgstr "Filtre sur la date"
 
-#: inc/helper.class.php:1765
+#: inc/helper.class.php:1770
 msgid "Tag"
 msgstr "Tag"
 
-#: inc/helper.class.php:2051
+#: inc/helper.class.php:2056
 msgid "Not a valid SQL SELECT query"
 msgstr "Requête SQL SELECT non valide"
 
@@ -541,8 +541,12 @@ msgstr "Mes groupes demandeurs préférés pour les widgets"
 msgid "My prefered entity for widget"
 msgstr "Mon entité préférée pour les widgets"
 
-#: inc/preference.class.php:195 inc/preference.class.php:197
-#: inc/preference.class.php:198
+#: inc/preference.class.php:195
+msgid "My prefered type for widget"
+msgstr "Mon type préféré pour les widgets"
+
+#: inc/preference.class.php:202 inc/preference.class.php:204
+#: inc/preference.class.php:205
 msgid "Palette color"
 msgstr "Palette de couleur"
 
