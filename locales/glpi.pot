@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-11 15:30+0000\n"
+"POT-Creation-Date: 2021-11-02 14:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,8 +49,8 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: setup.php:166 ajax/loadscripts.php:38 inc/menu.class.php:87
-#: inc/menu.class.php:982 inc/preference.class.php:62
+#: setup.php:166 ajax/loadscripts.php:38 ajax/loadscripts.php:107
+#: inc/menu.class.php:87 inc/menu.class.php:982 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
 
@@ -189,15 +189,15 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: inc/groupprofile.class.php:56
+#: inc/groupprofile.class.php:55
 msgid "Default dashboard group"
 msgstr ""
 
-#: inc/groupprofile.class.php:66
+#: inc/groupprofile.class.php:65
 msgid "Use profile group"
 msgstr ""
 
-#: inc/groupprofile.class.php:68
+#: inc/groupprofile.class.php:67
 msgid "Default groups"
 msgstr ""
 
