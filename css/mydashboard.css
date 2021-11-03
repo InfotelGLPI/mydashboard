@@ -234,7 +234,7 @@ div#tabcontent{
 }
 
 .mygrid {
-   background-color: white;
+   background-color: #fbfbfb;
 }
 
 .cadre_edit_button {
@@ -886,6 +886,7 @@ div.dt-button-background {
    width: 100%;
    text-align: center;
    min-height: 100px;
+   box-sizing: content-box;
 }
 
 
@@ -899,6 +900,7 @@ div.dt-button-background {
    min-height: 85px;
    font-size: 12px;
    color: #000;
+   box-sizing: content-box;
 }
 
 .ind-link {

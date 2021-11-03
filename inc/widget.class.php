@@ -577,13 +577,21 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
       $display  = "<div id='gs4' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
-      $display  .= "<h3>";
+      if ($hidewidget != true) {
+         $display  .= "<h3>";
+      } else {
+         $display  .= "<h5>";
+      }
       $display  .= "<div class='alert alert-danger alert-important' role='alert'>";
       $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
       $display .= "</div>";
-      $display .= "</h3>";
+      if ($hidewidget != true) {
+         $display  .= "</h3>";
+      } else {
+         $display  .= "</h5>";
+      }
       //      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
       //      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
       $display .= "<div id=\"display-sc\">";
@@ -591,9 +599,21 @@ class PluginMydashboardWidget extends CommonDBTM {
          $alerts  = new PluginMydashboardAlert();
          $display .= $alerts->getAlertList(0, $itilcategories_id);
       } else {
-         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= "<div align='center'>";
+         if ($hidewidget != true) {
+            $display .= "<h3>";
+         } else {
+            $display  .= "<h5>";
+         }
+         $display .= "<span class ='alert-color'>";
          $display .= __("No problem detected", "mydashboard");
-         $display .= "</span></h3></div>";
+         $display .= "</span>";
+         if ($hidewidget != true) {
+            $display .= "</h3>";
+         } else {
+            $display  .= "</h5>";
+         }
+         $display .= "</div>";
       }
       $display .= "</div>";
       $display .= "</div>";
@@ -621,22 +641,42 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
       $display  = "<div id='gs5' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
-      $display  .= "<h3>";
+      if ($hidewidget != true) {
+         $display .= "<h3>";
+      } else {
+         $display  .= "<h5>";
+      }
       $display  .= "<div class='alert alert-warning alert-important' role='alert'>";
       $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_maintenances_widget');
-      $display .= "</span>";
       //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
       $display .= "</div>";
+      if ($hidewidget != true) {
+         $display .= "</h3>";
+      } else {
+         $display  .= "</h5>";
+      }
       $display .= "<div id=\"display-sc\">";
       if (PluginMydashboardAlert::countForAlerts(0, 1, $itilcategories_id) > 0) {
          $alerts  = new PluginMydashboardAlert();
          $display .= $alerts->getMaintenanceList($itilcategories_id);
       } else {
-         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= "<div align='center'>";
+         if ($hidewidget != true) {
+            $display .= "<h3>";
+         } else {
+            $display  .= "<h5>";
+         }
+         $display .= "<span class ='alert-color'>";
          $display .= __("No scheduled maintenance", "mydashboard");
-         $display .= "</span></h3></div>";
+         $display .= "</span>";
+         if ($hidewidget != true) {
+            $display .= "</h3>";
+         } else {
+            $display  .= "</h5>";
+         }
+         $display .= "</div>";
       }
       $display .= "</div>";
       $display .= "</div>";
@@ -665,13 +705,21 @@ class PluginMydashboardWidget extends CommonDBTM {
       }
       $display  = "<div id='gs6' class=\"bt-row $delclass $addclass\" style='$style'>";
       $display  .= "<div class=\"bt-feature $class \">";
-      $display  .= "<h3>";
+      if ($hidewidget != true) {
+         $display .= "<h3>";
+      } else {
+         $display  .= "<h5>";
+      }
       $display  .= "<div class='alert alert-info alert-important' role='alert'>";
       $config   = new PluginMydashboardConfig();
       $config->getFromDB(1);
       $display .= PluginMydashboardConfig::displayField($config, 'title_informations_widget');
       $display .= "</div>";
-      $display .= "</h3>";
+      if ($hidewidget != true) {
+         $display .= "</h3>";
+      } else {
+         $display  .= "</h5>";
+      }
       $display .= "<div id='display-sc'>";
       if (PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) > 0) {
 
@@ -679,9 +727,21 @@ class PluginMydashboardWidget extends CommonDBTM {
          $display .= $alerts->getInformationList($itilcategories_id);
 
       } else {
-         $display .= "<div align='center'><h3><span class ='alert-color'>";
+         $display .= "<div align='center'>";
+         if ($hidewidget != true) {
+            $display .= "<h3>";
+         } else {
+            $display  .= "<h5>";
+         }
+         $display .= "<span class ='alert-color'>";
          $display .= __("No informations founded", "mydashboard");
-         $display .= "</span></h3></div>";
+         $display .= "</span>";
+         if ($hidewidget != true) {
+            $display .= "<h3>";
+         } else {
+            $display  .= "</h5>";
+         }
+         $display .= "</div>";
       }
       $display .= "</div>";
       $display .= "</div>";
