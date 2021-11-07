@@ -109,6 +109,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
            <script src="../lib/fullcalendar/fullcalendar.min.js"></script>
 
           <script src="../lib/lodash.min.js"></script>
+          <link type="text/css" href="../lib/jquery-ui/jquery-ui.min.css" rel="stylesheet">
           <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
           <script src="../lib/gridstack/src/gridstack.js"></script>
           <script src="../lib/gridstack/src/gridstack.jQueryUI.js"></script>
