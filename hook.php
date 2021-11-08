@@ -39,7 +39,7 @@ function plugin_mydashboard_install() {
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-1.7.5.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-2.0.0.sql");
 
       PluginMydashboardMenu::installWidgets();
       insertDefaultTitles();
