@@ -1735,7 +1735,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "</ul>";
          $wl .= "<div id='nt_maint-infos-container'>";
          $wl .= "<div id='nt-infos-triangle'></div>";
-         $wl .= "<div id='nt_maint-infos' class='row'>";
+         $wl .= "<div id='nt_maint-infos' class=''>";
          $wl .= "<div class='col-xs-4 centered'>";
          //         if ($nb > 1) {
          $wl .= "<i class='fas fa-caret-left' id='nt_maint-prev'></i>";
@@ -1910,7 +1910,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "</ul>";
          $wl .= "<div id='nt_info-infos-container'>";
          $wl .= "<div id='nt-infos-triangle'></div>";
-         $wl .= "<div id='nt_info-infos' class='row'>";
+         $wl .= "<div id='nt_info-infos' class=''>";
          $wl .= "<div class='col-xs-4 centered'>";
          //         if ($nb > 1) {
          $wl .= "<i class='fas fa-caret-left' id='nt_info-prev'></i>";
@@ -2062,7 +2062,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= "</ul>";
          $wl .= "<div id='nt_alert-infos-container'>";
          $wl .= "<div id='nt-infos-triangle'></div>";
-         $wl .= "<div id='nt_alert-infos' class='row'>";
+         $wl .= "<div id='nt_alert-infos' class=''>";
          $wl .= "<div class='col-xs-4 centered'>";
          //         if ($nb > 1) {
          $wl .= "<i class='fas fa-caret-left' id='nt_alert-prev'></i>";

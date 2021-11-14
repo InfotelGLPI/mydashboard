@@ -8,8 +8,8 @@ CREATE TABLE `glpi_plugin_mydashboard_profiles`
 (
     `id`          INT(11) NOT NULL AUTO_INCREMENT,                                       -- id du profil
     `profiles_id` INT(11) NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_profiles (id)', -- lien avec profiles de glpi
-    `mydashboard` CHAR(1) COLLATE utf8_unicode_ci DEFAULT NULL,                          -- $right:  r (can view), w (can update)
-    `config`      CHAR(1) COLLATE utf8_unicode_ci DEFAULT NULL,                          -- $right:  r (can view), w (can update)
+    `mydashboard` CHAR(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,                          -- $right:  r (can view), w (can update)
+    `config`      CHAR(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,                          -- $right:  r (can view), w (can update)
     PRIMARY KEY (`id`),
     KEY           `profiles_id` (`profiles_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -94,10 +94,10 @@ CREATE TABLE `glpi_plugin_mydashboard_stockwidgets`
     `entities_id`     INT(11) NOT NULL DEFAULT '0',
     `is_recursive`    TINYINT(1) NOT NULL DEFAULT '0',
     `name`            VARCHAR(255)                         NOT NULL,
-    `states`          longtext COLLATE utf8_unicode_ci DEFAULT NULL,
-    `itemtype`        VARCHAR(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'see .class.php file',
+    `states`          longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `itemtype`        VARCHAR(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
     `icon`            VARCHAR(255)                         NOT NULL,
-    `types`           longtext COLLATE utf8_unicode_ci DEFAULT NULL,
+    `types`           longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `alarm_threshold` int(11) NOT NULL DEFAULT '5',
     PRIMARY KEY (`id`),
     KEY               `name` (`name`),
@@ -109,7 +109,7 @@ CREATE TABLE `glpi_plugin_mydashboard_customswidgets`
 (
     `id`      int(11) NOT NULL AUTO_INCREMENT,
     `name`    varchar(255) NOT NULL,
-    `comment` text COLLATE utf8_unicode_ci default NULL,
+    `comment` text COLLATE utf8mb4_unicode_ci default NULL,
     `content` TEXT         NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
