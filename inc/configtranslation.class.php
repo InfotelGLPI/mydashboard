@@ -263,7 +263,12 @@ class PluginMydashboardConfigTranslation extends CommonDBChild {
       }
       echo "</td>";
       echo "<td>" . __('Value') . "</td>";
-      echo "<td><textarea cols='80' rows='3' name='value'>" . $this->fields['value'] . "</textarea>";
+      echo "<td>";
+      Html::textarea(['name'            => 'value',
+                      'value'           => $this->fields["value"],
+                      'cols'       => 80,
+                      'rows'       => 3,
+                      'enable_richtext' => false]);
       echo "</td>";
       echo "</tr>\n";
       $this->showFormButtons($options);

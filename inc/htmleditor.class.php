@@ -115,10 +115,10 @@ class PluginMydashboardHTMLEditor extends CommonDBTM {
 
       $rand = mt_rand();
 
-      echo '<textarea id="custom_css_code_' . $rand . '" name="content" ';
-      echo '>';
-      echo Html::entities_deep($item->fields['content']);
-      echo '</textarea>';
+      Html::textarea(['name'            => 'content',
+                      'value'           => Html::entities_deep($item->fields['content']),
+                      'id'           => 'custom_css_code_'. $rand,
+                      'enable_richtext' => false]);
 
       $editor_options = [
          'mode'         => 'text/css',
