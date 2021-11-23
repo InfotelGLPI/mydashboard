@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-19 10:49+0000\n"
+"POT-Creation-Date: 2021-11-23 15:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,8 +49,8 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: setup.php:166 ajax/loadscripts.php:38 ajax/loadscripts.php:107
-#: inc/menu.class.php:87 inc/menu.class.php:982 inc/preference.class.php:62
+#: setup.php:166 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: inc/menu.class.php:87 inc/menu.class.php:989 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
 
@@ -86,10 +86,6 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: ajax/lateralmenu.php:33 inc/menu.class.php:383
-msgid "Edit mode"
-msgstr ""
-
 #: ajax/loadscripts.php:43
 msgid "Go to mydashboard actions"
 msgstr ""
@@ -106,7 +102,7 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:111 inc/menu.class.php:1403 inc/widget.class.php:555
+#: inc/chart.class.php:111 inc/menu.class.php:1463 inc/widget.class.php:555
 msgid "No data available"
 msgstr ""
 
@@ -159,7 +155,7 @@ msgid "Custom Widgets"
 msgstr ""
 
 #: inc/dashboard.class.php:52 inc/datatable.class.php:53 inc/html.class.php:50
-#: inc/menu.class.php:1234 inc/module.class.php:57 reports/change.class.php:38
+#: inc/menu.class.php:1241 inc/module.class.php:57 reports/change.class.php:38
 #: reports/planning.class.php:40 reports/problem.class.php:38
 #: reports/project.class.php:38 reports/projecttask.class.php:38
 msgid "Dashboard"
@@ -313,184 +309,188 @@ msgstr ""
 msgid "My view"
 msgstr ""
 
-#: inc/menu.class.php:373
+#: inc/menu.class.php:374
 msgid "Availables widgets"
 msgstr ""
 
-#: inc/menu.class.php:385
+#: inc/menu.class.php:384
+msgid "Edit mode"
+msgstr ""
+
+#: inc/menu.class.php:386
 msgid "Global"
 msgstr ""
 
-#: inc/menu.class.php:406 inc/menu.class.php:407
+#: inc/menu.class.php:407 inc/menu.class.php:408
 msgid "Load a predefined grid"
 msgstr ""
 
-#: inc/menu.class.php:423 inc/menu.class.php:425
+#: inc/menu.class.php:430 inc/menu.class.php:432
 msgid "Load widgets"
 msgstr ""
 
-#: inc/menu.class.php:431 inc/menu.class.php:433 inc/menu.class.php:521
-#: inc/menu.class.php:523
+#: inc/menu.class.php:438 inc/menu.class.php:440 inc/menu.class.php:528
+#: inc/menu.class.php:530
 msgid "Save grid"
 msgstr ""
 
-#: inc/menu.class.php:439 inc/menu.class.php:441
+#: inc/menu.class.php:446 inc/menu.class.php:448
 msgid "Save default grid"
 msgstr ""
 
-#: inc/menu.class.php:447 inc/menu.class.php:449
+#: inc/menu.class.php:454 inc/menu.class.php:456
 msgid "Clear grid"
 msgstr ""
 
-#: inc/menu.class.php:455 inc/menu.class.php:457 inc/menu.class.php:539
-#: inc/menu.class.php:541
+#: inc/menu.class.php:462 inc/menu.class.php:464 inc/menu.class.php:546
+#: inc/menu.class.php:548
 msgid "Permit drag / resize widgets"
 msgstr ""
 
-#: inc/menu.class.php:465 inc/menu.class.php:467 inc/menu.class.php:528
-#: inc/menu.class.php:530
+#: inc/menu.class.php:472 inc/menu.class.php:474 inc/menu.class.php:535
+#: inc/menu.class.php:537
 msgid "Block drag / resize widgets"
 msgstr ""
 
-#: inc/menu.class.php:477 inc/menu.class.php:479 inc/menu.class.php:572
-#: inc/menu.class.php:574
+#: inc/menu.class.php:484 inc/menu.class.php:486 inc/menu.class.php:579
+#: inc/menu.class.php:581
 msgid "Fullscreen"
 msgstr ""
 
-#: inc/menu.class.php:485 inc/menu.class.php:487
+#: inc/menu.class.php:492 inc/menu.class.php:494
 msgid "Close edit mode"
 msgstr ""
 
-#: inc/menu.class.php:499 inc/menu.class.php:1392
+#: inc/menu.class.php:506 inc/menu.class.php:1452
 msgid "Success"
 msgstr ""
 
-#: inc/menu.class.php:500
+#: inc/menu.class.php:507
 msgid "The widget was added to dashboard. Save the dashboard."
 msgstr ""
 
-#: inc/menu.class.php:507
+#: inc/menu.class.php:514
 msgid "Error"
 msgstr ""
 
-#: inc/menu.class.php:508
+#: inc/menu.class.php:515
 msgid "Please reload your page."
 msgstr ""
 
-#: inc/menu.class.php:549 inc/menu.class.php:551
+#: inc/menu.class.php:556 inc/menu.class.php:558
 msgid "Switch to edit mode"
 msgstr ""
 
-#: inc/menu.class.php:559 inc/menu.class.php:561
+#: inc/menu.class.php:566 inc/menu.class.php:568
 msgid "Custom and save default grid"
 msgstr ""
 
-#: inc/menu.class.php:736
+#: inc/menu.class.php:743
 msgid "No widgets available"
 msgstr ""
 
-#: inc/menu.class.php:1191
+#: inc/menu.class.php:1198
 msgid "No data available in table"
 msgstr ""
 
-#: inc/menu.class.php:1192
+#: inc/menu.class.php:1199
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: inc/menu.class.php:1193
+#: inc/menu.class.php:1200
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: inc/menu.class.php:1194
+#: inc/menu.class.php:1201
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: inc/menu.class.php:1201
+#: inc/menu.class.php:1208
 msgid "No matching records found"
 msgstr ""
 
-#: inc/menu.class.php:1209
+#: inc/menu.class.php:1216
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: inc/menu.class.php:1210
+#: inc/menu.class.php:1217
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: inc/menu.class.php:1216
+#: inc/menu.class.php:1223
 msgid "1 row selected"
 msgstr ""
 
-#: inc/menu.class.php:1220 inc/menu.class.php:1233
+#: inc/menu.class.php:1227 inc/menu.class.php:1240
 msgid "Close"
 msgstr ""
 
-#: inc/menu.class.php:1221
+#: inc/menu.class.php:1228
 msgid "Maximize"
 msgstr ""
 
-#: inc/menu.class.php:1222
+#: inc/menu.class.php:1229
 msgid "Minimize"
 msgstr ""
 
-#: inc/menu.class.php:1223
+#: inc/menu.class.php:1230
 msgid "Refresh"
 msgstr ""
 
-#: inc/menu.class.php:1225
+#: inc/menu.class.php:1232
 msgid "Column visibility"
 msgstr ""
 
-#: inc/menu.class.php:1227
+#: inc/menu.class.php:1234
 #, php-format
 msgid "Show %d elements"
 msgstr ""
 
-#: inc/menu.class.php:1228 inc/widget.class.php:395
+#: inc/menu.class.php:1235 inc/widget.class.php:395
 msgid "Show all"
 msgstr ""
 
-#: inc/menu.class.php:1235
+#: inc/menu.class.php:1242
 msgid "Dashboard saved"
 msgstr ""
 
-#: inc/menu.class.php:1236
+#: inc/menu.class.php:1243
 msgid "Dashboard not saved"
 msgstr ""
 
-#: inc/menu.class.php:1237
+#: inc/menu.class.php:1244
 msgid "Data received for"
 msgstr ""
 
-#: inc/menu.class.php:1238
+#: inc/menu.class.php:1245
 msgid "No data received for"
 msgstr ""
 
-#: inc/menu.class.php:1239
+#: inc/menu.class.php:1246
 msgid "Updating all widgets"
 msgstr ""
 
-#: inc/menu.class.php:1240
+#: inc/menu.class.php:1247
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: inc/menu.class.php:1365
+#: inc/menu.class.php:1425
 msgid "Warning"
 msgstr ""
 
-#: inc/menu.class.php:1366
+#: inc/menu.class.php:1426
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: inc/menu.class.php:1393
+#: inc/menu.class.php:1453
 msgid "Save grid to see widget"
 msgstr ""
 
-#: inc/menu.class.php:1402
+#: inc/menu.class.php:1462
 msgid "Delete widget"
 msgstr ""
 
-#: inc/menu.class.php:1404
+#: inc/menu.class.php:1464
 msgid "Refresh widget"
 msgstr ""
 
