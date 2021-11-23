@@ -358,10 +358,11 @@ class PluginMydashboardMenu extends CommonGLPI {
       $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
       echo $this->getscripts();
+
       echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
       if ($edit > 0) {
 
-         echo "<div class='center'>";
+         echo "<div class='left'>";
 
          echo "<form method='post' 
                      action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
@@ -407,19 +408,25 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "<span class='sr-only'>" . __('Load a predefined grid', 'mydashboard') . "</span>";
          echo "<br><br>";
          $elements = PluginMydashboardDashboard::getPredefinedDashboardName();
-         Dropdown::showFromArray("predefined_grid", $elements, [
-            'value'               => $predefined_grid,
-            'width'               => '170px',
-            'display_emptychoice' => true,
-            'on_change'           => 'this.form.submit()']);
-
-         echo "<br><br>";
+         echo "<select class='form-select' name='predefined_grid' onChange='this.form.submit()'>";
+         echo "<option>" . Dropdown::EMPTY_VALUE . "</option>";
+         foreach ($elements as $id => $name) {
+            echo "<option value='$id'>$name</option>";
+         }
+         echo "</select>";
+//         Dropdown::showFromArray("predefined_grid", $elements, [
+//            'value'               => $predefined_grid,
+//            'width'               => '170px',
+//            'display_emptychoice' => true,
+//            'on_change'           => 'this.form.submit()']);
+//
+         echo "<br>";
 
          if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
             $edit = 1;
          }
 
-         echo "<a id='load-widgets' class='btn btn-info btn-sm'>";
+         echo "<a id='load-widgets' class='btn btn-info btn-sm btn-mydashboard'>";
          echo "<i class='fas fa-1x fa-spinner pointer btn-mydashboard' title='" . __('Load widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __('Load widgets', 'mydashboard');
@@ -427,7 +434,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "<br><br>";
 
          if ($edit == 1) {
-            echo "<a id='save-grid' class='btn btn-success btn-sm'>";
+            echo "<a id='save-grid' class='btn btn-success btn-sm btn-mydashboard'>";
             echo "<i class='fas fa-1x fa-save pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save grid', 'mydashboard');
@@ -435,7 +442,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<br><br>";
          }
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            echo "<a id='save-default-grid' class='btn btn-success btn-sm'>";
+            echo "<a id='save-default-grid' class='btn btn-success btn-sm btn-mydashboard'>";
             echo "<i class='fas fa-1x fa-hdd pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save default grid', 'mydashboard');
@@ -443,7 +450,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<br><br>";
          }
 
-         echo "<a id='clear-grid' class='btn btn-danger btn-sm'>";
+         echo "<a id='clear-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
          echo "<i class='fas fa-1x fa-window-restore pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __('Clear grid', 'mydashboard');
@@ -451,7 +458,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          echo "<br><br>";
 
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            echo "<a id='drag-grid' class='btn btn-danger btn-sm'>";
+            echo "<a id='drag-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
             echo "<i class='fas fa-1x fa-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Permit drag / resize widgets', 'mydashboard');
@@ -461,7 +468,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
 
-            echo "<a id='undrag-grid' class='btn btn-success btn-sm'>";
+            echo "<a id='undrag-grid' class='btn btn-success btn-sm btn-mydashboard'>";
             echo "<i class='fas fa-1x fa-unlock-alt pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Block drag / resize widgets', 'mydashboard');
@@ -473,7 +480,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
              && $edit < 1
              && $this->interface == 1) {
-            echo "<a id='header_fullscreen' class='btn btn-info btn-sm'>";
+            echo "<a id='header_fullscreen' class='btn btn-info btn-sm btn-mydashboard'>";
             echo "<i class='fas fa-1x fa-arrows-alt pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __("Fullscreen", "mydashboard");
@@ -481,7 +488,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             echo "<br><br>";
          }
 
-         echo "<a id='close-edit' class='btn btn-success btn-sm'>";
+         echo "<a id='close-edit' class='btn btn-success btn-sm btn-mydashboard'>";
          echo "<i class='fas fa-1x fa-times-circle pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __("Close edit mode", "mydashboard");
@@ -917,7 +924,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                                                      . " data-view='" . $viewsNames[$widgetview] . "'>";
                         $icon                     = $widgetTitle['icon'] ?? "";
                         if (!empty($icon)) {
-                           $viewContent[$widgetview] .= "<div class='media-left'><i class='$icon fa-3x'></i></div>";
+                           $viewContent[$widgetview] .= "<div class='media-left'><i class='$icon fa-2x'></i></div>";
                         }
                         $viewContent[$widgetview] .= "<div class='media-body' style='margin: 10px;'>";
                         $viewContent[$widgetview] .= $widgetTitle['title'];
@@ -940,16 +947,16 @@ class PluginMydashboardMenu extends CommonGLPI {
       foreach ($viewContent as $view => $vContent) {
          if ($vContent != '') {
             $wl .= "<tr><td class='media plugin_mydashboard_menuDashboardList'>";
-//            $wl .= "<span class='media'>";
+            //            $wl .= "<span class='media'>";
+            //            $wl .= "<span class=''>";
+            $wl .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle2'>";
             $wl .= "<span class='media-left'>";
             $wl .= "<i class='far fa-folder fa-2x'></i>";
-            $wl .= "</span>";
-//            $wl .= "<span class=''>";
-            $wl .= "<h6 class='media-body plugin_mydashboard_menuDashboardListTitle2'>";
+            $wl .= "</span>&nbsp;";
             $wl .= $viewsNames[$view];
-            $wl .= "</h6>";
-//            $wl .= "</span>";
-//            $wl .= "</span>";
+            $wl .= "</h5>";
+            //            $wl .= "</span>";
+            //            $wl .= "</span>";
             $wl .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardList2'>";
             if (!empty($vContent)) {
                $wl .= $vContent;
@@ -987,7 +994,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          $is_empty = true;
 
-         $tmp = "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h3>";
+         $tmp = "<h5 class='plugin_mydashboard_menuDashboardListTitle1'>" . ucfirst($plugin_names[$plugin]) . "</h5>";
          //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
          $tmp .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'>";
          //         $tmp .= "<tr>";
@@ -1072,7 +1079,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
                         $icon = $widgetTitle['icon'] ?? "";
                         if (!empty($icon)) {
-                           $wl .= "<div class='media-left'><i class='$icon fa-3x'></i></div>";
+                           $wl .= "<div class='media-left'><i class='$icon fa-2x'></i></div>";
                         }
                         $wl .= "<div class='media-body' style='margin: 10px;'>";
                         $wl .= $widgetTitle['title'];
@@ -1088,12 +1095,12 @@ class PluginMydashboardMenu extends CommonGLPI {
                   }
                } else {
                   $tmp = "<tr><td class='media plugin_mydashboard_menuDashboardList'>";
+                  $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle$depth'>";
                   $tmp .= "<span class='media-left'>";
                   $tmp .= "<i class='far fa-folder fa-2x'></i>";
-                  $tmp .= "</span>";
-                  $tmp .= "<h6 class='media-body plugin_mydashboard_menuDashboardListTitle$depth'>";
+                  $tmp .= "</span>&nbsp;";
                   $tmp .= $widgetId;
-                  $tmp .= "</h6>";
+                  $tmp .= "</h5>";
                   $tmp .= "<table style='width: 100%;' class='plugin_mydashboard_menuDashboardList$depth'>";
                   $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
                   if ($res != '') {
@@ -1284,6 +1291,59 @@ class PluginMydashboardMenu extends CommonGLPI {
    function loadDashboard($active_profile = -1, $predefined_grid = 0) {
       global $CFG_GLPI, $GLPI_CACHE;
 
+//      echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
+//      echo Html::css("/plugins/mydashboard/css/style_bootstrap4.css");
+      echo Html::script("/plugins/mydashboard/lib/jquery-ui/jquery-ui.min.js");
+      echo Html::css("/plugins/mydashboard/lib/jquery-ui/jquery-ui.min.css");
+      echo Html::script("/plugins/mydashboard/lib/lodash.min.js");
+      echo Html::css("/plugins/mydashboard/lib/gridstack/src/gridstack.css");
+      echo Html::css("/plugins/mydashboard/lib/gridstack/src/gridstack-extra.css");
+      echo Html::script("/plugins/mydashboard/lib/gridstack/src/gridstack.js");
+      echo Html::script("/plugins/mydashboard/lib/gridstack/src/gridstack.jQueryUI.js");
+
+      echo Html::css("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css");
+      echo Html::css("/plugins/mydashboard/lib/datatables/ColReorder-1.5.2/css/colReorder.dataTables.min.css");
+      echo Html::css("/plugins/mydashboard/lib/datatables/datatables.min.css");
+      echo Html::css("/plugins/mydashboard/lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css");
+      echo Html::css("/plugins/mydashboard/lib/datatables/Select-1.3.1/css/select.dataTables.min.css");
+
+      echo Html::script("/plugins/mydashboard/lib/datatables/datatables.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/Responsive-2.2.3/js/dataTables.responsive.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/Select-1.3.1/js/dataTables.select.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/buttons.html5.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/buttons.print.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/buttons.colVis.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/JSZip-2.5.0/jszip.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
+
+      echo Html::script("/plugins/mydashboard/lib/chartjs/Chart.bundle.min.js");
+      echo Html::script("/plugins/mydashboard/lib/chartjs/chartjs-plugin-datalabels.js");
+
+      echo Html::script("/plugins/mydashboard/lib/html2canvas.min.js");
+      echo Html::script("/plugins/mydashboard/lib/fileSaver.min.js");
+      echo Html::script("/plugins/mydashboard/lib/circles/circles.min.js");
+      echo Html::script("/plugins/mydashboard/lib/countUp.min.js");
+      echo Html::script("/plugins/mydashboard/lib/countUp-jquery.js");
+
+      echo Html::script("/plugins/mydashboard/lib/moment.min.js");
+      echo Html::script("/plugins/mydashboard/lib/datetime-moment.js");
+
+      echo Html::script("/plugins/mydashboard/lib/fullcalendar/fullcalendar.min.js");
+      echo Html::css("/plugins/mydashboard/lib/fullcalendar/fullcalendar.min.css");
+      if (isset($_SESSION['glpilanguage'])) {
+         foreach ([2, 3] as $loc) {
+            $filename = "../lib/fullcalendar/locale/" .
+                        strtolower($CFG_GLPI["languages"][$_SESSION['glpilanguage']][$loc]) . ".js";
+            //                if (file_exists('../lib/fullcalendar/locale/' . $filename)) {
+            echo " <script src='$filename'></script>";
+            break;
+            //                }
+         }
+      }
+
       $rand           = mt_rand();
       $this->users_id = Session::getLoginUserID();
       $this->showMenu($rand, $this->users_id, $active_profile, $predefined_grid);
@@ -1463,7 +1523,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                          var delbutton = '';
                          var refreshbutton = '';
                          if ($delete_button == 1) {
-                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fas fa-times\"></i></button>';
+                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fas fa-times md-close\"></i></button>';
                          }
                          if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fas fa-sync-alt\"></i></button>';
@@ -1650,7 +1710,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 widget = widgetArray['' + id + ''];
                 var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
                          '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + id + '\');\">' +
-                          '<i class=\"fas fa-times\"></i></button>' + widget + '<div/><div/>');
+                          '<i class=\"fas fa-times  md-close\"></i></button>' + widget + '<div/><div/>');
                 var grid = $('.grid-stack$rand').data('gridstack');
                 grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);
                 return true;
@@ -1757,7 +1817,7 @@ class PluginMydashboardMenu extends CommonGLPI {
    /**
     * Create a side slide panel
     *
-    * @param string $name    name of the js object
+    * @param string $name name of the js object
     * @param array  $options Possible options:
     *          - title       Title to display
     *          - position    position (either left or right - defaults to right)
@@ -1772,13 +1832,13 @@ class PluginMydashboardMenu extends CommonGLPI {
       global $CFG_GLPI;
 
       $param = [
-         'title'     => '',
-         'position'  => 'right',
-         'url'       => '',
-         'display'   => true,
-         'icon'      => false,
-         'icon_url'  => false,
-         'icon_txt'  => false
+         'title'    => '',
+         'position' => 'right',
+         'url'      => '',
+         'display'  => true,
+         'icon'     => false,
+         'icon_url' => false,
+         'icon_txt' => false
       ];
 
       if (count($options)) {
@@ -1789,10 +1849,10 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
       }
 
-      $out  =  "<script type='text/javascript'>\n";
+      $out = "<script type='text/javascript'>\n";
       $out .= "$(function() {";
       $out .= "$('<div id=\'$name\' class=\'slidepanel on{$param['position']}\'><div class=\"header\">" .
-              "<button type=\'button\' class=\'close ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close\' title=\'". __s('Close') . "\'><span class=\'ui-button-icon-primary ui-icon ui-icon-closethick\'></span><span class=\'ui-button-text\'>X</span></button>";
+              "<button type=\'button\' class=\'close ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close\' title=\'" . __s('Close') . "\'><span class=\'ui-button-icon-primary ui-icon ui-icon-closethick\'></span><span class=\'ui-button-text\'>X</span></button>";
 
       if ($param['icon']) {
          $icon = "<img class=\'icon\' src=\'{$CFG_GLPI['root_doc']}{$param['icon']}\' alt=\'{$param['icon_txt']}\' title=\'{$param['icon_txt']}\'/>";

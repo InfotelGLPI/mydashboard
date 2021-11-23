@@ -55,109 +55,17 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 
    } else {
 
-      ?>
-       <!--<!DOCTYPE html>-->
-       <html>
-       <head>
-<!--           <link type="text/css" href="../css/bootstrap4.css" rel="stylesheet">-->
-<!--           <link type="text/css" href="../css/style_bootstrap_main.css" rel="stylesheet">-->
-<!--           <link type="text/css" href="../css/style_bootstrap_ticket.css" rel="stylesheet">-->
-           <!--DATATABLES CSS-->
-           <link type="text/css" href="../lib/datatables/datatables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css"
-                 rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/Select-1.3.1/css/select.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css" rel="stylesheet">
-           <link type="text/css" href="../lib/datatables/ColReorder-1.5.2/css/colReorder.dataTables.min.css"
-                 rel="stylesheet">
+      $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+      $predefined_grid = 0;
 
-           <!--GLPI-->
-<!--           <link type="text/css" href="../../../public/lib/base.css" rel="stylesheet">-->
-<!--           <link type="text/css" href="../../../public/lib/gridstack.css" rel="stylesheet">-->
-<!--           <script src="../../../public/lib/gridstack.js"></script>-->
-
-
-           <!--DATATABLES-->
-           <script src="../lib/datatables/datatables.min.js"></script>
-           <script src="../lib/datatables/Responsive-2.2.3/js/dataTables.responsive.min.js"></script>
-           <script src="../lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.6.1/js/buttons.html5.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.6.1/js/buttons.print.min.js"></script>
-           <script src="../lib/datatables/Buttons-1.6.1/js/buttons.colVis.min.js"></script>
-           <script src="../lib/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.js"></script>
-           <script src="../lib/datatables/JSZip-2.5.0/jszip.min.js"></script>
-           <script src="../lib/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
-           <script src="../lib/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
-           <!--MOMENT FOR DATATABLES-->
-           <script src="../lib/moment.min.js"></script>
-           <script src="../lib/datetime-moment.js"></script>
-           <!--CHARTJS-->
-           <script src="../lib/chartjs/Chart.bundle.min.js"></script>
-           <script src="../lib/chartjs/chartjs-plugin-datalabels.js"></script>
-           <!--EXPORT CHARTJS-->
-           <script src="../lib/html2canvas.min.js"></script>
-           <script src="../lib/fileSaver.min.js"></script>
-           <!--CIRCLES STATS-->
-           <script src="../lib/circles/circles.min.js"></script>
-           <!--COUNTS-->
-           <script src="../lib/countUp.min.js"></script>
-           <script src="../lib/countUp-jquery.js"></script>
-
-           <!--FULLCALENDAR-->
-           <link type="text/css" href="../lib/fullcalendar/fullcalendar.min.css" rel="stylesheet">
-           <script src="../lib/fullcalendar/fullcalendar.min.js"></script>
-
-          <script src="../lib/lodash.min.js"></script>
-          <link type="text/css" href="../lib/jquery-ui/jquery-ui.min.css" rel="stylesheet">
-          <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
-          <script src="../lib/gridstack/src/gridstack.js"></script>
-          <script src="../lib/gridstack/src/gridstack.jQueryUI.js"></script>
-          <link type="text/css" href="../lib/gridstack/src/gridstack.css" rel="stylesheet">
-          <link type="text/css" href="../lib/gridstack/src/gridstack-extra.css" rel="stylesheet">
-
-          <?php
-          if (isset($_SESSION['glpilanguage'])) {
-             foreach ([2, 3] as $loc) {
-                $filename = "../lib/fullcalendar/locale/".
-                            strtolower($CFG_GLPI["languages"][$_SESSION['glpilanguage']][$loc]).".js";
-//                if (file_exists('../lib/fullcalendar/locale/' . $filename)) {
-                   echo " <script src='$filename'></script>" ;
-                   break;
-//                }
-             }
-          }
-          //$apikey = PluginMydashboardHelper::getGoogleApiKey();
-          //if (!empty($apikey)) {
-          //   echo "<script src='https://maps.googleapis.com/maps/api/js?key=$apikey'></script>";
-          //}
-          ?>
-
-       </head>
-       <body>
-
-       <?php
-
-       $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
-       $predefined_grid = 0;
-
-       if (isset($_POST["profiles_id"])) {
-          $profile = $_POST["profiles_id"];
-       }
-       if (isset($_POST["predefined_grid"])) {
-          $predefined_grid = $_POST["predefined_grid"];
-       }
-       $dashboard = new PluginMydashboardMenu();
-       $dashboard->loadDashboard($profile, $predefined_grid);
-       //       $options=[];
-       //       $dashboard->display($options);
-
-       ?>
-
-       </body>
-       </html>
-
-      <?php
+      if (isset($_POST["profiles_id"])) {
+         $profile = $_POST["profiles_id"];
+      }
+      if (isset($_POST["predefined_grid"])) {
+         $predefined_grid = $_POST["predefined_grid"];
+      }
+      $dashboard = new PluginMydashboardMenu();
+      $dashboard->loadDashboard($profile, $predefined_grid);
 
    }
 } else {

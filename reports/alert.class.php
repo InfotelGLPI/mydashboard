@@ -1827,7 +1827,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $numrows = count($iterator);
       if ($numrows > 0) {
          $j = 0;
-         foreach ($iterator as $data) {
+         foreach ($iterator as $docs) {
             $doc = new Document();
             $doc->getFromDB($docs["documents_id"]);
             echo $doc->getDownloadLink();
@@ -2405,7 +2405,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       if (Session::haveRight("reminder_public", UPDATE)) {
          echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
          echo Html::hidden("id", ['value' => $id]);
          echo Html::hidden("reminders_id", ['value' => $reminders_id]);
          echo "</td></tr>";
@@ -2537,7 +2537,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          if (Session::haveRight("reminder_public", UPDATE)) {
             echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+            echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
             echo Html::hidden("id", ['value' => $id]);
             echo Html::hidden("reminders_id", ['value' => $reminders_id]);
             echo "</td></tr>";
@@ -2636,7 +2636,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $timeout     = 15;
       $proxy_host  = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
       $proxy_ident = $CFG_GLPI["proxy_user"] . ":" .
-                     Toolbox::sodiumDecrypt($CFG_GLPI["proxy_passwd"]); // username:password
+                     (new GLPIKey())->decrypt($CFG_GLPI["proxy_passwd"]); // username:password
 
       $url = $options["url"];
 

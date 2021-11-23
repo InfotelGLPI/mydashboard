@@ -35,6 +35,67 @@
    border: none;
 }
 
+.slidepanel .header {
+   border-bottom: 1px solid #ccc;
+   min-height: 2.4em;
+}
+
+.slidepanel .header > h3 {
+   margin: 0;
+   padding-top: .3em;
+   text-align: center;
+}
+
+.slidepanel .header .icon {
+   margin-top: .5em;
+   margin-right: .5em;
+}
+
+.slidepanel .contents {
+   clear: both;
+}
+
+.layout_lefttab .slidepanel .new_form_tabs .ui-tabs-nav,
+.slidepanel .ui-tabs {
+   width: auto;
+}
+
+.slidepanel.onleft {
+   left: 0;
+   border-right: 1px solid #ccc;
+}
+
+.slidepanel.onleft .close {
+   float: right;
+}
+
+.slidepanel.onleft .icon {
+   float: left;
+}
+
+.slidepanel.onright {
+   right: 0;
+   border-left: 1px solid #ccc;
+}
+
+.slidepanel.onright .close {
+   float: left;
+}
+
+.slidepanel.onright .icon {
+   float: right;
+}
+
+.slidepanel .tab_cadre_fixehov {
+   box-shadow: none;
+}
+
+.slidepanel .default {
+   display: inline-block;
+   width: 18px;
+   height: 18px;
+}
+
 .refresh-icon-disabled {
    cursor: not-allowed;
    pointer-events: none;
@@ -419,12 +480,13 @@ div#tabcontent{
    /*font-size: 11px;*/
    font-weight: normal;
    padding: 7px;
-   margin: 0px;
+   /*margin: 0px;*/
    cursor: pointer;
 }
 
 .plugin_mydashboard_menuDashboardListTitle2 {
    margin-left: 5px;
+   display: inline;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1:hover,
@@ -447,6 +509,9 @@ div#tabcontent{
 
 td.plugin_mydashboard_menuDashboardListItem {
    font-size: 12px;
+   display: inline-flex;
+   margin-left: 20px;
+   margin-top: 5px;
 }
 
 td.plugin_mydashboard_menuDashboardListItem:hover {
@@ -1075,4 +1140,9 @@ a#showMyDashboardLateralMenuLink {
    font-size: 9px;
    color: grey;
    font-style: italic;
+}
+
+.md-close {
+   color: #FFF;
+   margin: 2px;
 }

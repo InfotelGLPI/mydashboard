@@ -30,7 +30,7 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-Html::popHeader(__('Edit mode', 'mydashboard'), $_SERVER['PHP_SELF']);
+header("Content-Type: text/html; charset=UTF-8");
 
 $menu = new PluginMydashboardMenu();
 $rand = mt_rand();
@@ -48,6 +48,4 @@ if (isset($_SESSION['plugin_mydashboard_predefined_grid'])) {
 $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
 
 $menu->displayEditMode($rand, $edit, $selected_profile, $predefined_grid);
-
-Html::ajaxFooter();
 

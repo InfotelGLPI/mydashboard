@@ -153,7 +153,7 @@ class PluginMydashboardHTMLEditor extends CommonDBTM {
          echo "<tr class='tab_bg_1 center'>";
          echo "<td>";
          echo Html::hidden('id', ['value' => $item->getID()]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
          echo "</td></tr>\n";
          echo "</table>";
          Html::closeForm();

@@ -71,7 +71,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
          }
 
          echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-         echo Html::submit(_sx('button', 'Save'), ['name'=>'update']);
+         echo Html::submit(_sx('button', 'Save'), ['name'=>'update', 'class' => 'btn btn-primary']);
          echo Html::hidden("id", ['value' => Session::getLoginUserID()]);
          Html::closeForm();
 

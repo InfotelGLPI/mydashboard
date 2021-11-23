@@ -161,13 +161,13 @@ class PluginMydashboardItilAlert extends CommonDBTM {
             echo Html::hidden("reminders_id", ['value' => $reminders_id]);
             echo "<tr class='tab_bg_1 center'><td>";
             if ($id > 0) {
-               echo Html::submit(_sx('button', 'Update'), ['name' => 'update']);
+               echo Html::submit(_sx('button', 'Update'), ['name' => 'update', 'class' => 'btn btn-primary']);
             } else {
-               echo Html::submit(_sx('button', 'Add'), ['name' => 'update']);
+               echo Html::submit(_sx('button', 'Add'), ['name' => 'update', 'class' => 'btn btn-primary']);
             }
             echo "</td><td>";
             if ($id > 0) {
-               echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete']);
+               echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete', 'class' => 'btn btn-primary']);
             }
             echo "</td></tr>";
          }
