@@ -1291,8 +1291,9 @@ class PluginMydashboardMenu extends CommonGLPI {
    function loadDashboard($active_profile = -1, $predefined_grid = 0) {
       global $CFG_GLPI, $GLPI_CACHE;
 
-//      echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
-//      echo Html::css("/plugins/mydashboard/css/style_bootstrap4.css");
+//      echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
+//      echo Html::css("/plugins/mydashboard/css/bootstrap4.css");
       echo Html::script("/plugins/mydashboard/lib/jquery-ui/jquery-ui.min.js");
       echo Html::css("/plugins/mydashboard/lib/jquery-ui/jquery-ui.min.css");
       echo Html::script("/plugins/mydashboard/lib/lodash.min.js");
