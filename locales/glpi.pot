@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 15:25+0000\n"
+"POT-Creation-Date: 2021-11-24 10:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:111 inc/menu.class.php:1463 inc/widget.class.php:555
+#: inc/chart.class.php:111 inc/menu.class.php:1464 inc/widget.class.php:555
 msgid "No data available"
 msgstr ""
 
@@ -361,7 +361,7 @@ msgstr ""
 msgid "Close edit mode"
 msgstr ""
 
-#: inc/menu.class.php:506 inc/menu.class.php:1452
+#: inc/menu.class.php:506 inc/menu.class.php:1453
 msgid "Success"
 msgstr ""
 
@@ -474,23 +474,23 @@ msgstr ""
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: inc/menu.class.php:1425
+#: inc/menu.class.php:1426
 msgid "Warning"
 msgstr ""
 
-#: inc/menu.class.php:1426
+#: inc/menu.class.php:1427
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: inc/menu.class.php:1453
+#: inc/menu.class.php:1454
 msgid "Save grid to see widget"
 msgstr ""
 
-#: inc/menu.class.php:1462
+#: inc/menu.class.php:1463
 msgid "Delete widget"
 msgstr ""
 
-#: inc/menu.class.php:1464
+#: inc/menu.class.php:1465
 msgid "Refresh widget"
 msgstr ""
 
