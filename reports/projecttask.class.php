@@ -51,13 +51,13 @@ class PluginMydashboardProjecttask extends CommonGLPI {
             PluginMydashboardMenu::$PROJECT_VIEW =>
                [
                   "projecttaskprocesswidget" => ["title"   => __('projects tasks to be processed', 'mydashboard'),
-                                                 "icon"    => "fas fa-table",
+                                                 "icon"    => "ti ti-table",
                                                  "comment" => ""],
                ],
             PluginMydashboardMenu::$GROUP_VIEW   =>
                [
                   "projectprocesswidgetgroup" => ["title"   => __('projects tasks to be processed', 'mydashboard'),
-                                                  "icon"    => "fas fa-table",
+                                                  "icon"    => "ti ti-table",
                                                   "comment" => ""],
                ]
          ];

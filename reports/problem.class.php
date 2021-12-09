@@ -52,25 +52,25 @@ class PluginMydashboardProblem extends CommonGLPI {
             PluginMydashboardMenu::$PROBLEM_VIEW =>
                [
                   "problemprocesswidget" => ["title"   => __('Problems to be processed'),
-                                             "icon"    => "fas fa-table",
+                                             "icon"    => "ti ti-table",
                                              "comment" => ""],
                   "problemwaitingwidget" => ["title"   => __('Problems on pending status'),
-                                             "icon"    => "fas fa-table",
+                                             "icon"    => "ti ti-table",
                                              "comment" => ""],
                ],
             PluginMydashboardMenu::$GROUP_VIEW   =>
                [
                   "problemprocesswidgetgroup" => ["title"   => __('Problems to be processed'),
-                                                  "icon"    => "fas fa-table",
+                                                  "icon"    => "ti ti-table",
                                                   "comment" => ""],
                   "problemwaitingwidgetgroup" => ["title"   => __('Problems on pending status'),
-                                                  "icon"    => "fas fa-table",
+                                                  "icon"    => "ti ti-table",
                                                   "comment" => ""],
                ],
             PluginMydashboardMenu::$GLOBAL_VIEW  =>
                [
-                  "problemcountwidget" => ["title"   => __('Problem followup'),
-                                           "icon"    => "fas fa-table",
+                  "problemcountwidget" => ["title"   => __('Problem followup', 'mydashboard'),
+                                           "icon"    => "ti ti-table",
                                            "comment" => ""],
                ]
          ];

@@ -51,28 +51,28 @@ class PluginMydashboardChange extends CommonGLPI {
             PluginMydashboardMenu::$CHANGE_VIEW =>
                [
                   "changeprocesswidget" => ["title"   => __('Changes to be processed', 'mydashboard'),
-                                             "icon"    => "fas fa-table",
+                                             "icon"    => "ti ti-table",
                                              "comment" => ""],
                   "changewaitingwidget" => ["title"   => __('Changes on pending status', 'mydashboard'),
-                                            "icon"    => "fas fa-table",
+                                            "icon"    => "ti ti-table",
                                             "comment" => ""],
                   "changeappliedwidget" => ["title"   => __('Applied changes', 'mydashboard'),
-                                            "icon"    => "fas fa-table",
+                                            "icon"    => "ti ti-table",
                                             "comment" => ""],
                ],
             PluginMydashboardMenu::$GROUP_VIEW   =>
                [
                   "changeprocesswidgetgroup" => ["title"   => __('Changes to be processed', 'mydashboard'),
-                                                  "icon"    => "fas fa-table",
+                                                  "icon"    => "ti ti-table",
                                                   "comment" => ""],
                   "changewaitingwidgetgroup" => ["title"   => __('Changes on pending status', 'mydashboard'),
-                                            "icon"    => "fas fa-table",
+                                            "icon"    => "ti ti-table",
                                             "comment" => ""],
                ],
             PluginMydashboardMenu::$GLOBAL_VIEW   =>
                [
                   "changecountwidget" => ["title"   =>  __('Change followup', 'mydashboard'),
-                                                  "icon"    => "fas fa-table",
+                                                  "icon"    => "ti ti-table",
                                                   "comment" => ""],
                ]
          ];

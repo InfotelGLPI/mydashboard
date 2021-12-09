@@ -48,7 +48,7 @@ class PluginMydashboardContract extends CommonGLPI {
          $widgets = [
             PluginMydashboardMenu::$GLOBAL_VIEW => [
                "contractwidget" => ["title"   => Contract::getTypeName(1),
-                                    "icon"    => "fas fa-table",
+                                    "icon"    => "ti ti-table",
                                     "comment" => ""],
             ]
          ];

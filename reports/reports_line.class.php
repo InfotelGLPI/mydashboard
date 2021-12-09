@@ -58,16 +58,16 @@ class PluginMydashboardReports_Line extends CommonGLPI {
       $widgets = [
          __('Line charts', "mydashboard") => [
             $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
-                                        "icon"    => "fas fa-chart-line",
+                                        "icon"    => "ti ti-chart-area-line",
                                         "comment" => __("Sum of not solved tickets by month", "mydashboard")],
             $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
-                                        "icon"    => "fas fa-chart-line",
+                                        "icon"    => "ti ti-chart-area-line",
                                         "comment" => ""],
             $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
-                                        "icon"    => "fas fa-chart-line",
+                                        "icon"    => "ti ti-chart-area-line",
                                         "comment" => ""],
             $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
-                                        "icon"    => "fas fa-chart-line",
+                                        "icon"    => "ti ti-chart-area-line",
                                         "comment" => ""],
          ]
       ];

@@ -215,7 +215,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @return string
     */
    static function getIcon() {
-      return "fas fa-tachometer-alt";
+      return "ti ti-dashboard";
    }
 
    /**
@@ -427,7 +427,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
 
          echo "<a id='load-widgets' class='btn btn-info btn-sm btn-mydashboard'>";
-         echo "<i class='fas fa-1x fa-spinner pointer btn-mydashboard' title='" . __('Load widgets', 'mydashboard') . "'
+         echo "<i class='ti ti-loader pointer btn-mydashboard' title='" . __('Load widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __('Load widgets', 'mydashboard');
          echo "</a>";
@@ -435,7 +435,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          if ($edit == 1) {
             echo "<a id='save-grid' class='btn btn-success btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-save pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
+            echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save grid', 'mydashboard');
             echo "</a>";
@@ -443,7 +443,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
          if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
             echo "<a id='save-default-grid' class='btn btn-success btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-hdd pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
+            echo "<i class='ti ti-layout-grid pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save default grid', 'mydashboard');
             echo "</a>";
@@ -451,7 +451,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
 
          echo "<a id='clear-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
-         echo "<i class='fas fa-1x fa-window-restore pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
+         echo "<i class='ti ti-brand-windows pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __('Clear grid', 'mydashboard');
          echo "</a>";
@@ -459,7 +459,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
             echo "<a id='drag-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+            echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Permit drag / resize widgets', 'mydashboard');
             echo "</a>";
@@ -469,7 +469,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
 
             echo "<a id='undrag-grid' class='btn btn-success btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-unlock-alt pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
+            echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Block drag / resize widgets', 'mydashboard');
             echo "</a>";
@@ -481,7 +481,7 @@ class PluginMydashboardMenu extends CommonGLPI {
              && $edit < 1
              && $this->interface == 1) {
             echo "<a id='header_fullscreen' class='btn btn-info btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-arrows-alt pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
+            echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __("Fullscreen", "mydashboard");
             echo "</a>";
@@ -489,7 +489,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          }
 
          echo "<a id='close-edit' class='btn btn-success btn-sm btn-mydashboard'>";
-         echo "<i class='fas fa-1x fa-times-circle pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
+         echo "<i class='ti ti-circle-x pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
          echo "<br>" . __("Close edit mode", "mydashboard");
          echo "</a>";
@@ -525,14 +525,14 @@ class PluginMydashboardMenu extends CommonGLPI {
          if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
 
             echo "<a id='save-grid' class='btn btn-success btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-save pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
+            echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Save grid', 'mydashboard');
             echo "</a>";
             echo "<br><br>";
 
             echo "<a id='undrag-grid' class='btn btn-success btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-unlock-alt pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
+            echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Block drag / resize widgets', 'mydashboard');
             echo "</a>";
@@ -543,7 +543,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
 
             echo "<a id='drag-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+            echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Permit drag / resize widgets', 'mydashboard');
             echo "</a>";
@@ -553,7 +553,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if (Session::haveRight("plugin_mydashboard_edit", 6)) {
 
             echo "<a id='edit-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
+            echo "<i class='ti ti-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Switch to edit mode', 'mydashboard');
             echo "</a>";
@@ -563,7 +563,7 @@ class PluginMydashboardMenu extends CommonGLPI {
          if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
 
             echo "<a id='edit-default-grid' class='btn btn-danger btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-cogs pointer btn-mydashboard' title='" . __('Custom and save default grid', 'mydashboard') . "'
+            echo "<i class='ti ti-adjustments pointer btn-mydashboard' title='" . __('Custom and save default grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __('Custom and save default grid', 'mydashboard');
             echo "</a>";
@@ -576,7 +576,7 @@ class PluginMydashboardMenu extends CommonGLPI {
              && $this->interface == 1) {
 
             echo "<a id='header_fullscreen' class='btn btn-info btn-sm btn-mydashboard'>";
-            echo "<i class='fas fa-1x fa-arrows-alt pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
+            echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "<br>" . __("Fullscreen", "mydashboard");
             echo "</a>";
@@ -951,7 +951,7 @@ class PluginMydashboardMenu extends CommonGLPI {
             //            $wl .= "<span class=''>";
             $wl .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle2'>";
             $wl .= "<span class='media-left'>";
-            $wl .= "<i class='far fa-folder fa-2x'></i>";
+            $wl .= "<i class='ti ti-folder fa-2x'></i>";
             $wl .= "</span>&nbsp;";
             $wl .= $viewsNames[$view];
             $wl .= "</h5>";
@@ -1097,7 +1097,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                   $tmp = "<tr><td class='media plugin_mydashboard_menuDashboardList'>";
                   $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle$depth'>";
                   $tmp .= "<span class='media-left'>";
-                  $tmp .= "<i class='far fa-folder fa-2x'></i>";
+                  $tmp .= "<i class='ti ti-folder fa-2x'></i>";
                   $tmp .= "</span>&nbsp;";
                   $tmp .= $widgetId;
                   $tmp .= "</h5>";
@@ -1524,12 +1524,12 @@ class PluginMydashboardMenu extends CommonGLPI {
                          var delbutton = '';
                          var refreshbutton = '';
                          if ($delete_button == 1) {
-                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"fas fa-times md-close\"></i></button>';
+                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"ti ti-circle-x md-close\"></i></button>';
                          }
                          if (refreshopt == 1) {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"fas fa-sync-alt\"></i></button>';
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"ti ti-refresh\"></i></button>';
                          } else {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"fas fa-sync-alt\"></i></button>';
+                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"ti ti-refresh\"></i></button>';
                          }
                          if ( nodeid !== undefined ) {
                          var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
@@ -1711,7 +1711,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                 widget = widgetArray['' + id + ''];
                 var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
                          '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + id + '\');\">' +
-                          '<i class=\"fas fa-times  md-close\"></i></button>' + widget + '<div/><div/>');
+                          '<i class=\"ti ti-circle-x md-close\"></i></button>' + widget + '<div/><div/>');
                 var grid = $('.grid-stack$rand').data('gridstack');
                 grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);
                 return true;

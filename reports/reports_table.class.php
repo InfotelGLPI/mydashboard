@@ -58,19 +58,19 @@ class PluginMydashboardReports_Table extends CommonGLPI {
       $widgets = [
          __('Tables', "mydashboard") => [
             $this->getType() . "3"  => ["title"   => __("Internal annuary", "mydashboard"),
-                                        "icon"    => "fas fa-table",
+                                        "icon"    => "ti ti-table",
                                         "comment" => __("Search users of your organisation", "mydashboard")],
             $this->getType() . "5"  => ["title"   => __("Fields unicity"),
-                                        "icon"    => "fas fa-table",
+                                        "icon"    => "ti ti-table",
                                         "comment" => __("Display if you have duplicates into inventory", "mydashboard")],
             $this->getType() . "14" => ["title"   => __("All unpublished articles"),
-                                        "icon"    => "fas fa-table",
+                                        "icon"    => "ti ti-table",
                                         "comment" => __("Display unpublished articles of Knowbase", "mydashboard")],
             $this->getType() . "32" => ["title"   => __("Number of opened tickets by technician and by status", "mydashboard"),
-                                        "icon"    => "fas fa-table",
+                                        "icon"    => "ti ti-table",
                                         "comment" => ""],
             $this->getType() . "33" => ["title"   => __("Number of opened tickets by group and by status", "mydashboard"),
-                                        "icon"    => "fas fa-table",
+                                        "icon"    => "ti ti-table",
                                         "comment" => ""],
          ]
       ];

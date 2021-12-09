@@ -219,7 +219,7 @@ class PluginMydashboardWidget extends CommonDBTM {
          $message .= " - " . $id;
       }
       $msg = "<div class='center alert alert-warning alert-important' role='alert'><br><br>";
-      $msg .= "<i style='color:orange' class='fas fa-exclamation-triangle fa-3x'></i>";
+      $msg .= "<i style='color:orange' class='ti ti-alert-triangle fa-3x'></i>";
       $msg .= "<br><br><span class='b'>$message</span></div>";
 
       return $msg;
@@ -823,29 +823,14 @@ class PluginMydashboardWidget extends CommonDBTM {
                $display .= "</br>";
 
                //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense','PluginBadgesBadge'];
-               if ($itemtype == 'Computer') {
-                  $icon = 'fas fa-laptop';
-               } else if ($itemtype == 'Monitor') {
-                  $icon = 'fas fa-desktop';
-               } else if ($itemtype == 'Peripheral') {
-                  $icon = 'fas fa-hdd';
-               } else if ($itemtype == 'Phone') {
-                  $icon = 'fas fa-mobile-alt';
-               } else if ($itemtype == 'Printer') {
-                  $icon = 'fas fa-print';
-               } else if ($itemtype == 'SoftwareLicense') {
-                  $icon = 'fas fa-award';
-               } else if ($itemtype == 'PluginBadgesBadge') {
-                  $icon = 'far fa-id-badge';
-               }
-
+               $icon = $item->getIcon();
                if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])
                    && Session::getCurrentInterface() == 'central') {
                   $display .= "<a href='" . $item::getFormURL() . "?id=" . $item_datas['id'] . "' target='_blank'>";
                }
 
 
-               $display .= "<i class=\"$icon md-fa-2x fa-border\"></i>";
+               $display .= "<i class=\"$icon fa-2x fa-border\"></i>";
                $display .= "</br>";
                $display .= $item_datas['name'];
                if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])

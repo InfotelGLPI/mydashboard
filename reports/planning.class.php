@@ -65,7 +65,7 @@ class PluginMydashboardPlanning extends CommonGLPI {
          $widgets = [
             PluginMydashboardMenu::$TICKET_TECHVIEW => [
                "planningwidget"    => ["title"   => __('Your planning'),
-                                            "icon"    => "fas fa-calendar",
+                                            "icon"    => "ti ti-calendar",
                                             "comment" => ""],
             ]
          ];

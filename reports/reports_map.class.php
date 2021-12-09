@@ -58,7 +58,7 @@ class PluginMydashboardReports_Map extends CommonGLPI {
       $widgets = [
          __('Map', "mydashboard") => [
             $this->getType() . "29" => ["title"   => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
-                                        "icon"    => "fas fa-map",
+                                        "icon"    => "ti ti-map",
                                         "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")],
          ]
       ];
@@ -341,7 +341,7 @@ class PluginMydashboardReports_Map extends CommonGLPI {
                      var fail_info = L.control();
                      fail_info.onAdd = function (map) {
                         this._div = L.DomUtil.create('div', 'fail_info');
-                        this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'fas fa-sync\'></i> " . __s('Reload') . "</span>';
+                        this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'ti ti-refresh\'></i> " . __s('Reload') . "</span>';
                         return this._div;
                      };
                      fail_info.addTo(map_elt);

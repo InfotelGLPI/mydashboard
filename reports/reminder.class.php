@@ -41,13 +41,13 @@ class PluginMydashboardReminder extends CommonGLPI {
       $widgets = [];
       if (Session::getCurrentInterface() != 'helpdesk') {
          $widgets[PluginMydashboardMenu::$MY_VIEW]["reminderpersonalwidget"] = ["title"   => _n('Personal reminder', 'Personal reminders', 2),
-                                                                                "icon"    => "fas fa-table",
+                                                                                "icon"    => "ti ti-table",
                                                                                 "comment" => ""];
       }
       if (Session::haveRight("reminder_public", READ)) {
 
          $widgets[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = ["title"   => _n('Public reminder', 'Public reminders', 2),
-                                                                                                         "icon"    => "fas fa-table",
+                                                                                                         "icon"    => "ti ti-table",
                                                                                                          "comment" => ""];
       }
 
@@ -319,7 +319,7 @@ class PluginMydashboardReminder extends CommonGLPI {
       if (Reminder::canCreate()) {
          $output['title'] .= "&nbsp;<span>";
          $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php\">";
-         $output['title'] .= "<i class='fas fa-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
+         $output['title'] .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
       }
 
       $output['title'] .= "";
@@ -350,7 +350,7 @@ class PluginMydashboardReminder extends CommonGLPI {
                $date_url                  = $tab[0];
                $output['body'][$count][0] .= "<span class=\"reminder_right\">";
                $output['body'][$count][0] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?date=" . $date_url . "&amp;type=day\">";
-               $output['body'][$count][0] .= "<i class='fas fa-clock-o' title=\"" . sprintf(__s('From %1$s to %2$s'),
+               $output['body'][$count][0] .= "<i class='ti ti-clock' title=\"" . sprintf(__s('From %1$s to %2$s'),
                                                                                             Html::convDateTime($data["begin"]),
                                                                                             Html::convDateTime($data["end"])) . "\"></i><span class='sr-only'></span>";
                $output['body'][$count][0] .= "</a></span>";

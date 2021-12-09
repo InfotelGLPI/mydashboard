@@ -45,13 +45,13 @@ class PluginMydashboardRSSFeed extends CommonGLPI {
       $widgets = [];
       if (Session::getCurrentInterface() != 'helpdesk') {
          $widgets[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpersonalwidget"] = ["title"   =>  _n('Personal RSS feed', 'Personal RSS feeds', 2),
-                                                                                "icon"    => "fas fa-table",
+                                                                                "icon"    => "ti ti-table",
                                                                                 "comment" => ""];
       }
       if (Session::haveRight("rssfeed_public", READ)) {
 
          $widgets[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = ["title"   => _n('Public RSS feed', 'Public RSS feeds', 2),
-                                                                              "icon"    => "fas fa-table",
+                                                                              "icon"    => "ti ti-table",
                                                                               "comment" => ""];
       }
 
@@ -153,7 +153,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI {
       if (RSSFeed::canCreate()) {
          $output['title'] .= "<span class=\"rssfeed_right\">";
          $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.form.php\">";
-         $output['title'] .= "<i class='fas fa-plus'></i><span class='sr-only'>". __s('Add')."</span></a></span>";
+         $output['title'] .= "<i class='ti ti-plus'></i><span class='sr-only'>". __s('Add')."</span></a></span>";
       }
 
       $count = 0;

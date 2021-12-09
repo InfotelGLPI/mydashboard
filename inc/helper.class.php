@@ -241,7 +241,7 @@ class PluginMydashboardHelper {
       $graph = "<div class='bt-row'>";
       $graph .= "<div class='bt-col-md-12 left'>";
       if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
-         $graph .= "<a target='_blank' href='" . $params["setup"] . "'><i class=\"fas fa-wrench fa-1x\"></i></a>";
+         $graph .= "<a target='_blank' href='" . $params["setup"] . "'><i class=\"ti ti-tool\"></i></a>";
       }
       $graph .= "</div>";
       $graph .= "</div>";
@@ -859,7 +859,7 @@ class PluginMydashboardHelper {
                  });
                 </script>";
 
-      $form   .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"fas fa-bars md-fa-2x\"></i>";
+      $form   .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"ti ti-chart-bar\"></i>";
       $form   .= "<span style='font-size: 12px;font-family: verdana;color: #CCC;font-weight: bold;'>";
       $entity = new Entity();
       if (isset($opt['entities_id']) && $opt['entities_id'] > -1) {

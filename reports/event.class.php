@@ -62,7 +62,7 @@ class PluginMydashboardEvent extends Glpi\Event {
          $widgets = [
             PluginMydashboardMenu::$GLOBAL_VIEW => [
                "eventwidgetglobal" => ["title"   => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
-                                       "icon"    => "fas fa-table",
+                                       "icon"    => "ti ti-table",
                                        "comment" => ""],
             ]
          ];

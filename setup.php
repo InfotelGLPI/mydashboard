@@ -47,7 +47,7 @@ function plugin_init_mydashboard() {
       "lib/fileSaver.min.js",
       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
-//      "scripts/mydashboard_load_scripts.js",
+      //      "scripts/mydashboard_load_scripts.js",
       "scripts/mydashboard.js",
       "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
    ];
@@ -56,12 +56,14 @@ function plugin_init_mydashboard() {
       $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
          "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
          "lib/fileSaver.min.js",
-         //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
-         //"lib/sdashboard/lib/flotr2/flotr2.min.js",
-         "scripts/mydashboard_load_scripts.js",
          "scripts/mydashboard.js",
          "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
       ];
+      if (Session::getCurrentInterface() == 'central') {
+         $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+            "scripts/mydashboard_load_scripts.js",
+         ];
+      }
    }
 
    $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
@@ -98,7 +100,7 @@ function plugin_init_mydashboard() {
             $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => 'PluginMydashboardMenu'];
             $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = '/front/menu.php';
 
-//            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];
+            //            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];
 
             if ($plugin->isActivated('servicecatalog')
                 && Session::haveRight("plugin_servicecatalog", READ)) {
@@ -114,7 +116,7 @@ function plugin_init_mydashboard() {
 
                if (strpos($_SERVER['REQUEST_URI'], 'central.php?redirect') === false
                    && strpos($_SERVER['REQUEST_URI'], 'apirest.php') === false) {
-                  if(Session::getCurrentInterface() == 'central'){
+                  if (Session::getCurrentInterface() == 'central') {
                      if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
                         Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
@@ -129,13 +131,13 @@ function plugin_init_mydashboard() {
                }
             }
 
-            if(Session::getCurrentInterface() == 'central'){
+            if (Session::getCurrentInterface() == 'central') {
                if (PluginMydashboardHelper::getReplaceCentral()
-                   && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])){
+                   && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
                   $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
                } else if (PluginMydashboardHelper::getReplaceCentralConf()
                           && PluginMydashboardHelper::getReplaceCentral()
-                          && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])){
+                          && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
                   $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
                }
             }
@@ -150,7 +152,7 @@ function plugin_init_mydashboard() {
 
          }
          $PLUGIN_HOOKS['pre_item_purge']['mydashboard'] = ['Reminder' => ['PluginMydashboardItilAlert',
-                                                                       'purgeAlerts']];
+                                                                          'purgeAlerts']];
       }
       $PLUGIN_HOOKS['post_init']['mydashboard'] = 'plugin_mydashboard_postinit';
    }
@@ -163,12 +165,12 @@ function plugin_init_mydashboard() {
 function plugin_version_mydashboard() {
 
    return [
-      'name'           => __('My Dashboard', 'mydashboard'),
-      'version'        => PLUGIN_MYDASHBOARD_VERSION,
-      'author'         => "<a href='http://blogglpi.infotel.com'>Infotel</a>",
-      'license'        => 'GPLv2+',
-      'homepage'       => 'https://github.com/InfotelGLPI/mydashboard',
-      'requirements'   => [
+      'name'         => __('My Dashboard', 'mydashboard'),
+      'version'      => PLUGIN_MYDASHBOARD_VERSION,
+      'author'       => "<a href='http://blogglpi.infotel.com'>Infotel</a>",
+      'license'      => 'GPLv2+',
+      'homepage'     => 'https://github.com/InfotelGLPI/mydashboard',
+      'requirements' => [
          'glpi' => [
             'min' => '10.0',
             'max' => '11.0',

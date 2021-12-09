@@ -50,13 +50,13 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
       $widgets = [
          PluginMydashboardMenu::$GLOBAL_VIEW => [
             "knowbaseitempopular"    => ["title"   => __('FAQ') . " - " . __('Most popular questions'),
-                                         "icon"    => "fas fa-table",
+                                         "icon"    => "ti ti-table",
                                          "comment" => ""],
             "knowbaseitemrecent"     => ["title"   => __('FAQ') . " - " . __('Recent entries'),
-                                         "icon"    => "fas fa-table",
+                                         "icon"    => "ti ti-table",
                                          "comment" => ""],
             "knowbaseitemlastupdate" => ["title"   => __('FAQ') . " - " . __('Last updated entries'),
-                                         "icon"    => "fas fa-table",
+                                         "icon"    => "ti ti-table",
                                          "comment" => ""],
          ]
       ];
