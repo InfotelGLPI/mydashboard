@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-24 10:31+0000\n"
+"POT-Creation-Date: 2021-12-09 15:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: setup.php:166 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: setup.php:168 ajax/loadscripts.php:38 ajax/loadscripts.php:61
 #: inc/menu.class.php:87 inc/menu.class.php:989 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
-#: front/config.php:46
+#: front/config.php:45
 msgid "Please activate the plugin"
 msgstr ""
 
@@ -591,7 +591,7 @@ msgstr ""
 msgid "Authorize/Unauthorize all"
 msgstr ""
 
-#: inc/servicecatalog.class.php:63 inc/servicecatalog.class.php:70
+#: inc/servicecatalog.class.php:74 inc/servicecatalog.class.php:81
 msgid "Dashboard access"
 msgstr ""
 
@@ -651,7 +651,7 @@ msgstr ""
 msgid "Your equipments"
 msgstr ""
 
-#: inc/widget.class.php:891
+#: inc/widget.class.php:876
 msgid "No equipments founded"
 msgstr ""
 
@@ -917,6 +917,10 @@ msgstr ""
 
 #: reports/knowbaseitem.class.php:138
 msgid "Modification date"
+msgstr ""
+
+#: reports/problem.class.php:72
+msgid "Problem followup"
 msgstr ""
 
 #: reports/project.class.php:53 reports/project.class.php:59
@@ -1255,6 +1259,10 @@ msgstr ""
 
 #: reports/ticket.class.php:56
 msgid "Your rejected tickets"
+msgstr ""
+
+#: reports/ticket.class.php:113 reports/ticket.class.php:1100
+msgid "Ticket followup"
 msgstr ""
 
 #: scripts/clean_stock_tickets.php:85
