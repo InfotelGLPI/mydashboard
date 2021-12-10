@@ -850,7 +850,7 @@ class PluginMydashboardTicket extends CommonGLPI {
                                     sprintf(__('%1$s - %2$s'), $job->numberOfFollowups($showprivate),
                                             $job->numberOfTasks($showprivate)));
          $link            = sprintf(__('%1$s %2$s'), $link,
-                                    Html::showToolTip(nl2br(Glpi\Toolbox\RichText::getSafeHtml($job->fields['content'])),
+                                    Html::showToolTip(nl2br(Glpi\RichText\RichText::getSafeHtml($job->fields['content'])),
                                                       ['applyto' => 'ticket' . $job->fields["id"] . $rand,
                                                        'display' => false]));
          $output[$colnum] = $link;
@@ -954,9 +954,7 @@ class PluginMydashboardTicket extends CommonGLPI {
 
          $colnum++;
 
-         $content = Toolbox::unclean_cross_side_scripting_deep(html_entity_decode($job->fields['content'],
-                                                                                  ENT_QUOTES,
-                                                                                  "UTF-8"));
+         $content = Glpi\Toolbox\Sanitizer::unsanitize($job->fields['content']);
          $link    .= "<span class='b'>" . $content . "</span></a>";
 
          $output[$colnum] = $link;

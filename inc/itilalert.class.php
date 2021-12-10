@@ -88,9 +88,7 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          echo "<tr class='tab_bg_2'>";
          echo "<td>" . __("Comment") . "</td>";
          echo "<td>";
-         $content = Toolbox::unclean_cross_side_scripting_deep(html_entity_decode($reminder->fields['text'],
-                                                                                  ENT_QUOTES,
-                                                                                  "UTF-8"));
+         $content = Glpi\Toolbox\Sanitizer::unsanitize($reminder->fields['text']);
          echo $content;
          echo "</td>";
          echo "</tr>";
