@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-09 15:00+0000\n"
+"POT-Creation-Date: 2021-12-10 16:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:208 inc/config.class.php:325 inc/itilalert.class.php:120
+#: hook.php:208 inc/config.class.php:325 inc/itilalert.class.php:118
 #: reports/alert.class.php:126 reports/alert.class.php:2499
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:209 inc/config.class.php:326 inc/itilalert.class.php:121
+#: hook.php:209 inc/config.class.php:326 inc/itilalert.class.php:119
 #: reports/alert.class.php:129 reports/alert.class.php:2368
 #: reports/alert.class.php:2500
 msgid "Scheduled maintenance"
@@ -33,7 +33,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:210 inc/config.class.php:327 inc/itilalert.class.php:122
+#: hook.php:210 inc/config.class.php:327 inc/itilalert.class.php:120
 #: reports/alert.class.php:132 reports/alert.class.php:2369
 #: reports/alert.class.php:2501
 msgid "Information"
@@ -283,24 +283,24 @@ msgstr ""
 msgid "Linked reminder"
 msgstr ""
 
-#: inc/itilalert.class.php:117 reports/alert.class.php:2364
+#: inc/itilalert.class.php:115 reports/alert.class.php:2364
 #: reports/alert.class.php:2367 reports/alert.class.php:2496
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/itilalert.class.php:132 reports/alert.class.php:2378
+#: inc/itilalert.class.php:130 reports/alert.class.php:2378
 #: reports/alert.class.php:2511
 msgid "No impact"
 msgstr ""
 
-#: inc/itilalert.class.php:137 reports/alert.class.php:2383
+#: inc/itilalert.class.php:135 reports/alert.class.php:2383
 #: reports/alert.class.php:2516
 msgid "Alert level"
 msgstr ""
 
-#: inc/itilalert.class.php:145 reports/alert.class.php:2391
+#: inc/itilalert.class.php:143 reports/alert.class.php:2391
 #: reports/alert.class.php:2524
 msgid "Linked with a ticket category"
 msgstr ""
@@ -863,7 +863,7 @@ msgid "Curl PHP package not installed"
 msgstr ""
 
 #: reports/alert.class.php:2851 reports/alert.class.php:3151
-#: reports/ticket.class.php:74 reports/ticket.class.php:1182
+#: reports/ticket.class.php:74 reports/ticket.class.php:1180
 msgid "New tickets"
 msgstr ""
 
@@ -1261,7 +1261,7 @@ msgstr ""
 msgid "Your rejected tickets"
 msgstr ""
 
-#: reports/ticket.class.php:113 reports/ticket.class.php:1100
+#: reports/ticket.class.php:113 reports/ticket.class.php:1098
 msgid "Ticket followup"
 msgstr ""
 
