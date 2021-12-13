@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-10 16:00+0000\n"
+"POT-Creation-Date: 2021-12-13 07:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: setup.php:168 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: setup.php:174 ajax/loadscripts.php:38 ajax/loadscripts.php:61
 #: inc/menu.class.php:87 inc/menu.class.php:989 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
@@ -102,7 +102,7 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:111 inc/menu.class.php:1464 inc/widget.class.php:555
+#: inc/chart.class.php:111 inc/menu.class.php:1464 inc/widget.class.php:556
 msgid "No data available"
 msgstr ""
 
@@ -633,25 +633,25 @@ msgstr ""
 msgid "50 rows"
 msgstr ""
 
-#: inc/widget.class.php:609 reports/alert.class.php:2118
+#: inc/widget.class.php:610 reports/alert.class.php:2118
 #: reports/alert.class.php:2333
 msgid "No problem detected"
 msgstr ""
 
-#: inc/widget.class.php:672 reports/alert.class.php:1791
+#: inc/widget.class.php:673 reports/alert.class.php:1791
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/widget.class.php:737 reports/alert.class.php:1970
+#: inc/widget.class.php:738 reports/alert.class.php:1970
 msgid "No informations founded"
 msgstr ""
 
-#: inc/widget.class.php:768 reports/alert.class.php:156
+#: inc/widget.class.php:769 reports/alert.class.php:156
 #: reports/alert.class.php:739
 msgid "Your equipments"
 msgstr ""
 
-#: inc/widget.class.php:876
+#: inc/widget.class.php:877
 msgid "No equipments founded"
 msgstr ""
 
