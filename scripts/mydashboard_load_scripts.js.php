@@ -1,26 +1,21 @@
-/**
- *  Load plugin scripts on page start
- */
+<?php
+use Glpi\Event;
+include('../../../inc/includes.php');
+header('Content-Type: text/javascript');
+
+?>
+
+var root_mydashboard_doc = "<?php echo PLUGIN_MYDASHBOARD_WEBDIR; ?>";
+
 (function ($) {
    $.fn.mydashboard_load_scripts = function () {
 
       // Start the plugin
       function init() {
          //            $(document).ready(function () {
-         var path = 'plugins/mydashboard/';
-         var url = window.location.href.replace(/front\/.*/, path);
-         if (window.location.href.indexOf('plugins') > 0) {
-            url = window.location.href.replace(/plugins\/.*/, path);
-         }
-         var path = 'marketplace/mydashboard/';
-         var url = window.location.href.replace(/front\/.*/, path);
-         if (window.location.href.indexOf('marketplace') > 0) {
-            url = window.location.href.replace(/marketplace\/.*/, path);
-         }
-
          // Send data
          $.ajax({
-            url: url + 'ajax/loadscripts.php',
+            url: root_mydashboard_doc + '/ajax/loadscripts.php',
             type: 'POST',
             dataType: 'html',
             data: 'action=load',

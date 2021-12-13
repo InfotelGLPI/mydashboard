@@ -67,7 +67,7 @@ function plugin_init_mydashboard() {
       ];
       if (Session::getCurrentInterface() == 'central') {
          $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
-            "scripts/mydashboard_load_scripts.js",
+            "scripts/mydashboard_load_scripts.js.php",
          ];
       }
    }
@@ -78,7 +78,7 @@ function plugin_init_mydashboard() {
    if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
       $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
          PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard.js",
-         PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard_load_scripts.js",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard_load_scripts.js.php",
       ];
    }
 
