@@ -49,12 +49,12 @@ class PluginMydashboardServicecatalog extends CommonGLPI
    static function getMenuLink() {
       global $CFG_GLPI;
 
-      return $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php";
+      return PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
    }
 
    static function getMenuLogo() {
 
-      return "ti ti-dashboard";
+      return PluginMydashboardMenu::getIcon();
 
    }
 

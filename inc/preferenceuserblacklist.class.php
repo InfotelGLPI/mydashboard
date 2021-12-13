@@ -50,7 +50,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
          $blacklist = $this->getBlacklistForUser($user_id);
 
          $pluginObject = new Plugin();
-         echo "<form method='post' action='" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/preferenceuserblacklist.form.php' onsubmit='return true;'>";
+         echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/preferenceuserblacklist.form.php' onsubmit='return true;'>";
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='headerRow'><th class='center' colspan='2'>";
          echo __("From which plugins you want to display the widgets?", 'mydashboard');

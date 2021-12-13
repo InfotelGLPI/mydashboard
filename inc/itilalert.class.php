@@ -48,13 +48,13 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          echo "<table class='tab_cadre_fixe'>";
          echo "<th>" . PluginMydashboardMenu::getTypeName(2) . "</th>";
          echo "<tr class='tab_bg_1'><td class='center'>";
-         echo "<button type='submit' onclick=\"createAlert('$itemtype', $items_id)\">" . __("Create a new alert", "mydashboard") . "</button>";
+         echo "<button type='submit' class='btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __("Create a new alert", "mydashboard") . "</button>";
          echo '<script>
             function createAlert(itemtype, items_id) {
               $conf = confirm("' . __('Create a new alert', 'mydashboard') . '");
               if($conf){
                   $.ajax({
-                      url: "' . $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/createalert.php",
+                      url: "' . PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php",
                       type: "POST",
                       data: { "itemtype": itemtype, "items_id": items_id},
                       success: function()

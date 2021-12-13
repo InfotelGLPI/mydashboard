@@ -395,6 +395,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                                       __('Show all', 'mydashboard'),
                   ];
                   $lengthMenulangs = json_encode($lengthMenulangs);
+                  $root_doc = PLUGIN_MYDASHBOARD_WEBDIR;
                   $widgetdisplay   = "<script type='text/javascript'>
                //         setTimeout(function () {
                            $.fn.dataTable.moment('$mask');
@@ -411,7 +412,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                                     // Send an Ajax request to the server with the state object
                                     
                                     $.ajax({
-                                       'url': '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/state_save.php',
+                                       'url': '$root_doc/ajax/state_save.php',
                                        'data': data,
                                        'dataType': 'json',
                                        'type': 'POST',
@@ -425,7 +426,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                                    profiles_id = document.getElementsByName('profiles_id')[0].value;
                                  }
                                 $.ajax({
-                                    url: '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/state_load.php?gsId={$widgetindex}&profiles_id='+profiles_id,
+                                    url: '$root_doc/ajax/state_load.php?gsId={$widgetindex}&profiles_id='+profiles_id,
                                     dataType: 'json',
                                     success: function (json) {                               
                                       //JSON parse the saved filter and set the time equal to now.          

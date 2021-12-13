@@ -467,7 +467,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                        "canvas"    => false,
                        "nb"        => $nb];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params) . "<br>");
-            $linkURL   = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+            $linkURL   = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
             $js_group  = json_encode($technician_group);
             $js_entity = $crit['entity'];
             $js_sons   = $crit['sons'];
@@ -707,7 +707,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                        "nb"        => $nb];
             $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params) . "<br>");
 
-            $linkURL = $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+            $linkURL = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
             $js_entity = $crit['entity'];
             $js_sons   = $crit['sons'];

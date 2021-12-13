@@ -471,7 +471,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
                     type: 'POST',
                     data:
                     {
@@ -592,7 +592,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
                     type: 'POST',
                     data:
                     {
@@ -637,7 +637,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       $labels = $graph_datas['labels'];
       //      $backgroundColor = $graph_datas['backgroundColor'];
 
-      $linkURL = isset($graph_criterias['url']) ? $graph_criterias['url'] : $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+      $linkURL = isset($graph_criterias['url']) ? $graph_criterias['url'] : PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
       unset($graph_criterias['url']);
       $json_criterias = json_encode($graph_criterias);
 

@@ -74,7 +74,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
       $list             = new PluginMydashboardWidgetlist();
       $widgetlist       = $list->getList(false, -1, $options['interface']);
 
-      echo "<form method='post' action='../plugins/mydashboard/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
+      echo "<form method='post' action='".PLUGIN_MYDASHBOARD_WEBDIR."/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr class='tab_bg_2'>";
       echo "<th colspan='2' class='center b'>" . __('Authorized widgets', 'mydashboard') . "</th>";

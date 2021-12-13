@@ -337,7 +337,7 @@ class PluginMydashboardHelper {
       if (in_array("requesters_groups_id", $criterias)) {
          if (isset($params['opt']['requesters_groups_id'])) {
             $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
-         } else if ($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php") {
+         } else if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php") {
             $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID(), $opt);
             $opt['requesters_groups_id'] = $groups_id;
          } else {
@@ -380,7 +380,7 @@ class PluginMydashboardHelper {
       if (in_array("technicians_groups_id", $criterias)) {
          if (isset($params['opt']['technicians_groups_id'])) {
             $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
-         } else if ($_SERVER["REQUEST_URI"] == $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php") {
+         } else if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php") {
             $groups_id                    = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
             $opt['technicians_groups_id'] = $groups_id;
          } else {
@@ -859,7 +859,7 @@ class PluginMydashboardHelper {
                  });
                 </script>";
 
-      $form   .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"ti ti-chart-bar\"></i>";
+      $form   .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"ti ti-adjustments\"></i>";
       $form   .= "<span style='font-size: 12px;font-family: verdana;color: #CCC;font-weight: bold;'>";
       $entity = new Entity();
       if (isset($opt['entities_id']) && $opt['entities_id'] > -1) {
@@ -1805,7 +1805,7 @@ class PluginMydashboardHelper {
       }
 
       if ($onsubmit) {
-         $form .= "<input type='submit' class='btn btn-primary btn-sm' value='" . _x('button', 'Send') . "'>";
+         $form .= Html::submit(_x('button', 'Send'), ['name' => 'submit', 'class' => 'btn btn-primary']);
       }
 
       return $form . self::getFormFooter();

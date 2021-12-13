@@ -26,12 +26,18 @@
 
 define('PLUGIN_MYDASHBOARD_VERSION', '2.0.0');
 
+if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
+   define("PLUGIN_MYDASHBOARD_DIR", Plugin::getPhpDir("mydashboard"));
+   define("PLUGIN_MYDASHBOARD_NOTFULL_DIR", Plugin::getPhpDir("mydashboard",false));
+   define("PLUGIN_MYDASHBOARD_WEBDIR", Plugin::getWebDir("mydashboard"));
+}
+
 // Init the hooks of the plugins -Needed
 function plugin_init_mydashboard() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // manage autoload of plugin custom classes
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/autoload.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/autoload.php");
    $autoloader = new PluginMydasboardAutoloader();
    $autoloader->register();
 
@@ -67,12 +73,12 @@ function plugin_init_mydashboard() {
    }
 
    $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-      "/plugins/mydashboard/scripts/mydashboard.js",
+      PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard.js",
    ];
    if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
       $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-         "/plugins/mydashboard/scripts/mydashboard.js",
-         "/plugins/mydashboard/scripts/mydashboard_load_scripts.js",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard.js",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard_load_scripts.js",
       ];
    }
 
@@ -119,12 +125,12 @@ function plugin_init_mydashboard() {
                   if (Session::getCurrentInterface() == 'central') {
                      if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                        Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
+                        Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
 
                      } else if (!$plugin->isActivated("servicecatalog")
                                 || Session::haveRight("plugin_servicecatalog", 1)) {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                        Html::redirect($CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php");
+                        Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
 
                      }
                   }

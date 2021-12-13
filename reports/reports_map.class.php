@@ -226,8 +226,8 @@ class PluginMydashboardReports_Map extends CommonGLPI {
                } else {
                   $fulltarget = $target . "&" . $parameters;
                }
-
-               $graph .= "<script>                    
+               $root_doc = PLUGIN_MYDASHBOARD_WEBDIR;
+               $graph    .= "<script>
                 var _loadMap = function(map_elt, itemtype) {
                   L.AwesomeMarkers.Icon.prototype.options.prefix = 'fas';
                   var _micon = 'circle';
@@ -268,7 +268,7 @@ class PluginMydashboardReports_Map extends CommonGLPI {
                   $.ajax({
                      dataType: 'json',
                      method: 'POST',
-                     url: '{$CFG_GLPI['root_doc']}/plugins/mydashboard/ajax/map.php',
+                     url: '$root_doc/ajax/map.php',
                      data: {
                         itemtype: itemtype,
                         params: " . json_encode($params) . "

@@ -1755,7 +1755,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          $wl .= "</div>";
          if ($nb > 1) {
-            $urlalert = $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/showalert.php';
+            $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '//ajax/showalert.php';
             $wl       .= "<script type='text/javascript'>
                     var nt_maint = $('#nt_maint').newsTicker({
                         row_height: 60,
@@ -1932,7 +1932,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
 
          if ($nb > 1) {
-            $urlalert = $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/showalert.php';
+            $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
             $wl       .= "<script type='text/javascript'>
                     var nt_info = $('#nt_info').newsTicker({
                         row_height: 60,
@@ -2082,7 +2082,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
          $wl .= "</div>";
          if ($nb > 1) {
-            $urlalert = $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/showalert.php';
+            $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
             $wl       .= "<script type='text/javascript'>
                      var nt_alert = $('#nt_alert').newsTicker({
                         row_height: 60,
@@ -2178,12 +2178,12 @@ class PluginMydashboardAlert extends CommonDBTM {
       if ($nb || $nb_maintenance > 0) {
 
          $wl .= Html::css("/public/lib/base.css");
-         $wl .= Html::css("/plugins/mydashboard/css/mydashboard.css");
-         $wl .= Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
+         $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/mydashboard.css");
+         $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/style_bootstrap_main.css");
 
-         $css_file = GLPI_ROOT . "/plugins/mydashboard/css/info.css";
+         $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/info.css";
          if (file_exists($css_file) && $public == 1) {
-            $wl .= Html::css("/plugins/mydashboard/css/info.css");
+            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/info.css");
             $wl .= "<div id='info_img'>&nbsp;</div>";
             $wl .= "<div class='bt-row info_weather_public_block'>";
          } else {
@@ -2253,12 +2253,12 @@ class PluginMydashboardAlert extends CommonDBTM {
          $wl .= $this->displayContent('1', [], 0);
       }
 
-      $css_file = GLPI_ROOT . "/plugins/mydashboard/css/hideinfo.css";
+      $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/hideinfo.css";
       if (file_exists($css_file)
           && !$nb
           && $nb_maintenance == 0
           && $public == 1) {
-         $wl .= Html::css("/plugins/mydashboard/css/hideinfo.css");
+         $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/hideinfo.css");
       }
       return $wl;
    }
@@ -2432,13 +2432,13 @@ class PluginMydashboardAlert extends CommonDBTM {
          echo "<table class='tab_cadre_fixe'>";
          echo "<th>" . PluginMydashboardMenu::getTypeName(2) . "</th>";
          echo "<tr class='tab_bg_1'><td class='center'>";
-         echo "<button type='submit' onclick=\"createAlert('$itemtype', $items_id)\">" . __("Create a new alert", "mydashboard") . "</button>";
+         echo "<button type='submit' class='btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __("Create a new alert", "mydashboard") . "</button>";
          echo '<script>
             function createAlert(itemtype, items_id) {
               $conf = confirm("' . __('Create a new alert', 'mydashboard') . '");
               if($conf){
                   $.ajax({
-                      url: "' . $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/createalert.php",
+                      url: "' . PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php",
                       type: "POST",
                       data: { "itemtype": itemtype, "items_id": items_id},
                       success: function()

@@ -12,6 +12,8 @@
          if (window.location.href.indexOf('plugins') > 0) {
             url = window.location.href.replace(/plugins\/.*/, path);
          }
+         var path = 'marketplace/mydashboard/';
+         var url = window.location.href.replace(/front\/.*/, path);
          if (window.location.href.indexOf('marketplace') > 0) {
             url = window.location.href.replace(/marketplace\/.*/, path);
          }

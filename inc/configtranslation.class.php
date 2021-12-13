@@ -245,7 +245,7 @@ class PluginMydashboardConfigTranslation extends CommonDBChild {
                          'items_id' => $item->getID()];
          Ajax::updateItemOnSelectEvent("dropdown_language$rand",
                                        "span_fields",
-                                       $CFG_GLPI["root_doc"] . "/plugins/mydashboard/ajax/updateTranslationFields.php",
+                                       PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/updateTranslationFields.php",
                                        $params);
       }
       echo "</td><td colspan='2'>&nbsp;</td></tr>";

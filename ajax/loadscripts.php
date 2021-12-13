@@ -37,7 +37,7 @@ if (isset($_POST['action'])) {
          $name              = "showMyDashboardLateralMenu";
          $param['title']    = __('My Dashboard', 'mydashboard');
          $param['position'] = 'right';
-         $param['url']      = $CFG_GLPI["root_doc"] . '/plugins/mydashboard/ajax/lateralmenu.php';
+         $param['url']      = PLUGIN_MYDASHBOARD_WEBDIR. '/ajax/lateralmenu.php';
 
          $style = "";
          $title = __("Go to mydashboard actions", "mydashboard");
@@ -59,7 +59,7 @@ if (isset($_POST['action'])) {
             'showMyDashboardLateralMenu',
             [
                'title'     => __('My Dashboard', 'mydashboard'),
-               'url'       => $CFG_GLPI["root_doc"] . '/plugins/mydashboard/ajax/lateralmenu.php'
+               'url'       => PLUGIN_MYDASHBOARD_WEBDIR. '/ajax/lateralmenu.php'
             ]
          );
 

@@ -185,7 +185,7 @@ class PluginMydashboardMenu extends CommonGLPI {
     * @return array
     */
    static function getMenuContent() {
-      $plugin_page = "/plugins/mydashboard/front/menu.php";
+      $plugin_page = PluginMydashboardMenu::getSearchURL(false);
       $menu        = [];
       //Menu entry in tools
       $menu['title']           = self::getTypeName();
@@ -359,7 +359,7 @@ class PluginMydashboardMenu extends CommonGLPI {
 
       echo $this->getscripts();
 
-      echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
       if ($edit > 0) {
 
          echo "<div class='left'>";
@@ -1291,49 +1291,49 @@ class PluginMydashboardMenu extends CommonGLPI {
    function loadDashboard($active_profile = -1, $predefined_grid = 0) {
       global $CFG_GLPI, $GLPI_CACHE;
 
-//      echo Html::css("/plugins/mydashboard/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/mydashboard/css/style_bootstrap_ticket.css");
-//      echo Html::css("/plugins/mydashboard/css/bootstrap4.css");
-      echo Html::script("/plugins/mydashboard/lib/jquery-ui/jquery-ui.min.js");
-      echo Html::css("/plugins/mydashboard/lib/jquery-ui/jquery-ui.min.css");
-      echo Html::script("/plugins/mydashboard/lib/lodash.min.js");
-      echo Html::css("/plugins/mydashboard/lib/gridstack/src/gridstack.css");
-      echo Html::css("/plugins/mydashboard/lib/gridstack/src/gridstack-extra.css");
-      echo Html::script("/plugins/mydashboard/lib/gridstack/src/gridstack.js");
-      echo Html::script("/plugins/mydashboard/lib/gridstack/src/gridstack.jQueryUI.js");
+//      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+//      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/bootstrap4.css");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/jquery-ui/jquery-ui.min.js");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/jquery-ui/jquery-ui.min.css");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/lodash.min.js");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack-extra.css");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
 
-      echo Html::css("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css");
-      echo Html::css("/plugins/mydashboard/lib/datatables/ColReorder-1.5.2/css/colReorder.dataTables.min.css");
-      echo Html::css("/plugins/mydashboard/lib/datatables/datatables.min.css");
-      echo Html::css("/plugins/mydashboard/lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css");
-      echo Html::css("/plugins/mydashboard/lib/datatables/Select-1.3.1/css/select.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/ColReorder-1.5.2/css/colReorder.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/datatables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Select-1.3.1/css/select.dataTables.min.css");
 
-      echo Html::script("/plugins/mydashboard/lib/datatables/datatables.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/Responsive-2.2.3/js/dataTables.responsive.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/Select-1.3.1/js/dataTables.select.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/buttons.html5.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/buttons.print.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/Buttons-1.6.1/js/buttons.colVis.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/JSZip-2.5.0/jszip.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/datatables.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Responsive-2.2.3/js/dataTables.responsive.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Select-1.3.1/js/dataTables.select.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/buttons.html5.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/buttons.print.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/buttons.colVis.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/JSZip-2.5.0/jszip.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
 
-      echo Html::script("/plugins/mydashboard/lib/chartjs/Chart.bundle.min.js");
-      echo Html::script("/plugins/mydashboard/lib/chartjs/chartjs-plugin-datalabels.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/chartjs/Chart.bundle.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/chartjs/chartjs-plugin-datalabels.js");
 
-      echo Html::script("/plugins/mydashboard/lib/html2canvas.min.js");
-      echo Html::script("/plugins/mydashboard/lib/fileSaver.min.js");
-      echo Html::script("/plugins/mydashboard/lib/circles/circles.min.js");
-      echo Html::script("/plugins/mydashboard/lib/countUp.min.js");
-      echo Html::script("/plugins/mydashboard/lib/countUp-jquery.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/html2canvas.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/fileSaver.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/circles/circles.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/countUp.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/countUp-jquery.js");
 
-      echo Html::script("/plugins/mydashboard/lib/moment.min.js");
-      echo Html::script("/plugins/mydashboard/lib/datetime-moment.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/moment.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datetime-moment.js");
 
-      echo Html::script("/plugins/mydashboard/lib/fullcalendar/fullcalendar.min.js");
-      echo Html::css("/plugins/mydashboard/lib/fullcalendar/fullcalendar.min.css");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/fullcalendar/fullcalendar.min.js");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/fullcalendar/fullcalendar.min.css");
       if (isset($_SESSION['glpilanguage'])) {
          foreach ([2, 3] as $loc) {
             $filename = "../lib/fullcalendar/locale/" .
@@ -1551,24 +1551,24 @@ class PluginMydashboardMenu extends CommonGLPI {
             modal.dialog('widget').hide();
             $('#ajax_loader').show();
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/loadWidgets.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/loadWidgets.php',
                  type: 'POST',
                  complete: function () {
                           //back to normal!
                           $('#ajax_loader').hide();
                           modal.dialog('close');
-                          window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                          window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                       }
                  });
         }
         function launchClearGrid() {
            $('#ajax_loader').show();
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/clearGrid.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/clearGrid.php',
                  type: 'POST',
                  success:function(data) {
                         $('#ajax_loader').hide();
-                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                      }
                  });
         }
@@ -1579,60 +1579,60 @@ class PluginMydashboardMenu extends CommonGLPI {
         function launchEditMode() {
           $('#ajax_loader').show();
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/editGrid.php',
                  type: 'POST',
                  data:{edit_mode:1},
                  success:function(data) {
                         $('#ajax_loader').hide();
-                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                     }
                  });
         }
         function launchEditDefaultMode() {
           $('#ajax_loader').show();
                   $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
+                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/editGrid.php',
                        type: 'POST',
                        data:{edit_mode:2},
                        success:function(data) {
                               $('#ajax_loader').hide();
-                              window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                              window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                           }
                        });
         }
         function launchCloseEditMode() {
            $('#ajax_loader').show();
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/editGrid.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/editGrid.php',
                  type: 'POST',
                  data:{edit_mode:0},
                  success:function(data) {
                         $('#ajax_loader').hide();
-                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                     }
                  });
         }
         function launchDragGrid() {
            $('#ajax_loader').show();
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/dragGrid.php',
                  type: 'POST',
                  data:{drag_mode:1},
                  success:function(data) {
                         $('#ajax_loader').hide();
-                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                     }
                  });
         }
         function launchUndragGrid() {
            $('#ajax_loader').show();
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/dragGrid.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/dragGrid.php',
                  type: 'POST',
                  data:{drag_mode:0},
                  success:function(data) {
                         $('#ajax_loader').hide();
-                        window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                     }
                  });
         }
@@ -1654,12 +1654,12 @@ class PluginMydashboardMenu extends CommonGLPI {
         var profiles_id = -1;
         $('#ajax_loader').show();
          $.ajax({
-           url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
+           url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
            type: 'POST',
            data:{data:sData,profiles_id:$active_profile},
            success:function(data) {
                   $('#ajax_loader').hide();
-                  window.location.href = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                  window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                }
            });
         }
@@ -1680,12 +1680,12 @@ class PluginMydashboardMenu extends CommonGLPI {
         var profiles_id = -1;
         $('#ajax_loader').show();
          $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/saveGrid.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
               type: 'POST',
               data:{data:sData,users_id:users_id,profiles_id:$active_profile},
               success:function(data) {
                  $('#ajax_loader').hide();
-                 var redirectUrl = '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/front/menu.php';
+                 var redirectUrl = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                  var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
                  '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
                  '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
@@ -1721,7 +1721,7 @@ class PluginMydashboardMenu extends CommonGLPI {
         function refreshWidget (id) {
             var widgetOptionsObject = [];
             $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/refreshWidget.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "ajax/refreshWidget.php',
               type: 'POST',
               data:{gsid:id, params:widgetOptionsObject},
               dataType: 'json',
@@ -1762,7 +1762,7 @@ class PluginMydashboardMenu extends CommonGLPI {
            );           
            var widget = $('div[id='+ id + ']');
            $.ajax({
-              url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/refreshWidget.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
               type: 'POST',
               data:{
                   gsid:gsid,

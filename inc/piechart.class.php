@@ -217,7 +217,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
                     type: 'POST',
                     data:
                     {
@@ -320,7 +320,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
                     type: 'POST',
                     data:
                     {
@@ -426,7 +426,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
 //                 var tab = id$name;
 //                 var selected_id = tab[idx];
 //                 $.ajax({
-//                    url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+//                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
 //                    type: 'POST',
 //                    data:
 //                    {

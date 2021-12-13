@@ -6,7 +6,7 @@ class PluginMydasboardAutoloader {
 
       if ($plug = isPluginItemType($classname)) {
          $plugname = strtolower($plug['plugin']);
-         $dir      = GLPI_ROOT . "/plugins/mydashboard/reports/";
+         $dir      = PLUGIN_MYDASHBOARD_DIR . "/reports/";
          $item     = str_replace('\\', '/', strtolower($plug['class']));
          // Is the plugin active?
          // Command line usage of GLPI : need to do a real check plugin activation
@@ -43,7 +43,7 @@ class PluginMydasboardAutoloader {
     */
    public function listReports() {
 
-      $reportsFiles = scandir(GLPI_ROOT . '/plugins/mydashboard/reports');
+      $reportsFiles = scandir(PLUGIN_MYDASHBOARD_DIR . '/reports');
       $widgets = [];
       foreach ($reportsFiles as $report) {
          if ($report != "." && $report != "..") {

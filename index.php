@@ -24,25 +24,3 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-
-$plugin = new Plugin();
-
-global $CFG_GLPI;
-
-if ($plugin->isActivated("mydashboard")) {
-   if (Session::haveRight("plugin_mydashboard_config", UPDATE)) {
-
-      Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR. "/front/config.form.php");
-
-   } else {
-      Html::displayRightError();
-   }
-
-} else {
-   Html::header(__('Setup'), '', "config", "plugins");
-   echo "<div class='alert alert-important alert-warning d-flex'>";
-   echo "<b>" . __('Please activate the plugin', 'mydashboard') . "</b></div>";
-   Html::footer();
-
-}

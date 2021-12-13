@@ -30,16 +30,16 @@
 function plugin_mydashboard_install() {
    global $DB;
 
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/helper.class.php");
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/preference.class.php");
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/config.class.php");
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/menu.class.php");
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/widget.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/profile.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/helper.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/preference.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/config.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/menu.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/widget.class.php");
    //First install 1.0.0 (0.84)
    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
       //Creates all tables
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/empty-2.0.0.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/empty-2.0.0.sql");
 
       PluginMydashboardMenu::installWidgets();
       insertDefaultTitles();
@@ -48,12 +48,12 @@ function plugin_mydashboard_install() {
    //From 1.0.0 (0.84) to 1.0.1 (0.84)------------------------------------
    if (!$DB->tableExists("glpi_plugin_mydashboard_profileauthorizedwidgets")) {
       //A new table to manage widgets by profile
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.0.1.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.1.sql");
    }
    //end---------------------------------------------------------------------
    //From 1.0.1 (0.84) to 1.0.2 (0.84)------------------------------------
    if (!$DB->tableExists("glpi_plugin_mydashboard_alerts")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.0.2.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.2.sql");
    }
    //end---------------------------------------------------------------------
    //From 1.0.2 (0.84) to 1.0.3 (0.84)------------------------------------
@@ -97,7 +97,7 @@ function plugin_mydashboard_install() {
       $mig = new Migration("1.0.5");
 
       //new table to fix bug about stock tickets
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.0.5.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.5.sql");
 
       //fill the new table with the data of previous month of this year
       fillTableMydashboardStocktickets();
@@ -114,7 +114,7 @@ function plugin_mydashboard_install() {
    if (!$DB->fieldExists("glpi_plugin_mydashboard_alerts", "is_public")) {
       $mig = new Migration("1.2.1");
 
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.2.1.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.2.1.sql");
 
       $mig->executeMigration();
    }
@@ -122,7 +122,7 @@ function plugin_mydashboard_install() {
    if (!$DB->fieldExists("glpi_plugin_mydashboard_alerts", "type")) {
       $mig = new Migration("1.3.3");
 
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.3.3.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.3.3.sql");
 
       $mig->executeMigration();
    }
@@ -130,39 +130,39 @@ function plugin_mydashboard_install() {
    if (!$DB->tableExists("glpi_plugin_mydashboard_dashboards")) {
       $mig = new Migration("1.5.0");
       //new table to fix bug about stock tickets
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.5.0.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.5.0.sql");
       $mig->executeMigration();
-      include_once(GLPI_ROOT . "/plugins/mydashboard/install/update_133_150.php");
+      include_once(PLUGIN_MYDASHBOARD_DIR . "/install/update_133_150.php");
       update133to150();
    }
 
    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")) {
       $mig = new Migration("1.5.1");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.5.1.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.5.1.sql");
       $mig->executeMigration();
    }
 
    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "impact_1")) {
       $mig = new Migration("1.6.2");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.6.2.sql");
       $mig->executeMigration();
    }
 
    if (!$DB->fieldExists("glpi_plugin_mydashboard_dashboards", "grid_statesave")) {
       $mig = new Migration("1.6.3");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.6.3.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.6.3.sql");
       $mig->executeMigration();
    }
 
    if (!$DB->tableExists("glpi_plugin_mydashboard_stockwidgets")) {
       $mig = new Migration("1.7.0");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.0.sql");
       $mig->executeMigration();
    }
 
    if (!$DB->tableExists("glpi_plugin_mydashboard_customswidgets")) {
       $mig = new Migration("1.7.2");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.2.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.2.sql");
       $mig->executeMigration();
       insertDefaultTitles();
    }
@@ -180,7 +180,7 @@ function plugin_mydashboard_install() {
 
    if ($type != "varchar") {
       $mig = new Migration("1.7.5");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.5.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.5.sql");
       $mig->executeMigration();
       transform_prefered_group_to_prefered_groups();
       fillTableMydashboardStockticketsGroup();
@@ -188,7 +188,7 @@ function plugin_mydashboard_install() {
 
    if (!$DB->tableExists("glpi_plugin_mydashboard_itilalerts")) {
       $mig = new Migration("1.7.7");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.7.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.7.sql");
       $mig->executeMigration();
       $widget = new PluginMydashboardWidget();
       $widget->migrateWidgets();
@@ -196,7 +196,7 @@ function plugin_mydashboard_install() {
 
    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "title_informations_widget")) {
       $mig = new Migration("1.7.8");
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.8.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.8.sql");
       $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stocktickets`";
       $DB->query($queryTruncate);
       $mig->executeMigration();
@@ -217,7 +217,7 @@ function plugin_mydashboard_install() {
       $mig = new Migration("1.7.9");
 
       //new table to fix bug about stock tickets
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.7.9.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.9.sql");
       
 
       $mig->executeMigration();
@@ -227,7 +227,7 @@ function plugin_mydashboard_install() {
    if (!$DB->fieldExists("glpi_plugin_mydashboard_preferences","prefered_type")) {
       $mig = new Migration("1.8.2");
 
-      $DB->runFile(GLPI_ROOT . "/plugins/mydashboard/install/sql/update-1.8.2.sql");
+      $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.8.2.sql");
 
 
       $mig->executeMigration();
@@ -418,7 +418,7 @@ function plugin_mydashboard_uninstall() {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
    }
 
-   include_once(GLPI_ROOT . "/plugins/mydashboard/inc/profile.class.php");
+   include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/profile.class.php");
 
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
