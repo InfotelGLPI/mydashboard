@@ -95,7 +95,7 @@ if (isset($_POST['action'])) {
          }
 
          $out .= "if ($('#showMyDashboardLateralMenu').length === 0) {
-            $('#menu_all_button').after(\"<a class='fas fa-tachometer-alt fa-2x red' title='$title' href='#' style='color:$style;' id='showMyDashboardLateralMenuLink'></a>\");
+            $('#menu_all_button').after(\"<a class='fas fa-tachometer-alt fa-2x' title='$title' href='#' style='color:$style;' id='showMyDashboardLateralMenuLink'></a>\");
          };";
          
          $out .= "</script>";

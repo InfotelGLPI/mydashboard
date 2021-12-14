@@ -169,7 +169,7 @@ class PluginMydashboardPlanning extends CommonGLPI {
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay,listMonth'
                   },
-                  defaultView: 'listWeek',
+                  defaultView: 'listMonth',
                   defaultDate: '$today',
                   buttonIcons: true, // show the prev/next text
                   weekNumbers: true,
