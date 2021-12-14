@@ -28,7 +28,7 @@ define('PLUGIN_MYDASHBOARD_VERSION', '2.0.0');
 
 if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
    define("PLUGIN_MYDASHBOARD_DIR", Plugin::getPhpDir("mydashboard"));
-   define("PLUGIN_MYDASHBOARD_NOTFULL_DIR", Plugin::getPhpDir("mydashboard",false));
+   define("PLUGIN_MYDASHBOARD_NOTFULL_DIR", Plugin::getPhpDir("mydashboard", false));
    define("PLUGIN_MYDASHBOARD_WEBDIR", Plugin::getWebDir("mydashboard"));
 }
 
@@ -60,7 +60,6 @@ function plugin_init_mydashboard() {
 
    if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
       $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
-         "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
          "lib/fileSaver.min.js",
          "scripts/mydashboard.js",
          "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
@@ -70,16 +69,17 @@ function plugin_init_mydashboard() {
             "scripts/mydashboard_load_scripts.js.php",
          ];
       }
-   }
-
-   $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-      PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard.js",
-   ];
-   if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
       $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-         PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard.js",
-         PLUGIN_MYDASHBOARD_NOTFULL_DIR."/scripts/mydashboard_load_scripts.js.php",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard.js",
+         PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php",
       ];
+      if (Session::getCurrentInterface() == 'central') {
+         $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
+            PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php"
+         ];
+      }
    }
 
    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;

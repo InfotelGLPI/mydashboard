@@ -191,7 +191,7 @@
 /*}*/
 
 .weather_public_block {
-   text-align: left;
+   /*text-align: left;*/
    padding-bottom: 10px;
    margin-bottom: 10px;
    color: #000;
@@ -364,9 +364,9 @@ div#tabcontent{
 
 .editmode_test {
    /*color: #000;*/
-   text-decoration: none;
-   font-size: 11px;
-   font-weight: 500;
+   /*text-decoration: none;*/
+   /*font-size: 11px;*/
+   /*font-weight: 500;*/
 }
 
 #editmode a {
@@ -470,28 +470,47 @@ div#tabcontent{
    font-family: "Font Awesome 5 Free";
 }
 
+.plugin_mydashboard_menuDashboardList {
+   font-size: 13px;
+   border-bottom: 1px #CCC dashed;
+   padding: 5px;
+   background-color: #FFF;
+}
+
 .plugin_mydashboard_menuDashboardListTitle1 {
-   font-size: 12px;
+   font-size: 14px;
    border-bottom: 1px #CCC dashed;
 }
 
-.plugin_mydashboard_menuDashboardListTitle1,
-.plugin_mydashboard_menuDashboardListTitle2 {
-   /*font-size: 11px;*/
+.plugin_mydashboard_menuDashboardListContainer {
+   background-color: #FFF;
+}
+
+.plugin_mydashboard_menuDashboardListTitle1 {
+   margin: 0px;
    font-weight: normal;
-   padding: 7px;
-   /*margin: 0px;*/
+   padding: 10px;
+   background-color: whitesmoke;
    cursor: pointer;
 }
 
 .plugin_mydashboard_menuDashboardListTitle2 {
-   margin-left: 5px;
-   display: inline;
+   margin: 0px;
+   font-weight: normal;
+   padding: 10px;
+   background-color: #FFF;
+   cursor: pointer;
+}
+
+.plugin_mydashboard_menuDashboardListTitle2 {
+   margin-left: 15px;
+   display: table;
+   margin-bottom: 5px;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1:hover,
 .plugin_mydashboard_menuDashboardListTitle1Opened {
-   background-color: whitesmoke;
+   background-color: #FFF;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1:before {
@@ -507,15 +526,15 @@ div#tabcontent{
    font-family: "Font Awesome 5 Free";
 }
 
-td.plugin_mydashboard_menuDashboardListItem {
-   font-size: 12px;
-   display: inline-flex;
-   margin-left: 20px;
-   margin-top: 5px;
+.plugin_mydashboard_menuDashboardListItem {
+   display: table;
+   margin: 10px;
+   background-color: #FFF;
+   margin-left: 30px;
 }
 
-td.plugin_mydashboard_menuDashboardListItem:hover {
-   background-color: #E7E7E7;
+.plugin_mydashboard_menuDashboardListItem:hover {
+   /*background-color: #E7E7E7;*/
    cursor: pointer;
 }
 
