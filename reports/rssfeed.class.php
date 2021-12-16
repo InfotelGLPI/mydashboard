@@ -183,7 +183,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI {
                $output['body'][$count][1] .= "</a>";
             }
             $output['body'][$count][1] .= "</div>";
-            $output['body'][$count][1] .= Html::showToolTip(Toolbox::unclean_html_cross_side_scripting_deep($item->get_content()),
+            $output['body'][$count][1] .= Html::showToolTip( Glpi\RichText\RichText::getSafeHtml($item->get_content()),
                ['applyto' => "rssitem$rand",
                   'display' => false]);
             $count++;

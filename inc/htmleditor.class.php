@@ -117,13 +117,13 @@ class PluginMydashboardHTMLEditor extends CommonDBTM {
 
       Html::textarea(['name'            => 'content',
                       'value'           => Html::entities_deep($item->fields['content']),
-                      'id'           => 'custom_css_code_'. $rand,
+                      'editor_id'           => 'custom_css_code_'. $rand,
                       'enable_richtext' => false]);
 
       $editor_options = [
          'mode'         => 'text/css',
          'lineNumbers'  => true,
-         'lineWrapping' => true,
+//         'lineWrapping' => true,
          // Autocomplete with CTRL+SPACE
          'extraKeys'    => [
             'Ctrl-Space' => 'autocomplete',
@@ -144,6 +144,7 @@ class PluginMydashboardHTMLEditor extends CommonDBTM {
 
          // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
          setTimeout(function () {editor.refresh();}, 10);
+
       });
    ');
 

@@ -339,7 +339,7 @@ class PluginMydashboardReminder extends CommonGLPI {
             $output['body'][$count][0] .= "<div class=\"relative reminder_list\">";
             $link                      = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
 
-            $tooltip = Html::showToolTip(Toolbox::unclean_html_cross_side_scripting_deep($data["text"]),
+            $tooltip = Html::showToolTip( Glpi\RichText\RichText::getSafeHtml($data["text"]),
                                          ['applyto' => "content_reminder_" . $data["id"] . $rand,
                                           'display' => false]);
 
@@ -421,7 +421,7 @@ class PluginMydashboardReminder extends CommonGLPI {
          while ($data = $DB->fetchArray($result)) {
             echo "<li>";
             echo '<h1>' . $data["name"] . '</h1>';
-            echo Toolbox::unclean_html_cross_side_scripting_deep($data["text"]);
+            echo  Glpi\RichText\RichText::getSafeHtml($data["text"]);
             echo "</li>";
          }
          echo "</ul>";

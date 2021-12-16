@@ -227,7 +227,8 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                      LEFT JOIN `glpi_groups_knowbaseitems` ON (`glpi_groups_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
                      LEFT JOIN `glpi_knowbaseitems_profiles` ON (`glpi_knowbaseitems_profiles`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
                      LEFT JOIN `glpi_entities_knowbaseitems` ON (`glpi_entities_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
-                     LEFT JOIN `glpi_knowbaseitemcategories` ON (`glpi_knowbaseitemcategories`.`id` = `glpi_knowbaseitems`.`knowbaseitemcategories_id`) 
+                     LEFT JOIN `glpi_knowbaseitems_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
+                     LEFT JOIN `glpi_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitemcategories_id` = `glpi_knowbaseitemcategories`.`id`) 
                      WHERE (`glpi_entities_knowbaseitems`.`entities_id` IS NULL 
                      AND `glpi_knowbaseitems_profiles`.`profiles_id` IS NULL 
                      AND `glpi_groups_knowbaseitems`.`groups_id` IS NULL 

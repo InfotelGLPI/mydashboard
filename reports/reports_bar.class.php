@@ -549,7 +549,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $currentmonth = date("m");
 
             $previousyear = $currentyear - 1;
-            $nextmonth    = $currentmonth + 1;
+            if (($currentmonth  + 1) >= 12) {
+               $nextmonth = "01";
+            } else {
+               $nextmonth    = $currentmonth + 1;
+            }
+
             $is_deleted   = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT 

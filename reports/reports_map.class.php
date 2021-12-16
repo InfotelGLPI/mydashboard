@@ -159,11 +159,11 @@ class PluginMydashboardReports_Map extends CommonGLPI {
                   'value'      => $type
                ];
             }
-
-            if ($groups_criteria > 0) {
+            $grp_criteria = is_array($groups_criteria) ? $groups_criteria : [$groups_criteria];
+            if (is_array($grp_criteria) && count($grp_criteria) > 0) {
                $options['criteria'][7]['link'] = 'AND';
                $nb                             = 0;
-               foreach ($groups_criteria as $group) {
+               foreach ($grp_criteria as $group) {
                   if ($nb == 0) {
                      $options['criteria'][7]['criteria'][$nb]['link'] = 'AND';
                   } else {
