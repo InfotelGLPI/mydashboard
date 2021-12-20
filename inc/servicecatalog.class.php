@@ -52,6 +52,15 @@ class PluginMydashboardServicecatalog extends CommonGLPI
       return PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
    }
 
+   /**
+    * @return string
+    */
+   static function getNavBarLink() {
+      global $CFG_GLPI;
+
+      return PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/front/menu.php";
+   }
+
    static function getMenuLogo() {
 
       return PluginMydashboardMenu::getIcon();

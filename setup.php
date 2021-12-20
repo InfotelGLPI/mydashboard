@@ -104,7 +104,7 @@ function plugin_init_mydashboard() {
          if (Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
 
             $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => 'PluginMydashboardMenu'];
-            $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = '/front/menu.php';
+            $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = PLUGIN_MYDASHBOARD_NOTFULL_DIR.'/front/menu.php';
 
             //            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];
 
