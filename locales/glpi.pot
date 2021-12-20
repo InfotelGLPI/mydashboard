@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-16 15:33+0000\n"
+"POT-Creation-Date: 2021-12-20 11:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -591,7 +591,7 @@ msgstr ""
 msgid "Authorize/Unauthorize all"
 msgstr ""
 
-#: inc/servicecatalog.class.php:74 inc/servicecatalog.class.php:81
+#: inc/servicecatalog.class.php:83 inc/servicecatalog.class.php:90
 msgid "Dashboard access"
 msgstr ""
 
