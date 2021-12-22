@@ -495,12 +495,12 @@ class PluginMydashboardHelper {
 
       // DATE
       // MONTH
-      $year                 = intval(strftime("%Y"));
-      $month                = intval(strftime("%m") - 1);
+      $year                 = intval(date('Y', time()));
+      $month                = intval(date('m', time()) - 1);
       $crit['crit']['year'] = $year;
       if (in_array("month", $criterias)) {
          if ($month > 0) {
-            $year        = strftime("%Y");
+            $year        = date('Y', time());
             $opt["year"] = $year;
          } else {
             $month = 12;
@@ -538,7 +538,7 @@ class PluginMydashboardHelper {
          }
 
          if($opt["display_data"] == "YEAR"){
-            $year                 = intval(strftime("%Y"));
+            $year                 = intval(date('Y', time()));
             if (isset($params['opt']["year"])
                 && $params['opt']["year"] > 0) {
                $year        = $params['opt']["year"];
@@ -597,7 +597,7 @@ class PluginMydashboardHelper {
          }
 
          if($opt["filter_date"] == "YEAR"){
-            $year                 = intval(strftime("%Y"));
+            $year                 = intval(date('Y', time()));
             if (isset($params['opt']["year"])
                 && $params['opt']["year"] > 0) {
                $year        = $params['opt']["year"];
@@ -1224,7 +1224,7 @@ class PluginMydashboardHelper {
       // YEAR
       if (in_array("year", $criterias)) {
          $form           .= "<span class='md-widgetcrit'>";
-         $annee_courante = strftime("%Y");
+         $annee_courante = date('Y', time());
          if (isset($opt["year"])
              && $opt["year"] > 0) {
             $annee_courante = $opt["year"];
@@ -1240,7 +1240,7 @@ class PluginMydashboardHelper {
 
       if (in_array("week", $criterias)) {
          $form           .= "<span class='md-widgetcrit'>";
-         $semaine_courante = strftime("%W");
+         $semaine_courante = date('W', time());
          if (isset($opt["week"])
              && $opt["week"] > 0) {
             $semaine_courante = $opt["week"];
@@ -1628,7 +1628,7 @@ class PluginMydashboardHelper {
          }else{
             $form .= "</br></br>";
             $form           .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
+            $annee_courante = date('Y', time());
             if (isset($opt["year"])
                 && $opt["year"] > 0) {
                $annee_courante = $opt["year"];
@@ -1704,7 +1704,7 @@ class PluginMydashboardHelper {
          }else{
             $form .= "</br></br>";
             $form           .= "<span id='filter_date_crit$rand' name= 'filter_date_crit$rand' class='md-widgetcrit'>";
-            $annee_courante = strftime("%Y");
+            $annee_courante = date('Y', time());
             if (isset($opt["year"])
                 && $opt["year"] > 0) {
                $annee_courante = $opt["year"];

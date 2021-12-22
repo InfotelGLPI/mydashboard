@@ -2133,8 +2133,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
       $tickets_per_tech = [];
       $months           = Toolbox::getMonthsOfYearArray();
 
-      $mois = intval(strftime("%m") - 1);
-      $year = intval(strftime("%Y") - 1);
+      $mois = intval(date('m', time()) - 1);
+      $year = intval(date('Y', time()) - 1);
 
       if ($mois > 0) {
          $year = date("Y");
@@ -2404,8 +2404,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
       $tickets_helpdesk = [];
       $months           = Toolbox::getMonthsOfYearArray();
 
-      $mois = intval(strftime("%m") - 1);
-      $year = intval(strftime("%Y") - 1);
+      $mois = intval(date('m', time()) - 1);
+      $year = intval(date('Y', time()) - 1);
 
       if ($mois > 0) {
          $year = date("Y");

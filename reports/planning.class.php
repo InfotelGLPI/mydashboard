@@ -114,7 +114,7 @@ class PluginMydashboardPlanning extends CommonGLPI {
       $title  = __("Your planning");
       $widget->setWidgetTitle($title);
 
-      $when = strftime("%Y-%m-%d");
+      $when = date('Y-m-d', time());
 
       //Get begin and duration
       $date   = explode("-", $when);

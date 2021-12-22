@@ -108,7 +108,7 @@ if (isset($_POST["value"])) {
    } else if ($_POST['value'] == 'YEAR') {
 
 
-      $annee_courante = strftime("%Y");
+      $annee_courante = date('Y', time());
       if (isset($opt["year"])
           && $opt["year"] > 0) {
          $annee_courante = $opt["year"];
