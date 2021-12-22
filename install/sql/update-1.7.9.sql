@@ -8,6 +8,4 @@ CREATE TABLE IF NOT EXISTS glpi_plugin_mydashboard_stockticketindicators (
   indicator_id   INT UNSIGNED NOT NULL,
   groups_id      INT UNSIGNED NOT NULL,
   entities_id    INT UNSIGNED NOT NULL
-)
-  ENGINE = InnoDB
-  DEFAULT CHARSET = latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

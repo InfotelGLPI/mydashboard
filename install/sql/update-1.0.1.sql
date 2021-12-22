@@ -10,7 +10,4 @@ CREATE TABLE `glpi_plugin_mydashboard_profileauthorizedwidgets` (
   `widgets_id`  INT(11) NOT NULL DEFAULT '-1'
   COMMENT 'RELATION to glpi_mydashboard_widgets (id)',
   PRIMARY KEY (`id`)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARSET = utf8
-  COLLATE = utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

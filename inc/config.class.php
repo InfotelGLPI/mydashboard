@@ -320,7 +320,7 @@ class PluginMydashboardConfig extends CommonDBTM {
          $input['enable_fullscreen']         = "1";
          $input['display_menu']              = "1";
          $input['display_plugin_widget']     = "1";
-         $input['replace_central']           = "1";
+         $input['replace_central']           = "0";
          $input['google_api_key']            = "";
          $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
          $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
