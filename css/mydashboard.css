@@ -202,7 +202,7 @@
    -moz-border-radius: 8px;
    border-radius: 8px;
    background-color: #FFF;
-   /*width: 50%;*/
+   min-width: 300px;
 }
 
 .info-ul {
