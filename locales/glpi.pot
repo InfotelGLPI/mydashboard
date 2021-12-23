@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-22 13:17+0000\n"
+"POT-Creation-Date: 2021-12-23 08:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -754,7 +754,7 @@ msgid "Display alerts for requests"
 msgstr ""
 
 #: reports/alert.class.php:165 reports/alert.class.php:756
-#: reports/alert.class.php:3139
+#: reports/alert.class.php:3141
 msgid "Global indicators by week"
 msgstr ""
 
@@ -862,32 +862,32 @@ msgstr ""
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: reports/alert.class.php:2851 reports/alert.class.php:3151
-#: reports/ticket.class.php:74 reports/ticket.class.php:1180
+#: reports/alert.class.php:2853 reports/alert.class.php:3153
+#: reports/ticket.class.php:74 reports/ticket.class.php:1224
 msgid "New tickets"
 msgstr ""
 
-#: reports/alert.class.php:2892
+#: reports/alert.class.php:2894
 msgid "Tickets late"
 msgstr ""
 
-#: reports/alert.class.php:2925 reports/alert.class.php:3163
+#: reports/alert.class.php:2927 reports/alert.class.php:3165
 msgid "Pending tickets"
 msgstr ""
 
-#: reports/alert.class.php:2976 reports/alert.class.php:3169
+#: reports/alert.class.php:2978 reports/alert.class.php:3171
 msgid "Incidents in progress"
 msgstr ""
 
-#: reports/alert.class.php:3027 reports/alert.class.php:3175
+#: reports/alert.class.php:3029 reports/alert.class.php:3177
 msgid "Requests in progress"
 msgstr ""
 
-#: reports/alert.class.php:3071
+#: reports/alert.class.php:3073
 msgid "Ticket closed"
 msgstr ""
 
-#: reports/alert.class.php:3181
+#: reports/alert.class.php:3183
 msgid "Tickets closed"
 msgstr ""
 
@@ -911,11 +911,11 @@ msgstr ""
 msgid "Change followup"
 msgstr ""
 
-#: reports/knowbaseitem.class.php:136
+#: reports/knowbaseitem.class.php:140
 msgid "Publication date"
 msgstr ""
 
-#: reports/knowbaseitem.class.php:138
+#: reports/knowbaseitem.class.php:142
 msgid "Modification date"
 msgstr ""
 
