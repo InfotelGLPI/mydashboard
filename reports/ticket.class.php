@@ -1135,6 +1135,50 @@ class PluginMydashboardTicket extends CommonGLPI {
    }
 
    /**
+    * @deprecated 9.5.0
+    */
+   static function getCommonSelect() {
+
+      $SELECT = "";
+      if (count($_SESSION["glpiactiveentities"])>1) {
+         $SELECT .= ", `glpi_entities`.`completename` AS entityname,
+                       `glpi_tickets`.`entities_id` AS entityID ";
+      }
+
+      return " DISTINCT `glpi_tickets`.*,
+                        `glpi_itilcategories`.`completename` AS catname
+                        $SELECT";
+   }
+
+
+   /**
+    * @deprecated 9.5.0
+    */
+   static function getCommonLeftJoin() {
+
+      $FROM = "";
+      if (count($_SESSION["glpiactiveentities"])>1) {
+         $FROM .= " LEFT JOIN `glpi_entities`
+                        ON (`glpi_entities`.`id` = `glpi_tickets`.`entities_id`) ";
+      }
+
+      return " LEFT JOIN `glpi_groups_tickets`
+                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`)
+               LEFT JOIN `glpi_tickets_users`
+                  ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id`)
+               LEFT JOIN `glpi_suppliers_tickets`
+                  ON (`glpi_tickets`.`id` = `glpi_suppliers_tickets`.`tickets_id`)
+               LEFT JOIN `glpi_itilcategories`
+                  ON (`glpi_tickets`.`itilcategories_id` = `glpi_itilcategories`.`id`)
+               LEFT JOIN `glpi_tickettasks`
+                  ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
+               LEFT JOIN `glpi_items_tickets`
+                  ON (`glpi_tickets`.`id` = `glpi_items_tickets`.`tickets_id`)
+               $FROM";
+
+   }
+
+   /**
     * @return bool|PluginMydashboardDatatable
     */
    static function showCentralNewList() {
@@ -1146,8 +1190,8 @@ class PluginMydashboardTicket extends CommonGLPI {
 
       $output = [];
       $dbu    = new DbUtils();
-      $query  = "SELECT " . Ticket::getCommonSelect() . "
-                FROM `glpi_tickets` " . Ticket::getCommonLeftJoin() . "
+      $query  = "SELECT " . self::getCommonSelect() . "
+                FROM `glpi_tickets` " . self::getCommonLeftJoin() . "
                 WHERE `status` = '" . Ticket::INCOMING . "' " .
                 $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets") . "
                       AND NOT `is_deleted`

@@ -75,7 +75,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
       $faq = !Session::haveRight(self::$rightname, READ);
 
       if ($widgetId == "knowbaseitemrecent") {
-         $orderby = "ORDER BY `date` DESC";
+         $orderby = "ORDER BY `date_creation` DESC";
          $title   = __('FAQ') . " - " . __('Recent entries');
       } else if ($widgetId == 'knowbaseitemlastupdate') {
          $orderby = "ORDER BY `date_mod` DESC";
@@ -111,7 +111,11 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
          $faq_limit .= " AND (`glpi_knowbaseitems`.`is_faq` = '1')";
       }
 
-      $query = "SELECT DISTINCT `glpi_knowbaseitems`.`id`, `glpi_knowbaseitems`.`name`,`glpi_knowbaseitems`.`is_faq`, `glpi_knowbaseitems`.`date`, `glpi_knowbaseitems`.`date_mod`
+      $query = "SELECT DISTINCT `glpi_knowbaseitems`.`id`, 
+                `glpi_knowbaseitems`.`name`,
+                `glpi_knowbaseitems`.`is_faq`, 
+                `glpi_knowbaseitems`.`date_creation`,
+                `glpi_knowbaseitems`.`date_mod`
                 FROM `glpi_knowbaseitems`
                 $join
                 $faq_limit
@@ -122,7 +126,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI {
       $tab    = [];
       while ($row = $DB->fetchAssoc($result)) {
          if ($widgetId == "knowbaseitemrecent") {
-            $date = $row["date"];
+            $date = $row["date_creation"];
          } else {
             $date = $row["date_mod"];
          }

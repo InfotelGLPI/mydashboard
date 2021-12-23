@@ -130,7 +130,9 @@ class PluginMydashboardColor {
       $i       = 0;
       if ($nb_value > 1) {
          while ($i < $nb_value) {
-            $palette[] = $colors[$i];
+            if (isset($colors[$i])) {
+               $palette[] = $colors[$i];
+            }
             $i++;
          }
       } else {

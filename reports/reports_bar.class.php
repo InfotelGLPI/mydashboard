@@ -593,7 +593,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                    && $data_1['count'] > 0) {
                   $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
                }
-               $tabduration[] = round($average_by_ticket, 2);
+               $tabduration[] = round($average_by_ticket??0, 2);
                $tabnames[]    = $data['monthname'];
                $tabdates[]    = $data['monthnum'];
                $i++;
@@ -850,7 +850,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabage   = [];
             $tabnames = [];
             while ($data = $DB->fetchArray($results)) {
-               $percent    = round($data['Percent'], 2);
+               $percent    = round($data['Percent']??0, 2);
                $tabnames[] = $data['Age']; //" (".$percent."%)";
                $tabage[]   = $data['Total'];
             }
@@ -1164,7 +1164,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
                $result               = $DB->query($query_satisfactionT1);
                $data_satisfactionT1  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT1[0], 2));
+               array_push($satisfaction_data, round($data_satisfactionT1[0]??0, 2));
                // Checking T2
 
                array_push($tabnames, __('Trimester 2', 'mydashboard') . ' ' . $starting_year);
@@ -1181,7 +1181,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
                $result               = $DB->query($query_satisfactionT2);
                $data_satisfactionT2  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT2[0], 2));
+               array_push($satisfaction_data, round($data_satisfactionT2[0]??0, 2));
                // Checking T3
                array_push($tabnames, __('Trimester 3', 'mydashboard') . ' ' . $starting_year);
                $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
@@ -1197,7 +1197,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
                $result               = $DB->query($query_satisfactionT3);
                $data_satisfactionT3  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT3[0], 2));
+               array_push($satisfaction_data, round($data_satisfactionT3[0]??0, 2));
                // Checking T4
                array_push($tabnames, __('Trimester 4', 'mydashboard') . ' ' . $starting_year);
                $query_openedTicketT4 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
@@ -1213,7 +1213,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
                $result               = $DB->query($query_satisfactionT4);
                $data_satisfactionT4  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT4[0], 2));
+               array_push($satisfaction_data, round($data_satisfactionT4[0]??0, 2));
             }
 
             $widget = new PluginMydashboardHtml();
@@ -1915,8 +1915,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             foreach ($lifetime_avg_ticket as $avg_tickets_d) {
                if ($avg_tickets_d['nb'] > 0) {
-                  $avg_lifetime_ticket_data []        = round($avg_tickets_d['lifetime'] / $avg_tickets_d['nb'], 2);
-                  $avg_takeintoaccount_ticket_data [] = round($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb'], 2);
+                  $avg_lifetime_ticket_data []        = round(($avg_tickets_d['lifetime'] / $avg_tickets_d['nb'])??0, 2);
+                  $avg_takeintoaccount_ticket_data [] = round(($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb'])??0, 2);
                }
             }
 
@@ -2097,9 +2097,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                if ($data['actiontime_date'] > 0) {
                   if (isset($time_per_tech[$techid][$key])) {
-                     $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8), 2);
+                     $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8)??0, 2);
                   } else {
-                     $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8), 2);
+                     $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8)??0, 2);
                   }
                }
             }

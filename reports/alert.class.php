@@ -2716,6 +2716,8 @@ class PluginMydashboardAlert extends CommonDBTM {
       $data
       ) {
          return $data;
+      } else {
+         return false;
       }
    }
 
