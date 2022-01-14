@@ -4,10 +4,10 @@
 --
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_profileauthorizedwidgets`;
 CREATE TABLE `glpi_plugin_mydashboard_profileauthorizedwidgets` (
-  `id`          INT(11) NOT NULL AUTO_INCREMENT, -- id du profil
-  `profiles_id` INT(11) NOT NULL DEFAULT '0'
+  `id`          int unsigned NOT NULL AUTO_INCREMENT, -- id du profil
+  `profiles_id` int unsigned NOT NULL DEFAULT '0'
   COMMENT 'RELATION to glpi_profiles (id)', -- lien avec profiles de glpi
-  `widgets_id`  INT(11) NOT NULL DEFAULT '-1'
+  `widgets_id`  int unsigned NOT NULL DEFAULT '-1'
   COMMENT 'RELATION to glpi_mydashboard_widgets (id)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

@@ -3,7 +3,7 @@
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
- Copyright (C) 2015 by the MyDashboard Development Team.
+ Copyright (C) 2015-2022 by the MyDashboard Development Team.
  -------------------------------------------------------------------------
 
  LICENSE
