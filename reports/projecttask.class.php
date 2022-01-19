@@ -27,7 +27,7 @@
 /**
  * This class extends GLPI class project to add the functions to display a widget on Dashboard
  */
-class PluginMydashboardProjecttask extends CommonGLPI {
+class PluginMydashboardProjectTask extends CommonGLPI {
 
    /**
     * @param int $nb
@@ -43,7 +43,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
     */
    function getWidgetsForItem() {
       $widgets         = [];
-      $showprojecttask = Session::haveRightsOr('projecttask', [Projecttask::READMY]);
+      $showprojecttask = Session::haveRight('projecttask', ProjectTask::READMY);
 
       if ($showprojecttask) {
 
@@ -71,7 +71,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
     * @return PluginMydashboardDatatable
     */
    function getWidgetContentForItem($widgetId) {
-      $showprojecttask = Session::haveRightsOr('projecttask', [Projecttask::READMY]);
+      $showprojecttask = Session::haveRightsOr('projecttask', [ProjectTask::READMY]);
 
       if ($showprojecttask) {
          switch ($widgetId) {
@@ -108,7 +108,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
       $widget->setOption("bFilter", false);
       $widget->setOption("bInfo", false);
 
-      if (!Session::haveRightsOr('projecttask', [Projecttask::READMY])) {
+      if (!Session::haveRightsOr('projecttask', [ProjectTask::READMY])) {
          return false;
       }
 
@@ -248,7 +248,7 @@ class PluginMydashboardProjecttask extends CommonGLPI {
       // Make new job object and fill it from database, if success, print it
       $viewusers = Session::haveRight("user", READ);
 
-      $projecttask = new Projecttask();
+      $projecttask = new ProjectTask();
       $rand        = mt_rand();
 
       if ($projecttask->getFromDB($ID)) {

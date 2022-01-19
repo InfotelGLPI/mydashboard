@@ -84,7 +84,7 @@ class PluginMydashboardWidgetlist {
                           "PluginMydashboardTicket",
                           "PluginMydashboardRSSFeed",
                           "PluginMydashboardProject",
-                          "PluginMydashboardProjecttask",
+                          "PluginMydashboardProjectTask",
                           "PluginMydashboardContract",
                           "PluginMydashboardKnowbaseItem"
       ];
