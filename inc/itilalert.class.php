@@ -145,7 +145,8 @@ class PluginMydashboardItilAlert extends CommonDBTM {
          $opt = ['name'        => 'itilcategories_id',
                  'value'       => $itilcategories_id,
                  'entity'      => $_SESSION['glpiactiveentities'],
-                 'entity_sons' => true];
+//                 'entity_sons' => true
+         ];
          ITILCategory::dropdown($opt);
          echo "</td>";
          echo "</tr>";

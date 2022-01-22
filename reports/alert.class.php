@@ -2393,7 +2393,7 @@ class PluginMydashboardAlert extends CommonDBTM {
       $opt = ['name'        => 'itilcategories_id',
               'value'       => $itilcategories_id,
               'entity'      => $_SESSION['glpiactiveentities'],
-              'entity_sons' => true,
+//              'entity_sons' => true,
               'toadd'       => [-1 => __('All categories', 'mydashboard')]];
       ITILCategory::dropdown($opt);
       echo "</td>";
@@ -2526,7 +2526,8 @@ class PluginMydashboardAlert extends CommonDBTM {
          $opt = ['name'        => 'itilcategories_id',
                  'value'       => $itilcategories_id,
                  'entity'      => $_SESSION['glpiactiveentities'],
-                 'entity_sons' => true];
+//                 'entity_sons' => true
+         ];
          ITILCategory::dropdown($opt);
          echo "</td>";
          echo "</tr>";
