@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-19 18:19+0000\n"
+"POT-Creation-Date: 2022-01-22 15:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -754,7 +754,7 @@ msgid "Display alerts for requests"
 msgstr ""
 
 #: reports/alert.class.php:165 reports/alert.class.php:756
-#: reports/alert.class.php:3141
+#: reports/alert.class.php:3142
 msgid "Global indicators by week"
 msgstr ""
 
@@ -840,54 +840,54 @@ msgstr ""
 msgid "All categories"
 msgstr ""
 
-#: reports/alert.class.php:2570
+#: reports/alert.class.php:2571
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
-#: reports/alert.class.php:2607
+#: reports/alert.class.php:2608
 msgid "Problem with GLPI"
 msgstr ""
 
-#: reports/alert.class.php:2612
+#: reports/alert.class.php:2613
 msgid "GLPI is OK"
 msgstr ""
 
-#: reports/alert.class.php:2617
+#: reports/alert.class.php:2618
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
 
-#: reports/alert.class.php:2634
+#: reports/alert.class.php:2635
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: reports/alert.class.php:2853 reports/alert.class.php:3153
+#: reports/alert.class.php:2854 reports/alert.class.php:3154
 #: reports/ticket.class.php:74 reports/ticket.class.php:1224
 msgid "New tickets"
 msgstr ""
 
-#: reports/alert.class.php:2894
+#: reports/alert.class.php:2895
 msgid "Tickets late"
 msgstr ""
 
-#: reports/alert.class.php:2927 reports/alert.class.php:3165
+#: reports/alert.class.php:2928 reports/alert.class.php:3166
 msgid "Pending tickets"
 msgstr ""
 
-#: reports/alert.class.php:2978 reports/alert.class.php:3171
+#: reports/alert.class.php:2979 reports/alert.class.php:3172
 msgid "Incidents in progress"
 msgstr ""
 
-#: reports/alert.class.php:3029 reports/alert.class.php:3177
+#: reports/alert.class.php:3030 reports/alert.class.php:3178
 msgid "Requests in progress"
 msgstr ""
 
-#: reports/alert.class.php:3073
+#: reports/alert.class.php:3074
 msgid "Ticket closed"
 msgstr ""
 
-#: reports/alert.class.php:3183
+#: reports/alert.class.php:3184
 msgid "Tickets closed"
 msgstr ""
 
