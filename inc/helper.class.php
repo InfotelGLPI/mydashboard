@@ -144,8 +144,8 @@ class PluginMydashboardHelper {
       $graph .= "</div>";
       if ($params["export"] == true) {
          $graph .= "<div class='bt-col-md-2 center'>";
-         $graph .= "<button class='btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
-         $graph .= "<button class='btn btn-primary btn-sm' style=\"margin-left: 1px;\" id=\"downloadCSV$name\">CSV</button>";
+         $graph .= "<button class='submit btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
+         $graph .= "<button class='submit btn btn-primary btn-sm' style=\"margin-left: 1px;\" id=\"downloadCSV$name\">CSV</button>";
          $graph .= "<script>
          $(document).ready(
                function () {
