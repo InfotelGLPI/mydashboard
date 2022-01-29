@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-25 08:06+0000\n"
+"POT-Creation-Date: 2022-01-29 10:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1009,23 +1009,23 @@ msgstr ""
 msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr ""
 
-#: reports/reports_bar.class.php:93 reports/reports_bar.class.php:1730
+#: reports/reports_bar.class.php:93 reports/reports_bar.class.php:1731
 msgid "Tickets request sources evolution"
 msgstr ""
 
-#: reports/reports_bar.class.php:95 reports/reports_bar.class.php:1731
+#: reports/reports_bar.class.php:95 reports/reports_bar.class.php:1732
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:96 reports/reports_bar.class.php:1845
+#: reports/reports_bar.class.php:96 reports/reports_bar.class.php:1846
 msgid "Tickets solution types evolution"
 msgstr ""
 
-#: reports/reports_bar.class.php:98 reports/reports_bar.class.php:1846
+#: reports/reports_bar.class.php:98 reports/reports_bar.class.php:1847
 msgid "Evolution of solution types by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:99 reports/reports_bar.class.php:1943
+#: reports/reports_bar.class.php:99 reports/reports_bar.class.php:1944
 msgid "Solve delay and take into account of tickets"
 msgstr ""
 
@@ -1064,11 +1064,11 @@ msgstr ""
 msgid "Average Satisfaction"
 msgstr ""
 
-#: reports/reports_bar.class.php:1882
+#: reports/reports_bar.class.php:1883
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: reports/reports_bar.class.php:1883
+#: reports/reports_bar.class.php:1884
 msgid "Take into account average (hour)"
 msgstr ""
 
