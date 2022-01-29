@@ -1696,11 +1696,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                while ($data_1 = $DB->fetchArray($results_1)) {
                   $tabdata[$data_1['requesttypes_id']][$year] = $data_1['count'];
                   $tabnames[$data_1['requesttypes_id']]       = $data_1['namerequest'];
+                  $i++;
                }
 
                $tabyears[] = $data['yearname'];
 
-               $i++;
+
             }
 
             if (isset($tabdata)) {
