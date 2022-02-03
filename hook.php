@@ -233,6 +233,10 @@ function plugin_mydashboard_install() {
       $mig->executeMigration();
    }
 
+   $mig = new Migration("2.0.0");
+   $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.0.sql");
+   $mig->executeMigration();
+
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
    if (!$config->getFromDB("1")) {
