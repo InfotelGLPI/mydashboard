@@ -337,14 +337,15 @@ class PluginMydashboardMenu extends CommonGLPI {
          //this js function call itself every $refreshIntervalMs ms, each execution result in the refreshing of all refreshable widgets
 
          echo Html::scriptBlock('
-            function automaticRefreshAll(delay) {
-                 setInterval(function () {
-                     mydashboard.refreshAll();
-                 }, delay);
-             }
             function refreshAll() {
                  $(\'.refresh-icon\').trigger(\'click\');
-             };');
+             };
+            function automaticRefreshAll(delay) {
+                 setInterval(function () {
+                     refreshAll();
+                 }, delay);
+             }
+            ');
 
          echo Html::scriptBlock('
                automaticRefreshAll(' . $refreshIntervalMs . ');
@@ -1722,7 +1723,7 @@ class PluginMydashboardMenu extends CommonGLPI {
         function refreshWidget (id) {
             var widgetOptionsObject = [];
             $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "ajax/refreshWidget.php',
+              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
               type: 'POST',
               data:{gsid:id, params:widgetOptionsObject},
               dataType: 'json',

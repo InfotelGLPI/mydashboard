@@ -169,6 +169,10 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                          stacked: true,
                      }],
                      yAxes: [{
+                         ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                        },
                          stacked: true
                      }]
                  },
