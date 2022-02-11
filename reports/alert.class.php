@@ -58,8 +58,9 @@ class PluginMydashboardAlert extends CommonDBTM {
       //          || $item->getType() == 'PluginEventsmanagerEvent'
       //          || $item->getType() == 'PluginReleasesRelease') {
       //         return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
-      //      }
-      if (in_array($item->getType(), self::getTypes())) {
+      //      }*
+      if (Session::getCurrentInterface() == 'central'
+          && in_array($item->getType(), self::getTypes())) {
          return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
       }
       return '';
