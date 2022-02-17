@@ -540,22 +540,22 @@ class PluginMydashboardMenu extends CommonGLPI {
 
          }
 
-         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-
-            echo "<a id='drag-grid' class='submit btn btn-danger'>";
-            echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-            echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
-            echo "</a>";
-            echo "<br><br>";
-         }
-
          if (Session::haveRight("plugin_mydashboard_edit", 6)) {
 
             echo "<a id='edit-grid' class='submit btn btn-danger'>";
             echo "<i class='ti ti-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
             echo "&nbsp;" . __('Switch to edit mode', 'mydashboard');
+            echo "</a>";
+            echo "<br><br>";
+         }
+
+         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+
+            echo "<a id='drag-grid' class='submit btn btn-danger'>";
+            echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+                           data-hasqtip='0' aria-hidden='true'></i>";
+            echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
             echo "</a>";
             echo "<br><br>";
          }

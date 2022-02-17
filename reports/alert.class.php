@@ -195,6 +195,8 @@ class PluginMydashboardAlert extends CommonDBTM {
       if (count($itilcategories_id) > 0) {
          $cats     = implode("','", $itilcategories_id);
          $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
+      } else {
+         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = 0";
       }
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
@@ -275,15 +277,11 @@ class PluginMydashboardAlert extends CommonDBTM {
          case $this->getType() . "6":
 
             $widget = new PluginMydashboardHtml();
-            $url    = $CFG_GLPI['url_base'] . "/status.php";
-            //            $url = "http://localhost/glpi/status.php";
-            $options  = ["url" => $url];
-            $table    = "";
-            $contents = self::cURLData($options);
-            $contents = nl2br($contents);
-
+            $url    = $CFG_GLPI['url_base'] . "/status.php?format=json";
+            $contents    = Glpi\System\Status\StatusChecker::getServiceStatus($_REQUEST['service'] ?? null, true, false);
             $table = self::handleShellcommandResult($contents, $url);
             if (!empty($contents)) {
+               $contents = nl2br($contents);
                $table .= "<div class='md-status'>";
                $table .= $contents;
                $table .= "</div>";
@@ -2593,7 +2591,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
       $alert = "";
       if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
-         $alert .= "<div class='center' style='color:darkred'><i class='ti ti-alert-circle fa-4x'></i><br><br>";
+         $alert .= "<div class='center' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __('Service is down for maintenance. It will be back shortly.');
          $alert .= "</b></div>";
@@ -2604,17 +2602,17 @@ class PluginMydashboardAlert extends CommonDBTM {
          }
          $message = "";
       } else if (preg_match('/PROBLEM/is', $message)) {
-         $alert .= "<div class='md-title-status' style='color:darkred'><i class='ti ti-alert-circle fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Problem with GLPI", "mydashboard");
          $alert .= "</b></div>";
       } else if (preg_match('/OK/is', $message)) {
-         $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='ti ti-circle-check fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fas fa-circle-check fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("GLPI is OK", "mydashboard");
          $alert .= "</b></div>";
       } else {
-         $alert .= "<div class='md-title-status' style='color:orange'><i class='ti ti-alert-triangle fa-4x'></i><br><br>";
+         $alert .= "<div class='md-title-status' style='color:orange'><i class='fas fa-triangle-exclamation fa-4x'></i><br><br>";
          $alert .= "<b>";
          $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
          $alert .= "</b>";

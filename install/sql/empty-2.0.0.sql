@@ -38,7 +38,7 @@ CREATE TABLE `glpi_plugin_mydashboard_userwidgets`
 (
     `id`         int unsigned NOT NULL AUTO_INCREMENT, -- id
     `users_id`   int unsigned NOT NULL COMMENT 'RELATION to glpi_users(id)',
-    `widgets_id` int NOT NULL,                -- id du widget
+    `widgets_id` int unsigned NOT NULL,                -- id du widget
     `place`      int unsigned NOT NULL,                -- placement du widget
     PRIMARY KEY (`id`),
     KEY `users_id` (`users_id`)
