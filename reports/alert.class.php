@@ -2186,7 +2186,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "<div id='info_img'>&nbsp;</div>";
             $wl .= "<div class='bt-row info_weather_public_block'>";
          } else {
-            $wl .= "<div class='bt-row weather_public_block'>";
+            $wl .= "<div class='bt-row'>";
          }
          $min = 160 + $nb * 20;
          if ($nb > 0 && $nb_maintenance > 0) {
