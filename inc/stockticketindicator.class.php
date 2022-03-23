@@ -296,14 +296,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM {
 
       $results    = $DB->query($sql_dempro);
       while ($data = $DB->fetchArray($results)) {
-         $groups_id="";
-         $groups_id_title ="";
-         if(isset($data['groups_id'])){
-           $groups_id_title = "`groups_id`,";
-           $groups_id=$data['groups_id'].",";
-         }
-         $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,".$groups_id_title."`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . ",".self::SOLVEDT .",".$groups_id. $data['entities_id'] . ")";
+         $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+                        VALUES (NULL,$year, $week," . $data['total'] . ",".self::REQUESTPROGRESST .",".$data['groups_id'].",". $data['entities_id'] . ")";
          $DB->query($query);
       }
       return true;
@@ -353,8 +347,14 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM {
 
       $results    = $DB->query($sql_res);
       while ($data = $DB->fetchArray($results)) {
-         $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . ",".self::SOLVEDT .",".$data['groups_id'].",". $data['entities_id'] . ")";
+	 $groups_id="";
+	 $groups_id_title ="";
+         if(isset($data['groups_id'])){
+	   $groups_id_title = "`groups_id`,";
+	   $groups_id=$data['groups_id'].",";
+         }
+         $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,".$groups_id_title."`entities_id`)
+                        VALUES (NULL,$year, $week," . $data['total'] . ",".self::SOLVEDT .",".$groups_id. $data['entities_id'] . ")";
          $DB->query($query);
       }
 

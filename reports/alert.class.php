@@ -2185,7 +2185,7 @@ class PluginMydashboardAlert extends CommonDBTM {
          if (file_exists($css_file) && $public == 1) {
             $wl .= Html::css("/plugins/mydashboard/css/info.css");
             $wl .= "<div id='info_img'>&nbsp;</div>";
-            $wl .= "<div class='bt-row info_weather_public_block'>";
+            $wl .= "<div class='bt-row weather_public_block'>";
          } else {
             $wl .= "<div class='bt-row weather_public_block'>";
          }
@@ -3109,7 +3109,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
 
          $stats = "";
          if ($iswidget == true
-             && Session::haveRightsOr("ticket", [Ticket::READALL, Ticket::READGROUP])) {
+             && Session::haveRightsOr("ticket", [Ticket::READALL, Ticket::READGROUP])
+             && Session::getCurrentInterface() == 'central') {
             $criterias     = ['technicians_groups_id','week','year'];
             $params_header = ["widgetId"  => "PluginMydashboardReports_PieSC32",
                               "name"      => 'PluginMydashboardReports_PieSC32',

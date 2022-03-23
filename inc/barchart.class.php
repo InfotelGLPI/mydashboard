@@ -626,10 +626,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
       }
       $name  = $graph_datas['name'];
       $title = $name;
-      $disp = 'false';
-      if(isset($graph_datas['title'])){
+      $disp  = 'false';
+      if (isset($graph_datas['title'])) {
          $title = $graph_datas['title'];
-         $disp = 'true';
+         $disp  = 'true';
       }
       $datas = $graph_datas['data'];
       $ids   = $graph_datas['ids'];
@@ -769,6 +769,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
               datasets: $datas,
               labels: $labels,
             };
+            var id$name = $ids;
              var isChartRendered = false;
              var canvas$name = document.getElementById('$name');
              var ctx = canvas$name.getContext('2d');
@@ -787,11 +788,15 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                options: {
                  plugins: {
                     datalabels: {
-                     color: '#000',
-                     display: false,
+                     display: function(context) {
+                         return context.dataset.data[context.dataIndex] >= 1;
+                      },
+                     color: 'grey',
                    },
                    labels: {
                      render: 'value',
+                     precision: 0,
+                     showZero: false,
 //                     fontSize: 14,
 //                     fontStyle: 'bold',
 //                     fontColor: '#000',
@@ -814,23 +819,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  tooltips: {
                      enabled: true,
                  },
-//                 animation: {
-//                  onComplete: function() {
-//                    var ctx = this.chart.ctx;
-//                   ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
-//                   ctx.fillStyle = '#000';
-//                   ctx.textAlign = 'center';
-//                   ctx.textBaseline = 'bottom';
-//                   this.data.datasets.forEach(function (dataset) {
-//                       for (var i = 0; i < dataset.data.length; i++) {
-//                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-//                           ctx.fillText(dataset.data[i], model.x, model.y - 5);
-//                       }
-//                   });
-//                    isChartRendered = true;
-//                  }
-//                 },
-                 hover: {
+                  animation: {
+                     onComplete: function() {
+                       isChartRendered = true;
+                     }
+                   },
+                   hover: {
                       onHover: function(event,elements) {
                          if ($onclick) {
                             $('#$name').css('cursor', elements[0] ? 'pointer' : 'default');
@@ -839,6 +833,32 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                     }
                 }
              });
+             
+             canvas$name.onclick = function(evt) {
+               if ($onclick) {
+                  var activePoints = $name.getElementAtEvent(evt);
+                  activePoints.forEach(function (dataset) {
+                  var datasetidx = dataset['_datasetIndex'];
+                  var idx = dataset['_index'];
+                  var tab = id$name;
+                  var selected_id = tab[datasetidx][idx];
+                     if (selected_id.length > 0) {
+                        $.ajax({
+                       url: '" . $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php',
+                       type: 'POST',
+                       data:
+                       {
+                           selected_id:selected_id,
+                           params: $json_criterias
+                         },
+                       success:function(response) {
+                               window.open(response);
+                             }
+                     });
+                     }
+                  });
+               }
+             };
              
           </script>";
 
