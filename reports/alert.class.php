@@ -2256,7 +2256,8 @@ class PluginMydashboardAlert extends CommonDBTM {
       if (file_exists($css_file)
           && !$nb
           && $nb_maintenance == 0
-          && $public == 1) {
+          && $public == 1
+          && (strpos($_SERVER['REQUEST_URI'], "index.php") === false)) {
          $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/hideinfo.css");
       }
       return $wl;
