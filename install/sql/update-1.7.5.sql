@@ -12,4 +12,4 @@
 ALTER TABLE `glpi_plugin_mydashboard_preferences` CHANGE `prefered_group` `prefered_group` VARCHAR(255) NOT NULL DEFAULT '[]';
 ALTER TABLE `glpi_plugin_mydashboard_preferences` ADD `requester_prefered_group` VARCHAR(255) NOT NULL DEFAULT '[]';
 ALTER TABLE `glpi_plugin_mydashboard_groupprofiles` CHANGE `groups_id` `groups_id` VARCHAR(255) NOT NULL DEFAULT '[]';
-ALTER TABLE `glpi_plugin_mydashboard_stocktickets` ADD `groups_id` int unsigned NOT NULL DEFAULT '-1' AFTER `entities_id`;
+ALTER TABLE `glpi_plugin_mydashboard_stocktickets` ADD `groups_id` int unsigned NOT NULL DEFAULT '0' AFTER `entities_id`;

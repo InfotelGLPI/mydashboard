@@ -58,7 +58,8 @@ function plugin_init_mydashboard() {
       "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
    ];
 
-   if (strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
+   if (isset($_SERVER['REQUEST_URI'])
+       && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
       $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
          "lib/fileSaver.min.js",
          "scripts/mydashboard.js",
