@@ -80,7 +80,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM {
       echo "<th colspan='2' class='center b'>" . __('Authorized widgets', 'mydashboard') . "</th>";
       echo "</tr>";
       foreach ($widgetlist as $plugin => $widgetclasses) {
-         echo "<tr class='tab_bg_2'>";
+         echo "<tr class='tab_bg_2' style='background-color: #CCC;'>";
          $fct = 'plugin_version_' . strtolower($plugin);
          if (function_exists($fct)) {
             echo "<td>" . ucfirst($this->getLocalName($plugin)) . "</td>";
