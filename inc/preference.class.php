@@ -64,6 +64,14 @@ class PluginMydashboardPreference extends CommonDBTM {
       return '';
    }
 
+    /**
+    * @return string
+    */
+   static function getIcon() {
+      return PluginMydashboardMenu::getIcon();
+   }
+   
+   
    /**
     * @param CommonGLPI $item
     * @param int        $tabnum

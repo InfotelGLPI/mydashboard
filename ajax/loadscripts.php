@@ -39,7 +39,7 @@ if (isset($_POST['action'])) {
          $param['position'] = 'right';
          $param['url']      = PLUGIN_MYDASHBOARD_WEBDIR. '/ajax/lateralmenu.php';
 
-         $style = "";
+         $style = "#000";
          $title = __("Go to mydashboard actions", "mydashboard");
 
          $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
