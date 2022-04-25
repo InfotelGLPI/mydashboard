@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-08 08:58+0000\n"
+"POT-Creation-Date: 2022-04-25 08:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Display widgets from plugins"
 msgstr ""
 
-#: inc/config.class.php:237 inc/preference.class.php:110
+#: inc/config.class.php:237 inc/preference.class.php:118
 msgid "Replace central interface"
 msgstr ""
 
@@ -510,36 +510,36 @@ msgstr ""
 msgid "You can't have more than one serie for a pie chart"
 msgstr ""
 
-#: inc/preference.class.php:96
+#: inc/preference.class.php:104
 msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr ""
 
-#: inc/preference.class.php:102
+#: inc/preference.class.php:110
 msgid "Refresh every "
 msgstr ""
 
-#: inc/preference.class.php:106
+#: inc/preference.class.php:114
 msgid "minute(s)"
 msgstr ""
 
-#: inc/preference.class.php:118
+#: inc/preference.class.php:126
 msgid "My prefered groups for widget"
 msgstr ""
 
-#: inc/preference.class.php:152
+#: inc/preference.class.php:160
 msgid "My requester prefered groups for widget"
 msgstr ""
 
-#: inc/preference.class.php:186
+#: inc/preference.class.php:194
 msgid "My prefered entity for widget"
 msgstr ""
 
-#: inc/preference.class.php:195
+#: inc/preference.class.php:203
 msgid "My prefered type for widget"
 msgstr ""
 
-#: inc/preference.class.php:202 inc/preference.class.php:204
-#: inc/preference.class.php:205
+#: inc/preference.class.php:210 inc/preference.class.php:212
+#: inc/preference.class.php:213
 msgid "Palette color"
 msgstr ""
 
