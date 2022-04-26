@@ -1286,7 +1286,7 @@ class PluginMydashboardTicket extends CommonGLPI {
       // Make new job object and fill it from database, if success, print it
       $job = new Ticket();
 
-      $showprivate = Session::haveRight('followup', ItilFollowup::SEEPRIVATE);
+      $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
 
       if ($job->getFromDB($id)) {
          $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
@@ -1410,7 +1410,7 @@ class PluginMydashboardTicket extends CommonGLPI {
             if ($followups
                 && ($output_type == Search::HTML_OUTPUT)
             ) {
-               $eigth_column .= ItilFollowup::showShortForTicket($job->fields["id"]);
+               $eigth_column .= ITILFollowup::showShortForTicket($job->fields["id"]);
             } else {
                $eigth_column = sprintf(__('%1$s (%2$s)'), $eigth_column,
                                        sprintf(__('%1$s - %2$s'),

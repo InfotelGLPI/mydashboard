@@ -1723,7 +1723,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $datasets[] =
                   ['data'            => array_values($v),
                    'label'           => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
-                   'backgroundColor' => $palette[$k],
+                   'backgroundColor' => isset($palette[$k])??"#CCC",
                   ];
             }
 
@@ -1838,7 +1838,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $datasets[] =
                   ['data'            => array_values($v),
                    'label'           => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
-                   'backgroundColor' => $palette[$k],
+                   'backgroundColor' => isset($palette[$k])??"#CCC",
                   ];
             }
 

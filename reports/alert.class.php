@@ -361,7 +361,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                   }
                   if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
 
-                     $itilfollowup = new ItilFollowup();
+                     $itilfollowup = new ITILFollowup();
                      $followups    = $itilfollowup->find(['items_id' => $ticket->fields['id'],
                                                           'itemtype' => 'Ticket'], 'date DESC');
 
