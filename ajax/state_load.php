@@ -52,25 +52,27 @@ if (isset($dashboardWidgets->fields['id'])) {
       $idUser    = 0;
       $idProfile = $_GET['profiles_id'];
    }
-   if ($dashboard->getFromDBByCrit(['users_id' => $idUser, 'profiles_id' => $idProfile])) {
-      if (!is_null($dashboard->fields['grid_statesave'])) {
-         $grids_saved = json_decode($dashboard->fields['grid_statesave']);
-         foreach ($grids_saved as $key => $grid_saved) {
-            if ($key == $gsId) {
-               $result = $grid_saved;
-               $result = json_encode($result, JSON_NUMERIC_CHECK);
-               $result = str_replace(['"true"', '"false"'], ['true', 'false'], $result);
+   if ($idProfile > 0) {
+      if ($dashboard->getFromDBByCrit(['users_id' => $idUser, 'profiles_id' => $idProfile])) {
+         if (!is_null($dashboard->fields['grid_statesave'])) {
+            $grids_saved = json_decode($dashboard->fields['grid_statesave']);
+            foreach ($grids_saved as $key => $grid_saved) {
+               if ($key == $gsId) {
+                  $result = $grid_saved;
+                  $result = json_encode($result, JSON_NUMERIC_CHECK);
+                  $result = str_replace(['"true"', '"false"'], ['true', 'false'], $result);
+               }
             }
          }
-      }
-   } else if ($dashboard->getFromDBByCrit(['users_id' => 0, 'profiles_id' => $idProfile])) {
-      if (!is_null($dashboard->fields['grid_statesave'])) {
-         $grids_saved = json_decode($dashboard->fields['grid_statesave']);
-         foreach ($grids_saved as $key => $grid_saved) {
-            if ($key == $gsId) {
-               $result = $grid_saved;
-               $result = json_encode($result, JSON_NUMERIC_CHECK);
-               $result = str_replace(['"true"', '"false"'], ['true', 'false'], $result);
+      } else if ($dashboard->getFromDBByCrit(['users_id' => 0, 'profiles_id' => $idProfile])) {
+         if (!is_null($dashboard->fields['grid_statesave'])) {
+            $grids_saved = json_decode($dashboard->fields['grid_statesave']);
+            foreach ($grids_saved as $key => $grid_saved) {
+               if ($key == $gsId) {
+                  $result = $grid_saved;
+                  $result = json_encode($result, JSON_NUMERIC_CHECK);
+                  $result = str_replace(['"true"', '"false"'], ['true', 'false'], $result);
+               }
             }
          }
       }
