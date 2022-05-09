@@ -87,9 +87,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $this->getType() . "38" => ["title"   => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
                                         "icon"    => "ti ti-chart-bar",
                                         "comment" => ""],
-//            $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling and pending by month", "mydashboard"),
-//                                        "icon"    => "ti ti-chart-bar",
-//                                        "comment" => ""],
+            //            $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling and pending by month", "mydashboard"),
+            //                                        "icon"    => "ti ti-chart-bar",
+            //                                        "comment" => ""],
             $this->getType() . "40" => ["title"   => __("Tickets request sources evolution", "mydashboard"),
                                         "icon"    => "ti ti-chart-bar",
                                         "comment" => __("Evolution of tickets request sources types by year", "mydashboard")],
@@ -397,7 +397,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $title  = __("Top ten ticket categories by type of ticket", "mydashboard");
             $widget->setWidgetTitle((($isDebug) ? "15 " : "") . $title);
             $widget->setWidgetComment(__("Display of Top ten ticket categories by type of ticket"
-               , "mydashboard"));
+               ,                         "mydashboard"));
             $databacklogset = json_encode($dataset);
             $labelsback     = json_encode($tabnames);
             $idsback        = json_encode($tabcat);
@@ -549,13 +549,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $currentmonth = date("m");
 
             $previousyear = $currentyear - 1;
-            if (($currentmonth  + 1) >= 12) {
+            if (($currentmonth + 1) >= 12) {
                $nextmonth = "01";
             } else {
-               $nextmonth    = $currentmonth + 1;
+               $nextmonth = $currentmonth + 1;
             }
 
-            $is_deleted   = "`glpi_tickets`.`is_deleted` = 0";
+            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
 
             $query = "SELECT 
                               DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
@@ -593,7 +593,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                    && $data_1['count'] > 0) {
                   $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
                }
-               $tabduration[] = round($average_by_ticket??0, 2);
+               $tabduration[] = round($average_by_ticket ?? 0, 2);
                $tabnames[]    = $data['monthname'];
                $tabdates[]    = $data['monthnum'];
                $i++;
@@ -850,7 +850,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $tabage   = [];
             $tabnames = [];
             while ($data = $DB->fetchArray($results)) {
-               $percent    = round($data['Percent']??0, 2);
+               $percent    = round($data['Percent'] ?? 0, 2);
                $tabnames[] = $data['Age']; //" (".$percent."%)";
                $tabage[]   = $data['Total'];
             }
@@ -1164,7 +1164,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
                $result               = $DB->query($query_satisfactionT1);
                $data_satisfactionT1  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT1[0]??0, 2));
+               array_push($satisfaction_data, round($data_satisfactionT1[0] ?? 0, 2));
                // Checking T2
 
                array_push($tabnames, __('Trimester 2', 'mydashboard') . ' ' . $starting_year);
@@ -1181,7 +1181,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
                $result               = $DB->query($query_satisfactionT2);
                $data_satisfactionT2  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT2[0]??0, 2));
+               array_push($satisfaction_data, round($data_satisfactionT2[0] ?? 0, 2));
                // Checking T3
                array_push($tabnames, __('Trimester 3', 'mydashboard') . ' ' . $starting_year);
                $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
@@ -1197,7 +1197,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
                $result               = $DB->query($query_satisfactionT3);
                $data_satisfactionT3  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT3[0]??0, 2));
+               array_push($satisfaction_data, round($data_satisfactionT3[0] ?? 0, 2));
                // Checking T4
                array_push($tabnames, __('Trimester 4', 'mydashboard') . ' ' . $starting_year);
                $query_openedTicketT4 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
@@ -1213,7 +1213,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
                $result               = $DB->query($query_satisfactionT4);
                $data_satisfactionT4  = $DB->fetchArray($result);
-               array_push($satisfaction_data, round($data_satisfactionT4[0]??0, 2));
+               array_push($satisfaction_data, round($data_satisfactionT4[0] ?? 0, 2));
             }
 
             $widget = new PluginMydashboardHtml();
@@ -1235,7 +1235,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $titleSatisfactionTicket = __("Average Satisfaction", "mydashboard");
             $labels                  = json_encode($tabnames);
 
-            $colors = PluginMydashboardColor::getColors(1, 0);;
+            $colors = PluginMydashboardColor::getColors(1, 0);
             //            $backgroundColor = json_encode($colors);
 
             $datasets[] =
@@ -1723,7 +1723,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                $datasets[] =
                   ['data'            => array_values($v),
                    'label'           => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
-                   'backgroundColor' => isset($palette[$k])??"#CCC",
+                   'backgroundColor' => isset($palette[$k]) ? $palette[$k] : "#CCC",
                   ];
             }
 
@@ -1831,14 +1831,14 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             }
 
             $labelsLine = json_encode($tabyears);
-            $palette    = PluginMydashboardColor::getColors($i);
+            $palette    = PluginMydashboardColor::getColors($i, 0);
             $datasets   = [];
 
             foreach ($tabdata as $k => $v) {
                $datasets[] =
                   ['data'            => array_values($v),
                    'label'           => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
-                   'backgroundColor' => isset($palette[$k])??"#CCC",
+                   'backgroundColor' => isset($palette[$k]) ? $palette[$k] : "#CCC",
                   ];
             }
 
@@ -1916,8 +1916,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             foreach ($lifetime_avg_ticket as $avg_tickets_d) {
                if ($avg_tickets_d['nb'] > 0) {
-                  $avg_lifetime_ticket_data []        = round(($avg_tickets_d['lifetime'] / $avg_tickets_d['nb'])??0, 2);
-                  $avg_takeintoaccount_ticket_data [] = round(($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb'])??0, 2);
+                  $avg_lifetime_ticket_data []        = round(($avg_tickets_d['lifetime'] / $avg_tickets_d['nb']) ?? 0, 2);
+                  $avg_takeintoaccount_ticket_data [] = round(($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb']) ?? 0, 2);
                }
             }
 
@@ -2098,9 +2098,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                if ($data['actiontime_date'] > 0) {
                   if (isset($time_per_tech[$techid][$key])) {
-                     $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8)??0, 2);
+                     $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2);
                   } else {
-                     $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8)??0, 2);
+                     $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2);
                   }
                }
             }
@@ -2146,7 +2146,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          $year = $params["year"];
       }
 
-      $type_criteria = "AND 1 = 1";
+      $type_criteria = "";
       if (isset($params["type"])
           && $params["type"] > 0) {
          $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
@@ -2394,7 +2394,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
       $entities_criteria   = $params['entities_id'];
       $locations_criteria  = $params['multiple_locations_id'];
-      $type_criteria       = "AND 1 = 1";
+      $type_criteria       = "";
       $groups_sql_criteria = "";
 
 
@@ -2416,11 +2416,9 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
          $year = $params["year"];
       }
 
-      if (isset($params["type"]) && $params["type"] > 0) {
-         $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
+      if (!empty($params['multiple_locations_id'])) {
+         $locations_criteria = " AND " . $params['multiple_locations_id'];
       }
-
-      $locations_criteria = $params['multiple_locations_id'];
 
       $current_month = date("m");
       foreach ($months as $key => $month) {
@@ -2466,10 +2464,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                         ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`
                           AND `glpi_groups_tickets`.`type` = {$assign}) ";
          $queryavg .= "WHERE ";
+
          $queryavg .= "{$date} >= '{$month_deb_datetime}' 
                           AND {$date} <= '{$month_end_datetime}'
                           {$groups_sql_criteria} {$type_criteria} 
-                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted} {$locations_criteria}";
+                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted} ";
 
          $queryavg   .= "GROUP BY DATE(`glpi_tickets`.`date`);
                         ";

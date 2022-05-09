@@ -427,7 +427,7 @@ class PluginMydashboardHelper {
 
       //LOCATION
       $opt['locations_id']          = 0;
-      $crit['crit']['locations_id'] = "AND 1 = 1";
+      $crit['crit']['locations_id'] = "";
       $user                         = new User();
       if (in_array("locations_id", $criterias)) {
          if (isset($params['opt']["locations_id"])
@@ -443,7 +443,7 @@ class PluginMydashboardHelper {
 
       // LOCATIONS
       $opt['multiple_locations_id']          = [];
-      $crit['crit']['multiple_locations_id'] = " AND 1 = 1 ";
+      $crit['crit']['multiple_locations_id'] = "";
       $opt['loc_ancestors']                  = 0;
       $crit['crit']['loc_ancestors']         = 0;
       if (in_array("multiple_locations_id", $criterias)) {
@@ -479,7 +479,7 @@ class PluginMydashboardHelper {
 
       //TYPE
       $opt['type']          = 0;
-      $crit['crit']['type'] = "AND 1 = 1";
+      $crit['crit']['type'] = "";
       if (in_array("type", $criterias)) {
          if (isset($params['preferences']['prefered_type'])
              && $params['preferences']['prefered_type'] > 0

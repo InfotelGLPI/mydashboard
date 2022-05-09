@@ -176,14 +176,14 @@ class PluginMydashboardReports_Map extends CommonGLPI {
                }
             }
 
-            if ($groups_criteria > 0) {
-               $params['criteria'][] = [
-                  'link'       => 'AND',
-                  'field'      => 8,
-                  'searchtype' => 'equals',
-                  'value'      => $groups_criteria
-               ];
-            }
+//            if ($groups_criteria > 0) {
+//               $params['criteria'][] = [
+//                  'link'       => 'AND',
+//                  'field'      => 8,
+//                  'searchtype' => 'equals',
+//                  'value'      => $groups_criteria
+//               ];
+//            }
             $data = Search::prepareDatasForSearch('Ticket', $params);
             Search::constructSQL($data);
             Search::constructData($data);
