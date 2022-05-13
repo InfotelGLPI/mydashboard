@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 11:56+0000\n"
+"POT-Creation-Date: 2022-05-13 11:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:208 inc/config.class.php:325 inc/itilalert.class.php:118
+#: hook.php:208 inc/config.class.php:333 inc/itilalert.class.php:118
 #: reports/alert.class.php:127 reports/alert.class.php:2498
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:209 inc/config.class.php:326 inc/itilalert.class.php:119
+#: hook.php:209 inc/config.class.php:334 inc/itilalert.class.php:119
 #: reports/alert.class.php:130 reports/alert.class.php:2367
 #: reports/alert.class.php:2499
 msgid "Scheduled maintenance"
@@ -33,7 +33,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:210 inc/config.class.php:327 inc/itilalert.class.php:120
+#: hook.php:210 inc/config.class.php:335 inc/itilalert.class.php:120
 #: reports/alert.class.php:133 reports/alert.class.php:2368
 #: reports/alert.class.php:2500
 msgid "Information"
@@ -114,39 +114,39 @@ msgstr ""
 msgid "Plugin setup"
 msgstr ""
 
-#: inc/config.class.php:169 inc/config.class.php:285
+#: inc/config.class.php:177 inc/config.class.php:293
 msgid "Title of alerts widget"
 msgstr ""
 
-#: inc/config.class.php:178 inc/config.class.php:291
+#: inc/config.class.php:186 inc/config.class.php:299
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
-#: inc/config.class.php:187 inc/config.class.php:297
+#: inc/config.class.php:195 inc/config.class.php:305
 msgid "Title of informations widget"
 msgstr ""
 
-#: inc/config.class.php:221
+#: inc/config.class.php:229
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: inc/config.class.php:231
+#: inc/config.class.php:239
 msgid "Display widgets from plugins"
 msgstr ""
 
-#: inc/config.class.php:237 inc/preference.class.php:118
+#: inc/config.class.php:245 inc/preference.class.php:118
 msgid "Replace central interface"
 msgstr ""
 
-#: inc/config.class.php:243
+#: inc/config.class.php:251
 msgid "Google API Key"
 msgstr ""
 
-#: inc/config.class.php:250
+#: inc/config.class.php:258
 msgid "Impact colors for alerts"
 msgstr ""
 
-#: inc/config.class.php:272
+#: inc/config.class.php:280
 msgid "Level of categories to show"
 msgstr ""
 
