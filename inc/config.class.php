@@ -82,6 +82,14 @@ class PluginMydashboardConfig extends CommonDBTM {
    }
 
    /**
+    * @return string
+    */
+   static function getIcon() {
+      return PluginMydashboardMenu::getIcon();
+   }
+
+
+   /**
     * @param string $interface
     *
     * @return array
