@@ -117,6 +117,8 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
       $color          = (isset($graph_datas['backgroundColor']))?$graph_datas['backgroundColor']:'#1f77b4';
       $json_criterias = json_encode($graph_criterias);
 
+      $linkURL = isset($graph_criterias['url']) ? $graph_criterias['url'] : $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+
       $graph = "<script type='text/javascript'>
             var dataLine$name = {
               datasets: [{
@@ -204,30 +206,30 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                     }
                 }
              });
-//             canvas$name.onclick = function(evt) {
-//               var activePoints = $name.getElementsAtEvent(evt);
-//               if (activePoints[0] && $onclick) {
-//                 var chartData = activePoints[0]['_chart'].config.data;
-//                 var idx = activePoints[0]['_index'];
-//                 var label = chartData.labels[idx];
-//                 var value = chartData.datasets[0].data[idx];
-//                 var tab = id$name;
-//                 var selected_id = tab[idx];
-//                 $.ajax({
-//                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
-//                    type: 'POST',
-//                    data:
-//                    {
-//                        selected_id:selected_id,
-//                        params: $json_criterias
-//                      },
-//                    success:function(response) {
-//                            window.open(response);
-//                          }
-//                 });
-//               }
-//             };
-             
+             canvas$name.onclick = function(evt) {
+               var activePoints = $name.getElementsAtEvent(evt);
+               if (activePoints[0] && $onclick) {
+                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0]['_index'];
+                 var label = chartData.labels[idx];
+                 var value = chartData.datasets[0].data[idx];
+                 var selected_id = idx;
+                 console.log(selected_id)
+                 $.ajax({
+                    url: '$linkURL',
+                    type: 'POST',
+                    data:
+                    {
+                        selected_id:selected_id,
+                        label:label,
+                        params: $json_criterias
+                      },
+                    success:function(response) {
+                            window.open(response);
+                          }
+                 });
+               }
+             };
           </script>";
 
       return $graph;
