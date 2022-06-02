@@ -214,7 +214,7 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                  var label = chartData.labels[idx];
                  var value = chartData.datasets[0].data[idx];
                  var selected_id = idx;
-                 console.log(selected_id)
+                 //console.log(selected_id)
                  $.ajax({
                     url: '$linkURL',
                     type: 'POST',
