@@ -117,7 +117,7 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
       $color          = (isset($graph_datas['backgroundColor']))?$graph_datas['backgroundColor']:'#1f77b4';
       $json_criterias = json_encode($graph_criterias);
 
-      $linkURL = isset($graph_criterias['url']) ? $graph_criterias['url'] : $CFG_GLPI['root_doc'] . "/plugins/mydashboard/ajax/launchURL.php";
+      $linkURL = isset($graph_criterias['url']) ? $graph_criterias['url'] : PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
       $graph = "<script type='text/javascript'>
             var dataLine$name = {
