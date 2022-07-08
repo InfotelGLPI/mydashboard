@@ -103,96 +103,37 @@ class PluginMydashboardPlanning extends CommonGLPI {
     * @return \PluginMydashboardDatatable (display function)
     */
    static function showCentral($who, $who_group = "") {
-      global $CFG_GLPI;
 
       if (!Session::haveRight(Planning::$rightname, Planning::READMY)
           || ($who <= 0 && $who_group == "")
       ) {
          return false;
       }
+      Html::requireJs('fullcalendar');
+      Html::requireJs('planning');
+      echo Html::css("/public/lib/fullcalendar.css");
+
       $widget = new PluginMydashboardHtml();
       $title  = __("Your planning");
       $widget->setWidgetTitle($title);
 
-      $when = date('Y-m-d', time());
+      $rand    = rand();
+      $options = [
+         'full_view'    => false,
+         'default_view' => 'listFull',
+         'header'       => false,
+         'height'       => 'auto',
+         'rand'         => $rand,
+         'now'          => date("Y-m-d H:i:s"),
+      ];
+      $graph     = "<div id='planning$rand' class='flex-fill'></div>";
+      $graph     .= "</div>";
 
-      //Get begin and duration
-      $date   = explode("-", $when);
-      $time   = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
-      $begin  = $time - 12 * MONTH_TIMESTAMP;
-      $end    = $begin + 13 * MONTH_TIMESTAMP;
-      $begin  = date("Y-m-d H:i:s", $begin);
-      $end    = date("Y-m-d H:i:s", $end);
-      $params = ['who'       => $who,
-                 'who_group' => $who_group,
-                 'whogroup'  => 0,
-                 'begin'     => $begin,
-                 'end'       => $end];
-      $interv = [];
-      foreach ($CFG_GLPI['planning_types'] as $itemtype) {
-         $interv = array_merge($interv, $itemtype::populatePlanning($params));
-      }
-      ksort($interv);
-      $events = [];
+      $graph     .= Html::scriptBlock("$(function() {
+         GLPIPlanning.display(" . json_encode($options) . ");
+         GLPIPlanning.planningFilters();
+      });");
 
-      if (count($interv) > 0) {
-         foreach ($interv as $key => $val) {
-            if ($val["begin"] < $begin) {
-               $val["begin"] = $begin;
-            }
-            if ($val["end"] > $end) {
-               $val["end"] = $end;
-            }
-            $title = $val['name'];
-            if (isset($val['users_id']) && $val['users_id'] > 0) {
-               $title .= " (" . getUserName($val['users_id']) . ")";
-            }
-            $events[] = ['title'    => $title,
-                         'tooltip'  => isset($val['content']) ? Glpi\RichText\RichText::getSafeHtml($val['content']) : "",
-                         'start'    => $val["begin"],
-                         'end'      => $val["end"],
-                         'url'      => isset($val['url']) ? $val['url'] : "",
-                         'ajaxurl'  => isset($val['ajaxurl']) ? $val['ajaxurl'] : "",
-                         'editable' => false
-            ];
-         }
-      }
-      $events    = json_encode($events);
-      $today     = date("Y-m-d");
-      $graph     = "<script>
-            $(document).ready(function() {
-                $('#calendar').fullCalendar({
-                  height:      400,
-//                  theme:       true,
-                  header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay,listMonth'
-                  },
-                  defaultView: 'listMonth',
-                  defaultDate: '$today',
-                  buttonIcons: true, // show the prev/next text
-                  weekNumbers: true,
-                  navLinks: true, // can click day/week names to navigate views
-                  editable: true,
-                  eventLimit: true, // allow \"more\" link when too many events
-                  events: $events,
-                  eventClick: function(event) {
-                      if (event.url) {
-                          window.open(event.url, '_blank');
-                          return false;
-                      }
-                  },
-                  eventRender: function(event, element) {
-                       element.qtip({
-                           content: event.tooltip
-                       });
-                   }
-                });
-
-              });
-             </script>";
-      $graph     .= "<div id='calendar'></div>";
       $widget->toggleWidgetRefresh();
       $widget->setWidgetHtmlContent(
          $graph

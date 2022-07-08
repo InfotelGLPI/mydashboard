@@ -398,7 +398,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                   $root_doc = PLUGIN_MYDASHBOARD_WEBDIR;
                   $widgetdisplay   = "<script type='text/javascript'>
                //         setTimeout(function () {
-                           $.fn.dataTable.moment('$mask');
+//                           $.fn.dataTable.moment('$mask');
                            $('#$widgetindex$rand').dataTable(
                                {
                                 stateSave: true,

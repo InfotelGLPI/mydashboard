@@ -1331,22 +1331,6 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/countUp.min.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/countUp-jquery.js");
 
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/moment.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datetime-moment.js");
-
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/fullcalendar/fullcalendar.min.js");
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/fullcalendar/fullcalendar.min.css");
-      if (isset($_SESSION['glpilanguage'])) {
-         foreach ([2, 3] as $loc) {
-            $filename = "../lib/fullcalendar/locale/" .
-                        strtolower($CFG_GLPI["languages"][$_SESSION['glpilanguage']][$loc]) . ".js";
-            //                if (file_exists('../lib/fullcalendar/locale/' . $filename)) {
-            echo " <script src='$filename'></script>";
-            break;
-            //                }
-         }
-      }
-
       $rand           = mt_rand();
       $this->users_id = Session::getLoginUserID();
       $this->showMenu($rand, $this->users_id, $active_profile, $predefined_grid);
