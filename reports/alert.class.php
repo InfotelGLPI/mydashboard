@@ -192,12 +192,15 @@ class PluginMydashboardAlert extends CommonDBTM {
                               AND (`glpi_reminders`.`end_view_date` IS NULL
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
       $addwhere            = "";
-      if (count($itilcategories_id) > 0) {
-         $cats     = implode("','", $itilcategories_id);
-         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
-      } else {
-         $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = 0";
+      if ($public == 0 ) {
+         if (count($itilcategories_id) > 0) {
+            $cats     = implode("','", $itilcategories_id);
+            $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
+         } else {
+            $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = 0";
+         }
       }
+
       $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
                . PluginMydashboardReminder::addVisibilityJoins()
