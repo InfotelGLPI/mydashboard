@@ -796,7 +796,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $widget->setWidgetTitle((($isDebug) ? "18 " : "") . $title);
 
             $dataPieset         = json_encode($dataspie);
-            $palette            = PluginMydashboardColor::getColors(2);
+            $palette            = PluginMydashboardColor::getColors(3);
             $backgroundPieColor = json_encode($palette);
             $labelsPie          = json_encode($namespie);
 
@@ -954,6 +954,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             $crit          = $options['crit'];
             $type          = $opt['type'];
             $type_criteria = $crit['type'];
+            $entities_criteria = $crit['entities_id'];
             $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
             $limit_query   = "";
             $limit         = isset($opt['limit']) ? $opt['limit'] : 10;
@@ -968,8 +969,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                         LEFT JOIN `glpi_groups_tickets` 
                         ON (`glpi_groups_tickets`.`tickets_id` = `glpi_tickets`.`id` 
                         AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')
-                        WHERE $is_deleted $type_criteria ";
-            $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable());
+                        WHERE $is_deleted $type_criteria $entities_criteria";
+//            $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable());
             $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
             $query .= " GROUP BY `groups_id` $limit_query";
 

@@ -1243,7 +1243,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 'data'            => $opened_tickets_data,
                 'label'           => $titleOpenedTicket,
                 'backgroundColor' => $colors,
-                'yAxisID'         => 'right-y-axis',
+                'yAxisID'         => 'rightyaxis',
                 'order'           => 2
                ];
 
@@ -1254,7 +1254,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 'borderColor' => '#ff7f0e',
                 'fill'        => false,
                 'lineTension' => '0.1',
-                'yAxisID'     => 'left-y-axis',
+                'yAxisID'     => 'leftyaxis',
                 'order'       => 1
                ];
             $max_left    = 10;

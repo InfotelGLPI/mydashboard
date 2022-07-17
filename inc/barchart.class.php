@@ -937,23 +937,23 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                     y: [{
-                         id: 'left-y-axis',
+                 
+                     leftyaxis: {
                          type: 'linear',
                          position: 'left',
                          ticks: {
                              $max_left
                              beginAtZero: true
                          }
-                     }, {
-                         id: 'right-y-axis',
+                     },
+                      rightyaxis: {
                          type: 'linear',
                          position: 'right',
                          ticks: {
                              $max_right
                              beginAtZero: true
                          }
-                      }]
+                      }
                  },
                  animation: {
                   onComplete: function() {
