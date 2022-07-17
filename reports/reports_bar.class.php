@@ -417,7 +417,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $graph_criterias      = ['entities_id'        => $entities_id_criteria,
                                      'sons'               => $sons_criteria,
                                      'group_is_recursive' => $js_ancestors,
-                                     'technician_groups'  => $opt['technicians_groups_id'] ?? [],
+                                     'technician_group'  => $opt['technicians_groups_id'] ?? [],
                                      'type'               => $type,
                                      'year'               => $year ?? '',
                                      'widget'             => $widgetId];
