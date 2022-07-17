@@ -384,7 +384,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             }
             $backgroundColor = PluginMydashboardColor::getColors(1);
             $nbtickets       = __('Tickets number', 'mydashboard');
-            $dataset[]       = ["type"            => 'horizontalBar',
+            $dataset[]       = ["type"            => 'bar',
                                 "label"           => $nbtickets,
                                 "data"            => $tabdata,
                                 "backgroundColor" => $backgroundColor,
@@ -720,7 +720,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             $ticketsnumber   = __('Tickets number', 'mydashboard');
             $palette         = PluginMydashboardColor::getColors(1);
             $backgroundColor = json_encode($palette);
-            $dataset[]       = ["type"            => 'horizontalBar',
+            $dataset[]       = ["type"            => 'bar',
                                 "label"           => $ticketsnumber,
                                 "data"            => $tabtickets,
                                 "backgroundColor" => $palette,

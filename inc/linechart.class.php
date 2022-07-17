@@ -167,36 +167,36 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                     xAxes: [{
+                     x: {
                          stacked: true,
-                     }],
-                     yAxes: [{
+                     },
+                     y: {
                          ticks: {
                             beginAtZero: true,
                             min: 0,
                         },
                          stacked: true
-                     }]
-                 },
-                 animation: {
-                     onComplete: function() {
-                       var chartInstance = this.chart,
-                        ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
-                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'bottom';
-                        ctx.fillStyle = chartInstance.chart.config.options.defaultFontColor;
-                        this.data.datasets.forEach(function (dataset, i) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar, index) {
-                                var data = dataset.data[index];
-                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                            });
-                        });
-                       isChartRendered = true;
                      }
-                   },
+                 },
+//                 animation: {
+//                     onComplete: function() {
+//                       var chartInstance = this.chart,
+//                        ctx = chartInstance.ctx;
+//                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+//                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+//                        ctx.textAlign = 'center';
+//                        ctx.textBaseline = 'bottom';
+//                        ctx.fillStyle = chartInstance.chart.config.options.defaultFontColor;
+//                        this.data.datasets.forEach(function (dataset, i) {
+//                            var meta = chartInstance.controller.getDatasetMeta(i);
+//                            meta.data.forEach(function (bar, index) {
+//                                var data = dataset.data[index];
+//                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+//                            });
+//                        });
+//                       isChartRendered = true;
+//                     }
+//                   },
                    hover: {
                       onHover: function(event,elements) {
                          if ($onclick) {
@@ -207,12 +207,13 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                 }
              });
              canvas$name.onclick = function(evt) {
-               var activePoints = $name.getElementsAtEvent(evt);
+               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                if (activePoints[0] && $onclick) {
-                 var chartData = activePoints[0]['_chart'].config.data;
-                 var idx = activePoints[0]['_index'];
-                 var label = chartData.labels[idx];
-                 var value = chartData.datasets[0].data[idx];
+//                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0].index;
+//                 var label = chartData.labels[idx];
+                 var label = $name.data.labels[activePoints[0].index];
+//                 var value = chartData.datasets[0].data[idx];
                  var selected_id = idx;
                  //console.log(selected_id)
                  $.ajax({

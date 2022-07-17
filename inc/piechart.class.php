@@ -143,11 +143,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
       $title = "";
       $disp = true;
       if(isset($graph_datas['title']) && !empty($graph_datas['title'])){
-         $title =" title:{
-            display:true,
-                     text:'".$graph_datas['title']."'
-                 },";
-
+         $title = $graph_datas['title'];
       }
 
       $graph = "<script type='text/javascript'>
@@ -182,9 +178,12 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
 //                     fontFamily: 'Lucida Console, Monaco, monospace'
                    }
                 },
-                $title
-                 responsive: true,
+                responsive: true,
                  maintainAspectRatio: true,
+                 title:{
+                     display:true,
+                     text:'$name'
+                 },
 //                  tooltips: {
 //                      mode: 'label',
 //                      callbacks: {
@@ -208,12 +207,12 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                 }
              });
              canvas$name.onclick = function(evt) {
-               var activePoints = $name.getElementsAtEvent(evt);
+               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                if (activePoints[0] && $onclick) {
-                 var chartData = activePoints[0]['_chart'].config.data;
-                 var idx = activePoints[0]['_index'];
-                 var label = chartData.labels[idx];
-                 var value = chartData.datasets[0].data[idx];
+//                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0].index;
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
@@ -311,12 +310,12 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                 }
              });
              canvas$name.onclick = function(evt) {
-               var activePoints = $name.getElementsAtEvent(evt);
+               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                if (activePoints[0] && $onclick) {
-                 var chartData = activePoints[0]['_chart'].config.data;
-                 var idx = activePoints[0]['_index'];
-                 var label = chartData.labels[idx];
-                 var value = chartData.datasets[0].data[idx];
+//                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0].index;
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
@@ -417,7 +416,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                 }
              });
 //             canvas$name.onclick = function(evt) {
-//               var activePoints = $name.getElementsAtEvent(evt);
+//               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
 //               if (activePoints[0] && $onclick) {
 //                 var chartData = activePoints[0]['_chart'].config.data;
 //                 var idx = activePoints[0]['_index'];

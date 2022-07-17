@@ -1322,8 +1322,8 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
 
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/chartjs/Chart.bundle.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/chartjs/chartjs-plugin-datalabels.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/chartjs/Chart.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/chartjs/chartjs-plugin-datalabels.min.js");
 
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/html2canvas.min.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/fileSaver.min.js");

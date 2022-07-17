@@ -291,10 +291,11 @@ class PluginMydashboardHelper {
       if (Session::isMultiEntitiesMode()) {
 
          $opt['entities_id'] = $_SESSION['glpiactive_entity'];
-         if (in_array("entities_id", $criterias)) {
+//         if (in_array("entities_id", $criterias)) {
             if (isset($params['preferences']['prefered_entity'])
                 && $params['preferences']['prefered_entity'] > 0
-                && count($params['opt']) < 1) {
+//                && count($params['opt']) < 1
+            ) {
                $opt['entities_id'] = $params['preferences']['prefered_entity'];
             } elseif (isset($params['opt']['entities_id'])
                       && $params['opt']['entities_id'] > 0) {
@@ -302,7 +303,7 @@ class PluginMydashboardHelper {
             } else {
                $opt['entities_id'] = $_SESSION['glpiactive_entity'];
             }
-         }
+//         }
          $opt['sons']          = 0;
          $crit['crit']['sons'] = 0;
          if (in_array("is_recursive", $criterias)) {

@@ -299,13 +299,13 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      enabled: true,
                  },
                  scales: {
-                        xAxes: [{
+                        x: {
                         stacked: true,
                         ticks: {
                         beginAtZero: true
-                    }
-                     }],
-                     yAxes: [
+                        }
+                     },
+                     y: 
                           {
                          id: 'left-y-axis',
                          type: 'linear',
@@ -325,7 +325,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                              $max_right
                              beginAtZero: true
                          }
-                      }],
+                      },
                  },
                  animation: {
                   onComplete: function() {
@@ -426,13 +426,13 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                     xAxes: [{
-                         stacked: true,
-                     }],
-                     yAxes: [{
-                         stacked: true
-                     }]
-                 },
+                      x: {
+                        stacked: true,
+                      },
+                      y: {
+                        stacked: true
+                      }
+                    },
                  animation: {
                      onComplete: function() {
 //                       var chartInstance = this.chart,
@@ -462,12 +462,13 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  }
              });
              canvas$name.onclick = function(evt) {
-               var activePoints = $name.getElementsAtEvent(evt);
+               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                if (activePoints[0] && $onclick) {
-                 var chartData = activePoints[0]['_chart'].config.data;
-                 var idx = activePoints[0]['_index'];
-                 var label = chartData.labels[idx];
-                 var value = chartData.datasets[0].data[idx];
+//                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0].index;
+                 
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
@@ -560,12 +561,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                     xAxes: [{
-                         stacked: true,
-                     }],
-                     yAxes: [{
-                         stacked: true
-                     }]
+                      x: {
+                        stacked: true,
+                      },
+                      y: {
+                        stacked: true
+                      }
                  },
                  legend: { position: 'top'},
                  animation: {
@@ -583,12 +584,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                 }
              });
              canvas$name.onclick = function(evt) {
-               var activePoints = $name.getElementsAtEvent(evt);
+               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                if (activePoints[0] && $onclick) {
-                 var chartData = activePoints[0]['_chart'].config.data;
-                 var idx = activePoints[0]['_index'];
-                 var label = chartData.labels[idx];
-                 var value = chartData.datasets[0].data[idx];
+//                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0].index;
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
@@ -653,9 +654,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
              ctx.canvas.width = 700;
              ctx.canvas.height = 400;
              var $name = new Chart(ctx, {
-               type: 'horizontalBar',
+               type: 'bar',
                data: dataBar$name,
                options: {
+                 indexAxis: 'y',
                  plugins: {
                     datalabels: {
                      color: '#000',
@@ -684,26 +686,26 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      enabled: true,
                  },
                  legend: { position: 'top'},
-                 animation: {
-                     onComplete: function() {
-                       var chartInstance = this.chart;
-                        ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
-                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'right';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillStyle = '#333';
-            
-//                        this.data.datasets.forEach(function (dataset, i) {
-//                            var meta = chartInstance.controller.getDatasetMeta(i);
-//                            meta.data.forEach(function (bar, index) {
-//                                var data = dataset.data[index];                            
-//                                ctx.fillText(data, bar._model.x + 40, bar._model.y);
-//                            });
-//                        });
-                       isChartRendered = true;
-                     }
-                   },
+//                 animation: {
+//                     onComplete: function() {
+//                       var chartInstance = this.chart;
+//                        ctx = chartInstance.ctx;
+//                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 
+//                        Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+//                        ctx.textAlign = 'right';
+//                        ctx.textBaseline = 'middle';
+//                        ctx.fillStyle = '#333';
+//            
+////                        this.data.datasets.forEach(function (dataset, i) {
+////                            var meta = chartInstance.controller.getDatasetMeta(i);
+////                            meta.data.forEach(function (bar, index) {
+////                                var data = dataset.data[index];                            
+////                                ctx.fillText(data, bar._model.x + 40, bar._model.y);
+////                            });
+////                        });
+//                       isChartRendered = true;
+//                     }
+//                   },
                    hover: {
                       onHover: function(event,elements) {
                          if ($onclick) {
@@ -714,12 +716,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                 }
              });
              canvas$name.onclick = function(evt) {
-               var activePoints = $name.getElementsAtEvent(evt);
+               var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                if (activePoints[0] && $onclick) {
-                 var chartData = activePoints[0]['_chart'].config.data;
-                 var idx = activePoints[0]['_index'];
-                 var label = chartData.labels[idx];
-                 var value = chartData.datasets[0].data[idx];
+//                 var chartData = activePoints[0]['_chart'].config.data;
+                 var idx = activePoints[0].index;
+//                 var label = chartData.labels[idx];
+//                 var value = chartData.datasets[0].data[idx];
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
@@ -806,11 +808,11 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                  responsive: true,
                  maintainAspectRatio: true,
                  scales: {
-                    yAxes: [{
+                    y: {
                          ticks: {
                          beginAtZero: disp
                         }
-                    }]
+                    }
                 },
                  title:{
                      display:false,
@@ -836,10 +838,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
              
              canvas$name.onclick = function(evt) {
                if ($onclick) {
-                  var activePoints = $name.getElementAtEvent(evt);
+                  var activePoints = $name.getElementsAtEventForMode(evt, 'point', $name.options);
                   activePoints.forEach(function (dataset) {
-                  var datasetidx = dataset['_datasetIndex'];
-                  var idx = dataset['_index'];
+                  var datasetidx = dataset.datasetIndex;
+                  var idx = dataset.index;
                   var tab = id$name;
                   var selected_id = tab[datasetidx][idx];
                      if (selected_id.length > 0) {
@@ -935,7 +937,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                     yAxes: [{
+                     y: [{
                          id: 'left-y-axis',
                          type: 'linear',
                          position: 'left',
@@ -943,7 +945,6 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                              $max_left
                              beginAtZero: true
                          }
-                        
                      }, {
                          id: 'right-y-axis',
                          type: 'linear',
