@@ -135,11 +135,11 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $gs3  = PluginMydashboardWidget::getGsID("PluginMydashboardAlert6");
          $gs4  = PluginMydashboardWidget::getGsID("eventwidgetglobal");
          $gs5  = PluginMydashboardWidget::getGsID("PluginMydashboardReports_Table3");
-         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"width":4,"height":8},
-         {"id":"' . $gs2 . '","x":4,"y":0,"width":4,"height":8},
-         {"id":"' . $gs3 . '","x":8,"y":0,"width":4,"height":8},
-         {"id":"' . $gs4 . '","x":0,"y":8,"width":4,"height":8},
-         {"id":"' . $gs5 . '","x":4,"y":8,"width":4,"height":8}]';
+         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":4,"y":0,"w":4,"h":8},
+         {"id":"' . $gs3 . '","x":8,"y":0,"w":4,"h":8},
+         {"id":"' . $gs4 . '","x":0,"y":8,"w":4,"h":8},
+         {"id":"' . $gs5 . '","x":4,"y":8,"w":4,"h":8}]';
       }
       if ($id == self::$INVENTORY_VIEW) {
          $plugin   = new Plugin();
@@ -148,16 +148,16 @@ class PluginMydashboardDashboard extends CommonDBTM {
 
             $gs4      = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard1");
             $gs5      = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard2");
-            $data_ocs = ',{"id":"' . $gs4 . '","x":0,"y":9,"width":5,"height":12},
-                        {"id":"' . $gs5 . '","x":5,"y":9,"width":5,"height":12}';
+            $data_ocs = ',{"id":"' . $gs4 . '","x":0,"y":9,"w":5,"h":12},
+                        {"id":"' . $gs5 . '","x":5,"y":9,"w":5,"h":12}';
          }
 
          $gs1  = PluginMydashboardWidget::getGsID("PluginMydashboardReports_Table5");
          $gs2  = PluginMydashboardWidget::getGsID("contractwidget");
          $gs3  = PluginMydashboardWidget::getGsID("PluginMydashboardReports_Table3");
-         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"width":4,"height":9},
-         {"id":"' . $gs2 . '","x":4,"y":0,"width":4,"height":9},
-         {"id":"' . $gs3 . '","x":8,"y":0,"width":4,"height":8}';
+         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":9},
+         {"id":"' . $gs2 . '","x":4,"y":0,"w":4,"h":9},
+         {"id":"' . $gs3 . '","x":8,"y":0,"w":4,"h":8}';
          $data .= $data_ocs;
          $data .= ']';
       }
@@ -176,18 +176,18 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $gs11 = PluginMydashboardWidget::getGsID("PluginMydashboardReports_Pie7");
          $gs12 = PluginMydashboardWidget::getGsID("PluginMydashboardReports_Pie18");
 
-         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"width":4,"height":8},
-         {"id":"' . $gs2 . '","x":0,"y":8,"width":4,"height":11},
-         {"id":"' . $gs3 . '","x":0,"y":19,"width":4,"height":12},
-         {"id":"' . $gs4 . '","x":0,"y":31,"width":5,"height":12},
-         {"id":"' . $gs5 . '","x":4,"y":0,"width":5,"height":8},
-         {"id":"' . $gs6 . '","x":4,"y":8,"width":4,"height":11},
-         {"id":"' . $gs7 . '","x":4,"y":19,"width":4,"height":12},
-         {"id":"' . $gs8 . '","x":5,"y":31,"width":3,"height":11},
-         {"id":"' . $gs9 . '","x":9,"y":0,"width":3,"height":8},
-         {"id":"' . $gs10 . '","x":8,"y":8,"width":4,"height":11},
-         {"id":"' . $gs11 . '","x":8,"y":19,"width":4,"height":12},
-         {"id":"' . $gs12 . '","x":8,"y":31,"width":4,"height":12}]';
+         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs3 . '","x":0,"y":19,"w":4,"h":12},
+         {"id":"' . $gs4 . '","x":0,"y":31,"w":5,"h":12},
+         {"id":"' . $gs5 . '","x":4,"y":0,"w":5,"h":8},
+         {"id":"' . $gs6 . '","x":4,"y":8,"w":4,"h":11},
+         {"id":"' . $gs7 . '","x":4,"y":19,"w":4,"h":12},
+         {"id":"' . $gs8 . '","x":5,"y":31,"w":3,"h":11},
+         {"id":"' . $gs9 . '","x":9,"y":0,"w":3,"h":8},
+         {"id":"' . $gs10 . '","x":8,"y":8,"w":4,"h":11},
+         {"id":"' . $gs11 . '","x":8,"y":19,"w":4,"h":12},
+         {"id":"' . $gs12 . '","x":8,"y":31,"w":4,"h":12}]';
       }
       if ($id == self::$INCIDENT_SUPERVISOR_VIEW) {
 
@@ -199,13 +199,13 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $gs6 = PluginMydashboardWidget::getGsID("PluginMydashboardReports_Line6");
          $gs7 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert7");
 
-         $data = '[{"id":"' . $gs1 . '","x":0,"y":8,"width":4,"height":11},
-         {"id":"' . $gs2 . '","x":8,"y":0,"width":4,"height":8},
-         {"id":"' . $gs3 . '","x":9,"y":19,"width":3,"height":8},
-         {"id":"' . $gs4 . '","x":9,"y":8,"width":3,"height":11},
-         {"id":"' . $gs5 . '","x":0,"y":0,"width":4,"height":8},
-         {"id":"' . $gs6 . '","x":4,"y":8,"width":5,"height":12},
-         {"id":"' . $gs7 . '","x":4,"y":0,"width":4,"height":8}]';
+         $data = '[{"id":"' . $gs1 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs2 . '","x":8,"y":0,"w":4,"h":8},
+         {"id":"' . $gs3 . '","x":9,"y":19,"w":3,"h":8},
+         {"id":"' . $gs4 . '","x":9,"y":8,"w":3,"h":11},
+         {"id":"' . $gs5 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs6 . '","x":4,"y":8,"w":5,"h":12},
+         {"id":"' . $gs7 . '","x":4,"y":0,"w":4,"h":8}]';
       }
       if ($id == self::$REQUEST_SUPERVISOR_VIEW) {
 
@@ -215,11 +215,11 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $gs4 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert1");
          $gs5 = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
 
-         $data = '[{"id":"' . $gs1 . '","x":4,"y":0,"width":5,"height":11},
-         {"id":"' . $gs2 . '","x":0,"y":0,"width":4,"height":12},
-         {"id":"' . $gs3 . '","x":4,"y":11,"width":5,"height":12},
-         {"id":"' . $gs4 . '","x":9,"y":0,"width":3,"height":11},
-         {"id":"' . $gs5 . '","x":9,"y":11,"width":3,"height":8}]';
+         $data = '[{"id":"' . $gs1 . '","x":4,"y":0,"w":5,"h":11},
+         {"id":"' . $gs2 . '","x":0,"y":0,"w":4,"h":12},
+         {"id":"' . $gs3 . '","x":4,"y":11,"w":5,"h":12},
+         {"id":"' . $gs4 . '","x":9,"y":0,"w":3,"h":11},
+         {"id":"' . $gs5 . '","x":9,"y":11,"w":3,"h":8}]';
       }
       if ($id == self::$HELPDESK_TECHNICIAN_VIEW) {
 
@@ -232,15 +232,15 @@ class PluginMydashboardDashboard extends CommonDBTM {
          $gs7  = PluginMydashboardWidget::getGsID("tickettaskstodowidgetgroup");
          $gs8  = PluginMydashboardWidget::getGsID("ticketlistprocesswidgetgroup");
          $gs9  = PluginMydashboardWidget::getGsID("PluginMydashboardAlert2");
-         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"width":4,"height":8},
-         {"id":"' . $gs2 . '","x":4,"y":0,"width":4,"height":8},
-         {"id":"' . $gs3 . '","x":8,"y":0,"width":4,"height":8},
-         {"id":"' . $gs4 . '","x":0,"y":8,"width":4,"height":9},
-         {"id":"' . $gs5 . '","x":4,"y":17,"width":4,"height":9},
-         {"id":"' . $gs6 . '","x":8,"y":8,"width":4,"height":11},
-         {"id":"' . $gs7 . '","x":4,"y":8,"width":4,"height":9},
-         {"id":"' . $gs8 . '","x":0,"y":17,"width":4,"height":9},
-         {"id":"' . $gs9 . '","x":8,"y":19,"width":4,"height":8}]';
+         $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":4,"y":0,"w":4,"h":8},
+         {"id":"' . $gs3 . '","x":8,"y":0,"w":4,"h":8},
+         {"id":"' . $gs4 . '","x":0,"y":8,"w":4,"h":9},
+         {"id":"' . $gs5 . '","x":4,"y":17,"w":4,"h":9},
+         {"id":"' . $gs6 . '","x":8,"y":8,"w":4,"h":11},
+         {"id":"' . $gs7 . '","x":4,"y":8,"w":4,"h":9},
+         {"id":"' . $gs8 . '","x":0,"y":17,"w":4,"h":9},
+         {"id":"' . $gs9 . '","x":8,"y":19,"w":4,"h":8}]';
       }
 
       return $data;

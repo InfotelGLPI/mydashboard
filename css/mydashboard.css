@@ -1108,14 +1108,14 @@ div.dt-button-background {
 }
 
 .md-grid-stack-item-content {
-   border: 1px dashed lightgray;
-   /*border: 1px solid #e6e6e6;*/
+   /*border: 1px dashed lightgray;*/
+   border: 1px solid #e6e6e6;
    -webkit-border-radius: 5px;
    -moz-border-radius: 5px;
    border-radius: 5px;
    font-size: 12px;
-   /*background-color: #FFF !important;*/
-   padding: 5px 5px 5px 5px;
+   background-color: #FFF !important;
+   /*padding: 5px 5px 5px 5px;*/
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {

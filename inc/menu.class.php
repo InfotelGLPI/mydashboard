@@ -293,12 +293,22 @@ class PluginMydashboardMenu extends CommonGLPI {
       foreach ($iterator as $data) {
          $profiles[$data['id']] = $data['name'];
       }
-
-      Dropdown::showFromArray($p['name'], $profiles,
-                              ['value'               => $p['value'],
-                               'rand'                => $p['rand'],
-                               'display_emptychoice' => true,
-                               'on_change'           => 'this.form.submit()']);
+       echo "<select name='".$p['name']."' onChange='this.form.submit()'>";
+       echo "<option>" . Dropdown::EMPTY_VALUE . "</option>";
+       foreach ($profiles as $id => $name) {
+           $selected = '';
+           if ($id == $p['value']) {
+               $selected = 'selected';
+           }
+           echo "<option $selected value='$id'>$name</option>";
+       }
+       echo "</select>";
+//
+//      Dropdown::showFromArray($p['name'], $profiles,
+//                              ['value'               => $p['value'],
+//                               'rand'                => $p['rand'],
+//                               'display_emptychoice' => true,
+//                               'on_change'           => 'this.form.submit()']);
    }
 
    /**
@@ -1296,12 +1306,15 @@ class PluginMydashboardMenu extends CommonGLPI {
 //      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/bootstrap4.css");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/jquery-ui/jquery-ui.min.js");
       echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/jquery-ui/jquery-ui.min.css");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/lodash.min.js");
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.css");
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack-extra.css");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
-
+//      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/lodash.min.js");
+//      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.css");
+//      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack-extra.css");
+//      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.js");
+//
+       Html::requireJs('gridstack');
+       echo Html::css("/public/lib/gridstack.css");
+       echo Html::css("/css/standalone/gridstack-grids.scss");
+//       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
 
       echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css");
@@ -1393,15 +1406,17 @@ class PluginMydashboardMenu extends CommonGLPI {
             if (isset($v["id"])) {
                $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
 
-               if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
-                  foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-                     if (isset($widgets[$v["id"]]["id"])
-                         && $widgets[$v["id"]]["id"] == $w) {
-                        $optjson[$v["id"]]["enableRefresh"] = $r;
-                     }
-                  }
-               }
+//               if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+//                  foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+//                     if (isset($widgets[$v["id"]]["id"])
+//                         && $widgets[$v["id"]]["id"] == $w) {
+//                        $optjson[$v["id"]]["enableRefresh"] = $r;
+//                     }
+//                  }
+//               }
             }
+//             $v['content'] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
+//             $datajson[] = $v;
          }
          //               if ($predefined_grid == 0) {
          //                  $GLPI_CACHE->set($ckey, $datajson);
@@ -1470,25 +1485,23 @@ class PluginMydashboardMenu extends CommonGLPI {
       echo "<script type='text/javascript'>
         $(function () {
             var options = {
-                cellHeight: 41,
-                verticalMargin: 2,
+                 cellHeight: 41,
                  disableResize: $disableResize,
                  disableDrag: $disableDrag,
+                 margin: 2,
                  resizable: {
                     handles: 'e, se, s, sw, w'
                 }
             };
-            $('.grid-stack$rand').gridstack(options);  
+            let grid = GridStack.init(options);
             new function () {
-                this.serializedData = $grid;
-                this.grid = $('.grid-stack$rand').data('gridstack');
                 this.loadGrid = function () {
-                    this.grid.removeAll();
-                    var items = GridStackUI.Utils.sort(this.serializedData);
+                    grid.removeAll();
+                    var items = $grid;
 //                    _.each(items, function (node) {
                      items.forEach(function(node)  {
                          var nodeid = node.id;
-                         var optArray = $optjson;
+//                         var optArray = $optjson;
                          var widgetArray = $datajson; 
                          var widget = widgetArray['' + nodeid + ''];
                          if ( widget !== undefined ) {
@@ -1496,37 +1509,115 @@ class PluginMydashboardMenu extends CommonGLPI {
                          } else {
                              widget = '$msg_error';
                          }
-                         var opt = optArray['' + nodeid + ''];
-                         if ( opt !== undefined ) {
-                            options = optArray['' + nodeid + ''];
-                            if ( options != null ) {
-                               refreshopt = optArray['' + nodeid + '']['enableRefresh'];
-                            } else {
-                                refreshopt = false;
-                            }
-                         } else {
-                             refreshopt = false;
-                         }
+//                         var opt = optArray['' + nodeid + ''];
+//                         if ( opt !== undefined ) {
+//                            options = optArray['' + nodeid + ''];
+//                            if ( options != null ) {
+//                               refreshopt = optArray['' + nodeid + '']['enableRefresh'];
+//                            } else {
+//                                refreshopt = false;
+//                            }
+//                         } else {
+//                             refreshopt = false;
+//                         }
                          var delbutton = '';
                          var refreshbutton = '';
                          if ($delete_button == 1) {
                             var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"ti ti-circle-x md-close\"></i></button>';
                          }
-                         if (refreshopt == 1) {
+//                         if (refreshopt == 1) {
                             var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"ti ti-refresh\"></i></button>';
-                         } else {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"ti ti-refresh\"></i></button>';
-                         }
+//                         } else {
+//                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"ti ti-refresh\"></i></button>';
+//                         }
                          if ( nodeid !== undefined ) {
-                         var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '<div/><div/>');
-                            this.grid.addWidget(el, node.x, node.y, node.width, node.height, true, null, null, null, null, node.id);
+                         var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\">' + refreshbutton + delbutton + widget + '</div></div>';
+
+                         grid.addWidget(el,
+                                            {
+                                               x: node.x,
+                                               y: node.y,
+                                               w: node.w,
+                                               h: node.h,
+                                               id: node.id,
+//                                               autoPosition: true,
+                                            }
+                                         );
+                         refreshWidget(node.id);
                             }
                     }, this);
                     return false;
                 }.bind(this);
-
+                
                 this.loadGrid();
+                
             };
+            deleteWidget = function(value) {
+                widget = 'div[gs-id='+ value + ']';
+                grid.removeWidget(widget);
+            }
+            
+            addNewWidget = function(value) {
+                if (value != 0){
+                        var widgetArray = $allwidgetjson; 
+                        widget = widgetArray['' + value + ''];
+                        var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
+                                 '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + value + '\');\">' +
+                                  '<i class=\"ti ti-circle-x md-close\"></i></button>' + widget + '</div></div>';
+        //                grid = $('.grid-stack').data('gridstack');
+                        grid.addWidget(
+                                                    el,
+                                                    {
+                                                       x: 0,
+                                                       y: 0,
+                                                       w: 4,
+                                                       h: 12,
+                                                       id: value
+                                                    }
+                                                 );
+                     }
+            }
+            // 3.1 full method saving the grid options + children (which is recursive for nested grids)
+            launchSaveGrid = function() {
+                delete serializedFull;
+                serializedData = grid.save(false);
+                var sData = JSON.stringify(serializedData);
+                var profiles_id = -1;
+                $('#ajax_loader').show();
+                $.ajax({
+                   url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
+                   type: 'POST',
+                   data:{data:sData,profiles_id:$active_profile},
+                   success:function(data) {
+                          $('#ajax_loader').hide();
+                          window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
+                       }
+                   });
+            }
+            
+            launchSaveDefaultGrid = function() {
+                delete serializedFull;
+                serializedData = grid.save(false);
+                var sData = JSON.stringify(serializedData);
+                var users_id = 0;
+                var profiles_id = -1;
+                $('#ajax_loader').show();
+                $.ajax({
+                      url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
+                      type: 'POST',
+                      data:{data:sData,users_id:users_id,profiles_id:$active_profile},
+                      success:function(data) {
+                         $('#ajax_loader').hide();
+                         var redirectUrl = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
+                         var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
+                         '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
+                         '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
+                        '</form>');
+                         $('body').append(form);
+                         $(form).submit();
+                      }
+                   });
+            }
         });
         
      
@@ -1622,88 +1713,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                     }
                  });
         }
-        function launchSaveGrid() {
-           this.serializedData = _.map($('.grid-stack$rand > .grid-stack-item:visible'), function (el) {
-            el = $(el);
-            var node = el.data('_gridstack_node');
-            if ( node.id !== undefined ) {
-               return {
-                    id: node.id,
-                   x: node.x,
-                   y: node.y,
-                   width: node.width,
-                   height: node.height
-               };
-            }
-        }, this);
-        var sData = JSON.stringify(this.serializedData);
-        var profiles_id = -1;
-        $('#ajax_loader').show();
-         $.ajax({
-           url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
-           type: 'POST',
-           data:{data:sData,profiles_id:$active_profile},
-           success:function(data) {
-                  $('#ajax_loader').hide();
-                  window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-               }
-           });
-        }
-        function launchSaveDefaultGrid() {
-           this.serializedData = _.map($('.grid-stack$rand > .grid-stack-item:visible'), function (el) {
-            el = $(el);
-            var node = el.data('_gridstack_node');
-            return {
-                 id: node.id,
-                x: node.x,
-                y: node.y,
-                width: node.width,
-                height: node.height
-            };
-        }, this);
-        var sData = JSON.stringify(this.serializedData);
-        var users_id = 0;
-        var profiles_id = -1;
-        $('#ajax_loader').show();
-         $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
-              type: 'POST',
-              data:{data:sData,users_id:users_id,profiles_id:$active_profile},
-              success:function(data) {
-                 $('#ajax_loader').hide();
-                 var redirectUrl = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                 var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
-                 '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
-                 '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
-                '</form>');
-                 $('body').append(form);
-                 $(form).submit();
-              }
-           });
-        }
-        function deleteWidget(id) {
-           this.grid = $('.grid-stack$rand').data('gridstack');
-           widget = $('div[data-gs-id='+ id + ']');
-//             if (confirm('$msg_delete') == true)
-//             { 
-                 this.grid.removeWidget(widget);
-//             }
-             return false;
-           };
-        function addNewWidget(value) {
-             var id = value;
-             if (id != 0){
-                var widgetArray = $allwidgetjson; 
-                widget = widgetArray['' + id + ''];
-                var el = $('<div><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
-                         '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + id + '\');\">' +
-                          '<i class=\"ti ti-circle-x md-close\"></i></button>' + widget + '<div/><div/>');
-                var grid = $('.grid-stack$rand').data('gridstack');
-                grid.addWidget(el, 0, 0, 4, 12, '', null, null, null, null, id);
-                return true;
-             }
-             return false;
-         };
+
         function refreshWidget (id) {
             var widgetOptionsObject = [];
             $.ajax({

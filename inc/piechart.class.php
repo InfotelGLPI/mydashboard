@@ -178,7 +178,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
 //                     fontFamily: 'Lucida Console, Monaco, monospace'
                    }
                 },
-                responsive: true,
+                 responsive: true,
                  maintainAspectRatio: true,
                  title:{
                      display:true,
