@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-17 14:49+0000\n"
+"POT-Creation-Date: 2022-07-17 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1173,15 +1173,15 @@ msgstr ""
 msgid "Display percent of solution types for tickets"
 msgstr ""
 
-#: reports/reports_pie.class.php:86 reports/reports_pie.class.php:999
+#: reports/reports_pie.class.php:86 reports/reports_pie.class.php:1000
 msgid "Top ten of opened tickets by requester groups"
 msgstr ""
 
-#: reports/reports_pie.class.php:89 reports/reports_pie.class.php:1087
+#: reports/reports_pie.class.php:89 reports/reports_pie.class.php:1088
 msgid "Global satisfaction level"
 msgstr ""
 
-#: reports/reports_pie.class.php:92 reports/reports_pie.class.php:1192
+#: reports/reports_pie.class.php:92 reports/reports_pie.class.php:1193
 msgid "Top ten of opened tickets by location"
 msgstr ""
 
@@ -1189,11 +1189,11 @@ msgstr ""
 msgid "Number of use of request sources"
 msgstr ""
 
-#: reports/reports_pie.class.php:97 reports/reports_pie.class.php:1310
+#: reports/reports_pie.class.php:97 reports/reports_pie.class.php:1311
 msgid "Display percent of request sources for closed tickets"
 msgstr ""
 
-#: reports/reports_pie.class.php:98 reports/reports_pie.class.php:1405
+#: reports/reports_pie.class.php:98 reports/reports_pie.class.php:1406
 msgid "Number of tickets per location per period"
 msgstr ""
 
@@ -1213,15 +1213,15 @@ msgstr ""
 msgid "Not respected TTO"
 msgstr ""
 
-#: reports/reports_pie.class.php:1092
+#: reports/reports_pie.class.php:1093
 msgid "Satisfy percent"
 msgstr ""
 
-#: reports/reports_pie.class.php:1092
+#: reports/reports_pie.class.php:1093
 msgid "Not satisfy percent"
 msgstr ""
 
-#: reports/reports_pie.class.php:1309
+#: reports/reports_pie.class.php:1310
 msgid "Percent of use of request sources"
 msgstr ""
 
