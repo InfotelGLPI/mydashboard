@@ -142,11 +142,11 @@ function plugin_init_mydashboard() {
             if (Session::getCurrentInterface() == 'central') {
                if (PluginMydashboardHelper::getReplaceCentral()
                    && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                  $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
+                  $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js.php';
                } else if (PluginMydashboardHelper::getReplaceCentralConf()
                           && PluginMydashboardHelper::getReplaceCentral()
                           && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                  $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js';
+                  $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js.php';
                }
             }
 
