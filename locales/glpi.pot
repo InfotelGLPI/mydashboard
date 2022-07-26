@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-22 15:09+0000\n"
+"POT-Creation-Date: 2022-07-26 13:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: setup.php:176 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: setup.php:174 ajax/loadscripts.php:38 ajax/loadscripts.php:61
 #: inc/menu.class.php:87 inc/menu.class.php:999 inc/preference.class.php:62
 msgid "My Dashboard"
 msgstr ""
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
-#: front/config.php:45
+#: front/config.php:43
 msgid "Please activate the plugin"
 msgstr ""
 
@@ -543,7 +543,7 @@ msgstr ""
 msgid "Palette color"
 msgstr ""
 
-#: inc/preferenceuserblacklist.class.php:56
+#: inc/preferenceuserblacklist.class.php:55
 msgid "From which plugins you want to display the widgets?"
 msgstr ""
 
@@ -754,7 +754,7 @@ msgid "Display alerts for requests"
 msgstr ""
 
 #: reports/alert.class.php:166 reports/alert.class.php:758
-#: reports/alert.class.php:3168
+#: reports/alert.class.php:3167
 msgid "Global indicators by week"
 msgstr ""
 
@@ -862,32 +862,32 @@ msgstr ""
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: reports/alert.class.php:2882 reports/alert.class.php:3180
+#: reports/alert.class.php:2881 reports/alert.class.php:3179
 #: reports/ticket.class.php:74 reports/ticket.class.php:1224
 msgid "New tickets"
 msgstr ""
 
-#: reports/alert.class.php:2923
+#: reports/alert.class.php:2922
 msgid "Tickets late"
 msgstr ""
 
-#: reports/alert.class.php:2956 reports/alert.class.php:3192
+#: reports/alert.class.php:2955 reports/alert.class.php:3191
 msgid "Pending tickets"
 msgstr ""
 
-#: reports/alert.class.php:3007 reports/alert.class.php:3198
+#: reports/alert.class.php:3006 reports/alert.class.php:3197
 msgid "Incidents in progress"
 msgstr ""
 
-#: reports/alert.class.php:3058 reports/alert.class.php:3204
+#: reports/alert.class.php:3057 reports/alert.class.php:3203
 msgid "Requests in progress"
 msgstr ""
 
-#: reports/alert.class.php:3102
+#: reports/alert.class.php:3101
 msgid "Ticket closed"
 msgstr ""
 
-#: reports/alert.class.php:3210
+#: reports/alert.class.php:3209
 msgid "Tickets closed"
 msgstr ""
 
@@ -1249,15 +1249,15 @@ msgstr ""
 msgid "Number of opened tickets by technician and by status"
 msgstr ""
 
-#: reports/reports_table.class.php:72 reports/reports_table.class.php:678
+#: reports/reports_table.class.php:72 reports/reports_table.class.php:676
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
-#: reports/reports_table.class.php:450
+#: reports/reports_table.class.php:449
 msgid "Number of tickets open by technician and by status"
 msgstr ""
 
-#: reports/reports_table.class.php:453
+#: reports/reports_table.class.php:452
 msgid "Technicians"
 msgstr ""
 
@@ -1269,8 +1269,8 @@ msgstr ""
 msgid "Ticket followup"
 msgstr ""
 
-#: scripts/clean_stock_tickets.php:85
-#: scripts/insert_stock_ticketindicators.php:56
-#: scripts/insert_stock_tickets.php:56
+#: scripts/clean_stock_tickets.php:83
+#: scripts/insert_stock_ticketindicators.php:53
+#: scripts/insert_stock_tickets.php:53
 msgid "Plugin disabled"
 msgstr ""
