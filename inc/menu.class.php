@@ -1317,20 +1317,20 @@ class PluginMydashboardMenu extends CommonGLPI {
 //       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
 
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css");
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/ColReorder-1.5.2/css/colReorder.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-2.2.3/css/buttons.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/ColReorder-1.5.6/css/colReorder.dataTables.min.css");
       echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/datatables.min.css");
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css");
-      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Select-1.3.1/css/select.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Responsive-2.3.0/css/responsive.dataTables.min.css");
+      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Select-1.4.0/css/select.dataTables.min.css");
 
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/datatables.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Responsive-2.2.3/js/dataTables.responsive.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Select-1.3.1/js/dataTables.select.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/buttons.html5.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/buttons.print.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-1.6.1/js/buttons.colVis.min.js");
-      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Responsive-2.3.0/js/dataTables.responsive.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Select-1.4.0/js/dataTables.select.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-2.2.3/js/dataTables.buttons.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-2.2.3/js/buttons.html5.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-2.2.3/js/buttons.print.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/Buttons-2.2.3/js/buttons.colVis.min.js");
+      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/ColReorder-1.5.6/js/dataTables.colReorder.min.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/JSZip-2.5.0/jszip.min.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
