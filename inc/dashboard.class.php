@@ -142,9 +142,8 @@ class PluginMydashboardDashboard extends CommonDBTM {
          {"id":"' . $gs5 . '","x":4,"y":8,"w":4,"h":8}]';
       }
       if ($id == self::$INVENTORY_VIEW) {
-         $plugin   = new Plugin();
          $data_ocs = '';
-         if ($plugin->isActivated("ocsinventoryng")) {
+         if (Plugin::isPluginActive("ocsinventoryng")) {
 
             $gs4      = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard1");
             $gs5      = PluginMydashboardWidget::getGsID("PluginOcsinventoryngDashboard2");

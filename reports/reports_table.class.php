@@ -334,9 +334,8 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                                  . $users_criteria
                                  . " GROUP BY `glpi_groups_users`.`users_id`";
             // Number of tickets by technician and by status more ticket
-            $plugin         = new Plugin();
             $moreTicketType = [];
-            if ($plugin->isActivated('moreticket')) {
+            if (Plugin::isPluginActive('moreticket')) {
                $query_moretickets_by_technician_by_status = "SELECT count(*) as nb, `glpi_tickets_users`.`users_id` as userid,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
                                                             . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
                                                             . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
@@ -411,7 +410,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                      }
                      $j++;
                   }
-                  if ($plugin->isActivated('moreticket')) {
+                  if (Plugin::isPluginActive('moreticket')) {
                      $result3       = $DB->query($query_moretickets_by_technician_by_status);
                      $hasMoreTicket = 1;
                      if ($DB->numrows($result3) > 0) {
@@ -439,7 +438,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                   }
                   $i++;
                }
-               if ($plugin->isActivated('moreticket')) {
+               if (Plugin::isPluginActive('moreticket')) {
                   if (isset($array) && count($array) > 0) {
                      $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
                   }
@@ -557,9 +556,8 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                                         ]
                                      ]);
 
-            $plugin         = new Plugin();
             $moreTicketType = [];
-            if ($plugin->isActivated('moreticket')) {
+            if (Plugin::isPluginActive('moreticket')) {
                $query_moretickets_by_group_by_status = "SELECT count(*) as nb, `glpi_groups_tickets`.`groups_id` as groups_id,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
                                                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
                                                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
@@ -644,7 +642,7 @@ class PluginMydashboardReports_Table extends CommonGLPI {
                      }
                      $j++;
                   }
-                  if ($plugin->isActivated('moreticket')) {
+                  if (Plugin::isPluginActive('moreticket')) {
                      $result3       = $DB->query($query_moretickets_by_group_by_status);
                      $hasMoreTicket = 1;
                      if ($DB->numrows($result3) > 0) {

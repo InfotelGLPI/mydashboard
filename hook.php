@@ -482,9 +482,7 @@ function plugin_mydashboard_getDatabaseRelations() {
 // Define Dropdown tables to be manage in GLPI
 function plugin_mydashboard_getDropdown() {
 
-   $plugin = new Plugin();
-
-   if ($plugin->isActivated("mydashboard")) {
+   if (Plugin::isPluginActive("mydashboard")) {
       return [
          'PluginMydashboardCustomswidget' => PluginMydashboardCustomswidget::getTypeName(2),];
    } else {

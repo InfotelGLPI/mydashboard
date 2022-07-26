@@ -181,7 +181,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                  responsive: true,
                  maintainAspectRatio: true,
                  title:{
-                     display:true,
+                     display:false,
                      text:'$name'
                  },
 //                  tooltips: {

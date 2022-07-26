@@ -46,10 +46,7 @@ if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
 }
 
 //Check if plugin is installed
-$plugin = new Plugin();
-//$config = PluginPrintercountersConfig::getInstance();
-
-if ($plugin->isActivated("mydashboard")) {
+if (Plugin::isPluginActive("mydashboard")) {
    $record = new PluginMydashboardStockTicketIndicator();
    $record->cronMydashboardInfotelUpdateStockTicketIndicator();
 } else {

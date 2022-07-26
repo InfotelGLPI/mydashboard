@@ -1049,8 +1049,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                   }
                }
             }
-            $plugin = new Plugin();
-            if ($plugin->isActivated('moreticket')) {
+
+            if (Plugin::isPluginActive('moreticket')) {
                $moreTickets = [];
                foreach (self::getAllMoreTicketStatus() as $id => $names) {
                   $moreTickets[] = $id;
@@ -2279,8 +2279,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
       global $DB;
 
       $tabs   = [];
-      $plugin = new Plugin();
-      if ($plugin->isActivated('moreticket')) {
+      if (Plugin::isPluginActive('moreticket')) {
          $query  = "SELECT `glpi_plugin_moreticket_waitingtypes`.`completename` as name, 
                    `glpi_plugin_moreticket_waitingtypes`.`id` as id  FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY id";
          $result = $DB->query($query);

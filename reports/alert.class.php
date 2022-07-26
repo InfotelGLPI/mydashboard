@@ -2763,8 +2763,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
         if ($seeown == false) {
             if ($iswidget == true) {
-                $plugin = new Plugin();
-                if ($plugin->isActivated("Mydashboard")) {
+                if (Plugin::isPluginActive("Mydashboard")) {
                     $preference = new PluginMydashboardPreference();
                     if (!$preference->getFromDB(Session::getLoginUserID())) {
                         $preference->initPreferences(Session::getLoginUserID());
@@ -3148,7 +3147,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                                   "export"    => false,
                                   "canvas"    => false,
                                   "nb"        => 1];
-                if ($plugin->isActivated("Mydashboard")) {
+                if (Plugin::isPluginActive("Mydashboard")) {
                     $stats .= PluginMydashboardHelper::getGraphHeader($params_header);
                 }
 

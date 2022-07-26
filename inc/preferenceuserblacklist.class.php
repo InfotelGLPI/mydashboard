@@ -49,7 +49,6 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
       if (isset($PLUGIN_HOOKS['mydashboard'])) {
          $blacklist = $this->getBlacklistForUser($user_id);
 
-         $pluginObject = new Plugin();
          echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/preferenceuserblacklist.form.php' onsubmit='return true;'>";
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='headerRow'><th class='center' colspan='2'>";
@@ -57,7 +56,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
          echo "</th></tr>";
          //Every plugins can be blacklisted by user, by default every plugins
          foreach ($PLUGIN_HOOKS['mydashboard'] as $pluginname => $x) {
-            if ($pluginObject->isActivated($pluginname)) {
+            if (Plugin::isPluginActive($pluginname)) {
                echo "<tr class='tab_bg_1'><td>" . $this->getLocalName($pluginname) . "</td>";
                echo "<td>";
                $yesno = 1;

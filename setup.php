@@ -89,16 +89,14 @@ function plugin_init_mydashboard() {
    if (Session::getLoginUserID()) {
       Plugin::registerClass('PluginMydashboardProfile', ['addtabon' => 'Profile']);
 
-      $plugin = new Plugin();
-
-      if ($plugin->isActivated("mydashboard")) {
+      if (Plugin::isPluginActive("mydashboard")) {
          //If user has right to see configuration
          if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
             $PLUGIN_HOOKS['config_page']['mydashboard'] = 'front/config.form.php';
             //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
          }
 
-         if ($plugin->isActivated('servicecatalog')) {
+         if (Plugin::isPluginActive('servicecatalog')) {
             $PLUGIN_HOOKS['servicecatalog']['mydashboard'] = ['PluginMydashboardServicecatalog'];
          }
 
@@ -110,7 +108,7 @@ function plugin_init_mydashboard() {
 
             //            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];
 
-            if ($plugin->isActivated('servicecatalog')
+            if (Plugin::isPluginActive('servicecatalog')
                 && Session::haveRight("plugin_servicecatalog", READ)) {
                unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
             }
@@ -129,7 +127,7 @@ function plugin_init_mydashboard() {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
                         Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
 
-                     } else if (!$plugin->isActivated("servicecatalog")
+                     } else if (!Plugin::isPluginActive("servicecatalog")
                                 || Session::haveRight("plugin_servicecatalog", 1)) {
                         $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
                         Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");

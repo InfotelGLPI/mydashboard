@@ -28,9 +28,7 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-$plugin = new Plugin();
-
-if ($plugin->isActivated("mydashboard")) {
+if (Plugin::isPluginActive("mydashboard")) {
 
    $config = new PluginMydashboardStockWidget();
 

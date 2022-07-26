@@ -1498,7 +1498,6 @@ class PluginMydashboardMenu extends CommonGLPI {
                 this.loadGrid = function () {
                     grid.removeAll();
                     var items = $grid;
-//                    _.each(items, function (node) {
                      items.forEach(function(node)  {
                          var nodeid = node.id;
 //                         var optArray = $optjson;

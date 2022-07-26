@@ -30,12 +30,10 @@ Session::checkLoginUser();
 
 Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'PluginMydashboardConfig');
 
-$plugin = new Plugin();
-
 if (!isset($_GET["id"])) {
    $_GET["id"] = "1";
 }
-if ($plugin->isActivated("mydashboard")) {
+if (Plugin::isPluginActive("mydashboard")) {
 
    $config = new PluginMydashboardConfig();
 

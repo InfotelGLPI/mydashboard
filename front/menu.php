@@ -28,13 +28,11 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-$plugin = new Plugin();
-
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginMydashboardMenu::getTypeName(1), '', "tools", "pluginmydashboardmenu");
 } else {
 
-   if ($plugin->isActivated('servicecatalog')) {
+   if (Plugin::isPluginActive('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginMydashboardMenu::getTypeName(1));
    } else {
       Html::helpHeader(PluginMydashboardMenu::getTypeName(1));
@@ -73,7 +71,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 }
 
 if (Session::getCurrentInterface() != 'central'
-    && $plugin->isActivated('servicecatalog')) {
+    && Plugin::isPluginActive('servicecatalog')) {
 
    PluginServicecatalogMain::showNavBarFooter('mydashboard');
 }

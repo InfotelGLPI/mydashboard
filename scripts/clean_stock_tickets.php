@@ -45,9 +45,7 @@ if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
 }
 
 //Check if plugin is installed
-$plugin = new Plugin();
-
-if ($plugin->isActivated("mydashboard")) {
+if (Plugin::isPluginActive("mydashboard")) {
 
    $currentmonth = date("m");
    $currentyear  = date("Y");
