@@ -167,16 +167,16 @@ class PluginMydashboardLineChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                     x: {
-                         stacked: true,
-                     },
-                     y: {
+                     xAxes: [{
+                      stacked: true
+                    }],
+                     yAxes: [{
                          ticks: {
                             beginAtZero: true,
                             min: 0,
                         },
                          stacked: true
-                     }
+                    }],
                  },
 //                 animation: {
 //                     onComplete: function() {

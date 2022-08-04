@@ -426,13 +426,13 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      intersect: false
                  },
                  scales: {
-                      x: {
-                        stacked: true,
-                      },
-                      y: {
-                        stacked: true
-                      }
-                    },
+                    xAxes: [{
+                      stacked: true
+                    }],
+                    yAxes: [{
+                      stacked: true
+                    }]
+                  },
                  animation: {
                      onComplete: function() {
 //                       var chartInstance = this.chart,
@@ -560,14 +560,14 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                      mode: 'index',
                      intersect: false
                  },
-                 scales: {
-                      x: {
-                        stacked: true,
-                      },
-                      y: {
-                        stacked: true
-                      }
-                 },
+                scales: {
+                    xAxes: [{
+                      stacked: true
+                    }],
+                    yAxes: [{
+                      stacked: true
+                    }]
+                  },
                  legend: { position: 'top'},
                  animation: {
                      onComplete: function() {

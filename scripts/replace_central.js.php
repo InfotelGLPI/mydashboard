@@ -14,7 +14,7 @@ header('Content-Type: text/javascript');
         var object = this;
         var root_mydashboard_doc = "<?php echo PLUGIN_MYDASHBOARD_WEBDIR; ?>";
         var check_path = root_mydashboard_doc.split('/');
-        console.log(check_path[2]);
+       // console.log(check_path[2]);
 
         // Start the plugin
         function init() {

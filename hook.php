@@ -237,6 +237,30 @@ function plugin_mydashboard_install() {
    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.0.sql");
    $mig->executeMigration();
 
+
+    $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
+    $result     = $DB->query($query);
+
+    while ($data = $DB->fetchArray($result)) {
+        $id    = $data['id'];
+        $grids = json_decode($data['grid'], true);
+        $newwidgets = [];
+        $newwidget  = [];
+        foreach ($grids as $k => $widgets) {
+            $newwidget['id'] = $widgets['id'];
+            $newwidget['x']  = $widgets['x'];
+            $newwidget['y']  = $widgets['y'];
+            $newwidget['w']  = isset($widgets['width']) ? $widgets['width'] : $widgets['w'];
+            $newwidget['h']  = isset($widgets['height']) ? $widgets['height'] : $widgets['h'];
+
+            $newwidgets[] = $newwidget;
+        }
+        $newgrid      = json_encode($newwidgets);
+        $query        = "UPDATE `glpi_plugin_mydashboard_dashboards`
+        SET `grid` = '" . $newgrid . "' WHERE `glpi_plugin_mydashboard_dashboards`.`id` = " . $id . ";";
+        $DB->query($query);
+    }
+
    //If default configuration is not loaded
    $config = new PluginMydashboardConfig();
    if (!$config->getFromDB("1")) {

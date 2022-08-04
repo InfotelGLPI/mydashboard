@@ -1069,43 +1069,43 @@ div.dt-button-background {
    background: none;
 }
 */
-.grid-stack-item:not(.lock-bottom) .grid-stack-item-content {
-   font-size: 11px;
-   font-weight: normal !important;
-   text-align: center;
-   overflow: hidden;
-   cursor: move; /* fallback */
-   cursor: -webkit-grab;
-   cursor: -moz-grab;
-   cursor: grab;
-}
+/*.grid-stack-item:not(.lock-bottom) .grid-stack-item-content {*/
+/*   font-size: 11px;*/
+/*   font-weight: normal !important;*/
+/*   text-align: center;*/
+/*   overflow: hidden;*/
+/*   cursor: move; !* fallback *!*/
+/*   cursor: -webkit-grab;*/
+/*   cursor: -moz-grab;*/
+/*   cursor: grab;*/
+/*}*/
 
-#mygrid {
-   width: 100%;
-   /*margin-left: 10px;*/
-   /*margin-right: 5px;*/
-}
+/*#mygrid {*/
+/*   width: 100%;*/
+/*   !*margin-left: 10px;*!*/
+/*   !*margin-right: 5px;*!*/
+/*}*/
 
 .ui-state-disabled {
    opacity: 1 !important;
 }
 
-.md-grid-stack {
-   /*background: #FFF;*/
-}
+/*.md-grid-stack {*/
+/*   !*background: #FFF;*!*/
+/*}*/
 
-.grid-stack > .grid-stack-item > .grid-stack-item-content {
-   left: 1px !important;
-   right: 1px !important;
-}
+/*.grid-stack > .grid-stack-item > .grid-stack-item-content {*/
+/*   left: 1px !important;*/
+/*   right: 1px !important;*/
+/*}*/
 
-.md-grid-stack-item {
-   background: white !important;
-   text-align: center;
-   margin-bottom: 16px;
-   min-height: 100px;
-   padding: 0 5px 0 5px !important;
-}
+/*.md-grid-stack-item {*/
+/*   background: white !important;*/
+/*   text-align: center;*/
+/*   margin-bottom: 16px;*/
+/*   min-height: 100px;*/
+/*   padding: 0 5px 0 5px !important;*/
+/*}*/
 
 .md-grid-stack-item-content {
    /*border: 1px dashed lightgray;*/

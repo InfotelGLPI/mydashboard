@@ -179,6 +179,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                    }
                 },
                  responsive: true,
+                 aspectRatio: 2,
                  maintainAspectRatio: true,
                  title:{
                      display:false,

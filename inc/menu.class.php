@@ -1574,6 +1574,7 @@ class PluginMydashboardMenu extends CommonGLPI {
                                                        id: value
                                                     }
                                                  );
+                        refreshWidget(value);
                      }
             }
             // 3.1 full method saving the grid options + children (which is recursive for nested grids)
