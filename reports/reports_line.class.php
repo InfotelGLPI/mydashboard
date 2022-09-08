@@ -164,6 +164,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
             $results = $DB->query($query);
+
+             $nbtickets = __('Tickets number', 'mydashboard');
             while ($data = $DB->fetchArray($results)) {
 
                list($year, $month) = explode('-', $data['month']);
@@ -178,33 +180,33 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                $data_1    = $DB->fetchArray($results_1);
 
                $tabdata[$i] = $data_1['count'];
-
                $tabnames[] = $data['monthname'];
                $i++;
             }
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Tickets stock", "mydashboard");
-            $widget->setWidgetComment(__("Sum of not solved tickets by month", "mydashboard"));
+             $comment = __("Sum of not solved tickets by month", "mydashboard");
+            $widget->setWidgetComment($comment);
             $widget->setWidgetTitle((($isDebug) ? "6 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
-            $dataLineset = json_encode($tabdata);
+             $datasets[] =
+                 ['type'        => 'line',
+                  'data'        => $tabdata,
+                  'name'       => $nbtickets,
+                 ];
+             $dataLineset = json_encode($datasets);
             $labelsLine  = json_encode($tabnames);
-            $colors      = PluginMydashboardColor::getColors(1, 0);
-
-            $month     = _n('month', 'months', 2);
-            $nbtickets = __('Tickets number', 'mydashboard');
-
-            $graph_datas = ['name'            => $name,
+            $graph_datas = ['title'   => $title,
+                            'comment' => $comment,
+                            'name'            => $name,
                             'ids'             => json_encode([]),
                             'data'            => $dataLineset,
-                            'labels'          => $labelsLine,
-                            'label'           => $title,
-                            'backgroundColor' => $colors];
+                            'labels'          => $labelsLine];
 
 
-            $graph = PluginMydashboardLineChart::launchGraph($graph_datas, []);
+            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, []);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,
@@ -227,7 +229,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $name    = 'TicketStatusBarLineChart';
             $onclick = 0;
             if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() == 'central') {
+//                && Session::getCurrentInterface() == 'central'
+            ) {
                $criterias = ['entities_id',
                              'technicians_groups_id',
                              'group_is_recursive',
@@ -239,12 +242,12 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                              'locations_id'];
                $onclick   = 1;
             }
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requesters_groups_id',
-                             'year',
-                             'locations_id'];
-            }
+//            if (isset($_SESSION['glpiactiveprofile']['interface'])
+//                && Session::getCurrentInterface() != 'central') {
+//               $criterias = ['requesters_groups_id',
+//                             'year',
+//                             'locations_id'];
+//            }
 
             $params  = ["preferences" => $this->preferences,
                         "criterias"   => $criterias,
@@ -457,6 +460,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened and closed tickets by month", "mydashboard");
+            $comment = "";
             $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
@@ -468,34 +472,32 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $datasets[] =
                ['type'        => 'line',
                 'data'        => $tabprogress,
-                'label'       => $titleprogress,
-                'borderColor' => PluginMydashboardColor::getColors(1, 0),
-                'fill'        => false,
-                'lineTension' => '0.1',
+                'name'       => $titleprogress,
                ];
 
             $datasets[] =
                ["type"            => "bar",
                 "data"            => $tabopened,
-                "label"           => $titleopened,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 1),
+                "name"           => $titleopened,
                ];
 
             $datasets[] =
                ['type'            => 'bar',
                 'data'            => $tabclosed,
-                'label'           => $titlesolved,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 2),
+                'name'           => $titlesolved,
                ];
 
 
             $tabdatesset = json_encode($tabdates);
 
-            $graph_datas = ['name'   => $name,
+            $graph_datas = ['title'   => $title,
+                            'comment' => $comment,
+                            'name'   => $name,
                             'ids'    => $tabdatesset,
                             'data'   => json_encode($datasets),
                             'labels' => $labels,
-                            'label'  => $title];
+//                            'label'  => $title
+            ];
 
             $graph_criterias = [];
             $js_ancestors    = $crit['ancestors'];
@@ -512,7 +514,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   'widget'             => $widgetId];
             }
 
-            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, $graph_criterias);
+            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,
@@ -741,6 +743,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened and resolved / closed tickets by month", "mydashboard");
+             $comment = "";
             $widget->setWidgetTitle((($isDebug) ? "34 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
@@ -752,33 +755,31 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $datasets[] =
                ['type'        => 'line',
                 'data'        => $tabprogress,
-                'label'       => $titleprogress,
-                'borderColor' => PluginMydashboardColor::getColors(1, 0),
-                'fill'        => false,
-                'lineTension' => '0.1',
+                'name'       => $titleprogress,
                ];
 
             $datasets[] =
                ["type"            => "bar",
                 "data"            => $tabopened,
-                "label"           => $titleopened,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 1),
+                "name"           => $titleopened,
                ];
 
             $datasets[] =
                ['type'            => 'bar',
                 'data'            => $tabresolved,
-                'label'           => $titlesolved,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 2),
+                'name'           => $titlesolved,
                ];
 
             $tabdatesset = json_encode($tabdates);
 
-            $graph_datas = ['name'   => $name,
+            $graph_datas = ['title'   => $title,
+                            'comment' => $comment,
+                            'name'   => $name,
                             'ids'    => $tabdatesset,
                             'data'   => json_encode($datasets),
                             'labels' => $labels,
-                            'label'  => $title];
+//                            'label'  => $title
+            ];
 
             $graph_criterias = [];
             $js_ancestors    = $crit['ancestors'];
@@ -795,7 +796,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   'widget'             => $widgetId];
             }
 
-            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, $graph_criterias);
+            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,
@@ -1051,6 +1052,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
             $widget = new PluginMydashboardHtml();
             $title  = __("Number of opened, closed  and unplanned tickets by month", "mydashboard");
+             $comment = "";
             $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
             $widget->toggleWidgetRefresh();
 
@@ -1063,40 +1065,37 @@ class PluginMydashboardReports_Line extends CommonGLPI {
             $datasets[] =
                ['type'        => 'line',
                 'data'        => $tabprogress,
-                'label'       => $titleprogress,
-                'borderColor' => PluginMydashboardColor::getColors(1, 0),
-                'fill'        => false,
-                'lineTension' => '0.1',
+                'name'       => $titleprogress,
                ];
 
             $datasets[] =
                ["type"            => "bar",
                 "data"            => $tabopened,
-                "label"           => $titleopened,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 1),
+                "name"           => $titleopened,
                ];
 
             $datasets[] =
                ['type'            => 'bar',
                 'data'            => $tabclosed,
-                'label'           => $titlesolved,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 2),
+                'name'           => $titlesolved,
                ];
 
             $datasets[] =
                ['type'            => 'bar',
                 'data'            => $tabunplanned,
-                'label'           => $titleunplanned,
-                'backgroundColor' => PluginMydashboardColor::getColors(1, 3),
+                'name'           => $titleunplanned,
                ];
 
             $tabdatesset = json_encode($tabdates);
 
-            $graph_datas = ['name'   => $name,
+            $graph_datas = ['title'   => $title,
+                            'comment' => $comment,
+                            'name'   => $name,
                             'ids'    => $tabdatesset,
                             'data'   => json_encode($datasets),
                             'labels' => $labels,
-                            'label'  => $title];
+//                            'label'  => $title
+            ];
 
             $graph_criterias = [];
             $js_ancestors    = $crit['ancestors'];
@@ -1113,7 +1112,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                   'widget'             => $widgetId];
             }
 
-            $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, $graph_criterias);
+            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
 
             $params = ["widgetId"  => $widgetId,
                        "name"      => $name,

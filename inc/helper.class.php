@@ -142,80 +142,80 @@ class PluginMydashboardHelper {
             $graph .= self::getForm($params["widgetId"], $params["opt"], $params["criterias"], $params["onsubmit"]);
         }
         $graph .= "</div>";
-        if ($params["export"] == true) {
-            $graph .= "<div class='bt-col-md-2 center'>";
-            $graph .= "<button class='submit btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
-            $graph .= "<button class='submit btn btn-primary btn-sm' style=\"margin-left: 1px;\" id=\"downloadCSV$name\">CSV</button>";
-            $graph .= "<script>
-         $(document).ready(
-               function () {
-                document.getElementById(\"downloadCSV$name\").addEventListener(\"click\", function(){
-                    downloadCSV({ filename: \"chart-data.csv\", chart: $name })
-                  });
-                   
-                   function convertChartDataToCSV(args,labels, nbIterations) {  
-                       
-                       var result, ctr, keys, columnDelimiter, lineDelimiter, data;
-                     
-                       data = args.data.data || null;
-                       if (data == null || !data.length) {
-                         return null;
-                       }
-
-                       columnDelimiter = args.columnDelimiter || \";\";
-                       lineDelimiter = args.lineDelimiter || '\\n';
-                       result = '';     
-                       if(nbIterations == 0){
-                           
-                          labels.forEach(function(label) {
-                            result += columnDelimiter;
-                            result += label;
-                          });
-                       }
-                       keys = Object.keys(data);
-                       result += lineDelimiter;
-                       result += args.data.label;
-                       result += columnDelimiter;
-                       data.forEach(function(item) {
-                          if (typeof item != 'undefined') {
-                                 result += item;
-                          }
-                           ctr++;
-                         result += columnDelimiter;
-                       });
-                       return result;
-                     }
-                     
-                     function downloadCSV(args) {
-                      console.log(args);
-                       var data, filename, link;
-                       var csv = \"\";
-                       
-                       for(var i = 0; i < args.chart.data.datasets.length; i++){
-                         csv += convertChartDataToCSV({
-                           data: args.chart.data.datasets[i]
-                         }, args.chart.data.labels, i);
-                       }
-                       if (csv == null) return;
-                     
-                       filename = args.filename || 'chart-data.csv';
-                     
-                       if (!csv.match(/^data:text\/csv/i)) {
-                         var universalBOM = '\uFEFF';
-                         csv = 'data:text/csv;charset=utf-8,' + encodeURIComponent(universalBOM+csv);
-                       }
-                       link = document.createElement('a');
-                       link.setAttribute('href', csv);
-                       link.setAttribute('download', filename);
-                       document.body.appendChild(link); // Required for FF
-                       link.click(); 
-                       document.body.removeChild(link);
-                     }
-         });</script>";
-            $graph .= "<a href='#' id='download'></a>";
-            $graph .= "</div>";
-        }
-        $graph .= "</div>";
+//        if ($params["export"] == true) {
+//            $graph .= "<div class='bt-col-md-2 center'>";
+//            $graph .= "<button class='submit btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
+//            $graph .= "<button class='submit btn btn-primary btn-sm' style=\"margin-left: 1px;\" id=\"downloadCSV$name\">CSV</button>";
+//            $graph .= "<script>
+//         $(document).ready(
+//               function () {
+//                document.getElementById(\"downloadCSV$name\").addEventListener(\"click\", function(){
+//                    downloadCSV({ filename: \"chart-data.csv\", chart: $name })
+//                  });
+//
+//                   function convertChartDataToCSV(args,labels, nbIterations) {
+//
+//                       var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+//
+//                       data = args.data.data || null;
+//                       if (data == null || !data.length) {
+//                         return null;
+//                       }
+//
+//                       columnDelimiter = args.columnDelimiter || \";\";
+//                       lineDelimiter = args.lineDelimiter || '\\n';
+//                       result = '';
+//                       if(nbIterations == 0){
+//
+//                          labels.forEach(function(label) {
+//                            result += columnDelimiter;
+//                            result += label;
+//                          });
+//                       }
+//                       keys = Object.keys(data);
+//                       result += lineDelimiter;
+//                       result += args.data.label;
+//                       result += columnDelimiter;
+//                       data.forEach(function(item) {
+//                          if (typeof item != 'undefined') {
+//                                 result += item;
+//                          }
+//                           ctr++;
+//                         result += columnDelimiter;
+//                       });
+//                       return result;
+//                     }
+//
+//                     function downloadCSV(args) {
+//                      console.log(args);
+//                       var data, filename, link;
+//                       var csv = \"\";
+//
+//                       for(var i = 0; i < args.chart.data.datasets.length; i++){
+//                         csv += convertChartDataToCSV({
+//                           data: args.chart.data.datasets[i]
+//                         }, args.chart.data.labels, i);
+//                       }
+//                       if (csv == null) return;
+//
+//                       filename = args.filename || 'chart-data.csv';
+//
+//                       if (!csv.match(/^data:text\/csv/i)) {
+//                         var universalBOM = '\uFEFF';
+//                         csv = 'data:text/csv;charset=utf-8,' + encodeURIComponent(universalBOM+csv);
+//                       }
+//                       link = document.createElement('a');
+//                       link.setAttribute('href', csv);
+//                       link.setAttribute('download', filename);
+//                       document.body.appendChild(link); // Required for FF
+//                       link.click();
+//                       document.body.removeChild(link);
+//                     }
+//         });</script>";
+//            $graph .= "<a href='#' id='download'></a>";
+//            $graph .= "</div>";
+//        }
+//        $graph .= "</div>";
         if ($params["canvas"] == true) {
             if ($params["nb"] < 1) {
                 $graph .= "<div align='center'><br><br><h3><span class ='maint-color'>";
@@ -223,7 +223,7 @@ class PluginMydashboardHelper {
                 $graph .= "</span></h3></div>";
             }
             $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-            $graph .= "<canvas id=\"$name\"></canvas>";
+            $graph .= "<div id=\"$name\" style='width: 100%; height: 400px;'></div>";
             $graph .= "</div>";
         }
 
@@ -857,7 +857,7 @@ class PluginMydashboardHelper {
                  });
                 </script>";
 
-        $form   .= "<div id='plugin_mydashboard_add_criteria$rand'><i class=\"ti ti-adjustments\"></i>";
+        $form   .= "<div id='plugin_mydashboard_add_criteria$rand' style='margin-bottom: 15px;'><i class=\"ti ti-adjustments\"></i>";
         $form   .= "<span style='font-size: 12px;font-family: verdana;color: #CCC;font-weight: bold;'>";
         $entity = new Entity();
         if (isset($opt['entities_id']) && $opt['entities_id'] > -1) {

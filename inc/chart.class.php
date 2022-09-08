@@ -41,7 +41,6 @@ abstract class PluginMydashboardChart extends PluginMydashboardModule
    function __construct() {
       $this->initOptions();
       $this->setWidgetType("chart");
-      $this->setOption('colors', PluginMydashboardColor::getColors());
       $this->tabDatas = [];
       $this->tabDatasSet = false;
    }
