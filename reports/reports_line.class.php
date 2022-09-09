@@ -29,106 +29,106 @@
  */
 class PluginMydashboardReports_Line extends CommonGLPI {
 
-   private       $options;
-   private       $pref;
-   public static $reports = [6, 22, 34, 35];
+    private       $options;
+    private       $pref;
+    public static $reports = [6, 22, 34, 35];
 
-   /**
-    * PluginMydashboardReports_Line constructor.
-    *
-    * @param array $_options
-    */
-   public function __construct($_options = []) {
-      $this->options = $_options;
+    /**
+     * PluginMydashboardReports_Line constructor.
+     *
+     * @param array $_options
+     */
+    public function __construct($_options = []) {
+        $this->options = $_options;
 
-      $preference = new PluginMydashboardPreference();
-      if (Session::getLoginUserID() !== false
-          && !$preference->getFromDB(Session::getLoginUserID())) {
-         $preference->initPreferences(Session::getLoginUserID());
-      }
-      $preference->getFromDB(Session::getLoginUserID());
-      $this->preferences = $preference->fields;
-   }
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $this->preferences = $preference->fields;
+    }
 
-   /**
-    * @return array
-    */
-   public function getWidgetsForItem() {
+    /**
+     * @return array
+     */
+    public function getWidgetsForItem() {
 
-      $widgets = [
-         __('Line charts', "mydashboard") => [
-            $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
-                                        "icon"    => "ti ti-chart-area-line",
-                                        "comment" => __("Sum of not solved tickets by month", "mydashboard")],
-            $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
-                                        "icon"    => "ti ti-chart-area-line",
-                                        "comment" => ""],
-            $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
-                                        "icon"    => "ti ti-chart-area-line",
-                                        "comment" => ""],
-            $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
-                                        "icon"    => "ti ti-chart-area-line",
-                                        "comment" => ""],
-         ]
-      ];
-      return $widgets;
-   }
+        $widgets = [
+            __('Line charts', "mydashboard") => [
+                $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => __("Sum of not solved tickets by month", "mydashboard")],
+                $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+            ]
+        ];
+        return $widgets;
+    }
 
 
-   /**
-    * @param       $widgetId
-    * @param array $opt
-    *
-    * @return \PluginMydashboardHtml
-    * @throws \GlpitestSQLError
-    */
-   public function getWidgetContentForItem($widgetId, $opt = []) {
-      global $DB, $CFG_GLPI;
-      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-      $dbu     = new DbUtils();
-      switch ($widgetId) {
+    /**
+     * @param       $widgetId
+     * @param array $opt
+     *
+     * @return \PluginMydashboardHtml
+     * @throws \GlpitestSQLError
+     */
+    public function getWidgetContentForItem($widgetId, $opt = []) {
+        global $DB, $CFG_GLPI;
+        $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
+        $dbu     = new DbUtils();
+        switch ($widgetId) {
 
-         case $this->getType() . "6":
-            $name = 'TicketStockLineChart';
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() == 'central') {
-               $criterias = ['technicians_groups_id',
-                             'entities_id',
-                             'is_recursive',
-                             'year'];
-            }
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central') {
-               $criterias = [];
-            }
+            case $this->getType() . "6":
+                $name = 'TicketStockLineChart';
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $criterias = ['technicians_groups_id',
+                                  'entities_id',
+                                  'is_recursive',
+                                  'year'];
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $criterias = [];
+                }
 
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+                $params  = ["preferences" => $this->preferences,
+                            "criterias"   => $criterias,
+                            "opt"         => $opt];
+                $options = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
 
-            $entities_criteria          = $crit['entities_id'];
-            $tech_groups_crit           = "";
-            $technician_groups_criteria = $crit['technicians_groups_id'];
-            $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
-            if (count($opt['technicians_groups_id']) > 0) {
-               $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-            } else {
-               $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
-            }
-            $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
+                $entities_criteria          = $crit['entities_id'];
+                $tech_groups_crit           = "";
+                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+                if (count($opt['technicians_groups_id']) > 0) {
+                    $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
+                } else {
+                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+                }
+                $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
-            $currentmonth = date("m");
-            $currentyear  = date("Y");
+                $currentmonth = date("m");
+                $currentyear  = date("Y");
 
-            if (isset($opt["year"]) && $opt["year"] > 0) {
-               $currentyear = $opt["year"];
-            }
-            $previousyear = $currentyear - 1;
-            $query_2      = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month,
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $previousyear = $currentyear - 1;
+                $query_2      = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month,
                                     DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname,
                                     SUM(nbStockTickets) as nbStockTickets
                                     FROM `glpi_plugin_mydashboard_stocktickets`
@@ -137,1001 +137,1005 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                                     " . $mdentities . $tech_groups_crit . "
                                     GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-            $tabdata    = [];
-            $tabnames   = [];
-            $results2   = $DB->query($query_2);
-            $maxcount   = 0;
-            $i          = 0;
-            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-            while ($data = $DB->fetchArray($results2)) {
-               $tabdata[$i] = $data["nbStockTickets"];
-               $tabnames[]  = $data['monthname'];
-               if ($data["nbStockTickets"] > $maxcount) {
-                  $maxcount = $data["nbStockTickets"];
-               }
-               $i++;
-            }
+                $tabdata    = [];
+                $tabnames   = [];
+                $results2   = $DB->query($query_2);
+                $maxcount   = 0;
+                $i          = 0;
+                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                while ($data = $DB->fetchArray($results2)) {
+                    $tabdata[$i] = $data["nbStockTickets"];
+                    $tabnames[]  = $data['monthname'];
+                    if ($data["nbStockTickets"] > $maxcount) {
+                        $maxcount = $data["nbStockTickets"];
+                    }
+                    $i++;
+                }
 
 
-            $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') AS month, 
+                $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') AS month, 
                      DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') AS monthname, 
                      DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))
                      FROM `glpi_tickets`
                      WHERE $is_deleted ";
-            $query .= $entities_criteria . " 
+                $query .= $entities_criteria . " 
                   AND MONTH(`glpi_tickets`.`date`)='" . date("m") . "' 
                   AND(YEAR(`glpi_tickets`.`date`) = '" . date("Y") . "') 
                   GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-            $results = $DB->query($query);
+                $results = $DB->query($query);
 
-             $nbtickets = __('Tickets number', 'mydashboard');
-            while ($data = $DB->fetchArray($results)) {
+                $nbtickets = __('Tickets number', 'mydashboard');
+                while ($data = $DB->fetchArray($results)) {
 
-               list($year, $month) = explode('-', $data['month']);
+                    list($year, $month) = explode('-', $data['month']);
 
-               $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
-               $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
+                    $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
+                    $query_1 = "SELECT COUNT(*) as count FROM `glpi_tickets`
                   WHERE $is_deleted " . $entities_criteria . $technician_groups_criteria . "
                   AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))";
 
-               $results_1 = $DB->query($query_1);
-               $data_1    = $DB->fetchArray($results_1);
+                    $results_1 = $DB->query($query_1);
+                    $data_1    = $DB->fetchArray($results_1);
 
-               $tabdata[$i] = $data_1['count'];
-               $tabnames[] = $data['monthname'];
-               $i++;
-            }
+                    $tabdata[$i] = $data_1['count'];
+                    $tabnames[]  = $data['monthname'];
+                    $i++;
+                }
 
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Tickets stock", "mydashboard");
-             $comment = __("Sum of not solved tickets by month", "mydashboard");
-            $widget->setWidgetComment($comment);
-            $widget->setWidgetTitle((($isDebug) ? "6 " : "") . $title);
-            $widget->toggleWidgetRefresh();
+                $widget  = new PluginMydashboardHtml();
+                $title   = __("Tickets stock", "mydashboard");
+                $comment = __("Sum of not solved tickets by month", "mydashboard");
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "6 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
-             $datasets[] =
-                 ['type'        => 'line',
-                  'data'        => $tabdata,
-                  'name'       => $nbtickets,
-                 ];
-             $dataLineset = json_encode($datasets);
-            $labelsLine  = json_encode($tabnames);
-            $graph_datas = ['title'   => $title,
-                            'comment' => $comment,
-                            'name'            => $name,
-                            'ids'             => json_encode([]),
-                            'data'            => $dataLineset,
-                            'labels'          => $labelsLine];
+                $datasets[]  =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => json_encode([]),
+                                'data'    => $dataLineset,
+                                'labels'  => $labelsLine];
 
 
-            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, []);
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, []);
 
-            $params = ["widgetId"  => $widgetId,
-                       "name"      => $name,
-                       "onsubmit"  => true,
-                       "opt"       => $opt,
-                       "criterias" => $criterias,
-                       "export"    => true,
-                       "canvas"    => true,
-                       "nb"        => 1];
-            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
 
-            $widget->setWidgetHtmlContent(
-               $graph
-            );
+                $widget->setWidgetHtmlContent(
+                    $graph
+                );
 
-            return $widget;
-            break;
+                return $widget;
+                break;
 
-         case $this->getType() . "22":
-            $name    = 'TicketStatusBarLineChart';
-            $onclick = 0;
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-//                && Session::getCurrentInterface() == 'central'
-            ) {
-               $criterias = ['entities_id',
-                             'technicians_groups_id',
-                             'group_is_recursive',
-                             'requesters_groups_id',
-                             'is_recursive',
-                             'display_data',
-                             'technicians_id',
-                             'type',
-                             'locations_id'];
-               $onclick   = 1;
-            }
-//            if (isset($_SESSION['glpiactiveprofile']['interface'])
-//                && Session::getCurrentInterface() != 'central') {
-//               $criterias = ['requesters_groups_id',
-//                             'year',
-//                             'locations_id'];
-//            }
+            case $this->getType() . "22":
+                $name    = 'TicketStatusBarLineChart';
+                $onclick = 0;
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    //                && Session::getCurrentInterface() == 'central'
+                ) {
+                    $criterias = ['entities_id',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'requesters_groups_id',
+                                  'is_recursive',
+                                  'display_data',
+                                  'technicians_id',
+                                  'type',
+                                  'locations_id'];
+                    $onclick   = 1;
+                }
+                //            if (isset($_SESSION['glpiactiveprofile']['interface'])
+                //                && Session::getCurrentInterface() != 'central') {
+                //               $criterias = ['requesters_groups_id',
+                //                             'year',
+                //                             'locations_id'];
+                //            }
 
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+                $params  = ["preferences" => $this->preferences,
+                            "criterias"   => $criterias,
+                            "opt"         => $opt];
+                $options = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
 
-            $type                 = $opt['type'];
-            $type_criteria        = $crit['type'];
-            $entities_criteria    = $crit['entities_id'];
-            $entities_id_criteria = $crit['entity'];
-            $sons_criteria        = $crit['sons'];
-            $technicians_ids_crit = $opt['technicians_id'];
+                $type                 = $opt['type'];
+                $type_criteria        = $crit['type'];
+                $entities_criteria    = $crit['entities_id'];
+                $entities_id_criteria = $crit['entity'];
+                $sons_criteria        = $crit['sons'];
+                $technicians_ids_crit = $opt['technicians_id'];
 
-            $requester_groups_criteria = $crit['requesters_groups_id'];
-            $requester_groups          = $opt['requesters_groups_id'];
+                $requester_groups_criteria = $crit['requesters_groups_id'];
+                $requester_groups          = $opt['requesters_groups_id'];
 
-            $technician_groups_criteria = $crit['technicians_groups_id'];
-            $technician_group           = $opt['technicians_groups_id'];
-            $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
-            if (count($opt['technicians_groups_id']) > 0) {
-               $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-            } else {
-               $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
-            }
+                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $technician_group           = $opt['technicians_groups_id'];
+                $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+                if (count($opt['technicians_groups_id']) > 0) {
+                    $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
+                } else {
+                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+                }
 
-            $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
+                $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
-            $ticket_users_join   = "";
-            $technician_criteria = "";
+                $ticket_users_join   = "";
+                $technician_criteria = "";
 
-            if (isset($opt['technicians_id']) && $opt['technicians_id'] != 0) {
-               $ticket_users_join   = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
-               $technician_criteria = "AND glpi_tickets_users.type = " . CommonITILObject::ASSIGNED;
-               $technician_criteria .= " AND glpi_tickets_users.users_id = " . $opt['technicians_id'];
-            }
+                if (isset($opt['technicians_id']) && $opt['technicians_id'] != 0) {
+                    $ticket_users_join   = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
+                    $technician_criteria = "AND glpi_tickets_users.type = " . CommonITILObject::ASSIGNED;
+                    $technician_criteria .= " AND glpi_tickets_users.users_id = " . $opt['technicians_id'];
+                }
 
-            $location           = $opt['locations_id'];
-            $locations_criteria = $crit['locations_id'];
+                $location           = $opt['locations_id'];
+                $locations_criteria = $crit['locations_id'];
 
-            $currentyear = date("Y");
+                $currentyear = date("Y");
 
-            if (isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
-               if (isset($opt["year"]) && $opt["year"] > 0) {
-                  $currentyear = $opt["year"];
-               }
-               $date_crit        = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
-               $date_crit_ticket = "`glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
-            } else {
-               $end_year    = $opt['end_year'] ?? date("Y");
-               $end_month   = $opt['end_month'] ?? date("m");
-               $start_month = $opt['start_month'] ?? date('m');
-               $start_year  = $opt['start_year'] ?? date("Y");
-               //               if($start_month <= 0) {
-               //                  $start_month = 12 + $start_month;
-               //                  $start_year = $start_year -1 ;
-               //               }
-               if (strlen($start_month) == 1) {
-                  $start_month = "0" . $start_month;
-               }
-               $nbdays           = date("t", mktime(0, 0, 0, $end_month, 1, $end_year));
-               $date_crit        = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
-               $date_crit_ticket = "`glpi_tickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
-            }
-            $currentmonth = date("m");
+                if (isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
+                    if (isset($opt["year"]) && $opt["year"] > 0) {
+                        $currentyear = $opt["year"];
+                    }
+                    $date_crit        = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
+                    $date_crit_ticket = "`glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)";
+                } else {
+                    $end_year    = $opt['end_year'] ?? date("Y");
+                    $end_month   = $opt['end_month'] ?? date("m");
+                    $start_month = $opt['start_month'] ?? date('m');
+                    $start_year  = $opt['start_year'] ?? date("Y");
+                    //               if($start_month <= 0) {
+                    //                  $start_month = 12 + $start_month;
+                    //                  $start_year = $start_year -1 ;
+                    //               }
+                    if (strlen($start_month) == 1) {
+                        $start_month = "0" . $start_month;
+                    }
+                    $nbdays           = date("t", mktime(0, 0, 0, $end_month, 1, $end_year));
+                    $date_crit        = "`glpi_plugin_mydashboard_stocktickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
+                    $date_crit_ticket = "`glpi_tickets`.`date` between '$start_year-$start_month-01' AND '$end_year-$end_month-$nbdays'";
+                }
+                $currentmonth = date("m");
 
-            $query_stockTickets =
-               "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
-               " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
-               " SUM(nbStockTickets) as nbStockTickets" .
-               " FROM `glpi_plugin_mydashboard_stocktickets`" .
-               " WHERE $date_crit " .
-               " " . $mdentities . $tech_groups_crit .
-               " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+                $query_stockTickets =
+                    "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
+                    " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
+                    " SUM(nbStockTickets) as nbStockTickets" .
+                    " FROM `glpi_plugin_mydashboard_stocktickets`" .
+                    " WHERE $date_crit " .
+                    " " . $mdentities . $tech_groups_crit .
+                    " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-            $resultsStockTickets = $DB->query($query_stockTickets);
-            $nbStockTickets      = $DB->numrows($resultsStockTickets);
-            $maxcount            = 0;
-            $i                   = 0;
-            $tabdates            = [];
-            $tabopened           = [];
-            $tabclosed           = [];
-            $tabprogress         = [];
-            $tabnames            = [];
+                $resultsStockTickets = $DB->query($query_stockTickets);
+                $nbStockTickets      = $DB->numrows($resultsStockTickets);
+                $maxcount            = 0;
+                $i                   = 0;
+                $tabdates            = [];
+                $tabopened           = [];
+                $tabclosed           = [];
+                $tabprogress         = [];
+                $tabnames            = [];
 
-            if ($nbStockTickets) {
-               while ($data = $DB->fetchArray($resultsStockTickets)) {
-                  $tabprogress[] = $data["nbStockTickets"];
-                  if ($data["nbStockTickets"] > $maxcount) {
-                     $maxcount = $data["nbStockTickets"];
-                  }
-                  list($year, $month) = explode('-', $data['month']);
-                  $tabdates[0][] = 0;
-                  $i++;
-               }
+                if ($nbStockTickets) {
+                    while ($data = $DB->fetchArray($resultsStockTickets)) {
+                        $tabprogress[] = $data["nbStockTickets"];
+                        if ($data["nbStockTickets"] > $maxcount) {
+                            $maxcount = $data["nbStockTickets"];
+                        }
+                        list($year, $month) = explode('-', $data['month']);
+                        $tabdates[0][] = 0;
+                        $i++;
+                    }
 
-            }
+                }
 
-            $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
-            $q             = "SET lc_time_names = '" . $_SESSION['glpilanguage'] . "';";
-            $r             = $DB->query($q);
-            $query_tickets =
-               "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
-               " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
-               " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, 
+                $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
+                $q             = "SET lc_time_names = '" . $_SESSION['glpilanguage'] . "';";
+                $r             = $DB->query($q);
+                $query_tickets =
+                    "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
+                    " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
+                    " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, 
                count(MONTH(`glpi_tickets`.`date`))" .
-               " FROM `glpi_tickets`" .
-               " WHERE $is_deleted" .
-               " AND $date_crit_ticket " .
-               " $entities_criteria" .
-               " $requester_groups_criteria" .
-               " $technician_groups_criteria" .
-               " $locations_criteria" .
-               " $type_criteria" .
-               " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                    " FROM `glpi_tickets`" .
+                    " WHERE $is_deleted" .
+                    " AND $date_crit_ticket " .
+                    " $entities_criteria" .
+                    " $requester_groups_criteria" .
+                    " $technician_groups_criteria" .
+                    " $locations_criteria" .
+                    " $type_criteria" .
+                    " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-            $results   = $DB->query($query_tickets);
-            $nbResults = $DB->numrows($results);
-            $i         = 0;
-            $q         = "SET lc_time_names = 'en_GB';";
-            $r         = $DB->query($q);
-            if ($nbResults) {
-               while ($data = $DB->fetchArray($results)) {
+                $results   = $DB->query($query_tickets);
+                $nbResults = $DB->numrows($results);
+                $i         = 0;
+                $q         = "SET lc_time_names = 'en_GB';";
+                $r         = $DB->query($q);
+                if ($nbResults) {
+                    while ($data = $DB->fetchArray($results)) {
 
-                  $tabnames[] = $data['monthname'];
+                        $tabnames[] = $data['monthname'];
 
-                  list($year, $month) = explode('-', $data['month']);
+                        list($year, $month) = explode('-', $data['month']);
 
-                  $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
 
-                  $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+                        $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
-                  $query_1 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " WHERE $date_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted";
+                        $query_1 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " WHERE $date_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted";
 
-                  $results_1 = $DB->query($query_1);
+                        $results_1 = $DB->query($query_1);
 
-                  if ($DB->numrows($results_1)) {
-                     $data_1      = $DB->fetchArray($results_1);
-                     $tabopened[] = $data_1['count'];
-                  } else {
-                     $tabopened[] = 0;
-                  }
-                  $tabdates[1][]      = $year . '-' . $month . '_opened';
-                  $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+                        if ($DB->numrows($results_1)) {
+                            $data_1      = $DB->fetchArray($results_1);
+                            $tabopened[] = $data_1['count'];
+                        } else {
+                            $tabopened[] = 0;
+                        }
+                        $tabdates[1][]      = $year . '-' . $month . '_opened';
+                        $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
-                  $query_2 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " WHERE $closedate_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted";
+                        $query_2 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " WHERE $closedate_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted";
 
-                  $results_2 = $DB->query($query_2);
+                        $results_2 = $DB->query($query_2);
 
-                  if ($DB->numrows($results_2)) {
-                     $data_2      = $DB->fetchArray($results_2);
-                     $tabclosed[] = $data_2['count'];
-                  } else {
-                     $tabclosed[] = 0;
-                  }
-                  $tabdates[2][] = $year . '-' . $month . '_closed';
-                  if ($month == date("m") && $year == date("Y")) {
+                        if ($DB->numrows($results_2)) {
+                            $data_2      = $DB->fetchArray($results_2);
+                            $tabclosed[] = $data_2['count'];
+                        } else {
+                            $tabclosed[] = 0;
+                        }
+                        $tabdates[2][] = $year . '-' . $month . '_closed';
+                        if ($month == date("m") && $year == date("Y")) {
 
-                     $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                     //nbstock : cannot use tech or group criteria
+                            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                            //nbstock : cannot use tech or group criteria
 
-                     $query_3 =
-                        "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                        //                        " $ticket_users_join".
-                        " WHERE $is_deleted" .
-                        " $technician_groups_criteria" .
-                        " $entities_criteria" .
-                        //                        " $requester_groups_criteria".
-                        //                        " $locations_criteria" .
-                        // Tickets open in the month
-                        " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                            $query_3 =
+                                "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                                //                        " $ticket_users_join".
+                                " WHERE $is_deleted" .
+                                " $technician_groups_criteria" .
+                                " $entities_criteria" .
+                                //                        " $requester_groups_criteria".
+                                //                        " $locations_criteria" .
+                                // Tickets open in the month
+                                " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                            AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
-                     $results_3 = $DB->query($query_3);
+                            $results_3 = $DB->query($query_3);
 
-                     if ($DB->numrows($results_3)) {
-                        $data_3        = $DB->fetchArray($results_3);
-                        $tabprogress[] = $data_3['count'];
+                            if ($DB->numrows($results_3)) {
+                                $data_3        = $DB->fetchArray($results_3);
+                                $tabprogress[] = $data_3['count'];
 
-                     } else {
-                        $tabprogress[] = 0;
-                     }
-                     $tabdates[0][] = 0;
-                  }
-                  $i++;
-               }
-            }
+                            } else {
+                                $tabprogress[] = 0;
+                            }
+                            $tabdates[0][] = 0;
+                        }
+                        $i++;
+                    }
+                }
 
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened and closed tickets by month", "mydashboard");
-            $comment = "";
-            $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
-            $widget->toggleWidgetRefresh();
+                $widget  = new PluginMydashboardHtml();
+                $title   = __("Number of opened and closed tickets by month", "mydashboard");
+                $comment = "";
+                $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
-            $titleopened   = __("Opened tickets", "mydashboard");
-            $titlesolved   = __("Closed tickets", "mydashboard");
-            $titleprogress = __("Opened tickets backlog", "mydashboard");
-            $labels        = json_encode($tabnames);
+                $titleopened   = __("Opened tickets", "mydashboard");
+                $titlesolved   = __("Closed tickets", "mydashboard");
+                $titleprogress = __("Opened tickets backlog", "mydashboard");
+                $labels        = json_encode($tabnames);
 
-            $datasets[] =
-               ['type'        => 'line',
-                'data'        => $tabprogress,
-                'name'       => $titleprogress,
-               ];
+                $datasets[] =
+                    ['type' => 'line',
+                     'data' => $tabprogress,
+                     'name' => $titleprogress,
+                     'smooth' => false
+                    ];
 
-            $datasets[] =
-               ["type"            => "bar",
-                "data"            => $tabopened,
-                "name"           => $titleopened,
-               ];
+                $datasets[] =
+                    ["type" => "bar",
+                     "data" => $tabopened,
+                     "name" => $titleopened,
+                    ];
 
-            $datasets[] =
-               ['type'            => 'bar',
-                'data'            => $tabclosed,
-                'name'           => $titlesolved,
-               ];
+                $datasets[] =
+                    ['type' => 'bar',
+                     'data' => $tabclosed,
+                     'name' => $titlesolved,
+                    ];
 
 
-            $tabdatesset = json_encode($tabdates);
+                $tabdatesset = json_encode($tabdates);
 
-            $graph_datas = ['title'   => $title,
-                            'comment' => $comment,
-                            'name'   => $name,
-                            'ids'    => $tabdatesset,
-                            'data'   => json_encode($datasets),
-                            'labels' => $labels,
-//                            'label'  => $title
-            ];
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => json_encode($datasets),
+                                'labels'  => $labels,
+                                //                            'label'  => $title
+                ];
 
-            $graph_criterias = [];
-            $js_ancestors    = $crit['ancestors'];
-            if ($onclick == 1) {
-               $graph_criterias = [
-                  'entities_id'        => $entities_id_criteria,
-                  'sons'               => $sons_criteria,
-                  'requester_groups'   => $requester_groups,
-                  'technician_group'   => $technician_group,
-                  'technician_id'      => $technicians_ids_crit,
-                  'group_is_recursive' => $js_ancestors,
-                  'type'               => $type,
-                  'locations_id'       => $location,
-                  'widget'             => $widgetId];
-            }
+                $graph_criterias = [];
+                $js_ancestors    = $crit['ancestors'];
+                if ($onclick == 1) {
+                    $graph_criterias = [
+                        'entities_id'        => $entities_id_criteria,
+                        'sons'               => $sons_criteria,
+                        'requester_groups'   => $requester_groups,
+                        'technician_group'   => $technician_group,
+                        'technician_id'      => $technicians_ids_crit,
+                        'group_is_recursive' => $js_ancestors,
+                        'type'               => $type,
+                        'locations_id'       => $location,
+                        'widget'             => $widgetId];
+                }
 
-            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
 
-            $params = ["widgetId"  => $widgetId,
-                       "name"      => $name,
-                       "onsubmit"  => true,
-                       "opt"       => $opt,
-                       "criterias" => $criterias,
-                       "export"    => true,
-                       "canvas"    => true,
-                       "nb"        => 1];
-            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
-            $widget->setWidgetHtmlContent(
-               $graph
-            );
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+                $widget->setWidgetHtmlContent(
+                    $graph
+                );
 
-            return $widget;
-            break;
+                return $widget;
+                break;
 
-         case $this->getType() . "34":
-            $name = 'TicketStatusResolvedBarLineChart';
-            $onclick = 0;
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id',
-                             'technicians_groups_id',
-                             'group_is_recursive',
-                             'requesters_groups_id',
-                             'is_recursive',
-                             'technicians_id',
-                             'year',
-                             'type',
-                             'locations_id'];
-               $onclick   = 1;
-            }
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requesters_groups_id',
-                             'year',
-                             'locations_id'];
-            }
+            case $this->getType() . "34":
+                $name    = 'TicketStatusResolvedBarLineChart';
+                $onclick = 0;
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $criterias = ['entities_id',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'requesters_groups_id',
+                                  'is_recursive',
+                                  'technicians_id',
+                                  'year',
+                                  'type',
+                                  'locations_id'];
+                    $onclick   = 1;
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $criterias = ['requesters_groups_id',
+                                  'year',
+                                  'locations_id'];
+                }
 
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+                $params  = ["preferences" => $this->preferences,
+                            "criterias"   => $criterias,
+                            "opt"         => $opt];
+                $options = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
 
-            $type                 = $opt['type'];
-            $type_criteria              = $crit['type'];
-            $entities_criteria          = $crit['entities_id'];
-            $entities_id_criteria = $crit['entity'];
-            $sons_criteria        = $crit['sons'];
-            $technicians_ids_crit = $opt['technicians_id'];
+                $type                 = $opt['type'];
+                $type_criteria        = $crit['type'];
+                $entities_criteria    = $crit['entities_id'];
+                $entities_id_criteria = $crit['entity'];
+                $sons_criteria        = $crit['sons'];
+                $technicians_ids_crit = $opt['technicians_id'];
 
-            $requester_groups_criteria = $crit['requesters_groups_id'];
-            $requester_groups          = $opt['requesters_groups_id'];
+                $requester_groups_criteria = $crit['requesters_groups_id'];
+                $requester_groups          = $opt['requesters_groups_id'];
 
-            $technician_groups_criteria = $crit['technicians_groups_id'];
-            $technician_group           = $opt['technicians_groups_id'];
-            $mdentities                 = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
+                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $technician_group           = $opt['technicians_groups_id'];
+                $mdentities                 = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
-            $ticket_users_join   = "";
-            $technician_criteria = "";
+                $ticket_users_join   = "";
+                $technician_criteria = "";
 
-            if (isset($opt['technicians_id']) && $opt['technicians_id'] != 0) {
-               $ticket_users_join   = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
-               $technician_criteria = "AND glpi_tickets_users.type = " . CommonITILObject::ASSIGNED;
-               $technician_criteria .= " AND glpi_tickets_users.users_id = " . $opt['technicians_id'];
-            }
+                if (isset($opt['technicians_id']) && $opt['technicians_id'] != 0) {
+                    $ticket_users_join   = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
+                    $technician_criteria = "AND glpi_tickets_users.type = " . CommonITILObject::ASSIGNED;
+                    $technician_criteria .= " AND glpi_tickets_users.users_id = " . $opt['technicians_id'];
+                }
 
-            $location           = $opt['locations_id'];
-            $locations_criteria = $crit['locations_id'];
+                $location           = $opt['locations_id'];
+                $locations_criteria = $crit['locations_id'];
 
-            $currentyear = date("Y");
+                $currentyear = date("Y");
 
-            if (isset($opt["year"]) && $opt["year"] > 0) {
-               $currentyear = $opt["year"];
-            }
-            $currentmonth          = date("m");
-            $tech_groups_crit      = "";
-            $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
-            if (count($opt['technicians_groups_id']) > 0) {
-               $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-            } else {
-               $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
-            }
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $currentmonth          = date("m");
+                $tech_groups_crit      = "";
+                $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+                if (count($opt['technicians_groups_id']) > 0) {
+                    $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
+                } else {
+                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+                }
 
-            $query_stockTickets =
-               "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
-               " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
-               " SUM(nbStockTickets) as nbStockTickets" .
-               " FROM `glpi_plugin_mydashboard_stocktickets`" .
-               " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
-               " " . $mdentities . $tech_groups_crit .
-               "  GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+                $query_stockTickets =
+                    "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
+                    " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
+                    " SUM(nbStockTickets) as nbStockTickets" .
+                    " FROM `glpi_plugin_mydashboard_stocktickets`" .
+                    " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
+                    " " . $mdentities . $tech_groups_crit .
+                    "  GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-            $resultsStockTickets = $DB->query($query_stockTickets);
-            $nbStockTickets      = $DB->numrows($resultsStockTickets);
-            $maxcount            = 0;
-            $i                   = 0;
-            $tabdates            = [];
-            $tabopened           = [];
-            $tabresolved         = [];
-            $tabprogress         = [];
-            $tabnames            = [];
-            if ($nbStockTickets) {
-               while ($data = $DB->fetchArray($resultsStockTickets)) {
-                  $tabprogress[] = $data["nbStockTickets"];
-                  if ($data["nbStockTickets"] > $maxcount) {
-                     $maxcount = $data["nbStockTickets"];
-                  }
-                  list($year, $month) = explode('-', $data['month']);
-                  $tabdates[0][] = 0;
-                  $i++;
-               }
-            }
+                $resultsStockTickets = $DB->query($query_stockTickets);
+                $nbStockTickets      = $DB->numrows($resultsStockTickets);
+                $maxcount            = 0;
+                $i                   = 0;
+                $tabdates            = [];
+                $tabopened           = [];
+                $tabresolved         = [];
+                $tabprogress         = [];
+                $tabnames            = [];
+                if ($nbStockTickets) {
+                    while ($data = $DB->fetchArray($resultsStockTickets)) {
+                        $tabprogress[] = $data["nbStockTickets"];
+                        if ($data["nbStockTickets"] > $maxcount) {
+                            $maxcount = $data["nbStockTickets"];
+                        }
+                        list($year, $month) = explode('-', $data['month']);
+                        $tabdates[0][] = 0;
+                        $i++;
+                    }
+                }
 
-            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
 
-            $query_tickets =
-               "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
-               " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
-               " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))" .
-               " FROM `glpi_tickets`" .
-               " WHERE $is_deleted" .
-               " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
-               " $entities_criteria" .
-               " $requester_groups_criteria" .
-               " $technician_groups_criteria" .
-               " $locations_criteria" .
-               " $type_criteria" .
-               " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $query_tickets =
+                    "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
+                    " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
+                    " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))" .
+                    " FROM `glpi_tickets`" .
+                    " WHERE $is_deleted" .
+                    " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
+                    " $entities_criteria" .
+                    " $requester_groups_criteria" .
+                    " $technician_groups_criteria" .
+                    " $locations_criteria" .
+                    " $type_criteria" .
+                    " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-            $results   = $DB->query($query_tickets);
-            $nbResults = $DB->numrows($results);
-            $i         = 0;
-            if ($nbResults) {
-               while ($data = $DB->fetchArray($results)) {
+                $results   = $DB->query($query_tickets);
+                $nbResults = $DB->numrows($results);
+                $i         = 0;
+                if ($nbResults) {
+                    while ($data = $DB->fetchArray($results)) {
 
-                  $tabnames[] = $data['monthname'];
+                        $tabnames[] = $data['monthname'];
 
-                  list($year, $month) = explode('-', $data['month']);
+                        list($year, $month) = explode('-', $data['month']);
 
-                  $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
 
-                  $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+                        $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
-                  $query_1 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " WHERE $date_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted";
+                        $query_1 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " WHERE $date_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted";
 
-                  $results_1 = $DB->query($query_1);
+                        $results_1 = $DB->query($query_1);
 
-                  if ($DB->numrows($results_1)) {
-                     $data_1      = $DB->fetchArray($results_1);
-                     $tabopened[] = $data_1['count'];
-                  } else {
-                     $tabopened[] = 0;
-                  }
-                  $tabdates[1][]      = $year . '-' . $month . '_opened';
+                        if ($DB->numrows($results_1)) {
+                            $data_1      = $DB->fetchArray($results_1);
+                            $tabopened[] = $data_1['count'];
+                        } else {
+                            $tabopened[] = 0;
+                        }
+                        $tabdates[1][] = $year . '-' . $month . '_opened';
 
-                  $solvedate_criteria = " (`glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH) 
+                        $solvedate_criteria = " (`glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH) 
                   OR `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH))";
 
-                  $query_2 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " WHERE $solvedate_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted";
+                        $query_2 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " WHERE $solvedate_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted";
 
-                  $results_2 = $DB->query($query_2);
+                        $results_2 = $DB->query($query_2);
 
-                  if ($DB->numrows($results_2)) {
-                     $data_2        = $DB->fetchArray($results_2);
-                     $tabresolved[] = $data_2['count'];
-                  } else {
-                     $tabresolved[] = 0;
-                  }
-                  $tabdates[2][] = $year . '-' . $month . '_resolved';
-                  if ($month == date("m") && $year == date("Y")) {
+                        if ($DB->numrows($results_2)) {
+                            $data_2        = $DB->fetchArray($results_2);
+                            $tabresolved[] = $data_2['count'];
+                        } else {
+                            $tabresolved[] = 0;
+                        }
+                        $tabdates[2][] = $year . '-' . $month . '_resolved';
+                        if ($month == date("m") && $year == date("Y")) {
 
-                     $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                     //nbstock : cannot use tech or group criteria
+                            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                            //nbstock : cannot use tech or group criteria
 
-                     $query_3 =
-                        "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                        //                        " $ticket_users_join".
-                        " WHERE $is_deleted" .
-                        " $technician_groups_criteria" .
-                        " $entities_criteria" .
-                        //                        " $requester_groups_criteria".
-                        //                        " $locations_criteria" .
-                        // Tickets open in the month
-                        " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                            $query_3 =
+                                "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                                //                        " $ticket_users_join".
+                                " WHERE $is_deleted" .
+                                " $technician_groups_criteria" .
+                                " $entities_criteria" .
+                                //                        " $requester_groups_criteria".
+                                //                        " $locations_criteria" .
+                                // Tickets open in the month
+                                " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                            AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
-                     $results_3 = $DB->query($query_3);
+                            $results_3 = $DB->query($query_3);
 
-                     if ($DB->numrows($results_3)) {
-                        $data_3        = $DB->fetchArray($results_3);
-                        $tabprogress[] = $data_3['count'];
-                     } else {
-                        $tabprogress[] = 0;
-                     }
-                     $tabdates[0][] = 0;
-                  }
+                            if ($DB->numrows($results_3)) {
+                                $data_3        = $DB->fetchArray($results_3);
+                                $tabprogress[] = $data_3['count'];
+                            } else {
+                                $tabprogress[] = 0;
+                            }
+                            $tabdates[0][] = 0;
+                        }
 
-                  $i++;
-               }
-            }
+                        $i++;
+                    }
+                }
 
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened and resolved / closed tickets by month", "mydashboard");
-             $comment = "";
-            $widget->setWidgetTitle((($isDebug) ? "34 " : "") . $title);
-            $widget->toggleWidgetRefresh();
+                $widget  = new PluginMydashboardHtml();
+                $title   = __("Number of opened and resolved / closed tickets by month", "mydashboard");
+                $comment = "";
+                $widget->setWidgetTitle((($isDebug) ? "34 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
-            $titleopened   = __("Opened tickets", "mydashboard");
-            $titlesolved   = __("Resolved / closed tickets", "mydashboard");
-            $titleprogress = __("Opened tickets backlog", "mydashboard");
-            $labels        = json_encode($tabnames);
+                $titleopened   = __("Opened tickets", "mydashboard");
+                $titlesolved   = __("Resolved / closed tickets", "mydashboard");
+                $titleprogress = __("Opened tickets backlog", "mydashboard");
+                $labels        = json_encode($tabnames);
 
-            $datasets[] =
-               ['type'        => 'line',
-                'data'        => $tabprogress,
-                'name'       => $titleprogress,
-               ];
+                $datasets[] =
+                    ['type' => 'line',
+                     'data' => $tabprogress,
+                     'name' => $titleprogress,
+                     'smooth' => false
+                    ];
 
-            $datasets[] =
-               ["type"            => "bar",
-                "data"            => $tabopened,
-                "name"           => $titleopened,
-               ];
+                $datasets[] =
+                    ["type" => "bar",
+                     "data" => $tabopened,
+                     "name" => $titleopened,
+                    ];
 
-            $datasets[] =
-               ['type'            => 'bar',
-                'data'            => $tabresolved,
-                'name'           => $titlesolved,
-               ];
+                $datasets[] =
+                    ['type' => 'bar',
+                     'data' => $tabresolved,
+                     'name' => $titlesolved,
+                    ];
 
-            $tabdatesset = json_encode($tabdates);
+                $tabdatesset = json_encode($tabdates);
 
-            $graph_datas = ['title'   => $title,
-                            'comment' => $comment,
-                            'name'   => $name,
-                            'ids'    => $tabdatesset,
-                            'data'   => json_encode($datasets),
-                            'labels' => $labels,
-//                            'label'  => $title
-            ];
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => json_encode($datasets),
+                                'labels'  => $labels,
+                                //                            'label'  => $title
+                ];
 
-            $graph_criterias = [];
-            $js_ancestors    = $crit['ancestors'];
-            if ($onclick == 1) {
-               $graph_criterias = [
-                  'entities_id'        => $entities_id_criteria,
-                  'sons'               => $sons_criteria,
-                  'requester_groups'   => $requester_groups,
-                  'technician_group'   => $technician_group,
-                  'technician_id'      => $technicians_ids_crit,
-                  'group_is_recursive' => $js_ancestors,
-                  'type'               => $type,
-                  'locations_id'       => $location,
-                  'widget'             => $widgetId];
-            }
+                $graph_criterias = [];
+                $js_ancestors    = $crit['ancestors'];
+                if ($onclick == 1) {
+                    $graph_criterias = [
+                        'entities_id'        => $entities_id_criteria,
+                        'sons'               => $sons_criteria,
+                        'requester_groups'   => $requester_groups,
+                        'technician_group'   => $technician_group,
+                        'technician_id'      => $technicians_ids_crit,
+                        'group_is_recursive' => $js_ancestors,
+                        'type'               => $type,
+                        'locations_id'       => $location,
+                        'widget'             => $widgetId];
+                }
 
-            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
 
-            $params = ["widgetId"  => $widgetId,
-                       "name"      => $name,
-                       "onsubmit"  => true,
-                       "opt"       => $opt,
-                       "criterias" => $criterias,
-                       "export"    => true,
-                       "canvas"    => true,
-                       "nb"        => 1];
-            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
-            $widget->setWidgetHtmlContent(
-               $graph
-            );
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+                $widget->setWidgetHtmlContent(
+                    $graph
+                );
 
-            return $widget;
-            break;
+                return $widget;
+                break;
 
-         case $this->getType() . "35":
-            $name = 'TicketStatusUnplannedBarLineChart';
-            $onclick = 0;
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() == 'central') {
-               $criterias = ['entities_id',
-                             'technicians_groups_id',
-                             'group_is_recursive',
-                             'requesters_groups_id',
-                             'is_recursive',
-                             'technicians_id',
-                             'year',
-                             'type',
-                             'locations_id'];
-               $onclick   = 1;
-            }
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central') {
-               $criterias = ['requesters_groups_id',
-                             'year',
-                             'locations_id'];
-            }
+            case $this->getType() . "35":
+                $name    = 'TicketStatusUnplannedBarLineChart';
+                $onclick = 0;
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $criterias = ['entities_id',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'requesters_groups_id',
+                                  'is_recursive',
+                                  'technicians_id',
+                                  'year',
+                                  'type',
+                                  'locations_id'];
+                    $onclick   = 1;
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $criterias = ['requesters_groups_id',
+                                  'year',
+                                  'locations_id'];
+                }
 
-            $params  = ["preferences" => $this->preferences,
-                        "criterias"   => $criterias,
-                        "opt"         => $opt];
-            $options = PluginMydashboardHelper::manageCriterias($params);
+                $params  = ["preferences" => $this->preferences,
+                            "criterias"   => $criterias,
+                            "opt"         => $opt];
+                $options = PluginMydashboardHelper::manageCriterias($params);
 
-            $opt  = $options['opt'];
-            $crit = $options['crit'];
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
 
-            $type                 = $opt['type'];
-            $type_criteria              = $crit['type'];
-            $entities_criteria          = $crit['entities_id'];
-            $entities_id_criteria = $crit['entity'];
-            $sons_criteria        = $crit['sons'];
-            $technicians_ids_crit = $opt['technicians_id'];
+                $type                 = $opt['type'];
+                $type_criteria        = $crit['type'];
+                $entities_criteria    = $crit['entities_id'];
+                $entities_id_criteria = $crit['entity'];
+                $sons_criteria        = $crit['sons'];
+                $technicians_ids_crit = $opt['technicians_id'];
 
-            $requester_groups_criteria = $crit['requesters_groups_id'];
-            $requester_groups          = $opt['requesters_groups_id'];
+                $requester_groups_criteria = $crit['requesters_groups_id'];
+                $requester_groups          = $opt['requesters_groups_id'];
 
-            $tech_groups_crit           = "";
-            $technician_groups_criteria = $crit['technicians_groups_id'];
-            $technician_group           = $opt['technicians_groups_id'];
+                $tech_groups_crit           = "";
+                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $technician_group           = $opt['technicians_groups_id'];
 
-            $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
-            if (count($opt['technicians_groups_id']) > 0) {
-               $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-            } else {
-               $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
-            }
-            $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
+                $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+                if (count($opt['technicians_groups_id']) > 0) {
+                    $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
+                } else {
+                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+                }
+                $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
-            $ticket_users_join   = "";
-            $technician_criteria = "";
+                $ticket_users_join   = "";
+                $technician_criteria = "";
 
-            if (isset($opt['technicians_id']) && $opt['technicians_id'] != 0) {
-               $ticket_users_join   = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
-               $technician_criteria = "AND glpi_tickets_users.type = " . CommonITILObject::ASSIGNED;
-               $technician_criteria .= " AND glpi_tickets_users.users_id = " . $opt['technicians_id'];
-            }
+                if (isset($opt['technicians_id']) && $opt['technicians_id'] != 0) {
+                    $ticket_users_join   = "INNER JOIN glpi_tickets_users ON glpi_tickets_users.tickets_id = glpi_tickets.id";
+                    $technician_criteria = "AND glpi_tickets_users.type = " . CommonITILObject::ASSIGNED;
+                    $technician_criteria .= " AND glpi_tickets_users.users_id = " . $opt['technicians_id'];
+                }
 
-            $location           = $opt['locations_id'];
-            $locations_criteria = $crit['locations_id'];
+                $location           = $opt['locations_id'];
+                $locations_criteria = $crit['locations_id'];
 
-            $currentyear = date("Y");
+                $currentyear = date("Y");
 
-            if (isset($opt["year"]) && $opt["year"] > 0) {
-               $currentyear = $opt["year"];
-            }
-            $currentmonth = date("m");
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $currentmonth = date("m");
 
-            $query_stockTickets =
-               "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
-               " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
-               " SUM(nbStockTickets) as nbStockTickets" .
-               " FROM `glpi_plugin_mydashboard_stocktickets`" .
-               " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
-               " " . $mdentities . $tech_groups_crit .
-               " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+                $query_stockTickets =
+                    "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
+                    " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
+                    " SUM(nbStockTickets) as nbStockTickets" .
+                    " FROM `glpi_plugin_mydashboard_stocktickets`" .
+                    " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
+                    " " . $mdentities . $tech_groups_crit .
+                    " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
-            $resultsStockTickets = $DB->query($query_stockTickets);
-            $nbStockTickets      = $DB->numrows($resultsStockTickets);
-            $maxcount            = 0;
-            $i                   = 0;
-            $tabdates            = [];
-            $tabopened           = [];
-            $tabclosed           = [];
-            $tabprogress         = [];
-            $tabunplanned        = [];
-            $tabnames            = [];
-            if ($nbStockTickets) {
-               while ($data = $DB->fetchArray($resultsStockTickets)) {
-                  $tabprogress[] = $data["nbStockTickets"];
-                  if ($data["nbStockTickets"] > $maxcount) {
-                     $maxcount = $data["nbStockTickets"];
-                  }
-                  list($year, $month) = explode('-', $data['month']);
-                  $tabdates[0][] = 0;
-                  $i++;
-               }
-            }
+                $resultsStockTickets = $DB->query($query_stockTickets);
+                $nbStockTickets      = $DB->numrows($resultsStockTickets);
+                $maxcount            = 0;
+                $i                   = 0;
+                $tabdates            = [];
+                $tabopened           = [];
+                $tabclosed           = [];
+                $tabprogress         = [];
+                $tabunplanned        = [];
+                $tabnames            = [];
+                if ($nbStockTickets) {
+                    while ($data = $DB->fetchArray($resultsStockTickets)) {
+                        $tabprogress[] = $data["nbStockTickets"];
+                        if ($data["nbStockTickets"] > $maxcount) {
+                            $maxcount = $data["nbStockTickets"];
+                        }
+                        list($year, $month) = explode('-', $data['month']);
+                        $tabdates[0][] = 0;
+                        $i++;
+                    }
+                }
 
-            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
 
-            $query_tickets =
-               "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
-               " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
-               " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))" .
-               " FROM `glpi_tickets`" .
-               " WHERE $is_deleted" .
-               " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
-               " $entities_criteria" .
-               " $requester_groups_criteria" .
-               " $technician_groups_criteria" .
-               " $locations_criteria" .
-               " $type_criteria" .
-               " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $query_tickets =
+                    "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
+                    " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
+                    " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))" .
+                    " FROM `glpi_tickets`" .
+                    " WHERE $is_deleted" .
+                    " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)" .
+                    " $entities_criteria" .
+                    " $requester_groups_criteria" .
+                    " $technician_groups_criteria" .
+                    " $locations_criteria" .
+                    " $type_criteria" .
+                    " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-            $results   = $DB->query($query_tickets);
-            $nbResults = $DB->numrows($results);
-            $i         = 0;
-            if ($nbResults) {
-               while ($data = $DB->fetchArray($results)) {
+                $results   = $DB->query($query_tickets);
+                $nbResults = $DB->numrows($results);
+                $i         = 0;
+                if ($nbResults) {
+                    while ($data = $DB->fetchArray($results)) {
 
-                  $tabnames[] = $data['monthname'];
+                        $tabnames[] = $data['monthname'];
 
-                  list($year, $month) = explode('-', $data['month']);
+                        list($year, $month) = explode('-', $data['month']);
 
-                  $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
 
-                  $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+                        $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
-                  $query_1 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " WHERE $date_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted";
+                        $query_1 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " WHERE $date_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted";
 
-                  $results_1 = $DB->query($query_1);
+                        $results_1 = $DB->query($query_1);
 
-                  if ($DB->numrows($results_1)) {
-                     $data_1      = $DB->fetchArray($results_1);
-                     $tabopened[] = $data_1['count'];
-                  } else {
-                     $tabopened[] = 0;
-                  }
-                  $tabdates[1][]      = $year . '-' . $month . '_opened';
+                        if ($DB->numrows($results_1)) {
+                            $data_1      = $DB->fetchArray($results_1);
+                            $tabopened[] = $data_1['count'];
+                        } else {
+                            $tabopened[] = 0;
+                        }
+                        $tabdates[1][] = $year . '-' . $month . '_opened';
 
-                  $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
+                        $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
-                  $query_2 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " WHERE $closedate_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted";
+                        $query_2 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " WHERE $closedate_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted";
 
-                  $results_2 = $DB->query($query_2);
+                        $results_2 = $DB->query($query_2);
 
-                  if ($DB->numrows($results_2)) {
-                     $data_2      = $DB->fetchArray($results_2);
-                     $tabclosed[] = $data_2['count'];
-                  } else {
-                     $tabclosed[] = 0;
-                  }
-                  $tabdates[2][] = $year . '-' . $month . '_closed';
+                        if ($DB->numrows($results_2)) {
+                            $data_2      = $DB->fetchArray($results_2);
+                            $tabclosed[] = $data_2['count'];
+                        } else {
+                            $tabclosed[] = 0;
+                        }
+                        $tabdates[2][] = $year . '-' . $month . '_closed';
 
-                  $whereUnplanned = " AND `glpi_tickettasks`.`actiontime` IS NULL ";
+                        $whereUnplanned = " AND `glpi_tickettasks`.`actiontime` IS NULL ";
 
-                  $query_3 =
-                     "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                     " $ticket_users_join" .
-                     " LEFT JOIN `glpi_tickettasks` ON `glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`" .
-                     " WHERE $closedate_criteria" .
-                     " $technician_criteria" .
-                     " $entities_criteria" .
-                     " $requester_groups_criteria" .
-                     " $technician_groups_criteria" .
-                     " $locations_criteria" .
-                     " $type_criteria" .
-                     " AND $is_deleted $whereUnplanned";
+                        $query_3 =
+                            "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                            " $ticket_users_join" .
+                            " LEFT JOIN `glpi_tickettasks` ON `glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`" .
+                            " WHERE $closedate_criteria" .
+                            " $technician_criteria" .
+                            " $entities_criteria" .
+                            " $requester_groups_criteria" .
+                            " $technician_groups_criteria" .
+                            " $locations_criteria" .
+                            " $type_criteria" .
+                            " AND $is_deleted $whereUnplanned";
 
-                  $results_3 = $DB->query($query_3);
+                        $results_3 = $DB->query($query_3);
 
-                  if ($DB->numrows($results_3)) {
-                     $data_3         = $DB->fetchArray($results_3);
-                     $tabunplanned[] = $data_3['count'];
-                  } else {
-                     $tabunplanned[] = 0;
-                  }
-                  $tabdates[3][] = $year . '-' . $month . '_unplanned';
+                        if ($DB->numrows($results_3)) {
+                            $data_3         = $DB->fetchArray($results_3);
+                            $tabunplanned[] = $data_3['count'];
+                        } else {
+                            $tabunplanned[] = 0;
+                        }
+                        $tabdates[3][] = $year . '-' . $month . '_unplanned';
 
-                  if ($month == date("m") && $year == date("Y")) {
+                        if ($month == date("m") && $year == date("Y")) {
 
-                     $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                     //nbstock : cannot use tech or group criteria
+                            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                            //nbstock : cannot use tech or group criteria
 
-                     $query_3 =
-                        "SELECT COUNT(*) as count FROM `glpi_tickets`" .
-                        //                        " $ticket_users_join".
-                        " WHERE $is_deleted" .
-                        " $technician_groups_criteria" .
-                        " $entities_criteria" .
-                        //                        " $requester_groups_criteria".
-                        //                        " $locations_criteria" .
-                        // Tickets open in the month
-                        " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                            $query_3 =
+                                "SELECT COUNT(*) as count FROM `glpi_tickets`" .
+                                //                        " $ticket_users_join".
+                                " WHERE $is_deleted" .
+                                " $technician_groups_criteria" .
+                                " $entities_criteria" .
+                                //                        " $requester_groups_criteria".
+                                //                        " $locations_criteria" .
+                                // Tickets open in the month
+                                " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                            AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
-                     $results_3 = $DB->query($query_3);
+                            $results_3 = $DB->query($query_3);
 
-                     if ($DB->numrows($results_3)) {
-                        $data_3        = $DB->fetchArray($results_3);
-                        $tabprogress[] = $data_3['count'];
-                     } else {
-                        $tabprogress[] = 0;
-                     }
-                     $tabdates[0][] = 0;
-                  }
+                            if ($DB->numrows($results_3)) {
+                                $data_3        = $DB->fetchArray($results_3);
+                                $tabprogress[] = $data_3['count'];
+                            } else {
+                                $tabprogress[] = 0;
+                            }
+                            $tabdates[0][] = 0;
+                        }
 
-                  $i++;
-               }
-            }
+                        $i++;
+                    }
+                }
 
-            $widget = new PluginMydashboardHtml();
-            $title  = __("Number of opened, closed  and unplanned tickets by month", "mydashboard");
-             $comment = "";
-            $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
-            $widget->toggleWidgetRefresh();
+                $widget  = new PluginMydashboardHtml();
+                $title   = __("Number of opened, closed  and unplanned tickets by month", "mydashboard");
+                $comment = "";
+                $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
-            $titleopened    = __("Opened tickets", "mydashboard");
-            $titlesolved    = __("Closed tickets", "mydashboard");
-            $titleunplanned = __("Not planned", "mydashboard");
-            $titleprogress  = __("Opened tickets backlog", "mydashboard");
-            $labels         = json_encode($tabnames);
+                $titleopened    = __("Opened tickets", "mydashboard");
+                $titlesolved    = __("Closed tickets", "mydashboard");
+                $titleunplanned = __("Not planned", "mydashboard");
+                $titleprogress  = __("Opened tickets backlog", "mydashboard");
+                $labels         = json_encode($tabnames);
 
-            $datasets[] =
-               ['type'        => 'line',
-                'data'        => $tabprogress,
-                'name'       => $titleprogress,
-               ];
+                $datasets[] =
+                    ['type' => 'line',
+                     'data' => $tabprogress,
+                     'name' => $titleprogress,
+                     'smooth' => false
+                    ];
 
-            $datasets[] =
-               ["type"            => "bar",
-                "data"            => $tabopened,
-                "name"           => $titleopened,
-               ];
+                $datasets[] =
+                    ["type" => "bar",
+                     "data" => $tabopened,
+                     "name" => $titleopened,
+                    ];
 
-            $datasets[] =
-               ['type'            => 'bar',
-                'data'            => $tabclosed,
-                'name'           => $titlesolved,
-               ];
+                $datasets[] =
+                    ['type' => 'bar',
+                     'data' => $tabclosed,
+                     'name' => $titlesolved,
+                    ];
 
-            $datasets[] =
-               ['type'            => 'bar',
-                'data'            => $tabunplanned,
-                'name'           => $titleunplanned,
-               ];
+                $datasets[] =
+                    ['type' => 'bar',
+                     'data' => $tabunplanned,
+                     'name' => $titleunplanned,
+                    ];
 
-            $tabdatesset = json_encode($tabdates);
+                $tabdatesset = json_encode($tabdates);
 
-            $graph_datas = ['title'   => $title,
-                            'comment' => $comment,
-                            'name'   => $name,
-                            'ids'    => $tabdatesset,
-                            'data'   => json_encode($datasets),
-                            'labels' => $labels,
-//                            'label'  => $title
-            ];
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => json_encode($datasets),
+                                'labels'  => $labels,
+                                //                            'label'  => $title
+                ];
 
-            $graph_criterias = [];
-            $js_ancestors    = $crit['ancestors'];
-            if ($onclick == 1) {
-               $graph_criterias = [
-                  'entities_id'        => $entities_id_criteria,
-                  'sons'               => $sons_criteria,
-                  'requester_groups'   => $requester_groups,
-                  'technician_group'   => $technician_group,
-                  'technician_id'      => $technicians_ids_crit,
-                  'group_is_recursive' => $js_ancestors,
-                  'type'               => $type,
-                  'locations_id'       => $location,
-                  'widget'             => $widgetId];
-            }
+                $graph_criterias = [];
+                $js_ancestors    = $crit['ancestors'];
+                if ($onclick == 1) {
+                    $graph_criterias = [
+                        'entities_id'        => $entities_id_criteria,
+                        'sons'               => $sons_criteria,
+                        'requester_groups'   => $requester_groups,
+                        'technician_group'   => $technician_group,
+                        'technician_id'      => $technicians_ids_crit,
+                        'group_is_recursive' => $js_ancestors,
+                        'type'               => $type,
+                        'locations_id'       => $location,
+                        'widget'             => $widgetId];
+                }
 
-            $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
 
-            $params = ["widgetId"  => $widgetId,
-                       "name"      => $name,
-                       "onsubmit"  => true,
-                       "opt"       => $opt,
-                       "criterias" => $criterias,
-                       "export"    => true,
-                       "canvas"    => true,
-                       "nb"        => 1];
-            $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
-            $widget->setWidgetHtmlContent(
-               $graph
-            );
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+                $widget->setWidgetHtmlContent(
+                    $graph
+                );
 
-            return $widget;
-            break;
+                return $widget;
+                break;
 
-         default:
-            break;
-      }
-   }
+            default:
+                break;
+        }
+    }
 }
