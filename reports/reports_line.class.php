@@ -116,9 +116,10 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
                 if (count($opt['technicians_groups_id']) > 0) {
                     $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-                } else {
-                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
-                }
+                } 
+//                else {
+//                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+//                }
                 $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
                 $currentmonth = date("m");
@@ -273,9 +274,10 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
                 if (count($opt['technicians_groups_id']) > 0) {
                     $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-                } else {
-                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
                 }
+//                else {
+//                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+//                }
 
                 $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
@@ -601,9 +603,10 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
                 if (count($opt['technicians_groups_id']) > 0) {
                     $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-                } else {
-                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
                 }
+//                else {
+//                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+//                }
 
                 $query_stockTickets =
                     "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
@@ -865,9 +868,10 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
                 if (count($opt['technicians_groups_id']) > 0) {
                     $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
-                } else {
-                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
                 }
+//                else {
+//                    $tech_groups_crit = " AND `glpi_plugin_mydashboard_stocktickets`.`groups_id` = -1";
+//                }
                 $mdentities = PluginMydashboardHelper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
                 $ticket_users_join   = "";
