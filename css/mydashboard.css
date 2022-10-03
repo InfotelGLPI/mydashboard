@@ -296,6 +296,7 @@ div#tabcontent{
 
 .mygrid {
    background-color: #fbfbfb;
+   margin-bottom: 50px;
 }
 
 .cadre_edit_button {
@@ -1114,7 +1115,7 @@ div.dt-button-background {
    -moz-border-radius: 5px;
    border-radius: 5px;
    font-size: 12px;
-   background-color: #FFF !important;
+   background-color: #FFFFFF!important;
    /*padding: 5px 5px 5px 5px;*/
 }
 

@@ -1746,8 +1746,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $note = new Reminder();
                 $note->getFromDB($row["id"]);
 
-                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
-                $name .= ReminderTranslation::getTranslatedValue($note, 'name');
+//                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
+                $name = ReminderTranslation::getTranslatedValue($note, 'name');
 
                 $style_title         = "text-align:center;color:orange";
                 $description         = ReminderTranslation::getTranslatedValue($note, 'text');
@@ -1763,7 +1763,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_maint-infos-container'>";
-            $wl .= "<div id='nt-infos-triangle'></div>";
+//            $wl .= "<div id='nt-infos-triangle'></div>";
             $wl .= "<div id='nt_maint-infos' class=''>";
             $wl .= "<div class='col-xs-4 centered'>";
             //         if ($nb > 1) {
@@ -1921,8 +1921,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $note = new Reminder();
                 $note->getFromDB($row["id"]);
 
-                $name = "<i class='ti ti-info-circle'></i>";
-                $name .= ReminderTranslation::getTranslatedValue($note, 'name');
+//                $name = "<i class='ti ti-info-circle'></i>";
+                $name = ReminderTranslation::getTranslatedValue($note, 'name');
 
                 $style_title         = "text-align:center;";
                 $description         = ReminderTranslation::getTranslatedValue($note, 'text');
@@ -1938,7 +1938,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_info-infos-container'>";
-            $wl .= "<div id='nt-infos-triangle'></div>";
+//            $wl .= "<div id='nt-infos-triangle'></div>";
             $wl .= "<div id='nt_info-infos' class=''>";
             $wl .= "<div class='col-xs-4 centered'>";
             //         if ($nb > 1) {
@@ -2090,7 +2090,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_alert-infos-container'>";
-            $wl .= "<div id='nt-infos-triangle'></div>";
+//            $wl .= "<div id='nt-infos-triangle'></div>";
             $wl .= "<div id='nt_alert-infos' class=''>";
             $wl .= "<div class='col-xs-4 centered'>";
             //         if ($nb > 1) {
@@ -2307,7 +2307,7 @@ class PluginMydashboardAlert extends CommonDBTM {
         $class = "plugin_mydashboard_fa-thermometer-" . ($impact - 1);
         $style = "color:" . $config->getField('impact_' . $impact);
 
-        $div .= "<div class='card-header mb-4' style='width: 450px;'>";
+        $div .= "<div class='card-header mb-4'>";
         $div .= "<h2 class='mx-auto'>" . PluginMydashboardConfig::displayField($config, 'title_alerts_widget') . "</h2></div>";
         $div .= "<div class=\"mb-3\">";
         $div .= "<i style='$style' class='fas $class fa-alert-4'></i>";

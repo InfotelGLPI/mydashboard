@@ -1338,7 +1338,7 @@ class PluginMydashboardMenu extends CommonGLPI {
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/echarts.js");
         $theme = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/html2canvas.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
 //        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/circles/circles.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/countUp.min.js");
