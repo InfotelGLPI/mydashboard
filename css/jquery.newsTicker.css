@@ -51,11 +51,11 @@ NEWSTICKERS
     transition: all 0.1s ease-in-out;
 }
 
-#nt_maint-container i:hover,
-#nt_alert-container i:hover,
-#nt_info-container i:hover{
-    color: #333;
-}
+/*#nt_maint-container i:hover,*/
+/*#nt_alert-container i:hover,*/
+/*#nt_info-container i:hover{*/
+/*    color: #333;*/
+/*}*/
 
 #nt_maint li,
 #nt_alert li,

@@ -1746,7 +1746,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $note = new Reminder();
                 $note->getFromDB($row["id"]);
 
-//                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
+                //                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
                 $name = ReminderTranslation::getTranslatedValue($note, 'name');
 
                 $style_title         = "text-align:center;color:orange";
@@ -1763,7 +1763,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_maint-infos-container'>";
-//            $wl .= "<div id='nt-infos-triangle'></div>";
+            //            $wl .= "<div id='nt-infos-triangle'></div>";
             $wl .= "<div id='nt_maint-infos' class=''>";
             $wl .= "<div class='col-xs-4 centered'>";
             //         if ($nb > 1) {
@@ -1833,36 +1833,38 @@ class PluginMydashboardAlert extends CommonDBTM {
 
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
-//
+        //
         $alert = new self();
-        $alert->getFromDBByCrit(['reminders_id' => $id]);
-        if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
-            $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
-            echo "<span style='$style_description'>";
-        }
-        echo html_entity_decode(ReminderTranslation::getTranslatedValue($note, 'text'));
-        if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
-            echo "</span>";
-        }
-        $iterator = $DB->request([
-                                     'FIELDS' => 'documents_id',
-                                     'FROM'   => 'glpi_documents_items',
-                                     'WHERE'  => [
-                                         'items_id' => $id,
-                                         'itemtype' => 'Reminder'
-                                     ]
-                                 ]);
 
-        $numrows = count($iterator);
-        if ($numrows > 0) {
-            $j = 0;
-            foreach ($iterator as $docs) {
-                $doc = new Document();
-                $doc->getFromDB($docs["documents_id"]);
-                echo $doc->getDownloadLink();
-                $j++;
-                if ($j > 1) {
-                    echo "<br>";
+        if ($alert->getFromDBByCrit(['reminders_id' => $id])) {
+            if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
+                $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
+                echo "<span style='$style_description'>";
+            }
+            echo html_entity_decode(ReminderTranslation::getTranslatedValue($note, 'text'));
+            if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
+                echo "</span>";
+            }
+            $iterator = $DB->request([
+                                         'FIELDS' => 'documents_id',
+                                         'FROM'   => 'glpi_documents_items',
+                                         'WHERE'  => [
+                                             'items_id' => $id,
+                                             'itemtype' => 'Reminder'
+                                         ]
+                                     ]);
+
+            $numrows = count($iterator);
+            if ($numrows > 0) {
+                $j = 0;
+                foreach ($iterator as $docs) {
+                    $doc = new Document();
+                    $doc->getFromDB($docs["documents_id"]);
+                    echo $doc->getDownloadLink();
+                    $j++;
+                    if ($j > 1) {
+                        echo "<br>";
+                    }
                 }
             }
         }
@@ -1921,7 +1923,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $note = new Reminder();
                 $note->getFromDB($row["id"]);
 
-//                $name = "<i class='ti ti-info-circle'></i>";
+                //                $name = "<i class='ti ti-info-circle'></i>";
                 $name = ReminderTranslation::getTranslatedValue($note, 'name');
 
                 $style_title         = "text-align:center;";
@@ -1938,7 +1940,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_info-infos-container'>";
-//            $wl .= "<div id='nt-infos-triangle'></div>";
+            //            $wl .= "<div id='nt-infos-triangle'></div>";
             $wl .= "<div id='nt_info-infos' class=''>";
             $wl .= "<div class='col-xs-4 centered'>";
             //         if ($nb > 1) {
@@ -2090,7 +2092,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_alert-infos-container'>";
-//            $wl .= "<div id='nt-infos-triangle'></div>";
+            //            $wl .= "<div id='nt-infos-triangle'></div>";
             $wl .= "<div id='nt_alert-infos' class=''>";
             $wl .= "<div class='col-xs-4 centered'>";
             //         if ($nb > 1) {
@@ -2208,33 +2210,33 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.css");
 
-//            $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css";
-//            if (file_exists($css_file) && $public == 1) {
-//                $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css");
-//                $wl .= "<div id='info_img'>&nbsp;</div>";
-//                $wl .= "<div class='bt-row info_weather_public_block'>";
-//            } else {
-//                $wl .= "<div class='bt-row'>";
-//            }
-//            $min = 160 + $nb * 20;
-//            if ($nb > 0 && $nb_maintenance > 0) {
-//                $min = $min + 60;
-//            }
-//
-//            $min = $min . 'px';
-//            $wl  .= "<script type='text/javascript'>
-//            $(document).ready( function() {
-//                $('#form-login').css('min-height', '$min');
-//            });
-//            </script>";
-//
-//            if ($nb > 1 || ($nb > 0 && $nb_maintenance > 0)) {
-//                $wl .= "<script type='text/javascript'>
-//            $(document).ready( function() {
-//                $('#form-login').css('margin-top', '60px');
-//            });
-//            </script>";
-//            }
+            //            $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css";
+            //            if (file_exists($css_file) && $public == 1) {
+            //                $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css");
+            //                $wl .= "<div id='info_img'>&nbsp;</div>";
+            //                $wl .= "<div class='bt-row info_weather_public_block'>";
+            //            } else {
+            //                $wl .= "<div class='bt-row'>";
+            //            }
+            //            $min = 160 + $nb * 20;
+            //            if ($nb > 0 && $nb_maintenance > 0) {
+            //                $min = $min + 60;
+            //            }
+            //
+            //            $min = $min . 'px';
+            //            $wl  .= "<script type='text/javascript'>
+            //            $(document).ready( function() {
+            //                $('#form-login').css('min-height', '$min');
+            //            });
+            //            </script>";
+            //
+            //            if ($nb > 1 || ($nb > 0 && $nb_maintenance > 0)) {
+            //                $wl .= "<script type='text/javascript'>
+            //            $(document).ready( function() {
+            //                $('#form-login').css('margin-top', '60px');
+            //            });
+            //            </script>";
+            //            }
             while ($row = $DB->fetchArray($result)) {
 
                 if ($row['impact'] == 1) {
@@ -2273,20 +2275,20 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $wl .= __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
                 $wl .= "</div>";
             }
-//            $wl .= "</div>";
+            //            $wl .= "</div>";
         }
 
         if (!$nb && ($public == 0 || $force == 1)) {
             $wl .= $this->displayContent('1', [], 0);
         }
 
-//        $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/hideinfo.css";
-//        if (file_exists($css_file)
-//            && !$nb
-//            && $nb_maintenance == 0
-//            && $public == 1) {
-//            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/hideinfo.css");
-//        }
+        //        $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/hideinfo.css";
+        //        if (file_exists($css_file)
+        //            && !$nb
+        //            && $nb_maintenance == 0
+        //            && $public == 1) {
+        //            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/hideinfo.css");
+        //        }
         return $wl;
     }
 
