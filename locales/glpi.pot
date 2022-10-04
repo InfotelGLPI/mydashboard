@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 11:24+0000\n"
+"POT-Creation-Date: 2022-10-04 11:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -935,8 +935,8 @@ msgid "Bar charts"
 msgstr ""
 
 #: reports/reports_bar.class.php:60 reports/reports_bar.class.php:190
-#: reports/reports_line.class.php:472 reports/reports_line.class.php:757
-#: reports/reports_line.class.php:1069
+#: reports/reports_line.class.php:473 reports/reports_line.class.php:758
+#: reports/reports_line.class.php:1070
 msgid "Opened tickets backlog"
 msgstr ""
 
@@ -1058,8 +1058,8 @@ msgstr ""
 msgid "Trimester 4"
 msgstr ""
 
-#: reports/reports_bar.class.php:1251 reports/reports_line.class.php:470
-#: reports/reports_line.class.php:755 reports/reports_line.class.php:1066
+#: reports/reports_bar.class.php:1251 reports/reports_line.class.php:471
+#: reports/reports_line.class.php:756 reports/reports_line.class.php:1067
 #: reports/reports_pie.class.php:772 reports/reports_pie.class.php:774
 msgid "Opened tickets"
 msgstr ""
@@ -1104,11 +1104,11 @@ msgstr ""
 msgid "Sum of not solved tickets by month"
 msgstr ""
 
-#: reports/reports_line.class.php:63 reports/reports_line.class.php:465
+#: reports/reports_line.class.php:63 reports/reports_line.class.php:466
 msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: reports/reports_line.class.php:66 reports/reports_line.class.php:750
+#: reports/reports_line.class.php:66 reports/reports_line.class.php:751
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr ""
 
@@ -1120,20 +1120,20 @@ msgstr ""
 msgid "Tickets stock"
 msgstr ""
 
-#: reports/reports_line.class.php:471 reports/reports_line.class.php:1067
+#: reports/reports_line.class.php:472 reports/reports_line.class.php:1068
 #: reports/reports_pie.class.php:790 reports/reports_pie.class.php:792
 msgid "Closed tickets"
 msgstr ""
 
-#: reports/reports_line.class.php:756
+#: reports/reports_line.class.php:757
 msgid "Resolved / closed tickets"
 msgstr ""
 
-#: reports/reports_line.class.php:1061
+#: reports/reports_line.class.php:1062
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr ""
 
-#: reports/reports_line.class.php:1068 reports/reports_pie.class.php:810
+#: reports/reports_line.class.php:1069 reports/reports_pie.class.php:810
 #: reports/reports_pie.class.php:812
 msgid "Not planned"
 msgstr ""
