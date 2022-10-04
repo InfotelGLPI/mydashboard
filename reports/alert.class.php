@@ -1773,7 +1773,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             $wl .= "</div>";
 
             $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text' style='color:orange;'>";
+            $wl .= "<div class='infos-text'>";
             $wl .= $firstdescription;
             $wl .= "</div>";
             $wl .= "</div>";
@@ -1784,7 +1784,7 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             $wl .= "</div>";
             if ($nb > 1) {
-                $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '//ajax/showalert.php';
+                $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
                 $wl       .= "<script type='text/javascript'>
                     var nt_maint = $('#nt_maint').newsTicker({
                         row_height: 60,
@@ -1833,15 +1833,15 @@ class PluginMydashboardAlert extends CommonDBTM {
 
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
-
+//
         $alert = new self();
         $alert->getFromDBByCrit(['reminders_id' => $id]);
-        if ($alert->fields['impact'] > 0) {
+        if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
             $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
             echo "<span style='$style_description'>";
         }
         echo html_entity_decode(ReminderTranslation::getTranslatedValue($note, 'text'));
-        if ($alert->fields['impact'] > 0) {
+        if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
             echo "</span>";
         }
         $iterator = $DB->request([
