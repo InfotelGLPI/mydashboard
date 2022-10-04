@@ -44,7 +44,7 @@ function plugin_init_mydashboard() {
    $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
 
    $PLUGIN_HOOKS['add_css']['mydashboard'] = [
-      "css/mydashboard.css",
+      "css/mydashboard.scss",
       "css/jquery.newsTicker.css",
    ];
 

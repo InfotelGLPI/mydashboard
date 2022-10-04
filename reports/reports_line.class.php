@@ -272,6 +272,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $technician_groups_criteria = $crit['technicians_groups_id'];
                 $technician_group           = $opt['technicians_groups_id'];
                 $technician_groups_ids      = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
+                $tech_groups_crit = "";
                 if (count($opt['technicians_groups_id']) > 0) {
                     $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
                 }
