@@ -84,7 +84,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
                 }
               },
               calculable: true,
-              grid: { left: 16, right: 32, top: 32, bottom: 32, containLabel: true },
+//              grid: { left: 16, right: 32, top: 32, bottom: 32, containLabel: true },
               xAxis: [
                 {
                   type: 'category',

@@ -87,7 +87,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $this->getType() . "38" => ["title"   => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
                                             "icon"    => "ti ti-chart-bar",
                                             "comment" => ""],
-                $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling and pending by month", "mydashboard"),
+                $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling months and pending tickets per month", "mydashboard"),
                                             "icon"    => "ti ti-chart-bar",
                                             "comment" => ""],
                 $this->getType() . "40" => ["title"   => __("Tickets request sources evolution", "mydashboard"),
@@ -1518,6 +1518,29 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 //                    }
                 //                }
 
+                foreach ($monthDays as $key => $month) {
+                    foreach ($month as $day) {
+                        $query_average_total = "SELECT COUNT(`glpi_tickets`.`id`) AS Total FROM `glpi_tickets`
+                                                                      WHERE {$is_deleted} {$type_criteria}
+                                                                         {$requester_groups_criteria}
+                                                                        AND `glpi_tickets`.date<=date_add('{$day}', interval 3*7 DAY)
+                                                                        AND (`glpi_tickets`.solvedate>=date_add('{$day}', interval 3*7 DAY) OR `glpi_tickets`.solvedate is null)
+                                                                    ";
+
+
+                        $results   = $DB->query($query_average_total);
+                        $nbResults = $DB->numrows($results);
+
+
+                        if ($nbResults) {
+                            while ($data = $DB->fetchArray($results)) {
+                                if (strpos($day, $key) !== false) {
+                                    $tabTotalRunningByDayAndMonth[$key][$day]['total'] = $data['Total'];
+                                }
+                            }
+                        }
+                    }
+                }
                 $tabTotalRunningByMonth = [];
                 //Reformat datas by calculate total by month
                 foreach ($tabTotalRunningByDayAndMonth as $month => $runningMouth) {
@@ -1561,7 +1584,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Responsiveness over 12 rolling and pending by month", "mydashboard");
+                $title   = __("Responsiveness over 12 rolling months and pending tickets per month", "mydashboard");
                 $comment = "";
                 $widget->setWidgetTitle((($isDebug) ? "39 " : "") . $title);
                 $widget->toggleWidgetRefresh();
@@ -1591,12 +1614,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $datasets[] =
                     ['type'    => 'line',
                      'data'    => $tabAverageTotalRunningByMonth,
-                     'label'   => __('Sum of pending by month', "mydashboard"),
+                     'name'   => __('Sum of pending tickets per month', "mydashboard"),
                      'smooth'  => false,
                      //                                  'borderColor' => '#00BFFF',
                      //                                  'fill' => false,
                      //                                  'lineTension' => '0.1',
-                     'yAxisID' => 'left-y-axis'
+//                     'yAxisID' => 'bar-y-axis'
                     ];
 
 
@@ -1616,27 +1639,27 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                     [
                         "type"    => "bar",
                         "data"    => $tabTicketsLessThanOneDay['total'],
-                        "name"    => __('Sum of less 24 hours', "mydashboard"),
+                        "name"    => __('Sum of tickets solved in less than 24 hours', "mydashboard"),
                         //                                  'backgroundColor' => '#BBD4F9',
-                        'yAxisID' => 'bar-y-axis'
+//                        'yAxisID' => 'bar-y-axis'
                     ];
 
                 $datasets[] =
                     [
                         "type"    => "bar",
                         "data"    => $tabTicketsBetweenOneDayAndOneWeek['total'],
-                        "name"    => __('Sum of less 1 week', "mydashboard"),
+                        "name"    => __('Sum of tickets solved in less than a week', "mydashboard"),
                         //                                  'backgroundColor' => '#2B68C4',
-                        'yAxisID' => 'bar-y-axis'
+//                        'yAxisID' => 'bar-y-axis'
                     ];
 
                 $datasets[] =
                     [
                         "type"    => "bar",
                         "data"    => $tabTicketsMoreThanOneWeek['total'],
-                        "name"    => __('Sum of more 1 week', "mydashboard"),
+                        "name"    => __('Sum of tickets solved in more than a week', "mydashboard"),
                         //                                  'backgroundColor' => '#033A5F',
-                        'yAxisID' => 'bar-y-axis'
+//                        'yAxisID' => 'bar-y-axis'
                     ];
 
                 $graph_datas = ['title'   => $title,
