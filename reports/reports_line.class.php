@@ -231,7 +231,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $name    = 'TicketStatusBarLineChart';
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    //                && Session::getCurrentInterface() == 'central'
+                                    && Session::getCurrentInterface() == 'central'
                 ) {
                     $criterias = ['entities_id',
                                   'technicians_groups_id',

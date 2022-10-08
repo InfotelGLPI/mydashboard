@@ -655,6 +655,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             case $this->getType() . "24":
                 $name = 'TicketByTechsBarChart';
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -664,6 +665,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                   'begin',
                                   'end',
                                   'limit'];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -751,15 +753,16 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                 'labels'  => $tabNamesset,
                                 //                            'label'           => $ticketsnumber,
                 ];
-
-                $graph_criterias = ['entities_id' => $entities_id_criteria,
-                                    'sons'        => $sons_criteria,
-                                    'type'        => $type,
-                                    //                                'year'        => $year_criteria,
-                                    'begin'       => $opt['begin'],
-                                    'end'         => $opt['end'],
-                                    'widget'      => $widgetId];
-
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                                        'sons'        => $sons_criteria,
+                                        'type'        => $type,
+                                        //                                'year'        => $year_criteria,
+                                        'begin'       => $opt['begin'],
+                                        'end'         => $opt['end'],
+                                        'widget'      => $widgetId];
+                }
                 $graph = PluginMydashboardBarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
@@ -907,6 +910,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             case $this->getType() . "36":
                 $name = 'TicketsByPriorityBarChart';
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -914,6 +918,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                   'type',
                                   'technicians_groups_id',
                                   'group_is_recursive'];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -987,14 +992,15 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                 'ids'     => $tabpriorityset,
                                 'data'    => $dataset,
                                 'labels'  => $labels];
-
-                $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                    'sons'               => $sons_criteria,
-                                    'technician_group'   => $technician_group,
-                                    'group_is_recursive' => $js_ancestors,
-                                    'type'               => $type,
-                                    'widget'             => $widgetId];
-
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'type'               => $type,
+                                        'widget'             => $widgetId];
+                }
                 $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
 
@@ -1003,6 +1009,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
             case $this->getType() . "37":
                 $name = 'TicketsByStatusBarChart';
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -1010,6 +1017,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                   'type',
                                   'technicians_groups_id',
                                   'group_is_recursive'];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -1138,14 +1146,15 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                 'ids'     => $tabstatusset,
                                 'data'    => $dataset,
                                 'labels'  => $labels];
-
-                $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                    'sons'               => $sons_criteria,
-                                    'technician_group'   => $technician_group,
-                                    'group_is_recursive' => $js_ancestors,
-                                    'type'               => $type,
-                                    'widget'             => $widgetId];
-
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'type'               => $type,
+                                        'widget'             => $widgetId];
+                }
                 $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
 

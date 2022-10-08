@@ -119,7 +119,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
         switch ($widgetId) {
 
             case $this->getType() . "2":
-                $name = 'TicketsByPriorityPieChart';
+                $onclick = 0;
+                $name    = 'TicketsByPriorityPieChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -127,6 +128,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                   'type',
                                   'technicians_groups_id',
                                   'group_is_recursive'];
+                    $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -191,14 +193,14 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                 'labels'  => $labelsPie,
                                 'label'   => $title];
 
-                //            if ($onclick == 1) {
-                $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                    'sons'               => $sons_criteria,
-                                    'technician_group'   => $technician_group,
-                                    'group_is_recursive' => $js_ancestors,
-                                    'type'               => $type,
-                                    'widget'             => $widgetId];
-                //            }
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'type'               => $type,
+                                        'widget'             => $widgetId];
+                }
 
                 $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, $graph_criterias);
 
@@ -494,6 +496,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
             case $this->getType() . "16":
                 $name = 'IncidentsByCategoryPieChart';
+                $onclick + 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -501,6 +504,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                   'technicians_groups_id',
                                   'group_is_recursive',
                                   'requesters_groups_id'];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -579,14 +583,15 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                 'labels'  => $labelsPie,
                                 'label'   => $title,
                 ];
-
-                $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                    'sons'               => $sons_criteria,
-                                    'technician_group'   => $technician_group,
-                                    'group_is_recursive' => $js_ancestors,
-                                    'requester_groups'   => $requester_groups,
-                                    'widget'             => $widgetId];
-
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'requester_groups'   => $requester_groups,
+                                        'widget'             => $widgetId];
+                }
                 $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
@@ -608,6 +613,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
             case $this->getType() . "17":
                 $name = 'RequestsByCategoryPieChart';
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -616,6 +622,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                   'group_is_recursive',
                                   'requesters_groups_id',
                                   'limit'];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -693,14 +700,15 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                 'labels'  => $labelsPie,
                                 'label'   => $title,
                 ];
-
-                $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                    'sons'               => $sons_criteria,
-                                    'technician_group'   => $technician_group,
-                                    'group_is_recursive' => $js_ancestors,
-                                    'requester_groups'   => $requester_groups,
-                                    'widget'             => $widgetId];
-
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'requester_groups'   => $requester_groups,
+                                        'widget'             => $widgetId];
+                }
                 $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
@@ -1039,11 +1047,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                 'labels'  => $labelsPie,
                                 'label'   => $title];
 
-                //            if ($onclick == 1) {
-                $graph_criterias = ['type'   => $type,
-                                    'widget' => $widgetId];
-                //            }
-
                 $graph = PluginMydashboardPieChart::launchPieGraph($graph_datas, []);
 
                 $params = ["widgetId"  => $widgetId,
@@ -1232,21 +1235,22 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 $tablocationset = json_encode($tablocation);
                 $js_ancestors   = $crit['ancestors'];
 
-                $graph_datas = ['title'   => $title,
-                                'comment' => $comment,
-                                'name'    => $name,
-                                'ids'     => $tablocationset,
-                                'data'    => $dataPieset,
-                                'labels'  => $labelsPie,
-                                'label'   => $title];
-
-                $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                    'sons'               => $sons_criteria,
-                                    'technician_group'   => $technician_group,
-                                    'group_is_recursive' => $js_ancestors,
-                                    'type'               => $type,
-                                    'widget'             => $widgetId];
-
+                $graph_datas     = ['title'   => $title,
+                                    'comment' => $comment,
+                                    'name'    => $name,
+                                    'ids'     => $tablocationset,
+                                    'data'    => $dataPieset,
+                                    'labels'  => $labelsPie,
+                                    'label'   => $title];
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'type'               => $type,
+                                        'widget'             => $widgetId];
+                }
                 $graph = PluginMydashboardPieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
@@ -1379,7 +1383,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 break;
 
             case $this->getType() . "31":
-                $name = 'TicketsByLocationPolarChart';
+                $name    = 'TicketsByLocationPolarChart';
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
@@ -1388,6 +1393,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                   'year',
                                   'month',
                                   'technicians_groups_id'];
+                    $onclick   = 1;
                 }
                 $params  = ["preferences" => $this->preferences,
                             "criterias"   => $criterias,
@@ -1457,12 +1463,14 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                    'labels'  => $labelsPolar,
                                    'label'   => $title];
 
-                $graph_criterias = ['entities_id'      => $entities_id_criteria,
-                                    'sons'             => $sons_criteria,
-                                    'technician_group' => $technician_group,
-                                    'type'             => $type,
-                                    'widget'           => $widgetId];
-
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'      => $entities_id_criteria,
+                                        'sons'             => $sons_criteria,
+                                        'technician_group' => $technician_group,
+                                        'type'             => $type,
+                                        'widget'           => $widgetId];
+                }
                 $graph = PluginMydashboardPieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
