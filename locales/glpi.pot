@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 11:48+0000\n"
+"POT-Creation-Date: 2022-10-08 12:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1004,27 +1004,27 @@ msgstr ""
 msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr ""
 
-#: reports/reports_bar.class.php:90 reports/reports_bar.class.php:1564
-msgid "Responsiveness over 12 rolling and pending by month"
+#: reports/reports_bar.class.php:90 reports/reports_bar.class.php:1587
+msgid "Responsiveness over 12 rolling months and pending tickets per month"
 msgstr ""
 
-#: reports/reports_bar.class.php:93 reports/reports_bar.class.php:1753
+#: reports/reports_bar.class.php:93 reports/reports_bar.class.php:1776
 msgid "Tickets request sources evolution"
 msgstr ""
 
-#: reports/reports_bar.class.php:95 reports/reports_bar.class.php:1754
+#: reports/reports_bar.class.php:95 reports/reports_bar.class.php:1777
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:96 reports/reports_bar.class.php:1874
+#: reports/reports_bar.class.php:96 reports/reports_bar.class.php:1897
 msgid "Tickets solution types evolution"
 msgstr ""
 
-#: reports/reports_bar.class.php:98 reports/reports_bar.class.php:1875
+#: reports/reports_bar.class.php:98 reports/reports_bar.class.php:1898
 msgid "Evolution of solution types by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:99 reports/reports_bar.class.php:1970
+#: reports/reports_bar.class.php:99 reports/reports_bar.class.php:1993
 msgid "Solve delay and take into account of tickets"
 msgstr ""
 
@@ -1068,27 +1068,27 @@ msgstr ""
 msgid "Average Satisfaction"
 msgstr ""
 
-#: reports/reports_bar.class.php:1594
-msgid "Sum of pending by month"
+#: reports/reports_bar.class.php:1617
+msgid "Sum of pending tickets per month"
 msgstr ""
 
-#: reports/reports_bar.class.php:1619
-msgid "Sum of less 24 hours"
+#: reports/reports_bar.class.php:1642
+msgid "Sum of tickets solved in less than 24 hours"
 msgstr ""
 
-#: reports/reports_bar.class.php:1628
-msgid "Sum of less 1 week"
+#: reports/reports_bar.class.php:1651
+msgid "Sum of tickets solved in less than a week"
 msgstr ""
 
-#: reports/reports_bar.class.php:1637
-msgid "Sum of more 1 week"
+#: reports/reports_bar.class.php:1660
+msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: reports/reports_bar.class.php:1913
+#: reports/reports_bar.class.php:1936
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: reports/reports_bar.class.php:1914
+#: reports/reports_bar.class.php:1937
 msgid "Take into account average (hour)"
 msgstr ""
 
