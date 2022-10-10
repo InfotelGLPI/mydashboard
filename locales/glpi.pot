@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-08 15:53+0000\n"
+"POT-Creation-Date: 2022-10-10 10:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -270,7 +270,7 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#: inc/helper.class.php:2047
+#: inc/helper.class.php:2048
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
