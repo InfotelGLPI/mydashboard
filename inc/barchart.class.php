@@ -88,13 +88,19 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
               xAxis: [
                 {
                   type: 'category',
-                  data: $labels
+                  data: $labels,
+                  axisPointer: {
+                    type: 'shadow'
+                  }
                 }
               ],
               yAxis: [
                 {
                   type: 'value'
+                },{
+                  type: 'value'
                 }
+                
               ],
               series: $datas
             };

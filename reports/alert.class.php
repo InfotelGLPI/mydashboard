@@ -2208,7 +2208,7 @@ class PluginMydashboardAlert extends CommonDBTM {
         $nb_maintenance = self::countForAlerts($public, 1);
         if ($nb || $nb_maintenance > 0) {
 
-            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.css");
+            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.scss");
 
             //            $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css";
             //            if (file_exists($css_file) && $public == 1) {

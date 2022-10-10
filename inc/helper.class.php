@@ -1796,7 +1796,8 @@ class PluginMydashboardHelper {
         }
 
         if ($onsubmit) {
-            $form .= Html::submit(_x('button', 'Send'), ['name' => 'submit', 'class' => 'btn btn-primary']);
+            $form .= Html::submit(_x('button', 'Send'), ['name' => 'submit',
+                                                         'class' => 'btn btn-primary']);
         }
 
         return $form . self::getFormFooter();
