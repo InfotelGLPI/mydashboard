@@ -496,7 +496,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
             case $this->getType() . "16":
                 $name = 'IncidentsByCategoryPieChart';
-                $onclick + 0;
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',

@@ -50,6 +50,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
         $labels         = $graph_datas['labels'];
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
+        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = json_encode($graph_criterias);
 
@@ -114,7 +115,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
+                    url: '$url',
                     type: 'POST',
                     data:
                     {
@@ -152,6 +153,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
         $labels         = $graph_datas['labels'];
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
+        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = json_encode($graph_criterias);
 
@@ -223,7 +225,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
+                    url: '$url',
                     type: 'POST',
                     data:
                     {
@@ -260,6 +262,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
         $labels         = $graph_datas['labels'];
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
+        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = json_encode($graph_criterias);
 
@@ -333,7 +336,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                  var tab = id$name;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
+                    url: '$url',
                     type: 'POST',
                     data:
                     {

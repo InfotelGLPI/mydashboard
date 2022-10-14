@@ -593,7 +593,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                     list($year, $month) = explode('-', $data['month']);
 
                     $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
-                    $query_1 = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nb_tickets, SUM(`glpi_tickettasks`.`actiontime`) AS count 
+                    $query_1 = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nb_tickets, 
+                                        SUM(`glpi_tickettasks`.`actiontime`) AS count 
                           FROM `glpi_tickettasks`
                           LEFT JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
                           WHERE $is_deleted " . $entities_criteria . $type_criteria . "

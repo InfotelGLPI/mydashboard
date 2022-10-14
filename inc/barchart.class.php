@@ -27,7 +27,8 @@
 /**
  * Class PluginMydashboardBarChart
  */
-abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
+abstract class PluginMydashboardBarChart extends PluginMydashboardChart
+{
 
     /**
      * @param array $graph_datas
@@ -35,10 +36,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
      *
      * @return string
      */
-    static function launchGraph($graph_datas = [], $graph_criterias = []) {
+    static function launchGraph($graph_datas = [], $graph_criterias = [])
+    {
 
         $onclick = 0;
-        if (count($graph_criterias) > 0) {
+        if (count($graph_criterias) > 0)
+        {
             $onclick = 1;
         }
         $name    = $graph_datas['name'];
@@ -48,11 +51,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
         $labels  = $graph_datas['labels'];
         $title   = $graph_datas['title'] ?? "";
         $comment = $graph_datas['comment'] ?? "";
+        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
         $json_criterias = json_encode($graph_criterias);
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $graph          = "<script type='text/javascript'>
-          var id$name = $ids;
+
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
             canvas$name.resize();
@@ -112,10 +116,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
             //  console.log(params);
               if ($onclick) {
                  var idx = params.dataIndex;
-                 var tab = id$name;
+                 var tab = $ids;
                  var selected_id = tab[idx];
                  $.ajax({
-                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
+                    url: '$url',
                     type: 'POST',
                     data:
                     {
@@ -142,10 +146,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
      *
      * @return string
      */
-    static function launchHorizontalGraph($graph_datas = [], $graph_criterias = []) {
+    static function launchHorizontalGraph($graph_datas = [], $graph_criterias = [])
+    {
 
         $onclick = 0;
-        if (count($graph_criterias) > 0) {
+        if (count($graph_criterias) > 0)
+        {
             $onclick = 1;
         }
         $name    = $graph_datas['name'];
@@ -155,11 +161,12 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
         $labels  = $graph_datas['labels'];
         $title   = $graph_datas['title'] ?? "";
         $comment = $graph_datas['comment'] ?? "";
+        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
         $json_criterias = json_encode($graph_criterias);
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
-        $graph = "<script type='text/javascript'>
-             var id$name = $ids;
+        $graph          = "<script type='text/javascript'>
+
               var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
               window.onresize = function() {
                 canvas$name.resize();
@@ -214,10 +221,10 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart {
             //  console.log(params);
               if ($onclick) {
                              var idx = params.dataIndex;
-                             var tab = id$name;
+                             var tab = $ids;
                              var selected_id = tab[idx];
                              $.ajax({
-                                url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php',
+                                url: '$url',
                                 type: 'POST',
                                 data:
                                 {

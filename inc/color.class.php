@@ -29,4 +29,7 @@
  */
 class PluginMydashboardColor {
 
+    function getColors () {
+
+    }
 }
