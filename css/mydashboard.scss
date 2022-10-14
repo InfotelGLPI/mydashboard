@@ -975,7 +975,7 @@ div.dt-button-background {
   text-align: center;
   border: 1px solid #e6e6e6;
   width: 85px;
-  min-height: 85px;
+  min-height: 100px;
   font-size: 12px;
   color: #000;
   box-sizing: content-box;
@@ -987,6 +987,14 @@ div.dt-button-background {
 
 .ind-widget-new {
   background: #FFF;
+  padding-top: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+}
+
+.ind-widget-closed {
+  background: #524c4c;
   padding-top: 15px;
   padding-left: 30px;
   padding-right: 30px;

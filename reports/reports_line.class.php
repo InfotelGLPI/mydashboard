@@ -442,6 +442,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                                 " WHERE $is_deleted" .
                                 " $technician_groups_criteria" .
                                 " $entities_criteria" .
+                                " $type_criteria" .
                                 //                        " $requester_groups_criteria".
                                 //                        " $locations_criteria" .
                                 // Tickets open in the month
@@ -727,6 +728,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                                 " WHERE $is_deleted" .
                                 " $technician_groups_criteria" .
                                 " $entities_criteria" .
+                                " $type_criteria" .
                                 //                        " $requester_groups_criteria".
                                 //                        " $locations_criteria" .
                                 // Tickets open in the month
@@ -1038,6 +1040,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                                 " WHERE $is_deleted" .
                                 " $technician_groups_criteria" .
                                 " $entities_criteria" .
+                                " $type_criteria" .
                                 //                        " $requester_groups_criteria".
                                 //                        " $locations_criteria" .
                                 // Tickets open in the month

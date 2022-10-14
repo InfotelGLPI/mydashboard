@@ -256,7 +256,6 @@ class PluginMydashboardWidget extends CommonDBTM {
      * @return string
      */
     static function loadWidget($classname, $widgetindex, $parent, $class, $opt = []) {
-        global $CFG_GLPI;
 
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);
@@ -272,7 +271,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                 }
 
                 if (isset($widget) && ($widget instanceof PluginMydashboardModule)) {
-
                     $widget->setWidgetId($widgetindex);
                     //Then its Html content
                     $htmlContent = $widget->getWidgetHtmlContent();
@@ -548,7 +546,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                     $widgetdisplay .= "</div>";
 
                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                        $displayloadwidget = "Load widget : " . $loadwidget . "<br>";
+                        $displayloadwidget = "Load widget ".$widgetindex." : " . $loadwidget . "<br>";
                         $widgetdisplay     .= $displayloadwidget;
                     }
                     return $widgetdisplay;

@@ -2801,7 +2801,8 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $params['year'] = date('Y');
                 $params['week'] = date('W');
             }
-            if ($params['year'] == date('Y') && $params['week'] == date('W')) {
+            if ($params['year'] == date('Y')
+                && $params['week'] == date('W')) {
                 if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
                     $left                  .= "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -3061,21 +3062,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
 
         $options_closed['reset'][] = 'reset';
 
-        if ($seeown == false) {
-            $options_closed['criteria'][] = [
-                'field'      => 12,//status
-                'searchtype' => 'equals',
-                'value'      => 'process',
-                'link'       => 'AND'
-            ];
-        } else {
-            $options_closed['criteria'][] = [
-                'field'      => 12,//status
-                'searchtype' => 'equals',
-                'value'      => Ticket::CLOSED,
-                'link'       => 'AND'
-            ];
-        }
+        $options_closed['criteria'][] = [
+            'field'      => 12,//status
+            'searchtype' => 'equals',
+            'value'      => Ticket::CLOSED,
+            'link'       => 'AND'
+        ];
 
 
         if ($seeown == false) {
@@ -3137,19 +3129,18 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             $stats = "";
             if ($iswidget == true
                 && Session::haveRightsOr("ticket", [Ticket::READALL, Ticket::READGROUP])) {
-                $criterias     = ['technicians_groups_id', 'week', 'year'];
-                $params_header = ["widgetId"  => "PluginMydashboardReports_PieSC32",
-                                  "name"      => 'PluginMydashboardReports_PieSC32',
+                $criterias     = ['technicians_groups_id',
+                                  'week',
+                                  'year'];
+                $params_header = ["widgetId"  => "PluginMydashboardAlert_SC32",
+                                  "name"      => __("Global indicators by week", "mydashboard"),
                                   "onsubmit"  => true,
                                   "opt"       => $params,
                                   "criterias" => $criterias,
                                   "export"    => false,
                                   "canvas"    => false,
                                   "nb"        => 1];
-                if (Plugin::isPluginActive("Mydashboard")) {
-                    $stats .= PluginMydashboardHelper::getGraphHeader($params_header);
-                }
-
+                $stats .= PluginMydashboardHelper::getGraphHeader($params_header);
             }
 
             if ($seeown == true) {
@@ -3202,7 +3193,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $stats .= __('Requests in progress', 'mydashboard');
                 $stats .= "</div>";
 
-                $stats .= "<div class='nb ind-widget-late'>";
+                $stats .= "<div class='nb ind-widget-closed'>";
                 $stats .= $href_closed;
                 $stats .= "<br><br>";
                 $stats .= __('Tickets closed', 'mydashboard');
