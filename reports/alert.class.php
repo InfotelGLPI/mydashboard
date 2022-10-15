@@ -3132,7 +3132,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $criterias     = ['technicians_groups_id',
                                   'week',
                                   'year'];
-                $params_header = ["widgetId"  => "PluginMydashboardAlert_SC32",
+                $params_header = ["widgetId"  => "PluginMydashboardAlertSC32",
                                   "name"      => __("Global indicators by week", "mydashboard"),
                                   "onsubmit"  => true,
                                   "opt"       => $params,
