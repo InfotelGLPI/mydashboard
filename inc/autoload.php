@@ -51,8 +51,7 @@ class PluginMydasboardAutoloader {
             $reportName = substr($report, 0, strpos($report, "."));
             $className  = "PluginMydashboard" . ucfirst($reportName);
              if ((strpos($className, "PluginMydashboardReports") !== false)
-                 || (strpos($className, "PluginMydashboardAlert") !== false)
-                 || (strpos($className, "PluginMydashboardUniprevoyance") !== false)) {
+                 || (strpos($className, "PluginMydashboardAlert") !== false)) {
                  $widgets[] = $className;
             }
          }
