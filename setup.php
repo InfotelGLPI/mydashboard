@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '2.0.7');
+define('PLUGIN_MYDASHBOARD_VERSION', '2.0.8');
 
 if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
    define("PLUGIN_MYDASHBOARD_DIR", Plugin::getPhpDir("mydashboard"));
