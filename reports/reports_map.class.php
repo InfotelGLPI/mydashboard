@@ -243,8 +243,7 @@ class PluginMydashboardReports_Map extends CommonGLPI
                         ],
                         '&amp;'
                     );
-                    $parameters   = "as_map=0&amp;sort=" . $data['search']['sort'] . "&amp;order=" . $data['search']['order'] . '&amp;' .
-                                    $globallinkto;
+                    $parameters   = "as_map=0&amp;" . $globallinkto;
 
                     $typename = $itemtype::getTypeName(2);
 
