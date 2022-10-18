@@ -27,10 +27,10 @@
 /**
  * Class PluginMydashboardReports_Bar
  */
-class PluginMydashboardReports_Bar extends CommonGLPI {
-
-    private       $options;
-    private       $pref;
+class PluginMydashboardReports_Bar extends CommonGLPI
+{
+    private $options;
+    private $pref;
     public static $reports = [1, 8, 15, 21, 23, 24, 35, 36, 37, 38, 39, 40, 41, 42];
 
     /**
@@ -38,7 +38,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
      *
      * @param array $_options
      */
-    public function __construct($_options = []) {
+    public function __construct($_options = [])
+    {
         $this->options = $_options;
 
         $preference = new PluginMydashboardPreference();
@@ -53,8 +54,33 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
     /**
      * @return array
      */
-    public function getWidgetsForItem() {
+    public function getTitleForWidget($widgetID)
+    {
 
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['title'];
+        }
+        return false;
+
+    }
+
+    public function getCommentForWidget($widgetID)
+    {
+
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['comment'];
+        }
+        return false;
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getWidgetsForItem()
+    {
         $widgets = [
             __('Bar charts', "mydashboard") => [
                 $this->getType() . "1"  => ["title"   => __("Opened tickets backlog", "mydashboard"),
@@ -102,7 +128,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             ]
         ];
         return $widgets;
-
     }
 
 
@@ -113,12 +138,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
      * @return \PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
-    public function getWidgetContentForItem($widgetId, $opt = []) {
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
         switch ($widgetId) {
-
             case $this->getType() . "1":
                 $name    = 'BacklogBarChart';
                 $onclick = 0;
@@ -187,10 +212,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Opened tickets backlog", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "1 " : "") . $title);
-                $comment = __("Display of opened tickets by month", "mydashboard");
                 $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
                 $databacklogset = json_encode($tabdata);
                 $labelsback     = json_encode($tabnames);
                 $tabdatesset    = json_encode($tabdates);
@@ -289,10 +316,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Process time by technicians by month", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "8 " : "") . $title);
-                $comment = __("Sum of ticket tasks duration by technicians", "mydashboard");
                 $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
 
                 $dataLineset = json_encode($dataset);
                 $labelsLine  = json_encode($months);
@@ -384,7 +412,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                     while ($data = $DB->fetchAssoc($result)) {
                         $tabdata[]           = $data['count'];
                         $itilcategories_name = $data['itilcategories_name'];
-                        if ($data['itilcategories_name'] == NULL) {
+                        if ($data['itilcategories_name'] == null) {
                             $itilcategories_name = __('None');
                         }
                         $tabnames[] = $itilcategories_name;
@@ -399,11 +427,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 ];
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Top ten ticket categories by type of ticket", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "15 " : "") . $title);
-                $comment = __("Display of Top ten ticket categories by type of ticket"
-                    ,         "mydashboard");
                 $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
                 $databacklogset = json_encode($dataset);
                 $labelsback     = json_encode($tabnames);
                 $idsback        = json_encode($tabcat);
@@ -500,11 +529,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                     ];
                     $i++;
                 }
-                $title  = __("Number of tickets affected by technicians by month", "mydashboard");
+
                 $widget = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "21 " : "") . $title);
-                $comment = __("Sum of ticket affected by technicians", "mydashboard");
                 $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
 
                 $dataLineset = json_encode($dataset);
                 $labelsLine  = json_encode($months);
@@ -589,7 +620,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $tabdates    = [];
                 $tabnames    = [];
                 while ($data = $DB->fetchArray($results)) {
-
                     list($year, $month) = explode('-', $data['month']);
 
                     $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -618,10 +648,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Average real duration of treatment of the ticket", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "23 " : "") . $title);
-                $comment = __("Display of average real duration of treatment of tickets (actiontime of tasks)", "mydashboard");
                 $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
                 $dataLineset = json_encode($tabduration);
                 $labelsLine  = json_encode($tabnames);
                 $tabdatesset = json_encode($tabdates);
@@ -675,7 +707,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                   'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $opt['begin'] = isset($opt['begin']) ? $opt['begin'] : date('Y-m-d H:i:s', strtotime('-1 year'));;
+                $opt['begin'] = isset($opt['begin']) ? $opt['begin'] : date('Y-m-d H:i:s', strtotime('-1 year'));
+                ;
                 $opt['end'] = isset($opt['end']) ? $opt['end'] : date('Y-m-d H:i:s');
 
                 $params  = ["preferences" => $this->preferences,
@@ -736,10 +769,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Top ten technicians (by tickets number)", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "24 " : "") . $title);
-                $comment = __("Display of number of tickets by technicians", "mydashboard");
                 $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
 
                 $dataticketset = json_encode($tabtickets);
                 $tabNamesset   = json_encode($tabtechName);
@@ -875,13 +909,14 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $widget->setWidgetTitle((($isDebug) ? "35 " : "") . __("Age of tickets", "mydashboard"));
                 $dataLineset = json_encode($tabage);
                 $labelsLine  = json_encode($tabnames);
 
-                $title = __("Age of tickets", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "35 " : "") . $title);
-                $comment = "";
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
 
                 $graph_datas = ['title'   => $title,
                                 'comment' => $comment,
@@ -968,9 +1003,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Number of opened tickets by priority", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "36 " : "") . $title);
-                $comment = "";
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
 
                 $params = ["widgetId"  => $widgetId,
                            "name"      => $name,
@@ -1122,9 +1159,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 //            }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Stock of tickets by status", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "37 " : "") . $title);
-                $comment = "";
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
 
                 $params = ["widgetId"  => $widgetId,
                            "name"      => $name,
@@ -1252,11 +1291,11 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Number of opened ticket and average satisfaction per trimester", "mydashboard");
-                $comment = "";
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "38 " : "") . $title);
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
-
 
                 $titleOpenedTicket       = __("Opened tickets", "mydashboard");
                 $titleSatisfactionTicket = __("Average Satisfaction", "mydashboard");
@@ -1359,7 +1398,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                     if ($data['Monthname'] !== $datePeriod) {
                                         $tabTicketsLessThanOneDay['month_name'][] = $datePeriod;
                                         $tabTicketsLessThanOneDay['total'][]      = 0;
-
                                     } else {
                                         $tabTicketsLessThanOneDay['month_name'][] = $data['Monthname'];
                                         $tabTicketsLessThanOneDay['total'][]      = $data['Total'];
@@ -1404,7 +1442,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                     if ($data['Monthname'] !== $datePeriod) {
                                         $tabTicketsBetweenOneDayAndOneWeek['month_name'][] = $datePeriod;
                                         $tabTicketsBetweenOneDayAndOneWeek['total'][]      = 0;
-
                                     } else {
                                         $tabTicketsBetweenOneDayAndOneWeek['month_name'][] = $data['Monthname'];
                                         $tabTicketsBetweenOneDayAndOneWeek['total'][]      = $data['Total'];
@@ -1449,7 +1486,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                                     if ($data['Monthname'] !== $datePeriod) {
                                         $tabTicketsMoreThanOneWeek['month_name'][] = $datePeriod;
                                         $tabTicketsMoreThanOneWeek['total'][]      = 0;
-
                                     } else {
                                         $tabTicketsMoreThanOneWeek['month_name'][] = $data['Monthname'];
                                         $tabTicketsMoreThanOneWeek['total'][]      = $data['Total'];
@@ -1594,9 +1630,10 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Responsiveness over 12 rolling months and pending tickets per month", "mydashboard");
-                $comment = "";
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "39 " : "") . $title);
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
                 $labels = json_encode($datesTab);
@@ -1730,7 +1767,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $results = $DB->query($query);
 
                 while ($data = $DB->fetchArray($results)) {
-
                     $year = $data['year'];
 
                     $query_1 = "SELECT COUNT(`requesttypes_id`) as count,
@@ -1752,8 +1788,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                     }
 
                     $tabyears[] = $data['yearname'];
-
-
                 }
 
                 if (isset($tabdata)) {
@@ -1772,7 +1806,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
                 foreach ($tabdata as $k => $v) {
                     $datasets[] = [
-                        "name"     => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
+                        "name"     => ($tabnames[$k] == null) ? __('None') : $tabnames[$k],
                         "data"     => array_values($v),
                         "type"     => "bar",
                         "stack"    => "Ad",
@@ -1783,10 +1817,10 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Tickets request sources evolution", "mydashboard");
-                $comment = __("Evolution of tickets request sources types by year", "mydashboard");
-                $widget->setWidgetComment($comment);
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "40 " : "") . $title);
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
                 $name = 'RequestTypeEvolutionLineChart';
@@ -1850,7 +1884,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $results = $DB->query($query);
 
                 while ($data = $DB->fetchArray($results)) {
-
                     $year = $data['year'];
 
                     $query_1 = "SELECT COUNT(`solutiontypes_id`) as count,
@@ -1894,7 +1927,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 foreach ($tabdata as $k => $v) {
                     $datasets[] =
                         ['data'     => array_values($v),
-                         'name'     => ($tabnames[$k] == NULL) ? __('None') : $tabnames[$k],
+                         'name'     => ($tabnames[$k] == null) ? __('None') : $tabnames[$k],
                          'type'     => 'bar',
                          'stack'    => 'Ad',
                          'emphasis' => [
@@ -1904,11 +1937,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Tickets solution types evolution", "mydashboard");
-                $widget->setWidgetComment(__("Evolution of solution types by year", "mydashboard"));
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "41 " : "") . $title);
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
-                $comment = "";
+
                 $name    = 'SolutionTypeEvolutionLineChart';
 
                 $jsonsets = json_encode($datasets);
@@ -2000,10 +2034,10 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 ];
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Solve delay and take into account of tickets", "mydashboard");
-                $comment = "";
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "42 " : "") . $title);
-
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
                 $dataLineset = json_encode($dataset);
@@ -2044,7 +2078,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
      *
      * @return array
      */
-    private static function getTimePerTech($params) {
+    private static function getTimePerTech($params)
+    {
         global $DB;
 
         $time_per_tech = [];
@@ -2060,7 +2095,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         if (isset($opt["technicians_groups_id"])
             && count($opt["technicians_groups_id"]) > 0) {
             $selected_group = $opt['technicians_groups_id'];
-        } else if (count($_SESSION['glpigroups']) > 0) {
+        } elseif (count($_SESSION['glpigroups']) > 0) {
             $selected_group = $_SESSION['glpigroups'];
         }
 
@@ -2085,7 +2120,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $techlist[] = $data['users_id'];
             }
         } else {
-
             $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
                                   . "FROM `glpi_tickettasks` "
                                   . " GROUP BY `glpi_tickettasks`.`users_id_tech`
@@ -2100,7 +2134,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
 
         $current_month = date("m");
         foreach ($months as $key => $month) {
-
             if ($key > $current_month && $year == date("Y")) {
                 break;
             }
@@ -2188,7 +2221,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
      *
      * @return array
      */
-    private static function getTicketsPerTech($params) {
+    private static function getTicketsPerTech($params)
+    {
         global $DB;
 
         $tickets_per_tech = [];
@@ -2216,7 +2250,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         if (isset($params["technicians_groups_id"])
             && count($params["technicians_groups_id"]) > 0) {
             $selected_group = $params['technicians_groups_id'];
-        } else if (count($_SESSION['glpigroups']) > 0) {
+        } elseif (count($_SESSION['glpigroups']) > 0) {
             $selected_group = $_SESSION['glpigroups'];
         }
 
@@ -2241,7 +2275,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
                 $techlist[] = $data['users_id'];
             }
         } else {
-
             $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
                                   . "FROM `glpi_tickettasks` "
                                   . " GROUP BY `glpi_tickettasks`.`users_id_tech`
@@ -2267,7 +2300,6 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         //      }
         $current_month = date("m");
         foreach ($months as $key => $month) {
-
             if ($key > $current_month && $year == date("Y")) {
                 break;
             }
@@ -2335,7 +2367,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         return $tickets_per_tech;
     }
 
-    static function getAllMoreTicketStatus() {
+    public static function getAllMoreTicketStatus()
+    {
         global $DB;
 
         $tabs = [];
@@ -2355,8 +2388,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
      *
      * @return float|int
      */
-    static function TotalTpsPassesArrondis($a_arrondir) {
-
+    public static function TotalTpsPassesArrondis($a_arrondir)
+    {
         $tranches_seuil   = 0.002;
         $tranches_arrondi = [0, 0.25, 0.5, 0.75, 1];
 
@@ -2370,16 +2403,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         }
         if ($reste < $tranches_majorees[0]) {
             $result = $partie_entiere;
-
-        } else if ($reste >= $tranches_majorees[0] && $reste < $tranches_majorees[1]) {
+        } elseif ($reste >= $tranches_majorees[0] && $reste < $tranches_majorees[1]) {
             $result = $partie_entiere + $tranches_arrondi[1];
-
-        } else if ($reste >= $tranches_majorees[1] && $reste < $tranches_majorees[2]) {
+        } elseif ($reste >= $tranches_majorees[1] && $reste < $tranches_majorees[2]) {
             $result = $partie_entiere + $tranches_arrondi[2];
-
-        } else if ($reste >= $tranches_majorees[2] && $reste < $tranches_majorees[3]) {
+        } elseif ($reste >= $tranches_majorees[2] && $reste < $tranches_majorees[3]) {
             $result = $partie_entiere + $tranches_arrondi[3];
-
         } else {
             $result = $partie_entiere + $tranches_arrondi[4];
         }
@@ -2387,7 +2416,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         return $result;
     }
 
-    private static function getCategorySonsOf($id) {
+    private static function getCategorySonsOf($id)
+    {
         $categories = getSonsOf("glpi_itilcategories", $id);
 
         if (count($categories) > 1) {
@@ -2398,8 +2428,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         return $categories;
     }
 
-    function getAllMonthAndYear($currentYear, $currentMonth, $previousYear, $otherFormat = false) {
-
+    public function getAllMonthAndYear($currentYear, $currentMonth, $previousYear, $otherFormat = false)
+    {
         $begin    = new DateTime($previousYear . '-' . $currentMonth . '-' . '01');
         $end      = new DateTime($currentYear . '-' . $currentMonth . '-' . '01');
         $period   = new DatePeriod($begin, new DateInterval('P1M'), $end);
@@ -2412,12 +2442,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
             } else {
                 array_push($datesTab, $date->format("M Y"));
             }
-
         }
         return $datesTab;
     }
 
-    function getAllFirstDayOfWeeksInAMonth($year, $month, $day = 'Monday', $daysError = 3) {
+    public function getAllFirstDayOfWeeksInAMonth($year, $month, $day = 'Monday', $daysError = 3)
+    {
         $dateString = 'first ' . $day . ' of ' . $year . '-' . $month;
 
         $startDay    = new \DateTime($dateString);
@@ -2448,7 +2478,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
      * @return array
      * @throws \GlpitestSQLError
      */
-    private static function getLifetimeOrTakeIntoAccountTicketAverage($params, $groups_id) {
+    private static function getLifetimeOrTakeIntoAccountTicketAverage($params, $groups_id)
+    {
         global $DB;
 
         $entities_criteria   = $params['entities_id'];
@@ -2544,7 +2575,5 @@ class PluginMydashboardReports_Bar extends CommonGLPI {
         }
 
         return $tickets_helpdesk;
-
-
     }
 }

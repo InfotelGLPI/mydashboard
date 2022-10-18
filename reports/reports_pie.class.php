@@ -27,10 +27,10 @@
 /**
  * Class PluginMydashboardReports_Pie
  */
-class PluginMydashboardReports_Pie extends CommonGLPI {
-
-    private       $options;
-    private       $pref;
+class PluginMydashboardReports_Pie extends CommonGLPI
+{
+    private $options;
+    private $pref;
     public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30, 31];
 
 
@@ -39,7 +39,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
      *
      * @param array $_options
      */
-    public function __construct($_options = []) {
+    public function __construct($_options = [])
+    {
         $this->options = $_options;
 
         $preference = new PluginMydashboardPreference();
@@ -54,8 +55,29 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
     /**
      * @return array
      */
-    public function getWidgetsForItem() {
+    public function getTitleForWidget($widgetID)
+    {
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['title'];
+        }
+        return false;
+    }
 
+    public function getCommentForWidget($widgetID)
+    {
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['comment'];
+        }
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWidgetsForItem()
+    {
         $widgets = [
             __('Pie charts', "mydashboard") => [
                 $this->getType() . "2"  => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
@@ -101,7 +123,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
             ]
         ];
         return $widgets;
-
     }
 
 
@@ -112,12 +133,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
      * @return \PluginMydashboardDatatable|\PluginMydashboardHBarChart|\PluginMydashboardHtml|\PluginMydashboardLineChart|\PluginMydashboardPieChart|\PluginMydashboardVBarChart
      * @throws \GlpitestSQLError
      */
-    public function getWidgetContentForItem($widgetId, $opt = []) {
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
         switch ($widgetId) {
-
             case $this->getType() . "2":
                 $onclick = 0;
                 $name    = 'TicketsByPriorityPieChart';
@@ -176,9 +197,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Number of opened tickets by priority", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "2 " : "") . $title);
-                $comment = "";
+                $widget->toggleWidgetRefresh();
 
                 $dataPieset     = json_encode($datas);
                 $labelsPie      = json_encode($name_priority);
@@ -274,9 +297,9 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                     foreach ($datas as $k => $v) {
                         if ($k == 0) {
                             $name_user = __('Email');
-                        } else if ($k == -1) {
+                        } elseif ($k == -1) {
                             $name_user = __('None');
-                        } else if ($k > 0) {
+                        } elseif ($k > 0) {
                             $name_user = getUserName($k);
                         }
                         //                  $dataspie[] = $v;
@@ -288,9 +311,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Top ten ticket requesters by month", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "7 " : "") . $title);
-                $comment    = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset = json_encode($dataspie);
                 $labelsPie  = json_encode($namespie);
 
@@ -372,10 +398,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                 'name'  => __("Respected TTR", "mydashboard")];
                 }
                 $widget = new PluginMydashboardHtml();
-                $title  = __("TTR Compliance", "mydashboard");
-                $widget->setWidgetTitle((($isDebug) ? "12 " : "") . $title);
-                $comment = __("Display tickets where time to resolve is respected (percent)", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "12 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
                 $dataPieset  = json_encode($datas);
                 $labelsPie   = json_encode([__("Respected TTR", "mydashboard"),
@@ -461,10 +488,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                                 'name'  => __("Respected TTO", "mydashboard")];
                 }
                 $widget = new PluginMydashboardHtml();
-                $title  = __("TTO Compliance", "mydashboard");
-                $widget->setWidgetTitle((($isDebug) ? "13 " : "") . $title);
-                $comment = __("Display tickets where time to own is respected (percent)", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "13 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
                 $dataPieset  = json_encode($datas);
                 $labelsPie   = json_encode([__("Respected TTO", "mydashboard"), __("Not respected TTO", "mydashboard")]);
@@ -550,7 +578,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 $tabincidentcategory = [];
                 if ($nb) {
                     while ($data = $DB->fetchArray($result)) {
-                        if ($data['name'] == NULL) {
+                        if ($data['name'] == null) {
                             $name_category = __('None');
                             $names_ipie[]  = __('None');
                         } else {
@@ -562,14 +590,16 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
                         $datas[] = ['value' => $data['nb'],
                                     'name'  => $name_category];
-
                     }
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Number of opened incidents by category", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "16 " : "") . $title);
-                $comment                = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset             = json_encode($datas);
                 $labelsPie              = json_encode($names_ipie);
                 $tabincidentcategoryset = json_encode($tabincidentcategory);
@@ -671,12 +701,13 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 $tabcategory   = [];
                 if ($nb) {
                     while ($data = $DB->fetchArray($result)) {
-                        if ($data['name'] == NULL) {
+                        if ($data['name'] == null) {
                             $name_category = __('None');
                             $names_pie[]   = __('None');
                         } else {
                             $name_category = $data['name'];
-                            $names_pie[]   = $data['name'];;
+                            $names_pie[]   = $data['name'];
+                            ;
                         }
                         $datas[]       = ['value' => $data['nb'],
                                           'name'  => $name_category];
@@ -684,9 +715,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                     }
                 }
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Number of opened requests by category", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "17 " : "") . $title);
-                $comment        = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset     = json_encode($datas);
                 $labelsPie      = json_encode($names_pie);
                 $tabcategoryset = json_encode($tabcategory);
@@ -822,9 +856,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Number of opened, closed and unplanned tickets by month", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "18 " : "") . $title);
-                $comment    = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset = json_encode($dataspie);
                 $labelsPie  = json_encode($namespie);
 
@@ -936,10 +973,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Percent of use of solution types", "mydashboard");
-                $comment = __("Display percent of solution types for tickets", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "20 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
                 $dataPieset     = json_encode($datas);
                 $labelsPie      = json_encode($name_solution);
@@ -1032,9 +1070,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Top ten of opened tickets by requester groups", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "25 " : "") . $title);
-                $comment     = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset  = json_encode($datas);
                 $labelsPie   = json_encode($name_groups);
                 $tabgroupset = json_encode($tabgroup);
@@ -1120,9 +1161,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Global satisfaction level", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "26 " : "") . $title);
-                $comment    = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset = json_encode($datas);
                 $labelsPie  = json_encode([__("Satisfy percent", "mydashboard"), __("Not satisfy percent", "mydashboard")]);
 
@@ -1227,9 +1271,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Top ten of opened tickets by location", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "27 " : "") . $title);
-                $comment        = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPieset     = json_encode($datas);
                 $labelsPie      = json_encode($name_location);
                 $tablocationset = json_encode($tablocation);
@@ -1334,7 +1381,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
 
                 if ($nb) {
                     while ($data = $DB->fetchArray($result)) {
-                        if ($data['name'] == NULL) {
+                        if ($data['name'] == null) {
                             $name_requesttypes[] = __('None');
                         } else {
                             $name_requesttypes[] = $data['name'];
@@ -1346,10 +1393,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                     }
                 }
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Percent of use of request sources", "mydashboard");
-                $comment = __("Display percent of request sources for closed tickets", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "30 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
                 $dataPieset    = json_encode($datas);
                 $labelsPie     = json_encode($name_requesttypes);
@@ -1449,9 +1497,12 @@ class PluginMydashboardReports_Pie extends CommonGLPI {
                 }
 
                 $widget = new PluginMydashboardHtml();
-                $title  = __("Number of tickets per location per period", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "40 " : "") . $title);
-                $comment        = "";
+                $widget->toggleWidgetRefresh();
+
                 $dataPolarset   = json_encode($datas);
                 $labelsPolar    = json_encode($name_location1);
                 $tablocationset = json_encode($tablocation);

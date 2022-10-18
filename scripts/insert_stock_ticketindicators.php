@@ -42,14 +42,14 @@ $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
 // Chech Memory_limit - sometine cli limit (php-cli.ini) != module limit (php.ini)
 $mem = Toolbox::getMemoryLimit();
 if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
-   die("PHP memory_limit = " . $mem . " - " . "A minimum of 64Mio is commonly required for GLPI.'\n\n");
+    die("PHP memory_limit = " . $mem . " - " . "A minimum of 64Mio is commonly required for GLPI.'\n\n");
 }
 
 //Check if plugin is installed
 if (Plugin::isPluginActive("mydashboard")) {
-   $record = new PluginMydashboardStockTicketIndicator();
-   $record->cronMydashboardInfotelUpdateStockTicketIndicator();
+    $record = new PluginMydashboardStockTicketIndicator();
+    $record->cronMydashboardInfotelUpdateStockTicketIndicator();
 } else {
-   echo __('Plugin disabled', 'mydashboard');
-   exit(1);
+    echo __('Plugin disabled', 'mydashboard');
+    exit(1);
 }

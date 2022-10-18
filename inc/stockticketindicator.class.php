@@ -26,7 +26,6 @@
 
 class PluginMydashboardStockTicketIndicator extends CommonDBTM
 {
-
     const NEWT              = 1;
     const LATET             = 2;
     const PENDINGT          = 3;
@@ -35,7 +34,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
     const SOLVEDT           = 6;
     const CLOSEDT           = 7;
 
-    public function cronMydashboardInfotelUpdateStockTicketIndicator() {
+    public function cronMydashboardInfotelUpdateStockTicketIndicator()
+    {
         global $DB;
         $year = date("Y");
         $week = date("W") - 1;
@@ -46,7 +46,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
         }
         //      $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
         $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stockticketindicators 
-                  WHERE glpi_plugin_mydashboard_stockticketindicators.year = '$year' and glpi_plugin_mydashboard_stockticketindicators.week = '$week'";
+                  WHERE glpi_plugin_mydashboard_stockticketindicators.year = '$year' 
+                      AND glpi_plugin_mydashboard_stockticketindicators.week = '$week'";
         $results = $DB->query($query);
         $data    = $DB->fetchArray($results);
         if ($data["count"] > 0) {
@@ -70,18 +71,19 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      *
      * @return bool
      */
-    static function queryNewTickets($year, $week) {
+    public static function queryNewTickets($year, $week)
+    {
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
         $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
                     `glpi_tickets`.`entities_id`
                   FROM glpi_tickets
                   LEFT JOIN glpi_entities 
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
                   WHERE `glpi_tickets`.`is_deleted` = 0 
-                        AND `glpi_tickets`.`status` = " . Ticket::INCOMING . " GROUP BY `glpi_tickets`.`entities_id`";
+                        AND `glpi_tickets`.`status` = " . Ticket::INCOMING . " 
+                        GROUP BY `glpi_tickets`.`entities_id`";
         $results = $DB->query($sql_new);
         while ($data = $DB->fetchArray($results)) {
             $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
@@ -100,9 +102,9 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      * @return bool
      */
 
-    static function queryDueTickets($year, $week) {
+    public static function queryDueTickets($year, $week)
+    {
         global $DB;
-
 
         $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
                     `glpi_tickets`.`entities_id`
@@ -158,10 +160,10 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      *
      * @return bool
      */
-    static function queryPendingTickets($year, $week) {
+    public static function queryPendingTickets($year, $week)
+    {
         global $DB;
 
-        $dbu      = new DbUtils();
         $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
                     `glpi_tickets`.`entities_id`
                   FROM glpi_tickets
@@ -210,10 +212,10 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      *
      * @return bool
      */
-    static function queryIncidentTickets($year, $week) {
+    public static function queryIncidentTickets($year, $week)
+    {
         global $DB;
 
-        $dbu      = new DbUtils();
         $statuses = [Ticket::SOLVED, Ticket::CLOSED, Ticket::WAITING, Ticket::INCOMING];
 
 
@@ -266,12 +268,11 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      *
      * @return bool
      */
-    static function queryRequestTickets($year, $week) {
+    public static function queryRequestTickets($year, $week)
+    {
         global $DB;
 
-
         $statuses = [Ticket::SOLVED, Ticket::CLOSED, Ticket::WAITING, Ticket::INCOMING];
-
 
         $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
                     `glpi_tickets`.`entities_id`
@@ -324,9 +325,9 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      *
      * @return bool
      */
-    static function queryResolvedTickets($year, $week) {
+    public static function queryResolvedTickets($year, $week)
+    {
         global $DB;
-
 
         $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
                     `glpi_tickets`.`entities_id`
@@ -379,9 +380,9 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
      *
      * @return bool
      */
-    static function queryClosedTickets($year, $week) {
+    public static function queryClosedTickets($year, $week)
+    {
         global $DB;
-
 
         $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
                     `glpi_tickets`.`entities_id`

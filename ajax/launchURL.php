@@ -43,6 +43,9 @@ define("LOCATIONS_ID", 83);
 define("CLOSE_DATE", 16);
 define("SOLVE_DATE", 17);
 define("TASK_ACTIONTIME", 96);
+define("VALIDATION_STATS", 55);
+define("VALIDATION_REFUSED", 4);
+define("NUMBER_OF_PROBLEMS", 200);
 
 //Case PluginMydashboardReports_Table32 / PluginMydashboardReports_Table33
 if (isset($_POST['widget'])) {
@@ -570,4 +573,237 @@ if (isset($_POST["params"]["widget"])
       echo $link;
    }
    //   echo __('No informations sended', 'mydashboard');
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Line35") {
+    //$criterias = ['entities_id',
+    //                             'technicians_groups_id',
+    //                             'group_is_recursive',
+    //                             TODO'requesters_groups_id',
+    //                             'is_recursive',
+    //                             'display_data',
+    //                             'technicians_id',
+    //                             'type',
+    //                             'locations_id'];
+
+    if (isset($_POST["selected_id"])) {
+
+        if ($_POST["selected_id"] == "") {
+            $_POST["selected_id"] = 0;
+        }
+
+        if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '_') !== false) {
+            $eventParts  = explode('_', $_POST['selected_id']);
+            $date        = $eventParts[0];
+            $ticket_state        = $eventParts[1];
+            if (isset($date) && strpos($date, '-') !== false) {
+                $dateParts = explode('-', $date);
+                $year        = $dateParts[0];
+                $month        = $dateParts[1];
+            }
+
+            $_POST['id'] = $eventParts[1];
+        }
+        $add_actiontime_crit = 0;
+        if (isset($year) && isset($month) && isset($ticket_state)) {
+            if ($ticket_state == "opened") {
+                $crit = OPEN_DATE;
+            } else if ($ticket_state == "closed") {
+                $crit = CLOSE_DATE;
+            } else if ($ticket_state == "progress") {
+                $crit = OPEN_DATE;
+            } else if ($ticket_state == "unplanned") {
+                $crit = CLOSE_DATE;
+                $add_actiontime_crit = 1;
+            }
+            if ($ticket_state == "progress") {
+                $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $date = "$year-$month-$nbdays 23:59";
+                addCriteria($crit, 'lessthan', $date, 'AND');
+                addCriteria(STATUS, 'equals', 'notold', 'AND');
+            } else {
+                $date = "$year-$month-01 00:00";
+                $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+                addCriteria($crit, 'morethan', $date, 'AND');
+                $date = "$year-$month-$nbdays 23:59";
+                addCriteria($crit, 'lessthan', $date, 'AND');
+            }
+        }
+
+        if ($_POST["params"]["locations_id"] > 0) {
+            addCriteria(LOCATIONS_ID, 'equals', $_POST["params"]["locations_id"], 'AND');
+        }
+        if ($_POST["params"]["technician_id"] > 0) {
+            addCriteria(TECHNICIAN, 'equals', $_POST["params"]["technician_id"], 'AND');
+        }
+        if ($_POST["params"]["type"] > 0) {
+            addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+        }
+
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+
+        groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
+
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+
+        if ($add_actiontime_crit == 1) {
+            addCriteria(TASK_ACTIONTIME, 'contains', 'NULL', 'AND');
+        }
+
+        $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+        echo $link;
+    }
+    //   echo __('No informations sended', 'mydashboard');
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Line43") {
+    if ($_POST["selected_id"] == "") {
+        $_POST["selected_id"] = 0;
+    }
+    if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '-') !== false) {
+        $dateParts   = explode('-', $_POST['selected_id']);
+        $year      = $dateParts[0];
+        $month     = $dateParts[1];
+
+    }
+    if (isset($month)) {
+        $date = "$year-$month-01 00:00";
+        $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+        addCriteria(OPEN_DATE, 'morethan', $date, 'AND');
+        $date = "$year-$month-$nbdays 23:59";
+        addCriteria(OPEN_DATE, 'lessthan', $date, 'AND');
+    }
+    if ($_POST["params"]["type"] > 0) {
+        addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+    }
+
+    $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+            Toolbox::append_params($options, "&");
+    echo $link;
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Line44") {
+    if (isset($_POST["selected_id"])) {
+        if ($_POST["selected_id"] == "") {
+            $_POST["selected_id"] = 0;
+        }
+        if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '_') !== false) {
+            $eventParts   = explode('_', $_POST['selected_id']);
+            $date         = $eventParts[0];
+            $ticket_state = $eventParts[1];
+            if (isset($date) && strpos($date, '-') !== false) {
+                $dateParts = explode('-', $date);
+                $year      = $dateParts[0];
+                $month     = $dateParts[1];
+            }
+
+            $_POST['id'] = $eventParts[1];
+        }
+        $week_number = $_POST["selected_id"];
+
+        $firstMonday = date("d", strtotime("first monday of january $year"));
+        $start       = date("Y-m-d 00:00:00", strtotime("$firstMonday Jan " . $year . " 00:00:00 GMT + " . $week_number . " weeks"));
+        $end         = date("Y-m-d 23:59:59", strtotime($start . " + 1 week"));
+        $end         = date("Y-m-d 23:59:59", strtotime($end . " - 1 day"));
+
+        addCriteria(OPEN_DATE, 'morethan', $start, 'AND');
+        addCriteria(OPEN_DATE, 'lessthan', $end, 'AND');
+
+        if ($_POST["params"]["type"] > 0) {
+            addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+        }
+
+        $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+        echo $link;
+    }
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Line45") {
+    if (isset($_POST["selected_id"])) {
+        if ($_POST["selected_id"] == "") {
+            $_POST["selected_id"] = 0;
+        }
+        if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '-') !== false) {
+            $dateParts   = explode('-', $_POST['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+
+        }
+        if (isset($month)) {
+            $date = "$year-$month-01 00:00";
+            $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+            addCriteria(OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            addCriteria(OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        addCriteria(VALIDATION_STATS, 'equals', VALIDATION_REFUSED, 'AND');
+
+        if ($_POST["params"]["type"] > 0) {
+            addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+        }
+
+        $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+        echo $link;
+    }
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Line46") {
+    if (isset($_POST["selected_id"])) {
+        if ($_POST["selected_id"] == "") {
+            $_POST["selected_id"] = 0;
+        }
+        if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '-') !== false) {
+            $dateParts   = explode('-', $_POST['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+
+        }
+        if (isset($month)) {
+            $date = "$year-$month-01 00:00";
+            $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+            addCriteria(OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            addCriteria(OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        addCriteria(NUMBER_OF_PROBLEMS, 'equals', '>0', 'AND');
+
+        if ($_POST["params"]["type"] > 0) {
+            addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+        }
+
+        $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+        echo $link;
+    }
+} else if (isset($_POST["params"]["widget"])
+           && $_POST["params"]["widget"] == "PluginMydashboardReports_Line48") {
+    if (isset($_POST["selected_id"])) {
+        if ($_POST["selected_id"] == "") {
+            $_POST["selected_id"] = 0;
+        }
+        if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '-') !== false) {
+            $dateParts   = explode('-', $_POST['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+
+        }
+        if (isset($month)) {
+            $date = "$year-$month-01 00:00";
+            $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+            addCriteria(OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            addCriteria(OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        addCriteria(STATUS, 'equals', 'notold', 'AND');
+
+        groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
+
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+
+        if ($_POST["params"]["type"] > 0) {
+            addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
+        }
+
+        $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+        echo $link;
+    }
 }

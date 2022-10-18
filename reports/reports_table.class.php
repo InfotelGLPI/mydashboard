@@ -80,6 +80,31 @@ class PluginMydashboardReports_Table extends CommonGLPI
         return $widgets;
     }
 
+    /**
+     * @return array
+     */
+    public function getTitleForWidget($widgetID)
+    {
+
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['title'];
+        }
+        return false;
+
+    }
+
+    public function getCommentForWidget($widgetID)
+    {
+
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['comment'];
+        }
+        return false;
+
+    }
+
 
     /**
      * @param       $widgetId
@@ -120,14 +145,22 @@ class PluginMydashboardReports_Table extends CommonGLPI
                         ORDER BY `realname`, `firstname` ASC";
 
                 $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-                $headers = [__('First name'), __('Name'), __('Login'), __('Phone'), __('Phone 2'), __('Mobile phone')];
+                $headers = [__('First name'),
+                            __('Name'),
+                            __('Login'),
+                            __('Phone'),
+                            __('Phone 2'),
+                            __('Mobile phone')];
 
                 $widget->setTabNames($headers);
                 $hidden[] = ["targets" => 2, "visible" => false];
                 $widget->setOption("bDef", $hidden);
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "3 " : "") . $title);
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
-                $widget->setWidgetTitle((($isDebug) ? "3 " : "") . __("Internal annuary", "mydashboard"));
-                $widget->setWidgetComment(__("Search users of your organisation", "mydashboard"));
 
                 return $widget;
                 break;
@@ -214,8 +247,10 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 }
 
                 $widget->setTabDatas($datas);
-                $widget->setWidgetTitle((($isDebug) ? "5 " : "") . __('Fields unicity'));
-                $widget->setWidgetComment(__("Display if you have duplicates into inventory", "mydashboard"));
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "5 " : "") . $title);
+                $widget->setWidgetComment($comment);
 
                 return $widget;
                 break;
@@ -266,8 +301,11 @@ class PluginMydashboardReports_Table extends CommonGLPI
 
                 $widget->setTabDatas($datas);
 
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "14 " : "") . $title);
+                $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
-                $widget->setWidgetTitle((($isDebug) ? "14 " : "") . __('All unpublished articles'));
 
                 return $widget;
                 break;
@@ -454,7 +492,10 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 } else {
                     $title .= " : $nb " . __('Technician');
                 }
+//                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "32 " : "") . $title);
+                $widget->setWidgetComment($comment);
 
                 $widget->setTabNames($typesTicketStatus);
                 $hidden[] = ["targets" => 2, "visible" => false];
@@ -687,7 +728,10 @@ class PluginMydashboardReports_Table extends CommonGLPI
                     $title .= " : $nb " . __('Group');
                 }
 
+//                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "33 " : "") . $title);
+                $widget->setWidgetComment($comment);
 
                 $typesTicketStatus = [__('Group'),
                                       _x('status', 'Processing (assigned)'),

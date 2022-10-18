@@ -27,75 +27,75 @@
 /**
  * Class PluginMydashboardReports_Custom
  */
-class PluginMydashboardReports_Custom extends CommonGLPI {
+class PluginMydashboardReports_Custom extends CommonGLPI
+{
+    private $options;
+    private $pref;
+    public static $reports = [];
 
-   private       $options;
-   private       $pref;
-   public static $reports = [];
+    /**
+     * PluginMydashboardReports_Custom constructor.
+     *
+     * @param array $_options
+     */
+    public function __construct($_options = [])
+    {
+        $this->options = $_options;
 
-   /**
-    * PluginMydashboardReports_Custom constructor.
-    *
-    * @param array $_options
-    */
-   public function __construct($_options = []) {
-      $this->options = $_options;
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $this->preferences = $preference->fields;
+    }
 
-      $preference = new PluginMydashboardPreference();
-      if (Session::getLoginUserID() !== false
-          && !$preference->getFromDB(Session::getLoginUserID())) {
-         $preference->initPreferences(Session::getLoginUserID());
-      }
-      $preference->getFromDB(Session::getLoginUserID());
-      $this->preferences = $preference->fields;
-   }
 
-   /**
-    * @return array
-    */
-   public function getWidgetsForItem() {
-
+    /**
+     * @return array
+     */
+    public function getWidgetsForItem()
+    {
       //      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-      $widgets        = [];
-      $customsWidgets = PluginMydashboardCustomswidget::listCustomsWidgets();
-      if (!empty($customsWidgets)) {
-         foreach ($customsWidgets as $customWidget) {
-            $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
-                                                                                                            "icon"    => "ti ti-edit",
-                                                                                                            "comment" => ""];
-         }
-      }
-      return $widgets;
-   }
+        $widgets        = [];
+        $customsWidgets = PluginMydashboardCustomswidget::listCustomsWidgets();
+        if (!empty($customsWidgets)) {
+            foreach ($customsWidgets as $customWidget) {
+                $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
+                                                                                                                "icon"    => "ti ti-edit",
+                                                                                                                "comment" => ""];
+            }
+        }
+        return $widgets;
+    }
 
 
-   /**
-    * @param       $widgetId
-    * @param array $opt
-    *
-    * @return \PluginMydashboardHtml
-    */
-   public function getWidgetContentForItem($widgetId, $opt = []) {
+    /**
+     * @param       $widgetId
+     * @param array $opt
+     *
+     * @return \PluginMydashboardHtml
+     */
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
+        switch ($widgetId) {
+            default:
+                {
+                    // It's a custom widget
+                    if (strpos($widgetId, "cw")) {
+                        // Last letter of widgetId is customWidget index in database
+                        $id = intval(substr($widgetId, -1));
 
-      switch ($widgetId) {
+                        $content = PluginMydashboardCustomswidget::getCustomWidget($id);
 
-         default:
-         {
-            // It's a custom widget
-            if (strpos($widgetId, "cw")) {
+                        $widget = new PluginMydashboardHtml(true);
 
-               // Last letter of widgetId is customWidget index in database
-               $id = intval(substr($widgetId, -1));
+                        $widget->setWidgetTitle($content['name']);
 
-               $content = PluginMydashboardCustomswidget::getCustomWidget($id);
+                        $htmlContent = html_entity_decode($content['content']);
 
-               $widget = new PluginMydashboardHtml(true);
-
-               $widget->setWidgetTitle($content['name']);
-
-               $htmlContent = html_entity_decode($content['content']);
-
-               // Edit style to avoid padding, margin, and limited width
+                        // Edit style to avoid padding, margin, and limited width
 
                //               $htmlContent .= "<script>
                //                $( document ).ready(function() {
@@ -107,13 +107,13 @@ class PluginMydashboardReports_Custom extends CommonGLPI {
                //                });
                //                </script>";
 
-               if (isset($opt["is_widget"]) && $opt["is_widget"] == false) {
-                  return $htmlContent;
-               }
-               $widget->setWidgetHtmlContent($htmlContent);
-               return $widget;
-            }
-         }
-      }
-   }
+                        if (isset($opt["is_widget"]) && $opt["is_widget"] == false) {
+                            return $htmlContent;
+                        }
+                        $widget->setWidgetHtmlContent($htmlContent);
+                        return $widget;
+                    }
+                }
+        }
+    }
 }

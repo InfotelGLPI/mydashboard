@@ -27,18 +27,20 @@
 /**
  * Class PluginMydashboardReports_Line
  */
-class PluginMydashboardReports_Line extends CommonGLPI {
+class PluginMydashboardReports_Line extends CommonGLPI
+{
 
-    private       $options;
-    private       $pref;
-    public static $reports = [6, 22, 34, 35];
+    private $options;
+    private $pref;
+    public static $reports = [6, 22, 34, 35, 43, 44, 45, 46, 47, 48];
 
     /**
      * PluginMydashboardReports_Line constructor.
      *
      * @param array $_options
      */
-    public function __construct($_options = []) {
+    public function __construct($_options = [])
+    {
         $this->options = $_options;
 
         $preference = new PluginMydashboardPreference();
@@ -53,7 +55,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
     /**
      * @return array
      */
-    public function getWidgetsForItem() {
+    public function getWidgetsForItem()
+    {
 
         $widgets = [
             __('Line charts', "mydashboard") => [
@@ -69,11 +72,53 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
                                             "icon"    => "ti ti-chart-area-line",
                                             "comment" => ""],
+                $this->getType() . "43" => ["title"   => __("Number of tickets created each months", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "44" => ["title"   => __("Number of tickets created each week", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "45" => ["title"   => __("Number of tickets with validation refusal", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "46" => ["title"   => __("Number of tickets linked with problems", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "47" => ["title"   => __("Weekly incidents in progress", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
+                $this->getType() . "48" => ["title"   => __("Backlog tickets in progress", "mydashboard"),
+                                            "icon"    => "ti ti-chart-area-line",
+                                            "comment" => ""],
             ]
         ];
         return $widgets;
     }
 
+    /**
+     * @return array
+     */
+    public function getTitleForWidget($widgetID)
+    {
+
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['title'];
+        }
+        return false;
+
+    }
+
+    public function getCommentForWidget($widgetID)
+    {
+
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['comment'];
+        }
+        return false;
+
+    }
 
     /**
      * @param       $widgetId
@@ -82,12 +127,12 @@ class PluginMydashboardReports_Line extends CommonGLPI {
      * @return \PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
-    public function getWidgetContentForItem($widgetId, $opt = []) {
-        global $DB, $CFG_GLPI;
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
+        global $DB;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $dbu     = new DbUtils();
-        switch ($widgetId) {
 
+        switch ($widgetId) {
             case $this->getType() . "6":
                 $name = 'TicketStockLineChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -168,7 +213,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
 
                 $nbtickets = __('Tickets number', 'mydashboard');
                 while ($data = $DB->fetchArray($results)) {
-
                     list($year, $month) = explode('-', $data['month']);
 
                     $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -186,8 +230,8 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 }
 
                 $widget  = new PluginMydashboardHtml();
-                $title   = __("Tickets stock", "mydashboard");
-                $comment = __("Sum of not solved tickets by month", "mydashboard");
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "6 " : "") . $title);
                 $widget->toggleWidgetRefresh();
@@ -350,7 +394,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                         $tabdates[0][] = 0;
                         $i++;
                     }
-
                 }
 
                 $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
@@ -378,7 +421,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $r         = $DB->query($q);
                 if ($nbResults) {
                     while ($data = $DB->fetchArray($results)) {
-
                         $tabnames[] = $data['monthname'];
 
                         list($year, $month) = explode('-', $data['month']);
@@ -432,7 +474,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                         }
                         $tabdates[2][] = $year . '-' . $month . '_closed';
                         if ($month == date("m") && $year == date("Y")) {
-
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                             //nbstock : cannot use tech or group criteria
 
@@ -454,7 +495,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                             if ($DB->numrows($results_3)) {
                                 $data_3        = $DB->fetchArray($results_3);
                                 $tabprogress[] = $data_3['count'];
-
                             } else {
                                 $tabprogress[] = 0;
                             }
@@ -662,7 +702,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $i         = 0;
                 if ($nbResults) {
                     while ($data = $DB->fetchArray($results)) {
-
                         $tabnames[] = $data['monthname'];
 
                         list($year, $month) = explode('-', $data['month']);
@@ -718,7 +757,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                         }
                         $tabdates[2][] = $year . '-' . $month . '_resolved';
                         if ($month == date("m") && $year == date("Y")) {
-
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                             //nbstock : cannot use tech or group criteria
 
@@ -949,7 +987,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $i         = 0;
                 if ($nbResults) {
                     while ($data = $DB->fetchArray($results)) {
-
                         $tabnames[] = $data['monthname'];
 
                         list($year, $month) = explode('-', $data['month']);
@@ -1030,7 +1067,6 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                         $tabdates[3][] = $year . '-' . $month . '_unplanned';
 
                         if ($month == date("m") && $year == date("Y")) {
-
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                             //nbstock : cannot use tech or group criteria
 
@@ -1065,7 +1101,7 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 $widget  = new PluginMydashboardHtml();
                 $title   = __("Number of opened, closed  and unplanned tickets by month", "mydashboard");
                 $comment = "";
-                $widget->setWidgetTitle((($isDebug) ? "22 " : "") . $title);
+                $widget->setWidgetTitle((($isDebug) ? "35 " : "") . $title);
                 $widget->toggleWidgetRefresh();
 
                 $titleopened    = __("Opened tickets", "mydashboard");
@@ -1143,8 +1179,646 @@ class PluginMydashboardReports_Line extends CommonGLPI {
                 return $widget;
                 break;
 
+            case $this->getType() . "43":
+                $name = 'reportLineChartNbCreatedTicketByMonths';
+
+                $criterias = ['year',
+                              'type',
+                              'entities_id',
+                              'is_recursive'];
+                $params    = ["preferences" => $this->preferences,
+                              "criterias"   => $criterias,
+                              "opt"         => $opt];
+
+                $options = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
+
+                $isDeleted         = " AND `glpi_tickets`.`is_deleted` = 0 ";
+                $type_criteria     = $crit['type'];
+                $entities_criteria = $crit['entities_id'];
+
+                $currentmonth = date("m");
+                $currentyear  = date("Y");
+                $now          = date("Y-m-d");
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $previousyear      = $currentyear - 1;
+                $tabdates          = [];
+                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
+                                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
+                                         count(*) as count
+                                  FROM `glpi_tickets`
+                                  WHERE  (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                                  AND (`glpi_tickets`.`date` <= '$now 23:59:59')
+                                  " . $entities_criteria . $isDeleted . $type_criteria . "
+                                  GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $tabdata           = [];
+                $tabnames          = [];
+                $results           = $DB->query($queryOpenedTicket);
+                while ($data = $DB->fetchArray($results)) {
+                    $tabdata[]  = $data['count'];
+                    $tabnames[] = $data['monthname'];
+                    $tabdates[] = $data['period'];
+                }
+
+
+                $widget  = new PluginMydashboardHtml();
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "43 " : "") . $title);
+                $widget->setWidgetComment($comment);
+
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets  = __('Tickets number', 'mydashboard');
+                $datasets[] =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $tabdatesset = json_encode($tabdates);
+
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => $dataLineset,
+                                'labels'  => $labelsLine,
+                ];
+
+                $graph_criterias = ['type'   => $options['crit']["type"],
+                                    'year'   => $options['crit']['year'],
+                                    'widget' => $widgetId];
+
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
+                break;
+
+            case $this->getType() . "44":
+                $name = 'reportLineChartNbCreatedTicketByWeek';
+
+                $criterias = ['entities_id',
+                              'is_recursive',
+                              'year',
+                              'type'];
+                $params    = ["preferences" => $this->preferences,
+                              "criterias"   => $criterias,
+                              "opt"         => $opt];
+                $options   = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt      = $options['opt'];
+                $result   = self::getTicketsCreatedPerWeek($options);
+                $tabdata  = [];
+                $tabnames = [];
+                $maxcount = 0;
+                foreach ($result as $weeknum => $nbticket) {
+                    $tabdata[]  = $nbticket;
+                    $tabnames[] = $weeknum;
+                    if ($nbticket > $maxcount) {
+                        $maxcount = $nbticket;
+                    }
+                }
+
+                $widget  = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "44 " : "") . $title);
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets = __('Tickets number', 'mydashboard');
+
+                $datasets[] =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $tabdatesset = json_encode([]);
+
+                $graph_datas     = ['title'   => $title,
+                                    'comment' => $comment,
+                                    'name'    => $name,
+                                    'ids'     => $tabdatesset,
+                                    'data'    => $dataLineset,
+                                    'labels'  => $labelsLine];
+                $onclick         = 0;
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['type'   => $options['crit']["type"],
+                                        'year'   => $options['crit']['year'],
+                                        'widget' => $widgetId];
+                }
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
+                break;
+            case $this->getType() . "45":
+                $name      = 'reportLineChartRefusedTicketsByMonths';
+                $criterias = ['year',
+                              'type',
+                              'entities_id',
+                              'is_recursive'];
+                $params    = ["preferences" => $this->preferences,
+                              "criterias"   => $criterias,
+                              "opt"         => $opt];
+                $options   = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
+
+                $isDeleted         = " AND `glpi_tickets`.`is_deleted` = 0 ";
+                $type_criteria     = $crit['type'];
+                $entities_criteria = $crit['entities_id'];
+
+                $currentmonth = date("m");
+                $currentyear  = date("Y");
+                $now          = date("Y-m-d");
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $previousyear      = $currentyear - 1;
+                $tabdates          = [];
+                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
+                                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
+                                         count(*) as count
+                                  FROM `glpi_tickets`
+                                  INNER JOIN glpi_ticketvalidations ON `glpi_tickets`.`id` = `glpi_ticketvalidations`.`tickets_id`
+                                  WHERE  (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                                  AND `glpi_ticketvalidations`.`status` = 4 
+                                  AND (`glpi_tickets`.`date` <= '$now 23:59:59')
+                                  " . $entities_criteria . $isDeleted . $type_criteria . "
+                                  GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $tabdata           = [];
+                $tabnames          = [];
+                $results           = $DB->query($queryOpenedTicket);
+                while ($data = $DB->fetchArray($results)) {
+                    $tabdata[]  = $data['count'];
+                    $tabnames[] = $data['monthname'];
+                    $tabdates[] = $data['period'];
+                }
+
+
+                $widget  = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "45 " : "") . $title);
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets = __('Tickets number', 'mydashboard');
+
+                $datasets[] =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $tabdatesset = json_encode($tabdates);
+
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => $dataLineset,
+                                'labels'  => $labelsLine];
+
+                $graph_criterias = ['type'   => $options['crit']["type"],
+                                    'year'   => $options['crit']['year'],
+                                    'widget' => $widgetId];
+
+
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
+                break;
+            case $this->getType() . "46":
+                $name      = 'reportLineTicketsProblemsByMonths';
+                $criterias = ['year',
+                              'type',
+                              'entities_id',
+                              'is_recursive'];
+                $params    = ["preferences" => $this->preferences,
+                              "criterias"   => $criterias,
+                              "opt"         => $opt];
+                $options   = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
+
+                $isDeleted         = " AND `glpi_tickets`.`is_deleted` = 0 ";
+                $type_criteria     = $crit['type'];
+                $entities_criteria = $crit['entities_id'];
+
+                $currentmonth = date("m");
+                $currentyear  = date("Y");
+                $now          = date("Y-m-d");
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $previousyear      = $currentyear - 1;
+                $tabdates          = [];
+                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
+                                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
+                                         count(*) as count
+                                  FROM `glpi_tickets`
+                                  INNER JOIN glpi_problems_tickets ON `glpi_tickets`.`id` = `glpi_problems_tickets`.`tickets_id`
+                                  WHERE  (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                                  AND (`glpi_tickets`.`date` <= '$now 23:59:59')
+                                  " . $entities_criteria . $isDeleted . $type_criteria . "
+                                  GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $tabdata           = [];
+                $tabnames          = [];
+                $results           = $DB->query($queryOpenedTicket);
+                while ($data = $DB->fetchArray($results)) {
+                    $tabdata[]  = $data['count'];
+                    $tabnames[] = $data['monthname'];
+                    $tabdates[] = $data['period'];
+                }
+
+
+                $widget  = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "46 " : "") . $title);
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets = __('Tickets number', 'mydashboard');
+
+                $datasets[] =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $tabdatesset = json_encode($tabdates);
+
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => $dataLineset,
+                                'labels'  => $labelsLine];
+
+                $graph_criterias = ['type'   => $options['crit']["type"],
+                                    'year'   => $options['crit']['year'],
+                                    'widget' => $widgetId];
+
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
+                break;
+            case $this->getType() . "47":
+                $name = 'reportLineChartBacklogTicketByWeek';
+
+                $criterias = ['entities_id',
+                              'is_recursive',
+                              'year',
+                              'type'];
+                $params    = ["preferences" => $this->preferences,
+                              "criterias"   => $criterias,
+                              "opt"         => $opt];
+                $options   = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt         = $options['opt'];
+                $currentyear = date("Y");
+                $year        = intval(date('Y', time()) - 1);
+
+                if (isset($params['opt']["year"]) && $params['opt']["year"] > 0) {
+                    $year        = $params['opt']["year"];
+                    $currentyear = $params['opt']["year"];
+                }
+                if ($year < intval($currentyear)) {
+                    $week = date("W", strtotime("$currentyear-12-31"));
+                } else {
+                    $week = intval(date('W'));
+                }
+
+                $tabdata  = [];
+                $tabnames = [];
+                $maxcount = 0;
+
+                for ($i = 1; $i <= intval($week); $i++) {
+                    if (!isset($datas[$i])) {
+                        $nbticket = 0;
+                        if ($opt['type'] == Ticket::DEMAND_TYPE) {
+                            $nbticket += PluginMydashboardAlert::queryRequestTicketsWeek($currentyear, $i, [0]);
+                        } elseif ($opt['type'] == Ticket::INCIDENT_TYPE) {
+                            $nbticket += PluginMydashboardAlert::queryIncidentTicketsWeek($currentyear, $i, [0]);
+                        } else {
+                            $nbticket += PluginMydashboardAlert::queryIncidentTicketsWeek($currentyear, $i, [0]);
+                            $nbticket += PluginMydashboardAlert::queryRequestTicketsWeek($currentyear, $i, [0]);
+                        }
+                        $tabdata[]  = $nbticket;
+                        $tabnames[] = $i;
+                        if ($nbticket > $maxcount) {
+                            $maxcount = $nbticket;
+                        }
+                    }
+                }
+
+                $widget  = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "47 " : "") . $title);
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets = __('Tickets number', 'mydashboard');
+
+                $datasets[] =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $tabdatesset = json_encode([]);
+
+                $graph_datas     = ['title'   => $title,
+                                    'comment' => $comment,
+                                    'name'    => $name,
+                                    'ids'     => $tabdatesset,
+                                    'data'    => $dataLineset,
+                                    'labels'  => $labelsLine];
+                $onclick         = 0;
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $graph_criterias = ['type'   => $options['crit']["type"],
+                                        'year'   => $options['crit']['year'],
+                                        'widget' => $widgetId];
+                }
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
+
+                break;
+
+            case $this->getType() . "48":
+                $name    = 'reportLineBacklog';
+                $onclick = 0;
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $criterias = ['entities_id',
+                                  'is_recursive',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'requesters_groups_id',
+                                  'type',
+                                  'locations_id'];
+                    $onclick   = 1;
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $criterias = ['type',
+                                  'locations_id',
+                                  'requesters_groups_id'];
+                }
+
+                $params  = ["preferences" => $this->preferences,
+                            "criterias"   => $criterias,
+                            "opt"         => $opt];
+                $options = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt                        = $options['opt'];
+                $crit                       = $options['crit'];
+                $type                       = $opt['type'];
+                $type_criteria              = $crit['type'];
+                $entities_criteria          = $crit['entities_id'];
+                $entities_id_criteria       = $crit['entity'];
+                $sons_criteria              = $crit['sons'];
+                $requester_groups           = $opt['requesters_groups_id'];
+                $requester_groups_criteria  = $crit['requesters_groups_id'];
+                $technician_group           = $opt['technicians_groups_id'];
+                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $location                   = $opt['locations_id'];
+                $locations_criteria         = $crit['locations_id'];
+                $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
+
+
+                $query = "SELECT DISTINCT
+                           DATE_FORMAT(`date`, '%b %Y') AS period_name,
+                           COUNT(`glpi_tickets`.`id`) AS nb,
+                           DATE_FORMAT(`date`, '%Y-%m') AS period
+                        FROM `glpi_tickets` ";
+                $query .= " WHERE $is_deleted $type_criteria $locations_criteria $technician_groups_criteria
+                 $requester_groups_criteria";
+                $query .= " $entities_criteria 
+                AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                        GROUP BY period_name ORDER BY period ASC";
+
+                $result   = $DB->query($query);
+                $nb       = $DB->numrows($result);
+                $tabdata  = [];
+                $tabnames = [];
+                $tabdates = [];
+                if ($nb) {
+                    while ($data = $DB->fetchAssoc($result)) {
+                        $tabdata[]  = $data['nb'];
+                        $tabnames[] = $data['period_name'];
+                        $tabdates[] = $data['period'];
+                    }
+                }
+
+                $widget  = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "48 " : "") . $title);
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets = __('Tickets number', 'mydashboard');
+
+                $datasets[] =
+                    ['type'   => 'line',
+                     'data'   => $tabdata,
+                     'name'   => $nbtickets,
+                     'smooth' => false
+                    ];
+
+                $databacklogset = json_encode($datasets);
+                $labelsback     = json_encode($tabnames);
+                $tabdatesset    = json_encode($tabdates);
+
+                $js_ancestors = $crit['ancestors'];
+
+                $graph_datas = ['title'   => $title,
+                                'comment' => $comment,
+                                'name'    => $name,
+                                'ids'     => $tabdatesset,
+                                'data'    => $databacklogset,
+                                'labels'  => $labelsback];
+                if ($onclick == 1) {
+                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
+                                        'sons'               => $sons_criteria,
+                                        'requester_groups'   => $requester_groups,
+                                        'technician_group'   => $technician_group,
+                                        'group_is_recursive' => $js_ancestors,
+                                        'type'               => $type,
+                                        'locations_id'       => $location,
+                                        'widget'             => $widgetId];
+                }
+                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => 1];
+
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+                $widget->toggleWidgetRefresh();
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * @param $params
+     * @param $specific
+     *
+     * @return array
+     */
+    private static function getTicketsCreatedPerWeek($params, $specific = [])
+    {
+        global $DB;
+
+        $year        = intval(date('Y', time()) - 1);
+        $currentyear = date("Y");
+
+        if (isset($params['opt']["year"]) && $params['opt']["year"] > 0) {
+            $year = $params['opt']["year"];
+        }
+        if ($year < intval($currentyear)) {
+            $week = date("W", strtotime("$currentyear-12-31"));
+        } else {
+            $week = intval(date('W'));
+        }
+        $type_criteria = $params['crit']["type"];
+
+        $entities_criteria = $params['crit']['entities_id'];
+        $is_deleted        = "`glpi_tickets`.`is_deleted` = 0";
+        $whereStr          = "";
+        if (!empty($specific)) {
+            $whereStr = " " . implode('', $specific);
+        }
+
+        $querym_ai   = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets,
+                                   week(`glpi_tickets`.`date` ) AS numweek
+                        FROM `glpi_tickets` ";
+        $querym_ai   .= "WHERE ";
+        $querym_ai   .= "(
+                           `glpi_tickets`.`date` >= '$year-01-01 00:00:00' 
+                           AND `glpi_tickets`.`date` <= '$year-12-31 23:59:59'
+                           AND  $is_deleted 
+                           $type_criteria ) 
+                           $entities_criteria
+                           $whereStr";
+        $querym_ai   .= "GROUP BY week(`glpi_tickets`.`date`);
+                        ";
+        $result_ai_q = $DB->query($querym_ai);
+        $datas       = [];
+        while ($data = $DB->fetchAssoc($result_ai_q)) {
+            $datas[$data["numweek"]] = $data["nbtickets"];
+        }
+
+
+        for ($i = 1; $i <= intval($week); $i++) {
+            if (!isset($datas[$i])) {
+                $datas[$i] = 0;
+            }
+        }
+        ksort($datas);
+
+
+        return $datas;
     }
 }
