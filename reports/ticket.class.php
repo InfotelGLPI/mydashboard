@@ -1136,9 +1136,9 @@ class PluginMydashboardTicket extends CommonGLPI
         $widget->setTabDatas($output['body']);
 
         //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
-        if (count($output['body']) > 0) {
-            $widget->setOption("bSort", false);
-        }
+//        if (count($output['body']) > 0) {
+//            $widget->setOption("bSort", false);
+//        }
         $widget->setOption("bPaginate", false);
         $widget->setOption("bFilter", false);
         $widget->setOption("bInfo", false);

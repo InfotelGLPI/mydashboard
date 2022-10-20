@@ -127,6 +127,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
 
         $result = $DB->query($query);
         $tab    = [];
+        $nb     = $DB->numrows($result);
         while ($row = $DB->fetchAssoc($result)) {
             if ($widgetId == "knowbaseitemrecent") {
                 $date = $row["date_creation"];
@@ -150,7 +151,10 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
         $widget->setTabDatas($tab);
         $widget->setWidgetTitle($title);
         $widget->setOption("bDate", ["DH"]);
-        $widget->setOption("bSort", [1, 'desc']);
+        if ($nb) {
+            $widget->setOption("bSort", [1, 'desc']);
+        }
+
         return $widget;
     }
 }

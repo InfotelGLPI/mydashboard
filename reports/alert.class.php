@@ -27,17 +27,17 @@
 /**
  * Class PluginMydashboardAlert
  */
-class PluginMydashboardAlert extends CommonDBTM {
-
-
-    static $types = ['Reminder', 'Problem', 'Change', 'PluginEventsmanagerEvent', 'PluginReleasesRelease'];
+class PluginMydashboardAlert extends CommonDBTM
+{
+    public static $types = ['Reminder', 'Problem', 'Change', 'PluginEventsmanagerEvent', 'PluginReleasesRelease'];
 
     /**
      * PluginMydashboardAlert constructor.
      *
      * @param array $_options
      */
-    public function __construct($_options = []) {
+    public function __construct($_options = [])
+    {
         $this->options = $_options;
 
         $preference = new PluginMydashboardPreference();
@@ -51,7 +51,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string|translated
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
         //      if ($item->getType() == 'Reminder'
         //          || $item->getType() == 'Problem'
         //          || $item->getType() == 'Change'
@@ -71,7 +72,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return array of allowed type
      */
-    static function getTypes($all = false) {
+    public static function getTypes($all = false)
+    {
         if ($all) {
             return self::$types;
         }
@@ -96,7 +98,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return bool
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
         $alert      = new self();
         $itil_alert = new PluginMydashboardItilAlert();
         switch ($item->getType()) {
@@ -108,7 +111,7 @@ class PluginMydashboardAlert extends CommonDBTM {
             case "PluginReleasesRelease":
                 $itil_alert->showForItem($item);
                 break;
-            default :
+            default:
                 $alert->showForItem($item);
                 break;
         }
@@ -120,8 +123,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return array
      */
-    function getWidgetsForItem() {
-
+    public function getWidgetsForItem()
+    {
         $widgets = [
             __('Indicators', 'mydashboard') => [
                 $this->getType() . "1"    => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
@@ -169,7 +172,27 @@ class PluginMydashboardAlert extends CommonDBTM {
             ]
         ];
         return $widgets;
+    }
 
+    /**
+     * @return array
+     */
+    public function getTitleForWidget($widgetID)
+    {
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['title'];
+        }
+        return false;
+    }
+
+    public function getCommentForWidget($widgetID)
+    {
+        $widgets = $this->getWidgetsForItem();
+        foreach ($widgets as $class => $widget) {
+            return $widget[$widgetID]['comment'];
+        }
+        return false;
     }
 
     /**
@@ -183,7 +206,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      * @return int
      * @throws \GlpitestSQLError
      */
-    static function countForAlerts($public, $type, $itilcategories_id = []) {
+    public static function countForAlerts($public, $type, $itilcategories_id = [])
+    {
         global $DB;
 
         $now                 = date('Y-m-d H:i:s');
@@ -231,11 +255,15 @@ class PluginMydashboardAlert extends CommonDBTM {
      * @return PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
-    function getWidgetContentForItem($widgetId, $opt = []) {
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
         global $CFG_GLPI, $DB;
+
+        $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu    = new DbUtils();
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
+
         switch ($widgetId) {
             case $this->getType() . "1":
                 $widget = new PluginMydashboardHtml();
@@ -319,7 +347,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                  AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
                                  AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
 
-                $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";//
+                $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";
 
                 $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
                 $headers = [__('ID and priority', 'mydashboard'),
@@ -341,14 +369,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                 if ($nb) {
                     $i = 0;
                     while ($data = $DB->fetchAssoc($result)) {
-
                         $ticket = new Ticket();
                         $ticket->getFromDB($data['tickets_id']);
 
                         $users_requesters = [];
                         $userdata         = '';
                         if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
-
                             foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
                                 $k                                = $u['users_id'];
                                 $users_requesters[$u['users_id']] = $u['users_id'];
@@ -363,7 +389,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                             }
                         }
                         if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
-
                             $itilfollowup = new ITILFollowup();
                             $followups    = $itilfollowup->find(['items_id' => $ticket->fields['id'],
                                                                  'itemtype' => 'Ticket'], 'date DESC');
@@ -373,7 +398,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
                             if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
                                 || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
-
                                 $bgcolor   = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
                                 $textColor = "color:black!important;";
                                 if ($bgcolor == '#000000') {
@@ -395,7 +419,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
                                 $techdata = '';
                                 if ($ticket->countUsers(CommonITILActor::ASSIGN)) {
-
                                     foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
                                         $k = $u['users_id'];
                                         if ($k) {
@@ -410,7 +433,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                                 }
 
                                 if ($ticket->countGroups(CommonITILActor::ASSIGN)) {
-
                                     foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
                                         $k = $u['groups_id'];
                                         if ($k) {
@@ -461,7 +483,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                                     $offset   = 0;
                                     $allpos   = [];
 
-                                    while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
+                                    while (($pos = strpos($haystack, $needle, $offset)) !== false) {
                                         $offset   = $pos + 1;
                                         $allpos[] = $pos;
                                     }
@@ -484,12 +506,18 @@ class PluginMydashboardAlert extends CommonDBTM {
                 }
 
                 $widget->setTabDatas($datas);
-                $widget->setOption("bSort", [3, 'desc']);
+                if ($nb) {
+                    $widget->setOption("bSort", [3, 'desc']);
+                }
                 $widget->setOption("bDate", ["DH"]);
-                $widget->toggleWidgetRefresh();
+
                 $widget->setWidgetHeaderType('warning');
-                $widget->setWidgetTitle("<i class='ti ti-alert-triangle fa-1x'></i>&nbsp;" . __("User ticket alerts", "mydashboard"));
-                $widget->setWidgetComment(__("Display tickets where last modification is a user action", "mydashboard"));
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "7 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
                 return $widget;
                 break;
@@ -503,7 +531,9 @@ class PluginMydashboardAlert extends CommonDBTM {
                            OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
 
                 $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
-                $headers = [__('Last run'), __('Name'), __('Status')];
+                $headers = [__('Last run'),
+                            __('Name'),
+                            __('Status')];
                 $widget->setTabNames($headers);
 
                 $result = $DB->query($query);
@@ -513,7 +543,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $i     = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
-
                         $datas[$i]["lastrun"] = Html::convDateTime($data['lastrun']);
 
                         $name = $data["name"];
@@ -527,14 +556,18 @@ class PluginMydashboardAlert extends CommonDBTM {
 
                         $i++;
                     }
-
                 }
                 $widget->setWidgetHeaderType('danger');
                 $widget->setTabDatas($datas);
                 $widget->setOption("bDate", ["DH"]);
-                $widget->setOption("bSort", [1, 'desc']);
+                if ($nb) {
+                    $widget->setOption("bSort", [1, 'desc']);
+                }
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "8 " : "") . $title);
                 $widget->toggleWidgetRefresh();
-                $widget->setWidgetTitle("<i class='ti ti-alert-triangle fa-1x'></i>&nbsp;" . __('Automatic actions in error', 'mydashboard'));
 
                 return $widget;
                 break;
@@ -559,7 +592,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $i     = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
-
                         $datas[$i]["date"] = Html::convDateTime($data['date']);
 
                         $datas[$i]["from"] = $data['from'];
@@ -572,15 +604,18 @@ class PluginMydashboardAlert extends CommonDBTM {
 
                         $i++;
                     }
-
                 }
                 $widget->setWidgetHeaderType('danger');
                 $widget->setTabDatas($datas);
                 $widget->setOption("bDate", ["DH"]);
-                $widget->setOption("bSort", [0, 'desc']);
+                if ($nb) {
+                    $widget->setOption("bSort", [0, 'desc']);
+                }
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "9 " : "") . $title);
                 $widget->toggleWidgetRefresh();
-                $widget->setWidgetTitle("<i class='ti ti-alert-triangle fa-1x'></i>&nbsp;" . __("Not imported mails in collectors", "mydashboard"));
-                $widget->setWidgetComment(__("Display of mails which are not imported", "mydashboard"));
 
                 return $widget;
                 break;
@@ -707,7 +742,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                             $table .= "</div>";
 
                             $script .= "$('#stock_$nb').countup($stock);";
-
                         }
                     }
                     $table .= "<script type='text/javascript'>
@@ -716,7 +750,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                          });
                   </script>";
                 } else {
-
                     $table .= "<i style='color:orange' class='ti ti-alert-triangle fa-3x'></i>";
                     $table .= "<br><br><span class='b'>" . __("No alerts are setup", "mydashboard") . "</span>";
                 }
@@ -725,10 +758,14 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $widget->setWidgetHtmlContent(
                     $table
                 );
-                $widget->toggleWidgetRefresh();
+
                 $widget->setWidgetHeaderType('danger');
-                $widget->setWidgetTitle(__("Inventory stock alerts", "mydashboard"));
-                $widget->setWidgetComment(__("Display alerts for inventory stocks", "mydashboard"));
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "10 " : "") . $title);
+                $widget->toggleWidgetRefresh();
 
                 return $widget;
                 break;
@@ -738,7 +775,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $class   = "bt-col-md-12";
                 $display = PluginMydashboardWidget::getWidgetMydashboardEquipments($class, false);
                 $widget->setWidgetHtmlContent($display);
-                $widget->setWidgetTitle(__('Your equipments', 'mydashboard'));
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "11 " : "") . $title);
+                $widget->toggleWidgetRefresh();
                 return $widget;
                 break;
 
@@ -755,12 +797,17 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             case $this->getType() . "SC32":
                 $widget = new PluginMydashboardHtml();
-                $widget->setWidgetTitle(__("Global indicators by week", "mydashboard"));
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "2 " : "") . $title);
+                $widget->toggleWidgetRefresh();
+
                 $graph = self::displayIndicator($widgetId, $opt, true);
                 $widget->setWidgetHtmlContent(
                     $graph
                 );
-                $widget->toggleWidgetRefresh();
                 return $widget;
                 break;
         }
@@ -775,7 +822,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      * @return \PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
-    function displayTicketsAlertsWidgets($name, $widgetId, $opt, $type) {
+    public function displayTicketsAlertsWidgets($name, $widgetId, $opt, $type)
+    {
         global $CFG_GLPI, $DB;
 
         $widget = new PluginMydashboardHtml();
@@ -806,7 +854,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
 
         if (count($technicians_groups_id) > 0) {
-
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
@@ -929,7 +976,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         //////////////////////////////////////////
         //new tickets
         if ($stats_tickets3 > 0) {
-
             // Reset criterias
             $options3['reset'][] = 'reset';
 
@@ -976,7 +1022,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         //////////////////////////////////////////
         //tickets without tech
         if ($stats_tickets4 > 0) {
-
             // Reset criterias
             $options4['reset'][] = 'reset';
 
@@ -1006,7 +1051,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1048,7 +1092,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         //////////////////////////////////////////
         //Tickets with very high or major priority
         if ($stats_tickets1 > 0) {
-
             // Reset criterias
             $options1['reset'][] = 'reset';
 
@@ -1078,7 +1121,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1096,7 +1138,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats1\">";
         if ($stats_tickets1 > 0) {
-
             if ($type == Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Incidents with very high or major priority', 'mydashboard') . "'>";
             } else {
@@ -1120,7 +1161,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         //Problem with high priority
         if ($type == Ticket::INCIDENT_TYPE) {
             if ($stats_tickets2 > 0) {
-
                 // Reset criterias
                 $options2['reset'][] = 'reset';
 
@@ -1192,7 +1232,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     }
 
 
-    function displaySLATicketsAlertsWidgets($name, $widgetId, $opt, $type) {
+    public function displaySLATicketsAlertsWidgets($name, $widgetId, $opt, $type)
+    {
         global $CFG_GLPI, $DB;
 
         $widget = new PluginMydashboardHtml();
@@ -1224,7 +1265,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         }
 
         if (count($technicians_groups_id) > 0) {
-
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -1267,7 +1307,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $left          = "";
         $stats3        = 0;
         if (count($technicians_groups_id) > 0) {
-
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
@@ -1301,7 +1340,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $stats4        = 0;
 
         if (count($technicians_groups_id) > 0) {
-
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -1335,7 +1373,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $stats5        = 0;
 
         if (count($technicians_groups_id) > 0) {
-
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -1365,7 +1402,6 @@ class PluginMydashboardAlert extends CommonDBTM {
 
         $table = "<div class=\"tickets-stats\">";
         if ($stats2 > 0) {
-
             // Reset criterias
             $options2['reset'][] = 'reset';
 
@@ -1395,7 +1431,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1437,7 +1472,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         }
         $table .= "</div>";
         if ($stats3 > 0) {
-
             // Reset criterias
             $options2['reset'][] = 'reset';
 
@@ -1467,7 +1501,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1509,7 +1542,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $table .= "</div>";
 
         if ($stats4 > 0) {
-
             // Reset criterias
             $options4['reset'][] = 'reset';
 
@@ -1539,7 +1571,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1582,7 +1613,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $table .= "</div>";
 
         if ($stats5 > 0) {
-
             // Reset criterias
             $options5['reset'][] = 'reset';
 
@@ -1612,7 +1642,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1685,7 +1714,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string
      */
-    static function getMaintenanceMessage($public = false) {
+    public static function getMaintenanceMessage($public = false)
+    {
         if (self::countForAlerts($public, 1) > 0) {
             echo "<div class='red'>";
             echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
@@ -1696,7 +1726,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     /**
      * @return string
      */
-    function getMaintenanceList($itilcategories_id = []) {
+    public function getMaintenanceList($itilcategories_id = [])
+    {
         global $DB, $CFG_GLPI;
 
         $now = date('Y-m-d H:i:s');
@@ -1736,7 +1767,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $result = $DB->query($query);
         $nb     = $DB->numrows($result);
         if ($nb) {
-
             $wl               .= '<div id="nt_maint-container">';
             $wl               .= '<ul id="nt_maint">';
             $i                = 1;
@@ -1759,7 +1789,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $wl .= "<li style='$style_title' data-maint='" . $row["id"] . "'>";
                 $wl .= $name;
                 $wl .= "</li>";
-
             }
             $wl .= "</ul>";
             $wl .= "<div id='nt_maint-infos-container'>";
@@ -1815,7 +1844,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                </script>";
             }
         } else {
-
             $wl .= "<div align='center'><br><br><h3><span class ='maint-color'>";
             $wl .= __("No scheduled maintenance", "mydashboard");
             $wl .= "</span></h3></div>";
@@ -1825,7 +1853,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     }
 
 
-    static function displayTickerDescription($id) {
+    public static function displayTickerDescription($id)
+    {
         global $DB;
 
         $note = new Reminder();
@@ -1873,7 +1902,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     /**
      * @return string
      */
-    function getInformationList($itilcategories_id = []) {
+    public function getInformationList($itilcategories_id = [])
+    {
         global $DB, $CFG_GLPI;
 
         $now           = date('Y-m-d H:i:s');
@@ -1913,7 +1943,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $nb     = $DB->numrows($result);
 
         if ($nb) {
-
             $wl               .= '<div id="nt_info-container">';
             $wl               .= '<ul id="nt_info">';
             $i                = 1;
@@ -1996,7 +2025,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                </script>";
             }
         } else {
-
             $wl .= "<div align='center'><br><br><h3><span class ='maint-color'>";
             $wl .= __("No informations founded", "mydashboard");
             $wl .= "</span></h3></div>";
@@ -2012,7 +2040,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string
      */
-    function getAlertList($public = 0, $itilcategories_id = []) {
+    public function getAlertList($public = 0, $itilcategories_id = [])
+    {
         global $DB, $CFG_GLPI;
 
         $config = new PluginMydashboardConfig();
@@ -2059,13 +2088,11 @@ class PluginMydashboardAlert extends CommonDBTM {
         $nb     = $DB->numrows($result);
 
         if ($nb) {
-
             $wl               .= '<div id="nt_alert-container">';
             $wl               .= '<ul id="nt_alert">';
             $i                = 1;
             $firstdescription = "";
             while ($row = $DB->fetchArray($result)) {
-
                 $note = new Reminder();
                 $note->getFromDB($row["id"]);
 
@@ -2144,7 +2171,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                </script>";
             }
         } else {
-
             $wl .= "<div align='center'><br><br><h3><span class ='alert-color'>";
             $wl .= __("No problem detected", "mydashboard");
             $wl .= "</span></h3></div>";
@@ -2161,7 +2187,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string
      */
-    function getAlertSummary($public = 0, $force = 0) {
+    public function getAlertSummary($public = 0, $force = 0)
+    {
         global $DB, $CFG_GLPI;
 
         $now = date('Y-m-d H:i:s');
@@ -2207,7 +2234,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $nb             = $DB->numrows($result);
         $nb_maintenance = self::countForAlerts($public, 1);
         if ($nb || $nb_maintenance > 0) {
-
             $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.scss");
 
             //            $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css";
@@ -2238,20 +2264,19 @@ class PluginMydashboardAlert extends CommonDBTM {
             //            </script>";
             //            }
             while ($row = $DB->fetchArray($result)) {
-
                 if ($row['impact'] == 1) {
                     $f1[]   = $row;
                     $list[] = $row;
-                } else if ($row['impact'] == 2) {
+                } elseif ($row['impact'] == 2) {
                     $f2[]   = $row;
                     $list[] = $row;
-                } else if ($row['impact'] == 3) {
+                } elseif ($row['impact'] == 3) {
                     $f3[]   = $row;
                     $list[] = $row;
-                } else if ($row['impact'] == 4) {
+                } elseif ($row['impact'] == 4) {
                     $f4[]   = $row;
                     $list[] = $row;
-                } else if ($row['impact'] == 5) {
+                } elseif ($row['impact'] == 5) {
                     $f5[]   = $row;
                     $list[] = $row;
                 }
@@ -2259,13 +2284,13 @@ class PluginMydashboardAlert extends CommonDBTM {
 
             if (!empty($f5)) {
                 $wl .= $this->displayContent('5', $list, $public);
-            } else if (!empty($f4)) {
+            } elseif (!empty($f4)) {
                 $wl .= $this->displayContent('4', $list, $public);
-            } else if (!empty($f3)) {
+            } elseif (!empty($f3)) {
                 $wl .= $this->displayContent('3', $list, $public);
-            } else if (!empty($f2)) {
+            } elseif (!empty($f2)) {
                 $wl .= $this->displayContent('2', $list, $public);
-            } else if (!empty($f1)) {
+            } elseif (!empty($f1)) {
                 $wl .= $this->displayContent('1', $list, $public);
             }
 
@@ -2299,9 +2324,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string
      */
-    private
-    function displayContent($impact, $list = [], $public = 0) {
-
+    private function displayContent($impact, $list = [], $public = 0)
+    {
         $div    = "";
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
@@ -2327,14 +2351,13 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string
      */
-    private function getMessage($list, $public) {
-
+    private function getMessage($list, $public)
+    {
         $l      = "";
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
         if (!empty($list)) {
             foreach ($list as $listitem) {
-
                 $configColor = $config->getField("impact_" . $listitem['impact']);
                 //            $class     = (Html::convDate(date("Y-m-d")) == Html::convDate($listitem['date'])) ? 'alert_new' : '';
                 //            $class     = ' alert_impact' . $listitem['impact'];
@@ -2369,7 +2392,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     /**
      * @param Reminder $item
      */
-    private function showReminderForm(Reminder $item) {
+    private function showReminderForm(Reminder $item)
+    {
         $reminders_id = $item->getID();
 
         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
@@ -2396,7 +2420,10 @@ class PluginMydashboardAlert extends CommonDBTM {
         $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
         $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
         echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-        Dropdown::showFromArray('type', $types, [
+        Dropdown::showFromArray(
+            'type',
+            $types,
+            [
                                           'value' => $type
                                       ]
         );
@@ -2409,7 +2436,10 @@ class PluginMydashboardAlert extends CommonDBTM {
         }
 
         echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-        Dropdown::showFromArray('impact', $impacts, [
+        Dropdown::showFromArray(
+            'impact',
+            $impacts,
+            [
                                             'value' => $impact
                                         ]
         );
@@ -2446,8 +2476,8 @@ class PluginMydashboardAlert extends CommonDBTM {
     /**
      * @param $item
      */
-    private
-    function showForItem($item) {
+    private function showForItem($item)
+    {
         global $CFG_GLPI;
 
         $items_id = $item->getID();
@@ -2456,7 +2486,6 @@ class PluginMydashboardAlert extends CommonDBTM {
         $reminder = new Reminder();
 
         if (!isset($item->fields['reminders_id'])) {
-
             echo "<table class='tab_cadre_fixe'>";
             echo "<th>" . PluginMydashboardMenu::getTypeName(2) . "</th>";
             echo "<tr class='tab_bg_1'><td class='center'>";
@@ -2529,7 +2558,10 @@ class PluginMydashboardAlert extends CommonDBTM {
             $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
 
             echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-            Dropdown::showFromArray('type', $types, [
+            Dropdown::showFromArray(
+                'type',
+                $types,
+                [
                                               'value' => $type
                                           ]
             );
@@ -2542,7 +2574,10 @@ class PluginMydashboardAlert extends CommonDBTM {
             }
 
             echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-            Dropdown::showFromArray('impact', $impacts, [
+            Dropdown::showFromArray(
+                'impact',
+                $impacts,
+                [
                                                 'value' => $impact
                                             ]
             );
@@ -2584,8 +2619,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return bool|string
      */
-    static function getWidgetMydashboardAlert($class) {
-
+    public static function getWidgetMydashboardAlert($class)
+    {
         if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
             $display = "<div class=\"bt-feature $class \">";
             $display .= "<h3>";
@@ -2615,7 +2650,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return string
      */
-    static function handleShellcommandResult(&$message, $url) {
+    public static function handleShellcommandResult(&$message, $url)
+    {
         global $CFG_GLPI;
 
         $alert = "";
@@ -2630,12 +2666,12 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $alert .= "</div>";
             }
             $message = "";
-        } else if (preg_match('/PROBLEM/is', $message)) {
+        } elseif (preg_match('/PROBLEM/is', $message)) {
             $alert .= "<div class='md-title-status' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
             $alert .= "<b>";
             $alert .= __("Problem with GLPI", "mydashboard");
             $alert .= "</b></div>";
-        } else if (preg_match('/OK/is', $message)) {
+        } elseif (preg_match('/OK/is', $message)) {
             $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fas fa-circle-check fa-4x'></i><br><br>";
             $alert .= "<b>";
             $alert .= __("GLPI is OK", "mydashboard");
@@ -2656,7 +2692,8 @@ class PluginMydashboardAlert extends CommonDBTM {
      *
      * @return mixed|string
      */
-    static function cURLData($options) {
+    public static function cURLData($options)
+    {
         global $CFG_GLPI;
 
         if (!function_exists('curl_init')) {
@@ -2729,11 +2766,11 @@ class PluginMydashboardAlert extends CommonDBTM {
         //}
 
         if (//!$options["download"] &&
-        !$data
+            !$data
         ) {
             curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch); // make sure we closeany current curl sessions
-            //die($http_code.' Unable to connect to server. Please come back later.');
+        //die($http_code.' Unable to connect to server. Please come back later.');
         } else {
             curl_close($ch);
         }
@@ -2742,7 +2779,7 @@ class PluginMydashboardAlert extends CommonDBTM {
         //fclose($fp);
         //}
         if (//!$options["download"] &&
-        $data
+            $data
         ) {
             return $data;
         } else {
@@ -2750,7 +2787,8 @@ class PluginMydashboardAlert extends CommonDBTM {
         }
     }
 
-    static function displayIndicator($id, $params = [], $iswidget = false) {
+    public static function displayIndicator($id, $params = [], $iswidget = false)
+    {
         global $CFG_GLPI;
 
         if (!Session::haveRightsOr("ticket", [Ticket::READMY, Ticket::READALL, Ticket::READGROUP])) {
@@ -2826,9 +2864,7 @@ class PluginMydashboardAlert extends CommonDBTM {
                 $total_resolved = self::queryResolvedTickets($left, $is_deleted, $search_assign);
                 //Resolved tickets
                 $total_closed = self::queryClosedTickets($left, $is_deleted, $search_assign);
-
             } else {
-
                 if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
                     $technicians_groups_id = $params['technicians_groups_id'];
                 } else {
@@ -2851,7 +2887,6 @@ class PluginMydashboardAlert extends CommonDBTM {
                 //Resolved tickets
                 $total_closed = self::queryClosedTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
             }
-
         }
 
 
@@ -2899,7 +2934,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             $groups = $params['technicians_groups_id'];
             $nb     = 0;
             foreach ($groups as $group) {
-
                 $criterias['criteria'][$nb] = [
                     'field'      => 8, // groups_id_assign
                     'searchtype' => 'equals',
@@ -2940,7 +2974,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             $groups = $params['technicians_groups_id'];
             $nb     = 0;
             foreach ($groups as $group) {
-
                 $criterias['criteria'][$nb] = [
                     'field'      => 8, // groups_id_assign
                     'searchtype' => 'equals',
@@ -2990,7 +3023,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $groups = $params['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -3041,7 +3073,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $groups = $params['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -3076,7 +3107,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $groups = $params['technicians_groups_id'];
                 $nb     = 0;
                 foreach ($groups as $group) {
-
                     $criterias['criteria'][$nb] = [
                         'field'      => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -3121,9 +3151,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
 
             echo "</tr></table>";
             //         echo "</li>";
-
         } else {
-
             //         $graph = "<table id='indicators' class='indicators'><tr>";
 
             $stats = "";
@@ -3198,7 +3226,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $stats .= "<br><br>";
                 $stats .= __('Tickets closed', 'mydashboard');
                 $stats .= "</div>";
-
             }
             //         $stats .= "</div>";
             $stats .= "</div>";
@@ -3216,7 +3243,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
     }
 
 
-    static function queryAllTickets($left, $criteria) {
+    public static function queryAllTickets($left, $criteria)
+    {
         global $DB;
 
         //all tickets
@@ -3241,7 +3269,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    static function queryNewTickets($left, $criteria) {
+    public static function queryNewTickets($left, $criteria)
+    {
         global $DB;
 
         //New tickets
@@ -3266,7 +3295,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_new;
     }
 
-    static function queryNewTicketsWeek($year, $week) {
+    public static function queryNewTicketsWeek($year, $week)
+    {
         global $DB;
 
         //New tickets
@@ -3298,7 +3328,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    static function queryDueTickets($left, $criteria, $search_assign) {
+    public static function queryDueTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu     = new DbUtils();
@@ -3318,7 +3349,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_due;
     }
 
-    static function queryDueTicketsWeek($year, $week, $groups_id) {
+    public static function queryDueTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3352,7 +3384,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    static function queryPendingTickets($left, $criteria, $search_assign) {
+    public static function queryPendingTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu      = new DbUtils();
@@ -3370,7 +3403,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_pend;
     }
 
-    static function queryPendingTicketsWeek($year, $week, $groups_id) {
+    public static function queryPendingTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3405,7 +3439,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    static function queryIncidentTickets($left, $criteria, $search_assign) {
+    public static function queryIncidentTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu      = new DbUtils();
@@ -3427,7 +3462,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_incpro;
     }
 
-    static function queryIncidentTicketsWeek($year, $week, $groups_id) {
+    public static function queryIncidentTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3464,7 +3500,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    static function queryRequestTickets($left, $criteria, $search_assign) {
+    public static function queryRequestTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu = new DbUtils();
@@ -3488,7 +3525,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_dempro;
     }
 
-    static function queryRequestTicketsWeek($year, $week, $groups_id) {
+    public static function queryRequestTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3524,7 +3562,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    static function queryResolvedTickets($left, $criteria, $search_assign) {
+    public static function queryResolvedTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu     = new DbUtils();
@@ -3547,7 +3586,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_res;
     }
 
-    static function queryResolvedTicketsWeek($year, $week, $groups_id) {
+    public static function queryResolvedTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3575,7 +3615,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_new;
     }
 
-    static function queryClosedTickets($left, $criteria, $search_assign) {
+    public static function queryClosedTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         //New tickets
@@ -3615,7 +3656,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_close;
     }
 
-    static function queryClosedTicketsWeek($year, $week, $groups_id) {
+    public static function queryClosedTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets

@@ -135,7 +135,8 @@ class PluginMydashboardReports_Pie extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
+
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
         switch ($widgetId) {

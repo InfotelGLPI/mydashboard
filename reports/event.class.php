@@ -38,8 +38,7 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return translated
      */
-    public static function getTypeName($nb = 0)
-    {
+    public static function getTypeName($nb = 0) {
         return _n('Log', 'Logs', $nb);
     }
 
@@ -48,8 +47,7 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @param array $options
      */
-    public function __construct($options = [])
-    {
+    public function __construct($options = []) {
         parent::__construct();
     }
 
@@ -57,16 +55,15 @@ class PluginMydashboardEvent extends Glpi\Event
     /**
      * @return array
      */
-    public function getWidgetsForItem()
-    {
+    public function getWidgetsForItem() {
         $widgets = [];
         if (Session::haveRight("logs", READ)) {
             $widgets = [
-               PluginMydashboardMenu::$GLOBAL_VIEW => [
-                  "eventwidgetglobal" => ["title"   => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
-                                          "icon"    => "ti ti-table",
-                                          "comment" => ""],
-               ]
+                PluginMydashboardMenu::$GLOBAL_VIEW => [
+                    "eventwidgetglobal" => ["title"   => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
+                                            "icon"    => "ti ti-table",
+                                            "comment" => ""],
+                ]
             ];
         }
         return $widgets;
@@ -77,8 +74,7 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return PluginMydashboardDatatable|void
      */
-    public function getWidgetContentForItem($widgetId)
-    {
+    public function getWidgetContentForItem($widgetId) {
         if (Session::haveRight("logs", READ)) {
             switch ($widgetId) {
                 case "eventwidgetpersonnal":
@@ -97,8 +93,7 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return string|void
      */
-    public static function displayItemLogID($type, $items_id)
-    {
+    public static function displayItemLogID($type, $items_id) {
         global $CFG_GLPI;
         $out = "";
         if (($items_id == "-1") || ($items_id == "0")) {
@@ -152,8 +147,7 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return PluginMydashboardDatatable|void
      */
-    public static function showForUser(string $user = "", bool $display = true)
-    {
+    public static function showForUser(string $user = "", bool $display = true) {
         global $DB, $CFG_GLPI;
 
         // Show events from $result in table form
@@ -225,25 +219,26 @@ class PluginMydashboardEvent extends Glpi\Event
 
             $i++;
         }
+        $widget = new PluginMydashboardDatatable();
+        $widget->setWidgetTitle($output['title']);
+        $personnal = ($user == "") ? "global" : "personnal";
+        $widget->setWidgetId("eventwidget" . $personnal);
+        //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
+        $widget->setTabNames($output['header']);
+
         if (!empty($output)) {
-            $personnal = ($user == "") ? "global" : "personnal";
-            $widget    = new PluginMydashboardDatatable();
-            $widget->setWidgetTitle($output['title']);
-            $widget->setWidgetId("eventwidget" . $personnal);
-            //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
-            $widget->setTabNames($output['header']);
             $widget->setTabDatas($output['body']);
             //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
             $widget->setOption("bPaginate", false);
             $widget->setOption("bFilter", false);
             $widget->setOption("bInfo", false);
-            if (count($output['body']) > 0) {
-                $widget->setOption("bSort", false);
-            }
-
-
-            $widget->toggleWidgetRefresh();
-            return $widget;
+//            if (count($output['body']) > 0) {
+//                $widget->setOption("bSort", false);
+//            }
         }
+
+        $widget->toggleWidgetRefresh();
+        return $widget;
+
     }
 }

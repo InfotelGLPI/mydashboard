@@ -324,8 +324,10 @@ class PluginMydashboardWidget extends CommonDBTM {
 
                     if ($type == "table") {
                         $opt = $widget->getOptions();
-                        //                  Toolbox::logDebug($opt);
-                        $order = json_encode([[0, 'asc']]);
+
+//                        $order = json_encode([[0, 'asc']]);
+
+                        $order = json_encode([]);
                         if (isset($opt['bSort'])) {
                             $order = json_encode([$opt['bSort']]);
                         }
@@ -602,7 +604,7 @@ class PluginMydashboardWidget extends CommonDBTM {
             $alerts  = new PluginMydashboardAlert();
             $display .= $alerts->getAlertList(0, $itilcategories_id);
         } else {
-            $display .= "<div align='center'>";
+            $display .= "<div class='center'>";
             if ($hidewidget != true) {
                 $display .= "<h3>";
             } else {
@@ -618,7 +620,7 @@ class PluginMydashboardWidget extends CommonDBTM {
             }
             $display .= "</div>";
         }
-        $display .= "</div>";
+
         $display .= "</div>";
         $display .= "</div>";
         if ($hidewidget != false) {
@@ -671,7 +673,7 @@ class PluginMydashboardWidget extends CommonDBTM {
             $alerts  = new PluginMydashboardAlert();
             $display .= $alerts->getMaintenanceList($itilcategories_id);
         } else {
-            $display .= "<div align='center'>";
+            $display .= "<div class='center'>";
             if ($hidewidget != true) {
                 $display .= "<h3>";
             } else {
@@ -687,7 +689,6 @@ class PluginMydashboardWidget extends CommonDBTM {
             }
             $display .= "</div>";
         }
-        $display .= "</div>";
         $display .= "</div>";
         $display .= "</div>";
         if ($hidewidget != false) {
@@ -742,7 +743,7 @@ class PluginMydashboardWidget extends CommonDBTM {
             $display .= $alerts->getInformationList($itilcategories_id);
 
         } else {
-            $display .= "<div align='center'>";
+            $display .= "<div class='center'>";
             if ($hidewidget != true) {
                 $display .= "<h3>";
             } else {
@@ -758,7 +759,6 @@ class PluginMydashboardWidget extends CommonDBTM {
             }
             $display .= "</div>";
         }
-        $display .= "</div>";
         $display .= "</div>";
         $display .= "</div>";
         if ($hidewidget != false) {
