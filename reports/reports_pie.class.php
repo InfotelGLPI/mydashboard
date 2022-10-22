@@ -388,6 +388,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $nb           = $DB->numrows($result);
                 $notrespected = 0;
                 $respected    = 0;
+                $datas = [];
                 if ($nb > 0 && $sum['nb'] > 0) {
                     $notrespected = round(($sum['nb']) * 100 / ($total['nb']), 2);
                     $respected    = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
