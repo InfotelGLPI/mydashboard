@@ -29,7 +29,8 @@
  * It sets basical parameters to display a pie chart with Flotr2
  * This widget class is meant to display data as a pie chart
  */
-class PluginMydashboardPieChart extends PluginMydashboardChart {
+class PluginMydashboardPieChart extends PluginMydashboardChart
+{
 
     /**
      * @param array $graph_datas
@@ -50,7 +51,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
         $labels         = $graph_datas['labels'];
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
-        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
+        $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = json_encode($graph_criterias);
 
@@ -83,7 +84,63 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                 feature: {
                   dataView: { show: true, readOnly: false },
                   restore: { show: true },
-                  saveAsImage: { show: true }
+                  saveAsImage: { show: true },
+                  myPDFExport: {
+                        show: true,
+                        title: 'PDF Export',
+                        icon: 'path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891',
+                        onclick: function (){
+//                            const btnExport = document.getElementById('export');
+
+                            addEventListener('click', async () => {
+                            try {
+  
+                            function loadImage(src) {
+                              return new Promise((resolve, reject) => {
+                                const img = new Image();
+                                img.onload = () => resolve(img);
+                                img.onerror = reject;
+                                img.src = src;
+                              });
+                            }
+                            function getChartImage(chart) {
+                              return loadImage(chart.getDataURL());
+                            }
+                            const img = await getChartImage(canvas$name);
+                            const dpr = canvas$name.getDevicePixelRatio();
+                        
+                            const doc = new jspdf.jsPDF({
+                              unit: 'px',
+                              orientation: 'l',
+                              hotfixes: ['px_scaling']
+                            });
+                        
+//                            doc.addImage(img1.src, 'PNG', 0, 0, img1.width / dpr1, img1.height / dpr1);
+                            const canvas = await html2canvas(document.getElementById('$name'));
+                            const pageWidth = doc.internal.pageSize.getWidth();
+                            const pageHeight = doc.internal.pageSize.getHeight();
+                        
+                            const widthRatio = pageWidth / canvas.width;
+                            const heightRatio = pageHeight / canvas.height;
+    
+                            const canvasWidth = img.width / dpr;
+                            const canvasHeight = img.height / dpr;
+                            
+                            const marginX = (pageWidth - canvasWidth) / 2;
+                            const marginY = (pageHeight - canvasHeight) / 2;
+                        
+                            doc.addImage(img.src, 'PNG', marginX, marginY, canvasWidth, canvasHeight);
+                            
+                        
+                            await doc.save('charts.pdf', {
+                              returnPromise: true
+                            });
+                           } catch (e) {
+                                console.error('failed to export', e);
+                              }
+                        });
+                        }
+                    },
                 }
               },
               calculable: true,
@@ -153,7 +210,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
         $labels         = $graph_datas['labels'];
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
-        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
+        $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = json_encode($graph_criterias);
 
@@ -189,7 +246,63 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                   mark: { show: true },
                   dataView: { show: true, readOnly: false },
                   restore: { show: true },
-                  saveAsImage: { show: true }
+                  saveAsImage: { show: true },
+                  myPDFExport: {
+                        show: true,
+                        title: 'PDF Export',
+                        icon: 'path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891',
+                        onclick: function (){
+//                            const btnExport = document.getElementById('export');
+
+                            addEventListener('click', async () => {
+                            try {
+  
+                            function loadImage(src) {
+                              return new Promise((resolve, reject) => {
+                                const img = new Image();
+                                img.onload = () => resolve(img);
+                                img.onerror = reject;
+                                img.src = src;
+                              });
+                            }
+                            function getChartImage(chart) {
+                              return loadImage(chart.getDataURL());
+                            }
+                            const img = await getChartImage(canvas$name);
+                            const dpr = canvas$name.getDevicePixelRatio();
+                        
+                            const doc = new jspdf.jsPDF({
+                              unit: 'px',
+                              orientation: 'l',
+                              hotfixes: ['px_scaling']
+                            });
+                        
+//                            doc.addImage(img1.src, 'PNG', 0, 0, img1.width / dpr1, img1.height / dpr1);
+                            const canvas = await html2canvas(document.getElementById('$name'));
+                            const pageWidth = doc.internal.pageSize.getWidth();
+                            const pageHeight = doc.internal.pageSize.getHeight();
+                        
+                            const widthRatio = pageWidth / canvas.width;
+                            const heightRatio = pageHeight / canvas.height;
+    
+                            const canvasWidth = img.width / dpr;
+                            const canvasHeight = img.height / dpr;
+                            
+                            const marginX = (pageWidth - canvasWidth) / 2;
+                            const marginY = (pageHeight - canvasHeight) / 2;
+                        
+                            doc.addImage(img.src, 'PNG', marginX, marginY, canvasWidth, canvasHeight);
+                            
+                        
+                            await doc.save('charts.pdf', {
+                              returnPromise: true
+                            });
+                           } catch (e) {
+                                console.error('failed to export', e);
+                              }
+                        });
+                        }
+                    },
                 }
               },
 //              grid: { left: 16, right: 32, top: 32, bottom: 32, containLabel: true },
@@ -262,7 +375,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
         $labels         = $graph_datas['labels'];
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
-        $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
+        $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = json_encode($graph_criterias);
 
@@ -296,7 +409,63 @@ class PluginMydashboardPieChart extends PluginMydashboardChart {
                 feature: {
                   dataView: { show: true, readOnly: false },
                   restore: { show: true },
-                  saveAsImage: { show: true }
+                  saveAsImage: { show: true },
+                  myPDFExport: {
+                        show: true,
+                        title: 'PDF Export',
+                        icon: 'path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891',
+                        onclick: function (){
+//                            const btnExport = document.getElementById('export');
+
+                            addEventListener('click', async () => {
+                            try {
+  
+                            function loadImage(src) {
+                              return new Promise((resolve, reject) => {
+                                const img = new Image();
+                                img.onload = () => resolve(img);
+                                img.onerror = reject;
+                                img.src = src;
+                              });
+                            }
+                            function getChartImage(chart) {
+                              return loadImage(chart.getDataURL());
+                            }
+                            const img = await getChartImage(canvas$name);
+                            const dpr = canvas$name.getDevicePixelRatio();
+                        
+                            const doc = new jspdf.jsPDF({
+                              unit: 'px',
+                              orientation: 'l',
+                              hotfixes: ['px_scaling']
+                            });
+                        
+//                            doc.addImage(img1.src, 'PNG', 0, 0, img1.width / dpr1, img1.height / dpr1);
+                            const canvas = await html2canvas(document.getElementById('$name'));
+                            const pageWidth = doc.internal.pageSize.getWidth();
+                            const pageHeight = doc.internal.pageSize.getHeight();
+                        
+                            const widthRatio = pageWidth / canvas.width;
+                            const heightRatio = pageHeight / canvas.height;
+    
+                            const canvasWidth = img.width / dpr;
+                            const canvasHeight = img.height / dpr;
+                            
+                            const marginX = (pageWidth - canvasWidth) / 2;
+                            const marginY = (pageHeight - canvasHeight) / 2;
+                        
+                            doc.addImage(img.src, 'PNG', marginX, marginY, canvasWidth, canvasHeight);
+                            
+                        
+                            await doc.save('charts.pdf', {
+                              returnPromise: true
+                            });
+                           } catch (e) {
+                                console.error('failed to export', e);
+                              }
+                        });
+                        }
+                    },
                 }
               },
               calculable: true,

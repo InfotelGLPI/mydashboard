@@ -481,14 +481,15 @@ class PluginMydashboardWidget extends CommonDBTM {
                     $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 96%'>";
 
                     if ($widget->getTitleVisibility()) {
-                        $widgetdisplay .= "<h3>";
+
                         $titletype     = $widget->getWidgetHeaderType();
                         if (!empty($titletype)) {
                             $titletype = $widget->getWidgetHeaderType();
                         } else {
                             $titletype = 'info';
                         }
-                        $widgetdisplay .= "<div class='alert alert-$titletype alert-important' role='alert'>";
+                        $widgetdisplay .= "<div class='display-4' style='margin: 15px;'>";
+                        $widgetdisplay .= "<h4>";
                         $widgetdisplay .= $title;
                         if ($comment != "") {
                             $widgetdisplay .= "&nbsp;";
@@ -496,9 +497,10 @@ class PluginMydashboardWidget extends CommonDBTM {
                                               'display'       => false];
                             $widgetdisplay .= Html::showToolTip($comment, $opt);
                         }
-                        $widgetdisplay .= "</div>";
+                        $widgetdisplay .= "</h4>";
+                        $widgetdisplay .= "</div><hr style='margin: 1.2rem 0;'>";
                         //         $widget .= "<small>" . __('A comment') . "</small>";
-                        $widgetdisplay .= "</h3>";
+
                     }
 
                     $widgetdisplay .= "<div id=\"display-sc\">";

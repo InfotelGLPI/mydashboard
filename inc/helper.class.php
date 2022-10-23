@@ -218,7 +218,7 @@ class PluginMydashboardHelper {
 //        $graph .= "</div>";
         if ($params["canvas"] == true) {
             if ($params["nb"] < 1) {
-                $graph .= "<div align='center'><br><br><h3><span class ='maint-color'>";
+                $graph .= "<div class='center'><br><br><h3><span class ='maint-color'>";
                 $graph .= __("No item found");
                 $graph .= "</span></h3></div>";
             }

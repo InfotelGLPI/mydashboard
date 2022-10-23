@@ -36,7 +36,7 @@ class PluginMydashboardMenu extends CommonGLPI
      * @var array of array of string
      */
     private $widgets    = [];
-    public $widgetlist = [];
+    public  $widgetlist = [];
     /**
      * Will contain an array of strings with js function needed to add a widget
      * @var array of string
@@ -64,18 +64,18 @@ class PluginMydashboardMenu extends CommonGLPI
      */
     //Unused
     //private $infos = "";
-    public static $ALL_VIEW                = -1;
-    public static $TICKET_REQUESTERVIEW    = 1;
-    public static $PROBLEM_VIEW            = 2;
-    public static $CHANGE_VIEW             = 3;
-    public static $GROUP_VIEW              = 4;
-    public static $MY_VIEW                 = 5;
-    public static $GLOBAL_VIEW             = 6;
-    public static $RSS_VIEW                = 7;
-    public static $PROJECT_VIEW            = 8;
-    public static $TICKET_TECHVIEW         = 9;
+    public static  $ALL_VIEW                = -1;
+    public static  $TICKET_REQUESTERVIEW    = 1;
+    public static  $PROBLEM_VIEW            = 2;
+    public static  $CHANGE_VIEW             = 3;
+    public static  $GROUP_VIEW              = 4;
+    public static  $MY_VIEW                 = 5;
+    public static  $GLOBAL_VIEW             = 6;
+    public static  $RSS_VIEW                = 7;
+    public static  $PROJECT_VIEW            = 8;
+    public static  $TICKET_TECHVIEW         = 9;
     private static $DEFAULT_ID              = 0;
-    public static $_PLUGIN_MYDASHBOARD_CFG = [];
+    public static  $_PLUGIN_MYDASHBOARD_CFG = [];
 
     public static $rightname = "plugin_mydashboard";
 
@@ -84,22 +84,19 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return translated
      */
-    public static function getTypeName($nb = 0)
-    {
+    public static function getTypeName($nb = 0) {
         return __('My Dashboard', 'mydashboard');
     }
 
 
-    public function defineTabs($options = [])
-    {
+    public function defineTabs($options = []) {
         $ong = [];
         $this->addStandardTab(__CLASS__, $ong, $options);
 
         return $ong;
     }
 
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-    {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
         if ($item->getType() == __CLASS__) {
             $tabs[1] = __('My view', 'mydashboard');
             $tabs[2] = __('GLPI admin grid', 'mydashboard');
@@ -113,8 +110,7 @@ class PluginMydashboardMenu extends CommonGLPI
         return '';
     }
 
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-    {
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
         $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
         $predefined_grid = 0;
 
@@ -147,8 +143,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @param bool $show_all
      */
-    public function __construct($show_all = false)
-    {
+    public function __construct($show_all = false) {
         $this->initConfig($show_all);
     }
 
@@ -157,8 +152,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @param $show_all
      */
-    private function initConfig($show_all)
-    {
+    private function initConfig($show_all) {
         //Configuration set by Administrator (via Configuration->Plugins ...)
         $config = new PluginMydashboardConfig();
         $config->getConfig();
@@ -186,8 +180,7 @@ class PluginMydashboardMenu extends CommonGLPI
     /**
      * @return array
      */
-    public static function getMenuContent()
-    {
+    public static function getMenuContent() {
         $plugin_page = PluginMydashboardMenu::getSearchURL(false);
         $menu        = [];
         //Menu entry in tools
@@ -217,8 +210,7 @@ class PluginMydashboardMenu extends CommonGLPI
     /**
      * @return string
      */
-    public static function getIcon()
-    {
+    public static function getIcon() {
         return "ti ti-dashboard";
     }
 
@@ -231,8 +223,7 @@ class PluginMydashboardMenu extends CommonGLPI
      * @return FALSE if the user haven't the right to see Dashboard
      * @internal param type $user_id
      */
-    public function showMenu($rand, $users_id = -1, $active_profile = -1, $predefined_grid = 0)
-    {
+    public function showMenu($rand, $users_id = -1, $active_profile = -1, $predefined_grid = 0) {
         //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
         $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
 
@@ -259,8 +250,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *    - value : integer / preselected value (default 0)
      *
      **/
-    public static function dropdownProfiles($options = [])
-    {
+    public static function dropdownProfiles($options = []) {
         global $DB;
 
         $p['name']  = 'profiles_id';
@@ -321,8 +311,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @param int $selected_profile
      */
-    private function showDashboard($rand, $selected_profile = -1, $predefined_grid = 0)
-    {
+    private function showDashboard($rand, $selected_profile = -1, $predefined_grid = 0) {
         //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
         //      $_SESSION['plugin_mydashboard_editmode'] = false;
         //      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
@@ -368,8 +357,7 @@ class PluginMydashboardMenu extends CommonGLPI
         }
     }
 
-    public function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0)
-    {
+    public function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0) {
         $drag = PluginMydashboardPreference::checkDragMode(Session::getLoginUserID());
 
         echo $this->getscripts();
@@ -379,7 +367,7 @@ class PluginMydashboardMenu extends CommonGLPI
             //force loading new widgets
             self::installWidgets();
         }
-        
+
         if ($edit > 0) {
             echo "<div class='left'>";
 
@@ -503,7 +491,6 @@ class PluginMydashboardMenu extends CommonGLPI
                 echo "</a>";
                 echo "<br><br>";
             }
-
             echo "<a id='close-edit' class='submit btn btn-success'>";
             echo "<i class='ti ti-circle-x pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
@@ -603,8 +590,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return string, HTML
      */
-    public function getWidgetsList($profile, $edit = 0)
-    {
+    public function getWidgetsList($profile, $edit = 0) {
         $list             = new PluginMydashboardWidgetlist();
         $this->widgetlist = $list->getList(true, $profile);
 
@@ -764,8 +750,7 @@ class PluginMydashboardMenu extends CommonGLPI
     /**
      * @return string
      */
-    public function getscripts()
-    {
+    public function getscripts() {
         $wl = "<script>
 
             $(document).ready(function () {
@@ -810,8 +795,7 @@ class PluginMydashboardMenu extends CommonGLPI
     /**
      * Initialization of widgets at installation
      */
-    public static function installWidgets()
-    {
+    public static function installWidgets() {
         $list       = new PluginMydashboardWidgetlist();
         $widgetlist = $list->getList(false);
 
@@ -841,8 +825,7 @@ class PluginMydashboardMenu extends CommonGLPI
     /**
      * Stores every widgets in Database (see PluginMydashboardWidget)
      */
-    private function initDBWidgets()
-    {
+    private function initDBWidgets() {
         $widgetDB    = new PluginMydashboardWidget();
         $dbu         = new DbUtils();
         $widgetsinDB = $dbu->getAllDataFromTable(PluginMydashboardWidget::getTable());
@@ -870,8 +853,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return bool|string is empty ?
      */
-    public function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = [])
-    {
+    public function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = []) {
         $wl = "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
         $wl .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'>";
 
@@ -992,8 +974,7 @@ class PluginMydashboardMenu extends CommonGLPI
      * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
      *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
      */
-    public function getWidgetsListFromPlugins($used = [], &$html = "", $gslist = [])
-    {
+    public function getWidgetsListFromPlugins($used = [], &$html = "", $gslist = []) {
         $plugin_names                = $this->getPluginsNames();
         $plugin_names["mydashboard"] = __('My Dashboard', 'mydashboard');
         $plugins_is_empty            = true;
@@ -1040,8 +1021,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return string
      */
-    private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = [])
-    {
+    private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = []) {
         $wl = "";
 
         if (is_array($widgetsarray) && count($widgetsarray) > 0) {
@@ -1132,8 +1112,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return array of string
      */
-    private function getDashboardForUser($id)
-    {
+    private function getDashboardForUser($id) {
         $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
         $user_widget     = new PluginMydashboardUserWidget($id, $this->interface);
         return $user_widget->getWidgets();
@@ -1155,8 +1134,7 @@ class PluginMydashboardMenu extends CommonGLPI
      * @return array of string
      * @global type $PLUGIN_HOOKS
      */
-    private function getPluginsNames()
-    {
+    private function getPluginsNames() {
         global $PLUGIN_HOOKS;
         $plugins_hooked = (isset($PLUGIN_HOOKS['mydashboard']) ? $PLUGIN_HOOKS['mydashboard'] : []);
         $tab            = [];
@@ -1173,8 +1151,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return string
      */
-    private function getLocalName($plugin_name)
-    {
+    private function getLocalName($plugin_name) {
         $infos = Plugin::getInfo($plugin_name);
         return isset($infos['name']) ? $infos['name'] : $plugin_name;
     }
@@ -1201,8 +1178,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *        sDashboard (for Datatable),
      *        mydashboard (for our own)
      */
-    public function getJsLanguages($libraryname)
-    {
+    public function getJsLanguages($libraryname) {
         $languages = [];
         switch ($libraryname) {
             case "datatables":
@@ -1265,8 +1241,7 @@ class PluginMydashboardMenu extends CommonGLPI
      * Get the names of each view
      * @return array of string
      */
-    public function getViewNames()
-    {
+    public function getViewNames() {
         $names = [];
 
         $names[self::$TICKET_REQUESTERVIEW] = _n('Ticket', 'Tickets', 2) . " (" . __("Requester") . ")";
@@ -1299,8 +1274,7 @@ class PluginMydashboardMenu extends CommonGLPI
     /**
      * @param int $active_profile
      */
-    public function loadDashboard($active_profile = -1, $predefined_grid = 0)
-    {
+    public function loadDashboard($active_profile = -1, $predefined_grid = 0) {
         global $CFG_GLPI, $GLPI_CACHE;
 
         //      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/style_bootstrap_main.css");
@@ -1340,8 +1314,11 @@ class PluginMydashboardMenu extends CommonGLPI
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/echarts.js");
         $theme = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/html2canvas.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jspdf.umd.js");
+
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js");
+        //        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/circles/circles.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/countUp.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/countUp-jquery.js");
@@ -1389,40 +1366,30 @@ class PluginMydashboardMenu extends CommonGLPI
         if ($predefined_grid > 0) {
             $grid = PluginMydashboardDashboard::loadPredefinedDashboard($predefined_grid);
         }
-        $datagrid = [];
-        $datajson = [];
-        $optjson  = [];
-        $widgets  = [];
+        $datagrid             = [];
+        $datajson             = [];
+        $optjson              = [];
+        $widgets              = [];
+        $displayed_widgets    = [];
+        $displayed_widgets_id = [];
+
         if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-            $widgetclasse = new PluginMydashboardWidget();
-            //            $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-            //            $datas     = $GLPI_CACHE->get($ckey);
-            //UNACTIVATE IT FOR DEBUG
-            //            if (is_array($datas) && count($datas) > 0 && $predefined_grid == 0) {
-            //               $datajson = $datas;
-            //            } else {
             $widgets = PluginMydashboardWidget::getWidgetList();
 
             foreach ($datagrid as $k => $v) {
                 if (isset($v["id"])) {
                     $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
 
-                    //               if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
-                    //                  foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-                    //                     if (isset($widgets[$v["id"]]["id"])
-                    //                         && $widgets[$v["id"]]["id"] == $w) {
-                    //                        $optjson[$v["id"]]["enableRefresh"] = $r;
-                    //                     }
-                    //                  }
-                    //               }
+                    $obj = new PluginMydashboardWidget();
+
+                    $id                     = substr($v["id"], 2);
+                    $widget_name = $obj->getWidgetNameById($id);
+                    if(strpos( $widget_name, "PluginMydashboardAlert" ) !== 0) {
+                        $displayed_widgets[]    = $widget_name;
+                        $displayed_widgets_id[] = $v["id"];
+                    }
                 }
-                //             $v['content'] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
-                //             $datajson[] = $v;
             }
-            //               if ($predefined_grid == 0) {
-            //                  $GLPI_CACHE->set($ckey, $datajson);
-            //               }
-            //            }
         } else {
             echo "<div class='alert alert-warning alert-important' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
@@ -1476,6 +1443,9 @@ class PluginMydashboardMenu extends CommonGLPI
             $delete_button = 'true';
         }
         //      }
+
+        $all_displayed_widgets    = json_encode($displayed_widgets);
+        $all_displayed_widgets_id = json_encode($displayed_widgets_id);
 
         echo "<div id='mygrid$rand' class='mygrid'>";
         echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
@@ -1772,42 +1742,109 @@ class PluginMydashboardMenu extends CommonGLPI
         };
          
           
-         function downloadGraph(id) {
-//             if (!isChartRendered) return; // return if chart not rendered
-                html2canvas(document.getElementById(id), {
-                 onrendered: function(canvas) {
-                     var link = document.createElement('a');
-                    link.href = canvas.toDataURL('image/png');
-                    
-                    if (!HTMLCanvasElement.prototype.toBlob) {
-                     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-                       value: function (callback, type, quality) {
-                         var canvas = this;
-                         setTimeout(function() {
-                           var binStr = atob( canvas.toDataURL(type, quality).split(',')[1] ),
-                           len = binStr.length,
-                           arr = new Uint8Array(len);
-                  
-                           for (var i = 0; i < len; i++ ) {
-                              arr[i] = binStr.charCodeAt(i);
-                           }
-                  
-                           callback( new Blob( [arr], {type: type || 'image/png'} ) );
-                         });
-                       }
-                    });
-                  }
-                       
-                  canvas.toBlob(function(blob){
-                   link.href = URL.createObjectURL(blob);
-                   saveAs(blob, 'myChart.png');
-                 },'image/png');                      
-              }
-            })
-         }
+//         function downloadGraph(id) {
+////             if (!isChartRendered) return; // return if chart not rendered
+//                html2canvas(document.getElementById(id), {
+//                 onrendered: function(canvas) {
+//                     var link = document.createElement('a');
+//                    link.href = canvas.toDataURL('image/png');
+//                    
+//                    if (!HTMLCanvasElement.prototype.toBlob) {
+//                     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+//                       value: function (callback, type, quality) {
+//                         var canvas = this;
+//                         setTimeout(function() {
+//                           var binStr = atob( canvas.toDataURL(type, quality).split(',')[1] ),
+//                           len = binStr.length,
+//                           arr = new Uint8Array(len);
+//                  
+//                           for (var i = 0; i < len; i++ ) {
+//                              arr[i] = binStr.charCodeAt(i);
+//                           }
+//                  
+//                           callback( new Blob( [arr], {type: type || 'image/png'} ) );
+//                         });
+//                       }
+//                    });
+//                  }
+//                       
+//                  canvas.toBlob(function(blob){
+//                   link.href = URL.createObjectURL(blob);
+//                   saveAs(blob, 'myChart.png');
+//                 },'image/png');                      
+//              }
+//            })
+//         }
     </script>";
 
         echo "</div>";
+        echo "<button class='btn btn-info' id='exportByHTML' style='float: right;margin-bottom: 25px;'>";
+        echo __("Export to PDF", "mydashboard") . "</button>";
+
+        echo "<script type='text/javascript'>
+
+            function loadImage(src) {
+              return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+              });
+            }
+            
+            function getChartImage(chart) {
+              return loadImage(chart.getDataURL());
+            }
+            
+            const btnExportHTML = document.getElementById('exportByHTML');
+            widgets = $all_displayed_widgets;
+            widgetsid = $all_displayed_widgets_id;
+            btnExportHTML.addEventListener('click', async () => {
+//            console.log('exporting...');
+            try {
+                const doc = new jspdf.jsPDF({
+                      unit: 'px',
+                      orientation: 'l',
+                      hotfixes: ['px_scaling']
+                    });
+                    // another way:
+                    
+                    for (var i = 0; i < widgets.length; i++) {
+                        var widgetname ='#'+widgets[i];
+
+                        const canvas = await html2canvas(document.querySelector(widgetname));
+                        const img = await loadImage(canvas.toDataURL());
+                        chart1 = echarts.init(document.getElementById(widgets[i]));
+                        dpr = chart1.getDevicePixelRatio();
+                        
+                        const pageWidth = doc.internal.pageSize.getWidth();
+                        const pageHeight = doc.internal.pageSize.getHeight();
+                    
+                        const widthRatio = pageWidth / canvas.width;
+                        const heightRatio = pageHeight / canvas.height;
+
+                        const canvasWidth = img.width / dpr;
+                        const canvasHeight = img.height / dpr;
+                        
+                        const marginX = (pageWidth - canvasWidth) / 2;
+                        const marginY = (pageHeight - canvasHeight) / 2;
+                    
+                        doc.addImage(img.src, 'PNG', marginX, marginY, canvasWidth, canvasHeight);
+                        if (i < widgets.length-1) {
+                            doc.addPage();
+                        }
+                     }
+                    for (var i = 0; i < widgetsid.length; i++) {
+                       refreshWidget(widgetsid[i]);
+                     }
+                     await doc.save('dashboard_report.pdf');
+                  } catch (e) {
+                console.error('failed to export', e);
+            }
+//            console.log('exported');
+        });
+
+          </script>";
     }
 
     /**
@@ -1824,8 +1861,7 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return void|string (see $options['display'])
      */
-    public static function createSlidePanel($name, $options = [])
-    {
+    public static function createSlidePanel($name, $options = []) {
         global $CFG_GLPI;
 
         $param = [
