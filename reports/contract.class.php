@@ -155,7 +155,7 @@ class PluginMydashboardContract extends CommonGLPI
 
         $widget = new PluginMydashboardDatatable();
         $widget->setWidgetId("contractwidget");
-        $widget->setWidgetTitle("<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset\">" .
+        $widget->setWidgetTitle("<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset\">" .
                                 Contract::getTypeName(2) . "</a>");
 
         $body = [];

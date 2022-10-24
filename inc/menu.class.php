@@ -1275,21 +1275,15 @@ class PluginMydashboardMenu extends CommonGLPI
      * @param int $active_profile
      */
     public function loadDashboard($active_profile = -1, $predefined_grid = 0) {
-        global $CFG_GLPI, $GLPI_CACHE;
 
-        //      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/style_bootstrap_main.css");
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/style_bootstrap_new.css");
-        //      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/css/bootstrap4.css");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.js");
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.css");
-        //      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/lodash.min.js");
-        //      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.css");
-        //      echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack-extra.css");
-        //      echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.js");
         //
         Html::requireJs('gridstack');
         echo Html::css("/public/lib/gridstack.css");
         echo Html::css("/css/standalone/gridstack-grids.scss");
+        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.php");
         //       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
 

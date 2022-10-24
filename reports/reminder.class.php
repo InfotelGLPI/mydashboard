@@ -283,7 +283,7 @@ class PluginMydashboardReminder extends CommonGLPI
                          $restrict_visibility
                    ORDER BY `glpi_reminders`.`name`";
 
-            $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" . _n('Personal reminder', 'Personal reminders', 2) . "</a>";
+            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" . _n('Personal reminder', 'Personal reminders', 2) . "</a>";
         } else {
             // Show public reminders / not mines : need to have access to public reminders
             if (!Session::haveRight('reminder_public', READ)) {
@@ -305,7 +305,7 @@ class PluginMydashboardReminder extends CommonGLPI
                    ORDER BY `glpi_reminders`.`name`";
 
             if (Session::getCurrentInterface() != 'helpdesk') {
-                $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" .
+                $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" .
                          _n('Public reminder', 'Public reminders', 2) . "</a>";
             } else {
                 $titre = _n('Public reminder', 'Public reminders', 2);

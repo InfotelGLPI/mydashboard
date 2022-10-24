@@ -49,7 +49,7 @@ if (isset($_POST['action'])) {
          }
          $out = "<script type='text/javascript'>\n";
          $out .= "if ($('#showMyDashboardLateralMenu').length === 0) {
-            $('.ms-md-4').before(\"<a class='ti ti-dashboard' title='$title' href='#' style='color:$style;' id='showMyDashboardLateralMenuLink'></a>\");
+            $('.ms-md-4').before(\"<a class='ti ti-dashboard slidelink' title='$title' href='#' id='showMyDashboardLateralMenuLink'></a>\");
          };";
          
          $out .= "</script>";

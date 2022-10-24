@@ -28,7 +28,6 @@
   position: absolute;
   width: 30em;
   max-width: 40%;
-  background: white;
   top: 0;
   min-height: 100vh;
   height: calc(100% - 28px); /* Without footer */
@@ -287,10 +286,6 @@ div#tabcontent{
   margin-right: 2px;
 }
 
-.mygrid {
-  background-color: #fbfbfb;
-  //margin-bottom: 50px;
-}
 
 .cadre_edit_button {
   display: block;
@@ -468,7 +463,7 @@ div#tabcontent{
   font-size: 13px;
   border-bottom: 1px #CCC dashed;
   padding: 5px;
-  background-color: #FFF;
+  //background-color: #FFF;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1 {
@@ -477,14 +472,14 @@ div#tabcontent{
 }
 
 .plugin_mydashboard_menuDashboardListContainer {
-  background-color: #FFF;
+  //background-color: #FFF;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1 {
   margin: 0px;
   font-weight: normal;
   padding: 10px;
-  background-color: whitesmoke;
+  //background-color: whitesmoke;
   cursor: pointer;
 }
 
@@ -492,7 +487,7 @@ div#tabcontent{
   margin: 0px;
   font-weight: normal;
   padding: 10px;
-  background-color: #FFF;
+  //background-color: #FFF;
   cursor: pointer;
 }
 
@@ -504,7 +499,7 @@ div#tabcontent{
 
 .plugin_mydashboard_menuDashboardListTitle1:hover,
 .plugin_mydashboard_menuDashboardListTitle1Opened {
-  background-color: #FFF;
+  //background-color: #FFF;
 }
 
 .plugin_mydashboard_menuDashboardListTitle1:before {
@@ -523,7 +518,7 @@ div#tabcontent{
 .plugin_mydashboard_menuDashboardListItem {
   display: table;
   margin: 10px;
-  background-color: #FFF;
+  //background-color: #FFF;
   margin-left: 30px;
 }
 
@@ -1116,7 +1111,7 @@ div.dt-button-background {
   -moz-border-radius: 5px;
   border-radius: 5px;
   font-size: 12px;
-  background-color: #FFFFFF !important;
+  //background-color: #FFFFFF !important;
   /*padding: 5px 5px 5px 5px;*/
 }
 
@@ -1256,11 +1251,11 @@ a#showMyDashboardLateralMenuLink {
   padding-top: 0px;
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos div,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos div,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos div {
-  color: #000 !important;
-}
+//#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos div,
+//#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos div,
+//#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos div {
+//  color: #000 !important;
+//}
 
 #PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos-container,
 #PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos-container,

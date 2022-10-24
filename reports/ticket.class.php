@@ -384,7 +384,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['link']       = 'AND';
                     $forcetab                             = 'Ticket$2';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your tickets to close'), $number, $numrows) . "</a>";
                     break;
@@ -400,7 +400,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'mygroups';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Tickets on pending status'), $number, $numrows) . "</a>";
                     break;
@@ -416,7 +416,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'mygroups';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Tickets to be processed'), $number, $numrows) . "</a>";
                     break;
@@ -432,7 +432,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'mygroups';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your observed tickets'), $number, $numrows) . "</a>";
                     break;
@@ -449,7 +449,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'mygroups';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
             }
@@ -466,7 +466,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = Session::getLoginUserID();
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Tickets on pending status'), $number, $numrows) . "</a>";
                     break;
@@ -482,7 +482,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'process';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Tickets to be processed'), $number, $numrows) . "</a>";
                     break;
@@ -504,7 +504,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][2]['link']       = 'AND NOT';
                     $forcetab                             = 'TicketValidation$1';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your tickets to validate'), $number, $numrows) . "</a>";
 
@@ -521,7 +521,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = Session::getLoginUserID();
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your rejected tickets'), $number, $numrows) . "</a>";
 
@@ -549,7 +549,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][3]['link']       = 'AND';
                     $forcetab                             = 'Ticket$2';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your tickets to close'), $number, $numrows) . "</a>";
                     break;
@@ -565,7 +565,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'notold';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your observed tickets'), $number, $numrows) . "</a>";
                     break;
@@ -592,7 +592,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][3]['link']       = 'AND';
                     $forcetab                             = 'Ticket$3';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Satisfaction survey'), $number, $numrows) . "</a>";
                     break;
@@ -609,7 +609,7 @@ class PluginMydashboardTicket extends CommonGLPI
                     $options['criteria'][1]['value']      = 'notold';
                     $options['criteria'][1]['link']       = 'AND';
 
-                    $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
                                        Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
             }
@@ -719,7 +719,7 @@ class PluginMydashboardTicket extends CommonGLPI
                 } elseif ($itemtype == "ProblemTask") {
                     $title = __("Problem tasks to do");
                 }
-                $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+                $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                    Toolbox::append_params($options, '&amp;') . "\">" .
                                    Html::makeTitle($title, $number, $numrows) . "</a>";
                 break;
@@ -779,7 +779,7 @@ class PluginMydashboardTicket extends CommonGLPI
                 $textColor = "color:white!important;";
             }
 
-            $link = "<a style='$textColor' id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
+            $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
                     "/front/ticket.form.php?id=" . $job->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
@@ -1106,7 +1106,7 @@ class PluginMydashboardTicket extends CommonGLPI
             $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1\" class='pointer'>" .
                                __('Create a ticket') . "&nbsp;<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
         } else {
-            $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
+            $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                Toolbox::append_params($options, '&amp;') . "\">" . __('Ticket followup', 'mydashboard') . "</a>";
         }
 
@@ -1224,7 +1224,7 @@ class PluginMydashboardTicket extends CommonGLPI
 
             //TRANS: %d is the number of new tickets
             $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
-            $output['title'] .= "&nbsp;(<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params($options, '&amp;') . "\">" . __('Show all') . "</a>)";
+            $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params($options, '&amp;') . "\">" . __('Show all') . "</a>)";
 
             $output['header'] = self::commonListHeader();
 

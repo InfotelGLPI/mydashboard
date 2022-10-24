@@ -377,4 +377,56 @@ class PluginMydashboardConfig extends CommonDBTM {
       }
       return $item->fields[$field];
    }
+
+    /**
+     * @return string
+     */
+    public function getGridTheme(): string {
+        if (str_contains($_SESSION['glpipalette'], 'darker') == true
+            || str_contains($_SESSION['glpipalette'], 'midnight') == true) {
+            return '';
+        } else {
+            return '#fbfbfb!important;';
+        }
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getWidgetTheme(): string {
+        if (str_contains($_SESSION['glpipalette'], 'darker') == true
+            || str_contains($_SESSION['glpipalette'], 'midnight') == true) {
+            return '';
+        } else {
+            return '#FFFFFF!important;';
+        }
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlidePanelTheme(): string {
+        if (str_contains($_SESSION['glpipalette'], 'darker') == true
+            || str_contains($_SESSION['glpipalette'], 'midnight') == true) {
+            return '#242323';
+        } else {
+            return '#FFFFFF!important;';
+        }
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlideLinkTheme(): string {
+        if (str_contains($_SESSION['glpipalette'], 'darker') == true
+            || str_contains($_SESSION['glpipalette'], 'midnight') == true) {
+            return '#FFFFFF';
+        } else {
+            return '#000000!important;';
+        }
+
+    }
 }

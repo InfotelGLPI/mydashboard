@@ -521,7 +521,7 @@ class PluginMydashboardProblem extends CommonGLPI
         $options['link'][0]       = 'AND';
         $options['reset']         = 'reset';
 
-        $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
+        $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
                            Toolbox::append_params($options, '&amp;') . "\">" . __('Problem followup') . "</a>";
 
         $output['header'][] = _n('Problem', 'Problems', 2);

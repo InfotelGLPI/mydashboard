@@ -105,7 +105,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI
                          AND `glpi_rssfeeds`.`is_active` = '1'
                    ORDER BY `glpi_rssfeeds`.`name`";
 
-            $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Personal RSS feed', 'Personal RSS feeds', 2) . "</a>";
+            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Personal RSS feed', 'Personal RSS feeds', 2) . "</a>";
         } else {
            // Show public rssfeeds / not mines : need to have access to public rssfeeds
             if (!Session::haveRight('rssfeed_public', READ)) {
@@ -126,7 +126,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI
                    ORDER BY `glpi_rssfeeds`.`name`";
 
             if (Session::getCurrentInterface() != 'helpdesk') {
-                $titre = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Public RSS feed', 'Public RSS feeds', 2) . "</a>";
+                $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Public RSS feed', 'Public RSS feeds', 2) . "</a>";
             } else {
                 $titre = _n('Public RSS feed', 'Public RSS feeds', 2);
             }

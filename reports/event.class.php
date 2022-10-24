@@ -182,7 +182,7 @@ class PluginMydashboardEvent extends Glpi\Event
         $i = 0;
 
         //TRANS: %d is the number of item to display
-        $output['title'] = "<a style=\"font-size:14px;\" href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
+        $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
                            sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
 
         $output['header'][] = __('Source');
