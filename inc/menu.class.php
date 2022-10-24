@@ -1378,7 +1378,9 @@ class PluginMydashboardMenu extends CommonGLPI
 
                     $id                     = substr($v["id"], 2);
                     $widget_name = $obj->getWidgetNameById($id);
-                    if(strpos( $widget_name, "PluginMydashboardAlert" ) !== 0) {
+                    if(strpos( $widget_name, "PluginMydashboardReports_Bar" ) === 0
+                    || strpos( $widget_name, "PluginMydashboardReports_Line" ) === 0
+                       || strpos( $widget_name, "PluginMydashboardReports_Pie" ) === 0) {
                         $displayed_widgets[]    = $widget_name;
                         $displayed_widgets_id[] = $v["id"];
                     }
