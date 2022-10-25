@@ -723,7 +723,7 @@ class PluginMydashboardAlert extends CommonDBTM
                             $icon  = $data['icon'];
                             $table .= "<div class=\"nbstock\" style=\"color:$color\">";
                             $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $data['name'] . "'>";
-                            $table .= "<i style='color:$color;font-size:34px' class=\"$icon fa-3x fa-border\"></i>";
+                            $table .= "<i style='color:$color;font-size:34px' class=\"fas $icon fa-3x fa-border\"></i>";
                             $table .= "<h3 style='margin-top: 10px;'>";
                             $table .= "<span class=\"counter count-number\" id=\"stock_$nb\"></span>";
                             //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";

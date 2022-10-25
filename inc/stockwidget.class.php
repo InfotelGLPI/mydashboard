@@ -165,7 +165,7 @@ class PluginMydashboardStockWidget extends CommonDBTM {
       }
       echo "</span>";
       echo "</td>";
-      echo "<td>" . _n('Status', 'Statuses', 2) . "</td>";
+      echo "<td>" . __('Item state') . "</td>";
       echo "<td>";
       echo "<span id='show_statuses$rand'>";
       if ($options['item']) {
@@ -198,12 +198,28 @@ class PluginMydashboardStockWidget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Icon') . "</td>";
       echo "<td>";
-      echo Html::input('icon', ['value' => $this->fields['icon'], 'size' => 40]);
-      if (isset($this->fields['icon'])
-          && !empty($this->fields['icon'])) {
-         $icon = $this->fields['icon'];
-         echo "<br><br><i class='fas-sc sc-fa-color $icon fa-3x' ></i>";
-      }
+//      echo Html::input('icon', ['value' => $this->fields['icon'], 'size' => 40]);
+       $icon_selector_id = 'icon_' . mt_rand();
+       echo Html::select(
+           'icon',
+           [$this->fields['icon'] => $this->fields['icon']],
+           [
+               'id'       => $icon_selector_id,
+               'selected' => $this->fields['icon'],
+               'style'    => 'width:175px;'
+           ]
+       );
+
+       echo Html::script('js/Forms/FaIconSelector.js');
+       echo Html::scriptBlock(<<<JAVASCRIPT
+         $(
+            function() {
+               var icon_selector = new GLPI.Forms.FaIconSelector(document.getElementById('{$icon_selector_id}'));
+               icon_selector.init();
+            }
+         );
+JAVASCRIPT
+       );
       echo "</td>";
 
       echo "<td>" . __('Alert threshold') . "</td>";
