@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-25 10:07+0000\n"
+"POT-Creation-Date: 2022-10-26 16:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:208 inc/config.class.php:333 inc/itilalert.class.php:118
+#: hook.php:212 inc/config.class.php:333 inc/itilalert.class.php:118
 #: reports/alert.class.php:125 reports/alert.class.php:2601
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:209 inc/config.class.php:334 inc/itilalert.class.php:119
+#: hook.php:213 inc/config.class.php:334 inc/itilalert.class.php:119
 #: reports/alert.class.php:128 reports/alert.class.php:2466
 #: reports/alert.class.php:2602
 msgid "Scheduled maintenance"
@@ -33,7 +33,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:210 inc/config.class.php:335 inc/itilalert.class.php:120
+#: hook.php:214 inc/config.class.php:335 inc/itilalert.class.php:120
 #: reports/alert.class.php:131 reports/alert.class.php:2467
 #: reports/alert.class.php:2603
 msgid "Information"
@@ -41,11 +41,11 @@ msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:290 hook.php:291
+#: hook.php:294 hook.php:295
 msgid "Incidents"
 msgstr ""
 
-#: hook.php:297 hook.php:298
+#: hook.php:303 hook.php:304
 msgid "Requests"
 msgstr ""
 
@@ -494,7 +494,7 @@ msgstr ""
 msgid "Refresh widget"
 msgstr ""
 
-#: inc/menu.class.php:1778
+#: inc/menu.class.php:1780
 msgid "Export to PDF"
 msgstr ""
 
