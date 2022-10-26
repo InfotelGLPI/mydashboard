@@ -1774,10 +1774,12 @@ class PluginMydashboardMenu extends CommonGLPI
     </script>";
 
         echo "</div>";
-        echo "<button class='btn btn-info' id='exportByHTML' style='float: right;margin-bottom: 25px;'>";
-        echo __("Export to PDF", "mydashboard") . "</button>";
 
-        echo "<script type='text/javascript'>
+        if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
+            echo "<button class='btn btn-info' id='exportByHTML' style='float: right;margin-bottom: 25px;'>";
+            echo __("Export to PDF", "mydashboard") . "</button>";
+
+            echo "<script type='text/javascript'>
 
             function loadImage(src) {
               return new Promise((resolve, reject) => {
@@ -1841,6 +1843,7 @@ class PluginMydashboardMenu extends CommonGLPI
         });
 
           </script>";
+        }
     }
 
     /**
