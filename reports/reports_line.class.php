@@ -29,7 +29,6 @@
  */
 class PluginMydashboardReports_Line extends CommonGLPI
 {
-
     private $options;
     private $pref;
     public static $reports = [6, 22, 34, 35, 43, 44, 45, 46, 47, 48];
@@ -57,7 +56,6 @@ class PluginMydashboardReports_Line extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-
         $widgets = [
             __('Line charts', "mydashboard") => [
                 $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
@@ -100,24 +98,20 @@ class PluginMydashboardReports_Line extends CommonGLPI
      */
     public function getTitleForWidget($widgetID)
     {
-
         $widgets = $this->getWidgetsForItem();
         foreach ($widgets as $class => $widget) {
             return $widget[$widgetID]['title'];
         }
         return false;
-
     }
 
     public function getCommentForWidget($widgetID)
     {
-
         $widgets = $this->getWidgetsForItem();
         foreach ($widgets as $class => $widget) {
             return $widget[$widgetID]['comment'];
         }
         return false;
-
     }
 
     /**
@@ -390,8 +384,8 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         if ($data["nbStockTickets"] > $maxcount) {
                             $maxcount = $data["nbStockTickets"];
                         }
-                        list($year, $month) = explode('-', $data['month']);
-                        $tabdates[0][] = 0;
+//                        list($year, $month) = explode('-', $data['month']);
+                        $tabdates[0][] = $data['month']. '_progress';
                         $i++;
                     }
                 }
@@ -449,7 +443,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabopened[] = 0;
                         }
-                        $tabdates[1][]      = $year . '-' . $month . '_opened';
+                        $tabdates[1][]      = $data['month'] . '_opened';
                         $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
                         $query_2 =
@@ -472,7 +466,9 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabclosed[] = 0;
                         }
-                        $tabdates[2][] = $year . '-' . $month . '_closed';
+                        $tabdates[2][] = $data['month'] . '_closed';
+
+
                         if ($month == date("m") && $year == date("Y")) {
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                             //nbstock : cannot use tech or group criteria
@@ -498,7 +494,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                             } else {
                                 $tabprogress[] = 0;
                             }
-                            $tabdates[0][] = 0;
+//                            $tabdates[0][] = 0;
                         }
                         $i++;
                     }
@@ -561,7 +557,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         'widget'             => $widgetId];
                 }
 
-                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+                $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
                            "name"      => $name,
@@ -676,7 +672,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                             $maxcount = $data["nbStockTickets"];
                         }
                         list($year, $month) = explode('-', $data['month']);
-                        $tabdates[0][] = 0;
+                        $tabdates[0][] = $data['month']. '_progress';
                         $i++;
                     }
                 }
@@ -730,7 +726,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabopened[] = 0;
                         }
-                        $tabdates[1][] = $year . '-' . $month . '_opened';
+                        $tabdates[1][] = $data['month'] . '_opened';
 
                         $solvedate_criteria = " (`glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH) 
                   OR `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH))";
@@ -755,7 +751,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabresolved[] = 0;
                         }
-                        $tabdates[2][] = $year . '-' . $month . '_resolved';
+                        $tabdates[2][] = $data['month'] . '_resolved';
                         if ($month == date("m") && $year == date("Y")) {
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                             //nbstock : cannot use tech or group criteria
@@ -844,7 +840,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         'widget'             => $widgetId];
                 }
 
-                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+                $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
                            "name"      => $name,
@@ -961,7 +957,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                             $maxcount = $data["nbStockTickets"];
                         }
                         list($year, $month) = explode('-', $data['month']);
-                        $tabdates[0][] = 0;
+                        $tabdates[0][] = $data['month']. '_progress';
                         $i++;
                     }
                 }
@@ -1015,7 +1011,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabopened[] = 0;
                         }
-                        $tabdates[1][] = $year . '-' . $month . '_opened';
+                        $tabdates[1][] = $data['month'] . '_opened';
 
                         $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
 
@@ -1039,7 +1035,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabclosed[] = 0;
                         }
-                        $tabdates[2][] = $year . '-' . $month . '_closed';
+                        $tabdates[2][] = $data['month'] . '_closed';
 
                         $whereUnplanned = " AND `glpi_tickettasks`.`actiontime` IS NULL ";
 
@@ -1064,7 +1060,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         } else {
                             $tabunplanned[] = 0;
                         }
-                        $tabdates[3][] = $year . '-' . $month . '_unplanned';
+                        $tabdates[3][] = $data['month'] . '_unplanned';
 
                         if ($month == date("m") && $year == date("Y")) {
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -1161,7 +1157,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                         'widget'             => $widgetId];
                 }
 
-                $graph = PluginMydashboardBarChart::launchGraph($graph_datas, $graph_criterias);
+                $graph = PluginMydashboardBarChart::launchMultipleGraph($graph_datas, $graph_criterias);
 
                 $params = ["widgetId"  => $widgetId,
                            "name"      => $name,

@@ -29,9 +29,8 @@
  */
 class PluginMydashboardReports_Table extends CommonGLPI
 {
-
-    private       $options;
-    private       $pref;
+    private $options;
+    private $pref;
     public static $reports = [3, 5, 14, 32, 33];
 
     /**
@@ -39,7 +38,8 @@ class PluginMydashboardReports_Table extends CommonGLPI
      *
      * @param array $_options
      */
-    public function __construct($_options = []) {
+    public function __construct($_options = [])
+    {
         $this->options = $_options;
 
         $preference = new PluginMydashboardPreference();
@@ -54,8 +54,8 @@ class PluginMydashboardReports_Table extends CommonGLPI
     /**
      * @return array
      */
-    public function getWidgetsForItem() {
-
+    public function getWidgetsForItem()
+    {
         $widgets = [
             __('Tables', "mydashboard") => [
                 $this->getType() . "3"  => ["title"   => __("Internal annuary", "mydashboard"),
@@ -85,24 +85,20 @@ class PluginMydashboardReports_Table extends CommonGLPI
      */
     public function getTitleForWidget($widgetID)
     {
-
         $widgets = $this->getWidgetsForItem();
         foreach ($widgets as $class => $widget) {
             return $widget[$widgetID]['title'];
         }
         return false;
-
     }
 
     public function getCommentForWidget($widgetID)
     {
-
         $widgets = $this->getWidgetsForItem();
         foreach ($widgets as $class => $widget) {
             return $widget[$widgetID]['comment'];
         }
         return false;
-
     }
 
 
@@ -113,7 +109,8 @@ class PluginMydashboardReports_Table extends CommonGLPI
      * @return \PluginMydashboardDatatable|\PluginMydashboardHBarChart|\PluginMydashboardHtml|\PluginMydashboardLineChart|\PluginMydashboardPieChart|\PluginMydashboardVBarChart
      * @throws \GlpitestSQLError
      */
-    public function getWidgetContentForItem($widgetId, $opt = []) {
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
@@ -170,8 +167,13 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $query = "SELECT id
                 FROM `glpi_fieldunicities`
                 WHERE `is_active` = '1' " .
-                         $dbu->getEntitiesRestrictRequest("AND", 'glpi_fieldunicities', "", $_SESSION['glpiactive_entity'],
-                                                          true);
+                         $dbu->getEntitiesRestrictRequest(
+                             "AND",
+                             'glpi_fieldunicities',
+                             "",
+                             $_SESSION['glpiactive_entity'],
+                             true
+                         );
                 $query .= "ORDER BY `entities_id` DESC";
 
                 $result = $DB->query($query);
@@ -185,7 +187,6 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $i     = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
-
                         $unicity = new FieldUnicity();
                         $unicity->getFromDB($data["id"]);
 
@@ -203,7 +204,6 @@ class PluginMydashboardReports_Table extends CommonGLPI
                         }
 
                         if (!empty($fields)) {
-
                             $entities = [$unicity->fields['entities_id']];
                             if ($unicity->fields['is_recursive']) {
                                 $entities = getSonsOf('glpi_entities', $unicity->fields['entities_id']);
@@ -517,8 +517,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $js_entity = $crit['entity'];
                 $js_sons   = $crit['sons'];
 
-                $js = "
-               var " . $widgetId . "_search = function(_technician, _status, _hasMoreTicket){
+                $js = "var " . $widgetId . "_search = function(_technician, _status, _hasMoreTicket){
                   $.ajax({
                      url: '" . $linkURL . "',
                      type: 'POST',
@@ -539,7 +538,8 @@ class PluginMydashboardReports_Table extends CommonGLPI
                      }
                   });
                }";
-                //                echo Html::scriptBlock($js);
+                $widget->appendWidgetScriptContent(Html::scriptBlock($js));
+
                 return $widget;
                 break;
 
@@ -589,7 +589,6 @@ class PluginMydashboardReports_Table extends CommonGLPI
                         }
                         $condition .= " AND `id` IN ('" . implode("','", $childs) . "')";
                     } else {
-
                         $condition .= " AND `id` IN ('" . implode("','", $technician_group) . "')";
                     }
                 }
@@ -662,7 +661,6 @@ class PluginMydashboardReports_Table extends CommonGLPI
 
                         $j = 1;
                         foreach ($statusList as $status) {
-
                             $query = sprintf($query_tickets_by_groups_by_status, $status, $groupId);
 
                             $temp[$i][$j] = 0;
@@ -671,9 +669,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                             $nb2     = $DB->numrows($result2);
 
                             if ($nb2) {
-
                                 while ($data = $DB->fetchAssoc($result2)) {
-
                                     $value            = "";
                                     $nbWaitingTickets = $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
@@ -762,8 +758,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $js_entity = $crit['entity'];
                 $js_sons   = $crit['sons'];
 
-                $js = "
-                               var " . $widgetId . "_searchgroup = function(_group, _status, _hasMoreTicket){
+                $js = "var " . $widgetId . "_searchgroup = function(_group, _status, _hasMoreTicket){
                                   $.ajax({
                                      url: '" . $linkURL . "',
                                      type: 'POST',
@@ -784,7 +779,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                                   });
                                }";
 
-                //                            echo Html::scriptBlock($js);
+                $widget->appendWidgetScriptContent(Html::scriptBlock($js));
 
                 return $widget;
                 break;

@@ -234,7 +234,9 @@ class PluginMydashboardProfile extends CommonDBTM
                            FROM `glpi_profilerights` 
                            WHERE `profiles_id`='" . $_SESSION['glpiactiveprofile']['id'] . "' 
                            AND `name` LIKE '%plugin_mydashboard%'") as $prof) {
-            $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
+            if (isset($_SESSION['glpiactiveprofile'])) {
+                $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
+            }
         }
 
         // When user connects or change profile he goes (when Mydashboard is configured) to the menu
