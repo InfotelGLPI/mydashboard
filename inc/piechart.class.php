@@ -72,6 +72,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
 //                subtext: '$comment'
 //              },
               tooltip: {
+                backgroundColor: 'rgba(255,255,255)',
                 trigger: 'item'
               },
               legend: {
@@ -232,6 +233,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
 //                subtext: '$comment'
 //              },
               tooltip: {
+                backgroundColor: 'rgba(255,255,255)',
                 trigger: 'item',
                 formatter: '{a} <br/>{b} : {c} ({d}%)'
               },
@@ -396,6 +398,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
 //                subtext: '$comment'
 //              },
               tooltip: {
+                backgroundColor: 'rgba(255,255,255)',
                 trigger: 'item',
                 formatter: '{a} <br/>{b} : {c} ({d}%)'
               },

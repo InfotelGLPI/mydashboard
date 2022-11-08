@@ -72,6 +72,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
 //                subtext: '$comment'
 //              },
               tooltip: {
+                backgroundColor: 'rgba(255,255,255)',
                 trigger: 'axis',
                 axisPointer: {
                   type: 'shadow'
@@ -238,6 +239,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
 //                subtext: '$comment'
 //              },
               tooltip: {
+                backgroundColor: 'rgba(255,255,255)',
                 trigger: 'axis',
                 axisPointer: {
                   type: 'shadow'
@@ -403,6 +405,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
 //                subtext: '$comment'
 //              },
               tooltip: {
+                backgroundColor: 'rgba(255,255,255)',
                 trigger: 'axis',
                 axisPointer: {
                   type: 'shadow'

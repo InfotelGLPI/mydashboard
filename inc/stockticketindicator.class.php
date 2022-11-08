@@ -418,8 +418,12 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
 
         $results = $DB->query($sql_res);
         while ($data = $DB->fetchArray($results)) {
+            $groups_id = 0;
+            if ($data['groups_id'] && $data['groups_id'] > 0) {
+                $groups_id = $data['groups_id'];
+            }
             $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::CLOSEDT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
+                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::CLOSEDT . "," . $groups_id . "," . $data['entities_id'] . ")";
             $DB->query($query);
         }
 
