@@ -82,12 +82,12 @@ class PluginMydashboardReports_Line extends CommonGLPI
                 $this->getType() . "46" => ["title"   => __("Number of tickets linked with problems", "mydashboard"),
                                             "icon"    => "ti ti-chart-area-line",
                                             "comment" => ""],
-                $this->getType() . "47" => ["title"   => __("Weekly incidents in progress", "mydashboard"),
+                $this->getType() . "47" => ["title"   => __("Backlog tickets by week", "mydashboard"),
                                             "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "48" => ["title"   => __("Backlog tickets in progress", "mydashboard"),
+                                            "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard")],
+                $this->getType() . "48" => ["title"   => __("Monthly tickets in progress", "mydashboard"),
                                             "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
+                                            "comment" => __("Number of open tickets in the month still in progress for each month", "mydashboard")],
             ]
         ];
         return $widgets;
@@ -1534,22 +1534,33 @@ class PluginMydashboardReports_Line extends CommonGLPI
             case $this->getType() . "47":
                 $name = 'reportLineChartBacklogTicketByWeek';
 
-                $criterias = ['entities_id',
-                              'is_recursive',
-                              'year',
-                              'type'];
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $criterias = ['technicians_groups_id',
+                                  'entities_id',
+                                  'is_recursive',
+                                  'year',
+                                  'type'];
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $criterias = [];
+                }
+
                 $params    = ["preferences" => $this->preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
 
-                $opt         = $options['opt'];
+                $opt                        = $options['opt'];
+                $crit                       = $options['crit'];
+                $technician_groups_ids      = $opt['technicians_groups_id'];
                 $currentyear = date("Y");
                 $year        = intval(date('Y', time()) - 1);
 
-                if (isset($params['opt']["year"]) && $params['opt']["year"] > 0) {
-                    $year        = $params['opt']["year"];
-                    $currentyear = $params['opt']["year"];
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $year        = $opt["year"];
+                    $currentyear = $opt["year"];
                 }
                 if ($year < intval($currentyear)) {
                     $week = date("W", strtotime("$currentyear-12-31"));
@@ -1565,12 +1576,12 @@ class PluginMydashboardReports_Line extends CommonGLPI
                     if (!isset($datas[$i])) {
                         $nbticket = 0;
                         if ($opt['type'] == Ticket::DEMAND_TYPE) {
-                            $nbticket += PluginMydashboardAlert::queryRequestTicketsWeek($currentyear, $i, [0]);
+                            $nbticket += PluginMydashboardAlert::queryRequestTicketsWeek($currentyear, $i, $technician_groups_ids);
                         } elseif ($opt['type'] == Ticket::INCIDENT_TYPE) {
-                            $nbticket += PluginMydashboardAlert::queryIncidentTicketsWeek($currentyear, $i, [0]);
+                            $nbticket += PluginMydashboardAlert::queryIncidentTicketsWeek($currentyear, $i, $technician_groups_ids);
                         } else {
-                            $nbticket += PluginMydashboardAlert::queryIncidentTicketsWeek($currentyear, $i, [0]);
-                            $nbticket += PluginMydashboardAlert::queryRequestTicketsWeek($currentyear, $i, [0]);
+                            $nbticket += PluginMydashboardAlert::queryIncidentTicketsWeek($currentyear, $i, $technician_groups_ids);
+                            $nbticket += PluginMydashboardAlert::queryRequestTicketsWeek($currentyear, $i, $technician_groups_ids);
                         }
                         $tabdata[]  = $nbticket;
                         $tabnames[] = $i;
@@ -1632,7 +1643,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                 break;
 
             case $this->getType() . "48":
-                $name    = 'reportLineBacklog';
+                $name    = 'reportLineWeekBacklog';
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {

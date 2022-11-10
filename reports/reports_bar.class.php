@@ -2594,7 +2594,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI
             $queryavg .= "{$date} >= '{$month_deb_datetime}' 
                           AND {$date} <= '{$month_end_datetime}'
                           {$type_criteria} 
-                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted} AND `glpi_tickets`.`status` IN ('6', '5') ";
+                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted} 
+                          AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             $queryavg   .= "GROUP BY DATE(`glpi_tickets`.`solvedate`);
                         ";

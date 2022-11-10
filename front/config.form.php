@@ -37,7 +37,21 @@ if (Plugin::isPluginActive("mydashboard")) {
 
    $config = new PluginMydashboardConfig();
 
-   if (isset($_POST['update'])) {
+    if (isset($_POST["reconstructBacklog"])) {
+        ini_set("max_execution_time", "0");
+        ini_set("memory_limit", "-1");
+        fillTableMydashboardStocktickets();
+        fillTableMydashboardStockticketsGroup();
+        Html::back();
+
+    } else if (isset($_POST["reconstructIndicators"])) {
+        ini_set("max_execution_time", "0");
+        ini_set("memory_limit", "-1");
+        $record = new PluginMydashboardStockTicketIndicator();
+        $record->cronMydashboardInfotelUpdateStockTicketIndicator("all");
+        Html::back();
+
+    } else if (isset($_POST['update'])) {
 
       $config->update($_POST);
    }

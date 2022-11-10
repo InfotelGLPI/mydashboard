@@ -105,7 +105,7 @@ function plugin_mydashboard_install()
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.5.sql");
 
         //fill the new table with the data of previous month of this year
-        fillTableMydashboardStocktickets();
+//        fillTableMydashboardStocktickets();
 
         $mig->executeMigration();
     }
@@ -187,7 +187,7 @@ function plugin_mydashboard_install()
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.5.sql");
         $mig->executeMigration();
         transform_prefered_group_to_prefered_groups();
-        fillTableMydashboardStockticketsGroup();
+//        fillTableMydashboardStockticketsGroup();
     }
 
     if (!$DB->tableExists("glpi_plugin_mydashboard_itilalerts")) {
@@ -204,8 +204,8 @@ function plugin_mydashboard_install()
         $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stocktickets`";
         $DB->query($queryTruncate);
         $mig->executeMigration();
-        fillTableMydashboardStocktickets();
-        fillTableMydashboardStockticketsGroup();
+//        fillTableMydashboardStocktickets();
+//        fillTableMydashboardStockticketsGroup();
 
         $config                             = new PluginMydashboardConfig();
         $input['id']                        = "1";

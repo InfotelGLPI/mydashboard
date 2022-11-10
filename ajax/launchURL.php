@@ -155,8 +155,8 @@ if (isset($_POST["params"]["widget"])
             $begin        = $eventParts[0];
             $end        = $eventParts[1];
             if ($begin == $end) {
-                $today = strtotime(date("Y-m-d H:m:s"));
-                $datecheck = date('Y-m-d H:m:s', strtotime('-1 month', $today));
+                $today = strtotime(date("Y-m-d H:i:s"));
+                $datecheck = date('Y-m-d H:i:s', strtotime('-1 month', $today));
                 if (strtotime($begin) < strtotime($datecheck)) {
                     addCriteria(OPEN_DATE, 'lessthan', $begin, 'AND');
                 } else {

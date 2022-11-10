@@ -34,34 +34,50 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
     const SOLVEDT           = 6;
     const CLOSEDT           = 7;
 
-    public function cronMydashboardInfotelUpdateStockTicketIndicator()
+    public function cronMydashboardInfotelUpdateStockTicketIndicator($type = "week")
     {
         global $DB;
+
         $year = date("Y");
-        $week = date("W") - 1;
-        if ($week == 0) {
-            $year = $year - 1;
-            $dt   = new DateTime('December 28th, ' . $year);
-            $week = $dt->format('W');
-        }
-        //      $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stockticketindicators 
+        if ($type == "week") {
+            $week = date("W") - 1;
+
+            if ($week == 0) {
+                $year = $year - 1;
+                $dt   = new DateTime('December 28th, ' . $year);
+                $week = $dt->format('W');
+            }
+            //      $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
+            $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stockticketindicators 
                   WHERE glpi_plugin_mydashboard_stockticketindicators.year = '$year' 
                       AND glpi_plugin_mydashboard_stockticketindicators.week = '$week'";
-        $results = $DB->query($query);
-        $data    = $DB->fetchArray($results);
-        if ($data["count"] > 0) {
-            die("stock tickets of $year week $week is already filled");
+            $results = $DB->query($query);
+            $data    = $DB->fetchArray($results);
+            if ($data["count"] > 0) {
+                die("stock tickets of $year week $week is already filled");
+            }
+            echo "fill table with datas of $year week $week";
         }
-        echo "fill table <glpi_plugin_mydashboard_stockticketindactorss> with datas of $year week $week";
+        if ($type == "all") {
+            for ($i = 1; $i <= 52; $i++) {
+                self::queryNewTickets($year, $i);
+                self::queryDueTickets($year, $i);
+                self::queryPendingTickets($year, $i);
+                self::queryIncidentTickets($year, $i);
+                self::queryRequestTickets($year, $i);
+                self::queryResolvedTickets($year, $i);
+                self::queryClosedTickets($year, $i);
 
-        self::queryNewTickets($year, $week);
-        self::queryDueTickets($year, $week);
-        self::queryPendingTickets($year, $week);
-        self::queryIncidentTickets($year, $week);
-        self::queryRequestTickets($year, $week);
-        self::queryResolvedTickets($year, $week);
-        self::queryClosedTickets($year, $week);
+            }
+        } else {
+            self::queryNewTickets($year, $week);
+            self::queryDueTickets($year, $week);
+            self::queryPendingTickets($year, $week);
+            self::queryIncidentTickets($year, $week);
+            self::queryRequestTickets($year, $week);
+            self::queryResolvedTickets($year, $week);
+            self::queryClosedTickets($year, $week);
+        }
     }
 
 
@@ -82,6 +98,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                   LEFT JOIN glpi_entities 
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
                   WHERE `glpi_tickets`.`is_deleted` = 0 
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`status` = " . Ticket::INCOMING . " 
                         GROUP BY `glpi_tickets`.`entities_id`";
         $results = $DB->query($sql_new);
@@ -111,10 +129,10 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                   FROM glpi_tickets
                   LEFT JOIN glpi_entities 
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  LEFT JOIN `glpi_groups_tickets` 
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE `glpi_tickets`.`is_deleted` = 0 
-                        AND `glpi_tickets`.`status` NOT IN (" . Ticket::WAITING . "," . Ticket::SOLVED . ", " . Ticket::CLOSED . ")
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+                        AND `glpi_tickets`.`status` NOT IN (" . Ticket::INCOMING . "," . Ticket::WAITING . "," . Ticket::SOLVED . ", " . Ticket::CLOSED . ")
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` < NOW() 
                   GROUP BY `glpi_tickets`.`entities_id`";
@@ -130,25 +148,26 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     `glpi_tickets`.`entities_id`,
                     `glpi_groups_tickets`.`groups_id`
                   FROM glpi_tickets
-                  LEFT JOIN glpi_entities 
+                  LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  LEFT JOIN `glpi_groups_tickets` 
+                  LEFT JOIN `glpi_groups_tickets`
                   ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
+                  WHERE `glpi_tickets`.`is_deleted` = 0
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`status` NOT IN (" . Ticket::WAITING . "," . Ticket::SOLVED . ", " . Ticket::CLOSED . ")
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_resolve` < NOW() 
+                        AND `glpi_tickets`.`time_to_resolve` < NOW()
                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
 
         $results = $DB->query($sql_due);
         while ($data = $DB->fetchArray($results)) {
-            if (!isset($data['groups_id'])) {
-                $data['groups_id'] = 0;
-            }
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
                         VALUES (NULL,$year, $week," . $data['due'] . "," . self::LATET . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-            $DB->query($query);
+                $DB->query($query);
+            }
         }
 
         return true;
@@ -170,6 +189,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     LEFT JOIN glpi_entities 
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
                   WHERE `glpi_tickets`.`is_deleted` = 0 
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`status` = " . Ticket::WAITING . "  
                   GROUP BY `glpi_tickets`.`entities_id`";
 
@@ -184,23 +205,24 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     `glpi_tickets`.`entities_id`,
                     `glpi_groups_tickets`.`groups_id`
                   FROM glpi_tickets
-                   LEFT JOIN glpi_entities 
+                   LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets` 
+                   LEFT JOIN `glpi_groups_tickets`
                   ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
+                  WHERE `glpi_tickets`.`is_deleted` = 0
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`status` = " . Ticket::WAITING . "
                    GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
 
         $results = $DB->query($sql_pend);
         while ($data = $DB->fetchArray($results)) {
-            if (!isset($data['groups_id'])) {
-                $data['groups_id'] = 0;
-            }
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
                         VALUES (NULL,$year, $week," . $data['total'] . "," . self::PENDINGT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-            $DB->query($query);
+                $DB->query($query);
+            }
         }
 
         return true;
@@ -225,6 +247,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                   LEFT JOIN glpi_entities 
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
                   WHERE `glpi_tickets`.`is_deleted` = 0 
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") 
                   GROUP BY `glpi_tickets`.`entities_id`";
@@ -240,23 +264,24 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     `glpi_tickets`.`entities_id`,
                     `glpi_groups_tickets`.`groups_id`
                   FROM glpi_tickets
-                  LEFT JOIN glpi_entities 
+                  LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets` 
+                   LEFT JOIN `glpi_groups_tickets`
                   ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
+                  WHERE `glpi_tickets`.`is_deleted` = 0
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") 
+                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
         $results = $DB->query($sql_incpro);
         while ($data = $DB->fetchArray($results)) {
-            if (!isset($data['groups_id'])) {
-                $data['groups_id'] = 0;
-            }
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+            if (isset($data['groups_id']) && $data['groups_id'] > 0) {
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
                         VALUES (NULL,$year, $week," . $data['total'] . "," . self::INCIDENTPROGRESST . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-            $DB->query($query);
+                $DB->query($query);
+            }
         }
 
         return true;
@@ -280,6 +305,8 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                    LEFT JOIN glpi_entities 
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
                   WHERE `glpi_tickets`.`is_deleted` = 0 
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") 
                   GROUP BY `glpi_tickets`.`entities_id`";
@@ -295,26 +322,25 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     `glpi_tickets`.`entities_id`,
                     `glpi_groups_tickets`.`groups_id`
                   FROM glpi_tickets
-                   LEFT JOIN glpi_entities 
+                   LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                    LEFT JOIN `glpi_groups_tickets` 
+                    LEFT JOIN `glpi_groups_tickets`
                   ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
+                  WHERE `glpi_tickets`.`is_deleted` = 0
+                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+                        AND YEAR(`glpi_tickets`.`date`) = '$year'
                         AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") 
+                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
         $results = $DB->query($sql_dempro);
         while ($data = $DB->fetchArray($results)) {
-            $groups_id       = "";
-            $groups_id_title = "";
-            if (isset($data['groups_id'])) {
-                $groups_id_title = "`groups_id`,";
-                $groups_id       = $data['groups_id'] . ",";
+            if (isset($data['groups_id']) && $data['groups_id'] > 0) {
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::REQUESTPROGRESST . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
+                $DB->query($query);
             }
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`," . $groups_id_title . "`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::SOLVEDT . "," . $groups_id . $data['entities_id'] . ")";
-            $DB->query($query);
+
         }
         return true;
     }
@@ -351,24 +377,23 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     `glpi_tickets`.`entities_id`,
                     `glpi_groups_tickets`.`groups_id`
                   FROM glpi_tickets
-                    LEFT JOIN glpi_entities 
+                    LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets` 
+                   LEFT JOIN `glpi_groups_tickets`
                   ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
+                  WHERE `glpi_tickets`.`is_deleted` = 0
                         AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
                         AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
-                        AND `glpi_tickets`.`status` = " . Ticket::SOLVED . " 
+                        AND `glpi_tickets`.`status` = " . Ticket::SOLVED . "
                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
         $results = $DB->query($sql_res);
         while ($data = $DB->fetchArray($results)) {
-            if (!isset($data['groups_id'])) {
-                $data['groups_id'] = 0;
-            }
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
                         VALUES (NULL,$year, $week," . $data['total'] . "," . self::SOLVEDT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-            $DB->query($query);
+                $DB->query($query);
+            }
         }
 
         return true;
@@ -406,25 +431,23 @@ class PluginMydashboardStockTicketIndicator extends CommonDBTM
                     `glpi_tickets`.`entities_id`,
                     `glpi_groups_tickets`.`groups_id`
                   FROM glpi_tickets
-                    LEFT JOIN glpi_entities 
+                    LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets` 
+                   LEFT JOIN `glpi_groups_tickets`
                   ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
+                  WHERE `glpi_tickets`.`is_deleted` = 0
                         AND WEEK(`glpi_tickets`.`closedate`) = '$week'
                         AND YEAR(`glpi_tickets`.`closedate`) = '$year'
-                        AND `glpi_tickets`.`status` = " . Ticket::CLOSED . " 
+                        AND `glpi_tickets`.`status` = " . Ticket::CLOSED . "
                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
         $results = $DB->query($sql_res);
         while ($data = $DB->fetchArray($results)) {
-            $groups_id = 0;
-            if ($data['groups_id'] && $data['groups_id'] > 0) {
-                $groups_id = $data['groups_id'];
+            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
+                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::CLOSEDT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
+                $DB->query($query);
             }
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::CLOSEDT . "," . $groups_id . "," . $data['entities_id'] . ")";
-            $DB->query($query);
         }
 
         return true;

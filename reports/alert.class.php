@@ -36,7 +36,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @param array $_options
      */
-    public function __construct($_options = []) {
+    public function __construct($_options = [])
+    {
         $this->options = $_options;
 
         $preference = new PluginMydashboardPreference();
@@ -50,7 +51,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string|translated
      */
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
         //      if ($item->getType() == 'Reminder'
         //          || $item->getType() == 'Problem'
         //          || $item->getType() == 'Change'
@@ -70,7 +72,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return array of allowed type
      */
-    public static function getTypes($all = false) {
+    public static function getTypes($all = false)
+    {
         if ($all) {
             return self::$types;
         }
@@ -95,7 +98,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return bool
      */
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
         $alert      = new self();
         $itil_alert = new PluginMydashboardItilAlert();
         switch ($item->getType()) {
@@ -119,7 +123,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return array
      */
-    public function getWidgetsForItem() {
+    public function getWidgetsForItem()
+    {
         $widgets = [
             __('Indicators', 'mydashboard') => [
                 $this->getType() . "1"    => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
@@ -161,7 +166,10 @@ class PluginMydashboardAlert extends CommonDBTM
                 $this->getType() . "13"   => ["title"   => __("Requests alerts", "mydashboard"),
                                               "icon"    => "ti ti-info-circle",
                                               "comment" => __("Display alerts for requests", "mydashboard")],
-                $this->getType() . "SC32" => ["title"   => __("Global indicators by week", "mydashboard"),
+                $this->getType() . "SC32" => ["title"   => __("Global indicators", "mydashboard"),
+                                              "icon"    => "ti ti-info-circle",
+                                              "comment" => ""],
+                $this->getType() . "SC33" => ["title"   => __("Global indicators by week", "mydashboard"),
                                               "icon"    => "ti ti-info-circle",
                                               "comment" => ""],
             ]
@@ -172,7 +180,8 @@ class PluginMydashboardAlert extends CommonDBTM
     /**
      * @return array
      */
-    public function getTitleForWidget($widgetID) {
+    public function getTitleForWidget($widgetID)
+    {
         $widgets = $this->getWidgetsForItem();
         foreach ($widgets as $class => $widget) {
             return $widget[$widgetID]['title'];
@@ -180,7 +189,8 @@ class PluginMydashboardAlert extends CommonDBTM
         return false;
     }
 
-    public function getCommentForWidget($widgetID) {
+    public function getCommentForWidget($widgetID)
+    {
         $widgets = $this->getWidgetsForItem();
         foreach ($widgets as $class => $widget) {
             return $widget[$widgetID]['comment'];
@@ -199,7 +209,8 @@ class PluginMydashboardAlert extends CommonDBTM
      * @return int
      * @throws \GlpitestSQLError
      */
-    public static function countForAlerts($public, $type, $itilcategories_id = []) {
+    public static function countForAlerts($public, $type, $itilcategories_id = [])
+    {
         global $DB;
 
         $now                 = date('Y-m-d H:i:s');
@@ -247,7 +258,8 @@ class PluginMydashboardAlert extends CommonDBTM
      * @return PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
-    public function getWidgetContentForItem($widgetId, $opt = []) {
+    public function getWidgetContentForItem($widgetId, $opt = [])
+    {
         global $CFG_GLPI, $DB;
 
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
@@ -792,10 +804,24 @@ class PluginMydashboardAlert extends CommonDBTM
                 $title   = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
-                $widget->setWidgetTitle((($isDebug) ? "2 " : "") . $title);
+                $widget->setWidgetTitle((($isDebug) ? "SC32 " : "") . $title);
                 $widget->toggleWidgetRefresh();
 
-                $graph = self::displayIndicator($widgetId, $opt, true);
+                $graph = self::displayIndicator($widgetId, "all", $opt, true);
+                $widget->setWidgetHtmlContent(
+                    $graph
+                );
+                return $widget;
+            case $this->getType() . "SC33":
+                $widget = new PluginMydashboardHtml();
+
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "SC33 " : "") . $title);
+                $widget->toggleWidgetRefresh();
+
+                $graph = self::displayIndicator($widgetId, "week", $opt, true);
                 $widget->setWidgetHtmlContent(
                     $graph
                 );
@@ -813,7 +839,8 @@ class PluginMydashboardAlert extends CommonDBTM
      * @return \PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
-    public function displayTicketsAlertsWidgets($name, $widgetId, $opt, $type) {
+    public function displayTicketsAlertsWidgets($name, $widgetId, $opt, $type)
+    {
         global $CFG_GLPI, $DB;
 
         $widget = new PluginMydashboardHtml();
@@ -1222,7 +1249,8 @@ class PluginMydashboardAlert extends CommonDBTM
     }
 
 
-    public function displaySLATicketsAlertsWidgets($name, $widgetId, $opt, $type) {
+    public function displaySLATicketsAlertsWidgets($name, $widgetId, $opt, $type)
+    {
         global $CFG_GLPI, $DB;
 
         $widget = new PluginMydashboardHtml();
@@ -1703,7 +1731,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string
      */
-    public static function getMaintenanceMessage($public = false) {
+    public static function getMaintenanceMessage($public = false)
+    {
         if (self::countForAlerts($public, 1) > 0) {
             echo "<div class='red'>";
             echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
@@ -1714,7 +1743,8 @@ class PluginMydashboardAlert extends CommonDBTM
     /**
      * @return string
      */
-    public function getMaintenanceList($itilcategories_id = []) {
+    public function getMaintenanceList($itilcategories_id = [])
+    {
         global $DB, $CFG_GLPI;
 
         $now = date('Y-m-d H:i:s');
@@ -1833,8 +1863,8 @@ class PluginMydashboardAlert extends CommonDBTM
         } else {
             $wl .= '<div id="nt_maint-container">';
 
-            $wl .= '<ul id="nt_maint">';
-            $wl .= "<li>";
+            $wl     .= '<ul id="nt_maint">';
+            $wl     .= "<li>";
             $config = new PluginMydashboardConfig();
             $config->getFromDB(1);
             $wl .= PluginMydashboardConfig::displayField($config, 'title_maintenances_widget');
@@ -1861,7 +1891,8 @@ class PluginMydashboardAlert extends CommonDBTM
     }
 
 
-    public static function displayTickerDescription($id) {
+    public static function displayTickerDescription($id)
+    {
         global $DB;
 
         $note = new Reminder();
@@ -1909,7 +1940,8 @@ class PluginMydashboardAlert extends CommonDBTM
     /**
      * @return string
      */
-    public function getInformationList($itilcategories_id = []) {
+    public function getInformationList($itilcategories_id = [])
+    {
         global $DB;
 
         $now           = date('Y-m-d H:i:s');
@@ -2031,11 +2063,10 @@ class PluginMydashboardAlert extends CommonDBTM
                </script>";
             }
         } else {
-
             $wl .= '<div id="nt_info-container">';
 
-            $wl .= '<ul id="nt_info">';
-            $wl .= "<li>";
+            $wl     .= '<ul id="nt_info">';
+            $wl     .= "<li>";
             $config = new PluginMydashboardConfig();
             $config->getFromDB(1);
             $wl .= PluginMydashboardConfig::displayField($config, 'title_informations_widget');
@@ -2068,7 +2099,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string
      */
-    public function getAlertList($public = 0, $itilcategories_id = []) {
+    public function getAlertList($public = 0, $itilcategories_id = [])
+    {
         global $DB;
 
         $config = new PluginMydashboardConfig();
@@ -2198,11 +2230,10 @@ class PluginMydashboardAlert extends CommonDBTM
                </script>";
             }
         } else {
-
             $wl .= '<div id="nt_alert-container">';
 
-            $wl .= '<ul id="nt_alert">';
-            $wl .= "<li>";
+            $wl     .= '<ul id="nt_alert">';
+            $wl     .= "<li>";
             $config = new PluginMydashboardConfig();
             $config->getFromDB(1);
             $wl .= PluginMydashboardConfig::displayField($config, 'title_alerts_widget');
@@ -2223,7 +2254,6 @@ class PluginMydashboardAlert extends CommonDBTM
 
             $wl .= "</div>";
             $wl .= "</div>";
-
         }
         $wl .= "</div>";
 
@@ -2237,7 +2267,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string
      */
-    public function getAlertSummary($public = 0, $force = 0) {
+    public function getAlertSummary($public = 0, $force = 0)
+    {
         global $DB, $CFG_GLPI;
 
         $now = date('Y-m-d H:i:s');
@@ -2373,7 +2404,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string
      */
-    private function displayContent($impact, $list = [], $public = 0) {
+    private function displayContent($impact, $list = [], $public = 0)
+    {
         $div    = "";
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
@@ -2399,7 +2431,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string
      */
-    private function getMessage($list, $public) {
+    private function getMessage($list, $public)
+    {
         $l      = "";
         $config = new PluginMydashboardConfig();
         $config->getFromDB(1);
@@ -2439,7 +2472,8 @@ class PluginMydashboardAlert extends CommonDBTM
     /**
      * @param Reminder $item
      */
-    private function showReminderForm(Reminder $item) {
+    private function showReminderForm(Reminder $item)
+    {
         $reminders_id = $item->getID();
 
         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
@@ -2522,7 +2556,8 @@ class PluginMydashboardAlert extends CommonDBTM
     /**
      * @param $item
      */
-    private function showForItem($item) {
+    private function showForItem($item)
+    {
         global $CFG_GLPI;
 
         $items_id = $item->getID();
@@ -2664,7 +2699,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return bool|string
      */
-    public static function getWidgetMydashboardAlert($class) {
+    public static function getWidgetMydashboardAlert($class)
+    {
         if (PluginMydashboardAlert::countForAlerts(0, 0) > 0) {
             $display = "<div class=\"bt-feature $class \">";
             $display .= "<h3>";
@@ -2694,7 +2730,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return string
      */
-    public static function handleShellcommandResult(&$message, $url) {
+    public static function handleShellcommandResult(&$message, $url)
+    {
         global $CFG_GLPI;
 
         $alert = "";
@@ -2735,7 +2772,8 @@ class PluginMydashboardAlert extends CommonDBTM
      *
      * @return mixed|string
      */
-    public static function cURLData($options) {
+    public static function cURLData($options)
+    {
         global $CFG_GLPI;
 
         if (!function_exists('curl_init')) {
@@ -2808,11 +2846,11 @@ class PluginMydashboardAlert extends CommonDBTM
         //}
 
         if (//!$options["download"] &&
-        !$data
+            !$data
         ) {
             curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch); // make sure we closeany current curl sessions
-            //die($http_code.' Unable to connect to server. Please come back later.');
+        //die($http_code.' Unable to connect to server. Please come back later.');
         } else {
             curl_close($ch);
         }
@@ -2821,7 +2859,7 @@ class PluginMydashboardAlert extends CommonDBTM
         //fclose($fp);
         //}
         if (//!$options["download"] &&
-        $data
+            $data
         ) {
             return $data;
         } else {
@@ -2829,7 +2867,8 @@ class PluginMydashboardAlert extends CommonDBTM
         }
     }
 
-    public static function displayIndicator($id, $params = [], $iswidget = false) {
+    public static function displayIndicator($id, $type, $params = [], $iswidget = false)
+    {
         global $CFG_GLPI;
 
         if (!Session::haveRightsOr("ticket", [Ticket::READMY, Ticket::READALL, Ticket::READGROUP])) {
@@ -2838,6 +2877,27 @@ class PluginMydashboardAlert extends CommonDBTM
 
         $seeown = false;
 
+        $week_start = null;
+        $week_end = null;
+        if (isset($params['year']) && isset($params['week'])) {
+            $dto = new DateTime();
+            $dto->setISODate($params['year'], $params['week']);
+            $dto->setTime(0, 0, 1);
+            $week_start = $dto->format('Y-m-d H:i:s');
+            $dto->modify('+6 days');
+            $dto->setTime(23, 59, 59);
+            $week_end = $dto->format('Y-m-d H:i:s');
+        } else {
+            $params['year'] = date("Y");
+            $params['week'] = date("W");
+            $dto = new DateTime();
+            $dto->setISODate($params['year'], $params['week']);
+            $dto->setTime(0, 0, 1);
+            $week_start = $dto->format('Y-m-d H:i:s');
+            $dto->modify('+6 days');
+            $dto->setTime(23, 59, 59);
+            $week_end = $dto->format('Y-m-d H:i:s');
+        }
 
         if ($seeown == false) {
             if ($iswidget == true) {
@@ -2880,8 +2940,7 @@ class PluginMydashboardAlert extends CommonDBTM
                 $params['year'] = date('Y');
                 $params['week'] = date('W');
             }
-            if ($params['year'] == date('Y')
-                && $params['week'] == date('W')) {
+            if ($type == "all") {
                 if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
                     $left                  .= "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
@@ -2904,15 +2963,15 @@ class PluginMydashboardAlert extends CommonDBTM
                 //Resolved tickets
                 $total_resolved = self::queryResolvedTickets($left, $is_deleted, $search_assign);
                 //Resolved tickets
-                $total_closed = self::queryClosedTickets($left, $is_deleted, $search_assign);
-            } else {
+                $total_closed = 0;
+            } elseif ($type == "week") {
                 if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
                     $technicians_groups_id = $params['technicians_groups_id'];
                 } else {
                     $technicians_groups_id = [0];
                 }
-
-                $total_new = self::queryNewTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
+//                $params['week'] = '44';
+                $total_new      = self::queryNewTicketsWeek($params['year'], $params['week']);
                 //Late tickets
                 $total_due = self::queryDueTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
                 //Waiting tickets
@@ -2952,6 +3011,20 @@ class PluginMydashboardAlert extends CommonDBTM
             'value'      => Ticket::INCOMING,
             'link'       => 'AND'
         ];
+        if ($type == "week") {
+            $options_new['criteria'][] = [
+                'field'      => 15,//date
+                'searchtype' => 'lessthan',
+                'value'      => $week_end,
+                'link'       => 'AND'
+            ];
+            $options_new['criteria'][] = [
+                'field'      => 15,//date
+                'searchtype' => 'morethan',
+                'value'      => $week_start,
+                'link'       => 'AND'
+            ];
+        }
 
 
         $href_new = "<a $target style='color:#D9534F !important;$size' title='" . __('New tickets', 'mydashboard') . "' \
@@ -2985,6 +3058,20 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             }
             $options_due['criteria'][] = $criterias;
         }
+        if ($type == "week") {
+            $options_due['criteria'][] = [
+                'field'      => 15,//date
+                'searchtype' => 'lessthan',
+                'value'      => $week_end,
+                'link'       => 'AND'
+            ];
+            $options_due['criteria'][] = [
+                'field'      => 15,//date
+                'searchtype' => 'morethan',
+                'value'      => $week_start,
+                'link'       => 'AND'
+            ];
+        }
 
         $options_due['criteria'][] = [
             'field'      => 82,//due date
@@ -2992,7 +3079,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             'value'      => 1,
             'link'       => 'AND'
         ];
-
 
         $href_due = "<a $target style='$size' title='" . __('Tickets late', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
@@ -3024,6 +3110,20 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $nb++;
             }
             $options_pend['criteria'][] = $criterias;
+        }
+        if ($type == "week") {
+            $options_pend['criteria'][] = [
+                'field'      => 15,//date
+                'searchtype' => 'lessthan',
+                'value'      => $week_end,
+                'link'       => 'AND'
+            ];
+            $options_pend['criteria'][] = [
+                'field'      => 15,//date
+                'searchtype' => 'morethan',
+                'value'      => $week_start,
+                'link'       => 'AND'
+            ];
         }
 
         $href_pend = "<a $target style='$size' title='" . __('Pending tickets', 'mydashboard') . "' \
@@ -3073,6 +3173,20 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     $nb++;
                 }
                 $options_incpro['criteria'][] = $criterias;
+            }
+            if ($type == "week") {
+                $options_incpro['criteria'][] = [
+                    'field'      => 15,//date
+                    'searchtype' => 'lessthan',
+                    'value'      => $week_end,
+                    'link'       => 'AND'
+                ];
+                $options_incpro['criteria'][] = [
+                    'field'      => 15,//date
+                    'searchtype' => 'morethan',
+                    'value'      => $week_start,
+                    'link'       => 'AND'
+                ];
             }
         }
 
@@ -3124,6 +3238,20 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 }
                 $options_dempro['criteria'][] = $criterias;
             }
+            if ($type == "week") {
+                $options_dempro['criteria'][] = [
+                    'field'      => 15,//date
+                    'searchtype' => 'lessthan',
+                    'value'      => $week_end,
+                    'link'       => 'AND'
+                ];
+                $options_dempro['criteria'][] = [
+                    'field'      => 15,//date
+                    'searchtype' => 'morethan',
+                    'value'      => $week_start,
+                    'link'       => 'AND'
+                ];
+            }
         }
 
         $href_dempro = "<a $target style='$size' title='" . __('Requests in progress', 'mydashboard') . "' \
@@ -3131,7 +3259,55 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                        Toolbox::append_params($options_dempro, '&amp;') . "' ><span class='$span'>" .
                        $total_dempro . "</span></a>";
 
+        ///resolved
+        $options_resolved['reset'][] = 'reset';
 
+        $options_resolved['criteria'][] = [
+            'field'      => 12,//status
+            'searchtype' => 'equals',
+            'value'      => Ticket::SOLVED,
+            'link'       => 'AND'
+        ];
+
+
+        if ($seeown == false) {
+            if (isset($params['technicians_groups_id'])
+                && count($params['technicians_groups_id']) > 0) {
+                $groups = $params['technicians_groups_id'];
+                $nb     = 0;
+                foreach ($groups as $group) {
+                    $criterias['criteria'][$nb] = [
+                        'field'      => 8, // groups_id_assign
+                        'searchtype' => 'equals',
+                        'value'      => $group,
+                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                    ];
+                    $nb++;
+                }
+                $options_resolved['criteria'][] = $criterias;
+            }
+            if ($type == "week") {
+                $options_resolved['criteria'][] = [
+                    'field'      => 16,//solvedate
+                    'searchtype' => 'lessthan',
+                    'value'      => $week_end,
+                    'link'       => 'AND'
+                ];
+                $options_resolved['criteria'][] = [
+                    'field'      => 16,//solvedate
+                    'searchtype' => 'morethan',
+                    'value'      => $week_start,
+                    'link'       => 'AND'
+                ];
+            }
+        }
+
+        $href_resolved = "<a $target style='$size' title='" . __('Tickets solved', 'mydashboard') . "' \
+href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
+                         Toolbox::append_params($options_resolved, '&amp;') . "' ><span class='$span'>" .
+                         $total_resolved . "</span></a>";
+
+        ///closed
         $options_closed['reset'][] = 'reset';
 
         $options_closed['criteria'][] = [
@@ -3157,6 +3333,20 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     $nb++;
                 }
                 $options_closed['criteria'][] = $criterias;
+            }
+            if ($type == "week") {
+                $options_closed['criteria'][] = [
+                    'field'      => 17,//closedate
+                    'searchtype' => 'lessthan',
+                    'value'      => $week_end,
+                    'link'       => 'AND'
+                ];
+                $options_closed['criteria'][] = [
+                    'field'      => 17,//closedate
+                    'searchtype' => 'morethan',
+                    'value'      => $week_start,
+                    'link'       => 'AND'
+                ];
             }
         }
 
@@ -3198,11 +3388,17 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
             $stats = "";
             if ($iswidget == true
                 && Session::haveRightsOr("ticket", [Ticket::READALL, Ticket::READGROUP])) {
-                $criterias     = ['technicians_groups_id',
+                if ($type == "week") {
+                    $criterias = ['technicians_groups_id',
                                   'week',
                                   'year'];
-                $params_header = ["widgetId"  => "PluginMydashboardAlertSC32",
-                                  "name"      => __("Global indicators by week", "mydashboard"),
+                } else {
+                    $criterias = ['technicians_groups_id'];
+                    $params["year"] = NULL;
+                    $params["week"] = NULL;
+                }
+                $params_header = ["widgetId"  => $id,
+                                  "name"      => ($type == "all") ? __("Global indicators", "mydashboard") : __("Global indicators by week", "mydashboard"),
                                   "onsubmit"  => true,
                                   "opt"       => $params,
                                   "criterias" => $criterias,
@@ -3223,7 +3419,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $stats .= "<div class=\"bt-feature $class \">";
                 $stats .= "<h3 class=\"bt-title-divider\">";
                 $stats .= "<span>";
-                $stats .= __("Global indicators by week", "mydashboard");
+                $stats .= __("Global indicators", "mydashboard");
                 $stats .= "</span>";
                 $stats .= "</h3>";
             }
@@ -3262,11 +3458,19 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $stats .= __('Requests in progress', 'mydashboard');
                 $stats .= "</div>";
 
-                $stats .= "<div class='nb ind-widget-closed'>";
-                $stats .= $href_closed;
+                $stats .= "<div class='nb ind-widget-solved'>";
+                $stats .= $href_resolved;
                 $stats .= "<br><br>";
-                $stats .= __('Tickets closed', 'mydashboard');
+                $stats .= __('Tickets solved', 'mydashboard');
                 $stats .= "</div>";
+
+                if ($type == "week") {
+                    $stats .= "<div class='nb ind-widget-closed'>";
+                    $stats .= $href_closed;
+                    $stats .= "<br><br>";
+                    $stats .= __('Tickets closed', 'mydashboard');
+                    $stats .= "</div>";
+                }
             }
             //         $stats .= "</div>";
             $stats .= "</div>";
@@ -3284,7 +3488,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
     }
 
 
-    public static function queryAllTickets($left, $criteria) {
+    public static function queryAllTickets($left, $criteria)
+    {
         global $DB;
 
         //all tickets
@@ -3309,7 +3514,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryNewTickets($left, $criteria) {
+    public static function queryNewTickets($left, $criteria)
+    {
         global $DB;
 
         //New tickets
@@ -3334,7 +3540,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_new;
     }
 
-    public static function queryNewTicketsWeek($year, $week) {
+    public static function queryNewTicketsWeek($year, $week)
+    {
         global $DB;
 
         //New tickets
@@ -3366,7 +3573,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryDueTickets($left, $criteria, $search_assign) {
+    public static function queryDueTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu     = new DbUtils();
@@ -3386,7 +3594,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_due;
     }
 
-    public static function queryDueTicketsWeek($year, $week, $groups_id) {
+    public static function queryDueTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3420,7 +3629,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryPendingTickets($left, $criteria, $search_assign) {
+    public static function queryPendingTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu      = new DbUtils();
@@ -3438,7 +3648,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_pend;
     }
 
-    public static function queryPendingTicketsWeek($year, $week, $groups_id) {
+    public static function queryPendingTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3473,7 +3684,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryIncidentTickets($left, $criteria, $search_assign) {
+    public static function queryIncidentTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu      = new DbUtils();
@@ -3495,18 +3707,23 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_incpro;
     }
 
-    public static function queryIncidentTicketsWeek($year, $week, $groups_id) {
+    public static function queryIncidentTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::INCIDENTPROGRESST . " 
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ") 
-                   AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
+                  WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = '" . PluginMydashboardStockTicketIndicator::INCIDENTPROGRESST . "' ";
+        if (count($groups_id) > 0) {
+            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")  ";
+        } else {
+            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  = 0 ";
+        }
+        $sql_new .= " AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
-                   $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->query($sql_new);
 
@@ -3532,7 +3749,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryRequestTickets($left, $criteria, $search_assign) {
+    public static function queryRequestTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu = new DbUtils();
@@ -3556,18 +3774,23 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_dempro;
     }
 
-    public static function queryRequestTicketsWeek($year, $week, $groups_id) {
+    public static function queryRequestTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::REQUESTPROGRESST . " 
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ") 
-                   AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
+                  WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = '" . PluginMydashboardStockTicketIndicator::REQUESTPROGRESST . "' ";
+        if (count($groups_id) > 0) {
+            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")  ";
+        } else {
+            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  = 0 ";
+        }
+        $sql_new .= " AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
-                   $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->query($sql_new);
         if ($result_new == false) {
@@ -3592,7 +3815,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryResolvedTickets($left, $criteria, $search_assign) {
+    public static function queryResolvedTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
         $dbu     = new DbUtils();
@@ -3603,8 +3827,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   $left
                   WHERE $criteria
                         AND ($search_assign)
-                      AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
-                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
                         AND `glpi_tickets`.`status` = " . Ticket::SOLVED . " ";
         $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
@@ -3615,7 +3837,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_res;
     }
 
-    public static function queryResolvedTicketsWeek($year, $week, $groups_id) {
+    public static function queryResolvedTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets
@@ -3643,18 +3866,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_new;
     }
 
-    public static function queryClosedTickets($left, $criteria, $search_assign) {
+    public static function queryClosedTickets($left, $criteria, $search_assign)
+    {
         global $DB;
 
-        //New tickets
+        //closed tickets
         $dbu       = new DbUtils();
-        $sql_close = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                    LEFT JOIN glpi_entities 
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0 
-                        
-                  GROUP BY `glpi_tickets`.`entities_id`";
         $week      = date('W');
         $year      = date('Y');
         $sql_close = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
@@ -3662,8 +3879,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   $left
                   WHERE $criteria
                         AND ($search_assign)
-                      AND WEEK(`glpi_tickets`.`closedate`) = '$week'
-                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
                         AND `glpi_tickets`.`status` = " . Ticket::CLOSED . "  ";
         $sql_close .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
@@ -3683,7 +3898,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         return $total_close;
     }
 
-    public static function queryClosedTicketsWeek($year, $week, $groups_id) {
+    public static function queryClosedTicketsWeek($year, $week, $groups_id)
+    {
         global $DB;
 
         //New tickets

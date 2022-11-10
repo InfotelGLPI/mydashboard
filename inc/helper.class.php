@@ -927,6 +927,10 @@ class PluginMydashboardHelper {
             $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt['year'];
         }
 
+        if (isset($opt['week'])) {
+            $form .= "&nbsp;/&nbsp;" . __('Week', 'mydashboard') . "&nbsp;:&nbsp;" . $opt['week'];
+        }
+
         // TECHNICIAN MULTIPLE
         if (isset($opt['multiple_technicians_id'])) {
             $opt['multiple_technicians_id'] = is_array($opt['multiple_technicians_id']) ? $opt['multiple_technicians_id'] : [$opt['multiple_technicians_id']];
@@ -1033,7 +1037,6 @@ class PluginMydashboardHelper {
                 if ($count > 1) {
                     $form .= "</br></br>";
                 }
-
             }
         }
         // LOCATION
