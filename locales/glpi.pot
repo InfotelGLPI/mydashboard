@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-10 14:40+0000\n"
+"POT-Creation-Date: 2022-11-11 10:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1027,7 +1027,7 @@ msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr ""
 
 #: reports/reports_bar.class.php:114
-msgid "Responsiveness over 12 rolling months and pending tickets per month"
+msgid "Responsiveness over 12 rolling months"
 msgstr ""
 
 #: reports/reports_bar.class.php:117
@@ -1093,27 +1093,23 @@ msgstr ""
 msgid "Average Satisfaction"
 msgstr ""
 
-#: reports/reports_bar.class.php:1701
-msgid "Sum of pending tickets per month"
-msgstr ""
-
-#: reports/reports_bar.class.php:1726
+#: reports/reports_bar.class.php:1579
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr ""
 
-#: reports/reports_bar.class.php:1735
+#: reports/reports_bar.class.php:1588
 msgid "Sum of tickets solved in less than a week"
 msgstr ""
 
-#: reports/reports_bar.class.php:1744
+#: reports/reports_bar.class.php:1597
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: reports/reports_bar.class.php:2015
+#: reports/reports_bar.class.php:1868
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: reports/reports_bar.class.php:2016
+#: reports/reports_bar.class.php:1869
 msgid "Take into account average (hour)"
 msgstr ""
 
@@ -1253,6 +1249,10 @@ msgstr ""
 
 #: reports/reports_pie.class.php:110
 msgid "Global satisfaction level"
+msgstr ""
+
+#: reports/reports_pie.class.php:112
+msgid "Satisfaction average"
 msgstr ""
 
 #: reports/reports_pie.class.php:113
