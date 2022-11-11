@@ -30,22 +30,24 @@ Session::checkLoginUser();
 
 global $CFG_GLPI;
 
-define("PRIORITY", 3);
-define("TYPE", 14);
-define("ENTITIES_ID", 80);
-define("STATUS", 12);
-define("CATEGORY", 7);
-define("OPEN_DATE", 15);
-define("TECHNICIAN", 5);
-define("REQUESTER_GROUP", 71);
-define("TECHNICIAN_GROUP", 8);
-define("LOCATIONS_ID", 83);
-define("CLOSE_DATE", 16);
-define("SOLVE_DATE", 17);
-define("TASK_ACTIONTIME", 96);
-define("VALIDATION_STATS", 55);
-define("VALIDATION_REFUSED", 4);
-define("NUMBER_OF_PROBLEMS", 200);
+const PRIORITY = 3;
+const TYPE     = 14;
+const ENTITIES_ID = 80;
+const STATUS = 12;
+const CATEGORY = 7;
+const OPEN_DATE = 15;
+const TECHNICIAN = 5;
+const REQUESTER_GROUP = 71;
+const TECHNICIAN_GROUP = 8;
+const LOCATIONS_ID     = 83;
+const CLOSE_DATE       = 16;
+const SOLVE_DATE       = 17;
+const TASK_ACTIONTIME  = 96;
+const VALIDATION_STATS = 55;
+const VALIDATION_REFUSED = 4;
+const NUMBER_OF_PROBLEMS = 200;
+const SATISFACTION_DATE = 61;
+const SATISFACTION_VALUE = 62;
 
 //Case PluginMydashboardReports_Table32 / PluginMydashboardReports_Table33
 if (isset($_POST['widget'])) {
@@ -132,13 +134,15 @@ if (isset($_POST["params"]["widget"])
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         if ($_POST["params"]["type"] > 0) {
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -162,7 +166,6 @@ if (isset($_POST["params"]["widget"])
                 } else {
                     addCriteria(OPEN_DATE, 'morethan', $begin, 'AND');
                 }
-
             } else {
                 addCriteria(OPEN_DATE, 'lessthan', $begin, 'AND');
                 addCriteria(OPEN_DATE, 'morethan', $end, 'AND');
@@ -171,13 +174,15 @@ if (isset($_POST["params"]["widget"])
 
 //        groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         if ($_POST["params"]["type"] > 0) {
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -195,9 +200,11 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -232,9 +239,11 @@ if (isset($_POST["params"]["widget"])
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -250,7 +259,8 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         addCriteria(OPEN_DATE, 'morethan', $_POST["params"]["begin"], 'AND');
 
@@ -272,9 +282,11 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
@@ -284,7 +296,8 @@ if (isset($_POST["params"]["widget"])
 } elseif (isset($_POST["params"]["widget"])
            && $_POST["params"]["widget"] == "PluginMydashboardReports_Table32") {
     // ENTITY | SONS
-    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                              && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
     // USER
     if (isset($_POST["params"]["technician"])) {
@@ -303,7 +316,8 @@ if (isset($_POST["params"]["widget"])
 } elseif (isset($_POST["params"]["widget"])
            && $_POST["params"]["widget"] == "PluginMydashboardReports_Table33") {
     // ENTITY | SONS
-    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                              && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
     // STATUS
     if ($_POST["params"]['moreticket'] == 1) {
@@ -313,7 +327,8 @@ if (isset($_POST["params"]["widget"])
     }
 
     // Group
-    groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+    groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                      && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
 
     echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
@@ -321,7 +336,8 @@ if (isset($_POST["params"]["widget"])
 } elseif (isset($_POST["params"]["widget"])
            && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar37") {
     // ENTITY | SONS
-    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+    addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                              && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
     if ($_POST["params"]["type"] > 0) {
         addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
@@ -339,7 +355,8 @@ if (isset($_POST["params"]["widget"])
     }
 
     // Group
-    groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+    groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                      && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
 
     echo $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
@@ -363,7 +380,8 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
         addCriteria(CATEGORY, 'equals', $_POST["selected_id"], 'AND');
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -430,11 +448,13 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -502,11 +522,13 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
@@ -578,11 +600,13 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         if ($add_actiontime_crit == 1) {
             addCriteria(TASK_ACTIONTIME, 'contains', 'NULL', 'AND');
@@ -658,11 +682,13 @@ if (isset($_POST["params"]["widget"])
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
         }
 
-        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"]) && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
+        addCriteria(ENTITIES_ID, (isset($_POST["params"]["sons"])
+                                  && $_POST["params"]["sons"] > 0) ? 'under' : 'equals', $_POST["params"]["entities_id"], 'AND');
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         if ($add_actiontime_crit == 1) {
             addCriteria(TASK_ACTIONTIME, 'contains', 'NULL', 'AND');
@@ -811,7 +837,8 @@ if (isset($_POST["params"]["widget"])
 
         groupCriteria(REQUESTER_GROUP, 'equals', $_POST["params"]["requester_groups"]);
 
-        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"]) && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
+        groupCriteria(TECHNICIAN_GROUP, ((isset($_POST["params"]["group_is_recursive"])
+                                          && !empty($_POST["params"]["group_is_recursive"])) ? 'under' : 'equals'), $_POST["params"]["technician_group"]);
 
         if ($_POST["params"]["type"] > 0) {
             addCriteria(TYPE, 'equals', $_POST["params"]["type"], 'AND');
@@ -821,4 +848,39 @@ if (isset($_POST["params"]["widget"])
                 Toolbox::append_params($options, "&");
         echo $link;
     }
+} elseif (isset($_POST["params"]["widget"])
+          && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar43") {
+    if ($_POST["selected_id"] == "") {
+        $_POST["selected_id"] = 0;
+    }
+    if (isset($_POST['selected_id']) && strpos($_POST['selected_id'], '_') !== false) {
+        $eventParts  = explode('_', $_POST['selected_id']);
+        $date        = $eventParts[0];
+        $ticket_satisfaction        = $eventParts[1];
+        if (isset($date) && strpos($date, '-') !== false) {
+            $dateParts = explode('-', $date);
+            $year        = $dateParts[0];
+            $month        = $dateParts[1];
+        }
+
+        $_POST['id'] = $eventParts[1];
+    }
+    if (isset($year) && isset($month) && isset($ticket_satisfaction)) {
+        if ($ticket_satisfaction == "answered") {
+        } elseif ($ticket_satisfaction == "satisfy") {
+            addCriteria(SATISFACTION_VALUE, 'equals', '>= 3', 'AND');
+        } elseif ($ticket_satisfaction == "notsatisfy") {
+            addCriteria(SATISFACTION_VALUE, 'equals', '< 3', 'AND');
+        }
+
+        $date = "$year-$month-01 00:00";
+        $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
+        addCriteria(SATISFACTION_DATE, 'morethan', $date, 'AND');
+        $date = "$year-$month-$nbdays 23:59";
+        addCriteria(SATISFACTION_DATE, 'lessthan', $date, 'AND');
+    }
+
+    $link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+            Toolbox::append_params($options, "&");
+    echo $link;
 }

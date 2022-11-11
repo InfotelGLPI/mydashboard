@@ -27,13 +27,14 @@
 /**
  * This helper class provides some static functions that are useful for widget class
  */
-class PluginMydashboardHelper {
-
+class PluginMydashboardHelper
+{
     /**
      * get the delay between two automatic refreshing
      * @return int
      */
-    static function getAutomaticRefreshDelay() {
+    public static function getAutomaticRefreshDelay()
+    {
         return self::getPreferenceField('automatic_refresh_delay');
     }
 
@@ -41,7 +42,8 @@ class PluginMydashboardHelper {
      * Check if automatic refreshing is enable or not
      * @return boolean, TRUE if automatic refresh is enabled, FALSE otherwise
      */
-    static function getAutomaticRefresh() {
+    public static function getAutomaticRefresh()
+    {
         return (self::getPreferenceField('automatic_refresh') == 1) ? true : false;
     }
 
@@ -49,8 +51,8 @@ class PluginMydashboardHelper {
      * Get the number of widgets in width in the configuration
      * @return int
      */
-    static function getNumberOfWidgetsInWidth() {
-
+    public static function getNumberOfWidgetsInWidth()
+    {
         return self::getPreferenceField('nb_widgets_width');
     }
 
@@ -58,35 +60,40 @@ class PluginMydashboardHelper {
      * Check if user wants dashboard to replace central interface
      * @return boolean, TRUE if dashboard must replace, FALSE otherwise
      */
-    static function getReplaceCentral() {
+    public static function getReplaceCentral()
+    {
         return self::getPreferenceField("replace_central");
     }
 
     /**
      * @return mixed
      */
-    static function getDisplayPlugins() {
+    public static function getDisplayPlugins()
+    {
         return self::getConfigField("display_plugin_widget");
     }
 
     /**
      * @return mixed
      */
-    static function getDisplayMenu() {
+    public static function getDisplayMenu()
+    {
         return self::getConfigField("display_menu");
     }
 
     /**
      * @return mixed
      */
-    static function getReplaceCentralConf() {
+    public static function getReplaceCentralConf()
+    {
         return self::getConfigField("replace_central");
     }
 
     /**
      * @return mixed
      */
-    static function getGoogleApiKey() {
+    public static function getGoogleApiKey()
+    {
         return self::getConfigField("google_api_key");
     }
 
@@ -97,7 +104,8 @@ class PluginMydashboardHelper {
      *
      * @return mixed
      */
-    private static function getConfigField($fieldname) {
+    private static function getConfigField($fieldname)
+    {
         $config = new PluginMydashboardConfig();
         if (!$config->getFromDB(Session::getLoginUserID())) {
             $config->initConfig();
@@ -114,7 +122,8 @@ class PluginMydashboardHelper {
      *
      * @return mixed
      */
-    private static function getPreferenceField($fieldname) {
+    private static function getPreferenceField($fieldname)
+    {
         $preference = new PluginMydashboardPreference();
         if (!$preference->getFromDB(Session::getLoginUserID())) {
             $preference->initPreferences(Session::getLoginUserID());
@@ -129,8 +138,8 @@ class PluginMydashboardHelper {
      *
      * @return string
      */
-    static function getGraphHeader($params) {
-
+    public static function getGraphHeader($params)
+    {
         $name  = $params['name'];
         $graph = "<div class='bt-row'>";
         if ($params["export"] == true) {
@@ -237,8 +246,8 @@ class PluginMydashboardHelper {
      *
      * @return string
      */
-    static function getGraphFooter($params) {
-
+    public static function getGraphFooter($params)
+    {
         $graph = "<div class='bt-row'>";
         $graph .= "<div class='bt-col-md-12 left'>";
         if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
@@ -257,8 +266,8 @@ class PluginMydashboardHelper {
      *
      * @return string
      */
-    static function getSpecificEntityRestrict($table, $params) {
-
+    public static function getSpecificEntityRestrict($table, $params)
+    {
         if (isset($params['entities_id']) && $params['entities_id'] == "") {
             $params['entities_id'] = $_SESSION['glpiactive_entity'];
         }
@@ -283,21 +292,21 @@ class PluginMydashboardHelper {
      *
      * @return mixed
      */
-    static function manageCriterias($params) {
+    public static function manageCriterias($params)
+    {
         global $CFG_GLPI;
         $criterias = $params['criterias'];
 
 
         // ENTITY | SONS
         if (Session::isMultiEntitiesMode()) {
-
             $opt['entities_id'] = $_SESSION['glpiactive_entity'];
 
             if (in_array("entities_id", $criterias)
                 && isset($params['opt']['entities_id'])
                 && $params['opt']['entities_id'] > 0) {
                 $opt['entities_id'] = $params['opt']['entities_id'];
-            } else if (isset($params['preferences']['prefered_entity'])
+            } elseif (isset($params['preferences']['prefered_entity'])
                        && $params['preferences']['prefered_entity'] > 0) {
                 $opt['entities_id'] = $params['preferences']['prefered_entity'];
             } else {
@@ -337,7 +346,7 @@ class PluginMydashboardHelper {
         if (in_array("requesters_groups_id", $criterias)) {
             if (isset($params['opt']['requesters_groups_id'])) {
                 $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
-            } else if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php") {
+            } elseif ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php") {
                 $groups_id                   = self::getRequesterGroup($params['preferences']['requester_prefered_group'], $params, $_SESSION['glpiactive_entity'], Session::getLoginUserID(), $opt);
                 $opt['requesters_groups_id'] = $groups_id;
             } else {
@@ -380,7 +389,7 @@ class PluginMydashboardHelper {
         if (in_array("technicians_groups_id", $criterias)) {
             if (isset($params['opt']['technicians_groups_id'])) {
                 $opt['technicians_groups_id'] = is_array($params['opt']['technicians_groups_id']) ? $params['opt']['technicians_groups_id'] : [$params['opt']['technicians_groups_id']];
-            } else  { //if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php")
+            } else { //if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php")
                 $groups_id                    = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
                 $opt['technicians_groups_id'] = $groups_id;
 //            } else {
@@ -434,7 +443,7 @@ class PluginMydashboardHelper {
                 && $params['opt']["locations_id"] > 0) {
                 $opt['locations_id']          = $params['opt']['locations_id'];
                 $crit['crit']['locations_id'] = " AND `glpi_tickets`.`locations_id` = '" . $params['opt']["locations_id"] . "' ";
-            } else if (isset($_SESSION['glpiactiveprofile']['interface'])
+            } elseif (isset($_SESSION['glpiactiveprofile']['interface'])
                        && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
                 $opt['locations_id']          = $user->fields['locations_id'];
                 $crit['crit']['locations_id'] = " AND `glpi_tickets`.`locations_id` = '" . $opt["locations_id"] . "' ";
@@ -447,11 +456,9 @@ class PluginMydashboardHelper {
         $opt['loc_ancestors']                  = 0;
         $crit['crit']['loc_ancestors']         = 0;
         if (in_array("multiple_locations_id", $criterias)) {
-
             if (isset($params['opt']['multiple_locations_id'])) {
                 $opt['multiple_locations_id'] = is_array($params['opt']['multiple_locations_id']) ? $params['opt']['multiple_locations_id'] : [$params['opt']['multiple_locations_id']];
                 //            $crit['crit']['multiple_locations_id'] = " AND `glpi_tickets`.`locations_id` IN  (" . implode(",", $opt['multiple_locations_id']) . ") ";
-
             } else {
                 $crit['crit']['multiple_locations_id'] = "";
             }
@@ -547,7 +554,7 @@ class PluginMydashboardHelper {
                     $opt["year"] = $year;
                 }
                 $crit['crit']['year'] = $opt['year'];
-            } else if ($opt["display_data"] == "START_END") {
+            } elseif ($opt["display_data"] == "START_END") {
                 if (isset($params['opt']["start_month"])
                     && $params['opt']["start_month"] > 0) {
                     $opt['start_month']          = $params['opt']['start_month'];
@@ -584,7 +591,6 @@ class PluginMydashboardHelper {
                     $crit['crit']['end_year'] = date("Y");
                 }
             }
-
         }
 
         if (in_array("filter_date", $criterias)) {
@@ -611,8 +617,9 @@ class PluginMydashboardHelper {
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
                 $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
-            } else if ($opt["filter_date"] == "BEGIN_END") {
-
+                $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-01-01 00:00:01' 
+                              AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
+            } elseif ($opt["filter_date"] == "BEGIN_END") {
                 if (isset($params['opt']['begin'])
                     && $params['opt']["begin"] > 0) {
                     $opt["begin"]          = $params['opt']['begin'];
@@ -635,8 +642,9 @@ class PluginMydashboardHelper {
                               AND `glpi_tickets`.`date` <= '$end' )";
                 $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$start' 
                               AND `glpi_tickets`.`closedate` <= '$end' )";
+                $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$start' 
+                              AND `glpi_ticketsatisfactions`.`date_answered` <= '$end' )";
             }
-
         }
 
         // BEGIN DATE
@@ -662,13 +670,13 @@ class PluginMydashboardHelper {
         }
 
         if (!in_array('filter_date', $criterias)) {
-
-
             $nbdays                    = date("t", mktime(0, 0, 0, $month, 1, $year));
             $crit['crit']['date']      = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' 
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
             $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' 
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
+            $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-$month-01 00:00:01' 
+                              AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
         }
 
         if (!in_array("month", $criterias) && !in_array('filter_date', $criterias)) {
@@ -676,6 +684,8 @@ class PluginMydashboardHelper {
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
             $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
+            $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-01-01 00:00:01' 
+                              AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
         }
         // USER
         //      $opt["users_id"] = $_SESSION['glpiID'];
@@ -699,7 +709,6 @@ class PluginMydashboardHelper {
         $opt['multiple_technicians_id']          = [];
         $crit['crit']['multiple_technicians_id'] = " AND 1 = 1 ";
         if (in_array("multiple_technicians_id", $criterias)) {
-
             if (isset($params['opt']['multiple_technicians_id'])) {
                 $opt['multiple_technicians_id'] = is_array($params['opt']['multiple_technicians_id']) ? $params['opt']['multiple_technicians_id'] : [$params['opt']['multiple_technicians_id']];
             } else {
@@ -845,7 +854,8 @@ class PluginMydashboardHelper {
      *
      * @return string , like '<form id=...>'
      */
-    static function getFormHeader($widgetId, $gsid, $onsubmit = false, $opt = []) {
+    public static function getFormHeader($widgetId, $gsid, $onsubmit = false, $opt = [])
+    {
         $formId = uniqid('form');
         $rand   = mt_rand();
         $form   = "<script type='text/javascript'>
@@ -967,7 +977,6 @@ class PluginMydashboardHelper {
                     $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __("Month", 'mydashboard');
                     break;
             }
-
         }
 
         if (isset($opt['display_data']) && $opt['display_data'] == "SLIDING") {
@@ -975,7 +984,6 @@ class PluginMydashboardHelper {
         }
         if (isset($opt['itilcategorielvl1']) && $opt['itilcategorielvl1'] > 0) {
             $form .= "&nbsp;/&nbsp;" . __("Category", 'mydashobard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_itilcategories', $opt['itilcategorielvl1']);
-
         }
 
         $form .= "</span>";
@@ -999,8 +1007,8 @@ class PluginMydashboardHelper {
      *
      * @return string
      */
-    static function getForm($widgetId, $opt, $criterias, $onsubmit = false) {
-
+    public static function getForm($widgetId, $opt, $criterias, $onsubmit = false)
+    {
         $gsid = PluginMydashboardWidget::getGsID($widgetId);
 
         $form = self::getFormHeader($widgetId, $gsid, $onsubmit, $opt);
@@ -1360,8 +1368,12 @@ class PluginMydashboardHelper {
             $data_users = Group_user::getGroupUsers($technicians_groups_id, $restrict);
 
             foreach ($data_users as $data) {
-                $users[$data['id']] = formatUserName($data['id'], $data['name'], $data['realname'],
-                                                     $data['firstname']);
+                $users[$data['id']] = formatUserName(
+                    $data['id'],
+                    $data['name'],
+                    $data['realname'],
+                    $data['firstname']
+                );
                 $params['values'][] = $data['id'];
             }
             $users              = Toolbox::stripslashes_deep($users);
@@ -1466,7 +1478,6 @@ class PluginMydashboardHelper {
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-
         }
 
         if (in_array("multiple_year_time", $criterias)) {
@@ -1500,7 +1511,6 @@ class PluginMydashboardHelper {
 
             $form .= "</span>";
             if (isset($opt['multiple_year_time']) && $opt['multiple_year_time'] == 'MONTH') {
-
                 $form .= "<span id='month_crit$rand' name= 'month_crit$rand' class='md-widgetcrit'>";
                 $form .= "</br></br>";
                 $form .= __('Month', 'mydashboard');
@@ -1514,16 +1524,17 @@ class PluginMydashboardHelper {
             $params2 = ['value' => '__VALUE__',
 
             ];
-            $form    .= Ajax::updateItemOnSelectEvent('dropdown_multiple_year_time' . $rand,
-                                                      "month_crit$rand",
-                                                      Plugin::getWebDir('mydashboard') . "/ajax/dropdownMonth.php",
-                                                      $params2,
-                                                      false);
+            $form    .= Ajax::updateItemOnSelectEvent(
+                'dropdown_multiple_year_time' . $rand,
+                "month_crit$rand",
+                Plugin::getWebDir('mydashboard') . "/ajax/dropdownMonth.php",
+                $params2,
+                false
+            );
 
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-
         }
 
         if (in_array("display_data", $criterias)) {
@@ -1556,7 +1567,6 @@ class PluginMydashboardHelper {
 
             $form .= "</span>";
             if (isset($opt['display_data']) && $opt['display_data'] == 'START_END') {
-
                 $form               .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
                 $form               .= "<span class='md-widgetcrit'>";
                 $form               .= "</br></br>";
@@ -1635,22 +1645,22 @@ class PluginMydashboardHelper {
                 $form .= "&nbsp;";
                 $form .= self::YearDropdown($annee_courante);
                 $form .= "</span>";
-
             }
 
             $params2 = ['value' => '__VALUE__',
 
             ];
-            $form    .= Ajax::updateItemOnSelectEvent('dropdown_display_data' . $rand,
-                                                      "display_data_crit$rand",
-                                                      Plugin::getWebDir('mydashboard') . "/ajax/dropdownUpdateDisplaydata.php",
-                                                      $params2,
-                                                      false);
+            $form    .= Ajax::updateItemOnSelectEvent(
+                'dropdown_display_data' . $rand,
+                "display_data_crit$rand",
+                Plugin::getWebDir('mydashboard') . "/ajax/dropdownUpdateDisplaydata.php",
+                $params2,
+                false
+            );
 
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-
         }
 
         if (in_array("filter_date", $criterias)) {
@@ -1683,7 +1693,6 @@ class PluginMydashboardHelper {
 
             $form .= "</span>";
             if (isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END') {
-
                 $form .= "<span id='filter_date_crit$rand' name= 'filter_date_crit$rand' class='md-widgetcrit'>";
                 $form .= "<span class='md-widgetcrit'>";
 
@@ -1710,22 +1719,22 @@ class PluginMydashboardHelper {
                 $form .= "&nbsp;";
                 $form .= self::YearDropdown($annee_courante);
                 $form .= "</span>";
-
             }
 
             $params2 = ['value' => '__VALUE__',
 
             ];
-            $form    .= Ajax::updateItemOnSelectEvent('dropdown_filter_date' . $rand,
-                                                      "filter_date_crit$rand",
-                                                      Plugin::getWebDir('mydashboard') . "/ajax/dropdownUpdateDisplaydata.php",
-                                                      $params2,
-                                                      false);
+            $form    .= Ajax::updateItemOnSelectEvent(
+                'dropdown_filter_date' . $rand,
+                "filter_date_crit$rand",
+                Plugin::getWebDir('mydashboard') . "/ajax/dropdownUpdateDisplaydata.php",
+                $params2,
+                false
+            );
 
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-
         }
 
         if (in_array("itilcategorielvl1", $criterias)) {
@@ -1753,7 +1762,6 @@ class PluginMydashboardHelper {
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-
         }
 
         if (in_array("tag", $criterias)) {
@@ -1795,7 +1803,6 @@ class PluginMydashboardHelper {
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-
         }
 
         if ($onsubmit) {
@@ -1809,8 +1816,8 @@ class PluginMydashboardHelper {
     /**
      * @return string
      */
-    static function getFormFooter() {
-
+    public static function getFormFooter()
+    {
         $form = "</form>";
         $form .= "</div>";
 
@@ -1826,7 +1833,8 @@ class PluginMydashboardHelper {
      *
      * @return string
      */
-    static function getATag($pathfromrootdoc, $text, $title = "") {
+    public static function getATag($pathfromrootdoc, $text, $title = "")
+    {
         global $CFG_GLPI;
         $title = ($title !== "") ? "title=$title" : "";
         return "<a href='" . $CFG_GLPI['root_doc'] . "/" . $pathfromrootdoc . "' $title target='_blank'>" . $text . "</a>";
@@ -1840,7 +1848,8 @@ class PluginMydashboardHelper {
      *
      * @return string
      */
-    static function getUniqueWidgetId() {
+    public static function getUniqueWidgetId()
+    {
         return uniqid("id_");
     }
 
@@ -1852,7 +1861,8 @@ class PluginMydashboardHelper {
      *
      * @return array of string (each string is a script line)
      */
-    static function extractScriptsFromArray($arrayToEval) {
+    public static function extractScriptsFromArray($arrayToEval)
+    {
         $scripts = [];
         if (is_array($arrayToEval)) {
             if (!is_array($arrayToEval)) {
@@ -1877,7 +1887,8 @@ class PluginMydashboardHelper {
      *
      * @return array of string
      */
-    static function extractScriptsFromString($stringToEval) {
+    public static function extractScriptsFromString($stringToEval)
+    {
         $scripts = [];
         if (gettype($stringToEval) == "string") {
             $stringToEval = str_replace(["'", "//<![CDATA[", "//]]>"], ['"', "", ""], $stringToEval);
@@ -1902,7 +1913,8 @@ class PluginMydashboardHelper {
      *
      * @return string with no scripts
      */
-    static function removeScriptsFromString($stringToEval) {
+    public static function removeScriptsFromString($stringToEval)
+    {
         //      $stringWOScripts = "";
         //      if (gettype($stringToEval) == "string") {
         //         $stringWOScripts = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $stringToEval);
@@ -1925,7 +1937,8 @@ class PluginMydashboardHelper {
      *
      * @return a string formatted in JSon (most of the time, because in real JSon you can't have function)
      */
-    static function safeJsonData($datas, $options) {
+    public static function safeJsonData($datas, $options)
+    {
         $value_arr    = [];
         $replace_keys = [];
         foreach ($options as & $option) {
@@ -1945,12 +1958,14 @@ class PluginMydashboardHelper {
             }
         }
 
-        $json = str_replace($replace_keys,
-                            $value_arr,
-                            json_encode([
-                                            'data'    => $datas,
-                                            'options' => $options
-                                        ]));
+        $json = str_replace(
+            $replace_keys,
+            $value_arr,
+            json_encode([
+                            'data'    => $datas,
+                            'options' => $options
+                        ])
+        );
 
         return $json;
     }
@@ -1966,11 +1981,11 @@ class PluginMydashboardHelper {
      *
      * @return string a json encoded array
      */
-    static function safeJson($array) {
+    public static function safeJson($array)
+    {
         $value_arr    = [];
         $replace_keys = [];
         foreach ($array as $key => & $value) {
-
             if (is_string($value) && strpos($value, 'function(') === 0) {
                 // Store function string.
                 $value_arr[] = $value;
@@ -1979,7 +1994,6 @@ class PluginMydashboardHelper {
                 // Later on, we'll look for the value, and replace it.
                 $replace_keys[] = '"' . $value . '"';
             }
-
         }
 
         $json = str_replace($replace_keys, $value_arr, json_encode($array));
@@ -1993,11 +2007,11 @@ class PluginMydashboardHelper {
      *
      * @return PluginMydashboardDatatable|PluginMydashboardHBarChart|PluginMydashboardHtml|PluginMydashboardLineChart|PluginMydashboardPieChart|PluginMydashboardVBarChart
      */
-    static function getWidgetsFromDBQuery($widgettype, $query/*$widgettype,$table,$fields,$condition,$groupby,$orderby*/) {
+    public static function getWidgetsFromDBQuery($widgettype, $query/*$widgettype,$table,$fields,$condition,$groupby,$orderby*/)
+    {
         global $DB;
 
         if (stripos(trim($query), "SELECT") === 0) {
-
             $result = $DB->query($query);
             $tab    = [];
             if ($result) {
@@ -2008,7 +2022,7 @@ class PluginMydashboardHelper {
                 $chart     = false;
                 switch ($widgettype) {
                     case 'datatable':
-                    case 'table' :
+                    case 'table':
                         $widget = new PluginMydashboardDatatable();
                         break;
                     case 'hbarchart':
@@ -2038,13 +2052,12 @@ class PluginMydashboardHelper {
                         unset($tab[$key]);
                     }
                     $tab = $newtab;
-                } else if ($linechart) {
+                } elseif ($linechart) {
                     //TODO format for linechart
                 } else {
                     //$widget->setTabNames(array('Category','Count'));
                 }
                 $widget->setTabDatas($tab);
-
             }
         } else {
             $widget = new PluginMydashboardHtml();
@@ -2070,8 +2083,8 @@ class PluginMydashboardHelper {
      *
      * @return int|string
      */
-    static function YearDropdown($selected = null) {
-
+    public static function YearDropdown($selected = null)
+    {
         $year = date("Y") - 3;
         for ($i = 0; $i <= 3; $i++) {
             $elements[$year] = $year;
@@ -2089,9 +2102,8 @@ class PluginMydashboardHelper {
      *
      * @return int|string
      */
-    static function WeekDropdown($selected = null) {
-
-
+    public static function WeekDropdown($selected = null)
+    {
         $opt = [
             'value'   => $selected,
             'min'     => 1,
@@ -2118,8 +2130,8 @@ class PluginMydashboardHelper {
      *
      * @return int|string
      */
-    static function monthDropdown($name = "month", $selected = null) {
-
+    public static function monthDropdown($name = "month", $selected = null)
+    {
         $monthsarray = Toolbox::getMonthsOfYearArray();
 
         $opt = ['value'   => $selected,
@@ -2138,7 +2150,8 @@ class PluginMydashboardHelper {
      *
      * @return array|mixed
      */
-    static public function getRequesterGroup($prefered_group, $opt, $entity, $userid, $params = false) {
+    public static function getRequesterGroup($prefered_group, $opt, $entity, $userid, $params = false)
+    {
         global $DB;
 
         $dbu = new DbUtils();
@@ -2162,7 +2175,7 @@ class PluginMydashboardHelper {
                 && !empty($prefered_group)
                 && count($opt) <= 1) {
                 $res = json_decode($prefered_group, true);
-            } else if (isset($opt['requesters_groups_id'])) {
+            } elseif (isset($opt['requesters_groups_id'])) {
                 $res = (is_array($opt['requesters_groups_id']) ? $opt['requesters_groups_id'] : [$opt['requesters_groups_id']]);
             } else {
                 $res = $rep;
@@ -2172,7 +2185,7 @@ class PluginMydashboardHelper {
                 && !empty($params['preferences']['requester_prefered_group'])
                 && !isset($params['opt']['requesters_groups_id'])) {
                 $res = json_decode($params['preferences']['requester_prefered_group'], true);
-            } else if (isset($params['opt']['requesters_groups_id'])
+            } elseif (isset($params['opt']['requesters_groups_id'])
                        && count($params['opt']['requesters_groups_id']) > 0) {
                 $res = json_decode($params['opt']['requesters_groups_id'], true);
             }
@@ -2187,7 +2200,8 @@ class PluginMydashboardHelper {
      *
      * @return array|mixed
      */
-    static function getGroup($prefered_group, $opt, $params = false) {
+    public static function getGroup($prefered_group, $opt, $params = false)
+    {
         $groupprofiles = new PluginMydashboardGroupprofile();
         $res           = [];
         if (!$params) {
@@ -2199,10 +2213,10 @@ class PluginMydashboardHelper {
                 } else {
                     $res = json_decode($prefered_group, true);
                 }
-            } else if ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
+            } elseif ($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id'])
                                 && count($opt) < 1) {
                 $res = json_decode($group, true);
-            } else if (isset($opt['technicians_groups_id'])) {
+            } elseif (isset($opt['technicians_groups_id'])) {
                 $res = (is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']]);
             } else {
                 $res = [];
@@ -2216,10 +2230,10 @@ class PluginMydashboardHelper {
                 } else {
                     $res = json_decode($params['preferences']['prefered_group'], true);
                 }
-            } else if (isset($params['opt']['technicians_groups_id'])
+            } elseif (isset($params['opt']['technicians_groups_id'])
                        && count($params['opt']['technicians_groups_id']) > 0) {
                 $res = json_decode($params['opt']['technicians_groups_id'], true);
-            } else if (($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
+            } elseif (($group = $groupprofiles->getProfilGroup($_SESSION['glpiactiveprofile']['id']))
                        && !isset($params['opt']['technicians_groups_id'])) {
                 $res = json_decode($group, true);
             }
