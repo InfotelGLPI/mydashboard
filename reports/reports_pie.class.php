@@ -109,7 +109,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                             "comment" => ""],
                 $this->getType() . "26" => ["title"   => __("Global satisfaction level", "mydashboard"),
                                             "icon"    => "ti ti-chart-pie",
-                                            "comment" => ""],
+                                            "comment" => __("Satisfaction average", "mydashboard")],
                 $this->getType() . "27" => ["title"   => __("Top ten of opened tickets by location", "mydashboard"),
                                             "icon"    => "ti ti-chart-pie",
                                             "comment" => ""],
