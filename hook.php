@@ -64,7 +64,7 @@ function plugin_mydashboard_install()
         $mig             = new Migration("1.0.3");
         $dbu             = new DbUtils();
         $configs         = $dbu->getAllDataFromTable("glpi_plugin_mydashboard_configs");
-        $replace_central = 1;
+        $replace_central = 0;
         //Basically there is only one config for Dashboard (this foreach may be useless)
         foreach ($configs as $config) {
             $replace_central = $config['replace_central'];

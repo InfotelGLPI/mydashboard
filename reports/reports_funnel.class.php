@@ -217,7 +217,6 @@ class PluginMydashboardReports_Funnel extends CommonGLPI
                          __('Without buy date', 'mydashboard')];
                 $i = 0;
                 while ($data = $DB->fetchArray($results)) {
-
                     $tabnames[] = $ages[$i];
                     $tabdate[] = $data['AgeCrit'];
                     $tabage[] = ['value' => $data['Total'], 'name' => $ages[$i]];
