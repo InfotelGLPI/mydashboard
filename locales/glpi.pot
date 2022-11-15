@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-15 10:17+0000\n"
+"POT-Creation-Date: 2022-11-15 10:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgid "Requests"
 msgstr ""
 
 #: setup.php:174 ajax/loadscripts.php:38 ajax/loadscripts.php:61
-#: inc/menu.class.php:88 inc/preference.class.php:62
+#: inc/menu.class.php:88 inc/preference.class.php:66
 msgid "My Dashboard"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Display widgets from plugins"
 msgstr ""
 
-#: inc/config.class.php:245 inc/preference.class.php:118
+#: inc/config.class.php:245 inc/preference.class.php:128
 msgid "Replace central interface"
 msgstr ""
 
@@ -524,35 +524,35 @@ msgstr ""
 msgid "error"
 msgstr ""
 
-#: inc/preference.class.php:104
+#: inc/preference.class.php:111
 msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr ""
 
-#: inc/preference.class.php:110
+#: inc/preference.class.php:117
 msgid "Refresh every "
 msgstr ""
 
-#: inc/preference.class.php:114
+#: inc/preference.class.php:124
 msgid "minute(s)"
 msgstr ""
 
-#: inc/preference.class.php:126
+#: inc/preference.class.php:136
 msgid "My prefered groups for widget"
 msgstr ""
 
-#: inc/preference.class.php:160
+#: inc/preference.class.php:170
 msgid "My requester prefered groups for widget"
 msgstr ""
 
-#: inc/preference.class.php:194
+#: inc/preference.class.php:204
 msgid "My prefered entity for widget"
 msgstr ""
 
-#: inc/preference.class.php:203
+#: inc/preference.class.php:213
 msgid "My prefered type for widget"
 msgstr ""
 
-#: inc/preference.class.php:210
+#: inc/preference.class.php:220
 msgid "Palette color"
 msgstr ""
 
