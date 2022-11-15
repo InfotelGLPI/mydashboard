@@ -25,105 +25,109 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 /**
  * Class PluginMydashboardCustomswidgets
  */
-class PluginMydashboardCustomswidget extends CommonDropdown {
+class PluginMydashboardCustomswidget extends CommonDropdown
+{
+    /**
+     * @param int $nb
+     *
+     * @return translated
+     * @override
+     */
+    public static function getTypeName($nb = 0)
+    {
+        return __('Custom Widgets', 'mydashboard');
+    }
 
-   /**
-    * @param int $nb
-    *
-    * @return translated
-    * @override
-    */
-   static function getTypeName($nb = 0) {
+    /**
+     * Display tab for each customwidget
+     * @override
+     */
+    public function defineTabs($options = [])
+    {
+        $ong = [];
 
-      return __('Custom Widgets', 'mydashboard');
-   }
+        $this->addDefaultFormTab($ong);
+        $this->addStandardTab('PluginMydashboardHTMLEditor', $ong, $options);
+        return $ong;
+    }
 
-   /**
-    * Display tab for each customwidget
-    * @override
-    */
-   function defineTabs($options = []) {
-      $ong = [];
+    /**
+     * @return array
+     * @throws \GlpitestSQLError
+     */
+    public static function listCustomsWidgets()
+    {
+        $customsWidgets = [];
 
-      $this->addDefaultFormTab($ong);
-      $this->addStandardTab('PluginMydashboardHTMLEditor', $ong, $options);
-      return $ong;
-   }
+        global $DB;
 
-   /**
-    * @return array
-    * @throws \GlpitestSQLError
-    */
-   static function listCustomsWidgets() {
+        $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
 
-      $customsWidgets = [];
+        $result = $DB->query($query);
 
-      global $DB;
+        while ($data = $DB->fetchAssoc($result)) {
+            $customsWidgets[] = $data;
+        }
 
-      $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
+        return $customsWidgets;
+    }
 
-      $result = $DB->query($query);
+    /**
+     * @param $id
+     *
+     * @return bool
+     * @throws \GlpitestSQLError
+     */
+    public static function checkCustomWidgetExist($id)
+    {
+        global $DB;
 
-      while ($data = $DB->fetchAssoc($result)) {
-         $customsWidgets[] = $data;
-      }
+        $query = "SELECT count(*) as count from " . PluginMydashboardCustomswidget::getTable();
+        $query .= " WHERE id=" . $id;
 
-      return $customsWidgets;
-   }
+        $result = $DB->query($query);
 
-   /**
-    * @param $id
-    *
-    * @return bool
-    * @throws \GlpitestSQLError
-    */
-   static function checkCustomWidgetExist($id) {
-      global $DB;
+        $data2 = $DB->fetchArray($result);
+        return $data2['count'] > 0;
+    }
 
-      $query = "SELECT count(*) as count from " . PluginMydashboardCustomswidget::getTable();
-      $query .= " WHERE id=" . $id;
+    /**
+     * @param $id
+     *
+     * @return string[]|null
+     * @throws \GlpitestSQLError
+     */
+    private static function getCustomWidgetById($id)
+    {
+        global $DB;
 
-      $result = $DB->query($query);
+        $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
+        $query .= " WHERE id=" . $id;
 
-      $data2 = $DB->fetchArray($result);
-      return $data2['count'] > 0;
-   }
+        $result = $DB->query($query);
 
-   /**
-    * @param $id
-    *
-    * @return string[]|null
-    * @throws \GlpitestSQLError
-    */
-   static private function getCustomWidgetById($id) {
-      global $DB;
+        while ($data = $DB->fetchAssoc($result)) {
+            return $data;
+        }
+        return null;
+    }
 
-      $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
-      $query .= " WHERE id=" . $id;
+    /**
+     * @param $id
+     *
+     * @return string[]|null
+     * @throws \GlpitestSQLError
+     */
+    public static function getCustomWidget($id)
+    {
+        $temp = self::getCustomWidgetById($id);
 
-      $result = $DB->query($query);
-
-      while ($data = $DB->fetchAssoc($result)) {
-         return $data;
-      }
-      return null;
-   }
-
-   /**
-    * @param $id
-    *
-    * @return string[]|null
-    * @throws \GlpitestSQLError
-    */
-   static function getCustomWidget($id) {
-      $temp = self::getCustomWidgetById($id);
-
-      return $temp;
-   }
+        return $temp;
+    }
 }

@@ -49,34 +49,35 @@ class PluginMydashboardProblem extends CommonGLPI
 
         if ($showproblem) {
             $widgets = [
-               PluginMydashboardMenu::$PROBLEM_VIEW =>
+               PluginMydashboardMenu::$HELPDESK =>
                   [
                      "problemprocesswidget" => ["title"   => __('Problems to be processed'),
-                                                "icon"    => "ti ti-table",
+                                                "type"    => PluginMydashboardWidget::$TABLE,
                                                 "comment" => ""],
                      "problemwaitingwidget" => ["title"   => __('Problems on pending status'),
-                                                "icon"    => "ti ti-table",
+                                                "type"    => PluginMydashboardWidget::$TABLE,
                                                 "comment" => ""],
                   ],
                PluginMydashboardMenu::$GROUP_VIEW   =>
                   [
                      "problemprocesswidgetgroup" => ["title"   => __('Problems to be processed'),
-                                                     "icon"    => "ti ti-table",
+                                                     "type"    => PluginMydashboardWidget::$TABLE,
                                                      "comment" => ""],
                      "problemwaitingwidgetgroup" => ["title"   => __('Problems on pending status'),
-                                                     "icon"    => "ti ti-table",
+                                                     "type"    => PluginMydashboardWidget::$TABLE,
                                                      "comment" => ""],
                   ],
-               PluginMydashboardMenu::$GLOBAL_VIEW  =>
+               PluginMydashboardMenu::$HELPDESK  =>
                   [
                      "problemcountwidget" => ["title"   => __('Problem followup', 'mydashboard'),
-                                              "icon"    => "ti ti-table",
+                                              "type"    => PluginMydashboardWidget::$TABLE,
                                               "comment" => ""],
                   ]
             ];
         }
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

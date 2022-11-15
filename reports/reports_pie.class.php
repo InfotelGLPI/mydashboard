@@ -53,22 +53,37 @@ class PluginMydashboardReports_Pie extends CommonGLPI
     }
 
     /**
-     * @return array
+     * @param $widgetID
+     *
+     * @return false|mixed
      */
     public function getTitleForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['title'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['title'];
+                }
+            }
         }
         return false;
     }
 
+    /**
+     * @param $widgetID
+     *
+     * @return false|mixed
+     */
     public function getCommentForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['comment'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['comment'];
+                }
+            }
         }
         return false;
     }
@@ -79,45 +94,45 @@ class PluginMydashboardReports_Pie extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-            __('Pie charts', "mydashboard") => [
+            PluginMydashboardMenu::$HELPDESK => [
                 $this->getType() . "2"  => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "7"  => ["title"   => __("Top ten ticket requesters by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "12" => ["title"   => __("TTR Compliance", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => __("Display tickets where time to resolve is respected (percent)", "mydashboard")],
                 $this->getType() . "13" => ["title"   => __("TTO Compliance", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => __("Display tickets where time to own is respected (percent)", "mydashboard")],
                 $this->getType() . "16" => ["title"   => __("Number of opened incidents by category", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "17" => ["title"   => __("Number of opened requests by category", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "18" => ["title"   => __("Number of opened, closed and unplanned tickets by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "20" => ["title"   => __("Percent of use of solution types", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => __("Display percent of solution types for tickets", "mydashboard")],
                 $this->getType() . "25" => ["title"   => __("Top ten of opened tickets by requester groups", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "26" => ["title"   => __("Global satisfaction level", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => __("Satisfaction average", "mydashboard")],
                 $this->getType() . "27" => ["title"   => __("Top ten of opened tickets by location", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
                 $this->getType() . "30" => ["title"   => __("Number of use of request sources", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => __("Display percent of request sources for closed tickets", "mydashboard")],
                 $this->getType() . "31" => ["title"   => __("Number of tickets per location per period", "mydashboard"),
-                                            "icon"    => "ti ti-chart-pie",
+                                            "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
 
             ]

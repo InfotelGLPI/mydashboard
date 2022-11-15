@@ -56,40 +56,49 @@ class PluginMydashboardReports_Map extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-        $widgets = [
-           __('Map', "mydashboard") => [
-              $this->getType() . "29" => ["title"   => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
-                                          "icon"    => "ti ti-map",
-                                          "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")],
-           ]
+        $widgets[PluginMydashboardMenu::$HELPDESK] = [
+            $this->getType() . "29" => ["title"   => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$MAP,
+                                        "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")],
         ];
         return $widgets;
     }
 
 
     /**
-     * @return array
+     * @param $widgetID
+     *
+     * @return false|mixed
      */
     public function getTitleForWidget($widgetID)
     {
-
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['title'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['title'];
+                }
+            }
         }
         return false;
-
     }
 
+    /**
+     * @param $widgetID
+     *
+     * @return false|mixed
+     */
     public function getCommentForWidget($widgetID)
     {
-
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['comment'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['comment'];
+                }
+            }
         }
         return false;
-
     }
 
     /**

@@ -50,21 +50,22 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-           PluginMydashboardMenu::$GLOBAL_VIEW => [
+           PluginMydashboardMenu::$TOOLS => [
               "knowbaseitempopular"    => ["title"   => __('FAQ') . " - " . __('Most popular questions'),
-                                           "icon"    => "ti ti-table",
+                                           "type"    => PluginMydashboardWidget::$TABLE,
                                            "comment" => ""],
               "knowbaseitemrecent"     => ["title"   => __('FAQ') . " - " . __('Recent entries'),
-                                           "icon"    => "ti ti-table",
+                                           "type"    => PluginMydashboardWidget::$TABLE,
                                            "comment" => ""],
               "knowbaseitemlastupdate" => ["title"   => __('FAQ') . " - " . __('Last updated entries'),
-                                           "icon"    => "ti ti-table",
+                                           "type"    => PluginMydashboardWidget::$TABLE,
                                            "comment" => ""],
            ]
         ];
 
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

@@ -56,51 +56,77 @@ class PluginMydashboardReports_Table extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
+
         $widgets = [
-            __('Tables', "mydashboard") => [
-                $this->getType() . "3"  => ["title"   => __("Internal annuary", "mydashboard"),
-                                            "icon"    => "ti ti-table",
-                                            "comment" => __("Search users of your organisation", "mydashboard")],
-                $this->getType() . "5"  => ["title"   => __("Fields unicity"),
-                                            "icon"    => "ti ti-table",
-                                            "comment" => __("Display if you have duplicates into inventory", "mydashboard")],
-                $this->getType() . "14" => ["title"   => __("All unpublished articles"),
-                                            "icon"    => "ti ti-table",
-                                            "comment" => __("Display unpublished articles of Knowbase", "mydashboard")],
+            PluginMydashboardMenu::$HELPDESK => [
+
                 $this->getType() . "32" => ["title"   => __("Number of opened tickets by technician and by status", "mydashboard"),
-                                            "icon"    => "ti ti-table",
+                                            "type"    => PluginMydashboardWidget::$TABLE,
                                             "comment" => ""],
                 $this->getType() . "33" => ["title"   => __("Number of opened tickets by group and by status", "mydashboard"),
-                                            "icon"    => "ti ti-table",
+                                            "type"    => PluginMydashboardWidget::$TABLE,
                                             "comment" => ""],
+            ],
+            PluginMydashboardMenu::$INVENTORY => [
+
+                $this->getType() . "5"  => ["title"   => __("Fields unicity"),
+                                            "type"    => PluginMydashboardWidget::$TABLE,
+                                            "comment" => __("Display if you have duplicates into inventory", "mydashboard")],
+            ],
+            PluginMydashboardMenu::$TOOLS => [
+
+                $this->getType() . "14" => ["title"   => __("All unpublished articles"),
+                                            "type"    => PluginMydashboardWidget::$TABLE,
+                                            "comment" => __("Display unpublished articles of Knowbase", "mydashboard")],
+
+            ],
+            PluginMydashboardMenu::$USERS => [
+
+                $this->getType() . "3"  => ["title"   => __("Internal annuary", "mydashboard"),
+                                            "type"    => PluginMydashboardWidget::$TABLE,
+                                            "comment" => __("Search users of your organisation", "mydashboard")],
             ]
         ];
-
 
         return $widgets;
     }
 
+
     /**
-     * @return array
+     * @param $widgetID
+     *
+     * @return false|mixed
      */
     public function getTitleForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['title'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['title'];
+                }
+            }
         }
         return false;
     }
 
+    /**
+     * @param $widgetID
+     *
+     * @return false|mixed
+     */
     public function getCommentForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['comment'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['comment'];
+                }
+            }
         }
         return false;
     }
-
 
     /**
      * @param       $widgetId

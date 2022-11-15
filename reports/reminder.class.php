@@ -41,18 +41,19 @@ class PluginMydashboardReminder extends CommonGLPI
     {
         $widgets = [];
         if (Session::getCurrentInterface() != 'helpdesk') {
-            $widgets[PluginMydashboardMenu::$MY_VIEW]["reminderpersonalwidget"] = ["title"   => _n('Personal reminder', 'Personal reminders', 2),
-                                                                                   "icon"    => "ti ti-table",
+            $widgets[PluginMydashboardMenu::$TOOLS]["reminderpersonalwidget"] = ["title"   => _n('Personal reminder', 'Personal reminders', 2),
+                                                                                   "type"    => PluginMydashboardWidget::$TABLE,
                                                                                    "comment" => ""];
         }
         if (Session::haveRight("reminder_public", READ)) {
-            $widgets[PluginMydashboardMenu::$MY_VIEW]["reminderpublicwidget"] = ["title"   => _n('Public reminder', 'Public reminders', 2),
-                                                                                                            "icon"    => "ti ti-table",
+            $widgets[PluginMydashboardMenu::$TOOLS]["reminderpublicwidget"] = ["title"   => _n('Public reminder', 'Public reminders', 2),
+                                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                             "comment" => ""];
         }
 
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

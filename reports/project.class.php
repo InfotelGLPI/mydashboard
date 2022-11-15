@@ -49,22 +49,23 @@ class PluginMydashboardProject extends CommonGLPI
 
         if ($showproject) {
             $widgets = [
-               PluginMydashboardMenu::$PROJECT_VIEW =>
+               PluginMydashboardMenu::$TOOLS =>
                   [
                      "projectprocesswidget" => ["title"   => __('projects to be processed', 'mydashboard'),
-                                                "icon"    => "ti ti-table",
+                                                "type"    => PluginMydashboardWidget::$TABLE,
                                                 "comment" => ""],
                   ],
                PluginMydashboardMenu::$GROUP_VIEW   =>
                   [
                      "projectprocesswidgetgroup" => ["title"   => __('projects to be processed', 'mydashboard'),
-                                                     "icon"    => "ti ti-table",
+                                                     "type"    => PluginMydashboardWidget::$TABLE,
                                                      "comment" => ""],
                   ]
             ];
         }
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

@@ -500,6 +500,17 @@ class PluginMydashboardHelper
             }
         }
 
+        //TYPE COMPUTER
+        $opt['type_computer']          = 0;
+        $crit['crit']['type_computer'] = "";
+        if (in_array("type_computer", $criterias)) {
+            if (isset($params['opt']['type_computer'])
+                      && $params['opt']['type_computer'] > 0) {
+                $opt['type_computer']          = $params['opt']['type_computer'];
+                $crit['crit']['type_computer'] = " AND `glpi_computers`.`computertypes_id` = '" . $params['opt']["type_computer"] . "' ";
+            }
+        }
+
         // DATE
         // MONTH
         $year                 = intval(date('Y', time()));
@@ -1224,6 +1235,28 @@ class PluginMydashboardHelper
             $form .= Ticket::dropdownType('type', ['value'               => $type,
                                                    'display'             => false,
                                                    'display_emptychoice' => true]);
+            $form .= "</span>";
+            if ($count > 1) {
+                $form .= "</br></br>";
+            }
+        }
+
+        // TYPE COMPUTER
+        if (in_array("type_computer", $criterias)) {
+            $form .= "<span class='md-widgetcrit'>";
+            $type = 0;
+            if (isset($opt["type_computer"])
+                && $opt["type_computer"] > 0) {
+                $type = $opt["type_computer"];
+            }
+            $form .= __('Type');
+            $form .= "&nbsp;";
+            $gparams = ['name'    => 'type_computer',
+                        'display' => false,
+                        'value'   => isset($opt['type_computer']) ? $opt['type_computer'] : 0,
+                        'entity'  => $_SESSION['glpiactiveentities'],
+            ];
+            $form .= ComputerType::Dropdown($gparams);
             $form .= "</span>";
             if ($count > 1) {
                 $form .= "</br></br>";

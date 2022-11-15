@@ -29,31 +29,29 @@
  */
 class PluginMydashboardRSSFeed extends CommonGLPI
 {
-
-   /**
-    * @param int $nb
-    *
-    * @return string|\translated
-    */
-    static function getTypeName($nb = 0)
+    /**
+     * @param int $nb
+     *
+     * @return string|\translated
+     */
+    public static function getTypeName($nb = 0)
     {
         return __('RSS');
     }
    /**
     * @return array
     */
-    function getWidgetsForItem()
+    public function getWidgetsForItem()
     {
-
         $widgets = [];
         if (Session::getCurrentInterface() != 'helpdesk') {
-            $widgets[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpersonalwidget"] = ["title"   =>  _n('Personal RSS feed', 'Personal RSS feeds', 2),
-                                                                                "icon"    => "ti ti-table",
+            $widgets[PluginMydashboardMenu::$TOOLS]["rssfeedpersonalwidget"] = ["title"   =>  _n('Personal RSS feed', 'Personal RSS feeds', 2),
+                                                                                   "type"    => PluginMydashboardWidget::$TABLE,
                                                                                 "comment" => ""];
         }
         if (Session::haveRight("rssfeed_public", READ)) {
-            $widgets[PluginMydashboardMenu::$RSS_VIEW]["rssfeedpublicwidget"] = ["title"   => _n('Public RSS feed', 'Public RSS feeds', 2),
-                                                                              "icon"    => "ti ti-table",
+            $widgets[PluginMydashboardMenu::$TOOLS]["rssfeedpublicwidget"] = ["title"   => _n('Public RSS feed', 'Public RSS feeds', 2),
+                                                                                 "type"    => PluginMydashboardWidget::$TABLE,
                                                                               "comment" => ""];
         }
 
@@ -64,12 +62,12 @@ class PluginMydashboardRSSFeed extends CommonGLPI
     * @param $widgetId
     * @return Nothing
     */
-    function getWidgetContentForItem($widgetId)
+    public function getWidgetContentForItem($widgetId)
     {
         switch ($widgetId) {
             case "rssfeedpersonalwidget":
                 return PluginMydashboardRSSFeed::showListForCentral();
-            break;
+                break;
             case "rssfeedpublicwidget":
                 if (Session::haveRight("rssfeed_public", READ)) {
                     return PluginMydashboardRSSFeed::showListForCentral(false);
@@ -85,7 +83,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI
     *
     * @return \PluginMydashboardDatatable (display function)
     */
-    static function showListForCentral($personal = true)
+    public static function showListForCentral($personal = true)
     {
         global $DB, $CFG_GLPI;
 
@@ -94,7 +92,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI
         $users_id = Session::getLoginUserID();
 
         if ($personal) {
-           /// Personal notes only for central view
+            /// Personal notes only for central view
             if (Session::getCurrentInterface() == 'helpdesk') {
                 return false;
             }
@@ -107,13 +105,13 @@ class PluginMydashboardRSSFeed extends CommonGLPI
 
             $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Personal RSS feed', 'Personal RSS feeds', 2) . "</a>";
         } else {
-           // Show public rssfeeds / not mines : need to have access to public rssfeeds
+            // Show public rssfeeds / not mines : need to have access to public rssfeeds
             if (!Session::haveRight('rssfeed_public', READ)) {
                 return false;
             }
 
             $restrict_user = '1';
-           // Only personal on central so do not keep it
+            // Only personal on central so do not keep it
             if (Session::getCurrentInterface() == 'central') {
                 $restrict_user = "`glpi_rssfeeds`.`users_id` <> '$users_id'";
             }
@@ -140,7 +138,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI
                 if ($rssfeed->getFromDB($data['id'])) {
                     // Force fetching feeds
                     if ($feed = RSSFeed::getRSSFeed($data['url'], $data['refresh_rate'])) {
-                      // Store feeds in array of feeds
+                        // Store feeds in array of feeds
                         $items = array_merge($items, $feed->get_items(0, $data['max_items']));
                         $rssfeed->setError(false);
                     } else {
@@ -196,16 +194,16 @@ class PluginMydashboardRSSFeed extends CommonGLPI
 
         $publique = $personal ? "personal" : "public";
 
-       //First we create a new Widget of Datatable kind
+        //First we create a new Widget of Datatable kind
         $widget = new PluginMydashboardDatatable();
-       //We set the widget title and the id
+        //We set the widget title and the id
         $widget->setWidgetTitle($output['title']);
         $widget->setWidgetId("rssfeed" . $publique . "widget");
-       //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
+        //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of PluginMydashboardDatatable)
         $widget->setTabNames($output['header']);
         $widget->setTabDatas($output['body']);
 
-       //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
+        //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
 //        if (count($output['body']) > 0) {
 //            $widget->setOption("bSort", false);
 //        }

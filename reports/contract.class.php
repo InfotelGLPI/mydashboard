@@ -47,15 +47,16 @@ class PluginMydashboardContract extends CommonGLPI
         $widgets = [];
         if (Session::haveRight("contract", READ)) {
             $widgets = [
-               PluginMydashboardMenu::$GLOBAL_VIEW => [
-                  "contractwidget" => ["title"   => Contract::getTypeName(1),
-                                       "icon"    => "ti ti-table",
+               PluginMydashboardMenu::$MANAGEMENT => [
+                  "contractwidget" => ["title"   => __('Contracts status', 'mydashboard'),
+                                       "type"    => PluginMydashboardWidget::$TABLE,
                                        "comment" => ""],
                ]
             ];
         }
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

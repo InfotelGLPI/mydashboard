@@ -57,59 +57,75 @@ class PluginMydashboardReports_Line extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-            __('Line charts', "mydashboard") => [
-                $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => __("Sum of not solved tickets by month", "mydashboard")],
-                $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "43" => ["title"   => __("Number of tickets created each months", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "44" => ["title"   => __("Number of tickets created each week", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "45" => ["title"   => __("Number of tickets with validation refusal", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "46" => ["title"   => __("Number of tickets linked with problems", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => ""],
-                $this->getType() . "47" => ["title"   => __("Backlog tickets by week", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard")],
-                $this->getType() . "48" => ["title"   => __("Monthly tickets in progress", "mydashboard"),
-                                            "icon"    => "ti ti-chart-area-line",
-                                            "comment" => __("Number of open tickets in the month still in progress for each month", "mydashboard")],
+            PluginMydashboardMenu::$HELPDESK => [
+            $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => __("Sum of not solved tickets by month", "mydashboard")],
+            $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "43" => ["title"   => __("Number of tickets created each months", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "44" => ["title"   => __("Number of tickets created each week", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "45" => ["title"   => __("Number of tickets with validation refusal", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "46" => ["title"   => __("Number of tickets linked with problems", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => ""],
+            $this->getType() . "47" => ["title"   => __("Backlog tickets by week", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard")],
+            $this->getType() . "48" => ["title"   => __("Monthly tickets in progress", "mydashboard"),
+                                        "type"    => PluginMydashboardWidget::$LINE,
+                                        "comment" => __("Number of open tickets in the month still in progress for each month", "mydashboard")],
             ]
         ];
         return $widgets;
     }
 
+
     /**
-     * @return array
+     * @param $widgetID
+     *
+     * @return false|mixed
      */
     public function getTitleForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['title'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['title'];
+                }
+            }
         }
         return false;
     }
 
+    /**
+     * @param $widgetID
+     *
+     * @return false|mixed
+     */
     public function getCommentForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['comment'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['comment'];
+                }
+            }
         }
         return false;
     }

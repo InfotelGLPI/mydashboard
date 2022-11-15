@@ -50,71 +50,72 @@ class PluginMydashboardTicket extends CommonGLPI
         $widgets = [
            PluginMydashboardMenu::$TICKET_REQUESTERVIEW => [
               "ticketlistrequestbyselfwidget" => ["title"   => __('Your tickets in progress'),
-                                                  "icon"    => "ti ti-table",
+                                                  "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
               "ticketlistobservedwidget"      => ["title"   => __('Your observed tickets'),
-                                                  "icon"    => "ti ti-table",
+                                                  "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
               "ticketlistrejectedwidget"      => ["title"   => __('Your rejected tickets', 'mydashboard'),
-                                                  "icon"    => "ti ti-table",
+                                                  "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
               "ticketlisttoapprovewidget"     => ["title"   => __('Your tickets to close'),
-                                                  "icon"    => "ti ti-table",
+                                                  "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
               "ticketlistsurveywidget"        => ["title"   => __('Satisfaction survey'),
-                                                  "icon"    => "ti ti-table",
+                                                  "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
            ]
         ];
         if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
             $widgets[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = ["title"   => __('Your tickets to validate'),
-                                                                                                    "icon"    => "ti ti-table",
+                                                                                                    "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                     "comment" => ""];
         }
         if ($showticket) {
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketcountwidget2"]      = ["title"   => __('New tickets', 'mydashboard'),
-                                                                                            "icon"    => "ti ti-table",
+                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                             "comment" => ""];
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = ["title"   => __('Tickets to be processed'),
-                                                                                            "icon"    => "ti ti-table",
+                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                             "comment" => ""];
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = ["title"   => __('Tickets on pending status'),
-                                                                                            "icon"    => "ti ti-table",
+                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                             "comment" => ""];
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["tickettaskstodowidget"]   = ["title"   => __("Ticket tasks to do"),
-                                                                                            "icon"    => "ti ti-table",
+                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                             "comment" => ""];
         }
         if (Session::haveRight('ticket', Ticket::READGROUP)) {
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Tickets on pending status'),
-                                                                                                       "icon"    => "ti ti-table",
+                                                                                                       "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                        "comment" => ""];
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Your tickets to close'),
-                                                                                                       "icon"    => "ti ti-table",
+                                                                                                       "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                        "comment" => ""];
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistrequestbyselfwidgetgroup"] = ["title"   => __('Your tickets in progress'),
-                                                                                                       "icon"    => "ti ti-table",
+                                                                                                       "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                        "comment" => ""];
             $widgets[PluginMydashboardMenu::$TICKET_TECHVIEW]["ticketlistobservedwidgetgroup"]      = ["title"   => __('Your observed tickets'),
-                                                                                                       "icon"    => "ti ti-table",
+                                                                                                       "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                        "comment" => ""];
         }
         if ($showticket) {
             $widgets[PluginMydashboardMenu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = ["title"   => __('Tickets to be processed'),
-                                                                                            "icon"    => "ti ti-table",
+                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                             "comment" => ""];
             $widgets[PluginMydashboardMenu::$GROUP_VIEW]["tickettaskstodowidgetgroup"]   = ["title"   => __("Ticket tasks to do"),
-                                                                                            "icon"    => "ti ti-table",
+                                                                                            "type"    => PluginMydashboardWidget::$TABLE,
                                                                                             "comment" => ""];
         }
         if ($showticket || $createticket) {
-            $widgets[PluginMydashboardMenu::$GLOBAL_VIEW]["ticketcountwidget"] = ["title"   => __('Ticket followup', 'mydashboard'),
-                                                                                  "icon"    => "ti ti-table",
+            $widgets[PluginMydashboardMenu::$HELPDESK]["ticketcountwidget"] = ["title"   => __('Ticket followup', 'mydashboard'),
+                                                                                  "type"    => PluginMydashboardWidget::$TABLE,
                                                                                   "comment" => ""];
         }
 
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

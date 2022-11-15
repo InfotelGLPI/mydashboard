@@ -27,18 +27,78 @@
 /**
  * Class PluginMydashboardWidget
  */
-class PluginMydashboardWidget extends CommonDBTM {
+class PluginMydashboardWidget extends CommonDBTM
+{
+    public static $rightname = "plugin_mydashboard";
 
-    static $rightname = "plugin_mydashboard";
-
+    public static $KPI      = 0;
+    public static $TABLE    = 1;
+    public static $PIE      = 2;
+    public static $BAR      = 3;
+    public static $LINE     = 4;
+    public static $MAP      = 5;
+    public static $PLANNING = 6;
+    public static $OTHERS   = 7;
     /**
      * @param int $nb
      *
      * @return translated
      */
-    static function getTypeName($nb = 0) {
-
+    public static function getTypeName($nb = 0)
+    {
         return __('Widget management', 'mydashboard');
+    }
+
+    /**
+     * @param $type
+     *
+     * @return mixed
+     */
+    public static function getIconByType($type)
+    {
+        switch ($type) {
+            case self::$KPI:
+                return 'ti ti-info-circle';
+            case self::$TABLE:
+                return 'ti ti-table';
+            case self::$PIE:
+                return 'ti ti-chart-pie';
+            case self::$BAR:
+                return 'ti ti-chart-bar';
+            case self::$LINE:
+                return 'ti ti-chart-area-line';
+            case self::$MAP:
+                return 'ti ti-map';
+            case self::$PLANNING:
+                return 'ti ti-calendar';
+        }
+        return 'ti ti-dashboard';
+    }
+
+    /**
+     * @param $type
+     *
+     * @return mixed
+     */
+    public static function getNameByType($type)
+    {
+        switch ($type) {
+            case self::$KPI:
+                return __('Indicators', 'mydashboard');
+            case self::$TABLE:
+                return __('Tables', 'mydashboard');
+            case self::$PIE:
+                return __('Pie charts', 'mydashboard');
+            case self::$BAR:
+                return __('Bar charts', 'mydashboard');
+            case self::$LINE:
+                return __('Line charts', 'mydashboard');
+            case self::$MAP:
+                return __('Map', 'mydashboard');
+            case self::$PLANNING:
+                return __('Planning');
+        }
+        return __('Others');
     }
 
     /**
@@ -50,8 +110,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      * @global type $DB
      *
      */
-    function getWidgetNameById($widgetId) {
-
+    public function getWidgetNameById($widgetId)
+    {
         if ($this->getFromDBByCrit(['id' => $widgetId]) === false) {
             return null;
         } else {
@@ -68,8 +128,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      * @global type  $DB
      *
      */
-    function getWidgetIdByName($widgetName) {
-
+    public function getWidgetIdByName($widgetName)
+    {
         unset($this->fields);
         if ($this->getFromDBByCrit(['name' => $widgetName]) === false) {
             return null;
@@ -87,8 +147,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      * @global type  $DB
      *
      */
-    function saveWidget($widgetName) {
-
+    public function saveWidget($widgetName)
+    {
         if (isset($widgetName) && $widgetName !== "") {
             //            $widgettmp = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
             //Not really good regex
@@ -116,8 +176,8 @@ class PluginMydashboardWidget extends CommonDBTM {
     /**
      *
      */
-    function migrateWidgets() {
-
+    public function migrateWidgets()
+    {
         $dbu     = new DbUtils();
         $reports = $dbu->getAllDataFromTable($this->getTable());
         foreach ($reports as $report) {
@@ -165,8 +225,8 @@ class PluginMydashboardWidget extends CommonDBTM {
     /**
      * @return array
      */
-    static function getWidgetList($preload = false) {
-
+    public static function getWidgetList($preload = false)
+    {
         $list = new PluginMydashboardWidgetlist();
         //Load widgets
         $widgetlist = $list->getList(true, -1, "central", $preload);
@@ -194,7 +254,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                     $widgets['gs' . $id] = ["class" => $widgetclasses, "id" => $widgetclass];
                     $i++;
                 }
-
             }
         }
         return $widgets;
@@ -208,7 +267,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return string
      */
-    static function getWidget($id, $widgets, $opt = []) {
+    public static function getWidget($id, $widgets, $opt = [])
+    {
         $class = "bt-col-md-11";
 
         if (isset($widgets[$id])) {
@@ -231,8 +291,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return bool
      */
-    static function getGsID($id) {
-
+    public static function getGsID($id)
+    {
         $widgets = self::getWidgetList();
 
         foreach ($widgets as $gs => $widgetclasses) {
@@ -255,8 +315,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return string
      */
-    static function loadWidget($classname, $widgetindex, $parent, $class, $opt = []) {
-
+    public static function loadWidget($classname, $widgetindex, $parent, $class, $opt = [])
+    {
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);
             if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
@@ -315,9 +375,9 @@ class PluginMydashboardWidget extends CommonDBTM {
                     $title = $json['widgetTitle'];
 
                     $comment = $json['widgetComment'];
-                    if (isset($view) && $view != -1) {
-                        $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
-                    }
+//                    if (isset($view) && $view != -1) {
+//                        $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
+//                    }
 
                     //               $json  = PluginMydashboardHelper::safeJson($json);
                     $datas = json_decode($jsondata, true);
@@ -348,38 +408,36 @@ class PluginMydashboardWidget extends CommonDBTM {
                             }
                             $format = $_SESSION["glpidate_format"];
                             switch ($format) {
-                                case 1 : // DD-MM-YYYY
+                                case 1: // DD-MM-YYYY
                                     $mask = 'DD-MM-YYYY HH:mm:SS';
                                     break;
-                                case 2 : // MM-DD-YYYY
+                                case 2: // MM-DD-YYYY
                                     $mask = 'MM-DD-YYYY HH:mm:SS';
                                     break;
                             }
-
-                        } else if ($dateformat == "DH") {
+                        } elseif ($dateformat == "DH") {
                             if (!isset($_SESSION["glpidate_format"])) {
                                 $_SESSION["glpidate_format"] = 0;
                             }
                             $format = $_SESSION["glpidate_format"];
                             switch ($format) {
-                                case 1 : // DD-MM-YYYY
+                                case 1: // DD-MM-YYYY
                                     $mask = 'DD-MM-YYYY HH:mm';
                                     break;
-                                case 2 : // MM-DD-YYYY
+                                case 2: // MM-DD-YYYY
                                     $mask = 'MM-DD-YYYY HH:mm';
                                     break;
                             }
-
-                        } else if ($dateformat == "D") {
+                        } elseif ($dateformat == "D") {
                             if (!isset($_SESSION["glpidate_format"])) {
                                 $_SESSION["glpidate_format"] = 0;
                             }
                             $format = $_SESSION["glpidate_format"];
                             switch ($format) {
-                                case 1 : // DD-MM-YYYY
+                                case 1: // DD-MM-YYYY
                                     $mask = 'DD-MM-YYYY';
                                     break;
-                                case 2 : // MM-DD-YYYY
+                                case 2: // MM-DD-YYYY
                                     $mask = 'MM-DD-YYYY';
                                     break;
                             }
@@ -481,7 +539,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                     $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 96%'>";
 
                     if ($widget->getTitleVisibility()) {
-
                         $titletype     = $widget->getWidgetHeaderType();
                         if (!empty($titletype)) {
                             $titletype = $widget->getWidgetHeaderType();
@@ -500,7 +557,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                         $widgetdisplay .= "</h4>";
                         $widgetdisplay .= "</div><hr style='margin: 1.2rem 0;'>";
                         //         $widget .= "<small>" . __('A comment') . "</small>";
-
                     }
 
                     $widgetdisplay .= "<div id=\"display-sc\">";
@@ -540,7 +596,7 @@ class PluginMydashboardWidget extends CommonDBTM {
                         $widgetdisplay .= '</tbody></table>';
 
                         $widgetdisplay .= $widget->getWidgetHtmlContent();
-                    } else if ($type == "html") {
+                    } elseif ($type == "html") {
                         $widgetdisplay .= $datas;
                     }
 
@@ -567,8 +623,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return string
      */
-    static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = [], $style = "") {
-
+    public static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = [], $style = "")
+    {
         if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 0, $itilcategories_id) < 1) {
             $display = false;
             return $display;
@@ -636,8 +692,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return string
      */
-    static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = [], $style = "") {
-
+    public static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = [], $style = "")
+    {
         if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 1, $itilcategories_id) < 1) {
             $display = false;
             return $display;
@@ -705,8 +761,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      * @return string
      * @throws \GlpitestSQLError
      */
-    static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = [], $style = "") {
-
+    public static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = [], $style = "")
+    {
         if ($hidewidget == true && PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) < 1) {
             $display = false;
             return $display;
@@ -740,10 +796,8 @@ class PluginMydashboardWidget extends CommonDBTM {
         }
         $display .= "<div id='display-sc'>";
         if (PluginMydashboardAlert::countForAlerts(0, 2, $itilcategories_id) > 0) {
-
             $alerts  = new PluginMydashboardAlert();
             $display .= $alerts->getInformationList($itilcategories_id);
-
         } else {
             $display .= "<div class='center'>";
             if ($hidewidget != true) {
@@ -774,7 +828,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return string
      */
-    static function getWidgetMydashboardEquipments($class, $fromsc) {
+    public static function getWidgetMydashboardEquipments($class, $fromsc)
+    {
         global $CFG_GLPI;
 
         $delclass = "";
@@ -801,7 +856,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                 $display .= "<div class=\"bt-feature bt-col-md-12 count-title\">";
             }
             foreach ($allUsedItemsForUser as $itemtype => $used_items) {
-
                 $item = getItemForItemtype($itemtype);
 
 
@@ -821,7 +875,6 @@ class PluginMydashboardWidget extends CommonDBTM {
                 $i  = 0;
                 $nb = count($used_items);
                 foreach ($used_items as $item_datas) {
-
                     //               if ($i % 2 == 0 && $nb > 1) {
                     //                  $display .= "<div class=\"bt-col-md-6 center\">";
                     //               }
@@ -908,7 +961,8 @@ class PluginMydashboardWidget extends CommonDBTM {
      *
      * @return array
      */
-    static function getAllUsedItemsForUser() {
+    public static function getAllUsedItemsForUser()
+    {
         $items = [];
 
         $types = ['Computer',

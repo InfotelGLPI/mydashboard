@@ -24,11 +24,6 @@
  --------------------------------------------------------------------------
  */
 
-/**
- * Every Pie charts classes must inherit of this class
- * It sets basical parameters to display a pie chart with Flotr2
- * This widget class is meant to display data as a pie chart
- */
 class PluginMydashboardPieChart extends PluginMydashboardChart
 {
 

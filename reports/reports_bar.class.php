@@ -52,22 +52,37 @@ class PluginMydashboardReports_Bar extends CommonGLPI
     }
 
     /**
-     * @return array
+     * @param $widgetID
+     *
+     * @return false|mixed
      */
     public function getTitleForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['title'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['title'];
+                }
+            }
         }
         return false;
     }
 
+    /**
+     * @param $widgetID
+     *
+     * @return false|mixed
+     */
     public function getCommentForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['comment'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['comment'];
+                }
+            }
         }
         return false;
     }
@@ -78,51 +93,51 @@ class PluginMydashboardReports_Bar extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-            __('Bar charts', "mydashboard") => [
+            PluginMydashboardMenu::$HELPDESK => [
                 $this->getType() . "1"  => ["title"   => __("Opened tickets backlog", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Display of opened tickets by month", "mydashboard")],
                 $this->getType() . "8"  => ["title"   => __("Process time by technicians by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Sum of ticket tasks duration by technicians", "mydashboard")],
                 $this->getType() . "15" => ["title"   => __("Top ten ticket categories by type of ticket", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Display of Top ten ticket categories by type of ticket", "mydashboard")],
                 $this->getType() . "21" => ["title"   => __("Number of tickets affected by technicians by month", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Sum of ticket affected by technicians", "mydashboard")],
                 $this->getType() . "23" => ["title"   => __("Average real duration of treatment of the ticket", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Display of average real duration of treatment of tickets (actiontime of tasks)", "mydashboard")],
                 $this->getType() . "24" => ["title"   => __("Top ten technicians (by tickets number)", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Display of number of tickets by technicians", "mydashboard")],
                 $this->getType() . "35" => ["title"   => __("Age of tickets", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
                 $this->getType() . "36" => ["title"   => __("Number of opened tickets by priority", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
                 $this->getType() . "37" => ["title"   => __("Stock of tickets by status", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
                 $this->getType() . "38" => ["title"   => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
                 $this->getType() . "39" => ["title"   => __("Responsiveness over 12 rolling months", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
                 $this->getType() . "40" => ["title"   => __("Tickets request sources evolution", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Evolution of tickets request sources types by year", "mydashboard")],
                 $this->getType() . "41" => ["title"   => __("Tickets solution types evolution", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => __("Evolution of solution types by year", "mydashboard")],
                 $this->getType() . "42" => ["title"   => __("Solve delay and take into account of tickets", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
                 $this->getType() . "43" => ["title"   => __("Evolution of ticket satisfaction by year", "mydashboard"),
-                                            "icon"    => "ti ti-chart-bar",
+                                            "type"    => PluginMydashboardWidget::$BAR,
                                             "comment" => ""],
             ]
         ];

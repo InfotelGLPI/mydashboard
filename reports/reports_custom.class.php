@@ -62,11 +62,14 @@ class PluginMydashboardReports_Custom extends CommonGLPI
         $customsWidgets = PluginMydashboardCustomswidget::listCustomsWidgets();
         if (!empty($customsWidgets)) {
             foreach ($customsWidgets as $customWidget) {
-                $widgets[__('Custom Widgets', 'mydashboard')][$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
-                                                                                                                "icon"    => "ti ti-edit",
-                                                                                                                "comment" => ""];
+                $addwidgets[$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
+                                                                       "type"    => PluginMydashboardWidget::$OTHERS,
+                                                                       "icon"    => "ti ti-edit",
+                                                                       "comment" => ""];
             }
+            $widgets[PluginMydashboardMenu::$OTHERS]        = $addwidgets;
         }
+
         return $widgets;
     }
 
@@ -83,19 +86,19 @@ class PluginMydashboardReports_Custom extends CommonGLPI
             default:
                 {
                     // It's a custom widget
-                    if (strpos($widgetId, "cw")) {
-                        // Last letter of widgetId is customWidget index in database
-                        $id = intval(substr($widgetId, -1));
+                if (strpos($widgetId, "cw")) {
+                    // Last letter of widgetId is customWidget index in database
+                    $id = intval(substr($widgetId, -1));
 
-                        $content = PluginMydashboardCustomswidget::getCustomWidget($id);
+                    $content = PluginMydashboardCustomswidget::getCustomWidget($id);
 
-                        $widget = new PluginMydashboardHtml(true);
+                    $widget = new PluginMydashboardHtml(true);
 
-                        $widget->setWidgetTitle($content['name']);
+                    $widget->setWidgetTitle($content['name']);
 
-                        $htmlContent = html_entity_decode($content['content']);
+                    $htmlContent = html_entity_decode($content['content']);
 
-                        // Edit style to avoid padding, margin, and limited width
+                    // Edit style to avoid padding, margin, and limited width
 
                //               $htmlContent .= "<script>
                //                $( document ).ready(function() {
@@ -107,13 +110,13 @@ class PluginMydashboardReports_Custom extends CommonGLPI
                //                });
                //                </script>";
 
-                        if (isset($opt["is_widget"]) && $opt["is_widget"] == false) {
-                            return $htmlContent;
-                        }
-                        $widget->setWidgetHtmlContent($htmlContent);
-                        return $widget;
+                    if (isset($opt["is_widget"]) && $opt["is_widget"] == false) {
+                        return $htmlContent;
                     }
+                    $widget->setWidgetHtmlContent($htmlContent);
+                    return $widget;
                 }
+            }
         }
     }
 }

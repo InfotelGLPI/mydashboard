@@ -49,37 +49,38 @@ class PluginMydashboardChange extends CommonGLPI
 
         if ($showchange) {
             $widgets = [
-               PluginMydashboardMenu::$CHANGE_VIEW =>
+               PluginMydashboardMenu::$HELPDESK =>
                   [
                      "changeprocesswidget" => ["title"   => __('Changes to be processed', 'mydashboard'),
-                                                "icon"    => "ti ti-table",
+                                                "type"    => PluginMydashboardWidget::$TABLE,
                                                 "comment" => ""],
                      "changewaitingwidget" => ["title"   => __('Changes on pending status', 'mydashboard'),
-                                               "icon"    => "ti ti-table",
+                                               "type"    => PluginMydashboardWidget::$TABLE,
                                                "comment" => ""],
                      "changeappliedwidget" => ["title"   => __('Applied changes', 'mydashboard'),
-                                               "icon"    => "ti ti-table",
+                                               "type"    => PluginMydashboardWidget::$TABLE,
                                                "comment" => ""],
                   ],
                PluginMydashboardMenu::$GROUP_VIEW   =>
                   [
                      "changeprocesswidgetgroup" => ["title"   => __('Changes to be processed', 'mydashboard'),
-                                                     "icon"    => "ti ti-table",
+                                                     "type"    => PluginMydashboardWidget::$TABLE,
                                                      "comment" => ""],
                      "changewaitingwidgetgroup" => ["title"   => __('Changes on pending status', 'mydashboard'),
-                                               "icon"    => "ti ti-table",
+                                               "type"    => PluginMydashboardWidget::$TABLE,
                                                "comment" => ""],
                   ],
-               PluginMydashboardMenu::$GLOBAL_VIEW   =>
+               PluginMydashboardMenu::$HELPDESK   =>
                   [
                      "changecountwidget" => ["title"   =>  __('Change followup', 'mydashboard'),
-                                                     "icon"    => "ti ti-table",
+                                                     "type"    => PluginMydashboardWidget::$TABLE,
                                                      "comment" => ""],
                   ]
             ];
         }
         return $widgets;
     }
+
 
     /**
      * @param $widgetId

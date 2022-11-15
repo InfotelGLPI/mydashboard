@@ -67,6 +67,7 @@ class PluginMydashboardAlert extends CommonDBTM
         return '';
     }
 
+
     /**
      * @param bool $withtemplate
      *
@@ -126,74 +127,99 @@ class PluginMydashboardAlert extends CommonDBTM
     public function getWidgetsForItem()
     {
         $widgets = [
-            __('Indicators', 'mydashboard') => [
-                $this->getType() . "1"    => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("See alert information block", "mydashboard")],
-                $this->getType() . "2"    => ["title"   => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("See scheduled maintenances information block", "mydashboard")],
-                $this->getType() . "3"    => ["title"   => _n('Information', 'Informations', 2, 'mydashboard'),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("See informations block", "mydashboard")],
-                $this->getType() . "4"    => ["title"   => __("Incidents alerts", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display alerts for incidents and problems", "mydashboard")],
-                $this->getType() . "5"    => ["title"   => __("SLA Incidents alerts", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard")],
-                $this->getType() . "6"    => ["title"   => __("GLPI Status", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Check if GLPI have no problem", "mydashboard")],
-                $this->getType() . "7"    => ["title"   => __("User ticket alerts", "mydashboard"),
-                                              "icon"    => "ti ti-table",
-                                              "comment" => __("Display tickets where last modification is a user action", "mydashboard")],
-                $this->getType() . "8"    => ["title"   => __('Automatic actions in error', 'mydashboard'),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display automatic actions in error", "mydashboard")],
-                $this->getType() . "9"    => ["title"   => __("Not imported mails in collectors", "mydashboard"),
-                                              "icon"    => "ti ti-table",
-                                              "comment" => __("Display of mails which are not imported", "mydashboard")],
-                $this->getType() . "10"   => ["title"   => __("Inventory stock alerts", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display alerts for inventory stocks", "mydashboard")],
-                $this->getType() . "11"   => ["title"   => __('Your equipments', 'mydashboard'),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display your equipments", "mydashboard")],
-                $this->getType() . "12"   => ["title"   => __("SLA Requests alerts", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard")],
-                $this->getType() . "13"   => ["title"   => __("Requests alerts", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => __("Display alerts for requests", "mydashboard")],
-                $this->getType() . "SC32" => ["title"   => __("Global indicators", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => ""],
-                $this->getType() . "SC33" => ["title"   => __("Global indicators by week", "mydashboard"),
-                                              "icon"    => "ti ti-info-circle",
-                                              "comment" => ""],
-            ]
+            PluginMydashboardMenu::$SYSTEM    => [
+                $this->getType() . "1" => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
+                                           "type"    => PluginMydashboardWidget::$KPI,
+                                           "comment" => __("See network alert block", "mydashboard")],
+                $this->getType() . "2" => ["title"   => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
+                                           "type"    => PluginMydashboardWidget::$KPI,
+                                           "comment" => __("See scheduled maintenances information block", "mydashboard")],
+                $this->getType() . "3" => ["title"   => _n('Information', 'Informations', 2, 'mydashboard'),
+                                           "type"    => PluginMydashboardWidget::$KPI,
+                                           "comment" => __("See informations block", "mydashboard")],
+                $this->getType() . "6" => ["title"   => __("GLPI Status", "mydashboard"),
+                                           "type"    => PluginMydashboardWidget::$KPI,
+                                           "comment" => __("Check if GLPI have no problem", "mydashboard")],
+                $this->getType() . "8" => ["title"   => __('Automatic actions in error', 'mydashboard'),
+                                           "type"    => PluginMydashboardWidget::$KPI,
+                                           "comment" => __("Display automatic actions in error", "mydashboard")],
+                $this->getType() . "9" => ["title"   => __("Not imported mails in collectors", "mydashboard"),
+                                           "type"    => PluginMydashboardWidget::$TABLE,
+                                           "comment" => __("Display of mails which are not imported", "mydashboard")],
+            ],
+            PluginMydashboardMenu::$INVENTORY =>
+                [
+                    $this->getType() . "10" => ["title"   => __("Inventory stock alerts", "mydashboard"),
+                                                "type"    => PluginMydashboardWidget::$KPI,
+                                                "comment" => __("Display alerts for inventory stocks", "mydashboard")],
+                    $this->getType() . "11" => ["title"   => __('Your equipments', 'mydashboard'),
+                                                "type"    => PluginMydashboardWidget::$KPI,
+                                                "comment" => __("Display your equipments", "mydashboard")],
+                ],
+            PluginMydashboardMenu::$HELPDESK  =>
+                [
+                    $this->getType() . "4"    => ["title"   => __("Incidents alerts", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$KPI,
+                                                  "comment" => __("Display alerts for incidents and problems", "mydashboard")],
+                    $this->getType() . "5"    => ["title"   => __("SLA Incidents alerts", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$KPI,
+                                                  "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard")],
+                    $this->getType() . "7"    => ["title"   => __("User ticket alerts", "mydashboard"),
+                                                  "type"   => PluginMydashboardWidget::$TABLE,
+                                                  "comment" => __("Display tickets where last modification is a user action", "mydashboard")],
+                    $this->getType() . "12"   => ["title"   => __("SLA Requests alerts", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$KPI,
+                                                  "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard")],
+                    $this->getType() . "13"   => ["title"   => __("Requests alerts", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$KPI,
+                                                  "comment" => __("Display alerts for requests", "mydashboard")],
+                    $this->getType() . "33"   => ["title"   => __("Number of opened tickets by group and by status", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$TABLE,
+                                                  "comment" => ""],
+                    $this->getType() . "SC32" => ["title"   => __("Global indicators", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$KPI,
+                                                  "comment" => ""],
+                    $this->getType() . "SC33" => ["title"   => __("Global indicators by week", "mydashboard"),
+                                                  "type"    => PluginMydashboardWidget::$KPI,
+                                                  "comment" => ""],
+                ],
         ];
+
         return $widgets;
     }
 
     /**
-     * @return array
+     * @param $widgetID
+     *
+     * @return false|mixed
      */
     public function getTitleForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['title'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['title'];
+                }
+            }
         }
         return false;
     }
 
+    /**
+     * @param $widgetID
+     *
+     * @return false|mixed
+     */
     public function getCommentForWidget($widgetID)
     {
         $widgets = $this->getWidgetsForItem();
-        foreach ($widgets as $class => $widget) {
-            return $widget[$widgetID]['comment'];
+        foreach ($widgets as $type => $list) {
+            foreach ($list as $name => $widget) {
+                if ($widgetID == $name) {
+                    return $widget['comment'];
+                }
+            }
         }
         return false;
     }
@@ -2878,7 +2904,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $seeown = false;
 
         $week_start = null;
-        $week_end = null;
+        $week_end   = null;
         if (isset($params['year']) && isset($params['week'])) {
             $dto = new DateTime();
             $dto->setISODate($params['year'], $params['week']);
@@ -2890,7 +2916,7 @@ class PluginMydashboardAlert extends CommonDBTM
         } else {
             $params['year'] = date("Y");
             $params['week'] = date("W");
-            $dto = new DateTime();
+            $dto            = new DateTime();
             $dto->setISODate($params['year'], $params['week']);
             $dto->setTime(0, 0, 1);
             $week_start = $dto->format('Y-m-d H:i:s');
@@ -2970,8 +2996,8 @@ class PluginMydashboardAlert extends CommonDBTM
                 } else {
                     $technicians_groups_id = [0];
                 }
-//                $params['week'] = '44';
-                $total_new      = self::queryNewTicketsWeek($params['year'], $params['week']);
+                //                $params['week'] = '44';
+                $total_new = self::queryNewTicketsWeek($params['year'], $params['week']);
                 //Late tickets
                 $total_due = self::queryDueTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
                 //Waiting tickets
@@ -3393,9 +3419,9 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                                   'week',
                                   'year'];
                 } else {
-                    $criterias = ['technicians_groups_id'];
-                    $params["year"] = NULL;
-                    $params["week"] = NULL;
+                    $criterias      = ['technicians_groups_id'];
+                    $params["year"] = null;
+                    $params["week"] = null;
                 }
                 $params_header = ["widgetId"  => $id,
                                   "name"      => ($type == "all") ? __("Global indicators", "mydashboard") : __("Global indicators by week", "mydashboard"),

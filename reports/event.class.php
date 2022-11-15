@@ -38,7 +38,8 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return translated
      */
-    public static function getTypeName($nb = 0) {
+    public static function getTypeName($nb = 0)
+    {
         return _n('Log', 'Logs', $nb);
     }
 
@@ -47,7 +48,8 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @param array $options
      */
-    public function __construct($options = []) {
+    public function __construct($options = [])
+    {
         parent::__construct();
     }
 
@@ -55,13 +57,14 @@ class PluginMydashboardEvent extends Glpi\Event
     /**
      * @return array
      */
-    public function getWidgetsForItem() {
+    public function getWidgetsForItem()
+    {
         $widgets = [];
         if (Session::haveRight("logs", READ)) {
             $widgets = [
-                PluginMydashboardMenu::$GLOBAL_VIEW => [
+                PluginMydashboardMenu::$SYSTEM => [
                     "eventwidgetglobal" => ["title"   => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
-                                            "icon"    => "ti ti-table",
+                                            "type"    => PluginMydashboardWidget::$TABLE,
                                             "comment" => ""],
                 ]
             ];
@@ -69,12 +72,14 @@ class PluginMydashboardEvent extends Glpi\Event
         return $widgets;
     }
 
+
     /**
      * @param $widgetId
      *
      * @return PluginMydashboardDatatable|void
      */
-    public function getWidgetContentForItem($widgetId) {
+    public function getWidgetContentForItem($widgetId)
+    {
         if (Session::haveRight("logs", READ)) {
             switch ($widgetId) {
                 case "eventwidgetpersonnal":
@@ -93,7 +98,8 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return string|void
      */
-    public static function displayItemLogID($type, $items_id) {
+    public static function displayItemLogID($type, $items_id)
+    {
         global $CFG_GLPI;
         $out = "";
         if (($items_id == "-1") || ($items_id == "0")) {
@@ -147,7 +153,8 @@ class PluginMydashboardEvent extends Glpi\Event
      *
      * @return PluginMydashboardDatatable|void
      */
-    public static function showForUser(string $user = "", bool $display = true) {
+    public static function showForUser(string $user = "", bool $display = true)
+    {
         global $DB, $CFG_GLPI;
 
         // Show events from $result in table form
@@ -239,6 +246,5 @@ class PluginMydashboardEvent extends Glpi\Event
 
         $widget->toggleWidgetRefresh();
         return $widget;
-
     }
 }

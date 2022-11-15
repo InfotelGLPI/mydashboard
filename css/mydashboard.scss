@@ -429,6 +429,16 @@ div#tabcontent{
   z-index: 1001 !important;
 }
 
+.plugin_mydashboard_trWidget {
+  border-left: 1px solid lightgray;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #FFF;
+  padding: 10px;
+  z-index: 1001 !important;
+}
+
 .plugin_mydashboard_fa-thermometer-0:before {
   content: "\f2cb";
   font-family: "Font Awesome 5 Free";
@@ -459,67 +469,60 @@ div#tabcontent{
   font-family: "Font Awesome 5 Free";
 }
 
-.plugin_mydashboard_menuDashboardList {
-  font-size: 13px;
-  border-bottom: 1px #CCC dashed;
-  padding: 5px;
-  //background-color: #FFF;
-}
 
-.plugin_mydashboard_menuDashboardListTitle1 {
-  font-size: 14px;
-  border-bottom: 1px #CCC dashed;
-}
 
 .plugin_mydashboard_menuDashboardListContainer {
   //background-color: #FFF;
 }
 
+.plugin_mydashboard_menuDashboardList {
+  font-size: 13px;
+  padding-left: 5px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+
 .plugin_mydashboard_menuDashboardListTitle1 {
   margin: 0px;
   font-weight: normal;
-  padding: 10px;
-  //background-color: whitesmoke;
   cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .plugin_mydashboard_menuDashboardListTitle2 {
   margin: 0px;
+  padding-top: 10px;
   font-weight: normal;
-  padding: 10px;
-  //background-color: #FFF;
   cursor: pointer;
-}
-
-.plugin_mydashboard_menuDashboardListTitle2 {
   margin-left: 15px;
-  display: table;
-  margin-bottom: 5px;
 }
 
-.plugin_mydashboard_menuDashboardListTitle1:hover,
-.plugin_mydashboard_menuDashboardListTitle1Opened {
-  //background-color: #FFF;
+.plugin_mydashboard_menuDashboardList2,
+.plugin_mydashboard_menuDashboardList3 {
+  margin-left: 25px;
+  padding-top: 5px;
 }
 
-.plugin_mydashboard_menuDashboardListTitle1:before {
-  content: "\f0da";
-  font-weight: 900;
-  font-family: "Font Awesome 5 Free";
-  margin-right: 5px;
-}
 
-.plugin_mydashboard_menuDashboardListTitle1.plugin_mydashboard_menuDashboardListTitle1Opened:before {
-  content: "\f0d7";
-  font-weight: 900;
-  font-family: "Font Awesome 5 Free";
-}
-
-.plugin_mydashboard_menuDashboardListItem {
-  display: table;
+.plugin_mydashboard_menuDashboardListWidget {
   margin: 10px;
   //background-color: #FFF;
   margin-left: 30px;
+}
+
+.plugin_mydashboard_menuDashboardListWidget:hover {
+  /*background-color: #E7E7E7;*/
+  cursor: pointer;
+}
+
+
+.plugin_mydashboard_menuDashboardListItem {
+  display: table;
+  margin: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .plugin_mydashboard_menuDashboardListItem:hover {
@@ -1120,15 +1123,15 @@ div.dt-button-background {
   /*background-color: #FFF !important;*/
 }
 
-.ajax_loader {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(255, 255, 255, .8) url(../pics/spinner.gif) 50% 50% no-repeat;
-}
+//.ajax_loader {
+//  position: fixed;
+//  z-index: 1000;
+//  top: 0;
+//  left: 0;
+//  height: 100%;
+//  width: 100%;
+//  background: rgba(255, 255, 255, .8) url(../pics/spinner.gif) 50% 50% no-repeat;
+//}
 
 .hidden {
   display: none;

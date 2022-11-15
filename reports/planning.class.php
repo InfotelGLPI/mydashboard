@@ -66,14 +66,15 @@ class PluginMydashboardPlanning extends CommonGLPI
         if (Session::haveRight(Planning::$rightname, Planning::READMY)) {
             $widgets = [
                PluginMydashboardMenu::$TICKET_TECHVIEW => [
-                  "planningwidget"    => ["title"   => __('Your planning'),
-                                               "icon"    => "ti ti-calendar",
-                                               "comment" => ""],
+                   "planningwidget" => ["title"   => __('Your planning'),
+                                        "type"    => PluginMydashboardWidget::$PLANNING,
+                                        "comment" => ""],
                ]
             ];
         }
         return $widgets;
     }
+
 
     /**
      * @param $widgetId
@@ -132,15 +133,16 @@ class PluginMydashboardPlanning extends CommonGLPI
         $graph     = "<div id='planning$rand' class='flex-fill'></div>";
         $graph     .= "</div>";
 
-        $graph     .= Html::scriptBlock("$(function() {
+        $js = Html::scriptBlock("$(function() {
          GLPIPlanning.display(" . json_encode($options) . ");
          GLPIPlanning.planningFilters();
       });");
-
+        $widget->appendWidgetScriptContent($js);
         $widget->toggleWidgetRefresh();
         $widget->setWidgetHtmlContent(
             $graph
         );
+
 
         return $widget;
     }
