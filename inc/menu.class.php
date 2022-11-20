@@ -65,6 +65,7 @@ class PluginMydashboardMenu extends CommonGLPI
 
     public static $_PLUGIN_MYDASHBOARD_CFG = [];
 
+    //Maintened for compatibility
     public static $TICKET_REQUESTERVIEW = 98;
     public static $TICKET_TECHVIEW      = 99;
     public static $GROUP_VIEW           = 100;
@@ -164,7 +165,6 @@ class PluginMydashboardMenu extends CommonGLPI
 
         self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']     = $config->fields['enable_fullscreen']; // 0 (FALSE) or 1 (TRUE), enable the possibility to display the mydashboard in fullscreen
         self::$_PLUGIN_MYDASHBOARD_CFG['display_menu']          = $config->fields['display_menu']; // Display the right menu slider
-        self::$_PLUGIN_MYDASHBOARD_CFG['display_plugin_widget'] = $config->fields['display_plugin_widget']; // Display widgets of plugins
         self::$_PLUGIN_MYDASHBOARD_CFG['replace_central']       = $config->fields['replace_central']; // Replace central interface
 
         unset($config);
@@ -392,9 +392,51 @@ class PluginMydashboardMenu extends CommonGLPI
             echo "&nbsp;" . __('Availables widgets', 'mydashboard');
             echo "</th>";
             echo "</tr>";
+
+            /**** Loading widgets****/
+            $widgetslist = PluginMydashboardWidget::getWidgetList();
+            $gslist      = [];
+            foreach ($widgetslist as $gs => $widgetclasses) {
+                $gslist[$widgetclasses['id']] = $gs;
+            }
+            $grid = [];
+            $used = [];
+
+            $dashboard = new PluginMydashboardDashboard();
+
+            if ($edit == 2) {
+                $options = ["users_id"    => 0,
+                            "profiles_id" => $selected_profile];
+                $id      = PluginMydashboardDashboard::checkIfPreferenceExists($options);
+                if ($dashboard->getFromDB($id)) {
+                    $grid = stripslashes($dashboard->fields['grid']);
+                }
+            }
+            if ($edit == 1) {
+                $option_users = ["users_id"    => Session::getLoginUserID(),
+                                 "profiles_id" => $selected_profile];
+                $id           = PluginMydashboardDashboard::checkIfPreferenceExists($option_users);
+                if ($dashboard->getFromDB($id)) {
+                    $grid = stripslashes($dashboard->fields['grid']);
+                }
+            }
+
+            if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
+                foreach ($datagrid as $k => $v) {
+                    $used[] = $v["id"];
+                }
+            }
+
+            $widgetlist = PluginMydashboardWidgetlist::getList(true, $selected_profile);
+            /**** End Loading widgets****/
+
+            echo "<div id='searchwidgets'>";
+            echo "</div>";
+            echo PluginMydashboardWidgetlist::fuzzySearch('getHtml');
+
             echo "<tr>";
             echo "<td class='left' style='padding: 0px;'>";
-            echo $this->getWidgetsList($selected_profile, $edit);
+            echo $this->getWidgetsList($widgetlist, $gslist, $used);
             echo "</th>";
             echo "</tr>";
 
@@ -601,39 +643,8 @@ class PluginMydashboardMenu extends CommonGLPI
      *
      * @return string, HTML
      */
-    public function getWidgetsList($profile, $edit = 0)
+    public function getWidgetsList($widgetlist, $gslist, $used)
     {
-        $list             = new PluginMydashboardWidgetlist();
-        $this->widgetlist = $list->getList(true, $profile);
-
-        $grid = [];
-        $used = [];
-
-        $dashboard = new PluginMydashboardDashboard();
-
-        if ($edit == 2) {
-            $options = ["users_id"    => 0,
-                        "profiles_id" => $profile];
-            $id      = PluginMydashboardDashboard::checkIfPreferenceExists($options);
-            if ($dashboard->getFromDB($id)) {
-                $grid = stripslashes($dashboard->fields['grid']);
-            }
-        }
-        if ($edit == 1) {
-            $option_users = ["users_id"    => Session::getLoginUserID(),
-                             "profiles_id" => $profile];
-            $id           = PluginMydashboardDashboard::checkIfPreferenceExists($option_users);
-            if ($dashboard->getFromDB($id)) {
-                $grid = stripslashes($dashboard->fields['grid']);
-            }
-        }
-
-        if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-            foreach ($datagrid as $k => $v) {
-                $used[] = $v["id"];
-            }
-        }
-
         $wl = "<script>
 
             $(document).ready(function () {
@@ -716,44 +727,8 @@ class PluginMydashboardMenu extends CommonGLPI
             });
 
         </script>";
-        //menuMyDashboard is the non moving part (it's just it width that changes)
-        //      $wl .= "<table class='plugin_mydashboard_menuDashboard' "
-        //             . " data-dashboardid='" . self::DASHBOARD_NAME . "'"
-        //             . ">";//(div.plugin_mydashboard_menuDashboard)
-        //      menuSlider is the moving part (jQuery changing the css property margin-right)
-        //      $wl .= "<table class='plugin_mydashboard_menuSlider'>";  //(div.plugin_mydashboard_menuSlider)
-        //        $wl .= "<div class='plugin_mydashboard_menuSliderHeader'>".$this->getTypeName()."</div>";
-        //menuSliderContent contains the lists of widgets
-        //      $wl .= "<table class='plugin_mydashboard_menuSliderContent'>"; //(div.plugin_mydashboard_menuSliderContent)
 
-        $empty       = false;
-        $widgetslist = PluginMydashboardWidget::getWidgetList();
-        $gslist      = [];
-        foreach ($widgetslist as $gs => $widgetclasses) {
-            $gslist[$widgetclasses['id']] = $gs;
-        }
-
-        //1) we 'display' GLPI core widgets in the list
-        if ($this->loadWidgetsList("core", $used, $wl, $gslist)) {
-            $empty = true;
-        }
-        //2) we 'display' Plugin widgets
-        if (self::$_PLUGIN_MYDASHBOARD_CFG['display_plugin_widget']) {
-            if ($this->loadWidgetsList("plugins", $used, $wl, $gslist)) {
-                $empty = ($empty) ? $empty : false;
-            } else {
-                $empty = false;
-            }
-        }
-
-        if ($empty) {
-            $wl .= __('No widgets available', 'mydashboard');
-        }
-        //-------------------------------------------------------
-        //      $wl .= "</table>"; //end(div.plugin_mydashboard_menuSliderContent)
-
-        //      $wl .= "</table>"; //end(div.plugin_mydashboard_menuSlider)
-        //      $wl .= "</table>"; //end(div.plugin_mydashboard_menuDashboard)
+        PluginMydashboardWidgetlist::loadWidgetsListForMenu($widgetlist, $used, $wl, $gslist);
 
         return $wl;
     }
@@ -810,8 +785,7 @@ class PluginMydashboardMenu extends CommonGLPI
      */
     public static function installWidgets()
     {
-        $list       = new PluginMydashboardWidgetlist();
-        $widgetlist = $list->getList(false);
+        $widgetlist = PluginMydashboardWidgetlist::getList(false);
 
         $widgetDB = new PluginMydashboardWidget();
 
@@ -859,325 +833,6 @@ class PluginMydashboardMenu extends CommonGLPI
         }
     }
 
-
-    /**
-     * Get the HTML list of the GLPI core widgets available
-     *
-     * @param array  $used
-     * @param string $html the HTML list
-     *
-     * @return bool|string is empty ?
-     */
-    //    public function getWidgetsListFromGLPICore($used = [], &$html = "", $gslist = [])
-    //    {
-    //        $wl = "<h3 class='plugin_mydashboard_menuDashboardListTitle1'>GLPI</h3>";
-    //        $wl .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardListContainer'>";
-    //
-    //        //GLPI core classes doesn't display the same thing in each view, we need to provide all views available
-    //        $views = [self::$TICKET_REQUESTERVIEW,
-    //                  self::$TICKET_TECHVIEW,
-    //                  self::$GROUP_VIEW,
-    //                  self::$HELPDESK,
-    //                  self::$INVENTORY,
-    //                  self::$TOOLS,
-    //                  self::$USERS,
-    //                  self::$MANAGEMENT,
-    //                  self::$SYSTEM,
-    //                  self::$OTHERS,
-    //                  ];
-    //        //To ease navigation we display the name of the view
-    //        $viewsNames = $this->getViewNames();
-    //
-    //        $viewContent = [];
-    //        foreach ($views as $view) {
-    //            $viewContent[$view] = "";
-    //        }
-    //
-    //        if (!isset($this->widgetlist['GLPI'])) {
-    //            return '';
-    //        }
-    //        $widgetclasses = $this->widgetlist['GLPI'];
-    //
-    //        foreach ($widgetclasses as $widgetclass => $widgets) {
-    //            foreach ($widgets as $widgetview => $widgetlist) {
-    //                if (is_array($widgetlist)) {
-    //                    foreach ($widgetlist as $widgetId => $widgetTitle) {
-    //                        if (!is_array($widgetTitle)) {
-    //                            if (is_numeric($widgetId)) {
-    //                                $widgetId = $widgetTitle;
-    //                            }
-    //                            $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
-    //                            $gsid                                   = $gslist[$widgetId];
-    //                            if (!in_array($gsid, $used)) {
-    //                                $viewContent[$widgetview] .= "<span class='plugin_mydashboard_menuDashboardListItem'"
-    //                                                             . " data-widgetid='" . $gsid . "'"
-    //                                                             . " data-classname='" . $widgetclass . "'"
-    //                                                             . " data-view='" . $viewsNames[$widgetview] . "'>";
-    //                                $viewContent[$widgetview] .= $widgetTitle;
-    //                                if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-    //                                    $viewContent[$widgetview] .= " (" . $gsid . ")";
-    //                                }
-    //                                $viewContent[$widgetview] .= "</span>";
-    //                            }
-    //                        } else {
-    //                            if (isset($widgetTitle['title'])) {
-    //                                if (is_numeric($widgetId)) {
-    //                                    $widgetId = $widgetTitle;
-    //                                }
-    //                                $this->widgets[$widgetclass][$widgetId] = $viewsNames[$widgetview];
-    //                                $gsid                                   = $gslist[$widgetId];
-    //                                if (!in_array($gsid, $used)) {
-    //                                    $viewContent[$widgetview] .= "<span class='plugin_mydashboard_menuDashboardListItem'"
-    //                                                                 . " data-widgetid='" . $gsid . "'"
-    //                                                                 . " data-classname='" . $widgetclass . "'"
-    //                                                                 . " data-view='" . $viewsNames[$widgetview] . "'>";
-    //                                    $icon                     = $widgetTitle['icon'] ?? "";
-    //                                    if (isset($widgetTitle['type'])) {
-    //                                        $icon = PluginMydashboardWidget::getIconByType($widgetTitle['type']);
-    //                                    }
-    //                                    if (!empty($icon)) {
-    //                                        $viewContent[$widgetview] .= "<div class='media-left'><i class='$icon'></i>&nbsp;";
-    //                                    }
-    //                                    //                        $viewContent[$widgetview] .= "<div class='media-body' style='margin: 10px;'>";
-    //                                    $viewContent[$widgetview] .= $widgetTitle['title'];
-    //                                    if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-    //                                        $viewContent[$widgetview] .= " (" . $gsid . ")";
-    //                                    }
-    //                                    $comment = $widgetTitle['comment'] ?? "";
-    //                                    if (!empty($comment)) {
-    //                                        $viewContent[$widgetview] .= "<br><span class='widget-comment'>$comment</span>";
-    //                                    }
-    //                                    $viewContent[$widgetview] .= "</div></span>";
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        $is_empty = true;
-    //        //Now we display each group (view) as a list
-    //        foreach ($viewContent as $view => $vContent) {
-    //            if ($vContent != '') {
-    //                $wl .= "<div class='plugin_mydashboard_menuDashboardList'>";
-    //                //            $wl .= "<span class='media'>";
-    //                //            $wl .= "<span class=''>";
-    //
-    //                $wl .= "<span class='media-left'>";
-    //                $wl .= "<i class='ti ti-folder'></i>";
-    //                $wl .= "</span>&nbsp;";
-    //                $wl .= $viewsNames[$view];
-    //                $wl .= "</h5>";
-    //                //            $wl .= "</span>";
-    //                //            $wl .= "</span>";
-    //                $wl .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList2'>";
-    //                if (!empty($vContent)) {
-    //                    $wl .= $vContent;
-    //                }
-    //                $wl       .= "</div></div>";
-    //                $is_empty = false;
-    //            }
-    //        }
-    //
-    //        $wl .= "</div>";
-    //        if ($is_empty) {
-    //            return true;
-    //        } else {
-    //            $html .= $wl;
-    //            return false;
-    //        }
-    //    }
-
-    /**
-     * Get the HTML list of the plugin widgets available
-     *
-     * @param array $used
-     *
-     * @return string|boolean
-     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
-     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
-     */
-    public function loadWidgetsList($from, $used = [], &$html = "", $gslist = [])
-    {
-        $list_is_empty = true;
-        $graphs        = [];
-        $is_empty      = true;
-        $tmp           = "<div class='plugin_mydashboard_menuDashboard'>";
-
-        foreach ($this->widgetlist as $plugin => $pluginclasses) {
-            if ($from == "core") {
-                $graphs = $this->widgetlist['GLPI'];
-            } else {
-                foreach ($pluginclasses as $widgetclasses => $types) {
-                    foreach ($types as $type => $list) {
-                        $graphs[$type][] = $list;
-                        $is_empty        = false;
-                    }
-                }
-            }
-        }
-        ksort($graphs);
-
-        foreach ($graphs as $globaltype => $widgetsplugin) {
-            $tmp .= "<div class='plugin_mydashboard_menuDashboardList'>";
-            $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle1'>";
-            $tmp .= "<span class='media-left'>";
-            $icon = self::getIconByType($globaltype);
-            $tmp .= "<i class='".$icon."'></i>";
-            $tmp .= "</span>&nbsp;";
-            $tmp .= self::getFolderByType($globaltype);
-            $tmp .= "</h5>";
-            //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
-            $tmp .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList1'>";
-
-            $graphbytype = [];
-            foreach ($widgetsplugin as $widgets) {
-                foreach ($widgets as $widgetsname => $widgetdetail) {
-                    $typegraph                             = $widgetdetail['type'] ?? 0;
-                    $graphbytype[$typegraph][$widgetsname] = $widgetdetail;
-                }
-            }
-
-            foreach ($graphbytype as $typegraph => $widgetdetail) {
-                $res = "<div class='plugin_mydashboard_menuDashboardList'>";
-                $res .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle2'>";
-                $res .= "<span class='media-left'>";
-                $icon = PluginMydashboardWidget::getIconByType($typegraph);
-                $res .= "<i class='$icon'></i>";
-                $res .= "</span>&nbsp;";
-                $res .= "&nbsp;";
-                $res .= PluginMydashboardWidget::getNameByType($typegraph);
-                $res .= "</h5>";
-                //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
-                $res .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList2'>";
-                $res .= $this->getWidgetsListFromWidgetsArray($widgetdetail, $typegraph, 2, $used, $gslist);
-                $res .= "</div>";
-                $res .= "</div>";
-                if ($res != '') {
-                    $tmp .= $res;
-                }
-            }
-            $tmp .= "<div style='padding-bottom: 10px;'>";
-            $tmp .= "</div>";
-
-            $tmp .= "</div>";
-            $tmp .= "</div>";
-
-        }
-        $tmp .= "</div>";
-        $tmp .= "<div style='padding-bottom: 10px;'>";
-        $tmp .= "</div>";
-        //If there is now widgets available from this plugins we don't display menu entry
-        if (!$is_empty) {
-            $html .= $tmp;
-            if ($list_is_empty) {
-                $list_is_empty = false;
-            }
-        }
-
-        return $list_is_empty;
-    }
-
-
-    /**
-     *
-     * @param type  $widgetsarray , an arry of widgets (or array of array ... of widgets)
-     * @param type  $classname , name of the class containing the widget
-     * @param int   $depth
-     *
-     * @param array $used
-     *
-     * @return string
-     */
-    private function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = [])
-    {
-        $wl = "";
-        //        Toolbox::logInfo($widgetsarray);
-        if (is_array($widgetsarray) && count($widgetsarray) > 0) {
-            foreach ($widgetsarray as $widgetId => $widgetTitle) {
-                //We check if this widget is a real widget
-                if (!is_array($widgetTitle)) {
-                    //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
-                    if (is_numeric($widgetId)) {
-                        $widgetId = $widgetTitle;
-                    }
-                    //                    $this->widgets[$classname][$widgetId] = -1;
-                    if (isset($gslist[$widgetId])) {
-                        $gsid = $gslist[$widgetId];
-                        if (!in_array($gsid, $used)) {
-                            $wl .= "<span id='btnAddWidgete" . $widgetId . "'"
-                                   . " class='plugin_mydashboard_menuDashboardListItem' "
-                                   . " data-widgetid='" . $gsid . "'"
-                                   . " data-classname='" . $classname . "'>";
-                            $wl .= $widgetTitle;
-
-                            if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                                $wl .= " (" . $gsid . ")";
-                            }/*->getWidgetListTitle()*/
-                            $wl .= "</span>";
-                        }
-                    }
-                } else { //If it's not a real widget
-                    //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
-
-                    if (isset($widgetTitle['title'])) {
-                        //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
-                        if (is_numeric($widgetId)) {
-                            $widgetId = $widgetTitle['title'];
-                        }
-                        //                        $this->widgets[$classname][$widgetId] = -1;
-                        $classname = $widgetTitle['title'];
-                        if (isset($gslist[$widgetId])) {
-                            $gsid = $gslist[$widgetId];
-                            if (!in_array($gsid, $used)) {
-                                $wl .= "<span id='btnAddWidgete" . $widgetId . "'"
-                                       . " class='media plugin_mydashboard_menuDashboardListItem' "
-                                       . " data-widgetid='" . $gsid . "'"
-                                       . " data-classname='" . $classname . "'>";
-
-                                $icon = $widgetTitle['icon'] ?? "";
-                                if (isset($widgetTitle['type'])) {
-                                    $icon = PluginMydashboardWidget::getIconByType($widgetTitle['type']);
-                                }
-                                if (!empty($icon)) {
-                                    $wl .= "<div class='media-left'><i class='$icon'></i>&nbsp;";
-                                }
-                                //                        $wl .= "<div class='media-body' style='margin: 10px;'>";
-                                $wl .= $widgetTitle['title'];
-                                if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                                    $wl .= " (" . $gsid . ")";
-                                }
-                                $comment = $widgetTitle['comment'] ?? "";
-                                if (!empty($comment)) {
-                                    $wl .= "<br><span class='widget-comment'>$comment</span>";
-                                }
-                                $wl .= "</div></span>";
-                            }
-                        }
-                    } else {
-                        $tmp = "<div class='plugin_mydashboard_menuDashboardList'>";
-                        $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle$depth'>";
-                        $tmp .= "<span class='media-left'>";
-                        $tmp .= "<i class='ti ti-folder'></i>";
-                        $tmp .= "</span>&nbsp;";
-                        $tmp .= self::getFolderByType($widgetId);
-                        $tmp .= "</h5>";
-                        $tmp .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList$depth'>";
-                        $res = $this->getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
-                        if ($res != '') {
-                            $tmp .= $res;
-                        }
-                        $tmp .= "</div></div>";
-                        if ($res != '') {
-                            $wl .= $tmp;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $wl;
-    }
 
     /**
      * Get an array of widgetNames as ["id1","id2"] for a specifid users_id
@@ -1315,84 +970,7 @@ class PluginMydashboardMenu extends CommonGLPI
         return $languages;
     }
 
-    /**
-     * Get the names of each view
-     * @return array of string
-     */
-    public function getViewNames()
-    {
-        $names = [];
 
-        $names[self::$TICKET_REQUESTERVIEW] = self::getFolderByType(self::$TICKET_REQUESTERVIEW);
-        $names[self::$TICKET_TECHVIEW]      = self::getFolderByType(self::$TICKET_TECHVIEW);
-        $names[self::$GROUP_VIEW]           = self::getFolderByType(self::$GROUP_VIEW);
-        $names[self::$HELPDESK]             = self::getFolderByType(self::$HELPDESK);
-        $names[self::$INVENTORY]            = self::getFolderByType(self::$INVENTORY);
-        $names[self::$TOOLS]                = self::getFolderByType(self::$TOOLS);
-        $names[self::$USERS]                = self::getFolderByType(self::$USERS);
-        $names[self::$MANAGEMENT]           = self::getFolderByType(self::$MANAGEMENT);
-        $names[self::$SYSTEM]               = self::getFolderByType(self::$SYSTEM);
-        $names[self::$OTHERS]               = self::getFolderByType(self::$OTHERS);
-
-        return $names;
-    }
-
-    /**
-     * @param $type
-     *
-     * @return mixed
-     */
-    public static function getFolderByType($type)
-    {
-        switch ($type) {
-            case self::$TICKET_REQUESTERVIEW:
-                return _n('Ticket', 'Tickets', 2) . " (" . __("Requester") . ")";
-            case self::$TICKET_TECHVIEW:
-                return _n('Ticket', 'Tickets', 2) . " (" . __("Technician") . ")";
-            case self::$GROUP_VIEW:
-                return __('Group View');
-            case self::$HELPDESK:
-                return __('Helpdesk');
-            case self::$INVENTORY:
-                return __('Inventory');
-            case self::$SYSTEM:
-                return __('System');
-            case self::$TOOLS:
-                return __('Tools');
-            case self::$USERS:
-                return _n('User', 'Users', 2);
-            case self::$MANAGEMENT:
-                return __('Management');
-        }
-        return __('Others');
-    }
-
-    /**
-     * @param $type
-     *
-     * @return mixed
-     */
-    public static function getIconByType($type)
-    {
-        switch ($type) {
-            case self::$TICKET_REQUESTERVIEW:
-            case self::$TICKET_TECHVIEW:
-            case self::$GROUP_VIEW:
-            case self::$HELPDESK:
-                return "ti ti-headset";
-            case self::$INVENTORY:
-                return "ti ti-package";
-            case self::$SYSTEM:
-                return "ti ti-settings";
-            case self::$TOOLS:
-                return "ti ti-briefcase";
-            case self::$USERS:
-                return "ti ti-user";
-            case self::$MANAGEMENT:
-                return "ti ti-wallet";
-        }
-        return "ti ti-dashboard";
-    }
 
     /**
      * Log $msg only when DEBUG_MODE is set

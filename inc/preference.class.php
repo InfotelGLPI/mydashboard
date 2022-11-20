@@ -233,24 +233,22 @@ class PluginMydashboardPreference extends CommonDBTM
 
         $this->showFormButtons($options);
 
-        if (PluginMydashboardHelper::getDisplayPlugins()) {
-            $blacklist = new PluginMydashboardPreferenceUserBlacklist();
-            $blacklist->showUserForm(Session::getLoginUserID());
-        }
+        $blacklist = new PluginMydashboardPreferenceUserBlacklist();
+        $blacklist->showUserForm(Session::getLoginUserID());
     }
 
-     public function getPalettes()
-     {
-         $themes_files = scandir(PLUGIN_MYDASHBOARD_DIR . "/lib/echarts/theme");
-         $themes = [];
-         foreach ($themes_files as $file) {
-             if (strpos($file, ".js") !== false) {
-                 $name     = substr($file, 0, -3);
-                 $themes[$name] = ucfirst($name);
-             }
-         }
-         return $themes;
-     }
+    public function getPalettes()
+    {
+        $themes_files = scandir(PLUGIN_MYDASHBOARD_DIR . "/lib/echarts/theme");
+        $themes = [];
+        foreach ($themes_files as $file) {
+            if (strpos($file, ".js") !== false) {
+                $name     = substr($file, 0, -3);
+                $themes[$name] = ucfirst($name);
+            }
+        }
+        return $themes;
+    }
 
     /**
      * @param $users_id

@@ -75,6 +75,7 @@ class PluginMydashboardWidget extends CommonDBTM
         return 'ti ti-dashboard';
     }
 
+
     /**
      * @param $type
      *
@@ -227,9 +228,9 @@ class PluginMydashboardWidget extends CommonDBTM
      */
     public static function getWidgetList($preload = false)
     {
-        $list = new PluginMydashboardWidgetlist();
+
         //Load widgets
-        $widgetlist = $list->getList(true, -1, "central", $preload);
+        $widgetlist = PluginMydashboardWidgetlist::getList(true, -1, "central", $preload);
         $i          = 1;
         $self       = new self();
         $widgets    = [];
@@ -364,8 +365,9 @@ class PluginMydashboardWidget extends CommonDBTM
                     $_SESSION["glpi_plugin_mydashboard_widgets"][$widget->getWidgetId()] = json_decode($widget->getWidgetEnableRefresh());
                     //safeJson because refreshCallBack must be a javascript function not a string,
                     // not a string, but a function in a json object is not valid
-                    $menu  = new PluginMydashboardMenu();
-                    $views = $menu->getViewNames();
+                    $widgetlistclass = new PluginMydashboardWidgetlist();
+                    $menu = new PluginMydashboardMenu();
+                    $views = $widgetlistclass->getViewNames();
                     $view  = -1;
                     if (is_numeric($parent)) {
                         $view = $views[$parent];

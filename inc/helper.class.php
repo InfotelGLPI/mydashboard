@@ -68,14 +68,6 @@ class PluginMydashboardHelper
     /**
      * @return mixed
      */
-    public static function getDisplayPlugins()
-    {
-        return self::getConfigField("display_plugin_widget");
-    }
-
-    /**
-     * @return mixed
-     */
     public static function getDisplayMenu()
     {
         return self::getConfigField("display_menu");
@@ -87,14 +79,6 @@ class PluginMydashboardHelper
     public static function getReplaceCentralConf()
     {
         return self::getConfigField("replace_central");
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getGoogleApiKey()
-    {
-        return self::getConfigField("google_api_key");
     }
 
     /**

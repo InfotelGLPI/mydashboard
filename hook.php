@@ -40,7 +40,7 @@ function plugin_mydashboard_install()
     //First install 1.0.0 (0.84)
     if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
         //Creates all tables
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/empty-2.0.0.sql");
+        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/empty-2.1.2.sql");
 
         PluginMydashboardMenu::installWidgets();
         insertDefaultTitles();
@@ -271,7 +271,14 @@ function plugin_mydashboard_install()
     $mig = new Migration("2.0.9");
     $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.9.sql");
     $mig->executeMigration();
-    //If default configuration is not loaded
+
+    if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "display_plugin_widget")) {
+        $mig = new Migration("2.1.2");
+        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.1.2.sql");
+        $mig->executeMigration();
+    }
+
+
     $config = new PluginMydashboardConfig();
     if (!$config->getFromDB("1")) {
         $config->initConfig();

@@ -72,8 +72,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
     public function showForm($ID, $options = [])
     {
         $this->authorized = $this->getAuthorizedListForProfile($ID);
-        $list             = new PluginMydashboardWidgetlist();
-        $widgetlist       = $list->getList(false, -1, $options['interface']);
+        $widgetlist       = PluginMydashboardWidgetlist::getList(false, -1, $options['interface']);
 
         echo "<form method='post' action='".PLUGIN_MYDASHBOARD_WEBDIR."/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
         echo "<table class='tab_cadre_fixe'>";
@@ -115,8 +114,9 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
      */
     private function displayList($widgetlist, $category, $pluginname)
     {
-        $menu  = new PluginMydashboardMenu();
-        $viewNames = $menu->getViewNames();
+        $widgetlistclass  = new PluginMydashboardWidgetlist();
+        $viewNames = $widgetlistclass->getViewNames();
+
         foreach ($widgetlist as $widgetId => $widgetTitle) {
             if (!is_array($widgetTitle)) {
                 echo "<tr class='tab_bg_1 $pluginname'>";

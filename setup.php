@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '2.1.1');
+define('PLUGIN_MYDASHBOARD_VERSION', '2.1.2');
 
 if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
     define("PLUGIN_MYDASHBOARD_DIR", Plugin::getPhpDir("mydashboard"));
@@ -49,40 +49,49 @@ function plugin_init_mydashboard()
        "css/jquery.newsTicker.css",
     ];
 
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
-       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
-       "lib/fileSaver.min.js",
-       //"lib/sdashboard/lib/datatables/jquery.dataTables.min.js",
-       //"lib/sdashboard/lib/flotr2/flotr2.min.js",
-      //      "scripts/mydashboard_load_scripts.js",
-       "scripts/mydashboard.js",
-       "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
-    ];
-
-    if (isset($_SERVER['REQUEST_URI'])
-        && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
-        $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
-           "lib/fileSaver.min.js",
-           "scripts/mydashboard.js",
-           "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
-        ];
-        if (Session::getCurrentInterface() == 'central') {
-            $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
-               "scripts/mydashboard_load_scripts.js.php",
-            ];
-        }
-        $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js",
-           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js",
-           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard.js",
-           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php",
-        ];
-        if (Session::getCurrentInterface() == 'central') {
-            $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-               PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php"
-            ];
-        }
-    }
+    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuze.js';
+    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuzzysearch.js.php';
+    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
+    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard_load_scripts.js.php';
+    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard.js';
+    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
+//    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+//       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
+//       "lib/fileSaver.min.js",
+//       "lib/fuze.js",
+//       "lib/fuzzysearch.js.php",
+//       "scripts/mydashboard.js",
+//       "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
+//    ];
+//
+//    if (isset($_SERVER['REQUEST_URI'])
+//        && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
+//        $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+//           "lib/fileSaver.min.js",
+//           "lib/fuze.js",
+//           "lib/fuzzysearch.js.php",
+//           "scripts/mydashboard.js",
+//           "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
+//        ];
+//        if (Session::getCurrentInterface() == 'central') {
+//            $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+//               "scripts/mydashboard_load_scripts.js.php",
+//            ];
+//        }
+//        $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
+//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js",
+//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js",
+//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard.js",
+//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php",
+//        ];
+//        if (Session::getCurrentInterface() == 'central') {
+//            $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
+//               PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php",
+//                PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js",
+//                 PLUGIN_MYDASHBOARD_NOTFULL_DIR . "lib/fuzzysearch.js.php"
+//            ];
+//        }
+//    }
 
     $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
     $PLUGIN_HOOKS['change_profile']['mydashboard'] = ['PluginMydashboardProfile', 'initProfile'];

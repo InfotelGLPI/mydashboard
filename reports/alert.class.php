@@ -3460,11 +3460,11 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 $stats .= __('New tickets', 'mydashboard');
                 $stats .= "</div>";
 
-                //            $stats .= "<div class='nb ind-widget-late'>";
-                //            $stats .= $href_due;
-                //            $stats .= "<br><br>";
-                //            $stats .= __('Tickets late', 'mydashboard');
-                //            $stats .= "</div>";
+                $stats .= "<div class='nb ind-widget-late'>";
+                $stats .= $href_due;
+                $stats .= "<br><br>";
+                $stats .= __('Tickets late', 'mydashboard');
+                $stats .= "</div>";
 
                 $stats .= "<div class='nb ind-widget-pending'>";
                 $stats .= $href_pend;

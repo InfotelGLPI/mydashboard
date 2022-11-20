@@ -61,7 +61,7 @@ class PluginMydashboardTicket extends CommonGLPI
               "ticketlisttoapprovewidget"     => ["title"   => __('Your tickets to close'),
                                                   "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
-              "ticketlistsurveywidget"        => ["title"   => __('Satisfaction survey'),
+              "ticketlistsurveywidget"        => ["title"   => __('Your satisfaction surveys', 'mydashboard'),
                                                   "type"    => PluginMydashboardWidget::$TABLE,
                                                   "comment" => ""],
            ]
