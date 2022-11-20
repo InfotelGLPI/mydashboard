@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-20 08:43+0000\n"
+"POT-Creation-Date: 2022-11-20 14:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:212 inc/config.class.php:342 inc/itilalert.class.php:118
+#: hook.php:212 inc/config.class.php:335 inc/itilalert.class.php:118
 #: reports/alert.class.php:131 reports/alert.class.php:2662
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:213 inc/config.class.php:343 inc/itilalert.class.php:119
+#: hook.php:213 inc/config.class.php:336 inc/itilalert.class.php:119
 #: reports/alert.class.php:134 reports/alert.class.php:2526
 #: reports/alert.class.php:2663
 msgid "Scheduled maintenance"
@@ -33,7 +33,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:214 inc/config.class.php:344 inc/itilalert.class.php:120
+#: hook.php:214 inc/config.class.php:337 inc/itilalert.class.php:120
 #: reports/alert.class.php:137 reports/alert.class.php:2527
 #: reports/alert.class.php:2664
 msgid "Information"
@@ -41,16 +41,16 @@ msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:294 hook.php:295
+#: hook.php:301 hook.php:302
 msgid "Incidents"
 msgstr ""
 
-#: hook.php:303 hook.php:304
+#: hook.php:310 hook.php:311
 msgid "Requests"
 msgstr ""
 
-#: setup.php:174 ajax/loadscripts.php:38 ajax/loadscripts.php:61
-#: inc/menu.class.php:88 inc/preference.class.php:66
+#: setup.php:183 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: inc/menu.class.php:89 inc/preference.class.php:66
 msgid "My Dashboard"
 msgstr ""
 
@@ -58,31 +58,31 @@ msgstr ""
 msgid "Grid cleared"
 msgstr ""
 
-#: ajax/dropdownMonth.php:41 inc/helper.class.php:988 inc/helper.class.php:1301
-#: inc/helper.class.php:1490 inc/helper.class.php:1524
-#: inc/helper.class.php:1549
+#: ajax/dropdownMonth.php:41 inc/helper.class.php:972 inc/helper.class.php:1285
+#: inc/helper.class.php:1474 inc/helper.class.php:1508
+#: inc/helper.class.php:1533
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1606
+#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1590
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1620
+#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1604
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1638
+#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1622
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1652
+#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1636
 msgid "End year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:948
-#: inc/helper.class.php:1274 inc/helper.class.php:1677
-#: inc/helper.class.php:1751
+#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:932
+#: inc/helper.class.php:1258 inc/helper.class.php:1661
+#: inc/helper.class.php:1735
 msgid "Year"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:137 inc/menu.class.php:1566 inc/widget.class.php:614
+#: inc/chart.class.php:137 inc/menu.class.php:1144 inc/widget.class.php:616
 msgid "No data available"
 msgstr ""
 
@@ -110,57 +110,49 @@ msgstr ""
 msgid "Not an array"
 msgstr ""
 
-#: inc/config.class.php:45
+#: inc/config.class.php:47
 msgid "Plugin setup"
 msgstr ""
 
-#: inc/config.class.php:177 inc/config.class.php:293
+#: inc/config.class.php:180 inc/config.class.php:285
 msgid "Title of alerts widget"
 msgstr ""
 
-#: inc/config.class.php:186 inc/config.class.php:299
+#: inc/config.class.php:189 inc/config.class.php:291
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
-#: inc/config.class.php:195 inc/config.class.php:305
+#: inc/config.class.php:198 inc/config.class.php:297
 msgid "Title of informations widget"
 msgstr ""
 
-#: inc/config.class.php:229
+#: inc/config.class.php:233
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: inc/config.class.php:239
-msgid "Display widgets from plugins"
-msgstr ""
-
-#: inc/config.class.php:245 inc/preference.class.php:128
+#: inc/config.class.php:243 inc/preference.class.php:128
 msgid "Replace central interface"
 msgstr ""
 
-#: inc/config.class.php:251
-msgid "Google API Key"
-msgstr ""
-
-#: inc/config.class.php:258
+#: inc/config.class.php:250
 msgid "Impact colors for alerts"
 msgstr ""
 
-#: inc/config.class.php:280
+#: inc/config.class.php:272
 msgid "Level of categories to show"
 msgstr ""
 
-#: inc/config.class.php:311
+#: inc/config.class.php:304
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr ""
 
-#: inc/config.class.php:313
+#: inc/config.class.php:308
 msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
 
-#: inc/config.class.php:316
+#: inc/config.class.php:312
 msgid "Can take many time if you have many tickets"
 msgstr ""
 
@@ -169,13 +161,13 @@ msgid "Custom Widgets"
 msgstr ""
 
 #: inc/dashboard.class.php:52 inc/datatable.class.php:53 inc/html.class.php:50
-#: inc/menu.class.php:1306 inc/module.class.php:57 reports/change.class.php:39
+#: inc/menu.class.php:961 inc/module.class.php:57 reports/change.class.php:39
 #: reports/planning.class.php:40 reports/problem.class.php:39
 #: reports/project.class.php:39 reports/projecttask.class.php:39
 msgid "Dashboard"
 msgstr ""
 
-#: inc/dashboard.class.php:118 inc/menu.class.php:104
+#: inc/dashboard.class.php:118 inc/menu.class.php:105
 msgid "GLPI admin grid"
 msgstr ""
 
@@ -215,76 +207,76 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: inc/helper.class.php:952 inc/helper.class.php:1290 inc/helper.class.php:1489
+#: inc/helper.class.php:936 inc/helper.class.php:1274 inc/helper.class.php:1473
 msgid "Week"
 msgstr ""
 
-#: inc/helper.class.php:959 inc/helper.class.php:1417
+#: inc/helper.class.php:943 inc/helper.class.php:1401
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/helper.class.php:979 inc/helper.class.php:982 inc/helper.class.php:985
-#: inc/helper.class.php:988 inc/helper.class.php:1501 inc/helper.class.php:1537
+#: inc/helper.class.php:963 inc/helper.class.php:966 inc/helper.class.php:969
+#: inc/helper.class.php:972 inc/helper.class.php:1485 inc/helper.class.php:1521
 msgid "Time display"
 msgstr ""
 
-#: inc/helper.class.php:979 inc/helper.class.php:1523
+#: inc/helper.class.php:963 inc/helper.class.php:1507
 msgid "Last month"
 msgstr ""
 
-#: inc/helper.class.php:982
+#: inc/helper.class.php:966
 msgid "Last year"
 msgstr ""
 
-#: inc/helper.class.php:985 inc/helper.class.php:1521
+#: inc/helper.class.php:969 inc/helper.class.php:1505
 msgid "Year to date"
 msgstr ""
 
-#: inc/helper.class.php:994
+#: inc/helper.class.php:978
 #, php-format
 msgid "sliding %s-month period"
 msgstr ""
 
-#: inc/helper.class.php:997 inc/helper.class.php:1779
+#: inc/helper.class.php:981 inc/helper.class.php:1763
 msgid "Category"
 msgstr ""
 
-#: inc/helper.class.php:1124
+#: inc/helper.class.php:1108
 msgid "Child locations"
 msgstr ""
 
-#: inc/helper.class.php:1488
+#: inc/helper.class.php:1472
 msgid "Day"
 msgstr ""
 
-#: inc/helper.class.php:1522 inc/helper.class.php:1578
-#: inc/helper.class.php:1704
+#: inc/helper.class.php:1506 inc/helper.class.php:1562
+#: inc/helper.class.php:1688
 msgid "year"
 msgstr ""
 
-#: inc/helper.class.php:1579
+#: inc/helper.class.php:1563
 msgid "Start end"
 msgstr ""
 
-#: inc/helper.class.php:1593
+#: inc/helper.class.php:1577
 msgid "Display"
 msgstr ""
 
-#: inc/helper.class.php:1705
+#: inc/helper.class.php:1689
 msgid "begin and end date"
 msgstr ""
 
-#: inc/helper.class.php:1719
+#: inc/helper.class.php:1703
 msgid "Filter date"
 msgstr ""
 
-#: inc/helper.class.php:1806
+#: inc/helper.class.php:1790
 msgid "Tag"
 msgstr ""
 
-#: inc/helper.class.php:2097
+#: inc/helper.class.php:2081
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
@@ -319,7 +311,7 @@ msgstr ""
 msgid "Linked with a ticket category"
 msgstr ""
 
-#: inc/menu.class.php:103
+#: inc/menu.class.php:104
 msgid "My view"
 msgstr ""
 
@@ -327,188 +319,184 @@ msgstr ""
 msgid "Availables widgets"
 msgstr ""
 
-#: inc/menu.class.php:402
+#: inc/menu.class.php:444
 msgid "Edit mode"
 msgstr ""
 
-#: inc/menu.class.php:404
+#: inc/menu.class.php:446
 msgid "Global"
 msgstr ""
 
-#: inc/menu.class.php:425
+#: inc/menu.class.php:467
 msgid "Load a predefined grid"
 msgstr ""
 
-#: inc/menu.class.php:447 inc/menu.class.php:449
+#: inc/menu.class.php:489 inc/menu.class.php:491
 msgid "Load widgets"
 msgstr ""
 
-#: inc/menu.class.php:455 inc/menu.class.php:457 inc/menu.class.php:540
-#: inc/menu.class.php:542
+#: inc/menu.class.php:497 inc/menu.class.php:499 inc/menu.class.php:582
+#: inc/menu.class.php:584
 msgid "Save grid"
 msgstr ""
 
-#: inc/menu.class.php:463 inc/menu.class.php:465
+#: inc/menu.class.php:505 inc/menu.class.php:507
 msgid "Save default grid"
 msgstr ""
 
-#: inc/menu.class.php:471 inc/menu.class.php:473
+#: inc/menu.class.php:513 inc/menu.class.php:515
 msgid "Clear grid"
 msgstr ""
 
-#: inc/menu.class.php:479 inc/menu.class.php:481 inc/menu.class.php:565
-#: inc/menu.class.php:567
+#: inc/menu.class.php:521 inc/menu.class.php:523 inc/menu.class.php:607
+#: inc/menu.class.php:609
 msgid "Permit drag / resize widgets"
 msgstr ""
 
-#: inc/menu.class.php:487 inc/menu.class.php:489 inc/menu.class.php:547
-#: inc/menu.class.php:549
+#: inc/menu.class.php:529 inc/menu.class.php:531 inc/menu.class.php:589
+#: inc/menu.class.php:591
 msgid "Block drag / resize widgets"
 msgstr ""
 
-#: inc/menu.class.php:499 inc/menu.class.php:501 inc/menu.class.php:586
-#: inc/menu.class.php:588
+#: inc/menu.class.php:541 inc/menu.class.php:543 inc/menu.class.php:628
+#: inc/menu.class.php:630
 msgid "Fullscreen"
 msgstr ""
 
-#: inc/menu.class.php:506 inc/menu.class.php:508
+#: inc/menu.class.php:548 inc/menu.class.php:550
 msgid "Close edit mode"
 msgstr ""
 
-#: inc/menu.class.php:520 inc/menu.class.php:1556
+#: inc/menu.class.php:562 inc/menu.class.php:1134
 msgid "Success"
 msgstr ""
 
-#: inc/menu.class.php:521
+#: inc/menu.class.php:563
 msgid "The widget was added to dashboard. Save the dashboard."
 msgstr ""
 
-#: inc/menu.class.php:528
+#: inc/menu.class.php:570
 msgid "Error"
 msgstr ""
 
-#: inc/menu.class.php:529
+#: inc/menu.class.php:571
 msgid "Please reload your page."
 msgstr ""
 
-#: inc/menu.class.php:556 inc/menu.class.php:558
+#: inc/menu.class.php:598 inc/menu.class.php:600
 msgid "Switch to edit mode"
 msgstr ""
 
-#: inc/menu.class.php:574 inc/menu.class.php:576
+#: inc/menu.class.php:616 inc/menu.class.php:618
 msgid "Custom and save default grid"
 msgstr ""
 
-#: inc/menu.class.php:750
-msgid "No widgets available"
-msgstr ""
-
-#: inc/menu.class.php:1263
+#: inc/menu.class.php:918
 msgid "No data available in table"
 msgstr ""
 
-#: inc/menu.class.php:1264
+#: inc/menu.class.php:919
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: inc/menu.class.php:1265
+#: inc/menu.class.php:920
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: inc/menu.class.php:1266
+#: inc/menu.class.php:921
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: inc/menu.class.php:1273
+#: inc/menu.class.php:928
 msgid "No matching records found"
 msgstr ""
 
-#: inc/menu.class.php:1281
+#: inc/menu.class.php:936
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: inc/menu.class.php:1282
+#: inc/menu.class.php:937
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: inc/menu.class.php:1288
+#: inc/menu.class.php:943
 msgid "1 row selected"
 msgstr ""
 
-#: inc/menu.class.php:1292 inc/menu.class.php:1305
+#: inc/menu.class.php:947 inc/menu.class.php:960
 msgid "Close"
 msgstr ""
 
-#: inc/menu.class.php:1293
+#: inc/menu.class.php:948
 msgid "Maximize"
 msgstr ""
 
-#: inc/menu.class.php:1294
+#: inc/menu.class.php:949
 msgid "Minimize"
 msgstr ""
 
-#: inc/menu.class.php:1295
+#: inc/menu.class.php:950
 msgid "Refresh"
 msgstr ""
 
-#: inc/menu.class.php:1297
+#: inc/menu.class.php:952
 msgid "Column visibility"
 msgstr ""
 
-#: inc/menu.class.php:1299
+#: inc/menu.class.php:954
 #, php-format
 msgid "Show %d elements"
 msgstr ""
 
-#: inc/menu.class.php:1300 inc/widget.class.php:453
+#: inc/menu.class.php:955 inc/widget.class.php:455
 msgid "Show all"
 msgstr ""
 
-#: inc/menu.class.php:1307
+#: inc/menu.class.php:962
 msgid "Dashboard saved"
 msgstr ""
 
-#: inc/menu.class.php:1308
+#: inc/menu.class.php:963
 msgid "Dashboard not saved"
 msgstr ""
 
-#: inc/menu.class.php:1309
+#: inc/menu.class.php:964
 msgid "Data received for"
 msgstr ""
 
-#: inc/menu.class.php:1310
+#: inc/menu.class.php:965
 msgid "No data received for"
 msgstr ""
 
-#: inc/menu.class.php:1311
+#: inc/menu.class.php:966
 msgid "Updating all widgets"
 msgstr ""
 
-#: inc/menu.class.php:1312
+#: inc/menu.class.php:967
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: inc/menu.class.php:1530
+#: inc/menu.class.php:1108
 msgid "Warning"
 msgstr ""
 
-#: inc/menu.class.php:1531
+#: inc/menu.class.php:1109
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: inc/menu.class.php:1557
+#: inc/menu.class.php:1135
 msgid "Save grid to see widget"
 msgstr ""
 
-#: inc/menu.class.php:1565
+#: inc/menu.class.php:1143
 msgid "Delete widget"
 msgstr ""
 
-#: inc/menu.class.php:1567
+#: inc/menu.class.php:1145
 msgid "Refresh widget"
 msgstr ""
 
-#: inc/menu.class.php:1919
+#: inc/menu.class.php:1497
 msgid "Export to PDF"
 msgstr ""
 
@@ -596,11 +584,11 @@ msgstr ""
 msgid "See the configuration"
 msgstr ""
 
-#: inc/profileauthorizedwidget.class.php:81
+#: inc/profileauthorizedwidget.class.php:80
 msgid "Authorized widgets"
 msgstr ""
 
-#: inc/profileauthorizedwidget.class.php:93
+#: inc/profileauthorizedwidget.class.php:92
 msgid "Authorize/Unauthorize all"
 msgstr ""
 
@@ -626,69 +614,77 @@ msgstr ""
 msgid "Widget management"
 msgstr ""
 
-#: inc/widget.class.php:87
+#: inc/widget.class.php:88
 msgid "Indicators"
 msgstr ""
 
-#: inc/widget.class.php:89
+#: inc/widget.class.php:90
 msgid "Tables"
 msgstr ""
 
-#: inc/widget.class.php:91
+#: inc/widget.class.php:92
 msgid "Pie charts"
 msgstr ""
 
-#: inc/widget.class.php:93
+#: inc/widget.class.php:94
 msgid "Bar charts"
 msgstr ""
 
-#: inc/widget.class.php:95
+#: inc/widget.class.php:96
 msgid "Line charts"
 msgstr ""
 
-#: inc/widget.class.php:97
+#: inc/widget.class.php:98
 msgid "Map"
 msgstr ""
 
-#: inc/widget.class.php:277
+#: inc/widget.class.php:278
 msgid "This widget doesn't exist anymore"
 msgstr ""
 
-#: inc/widget.class.php:449
+#: inc/widget.class.php:451
 msgid "5 rows"
 msgstr ""
 
-#: inc/widget.class.php:450
+#: inc/widget.class.php:452
 msgid "10 rows"
 msgstr ""
 
-#: inc/widget.class.php:451
+#: inc/widget.class.php:453
 msgid "25 rows"
 msgstr ""
 
-#: inc/widget.class.php:452
+#: inc/widget.class.php:454
 msgid "50 rows"
 msgstr ""
 
-#: inc/widget.class.php:672 reports/alert.class.php:2277
+#: inc/widget.class.php:674 reports/alert.class.php:2277
 #: reports/alert.class.php:2490
 msgid "No problem detected"
 msgstr ""
 
-#: inc/widget.class.php:741 reports/alert.class.php:1908
+#: inc/widget.class.php:743 reports/alert.class.php:1908
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/widget.class.php:809 reports/alert.class.php:2110
+#: inc/widget.class.php:811 reports/alert.class.php:2110
 msgid "No informations founded"
 msgstr ""
 
-#: inc/widget.class.php:842 reports/alert.class.php:155
+#: inc/widget.class.php:844 reports/alert.class.php:155
 msgid "Your equipments"
 msgstr ""
 
-#: inc/widget.class.php:948
+#: inc/widget.class.php:950
 msgid "No equipments founded"
+msgstr ""
+
+#: inc/widgetlist.class.php:396
+msgid "No widgets available"
+msgstr ""
+
+#: inc/widgetlist.class.php:515
+msgid "Find a widget"
 msgstr ""
 
 #: reports/alert.class.php:65
@@ -908,7 +904,7 @@ msgstr ""
 msgid "New tickets"
 msgstr ""
 
-#: reports/alert.class.php:3109
+#: reports/alert.class.php:3109 reports/alert.class.php:3466
 msgid "Tickets late"
 msgstr ""
 
@@ -1386,6 +1382,10 @@ msgstr ""
 
 #: reports/ticket.class.php:58
 msgid "Your rejected tickets"
+msgstr ""
+
+#: reports/ticket.class.php:64
+msgid "Your satisfaction surveys"
 msgstr ""
 
 #: reports/ticket.class.php:111 reports/ticket.class.php:1111
