@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-15 10:52+0000\n"
+"POT-Creation-Date: 2022-11-20 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,15 +98,15 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: inc/chart.class.php:93 inc/datatable.class.php:204
+#: inc/chart.class.php:119 inc/datatable.class.php:204
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:110 inc/menu.class.php:1564 inc/widget.class.php:614
+#: inc/chart.class.php:137 inc/menu.class.php:1566 inc/widget.class.php:614
 msgid "No data available"
 msgstr ""
 
-#: inc/chart.class.php:116 inc/datatable.class.php:124
+#: inc/chart.class.php:143 inc/datatable.class.php:124
 msgid "Not an array"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 msgid "Close edit mode"
 msgstr ""
 
-#: inc/menu.class.php:520 inc/menu.class.php:1554
+#: inc/menu.class.php:520 inc/menu.class.php:1556
 msgid "Success"
 msgstr ""
 
@@ -488,27 +488,27 @@ msgstr ""
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: inc/menu.class.php:1528
+#: inc/menu.class.php:1530
 msgid "Warning"
 msgstr ""
 
-#: inc/menu.class.php:1529
+#: inc/menu.class.php:1531
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: inc/menu.class.php:1555
+#: inc/menu.class.php:1557
 msgid "Save grid to see widget"
 msgstr ""
 
-#: inc/menu.class.php:1563
+#: inc/menu.class.php:1565
 msgid "Delete widget"
 msgstr ""
 
-#: inc/menu.class.php:1565
+#: inc/menu.class.php:1567
 msgid "Refresh widget"
 msgstr ""
 
-#: inc/menu.class.php:1917
+#: inc/menu.class.php:1919
 msgid "Export to PDF"
 msgstr ""
 
@@ -1079,8 +1079,12 @@ msgstr ""
 msgid "Evolution of ticket satisfaction by year"
 msgstr ""
 
-#: reports/reports_bar.class.php:217 reports/reports_bar.class.php:437
-#: reports/reports_bar.class.php:772 reports/reports_bar.class.php:1053
+#: reports/reports_bar.class.php:144
+msgid "Last synchronization of computers by month"
+msgstr ""
+
+#: reports/reports_bar.class.php:221 reports/reports_bar.class.php:441
+#: reports/reports_bar.class.php:776 reports/reports_bar.class.php:1057
 #: reports/reports_line.class.php:224 reports/reports_line.class.php:1249
 #: reports/reports_line.class.php:1322 reports/reports_line.class.php:1417
 #: reports/reports_line.class.php:1510 reports/reports_line.class.php:1617
@@ -1088,82 +1092,86 @@ msgstr ""
 msgid "Tickets number"
 msgstr ""
 
-#: reports/reports_bar.class.php:658
+#: reports/reports_bar.class.php:662
 msgid "Tasks duration (minutes)"
 msgstr ""
 
-#: reports/reports_bar.class.php:952
+#: reports/reports_bar.class.php:956
 msgid "Not resolved tickets"
 msgstr ""
 
-#: reports/reports_bar.class.php:1278
+#: reports/reports_bar.class.php:1282
 msgid "Trimester 1"
 msgstr ""
 
-#: reports/reports_bar.class.php:1297
+#: reports/reports_bar.class.php:1301
 msgid "Trimester 2"
 msgstr ""
 
-#: reports/reports_bar.class.php:1314
+#: reports/reports_bar.class.php:1318
 msgid "Trimester 3"
 msgstr ""
 
-#: reports/reports_bar.class.php:1330
+#: reports/reports_bar.class.php:1334
 msgid "Trimester 4"
 msgstr ""
 
-#: reports/reports_bar.class.php:1354 reports/reports_line.class.php:525
+#: reports/reports_bar.class.php:1358 reports/reports_line.class.php:525
 #: reports/reports_line.class.php:809 reports/reports_line.class.php:1119
 #: reports/reports_pie.class.php:831 reports/reports_pie.class.php:833
 msgid "Opened tickets"
 msgstr ""
 
-#: reports/reports_bar.class.php:1355
+#: reports/reports_bar.class.php:1359
 msgid "Average Satisfaction"
 msgstr ""
 
-#: reports/reports_bar.class.php:1595
+#: reports/reports_bar.class.php:1599
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr ""
 
-#: reports/reports_bar.class.php:1604
+#: reports/reports_bar.class.php:1608
 msgid "Sum of tickets solved in less than a week"
 msgstr ""
 
-#: reports/reports_bar.class.php:1613
+#: reports/reports_bar.class.php:1617
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: reports/reports_bar.class.php:1884
+#: reports/reports_bar.class.php:1888
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: reports/reports_bar.class.php:1885
+#: reports/reports_bar.class.php:1889
 msgid "Take into account average (hour)"
 msgstr ""
 
-#: reports/reports_bar.class.php:2074
+#: reports/reports_bar.class.php:2078
 msgid "Number of surveys answered"
 msgstr ""
 
-#: reports/reports_bar.class.php:2082
+#: reports/reports_bar.class.php:2086
 msgid "Satisfy number"
 msgstr ""
 
-#: reports/reports_bar.class.php:2088
+#: reports/reports_bar.class.php:2092
 msgid "Not satisfy number"
 msgstr ""
 
-#: reports/reports_funnel.class.php:64
+#: reports/reports_bar.class.php:2188
+msgid "Computers number"
+msgstr ""
+
+#: reports/reports_funnel.class.php:63
 msgid "Age pyramid"
 msgstr ""
 
 #: reports/reports_funnel.class.php:213
-msgid "< 2 years"
+msgid "Without buy date"
 msgstr ""
 
 #: reports/reports_funnel.class.php:214
-msgid "2-4 years"
+msgid "> 6 years"
 msgstr ""
 
 #: reports/reports_funnel.class.php:215
@@ -1171,11 +1179,11 @@ msgid "4-6 years"
 msgstr ""
 
 #: reports/reports_funnel.class.php:216
-msgid "> 6 years"
+msgid "2-4 years"
 msgstr ""
 
 #: reports/reports_funnel.class.php:217
-msgid "Without buy date"
+msgid "< 2 years"
 msgstr ""
 
 #: reports/reports_line.class.php:61
