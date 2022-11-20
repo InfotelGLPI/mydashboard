@@ -1844,4 +1844,399 @@ class PluginMydashboardReports_Line extends CommonGLPI
 
         return $datas;
     }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line22link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
+            $eventParts   = explode('_', $params['selected_id']);
+            $date         = $eventParts[0];
+            $ticket_state = $eventParts[1];
+            if (isset($date) && strpos($date, '-') !== false) {
+                $dateParts = explode('-', $date);
+                $year      = $dateParts[0];
+                $month     = $dateParts[1];
+            }
+
+            $params['id'] = $eventParts[1];
+        }
+        if (isset($year) && isset($month) && isset($ticket_state)) {
+            if ($ticket_state == "opened") {
+                $crit = PluginMydashboardChart::OPEN_DATE;
+            } elseif ($ticket_state == "closed") {
+                $crit = PluginMydashboardChart::CLOSE_DATE;
+            } elseif ($ticket_state == "progress") {
+                $crit = PluginMydashboardChart::OPEN_DATE;
+            }
+            if ($ticket_state == "progress") {
+                $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $date   = "$year-$month-$nbdays 23:59";
+                $options = PluginMydashboardChart::addCriteria($crit, 'lessthan', $date, 'AND');
+                $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::STATUS, 'equals', 'notold', 'AND');
+            } else {
+                $date   = "$year-$month-01 00:00";
+                $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $options = PluginMydashboardChart::addCriteria($crit, 'morethan', $date, 'AND');
+                $date = "$year-$month-$nbdays 23:59";
+                $options = PluginMydashboardChart::addCriteria($crit, 'lessthan', $date, 'AND');
+            }
+        }
+
+        if ($params["params"]["locations_id"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::LOCATIONS_ID, 'equals', $params["params"]["locations_id"], 'AND');
+        }
+        if ($params["params"]["technician_id"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TECHNICIAN, 'equals', $params["params"]["technician_id"], 'AND');
+        }
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
+                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
+                                          && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line34link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
+            $eventParts   = explode('_', $params['selected_id']);
+            $date         = $eventParts[0];
+            $ticket_state = $eventParts[1];
+            if (isset($date) && strpos($date, '-') !== false) {
+                $dateParts = explode('-', $date);
+                $year      = $dateParts[0];
+                $month     = $dateParts[1];
+            }
+
+            $params['id'] = $eventParts[1];
+        }
+        if (isset($year) && isset($month) && isset($ticket_state)) {
+            if ($ticket_state == "opened") {
+                $crit = PluginMydashboardChart::OPEN_DATE;
+            } elseif ($ticket_state == "resolved") {
+                $crit = PluginMydashboardChart::SOLVE_DATE;
+            } elseif ($ticket_state == "progress") {
+                $crit = PluginMydashboardChart::OPEN_DATE;
+            }
+            if ($ticket_state == "progress") {
+                $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $date   = "$year-$month-$nbdays 23:59";
+                $options = PluginMydashboardChart::addCriteria($crit, 'lessthan', $date, 'AND');
+                $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::STATUS, 'equals', 'notold', 'AND');
+            } else {
+                $date   = "$year-$month-01 00:00";
+                $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $options = PluginMydashboardChart::addCriteria($crit, 'morethan', $date, 'AND');
+                $date = "$year-$month-$nbdays 23:59";
+                $options = PluginMydashboardChart::addCriteria($crit, 'lessthan', $date, 'AND');
+            }
+        }
+
+        if ($params["params"]["locations_id"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::LOCATIONS_ID, 'equals', $params["params"]["locations_id"], 'AND');
+        }
+        if ($params["params"]["technician_id"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TECHNICIAN, 'equals', $params["params"]["technician_id"], 'AND');
+        }
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
+                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
+                                          && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+
+
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line35link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
+            $eventParts   = explode('_', $params['selected_id']);
+            $date         = $eventParts[0];
+            $ticket_state = $eventParts[1];
+            if (isset($date) && strpos($date, '-') !== false) {
+                $dateParts = explode('-', $date);
+                $year      = $dateParts[0];
+                $month     = $dateParts[1];
+            }
+
+            $params['id'] = $eventParts[1];
+        }
+        $add_actiontime_crit = 0;
+        if (isset($year) && isset($month) && isset($ticket_state)) {
+            if ($ticket_state == "opened") {
+                $crit = PluginMydashboardChart::OPEN_DATE;
+            } elseif ($ticket_state == "closed") {
+                $crit = PluginMydashboardChart::CLOSE_DATE;
+            } elseif ($ticket_state == "progress") {
+                $crit = PluginMydashboardChart::OPEN_DATE;
+            } elseif ($ticket_state == "unplanned") {
+                $crit                = PluginMydashboardChart::CLOSE_DATE;
+                $add_actiontime_crit = 1;
+            }
+            if ($ticket_state == "progress") {
+                $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $date   = "$year-$month-$nbdays 23:59";
+                $options = PluginMydashboardChart::addCriteria($crit, 'lessthan', $date, 'AND');
+                $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::STATUS, 'equals', 'notold', 'AND');
+            } else {
+                $date   = "$year-$month-01 00:00";
+                $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+                $options = PluginMydashboardChart::addCriteria($crit, 'morethan', $date, 'AND');
+                $date = "$year-$month-$nbdays 23:59";
+                $options = PluginMydashboardChart::addCriteria($crit, 'lessthan', $date, 'AND');
+            }
+        }
+
+        if ($params["params"]["locations_id"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::LOCATIONS_ID, 'equals', $params["params"]["locations_id"], 'AND');
+        }
+        if ($params["params"]["technician_id"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TECHNICIAN, 'equals', $params["params"]["technician_id"], 'AND');
+        }
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
+                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
+                                          && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+
+        if ($add_actiontime_crit == 1) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TASK_ACTIONTIME, 'contains', 'NULL', 'AND');
+        }
+
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line43link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+        
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $params['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+        }
+        if (isset($month)) {
+            $date   = "$year-$month-01 00:00";
+            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line44link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
+            $eventParts   = explode('_', $params['selected_id']);
+            $date         = $eventParts[0];
+            $ticket_state = $eventParts[1];
+            if (isset($date) && strpos($date, '-') !== false) {
+                $dateParts = explode('-', $date);
+                $year      = $dateParts[0];
+                $month     = $dateParts[1];
+            }
+
+            $params['id'] = $eventParts[1];
+        }
+        $week_number = $params["selected_id"];
+
+        $firstMonday = date("d", strtotime("first monday of january $year"));
+        $start       = date("Y-m-d 00:00:00", strtotime("$firstMonday Jan " . $year . " 00:00:00 GMT + " . $week_number . " weeks"));
+        $end         = date("Y-m-d 23:59:59", strtotime($start . " + 1 week"));
+        $end         = date("Y-m-d 23:59:59", strtotime($end . " - 1 day"));
+
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'morethan', $start, 'AND');
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'lessthan', $end, 'AND');
+
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line45link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $params['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+        }
+        if (isset($month)) {
+            $date   = "$year-$month-01 00:00";
+            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::VALIDATION_STATS, 'equals', VALIDATION_REFUSED, 'AND');
+
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line46link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $params['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+        }
+        if (isset($month)) {
+            $date   = "$year-$month-01 00:00";
+            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::NUMBER_OF_PROBLEMS, 'equals', '>0', 'AND');
+
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line48link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $params['selected_id']);
+            $year      = $dateParts[0];
+            $month     = $dateParts[1];
+        }
+        if (isset($month)) {
+            $date   = "$year-$month-01 00:00";
+            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::STATUS, 'equals', 'notold', 'AND');
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
+                                          && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+
+        if ($params["params"]["type"] > 0) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
 }

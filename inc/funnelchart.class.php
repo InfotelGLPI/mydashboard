@@ -158,7 +158,7 @@ class PluginMydashboardFunnelChart extends PluginMydashboardChart
                           label: {
                             show: true,
                             position: 'inside',
-                            formatter: '{b} : {c}'
+                            formatter: '{b} : {c} - {d}%',
                           },
                           labelLine: {
                             length: 10,

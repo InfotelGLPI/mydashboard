@@ -814,4 +814,69 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 break;
         }
     }
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Table32link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+        
+        // ENTITY | SONS
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
+                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+
+        // USER
+        if (isset($params["params"]["technician"])) {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TECHNICIAN, 'equals', $params["params"]["technician"], 'AND');
+        }
+
+        // STATUS
+        if ($params["params"]['moreticket'] == 1) {
+            $options = PluginMydashboardChart::addCriteria(3452, 'equals', $params["params"]["status"], 'AND');
+        } else {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::STATUS, 'equals', $params["params"]["status"], 'AND');
+        }
+
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Table33link($params)
+    {
+        global $CFG_GLPI;
+
+        $options['reset'][] = 'reset';
+
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
+                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+
+        // STATUS
+        if ($params["params"]['moreticket'] == 1) {
+            $options = PluginMydashboardChart::addCriteria(3452, 'equals', $params["params"]["status"], 'AND');
+        } else {
+            $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::STATUS, 'equals', $params["params"]["status"], 'AND');
+        }
+
+        // Group
+        $options = PluginMydashboardChart::groupCriteria(PluginMydashboardChart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
+                                          && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+
+
+
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
+                Toolbox::append_params($options, "&");
+
+    }
 }
