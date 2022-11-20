@@ -48,8 +48,7 @@ if (isset($_POST["params"]["requester_groups"])) {
 }
 
 if ($_POST["selected_id"] == "") {
-    return 'no criteria founded';
-    exit;
+    $link = '';
 }
 
 if (isset($_POST["params"]["widget"])

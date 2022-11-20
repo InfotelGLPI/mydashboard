@@ -3020,6 +3020,8 @@ class PluginMydashboardReports_Bar extends CommonGLPI
         if (isset($year) && isset($month)) {
             $date   = "$year-$month";
             $options = PluginMydashboardChart::addCriteria(9, 'contains', $date, 'AND');
+        } else {
+            $options = PluginMydashboardChart::addCriteria(9, 'contains', 'NULL', 'AND');
         }
         $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
                                                                                               && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
