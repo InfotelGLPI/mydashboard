@@ -2996,7 +2996,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
             $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::SATISFACTION_DATE, 'lessthan', $date, 'AND');
         }
 
-        return  $CFG_GLPI["root_doc"] . '/front/computer.php?is_deleted=0&' .
+        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&' .
                 Toolbox::append_params($options, "&");
     }
 
