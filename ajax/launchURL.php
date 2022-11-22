@@ -53,6 +53,7 @@ if ($_POST["selected_id"] == "") {
 
 if (isset($_POST["params"]["widget"])
     && $_POST["params"]["widget"] == "PluginOcsinventoryngDashboard1") {
+    //inventory
     $link = PluginOcsinventoryngDashboard::pluginOcsinventoryngDashboard1link($_POST);
 } elseif (isset($_POST["params"]["widget"])
           && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar1") {
@@ -77,6 +78,7 @@ if (isset($_POST["params"]["widget"])
     $link = PluginMydashboardReports_Bar::pluginMydashboardReports_Bar43link($_POST);
 } elseif (isset($_POST["params"]["widget"])
           && $_POST["params"]["widget"] == "PluginMydashboardReports_Bar44") {
+    //inventory
     $link = PluginMydashboardReports_Bar::pluginMydashboardReports_Bar44link($_POST);
 } elseif (isset($_POST["params"]["widget"])
           && ($_POST["params"]["widget"] == "PluginMydashboardReports_Pie2")) {
@@ -123,6 +125,7 @@ if (isset($_POST["params"]["widget"])
     $link = PluginMydashboardReports_Line::pluginMydashboardReports_Line48link($_POST);
 } elseif (isset($_POST["params"]["widget"])
           && $_POST["params"]["widget"] == "PluginMydashboardReports_Funnel1") {
+    //inventory
     $link = PluginMydashboardReports_Funnel::pluginMydashboardReports_Funnel1link($_POST);
 }
 

@@ -48,12 +48,14 @@ function plugin_init_mydashboard()
        "css/mydashboard.scss",
        "css/jquery.newsTicker.css",
     ];
+    if (Session::getCurrentInterface() == 'central') {
+        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuze.js';
+        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuzzysearch.js.php';
+        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
+        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard_load_scripts.js.php';
+        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard.js';
+    }
 
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuze.js';
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuzzysearch.js.php';
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard_load_scripts.js.php';
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard.js';
     $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
 //    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
 //       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
