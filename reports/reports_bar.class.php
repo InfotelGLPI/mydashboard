@@ -2040,7 +2040,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
 
                 $satisfydatasset    = [];
                 $notsatisfydatasset = [];
-
+                $datasets = [];
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
                         list($year, $month) = explode('-', $data['period']);
