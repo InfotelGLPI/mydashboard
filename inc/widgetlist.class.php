@@ -524,7 +524,7 @@ class PluginMydashboardWidgetlist
                 //               "<kbd><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>G</kbd></kbd>"
                 //            );
                 $html = <<<HTML
-               <div class="" tabindex="-1" id="fuzzysearch">
+               <div class="" tabindex="-1" id="md-fuzzysearch">
                   <div class="">
                      <div class="modal-content">
                         <div class="modal-body" style="padding: 10px;">

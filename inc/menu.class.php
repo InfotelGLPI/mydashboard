@@ -1001,6 +1001,8 @@ class PluginMydashboardMenu extends CommonGLPI
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.php");
         //       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuzzysearch.js.php");
 
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/css/buttons.dataTables.min.css");
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/ColReorder-1.5.6/css/colReorder.dataTables.min.css");
