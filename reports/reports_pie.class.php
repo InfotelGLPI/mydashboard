@@ -31,7 +31,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
 {
     private $options;
     private $pref;
-    public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30, 31];
+    public static $reports = [2, 7, 12, 13, 16, 17, 18, 20, 25, 26, 27, 30, 31, 32];
 
 
     /**
@@ -132,6 +132,9 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                             "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => __("Display percent of request sources for closed tickets", "mydashboard")],
                 $this->getType() . "31" => ["title"   => __("Number of tickets per location per period", "mydashboard"),
+                                            "type"    => PluginMydashboardWidget::$PIE,
+                                            "comment" => ""],
+                $this->getType() . "32" => ["title"   => __("Top ten of opened tickets by appliance", "mydashboard"),
                                             "type"    => PluginMydashboardWidget::$PIE,
                                             "comment" => ""],
 
@@ -1254,7 +1257,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 }
 
                 $query  = "SELECT COUNT(`glpi_tickets`.`id`) AS count, 
-                           glpi_locations.id as locations_id
+                           `glpi_locations`.`id` as locations_id
                         FROM `glpi_tickets` 
                         LEFT JOIN `glpi_locations` ON (`glpi_locations`.`id` = `glpi_tickets`.`locations_id`)";
                 $query  .= " WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria ";
@@ -1557,6 +1560,120 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 return $widget;
                 break;
 
+            case $this->getType() . "32":
+                $name    = 'TicketsByAppliancePieChart';
+                $onclick = 0;
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $criterias = ['entities_id',
+                                  'is_recursive',
+                                  'type',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'limit'];
+//                    $onclick   = 1;
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $criterias = ['type', 'limit'];
+                }
+                $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
+                $params       = ["preferences" => $this->preferences,
+                                 "criterias"   => $criterias,
+                                 "opt"         => $opt];
+
+                $options = PluginMydashboardHelper::manageCriterias($params);
+
+                $opt                        = $options['opt'];
+                $crit                       = $options['crit'];
+                $type                       = $opt['type'];
+                $type_criteria              = $crit['type'];
+                $entities_criteria          = $crit['entities_id'];
+                $entities_id_criteria       = $crit['entity'];
+                $sons_criteria              = $crit['sons'];
+                $technician_group           = $opt['technicians_groups_id'];
+                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
+                $limit_query                = "";
+                $limit                      = isset($opt['limit']) ? $opt['limit'] : 10;
+                if ($limit > 0) {
+                    $limit_query = "LIMIT $limit";
+                }
+
+                $query  = "SELECT COUNT(`glpi_tickets`.`id`) AS count, 
+                           `glpi_items_tickets`.`items_id` as appliances_id
+                        FROM `glpi_tickets` 
+                        INNER JOIN `glpi_items_tickets` ON (`glpi_items_tickets`.`tickets_id` = `glpi_tickets`.`id` 
+                            AND `glpi_items_tickets`.`itemtype` ='Appliance')";
+                $query  .= " WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria ";
+                $query  .= " GROUP BY `glpi_items_tickets`.`items_id` ORDER BY count DESC";
+                $query  .= " $limit_query";
+                $result = $DB->query($query);
+                $nb     = $DB->numrows($result);
+
+                $name_appliance = [];
+                $datas         = [];
+                $tabapp   = [];
+                if ($nb) {
+                    while ($data = $DB->fetchArray($result)) {
+                        if (!empty($data['appliances_id'])) {
+                            $name_appliance[] = Dropdown::getDropdownName("glpi_appliances", $data['appliances_id']);
+                            $name_app        = Dropdown::getDropdownName("glpi_appliances", $data['appliances_id']);
+                        } else {
+                            $name_app        = __('None');
+                            $name_appliance[] = __('None');
+                        }
+                        //                  $datas[] = $data['count'];
+                        $datas[] = ['value' => $data['count'],
+                                    'name'  => $name_app];
+                        if (!empty($data['appliances_id'])) {
+                            $tabapp[] = $data['appliances_id'];
+                        } else {
+                            $tabapp[] = 0;
+                        }
+                    }
+                }
+
+                $widget = new PluginMydashboardHtml();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetComment($comment);
+                $widget->setWidgetTitle((($isDebug) ? "32 " : "") . $title);
+                $widget->toggleWidgetRefresh();
+
+                $dataPieset     = json_encode($datas);
+                $labelsPie      = json_encode($name_appliance);
+                $tabappset = json_encode($tabapp);
+                $js_ancestors   = $crit['ancestors'];
+
+                $graph_datas     = ['title'   => $title,
+                                    'comment' => $comment,
+                                    'name'    => $name,
+                                    'ids'     => $tabappset,
+                                    'data'    => $dataPieset,
+                                    'labels'  => $labelsPie,
+                                    'label'   => $title];
+                $graph_criterias = [];
+//                if ($onclick == 1) {
+//                    $graph_criterias = [];
+//                }
+                $graph = PluginMydashboardPieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                           "name"      => $name,
+                           "onsubmit"  => true,
+                           "opt"       => $opt,
+                           "criterias" => $criterias,
+                           "export"    => true,
+                           "canvas"    => true,
+                           "nb"        => $nb];
+                $widget->setWidgetHeader(PluginMydashboardHelper::getGraphHeader($params));
+                $widget->setWidgetHtmlContent(
+                    $graph
+                );
+
+                return $widget;
+                break;
             default:
                 break;
         }

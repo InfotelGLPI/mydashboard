@@ -308,17 +308,10 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                           type: 'pie',
                           name: \"$label\",
                           radius: [20, 140],
+                          center: ['50%', '50%'],
                           roseType: 'area',
                           itemStyle: {
-                            borderRadius: 5
-                          },
-                          label: {
-                            show: false
-                          },
-                          emphasis: {
-                            label: {
-                              show: true
-                            }
+                            borderRadius: 8
                           },
                           data: $datas,
                         }
