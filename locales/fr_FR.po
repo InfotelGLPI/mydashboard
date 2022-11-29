@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-20 14:51+0000\n"
+"POT-Creation-Date: 2022-11-29 14:16+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2022\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -56,7 +56,7 @@ msgstr "Incidents"
 msgid "Requests"
 msgstr "Demandes"
 
-#: setup.php:183 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: setup.php:184 ajax/loadscripts.php:38 ajax/loadscripts.php:61
 #: inc/menu.class.php:89 inc/preference.class.php:66
 msgid "My Dashboard"
 msgstr "Dashboard"
@@ -111,7 +111,7 @@ msgstr "Merci d'activer le plugin"
 msgid "No data is given to the widget"
 msgstr "Les données du widget n’ont pas été initialisées"
 
-#: inc/chart.class.php:137 inc/menu.class.php:1144 inc/widget.class.php:616
+#: inc/chart.class.php:137 inc/menu.class.php:1146 inc/widget.class.php:616
 msgid "No data available"
 msgstr "Pas de données disponibles"
 
@@ -380,7 +380,7 @@ msgstr "Plein écran"
 msgid "Close edit mode"
 msgstr "Fermer le mode édition"
 
-#: inc/menu.class.php:562 inc/menu.class.php:1134
+#: inc/menu.class.php:562 inc/menu.class.php:1136
 msgid "Success"
 msgstr "Succès"
 
@@ -489,27 +489,27 @@ msgstr "Mise à jour de tous les widgets"
 msgid "Widget added on Dashboard"
 msgstr "Widget ajouté au Dashboard"
 
-#: inc/menu.class.php:1108
+#: inc/menu.class.php:1110
 msgid "Warning"
 msgstr "Attention"
 
-#: inc/menu.class.php:1109
+#: inc/menu.class.php:1111
 msgid "No widgets founded, please add widgets"
 msgstr "Pas de widgets trouvés, merci d'en ajouter"
 
-#: inc/menu.class.php:1135
+#: inc/menu.class.php:1137
 msgid "Save grid to see widget"
 msgstr "Sauver le dashboard pour voir le widget"
 
-#: inc/menu.class.php:1143
+#: inc/menu.class.php:1145
 msgid "Delete widget"
 msgstr "Supprimer un widget"
 
-#: inc/menu.class.php:1145
+#: inc/menu.class.php:1147
 msgid "Refresh widget"
 msgstr "Rafraîchir le widget"
 
-#: inc/menu.class.php:1497
+#: inc/menu.class.php:1499
 msgid "Export to PDF"
 msgstr "Export PDF"
 
@@ -1137,7 +1137,7 @@ msgstr "Trimestre 4"
 
 #: reports/reports_bar.class.php:1358 reports/reports_line.class.php:525
 #: reports/reports_line.class.php:809 reports/reports_line.class.php:1119
-#: reports/reports_pie.class.php:831 reports/reports_pie.class.php:833
+#: reports/reports_pie.class.php:834 reports/reports_pie.class.php:836
 msgid "Opened tickets"
 msgstr "Tickets ouverts"
 
@@ -1259,7 +1259,7 @@ msgstr ""
 "Nombre de tickets ouverts dans le mois encore en cours pour chaque mois"
 
 #: reports/reports_line.class.php:526 reports/reports_line.class.php:1120
-#: reports/reports_pie.class.php:849 reports/reports_pie.class.php:851
+#: reports/reports_pie.class.php:852 reports/reports_pie.class.php:854
 msgid "Closed tickets"
 msgstr "Tickets clos"
 
@@ -1271,8 +1271,8 @@ msgstr "Tickets résolus / clos"
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr "Nombre de tickets ouverts, clos et non planifiés par mois"
 
-#: reports/reports_line.class.php:1121 reports/reports_pie.class.php:869
-#: reports/reports_pie.class.php:871
+#: reports/reports_line.class.php:1121 reports/reports_pie.class.php:872
+#: reports/reports_pie.class.php:874
 msgid "Not planned"
 msgstr "Non planifié"
 
@@ -1354,27 +1354,31 @@ msgstr "Afficher le pourcentage de sources de demande pour les tickets fermés"
 msgid "Number of tickets per location per period"
 msgstr "Nombre de tickets par lieu et par période"
 
-#: reports/reports_pie.class.php:412 reports/reports_pie.class.php:426
+#: reports/reports_pie.class.php:137
+msgid "Top ten of opened tickets by appliance"
+msgstr "Top 10 des tickets par applicatif"
+
+#: reports/reports_pie.class.php:415 reports/reports_pie.class.php:429
 msgid "Not respected TTR"
 msgstr "TTR non respectés"
 
-#: reports/reports_pie.class.php:415 reports/reports_pie.class.php:425
+#: reports/reports_pie.class.php:418 reports/reports_pie.class.php:428
 msgid "Respected TTR"
 msgstr "TTR respectés"
 
-#: reports/reports_pie.class.php:502 reports/reports_pie.class.php:515
+#: reports/reports_pie.class.php:505 reports/reports_pie.class.php:518
 msgid "Not respected TTO"
 msgstr "TTO non respectés"
 
-#: reports/reports_pie.class.php:505 reports/reports_pie.class.php:515
+#: reports/reports_pie.class.php:508 reports/reports_pie.class.php:518
 msgid "Respected TTO"
 msgstr "TTO respectés"
 
-#: reports/reports_pie.class.php:1174 reports/reports_pie.class.php:1188
+#: reports/reports_pie.class.php:1177 reports/reports_pie.class.php:1191
 msgid "Satisfy percent"
 msgstr "Pourcentage de satisfaction"
 
-#: reports/reports_pie.class.php:1177 reports/reports_pie.class.php:1188
+#: reports/reports_pie.class.php:1180 reports/reports_pie.class.php:1191
 msgid "Not satisfy percent"
 msgstr "Pourcentage de non satisfaction"
 
