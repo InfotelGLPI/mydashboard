@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-27 16:10+0000\n"
+"POT-Creation-Date: 2022-11-29 14:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1114,7 +1114,7 @@ msgstr ""
 
 #: reports/reports_bar.class.php:1358 reports/reports_line.class.php:525
 #: reports/reports_line.class.php:809 reports/reports_line.class.php:1119
-#: reports/reports_pie.class.php:831 reports/reports_pie.class.php:833
+#: reports/reports_pie.class.php:834 reports/reports_pie.class.php:836
 msgid "Opened tickets"
 msgstr ""
 
@@ -1235,7 +1235,7 @@ msgid "Number of open tickets in the month still in progress for each month"
 msgstr ""
 
 #: reports/reports_line.class.php:526 reports/reports_line.class.php:1120
-#: reports/reports_pie.class.php:849 reports/reports_pie.class.php:851
+#: reports/reports_pie.class.php:852 reports/reports_pie.class.php:854
 msgid "Closed tickets"
 msgstr ""
 
@@ -1247,8 +1247,8 @@ msgstr ""
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr ""
 
-#: reports/reports_line.class.php:1121 reports/reports_pie.class.php:869
-#: reports/reports_pie.class.php:871
+#: reports/reports_line.class.php:1121 reports/reports_pie.class.php:872
+#: reports/reports_pie.class.php:874
 msgid "Not planned"
 msgstr ""
 
@@ -1328,27 +1328,31 @@ msgstr ""
 msgid "Number of tickets per location per period"
 msgstr ""
 
-#: reports/reports_pie.class.php:412 reports/reports_pie.class.php:426
+#: reports/reports_pie.class.php:137
+msgid "Top ten of opened tickets by appliance"
+msgstr ""
+
+#: reports/reports_pie.class.php:415 reports/reports_pie.class.php:429
 msgid "Not respected TTR"
 msgstr ""
 
-#: reports/reports_pie.class.php:415 reports/reports_pie.class.php:425
+#: reports/reports_pie.class.php:418 reports/reports_pie.class.php:428
 msgid "Respected TTR"
 msgstr ""
 
-#: reports/reports_pie.class.php:502 reports/reports_pie.class.php:515
+#: reports/reports_pie.class.php:505 reports/reports_pie.class.php:518
 msgid "Not respected TTO"
 msgstr ""
 
-#: reports/reports_pie.class.php:505 reports/reports_pie.class.php:515
+#: reports/reports_pie.class.php:508 reports/reports_pie.class.php:518
 msgid "Respected TTO"
 msgstr ""
 
-#: reports/reports_pie.class.php:1174 reports/reports_pie.class.php:1188
+#: reports/reports_pie.class.php:1177 reports/reports_pie.class.php:1191
 msgid "Satisfy percent"
 msgstr ""
 
-#: reports/reports_pie.class.php:1177 reports/reports_pie.class.php:1188
+#: reports/reports_pie.class.php:1180 reports/reports_pie.class.php:1191
 msgid "Not satisfy percent"
 msgstr ""
 
