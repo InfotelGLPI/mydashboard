@@ -998,7 +998,7 @@ class PluginMydashboardMenu extends CommonGLPI
         Html::requireJs('gridstack');
         echo Html::css("/public/lib/gridstack.css");
         echo Html::css("/css/standalone/gridstack-grids.scss");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.php");
+        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.css.php");
         //       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js");
