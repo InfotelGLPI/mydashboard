@@ -42,14 +42,6 @@ class PluginMydashboardReports_Pie extends CommonGLPI
     public function __construct($_options = [])
     {
         $this->options = $_options;
-
-        $preference = new PluginMydashboardPreference();
-        if (Session::getLoginUserID() !== false
-            && !$preference->getFromDB(Session::getLoginUserID())) {
-            $preference->initPreferences(Session::getLoginUserID());
-        }
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
     }
 
     /**
@@ -157,6 +149,14 @@ class PluginMydashboardReports_Pie extends CommonGLPI
 
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+
         switch ($widgetId) {
             case $this->getType() . "2":
                 $onclick = 0;
@@ -175,7 +175,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -280,7 +280,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                   'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
                 $options      = PluginMydashboardHelper::manageCriterias($params);
@@ -369,7 +369,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
             case $this->getType() . "12":
                 $name      = 'TTRCompliance';
                 $criterias = ['type'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -458,7 +458,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
             case $this->getType() . "13":
                 $name      = 'TTOCompliance';
                 $criterias = ['type'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -559,7 +559,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['requesters_groups_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -679,7 +679,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['requesters_groups_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -803,7 +803,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                   'month'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -924,7 +924,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1033,7 +1033,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
             case $this->getType() . "25":
                 $name         = 'TicketsByRequesterGroupPieChart';
                 $criterias    = ['type', 'limit'];
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
@@ -1139,7 +1139,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['year'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1234,7 +1234,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['type', 'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
 
@@ -1349,7 +1349,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1463,7 +1463,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                   'technicians_groups_id'];
                     $onclick   = 1;
                 }
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1578,7 +1578,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     $criterias = ['type', 'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
 

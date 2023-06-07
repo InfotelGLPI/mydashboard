@@ -51,7 +51,6 @@ class PluginMydashboardUserWidget extends CommonDBTM {
       } else {
          $this->interface = $interface;
       }
-      $this->profile_id = $_SESSION['glpiactiveprofile']['id'];
       $this->user_id = $user_id;
    }
 
@@ -83,7 +82,7 @@ class PluginMydashboardUserWidget extends CommonDBTM {
       
       if ($this->getFromDBByCrit(['users_id' => $this->user_id,
                                   'widgets_id' => $widgetId,
-                                  'profiles_id' => $this->profile_id,
+                                  'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
                                   'interface' => $this->interface]) === false) {
          return null;
       } else {
@@ -110,7 +109,7 @@ class PluginMydashboardUserWidget extends CommonDBTM {
                 . "LEFT JOIN `glpi_plugin_mydashboard_widgets` "
                 . "ON `" . $this->getTable() . "`.`widgets_id` = `glpi_plugin_mydashboard_widgets`.`id` "
                 . "WHERE `" . $this->getTable() . "`.`users_id` = '" . $user_id . "' "
-                . "AND `profiles_id` = '$this->profile_id' ";
+                . "AND `profiles_id` = '".$_SESSION['glpiactiveprofile']['id']."' ";
       $result = $DB->query($query);
 
       $tab = [];

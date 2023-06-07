@@ -41,14 +41,6 @@ class PluginMydashboardReports_Funnel extends CommonGLPI
     public function __construct($_options = [])
     {
         $this->options = $_options;
-
-        $preference = new PluginMydashboardPreference();
-        if (Session::getLoginUserID() !== false
-            && !$preference->getFromDB(Session::getLoginUserID())) {
-            $preference->initPreferences(Session::getLoginUserID());
-        }
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
     }
 
 
@@ -118,6 +110,14 @@ class PluginMydashboardReports_Funnel extends CommonGLPI
         global $DB;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+
         switch ($widgetId) {
             case $this->getType() . "1":
                 $name = 'AgePyramid';
@@ -137,7 +137,7 @@ class PluginMydashboardReports_Funnel extends CommonGLPI
                     ];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);

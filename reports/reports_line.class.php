@@ -42,13 +42,6 @@ class PluginMydashboardReports_Line extends CommonGLPI
     {
         $this->options = $_options;
 
-        $preference = new PluginMydashboardPreference();
-        if (Session::getLoginUserID() !== false
-            && !$preference->getFromDB(Session::getLoginUserID())) {
-            $preference->initPreferences(Session::getLoginUserID());
-        }
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
     }
 
     /**
@@ -142,6 +135,14 @@ class PluginMydashboardReports_Line extends CommonGLPI
         global $DB;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+
         switch ($widgetId) {
             case $this->getType() . "6":
                 $name = 'TicketStockLineChart';
@@ -157,7 +158,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                     $criterias = [];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -306,7 +307,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                                   'locations_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -614,7 +615,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                                   'locations_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -897,7 +898,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                                   'locations_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1198,7 +1199,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                               'type',
                               'entities_id',
                               'is_recursive'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
 
@@ -1294,7 +1295,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                               'is_recursive',
                               'year',
                               'type'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1367,7 +1368,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                               'type',
                               'entities_id',
                               'is_recursive'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1461,7 +1462,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                               'type',
                               'entities_id',
                               'is_recursive'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1563,7 +1564,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                     $criterias = [];
                 }
 
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1679,7 +1680,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
                                   'requesters_groups_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);

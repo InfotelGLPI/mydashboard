@@ -32,7 +32,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     private $tabNames = [];
     private $tabNamesHidden = [];
     private $tabDatas = [];
-    private $tabDatasSet = false;
+//    private $tabDatasSet = false;
     private $options = [];
     public static $rightname = "plugin_mydashboard";
 
@@ -107,8 +107,8 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
     public function setTabDatas($_tabDatas)
     {
         if (is_array($_tabDatas)) {
-            $this->tabNamesSet = !empty($this->tabNames);
-            $this->tabDatasSet = true;
+//            $this->tabNamesSet = !empty($this->tabNames);
+//            $this->tabDatasSet = true;
             //for a datatable we ignore all custom keys (they are useless in this case)
             foreach ($_tabDatas as &$line) {
                 //For future, maybe use those custom keys to match with order of the header and not use order of the array
@@ -200,9 +200,9 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
             $value = $tmp;
         }
         //Warning when setTabDatas haven't been called (it could have been called with an empty array, but that's not a problem)
-        if (!$this->tabDatasSet) {
-            $this->debugWarning(__("No data is given to the widget", 'mydashboard'));
-        }
+//        if (!$this->tabDatasSet) {
+//            $this->debugWarning(__("No data is given to the widget", 'mydashboard'));
+//        }
 
         //Setting datas
         $jsonData['aaData'] = $this->getTabDatas();

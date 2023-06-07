@@ -41,14 +41,6 @@ class PluginMydashboardReports_Custom extends CommonGLPI
     public function __construct($_options = [])
     {
         $this->options = $_options;
-
-        $preference = new PluginMydashboardPreference();
-        if (Session::getLoginUserID() !== false
-            && !$preference->getFromDB(Session::getLoginUserID())) {
-            $preference->initPreferences(Session::getLoginUserID());
-        }
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
     }
 
 

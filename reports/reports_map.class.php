@@ -42,13 +42,6 @@ class PluginMydashboardReports_Map extends CommonGLPI
     {
         $this->options = $_options;
 
-        $preference = new PluginMydashboardPreference();
-        if (Session::getLoginUserID() !== false
-            && !$preference->getFromDB(Session::getLoginUserID())) {
-            $preference->initPreferences(Session::getLoginUserID());
-        }
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
     }
 
     /**
@@ -112,6 +105,15 @@ class PluginMydashboardReports_Map extends CommonGLPI
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
+
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+        
         switch ($widgetId) {
             case $this->getType() . "29":
 
@@ -128,7 +130,7 @@ class PluginMydashboardReports_Map extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $paramsc = ["preferences" => $this->preferences,
+                $paramsc = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($paramsc);

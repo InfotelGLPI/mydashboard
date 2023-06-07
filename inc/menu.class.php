@@ -233,7 +233,7 @@ class PluginMydashboardMenu extends CommonGLPI
     public function showMenu($rand, $users_id = -1, $active_profile = -1, $predefined_grid = 0)
     {
         //We check the wanted interface (this param is later transmitted to PluginMydashboardUserWidget to get the dashboard for the user in this interface)
-        $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
 
         // validation des droits
         if (!Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
@@ -533,10 +533,10 @@ class PluginMydashboardMenu extends CommonGLPI
                 echo "<br><br>";
             }
 
-            $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
             if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
                 && $edit < 1
-                && $this->interface == 1) {
+                && $interface == 1) {
                 echo "<a id='header_fullscreen' class='submit btn btn-info'>";
                 echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
@@ -620,10 +620,10 @@ class PluginMydashboardMenu extends CommonGLPI
                 echo "<br><br>";
             }
 
-            $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
             if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
                 && $edit < 1
-                && $this->interface == 1) {
+                && $interface == 1) {
                 echo "<a id='header_fullscreen' class='submit btn btn-info'>";
                 echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
@@ -843,8 +843,8 @@ class PluginMydashboardMenu extends CommonGLPI
      */
     private function getDashboardForUser($id)
     {
-        $this->interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-        $user_widget     = new PluginMydashboardUserWidget($id, $this->interface);
+        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+        $user_widget     = new PluginMydashboardUserWidget($id, $interface);
         return $user_widget->getWidgets();
     }
 
@@ -1149,7 +1149,6 @@ class PluginMydashboardMenu extends CommonGLPI
         $disableDrag   = 'true';
         $delete_button = 'false';
 
-        //      if ($this->interface == 1) {
         if ($drag > 0) {
             $disableResize = 'false';
             $disableDrag   = 'false';
@@ -1157,7 +1156,6 @@ class PluginMydashboardMenu extends CommonGLPI
         if ($edit > 0) {
             $delete_button = 'true';
         }
-        //      }
 
         $all_displayed_widgets    = json_encode($displayed_widgets);
         $all_displayed_widgets_id = json_encode($displayed_widgets_id);

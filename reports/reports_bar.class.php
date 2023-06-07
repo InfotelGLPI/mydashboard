@@ -42,13 +42,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
     {
         $this->options = $_options;
 
-        $preference = new PluginMydashboardPreference();
-        if (Session::getLoginUserID() !== false
-            && !$preference->getFromDB(Session::getLoginUserID())) {
-            $preference->initPreferences(Session::getLoginUserID());
-        }
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
+
     }
 
     /**
@@ -161,6 +155,16 @@ class PluginMydashboardReports_Bar extends CommonGLPI
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
+
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+
+
         switch ($widgetId) {
             case $this->getType() . "1":
                 $name    = 'BacklogBarChart';
@@ -183,7 +187,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'requesters_groups_id'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -296,7 +300,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
                 $options      = PluginMydashboardHelper::manageCriterias($params);
@@ -390,7 +394,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
                 $options      = PluginMydashboardHelper::manageCriterias($params);
@@ -513,7 +517,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'limit'];
                 }
                 $opt['limit'] = isset($opt['limit']) ? $opt['limit'] : 10;
-                $params       = ["preferences" => $this->preferences,
+                $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
                 $options      = PluginMydashboardHelper::manageCriterias($params);
@@ -598,7 +602,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -729,7 +733,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 ;
                 $opt['end'] = isset($opt['end']) ? $opt['end'] : date('Y-m-d H:i:s');
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -853,7 +857,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1019,7 +1023,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1120,7 +1124,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $criterias = ['type'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1262,7 +1266,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
             case $this->getType() . "38":
                 $name      = 'NumberOfOpenedTicketAndAverageSatisfactionPerTrimester';
                 $criterias = [];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1399,7 +1403,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
             case $this->getType() . "39":
                 $name      = 'ResponsivenessRollingPendingByYear';
                 $criterias = ['requesters_groups_id', 'year', 'type'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
 
@@ -1650,7 +1654,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
 
             case $this->getType() . "40":
                 $criterias = ['entities_id', 'is_recursive'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1766,7 +1770,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
 
             case $this->getType() . "41":
                 $criterias = ['entities_id', 'is_recursive'];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -1895,7 +1899,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                               'multiple_locations_id',
                               'technicians_groups_id'];
 
-                $params = ["preferences" => $this->preferences,
+                $params = ["preferences" => $preferences,
                            "criterias"   => $criterias,
                            "opt"         => $opt];
 
@@ -1995,7 +1999,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $criterias = ['year'];
                 }
 
-                $params  = ["preferences" => $this->preferences,
+                $params  = ["preferences" => $preferences,
                             "criterias"   => $criterias,
                             "opt"         => $opt];
                 $options = PluginMydashboardHelper::manageCriterias($params);

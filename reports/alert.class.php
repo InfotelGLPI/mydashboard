@@ -29,21 +29,11 @@
  */
 class PluginMydashboardAlert extends CommonDBTM
 {
-    public static $types = ['Reminder', 'Problem', 'Change', 'PluginEventsmanagerEvent', 'PluginReleasesRelease'];
-
-    /**
-     * PluginMydashboardAlert constructor.
-     *
-     * @param array $_options
-     */
-    public function __construct($_options = [])
-    {
-        $this->options = $_options;
-
-        $preference = new PluginMydashboardPreference();
-        $preference->getFromDB(Session::getLoginUserID());
-        $this->preferences = $preference->fields;
-    }
+    public static $types = ['Reminder',
+        'Problem',
+        'Change',
+        'PluginEventsmanagerEvent',
+        'PluginReleasesRelease'];
 
     /**
      * @param CommonGLPI $item
@@ -290,6 +280,14 @@ class PluginMydashboardAlert extends CommonDBTM
 
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu     = new DbUtils();
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+
         $config  = new PluginMydashboardConfig();
         $config->getFromDB(1);
 
@@ -655,7 +653,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
                 $setuplink = PluginMydashboardStockWidget::getSearchURL(true);
                 $criterias = ["locations_id"];
-                $params    = ["preferences" => $this->preferences,
+                $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
                 $options   = PluginMydashboardHelper::manageCriterias($params);
@@ -871,6 +869,13 @@ class PluginMydashboardAlert extends CommonDBTM
 
         $widget = new PluginMydashboardHtml();
         $dbu    = new DbUtils();
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
 
         $colorstats1 = "#CCC";
         $colorstats2 = "#CCC";
@@ -882,7 +887,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
         $criterias = ['technicians_groups_id'];
 
-        $params  = ["preferences" => $this->preferences,
+        $params  = ["preferences" => $preferences,
                     "criterias"   => $criterias,
                     "opt"         => $opt];
         $options = PluginMydashboardHelper::manageCriterias($params);
@@ -890,7 +895,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $opt = $options['opt'];
 
         if (!isset($opt['technicians_groups_id']) || count($opt['technicians_groups_id']) == 0) {
-            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
         }
@@ -1286,6 +1291,13 @@ class PluginMydashboardAlert extends CommonDBTM
         $colorstats3 = "#CCC";
         $colorstats4 = "#CCC";
         $colorstats5 = "#CCC";
+        $preference = new PluginMydashboardPreference();
+        if (Session::getLoginUserID() !== false
+            && !$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
 
         /*Stats2*/
         $search_assign = "1=1";
@@ -1294,7 +1306,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
         $criterias = ['technicians_groups_id'];
 
-        $params  = ["preferences" => $this->preferences,
+        $params  = ["preferences" => $preferences,
                     "criterias"   => $criterias,
                     "opt"         => $opt];
         $options = PluginMydashboardHelper::manageCriterias($params);
@@ -1302,7 +1314,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $opt = $options['opt'];
 
         if (!isset($opt['technicians_groups_id']) || count($opt['technicians_groups_id']) == 0) {
-            $technicians_groups_id = PluginMydashboardHelper::getGroup($this->preferences['prefered_group'], $opt);
+            $technicians_groups_id = PluginMydashboardHelper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
         }
