@@ -24,6 +24,11 @@
     </authors>
     <versions>
         <version>
+            <num>2.1.5</num>
+            <compatibility>~10.0</compatibility>
+            <download_url>https://github.com/InfotelGLPI/mydashboard/releases/download/2.1.5/glpi-mydashboard-2.1.5.tar.bz2</download_url>
+        </version>
+        <version>
             <num>2.1.4</num>
             <compatibility>~10.0</compatibility>
             <download_url>https://github.com/InfotelGLPI/mydashboard/releases/download/2.1.4/glpi-mydashboard-2.1.4.tar.bz2</download_url>
