@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-07 18:14+0000\n"
+"POT-Creation-Date: 2023-06-27 16:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -679,11 +679,11 @@ msgstr ""
 msgid "No equipments founded"
 msgstr ""
 
-#: inc/widgetlist.class.php:396
+#: inc/widgetlist.class.php:397
 msgid "No widgets available"
 msgstr ""
 
-#: inc/widgetlist.class.php:515
+#: inc/widgetlist.class.php:516
 msgid "Find a widget"
 msgstr ""
 
