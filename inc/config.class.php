@@ -430,7 +430,7 @@ class PluginMydashboardConfig extends CommonDBTM
              || str_contains($_SESSION['glpipalette'], 'midnight') == true) {
              return '#FFFFFF';
          } else {
-             return '#000000!important;';
+             return '#000000';
          }
      }
 }
