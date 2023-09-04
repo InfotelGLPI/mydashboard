@@ -1594,7 +1594,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     array_push($max_tab, $max = max($tabTicketsMoreThanOneWeek['total']) + 100);
                 }
 
-                $maxFinal = max($max_tab);
+//                $maxFinal = max($max_tab);
 
                 $datasets[] =
                     [

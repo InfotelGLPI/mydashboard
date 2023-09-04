@@ -306,6 +306,7 @@ class PluginMydashboardWidgetlist
                     if (isset($gslist[$widgetId])) {
                         $gsid   = $gslist[$widgetId];
                         $list[] = [
+                            'type' => '',
                             'title'    => $widgetTitle['title'],
                             'icon'     => PluginMydashboardWidget::getIconByType($widgetTitle['type']),
                             'widgetid' => $gsid,
