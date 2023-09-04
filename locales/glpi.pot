@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-04 10:06+0000\n"
+"POT-Creation-Date: 2023-09-04 16:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,31 +58,31 @@ msgstr ""
 msgid "Grid cleared"
 msgstr ""
 
-#: ajax/dropdownMonth.php:41 inc/helper.class.php:971 inc/helper.class.php:1284
-#: inc/helper.class.php:1473 inc/helper.class.php:1507
-#: inc/helper.class.php:1532
+#: ajax/dropdownMonth.php:41 inc/helper.class.php:992 inc/helper.class.php:1308
+#: inc/helper.class.php:1497 inc/helper.class.php:1531
+#: inc/helper.class.php:1556
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1589
+#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1613
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1603
+#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1627
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1621
+#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1645
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1635
+#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1659
 msgid "End year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:931
-#: inc/helper.class.php:1257 inc/helper.class.php:1660
-#: inc/helper.class.php:1734
+#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:952
+#: inc/helper.class.php:1281 inc/helper.class.php:1684
+#: inc/helper.class.php:1758
 msgid "Year"
 msgstr ""
 
@@ -207,76 +207,77 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: inc/helper.class.php:935 inc/helper.class.php:1273 inc/helper.class.php:1472
+#: inc/helper.class.php:956 inc/helper.class.php:1297 inc/helper.class.php:1496
 msgid "Week"
 msgstr ""
 
-#: inc/helper.class.php:942 inc/helper.class.php:1400
+#: inc/helper.class.php:963 inc/helper.class.php:1424
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/helper.class.php:962 inc/helper.class.php:965 inc/helper.class.php:968
-#: inc/helper.class.php:971 inc/helper.class.php:1484 inc/helper.class.php:1520
+#: inc/helper.class.php:983 inc/helper.class.php:986 inc/helper.class.php:989
+#: inc/helper.class.php:992 inc/helper.class.php:1508 inc/helper.class.php:1544
 msgid "Time display"
 msgstr ""
 
-#: inc/helper.class.php:962 inc/helper.class.php:1506
+#: inc/helper.class.php:983 inc/helper.class.php:1530
 msgid "Last month"
 msgstr ""
 
-#: inc/helper.class.php:965
+#: inc/helper.class.php:986
 msgid "Last year"
 msgstr ""
 
-#: inc/helper.class.php:968 inc/helper.class.php:1504
+#: inc/helper.class.php:989 inc/helper.class.php:1528
 msgid "Year to date"
 msgstr ""
 
-#: inc/helper.class.php:977
+#: inc/helper.class.php:998
 #, php-format
 msgid "sliding %s-month period"
 msgstr ""
 
-#: inc/helper.class.php:980 inc/helper.class.php:1762
+#: inc/helper.class.php:1001 inc/helper.class.php:1005
+#: inc/helper.class.php:1784 inc/helper.class.php:1809
 msgid "Category"
 msgstr ""
 
-#: inc/helper.class.php:1107
+#: inc/helper.class.php:1131
 msgid "Child locations"
 msgstr ""
 
-#: inc/helper.class.php:1471
+#: inc/helper.class.php:1495
 msgid "Day"
 msgstr ""
 
-#: inc/helper.class.php:1505 inc/helper.class.php:1561
-#: inc/helper.class.php:1687
+#: inc/helper.class.php:1529 inc/helper.class.php:1585
+#: inc/helper.class.php:1711
 msgid "year"
 msgstr ""
 
-#: inc/helper.class.php:1562
+#: inc/helper.class.php:1586
 msgid "Start end"
 msgstr ""
 
-#: inc/helper.class.php:1576
+#: inc/helper.class.php:1600
 msgid "Display"
 msgstr ""
 
-#: inc/helper.class.php:1688
+#: inc/helper.class.php:1712
 msgid "begin and end date"
 msgstr ""
 
-#: inc/helper.class.php:1702
+#: inc/helper.class.php:1726
 msgid "Filter date"
 msgstr ""
 
-#: inc/helper.class.php:1789
+#: inc/helper.class.php:1836
 msgid "Tag"
 msgstr ""
 
-#: inc/helper.class.php:2080
+#: inc/helper.class.php:2127
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
@@ -790,12 +791,12 @@ msgstr ""
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
-#: reports/alert.class.php:169 reports/alert.class.php:3459
-#: reports/alert.class.php:3480
+#: reports/alert.class.php:169 reports/alert.class.php:3477
+#: reports/alert.class.php:3498
 msgid "Global indicators"
 msgstr ""
 
-#: reports/alert.class.php:172 reports/alert.class.php:3459
+#: reports/alert.class.php:172 reports/alert.class.php:3477
 msgid "Global indicators by week"
 msgstr ""
 
@@ -903,36 +904,36 @@ msgstr ""
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: reports/alert.class.php:3087 reports/alert.class.php:3492
+#: reports/alert.class.php:3105 reports/alert.class.php:3510
 #: reports/ticket.class.php:75 reports/ticket.class.php:1237
 msgid "New tickets"
 msgstr ""
 
-#: reports/alert.class.php:3140 reports/alert.class.php:3498
+#: reports/alert.class.php:3158 reports/alert.class.php:3516
 msgid "Tickets late"
 msgstr ""
 
-#: reports/alert.class.php:3186 reports/alert.class.php:3504
+#: reports/alert.class.php:3204 reports/alert.class.php:3522
 msgid "Pending tickets"
 msgstr ""
 
-#: reports/alert.class.php:3250 reports/alert.class.php:3510
+#: reports/alert.class.php:3268 reports/alert.class.php:3528
 msgid "Incidents in progress"
 msgstr ""
 
-#: reports/alert.class.php:3314 reports/alert.class.php:3516
+#: reports/alert.class.php:3332 reports/alert.class.php:3534
 msgid "Requests in progress"
 msgstr ""
 
-#: reports/alert.class.php:3362 reports/alert.class.php:3522
+#: reports/alert.class.php:3380 reports/alert.class.php:3540
 msgid "Tickets solved"
 msgstr ""
 
-#: reports/alert.class.php:3410
+#: reports/alert.class.php:3428
 msgid "Ticket closed"
 msgstr ""
 
-#: reports/alert.class.php:3529
+#: reports/alert.class.php:3547
 msgid "Tickets closed"
 msgstr ""
 
