@@ -71,6 +71,7 @@ CREATE TABLE `glpi_plugin_mydashboard_preferences`
     `automatic_refresh`       tinyint NOT NULL DEFAULT '0',
     `automatic_refresh_delay` int unsigned NOT NULL DEFAULT '10',
     `nb_widgets_width`        int unsigned NOT NULL DEFAULT '3',
+    `prefered_category`       int unsigned NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 

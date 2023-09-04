@@ -210,6 +210,25 @@ class PluginMydashboardPreference extends CommonDBTM
         echo "</td>";
         echo "</tr>";
 
+        echo "<tr>";
+        echo "<td>" . __('My favorite category for widgets', 'mydashboard') . "</td>";
+        echo "<td>";
+
+        $params = [
+            'name' => 'prefered_category',
+            'value' => $this->fields['prefered_category'],
+            'multiple' => false,
+            'display' => false,
+            'width' => '200px',
+            'entity' => $_SESSION['glpiactiveentities'],
+            'display_emptychoice' => true,
+            'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]]
+        ];
+
+        $dropdownCategory = ITILCategory::dropdown($params);
+        echo $dropdownCategory;
+        echo "</td>";
+        echo "</tr>";
         echo "<tr class='tab_bg_1'><td>" . __("My prefered type for widget", "mydashboard") . "</td>";
         echo "<td>";
         $params = ['value'  => $this->fields['prefered_type'],'toadd' =>[0 => Dropdown::EMPTY_VALUE]];
@@ -263,6 +282,7 @@ class PluginMydashboardPreference extends CommonDBTM
         $input['replace_central']          = "0";
         $input['prefered_group']           = "[]";
         $input['requester_prefered_group'] = "[]";
+        $input['prefered_group']           = "[]";
         $input['prefered_entity']          = "0";
         $input['color_palette']            = "";
         $input['edit_mode']                = "0";
