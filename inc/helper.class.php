@@ -793,30 +793,29 @@ class PluginMydashboardHelper
                 $crit['crit']['status'] = $status;
             }
         }
-        //TYPE
+        //ITILCATEGORY
         $opt['itilcategorielvl1']          = 0;
         $crit['crit']['itilcategorielvl1'] = "AND 1 = 1";
         if (in_array("itilcategorielvl1", $criterias)) {
-            if (isset($params['opt']["itilcategorielvl1"])
+            if (isset($params['preferences']['prefered_category'])
+                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategorielvl1'])) {
+                $opt['itilcategorielvl1'] = $params['preferences']['prefered_category'];
+            } else if (isset($params['opt']["itilcategorielvl1"])
                 && $params['opt']["itilcategorielvl1"] > 0) {
                 $opt['itilcategorielvl1'] = $params['opt']['itilcategorielvl1'];
-                $categorie                = new ITILCategory();
-                $catlvl2                  = $categorie->find(['itilcategories_id' => $opt['itilcategorielvl1']]);
-                $i                        = 0;
-                $listcat                  = "";
-                foreach ($catlvl2 as $cat) {
-                    if ($i != 0) {
-                        $listcat .= "," . $cat['id'];
-                    } else {
-                        $listcat .= $cat['id'];
-                    }
-                    $i++;
-                }
-                if (empty($listcat)) {
-                    $listcat = "0";
-                }
-                $crit['crit']['itilcategorielvl1'] = " AND `glpi_tickets`.`itilcategories_id` IN ( " . $listcat . ") ";
             }
+            $category = new ITILCategory();
+            $catlvl2 = $category->find(['itilcategories_id' => $opt['itilcategorielvl1'], 'is_request' => 1, 'is_incident' => 1]);
+            $listcat = [];
+            $listcat[] = $opt['itilcategorielvl1'];
+            foreach ($catlvl2 as $cat) {
+                $listcat[] = $cat['id'];
+            }
+            $categories = implode(",", $listcat);
+            if (empty($listcat)) {
+                $listcat = "0";
+            }
+            $crit['crit']['itilcategorielvl1'] = " AND `glpi_tickets`.`itilcategories_id` IN ( " . $categories . ") ";
         }
 
         //TAG
