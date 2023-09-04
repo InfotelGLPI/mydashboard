@@ -850,7 +850,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'technicians_groups_id',
                                   'group_is_recursive',
                                   'group_is_recursive',
-                                  'itilcategorielvl1'];
+                                  'itilcategory'];
                     $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -874,7 +874,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $js_ancestors               = $crit['ancestors'];
                 $technician_group           = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria        = $crit['itilcategorielvl1'];
+                $categories_criteria        = $crit['itilcategory'];
 
 
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
@@ -1024,7 +1024,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'type',
                                   'technicians_groups_id',
                                   'group_is_recursive',
-                                  'itilcategorielvl1'];
+                                  'itilcategory'];
                     $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -1047,7 +1047,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
                 $technician_group           = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria = $crit['itilcategorielvl1'];
+                $categories_criteria = $crit['itilcategory'];
 
                 $query = "SELECT DISTINCT
                            `priority`,
@@ -1127,7 +1127,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                   'type',
                                   'technicians_groups_id',
                                   'group_is_recursive',
-                                  'itilcategorielvl1'];
+                                  'itilcategory'];
                     $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -1150,7 +1150,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
                 $technician_group           = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria        = $crit['itilcategorielvl1'];
+                $categories_criteria        = $crit['itilcategory'];
 
                 $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
                 FROM glpi_tickets

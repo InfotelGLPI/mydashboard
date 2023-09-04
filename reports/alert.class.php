@@ -2969,6 +2969,24 @@ class PluginMydashboardAlert extends CommonDBTM
                             $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $params['itilcategorielvl1'];
                         }
                     }
+
+                    if(!isset($params['ititlcategory'])){
+                        $params['ititlcategory'] = "";
+                        if(isset($preferences['prefered_category'])){
+                            if($preferences['prefered_category'] != 0){
+                                $params['ititlcategory'] = $preferences['prefered_category'];
+                                $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $preferences['prefered_category'];
+                            } else {
+                                $category_criteria = " AND 1=1";
+                            }
+                        }
+                    } else {
+                        if($params['ititlcategory'] == 0){
+                            $category_criteria = " AND 1=1";
+                        } else {
+                            $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $params['ititlcategory'];
+                        }
+                    }
                 }
                 $params['entities_id'] = $_SESSION['glpiactive_entity'];
                 $params['sons'] = 0;

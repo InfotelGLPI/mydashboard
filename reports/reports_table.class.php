@@ -578,7 +578,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                                   'is_recursive',
                                   'technicians_groups_id',
                                   'group_is_recursive',
-                                  'itilcategorielvl1'];
+                                  'itilcategory'];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -592,7 +592,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $options = PluginMydashboardHelper::manageCriterias($params);
                 $crit    = $options['crit'];
                 $opt     = $options['opt'];
-                $category_criteria = $crit['itilcategorielvl1'];
+                $category_criteria = $crit['itilcategory'];
                 $groups_sql_criteria = "";
                 $entities_criteria   = $crit['entities_id'];
                 $technician_group    = $opt['technicians_groups_id'];

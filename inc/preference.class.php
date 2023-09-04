@@ -222,7 +222,7 @@ class PluginMydashboardPreference extends CommonDBTM
             'width' => '200px',
             'entity' => $_SESSION['glpiactiveentities'],
             'display_emptychoice' => true,
-            'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]]
+            'condition' => [['OR' => ['is_request' => 1, 'is_incident' => 1]]]
         ];
 
         $dropdownCategory = ITILCategory::dropdown($params);
