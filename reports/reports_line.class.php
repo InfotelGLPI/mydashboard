@@ -2158,7 +2158,7 @@ class PluginMydashboardReports_Line extends CommonGLPI
             $date = "$year-$month-$nbdays 23:59";
             $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::OPEN_DATE, 'lessthan', $date, 'AND');
         }
-        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::VALIDATION_STATS, 'equals', VALIDATION_REFUSED, 'AND');
+        $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::VALIDATION_STATS, 'equals', PluginMydashboardChart::VALIDATION_REFUSED, 'AND');
 
         if ($params["params"]["type"] > 0) {
             $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::TYPE, 'equals', $params["params"]["type"], 'AND');

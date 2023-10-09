@@ -368,7 +368,9 @@ class PluginMydashboardReports_Pie extends CommonGLPI
 
             case $this->getType() . "12":
                 $name      = 'TTRCompliance';
-                $criterias = ['type'];
+                $criterias = ['entities_id',
+                    'is_recursive',
+                    'type'];
                 $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
@@ -378,28 +380,27 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $crit = $options['crit'];
 
                 $type_criteria = $crit['type'];
+                $entities_criteria = $crit['entities_id'];
                 $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
                 $all           = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria
+                        WHERE $is_deleted $entities_criteria $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
-                $all           .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-                                  . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+                $all           .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
                 $result = $DB->query($all);
                 $total  = $DB->fetchAssoc($result);
 
                 $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria
+                        WHERE $is_deleted $entities_criteria $type_criteria
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
                                             AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
                                                  OR (`glpi_tickets`.`solvedate` IS NULL
                                                       AND `glpi_tickets`.`time_to_resolve` < NOW()))";
-                $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-                          . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
+                $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
                 $result       = $DB->query($query);
                 $sum          = $DB->fetchAssoc($result);
@@ -457,7 +458,9 @@ class PluginMydashboardReports_Pie extends CommonGLPI
 
             case $this->getType() . "13":
                 $name      = 'TTOCompliance';
-                $criterias = ['type'];
+                $criterias = ['entities_id',
+                    'is_recursive',
+                    'type'];
                 $params    = ["preferences" => $preferences,
                               "criterias"   => $criterias,
                               "opt"         => $opt];
@@ -467,22 +470,22 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $crit = $options['crit'];
 
                 $type_criteria = $crit['type'];
+                $entities_criteria = $crit['entities_id'];
                 $is_deleted    = "`glpi_tickets`.`is_deleted` = 0";
 
                 $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria
+                        WHERE $is_deleted $entities_criteria $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
-                $all .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-                        . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+                $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
                 $result = $DB->query($all);
                 $total  = $DB->fetchAssoc($result);
 
                 $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria
+                        WHERE $is_deleted $entities_criteria $type_criteria
                         AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL
                         AND (`glpi_tickets`.`takeintoaccount_delay_stat`
@@ -490,8 +493,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                                                                `glpi_tickets`.`date`))
                                                  OR (`glpi_tickets`.`takeintoaccount_delay_stat` = 0
                                                       AND `glpi_tickets`.`time_to_own` < NOW()))";
-                $query .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-                          . " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
+                $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
                 $result       = $DB->query($query);
                 $sum          = $DB->fetchAssoc($result);
@@ -1032,7 +1034,11 @@ class PluginMydashboardReports_Pie extends CommonGLPI
 
             case $this->getType() . "25":
                 $name         = 'TicketsByRequesterGroupPieChart';
-                $criterias    = ['type', 'limit'];
+
+                $criterias = ['entities_id',
+                    'is_recursive',
+                    'type'
+                    , 'limit'];
                 $params       = ["preferences" => $preferences,
                                  "criterias"   => $criterias,
                                  "opt"         => $opt];
@@ -1073,6 +1079,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                     while ($data = $DB->fetchArray($result)) {
                         if (!empty($data['requesters_groups_id'])) {
                             $name_grp      = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
+                            $name_grp = html_entity_decode($name_grp);
                             $name_groups[] = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
                         } else {
                             $name_groups[] = __('None');
@@ -1275,6 +1282,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                         if (!empty($data['locations_id'])) {
                             $name_location[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
                             $name_loc        = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
+                            $name_loc = html_entity_decode($name_loc);
                         } else {
                             $name_loc        = __('None');
                             $name_location[] = __('None');
@@ -1499,6 +1507,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                         if (!empty($data['locations_id'])) {
                             $name_location1[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
                             $name_loc1        = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
+                            $name_loc1 = html_entity_decode($name_loc1);
                         } else {
                             $name_location1[] = __('None');
                             $name_loc1        = __('None');

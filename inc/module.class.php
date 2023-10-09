@@ -212,7 +212,10 @@ abstract class PluginMydashboardModule extends CommonGLPI
     public function setWidgetTitle($nTitle)
     {
       //        $this->widgetTitle = addslashes($nTitle);
-        return $this->widgetTitle = str_replace(["\""], ["'"], $nTitle);
+        if ($nTitle) {
+            return $this->widgetTitle = str_replace(["\""], ["'"], $nTitle);
+        }
+
     }
 
     /**

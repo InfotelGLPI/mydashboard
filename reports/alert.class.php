@@ -258,10 +258,13 @@ class PluginMydashboardAlert extends CommonDBTM
         } else {
             $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
         }
-
+        $nb     = 0;
         $result = $DB->query($query);
-        $ligne  = $DB->fetchAssoc($result);
-        $nb     = $ligne['cpt'];
+        if ($DB->numrows($result) > 0) {
+            $ligne  = $DB->fetchAssoc($result);
+            $nb     = $ligne['cpt'];
+        }
+
 
         return $nb;
     }
