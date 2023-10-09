@@ -793,29 +793,49 @@ class PluginMydashboardHelper
                 $crit['crit']['status'] = $status;
             }
         }
-        //TYPE
+        //ITILCATEGORY_LVL1
         $opt['itilcategorielvl1']          = 0;
-        $crit['crit']['itilcategorielvl1'] = "AND 1 = 1";
+        $crit['crit']['itilcategorielvl1'] = " AND 1 = 1 ";
         if (in_array("itilcategorielvl1", $criterias)) {
-            if (isset($params['opt']["itilcategorielvl1"])
+            if (isset($params['preferences']['prefered_category'])
+                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategorielvl1'])) {
+                $opt['itilcategorielvl1'] = $params['preferences']['prefered_category'];
+            } else if (isset($params['opt']["itilcategorielvl1"])
                 && $params['opt']["itilcategorielvl1"] > 0) {
                 $opt['itilcategorielvl1'] = $params['opt']['itilcategorielvl1'];
-                $categorie                = new ITILCategory();
-                $catlvl2                  = $categorie->find(['itilcategories_id' => $opt['itilcategorielvl1']]);
-                $i                        = 0;
-                $listcat                  = "";
-                foreach ($catlvl2 as $cat) {
-                    if ($i != 0) {
-                        $listcat .= "," . $cat['id'];
-                    } else {
-                        $listcat .= $cat['id'];
-                    }
-                    $i++;
+            }
+            $category = new ITILCategory();
+            $catlvl2 = $category->find(['itilcategories_id' => $opt['itilcategorielvl1'], 'is_request' => 1, 'is_incident' => 1]);
+            $listcat = [];
+            $listcat[] = $opt['itilcategorielvl1'];
+            foreach ($catlvl2 as $cat) {
+                $listcat[] = $cat['id'];
+            }
+            $categories = implode(",", $listcat);
+            if (empty($listcat)) {
+                $listcat = "0";
+            }
+            $crit['crit']['itilcategorielvl1'] = " AND `glpi_tickets`.`itilcategories_id` IN ( " . $categories . ") ";
+        }
+
+        //ITILCATEGORY
+        $opt['itilcategory'] = 0;
+        $crit['crit']['itilcategory'] = " AND 1 = 1";
+        if (in_array("itilcategory", $criterias)) {
+            if (isset($params['preferences']['prefered_category'])
+                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategory'])) {
+                $opt['itilcategory'] = $params['preferences']['prefered_category'];
+            } else if (isset($params['opt']["itilcategory"])
+                && $params['opt']["itilcategory"] > 0) {
+                $opt['itilcategory'] = $params['opt']['itilcategory'];
+            }
+            if ($opt['itilcategory'] > 0) {
+                $category = new ITILCategory();
+                if ($category->getFromDB($opt['itilcategory'])) {
+                    $crit['crit']['itilcategory'] = " AND `glpi_tickets`.`itilcategories_id` = " . $opt['itilcategory'] . " ";
                 }
-                if (empty($listcat)) {
-                    $listcat = "0";
-                }
-                $crit['crit']['itilcategorielvl1'] = " AND `glpi_tickets`.`itilcategories_id` IN ( " . $listcat . ") ";
+            } else {
+                $crit['crit']['itilcategory'] = " AND 1 = 1 ";
             }
         }
 
@@ -981,6 +1001,10 @@ class PluginMydashboardHelper
             $form .= "&nbsp;/&nbsp;" . __("Category", 'mydashobard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_itilcategories', $opt['itilcategorielvl1']);
         }
 
+        if (isset($opt['itilcategory']) && $opt['itilcategory'] > 0) {
+            $form .= "&nbsp;/&nbsp;" . __("Category", 'mydashobard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_itilcategories', $opt['itilcategory']);
+        }
+
         $form .= "</span>";
         $form .= "</div>";
         $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
@@ -1098,7 +1122,6 @@ class PluginMydashboardHelper
             $dropdown = Dropdown::showFromArray("multiple_locations_id", $temp, $params);
 
             $form .= $dropdown;
-
             $form .= "</span>";
             if ($count > 1) {
                 $form .= "</br></br>";
@@ -1754,11 +1777,9 @@ class PluginMydashboardHelper
             }
         }
 
+        //ITILCATEGORY LVL1
         if (in_array("itilcategorielvl1", $criterias)) {
             $form .= "<span class='md-widgetcrit'>";
-
-
-            //
 
             $form .= __('Category', 'mydashboard');
             $form .= "&nbsp;";
@@ -1770,6 +1791,31 @@ class PluginMydashboardHelper
             }
 
             $dropdown = ITILCategory::dropdown(['name' => 'itilcategorielvl1', 'value' => $opt['itilcategorielvl1'], 'display' => false, 'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]]] + $restrict);
+
+            $form .= $dropdown;
+
+            $form .= "</span>";
+
+
+            if ($count > 1) {
+                $form .= "</br></br>";
+            }
+        }
+
+        //ITILCATEGORY
+        if (in_array("itilcategory", $criterias)) {
+            $form .= "<span class='md-widgetcrit'>";
+
+            $form .= __('Category', 'mydashboard');
+            $form .= "&nbsp;";
+            $dbu  = new DbUtils();
+            if (isset($_POST["params"]['entities_id'])) {
+                $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $_POST["params"]['entities_id'], $_POST["params"]['sons']);
+            } else {
+                $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $opt['entities_id'], $opt['sons']);
+            }
+
+            $dropdown = ITILCategory::dropdown(['name' => 'itilcategory', 'value' => $opt['itilcategory'], 'display' => false, 'condition' => ['OR' => ['is_request' => 1, 'is_incident' => 1]]] + $restrict);
 
             $form .= $dropdown;
 

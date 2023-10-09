@@ -827,13 +827,11 @@ class PluginMydashboardAlert extends CommonDBTM
 
             case $this->getType() . "SC32":
                 $widget = new PluginMydashboardHtml();
-
                 $title   = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "SC32 " : "") . $title);
                 $widget->toggleWidgetRefresh();
-
                 $graph = self::displayIndicator($widgetId, "all", $opt, true);
                 $widget->setWidgetHtmlContent(
                     $graph
@@ -2957,10 +2955,48 @@ class PluginMydashboardAlert extends CommonDBTM
                             $params['technicians_groups_id'] = $technicians_groups_id;
                         }
                     }
+                    if(!isset($params['itilcategorielvl1'])){
+                        $params['itilcategorielvl1'] = "";
+                        if (isset($preferences['prefered_category'])){
+                            if($preferences['prefered_category'] != 0) {
+                                $params['itilcategorielvl1'] = $preferences['prefered_category'];
+                                $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $preferences['prefered_category'];
+                            } else {
+                                $category_criteria = " AND 1=1";
+                            }
+                        }
+                    } else {
+                        if($params['itilcategorielvl1'] == 0){
+                            $category_criteria = " AND 1=1";
+                        } else {
+                            $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $params['itilcategorielvl1'];
+                        }
+                    }
+
+                    if(!isset($params['ititlcategory'])){
+                        $params['ititlcategory'] = "";
+                        if(isset($preferences['prefered_category'])){
+                            if($preferences['prefered_category'] != 0){
+                                $params['ititlcategory'] = $preferences['prefered_category'];
+                                $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $preferences['prefered_category'];
+                            } else {
+                                $category_criteria = " AND 1=1";
+                            }
+                        }
+                    } else {
+                        if($params['ititlcategory'] == 0){
+                            $category_criteria = " AND 1=1";
+                        } else {
+                            $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $params['ititlcategory'];
+                        }
+                    }
                 }
+                $params['entities_id'] = $_SESSION['glpiactive_entity'];
+                $params['sons'] = 0;
 
                 if (isset($params['technicians_groups_id'])) {
                     $params['technicians_groups_id'] = (is_array($params['technicians_groups_id']) ? $params['technicians_groups_id'] : [$params['technicians_groups_id']]);
+
                 }
             }
         }
@@ -2989,20 +3025,21 @@ class PluginMydashboardAlert extends CommonDBTM
                     $search_assign         .= " AND (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
                                 AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
                 }
+
                 //New tickets
-                $total_new = self::queryNewTickets($left, $is_deleted);
+                $total_new = self::queryNewTickets($left, $is_deleted, $category_criteria);
                 //Late tickets
-                $total_due = self::queryDueTickets($left, $is_deleted, $search_assign);
+                $total_due = self::queryDueTickets($left, $is_deleted, $search_assign, $category_criteria);
                 //Waiting tickets
-                $total_pend = self::queryPendingTickets($left, $is_deleted, $search_assign);
+                $total_pend = self::queryPendingTickets($left, $is_deleted, $search_assign, $category_criteria);
                 //Processing incidents
-                $total_incpro = self::queryIncidentTickets($left, $is_deleted, $search_assign);
+                $total_incpro = self::queryIncidentTickets($left, $is_deleted, $search_assign, $category_criteria);
                 //Processing requests
-                $total_dempro = self::queryRequestTickets($left, $is_deleted, $search_assign);
+                $total_dempro = self::queryRequestTickets($left, $is_deleted, $search_assign, $category_criteria);
                 //Validate tickets
                 //            $total_validate = self::queryValidateTickets($left, $is_deleted, $search_assign);
                 //Resolved tickets
-                $total_resolved = self::queryResolvedTickets($left, $is_deleted, $search_assign);
+                $total_resolved = self::queryResolvedTickets($left, $is_deleted, $search_assign, $category_criteria);
                 //Resolved tickets
                 $total_closed = 0;
             } elseif ($type == "week") {
@@ -3432,9 +3469,10 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                 if ($type == "week") {
                     $criterias = ['technicians_groups_id',
                                   'week',
-                                  'year'];
+                                  'year'
+                                  ];
                 } else {
-                    $criterias      = ['technicians_groups_id'];
+                    $criterias      = ['technicians_groups_id', 'itilcategorielvl1'];
                     $params["year"] = null;
                     $params["week"] = null;
                 }
@@ -3555,7 +3593,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryNewTickets($left, $criteria)
+    public static function queryNewTickets($left, $criteria, $category_criteria)
     {
         global $DB;
 
@@ -3565,6 +3603,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   FROM glpi_tickets
                   $left
                   WHERE $criteria
+                        $category_criteria
                         AND `glpi_tickets`.`status` = " . Ticket::INCOMING . " " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
@@ -3614,7 +3653,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryDueTickets($left, $criteria, $search_assign)
+    public static function queryDueTickets($left, $criteria, $search_assign, $category_criteria)
     {
         global $DB;
 
@@ -3626,6 +3665,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND ($search_assign)
                         AND `glpi_tickets`.`status` NOT IN (" . Ticket::WAITING . "," . Ticket::SOLVED . ", " . Ticket::CLOSED . ")
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
+                        $category_criteria
                         AND `glpi_tickets`.`time_to_resolve` < NOW() ";
         $sql_due .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
@@ -3670,7 +3710,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryPendingTickets($left, $criteria, $search_assign)
+    public static function queryPendingTickets($left, $criteria, $search_assign, $category_criteria)
     {
         global $DB;
 
@@ -3680,6 +3720,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   $left
                   WHERE $criteria
                         AND ($search_assign)
+                        $category_criteria
                         AND `glpi_tickets`.`status` = " . Ticket::WAITING . " " .
                     $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
@@ -3725,7 +3766,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryIncidentTickets($left, $criteria, $search_assign)
+    public static function queryIncidentTickets($left, $criteria, $search_assign, $category_criteria)
     {
         global $DB;
 
@@ -3740,6 +3781,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   $left
                   WHERE $criteria
                         AND ($search_assign)
+                        $category_criteria
                         AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
         $sql_incpro    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
@@ -3790,7 +3832,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryRequestTickets($left, $criteria, $search_assign)
+    public static function queryRequestTickets($left, $criteria, $search_assign, $category_criteria)
     {
         global $DB;
 
@@ -3806,6 +3848,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   $left
                   WHERE $criteria
                         AND ($search_assign)
+                        $category_criteria
                         AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
         $sql_dempro    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
@@ -3856,7 +3899,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryResolvedTickets($left, $criteria, $search_assign)
+    public static function queryResolvedTickets($left, $criteria, $search_assign, $category_criteria)
     {
         global $DB;
 
@@ -3868,6 +3911,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                   $left
                   WHERE $criteria
                         AND ($search_assign)
+                        $category_criteria
                         AND `glpi_tickets`.`status` = " . Ticket::SOLVED . " ";
         $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 

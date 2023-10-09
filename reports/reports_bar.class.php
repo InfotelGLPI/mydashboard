@@ -850,12 +850,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
-                        'is_recursive',
-                        'type',
-                        'technicians_groups_id',
-                        'group_is_recursive',
-                        'group_is_recursive'];
-                    $onclick = 1;
+                                  'is_recursive',
+                                  'type',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'group_is_recursive',
+                                  'itilcategory'];
+                    $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -878,12 +879,14 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $js_ancestors = $crit['ancestors'];
                 $technician_group = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
+                $categories_criteria        = $crit['itilcategory'];
+
 
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
 
                 $query = "SELECT  CONCAT ('< 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 / 
                 (SELECT COUNT(*) FROM glpi_tickets 
-                                 WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria 
+                                 WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
                                  AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')) Percent,
                 CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin,
                 CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_end
@@ -892,11 +895,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                  $type_criteria
                  $technician_groups_criteria
                  $entities_criteria
+                 $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')
                 UNION
                 SELECT CONCAT ('> 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 / 
                 (SELECT COUNT(*) FROM glpi_tickets 
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria 
+                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')) Percent,
                 CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin,
                 CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_end
@@ -906,11 +910,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                  $type_criteria
                  $technician_groups_criteria
                  $entities_criteria
+                 $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')
                 UNION
                 SELECT CONCAT ('> 1 Mois') Age, COUNT(*) Total, COUNT(*) * 100 / 
                 (SELECT COUNT(*) FROM glpi_tickets 
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria 
+                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')) Percent,
                 CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_begin,
                 CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_end
@@ -920,11 +925,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                  $type_criteria
                  $technician_groups_criteria
                  $entities_criteria
+                 $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')
                 UNION
                 SELECT CONCAT ('> 3 Mois') Age, COUNT(*) Total, COUNT(*) * 100 / 
                 (SELECT COUNT(*) FROM glpi_tickets 
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria 
+                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')) Percent,
                 CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_begin,
                 CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end
@@ -934,11 +940,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                  $type_criteria
                  $technician_groups_criteria
                  $entities_criteria
+                 $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')
                 UNION
                 SELECT CONCAT ('> 6 Mois') Age, COUNT(*) Total, COUNT(*) * 100 / 
                 (SELECT COUNT(*) FROM glpi_tickets 
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria 
+                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')) Percent,
                 CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin,
                 CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end
@@ -947,6 +954,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                  $type_criteria
                  $technician_groups_criteria
                  $entities_criteria
+                 $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')";
 
                 $results = $DB->query($query);
@@ -1017,11 +1025,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
-                        'is_recursive',
-                        'type',
-                        'technicians_groups_id',
-                        'group_is_recursive'];
-                    $onclick = 1;
+                                  'is_recursive',
+                                  'type',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'itilcategory'];
+                    $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -1043,12 +1052,13 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
                 $technician_group = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
+                $categories_criteria = $crit['itilcategory'];
 
                 $query = "SELECT DISTINCT
                            `priority`,
                            COUNT(`id`) AS nb
                         FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria";
+                        WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria $categories_criteria";
                 $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
                 $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
 
@@ -1118,11 +1128,12 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = ['entities_id',
-                        'is_recursive',
-                        'type',
-                        'technicians_groups_id',
-                        'group_is_recursive'];
-                    $onclick = 1;
+                                  'is_recursive',
+                                  'type',
+                                  'technicians_groups_id',
+                                  'group_is_recursive',
+                                  'itilcategory'];
+                    $onclick   = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -1144,6 +1155,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
                 $technician_group = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
+                $categories_criteria        = $crit['itilcategory'];
 
                 $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
                 FROM glpi_tickets
@@ -1151,6 +1163,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $type_criteria
                 $technician_groups_criteria
                 $entities_criteria
+                $categories_criteria
                 AND `glpi_tickets`.`status` IN (" . implode(",", Ticket::getNotSolvedStatusArray()) . ")
                 GROUP BY `glpi_tickets`.`status`";
 

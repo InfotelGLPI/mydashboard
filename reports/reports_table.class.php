@@ -577,7 +577,8 @@ class PluginMydashboardReports_Table extends CommonGLPI
                     $criterias = ['entities_id',
                                   'is_recursive',
                                   'technicians_groups_id',
-                                  'group_is_recursive'];
+                                  'group_is_recursive',
+                                  'itilcategory'];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -591,7 +592,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $options = PluginMydashboardHelper::manageCriterias($params);
                 $crit    = $options['crit'];
                 $opt     = $options['opt'];
-
+                $category_criteria = $crit['itilcategory'];
                 $groups_sql_criteria = "";
                 $entities_criteria   = $crit['entities_id'];
                 $technician_group    = $opt['technicians_groups_id'];
@@ -668,7 +669,8 @@ class PluginMydashboardReports_Table extends CommonGLPI
                                                      . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
                                                      . " WHERE `glpi_tickets`.`status` = %s"
                                                      . " AND `glpi_groups_tickets`.`groups_id` = '%s'"
-                                                     . $entities_criteria;
+                                                     . $entities_criteria
+                                                     . $category_criteria;
 
                 // Lists of tickets by group by status
                 $nb = count($iterator);
