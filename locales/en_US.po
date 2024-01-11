@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # Shawn Long <webaccounts@kkg.org>, 2023
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-28 09:37+0000\n"
+"POT-Creation-Date: 2023-10-16 13:06+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
-"Last-Translator: Shawn Long <webaccounts@kkg.org>, 2023\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2024\n"
 "Language-Team: English (United States) (https://app.transifex.com/infotelGLPI/teams/65490/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,23 +23,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: hook.php:212 inc/config.class.php:335 inc/itilalert.class.php:118
-#: reports/alert.class.php:131 reports/alert.class.php:2662
+#: reports/alert.class.php:121 reports/alert.class.php:2675
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] "Network Alert"
 msgstr[1] "Network Alerts"
 
 #: hook.php:213 inc/config.class.php:336 inc/itilalert.class.php:119
-#: reports/alert.class.php:134 reports/alert.class.php:2526
-#: reports/alert.class.php:2663
+#: reports/alert.class.php:124 reports/alert.class.php:2539
+#: reports/alert.class.php:2676
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] "Scheduled Maintenance"
-msgstr[1] "Scheduled Maintenance's"
+msgstr[1] "Scheduled Maintenance"
 
 #: hook.php:214 inc/config.class.php:337 inc/itilalert.class.php:120
-#: reports/alert.class.php:137 reports/alert.class.php:2527
-#: reports/alert.class.php:2664
+#: reports/alert.class.php:127 reports/alert.class.php:2540
+#: reports/alert.class.php:2677
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] "Information"
@@ -62,31 +62,31 @@ msgstr "My Dashboard"
 msgid "Grid cleared"
 msgstr "Grid Cleared"
 
-#: ajax/dropdownMonth.php:41 inc/helper.class.php:972
-#: inc/helper.class.php:1285 inc/helper.class.php:1474
-#: inc/helper.class.php:1508 inc/helper.class.php:1533
+#: ajax/dropdownMonth.php:41 inc/helper.class.php:992
+#: inc/helper.class.php:1308 inc/helper.class.php:1497
+#: inc/helper.class.php:1531 inc/helper.class.php:1556
 msgid "Month"
 msgstr "Month"
 
-#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1590
+#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1613
 msgid "Start month"
 msgstr "Starting Month"
 
-#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1604
+#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1627
 msgid "Start year"
 msgstr "Starting Year"
 
-#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1622
+#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1645
 msgid "End month"
 msgstr "End Month"
 
-#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1636
+#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1659
 msgid "End year"
 msgstr "End Year"
 
-#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:932
-#: inc/helper.class.php:1258 inc/helper.class.php:1661
-#: inc/helper.class.php:1735
+#: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:952
+#: inc/helper.class.php:1281 inc/helper.class.php:1684
+#: inc/helper.class.php:1758
 msgid "Year"
 msgstr "Year"
 
@@ -102,7 +102,7 @@ msgstr "Edit mode is enabled, please close it for better performance"
 msgid "Please activate the plugin"
 msgstr "Please activate the plugin"
 
-#: inc/chart.class.php:119 inc/datatable.class.php:204
+#: inc/chart.class.php:119
 msgid "No data is given to the widget"
 msgstr "No data is given to the widget"
 
@@ -211,109 +211,110 @@ msgstr "Use profile group"
 msgid "Default groups"
 msgstr "Default Groups"
 
-#: inc/helper.class.php:936 inc/helper.class.php:1274
-#: inc/helper.class.php:1473
+#: inc/helper.class.php:956 inc/helper.class.php:1297
+#: inc/helper.class.php:1496
 msgid "Week"
 msgstr "Week"
 
-#: inc/helper.class.php:943 inc/helper.class.php:1401
+#: inc/helper.class.php:963 inc/helper.class.php:1424
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] "Technician"
 msgstr[1] "Technician's"
 
-#: inc/helper.class.php:963 inc/helper.class.php:966 inc/helper.class.php:969
-#: inc/helper.class.php:972 inc/helper.class.php:1485
-#: inc/helper.class.php:1521
+#: inc/helper.class.php:983 inc/helper.class.php:986 inc/helper.class.php:989
+#: inc/helper.class.php:992 inc/helper.class.php:1508
+#: inc/helper.class.php:1544
 msgid "Time display"
 msgstr "Time Display"
 
-#: inc/helper.class.php:963 inc/helper.class.php:1507
+#: inc/helper.class.php:983 inc/helper.class.php:1530
 msgid "Last month"
 msgstr "Last Month"
 
-#: inc/helper.class.php:966
+#: inc/helper.class.php:986
 msgid "Last year"
 msgstr "Last Year"
 
-#: inc/helper.class.php:969 inc/helper.class.php:1505
+#: inc/helper.class.php:989 inc/helper.class.php:1528
 msgid "Year to date"
 msgstr "Year to Date"
 
-#: inc/helper.class.php:978
+#: inc/helper.class.php:998
 #, php-format
 msgid "sliding %s-month period"
 msgstr "sliding %s-month period"
 
-#: inc/helper.class.php:981 inc/helper.class.php:1763
+#: inc/helper.class.php:1001 inc/helper.class.php:1005
+#: inc/helper.class.php:1784 inc/helper.class.php:1809
 msgid "Category"
 msgstr "Category"
 
-#: inc/helper.class.php:1108
+#: inc/helper.class.php:1131
 msgid "Child locations"
 msgstr "Child Locations"
 
-#: inc/helper.class.php:1472
+#: inc/helper.class.php:1495
 msgid "Day"
 msgstr "Day"
 
-#: inc/helper.class.php:1506 inc/helper.class.php:1562
-#: inc/helper.class.php:1688
+#: inc/helper.class.php:1529 inc/helper.class.php:1585
+#: inc/helper.class.php:1711
 msgid "year"
 msgstr "Year"
 
-#: inc/helper.class.php:1563
+#: inc/helper.class.php:1586
 msgid "Start end"
 msgstr "Start End"
 
-#: inc/helper.class.php:1577
+#: inc/helper.class.php:1600
 msgid "Display"
 msgstr "Display"
 
-#: inc/helper.class.php:1689
+#: inc/helper.class.php:1712
 msgid "begin and end date"
 msgstr "Begin and End Date"
 
-#: inc/helper.class.php:1703
+#: inc/helper.class.php:1726
 msgid "Filter date"
 msgstr "Filter Date"
 
-#: inc/helper.class.php:1790
+#: inc/helper.class.php:1836
 msgid "Tag"
 msgstr "Tag"
 
-#: inc/helper.class.php:2081
+#: inc/helper.class.php:2127
 msgid "Not a valid SQL SELECT query"
 msgstr "Not a valid SQL SELECT query"
 
 #: inc/itilalert.class.php:51 inc/itilalert.class.php:54
-#: reports/alert.class.php:2598 reports/alert.class.php:2601
+#: reports/alert.class.php:2611 reports/alert.class.php:2614
 msgid "Create a new alert"
 msgstr "Create a New Alert"
 
-#: inc/itilalert.class.php:80 reports/alert.class.php:2626
+#: inc/itilalert.class.php:80 reports/alert.class.php:2639
 msgid "Linked reminder"
 msgstr "Linked Reminder"
 
-#: inc/itilalert.class.php:115 reports/alert.class.php:2522
-#: reports/alert.class.php:2525 reports/alert.class.php:2659
+#: inc/itilalert.class.php:115 reports/alert.class.php:2535
+#: reports/alert.class.php:2538 reports/alert.class.php:2672
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Alert"
 msgstr[1] "Alerts"
 
-#: inc/itilalert.class.php:130 reports/alert.class.php:2539
-#: reports/alert.class.php:2677
+#: inc/itilalert.class.php:130 reports/alert.class.php:2552
+#: reports/alert.class.php:2690
 msgid "No impact"
 msgstr "No Impact"
 
-#: inc/itilalert.class.php:135 reports/alert.class.php:2544
-#: reports/alert.class.php:2682
+#: inc/itilalert.class.php:135 reports/alert.class.php:2557
+#: reports/alert.class.php:2695
 msgid "Alert level"
 msgstr "Alert Level"
 
-#: inc/itilalert.class.php:143 reports/alert.class.php:2555
-#: reports/alert.class.php:2693
+#: inc/itilalert.class.php:143 reports/alert.class.php:2568
+#: reports/alert.class.php:2706
 msgid "Linked with a ticket category"
 msgstr "Linked with a Ticket Category"
 
@@ -502,19 +503,19 @@ msgstr "Delete Widget"
 msgid "Refresh widget"
 msgstr "Refresh Widget"
 
-#: inc/menu.class.php:1499
+#: inc/menu.class.php:1497
 msgid "Export to PDF"
 msgstr "Export to PDF"
 
-#: inc/module.class.php:169 inc/module.class.php:363
+#: inc/module.class.php:169 inc/module.class.php:366
 msgid "notice"
 msgstr "notice"
 
-#: inc/module.class.php:170 inc/module.class.php:371
+#: inc/module.class.php:170 inc/module.class.php:374
 msgid "warning"
 msgstr "warning"
 
-#: inc/module.class.php:171 inc/module.class.php:379
+#: inc/module.class.php:171 inc/module.class.php:382
 msgid "error"
 msgstr "error"
 
@@ -542,11 +543,15 @@ msgstr "My requester preferred groups for widget"
 msgid "My prefered entity for widget"
 msgstr "My prefered entity for widget"
 
-#: inc/preference.class.php:213
+#: inc/preference.class.php:214
+msgid "My favorite category for widgets"
+msgstr "My favorite category for widgets"
+
+#: inc/preference.class.php:232
 msgid "My prefered type for widget"
 msgstr "My prefered type for widget"
 
-#: inc/preference.class.php:220
+#: inc/preference.class.php:239
 msgid "Palette color"
 msgstr "Palette Color"
 
@@ -612,7 +617,7 @@ msgstr[1] "Stock Widgets"
 msgid "Cannot create alert without a type"
 msgstr "Cannot create alert without a type"
 
-#: inc/userwidget.class.php:65
+#: inc/userwidget.class.php:64
 msgid "user_widget management"
 msgstr "user_widget management"
 
@@ -664,20 +669,20 @@ msgstr "25 rows"
 msgid "50 rows"
 msgstr "50 rows"
 
-#: inc/widget.class.php:674 reports/alert.class.php:2277
-#: reports/alert.class.php:2490
+#: inc/widget.class.php:674 reports/alert.class.php:2290
+#: reports/alert.class.php:2503
 msgid "No problem detected"
 msgstr "No Problem Detected"
 
-#: inc/widget.class.php:743 reports/alert.class.php:1908
+#: inc/widget.class.php:743 reports/alert.class.php:1921
 msgid "No scheduled maintenance"
 msgstr "No Scheduled Maintenance"
 
-#: inc/widget.class.php:811 reports/alert.class.php:2110
+#: inc/widget.class.php:811 reports/alert.class.php:2123
 msgid "No informations founded"
 msgstr "No Information Found"
 
-#: inc/widget.class.php:844 reports/alert.class.php:155
+#: inc/widget.class.php:844 reports/alert.class.php:145
 msgid "Your equipments"
 msgstr "Your equipment"
 
@@ -685,196 +690,196 @@ msgstr "Your equipment"
 msgid "No equipments founded"
 msgstr "No equipment founded"
 
-#: inc/widgetlist.class.php:396
+#: inc/widgetlist.class.php:397
 msgid "No widgets available"
 msgstr "No widgets available"
 
-#: inc/widgetlist.class.php:515
+#: inc/widgetlist.class.php:516
 msgid "Find a widget"
 msgstr "Find a widget"
 
-#: reports/alert.class.php:65
+#: reports/alert.class.php:55
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] "Alert Dashboard"
 msgstr[1] "Alerts Dashboard"
 
-#: reports/alert.class.php:133
+#: reports/alert.class.php:123
 msgid "See network alert block"
 msgstr "See network alert block"
 
-#: reports/alert.class.php:136
+#: reports/alert.class.php:126
 msgid "See scheduled maintenances information block"
 msgstr "See scheduled maintenances information block"
 
-#: reports/alert.class.php:139
+#: reports/alert.class.php:129
 msgid "See informations block"
 msgstr "See informations block"
 
-#: reports/alert.class.php:140 reports/alert.class.php:354
+#: reports/alert.class.php:130 reports/alert.class.php:355
 msgid "GLPI Status"
 msgstr "GLPI Status"
 
-#: reports/alert.class.php:142 reports/alert.class.php:355
+#: reports/alert.class.php:132 reports/alert.class.php:356
 msgid "Check if GLPI have no problem"
 msgstr "Check if GLPI has no problem"
 
-#: reports/alert.class.php:143
+#: reports/alert.class.php:133
 msgid "Automatic actions in error"
 msgstr "Automatic actions in error"
 
-#: reports/alert.class.php:145
+#: reports/alert.class.php:135
 msgid "Display automatic actions in error"
 msgstr "Display automatic actions in error"
 
-#: reports/alert.class.php:146
+#: reports/alert.class.php:136
 msgid "Not imported mails in collectors"
 msgstr "No imported emails in collectors"
 
-#: reports/alert.class.php:148
+#: reports/alert.class.php:138
 msgid "Display of mails which are not imported"
 msgstr "Display of emails which are not imported"
 
-#: reports/alert.class.php:152
+#: reports/alert.class.php:142
 msgid "Inventory stock alerts"
 msgstr "Inventory Stock Alerts"
 
-#: reports/alert.class.php:154
+#: reports/alert.class.php:144
 msgid "Display alerts for inventory stocks"
 msgstr "Display alerts for inventory stocks"
 
-#: reports/alert.class.php:157
+#: reports/alert.class.php:147
 msgid "Display your equipments"
 msgstr "Display your Equipment"
 
-#: reports/alert.class.php:161 reports/alert.class.php:1268
+#: reports/alert.class.php:151 reports/alert.class.php:1274
 msgid "Incidents alerts"
 msgstr "Incidents Alerts"
 
-#: reports/alert.class.php:163 reports/alert.class.php:1269
+#: reports/alert.class.php:153 reports/alert.class.php:1275
 msgid "Display alerts for incidents and problems"
 msgstr "Display alerts for incidents and problems"
 
-#: reports/alert.class.php:164 reports/alert.class.php:1746
+#: reports/alert.class.php:154 reports/alert.class.php:1759
 msgid "SLA Incidents alerts"
 msgstr "SLA Incidents Alerts"
 
-#: reports/alert.class.php:166 reports/alert.class.php:1747
+#: reports/alert.class.php:156 reports/alert.class.php:1760
 msgid "Display alerts for SLA of Incidents tickets"
 msgstr "Display alerts for SLA of Incidents Tickets"
 
-#: reports/alert.class.php:167
+#: reports/alert.class.php:157
 msgid "User ticket alerts"
 msgstr "User Ticket Alerts"
 
-#: reports/alert.class.php:169
+#: reports/alert.class.php:159
 msgid "Display tickets where last modification is a user action"
 msgstr "Display tickets where last modification is a user action"
 
-#: reports/alert.class.php:170 reports/alert.class.php:1749
+#: reports/alert.class.php:160 reports/alert.class.php:1762
 msgid "SLA Requests alerts"
 msgstr "SLA Requests Alerts"
 
-#: reports/alert.class.php:172 reports/alert.class.php:1750
+#: reports/alert.class.php:162 reports/alert.class.php:1763
 msgid "Display alerts for SLA of Requests tickets"
 msgstr "Display alerts for SLA of Requests Tickets"
 
-#: reports/alert.class.php:173 reports/alert.class.php:1271
+#: reports/alert.class.php:163 reports/alert.class.php:1277
 msgid "Requests alerts"
 msgstr "Requests Alerts"
 
-#: reports/alert.class.php:175 reports/alert.class.php:1272
+#: reports/alert.class.php:165 reports/alert.class.php:1278
 msgid "Display alerts for requests"
 msgstr "Display alerts for requests"
 
-#: reports/alert.class.php:176 reports/reports_table.class.php:66
-#: reports/reports_table.class.php:744
+#: reports/alert.class.php:166 reports/reports_table.class.php:59
+#: reports/reports_table.class.php:747
 msgid "Number of opened tickets by group and by status"
 msgstr "Number of opened tickets by group and by status"
 
-#: reports/alert.class.php:179 reports/alert.class.php:3427
-#: reports/alert.class.php:3448
+#: reports/alert.class.php:169 reports/alert.class.php:3480
+#: reports/alert.class.php:3501
 msgid "Global indicators"
 msgstr "Global Indicators"
 
-#: reports/alert.class.php:182 reports/alert.class.php:3427
+#: reports/alert.class.php:172 reports/alert.class.php:3480
 msgid "Global indicators by week"
 msgstr "Global indicators by week"
 
-#: reports/alert.class.php:382 reports/ticket.class.php:359
+#: reports/alert.class.php:383 reports/ticket.class.php:359
 #: reports/ticket.class.php:682
 msgid "ID and priority"
 msgstr "ID and Priority"
 
-#: reports/alert.class.php:488
+#: reports/alert.class.php:489
 msgid "New document"
 msgstr "New Document"
 
-#: reports/alert.class.php:783
+#: reports/alert.class.php:784
 msgid "No alerts are setup"
 msgstr "No alerts are setup"
 
-#: reports/alert.class.php:1046 reports/alert.class.php:1055
+#: reports/alert.class.php:1052 reports/alert.class.php:1061
 msgid "New incidents"
 msgstr "New Incidents"
 
-#: reports/alert.class.php:1048 reports/alert.class.php:1057
+#: reports/alert.class.php:1054 reports/alert.class.php:1063
 msgid "New requests"
 msgstr "New requests"
 
-#: reports/alert.class.php:1115 reports/alert.class.php:1125
+#: reports/alert.class.php:1121 reports/alert.class.php:1131
 msgid "Opened incidents without assigned technicians"
 msgstr "Opened incidents without assigned technicians"
 
-#: reports/alert.class.php:1117 reports/alert.class.php:1127
+#: reports/alert.class.php:1123 reports/alert.class.php:1133
 msgid "Opened requests without assigned technicians"
 msgstr "Opened requests without assigned technicians"
 
-#: reports/alert.class.php:1185 reports/alert.class.php:1193
+#: reports/alert.class.php:1191 reports/alert.class.php:1199
 msgid "Incidents with very high or major priority"
 msgstr "Incidents with very high or major priority"
 
-#: reports/alert.class.php:1187 reports/alert.class.php:1195
+#: reports/alert.class.php:1193 reports/alert.class.php:1201
 msgid "Requests with very high or major priority"
 msgstr "Requests with very high or major priority"
 
-#: reports/alert.class.php:1230 reports/alert.class.php:1234
+#: reports/alert.class.php:1236 reports/alert.class.php:1240
 msgid "Problems with very high or major priority"
 msgstr "Problems with very high or major priority"
 
-#: reports/alert.class.php:1506
+#: reports/alert.class.php:1519
 msgid "Incidents where time to own will be exceeded"
 msgstr "Incidents where time to own will be exceeded"
 
-#: reports/alert.class.php:1510
+#: reports/alert.class.php:1523
 msgid "Requests where time to own will be exceeded"
 msgstr "Requests where time to own will be exceeded"
 
-#: reports/alert.class.php:1576
+#: reports/alert.class.php:1589
 msgid "Incidents where time to resolve will be exceeded"
 msgstr "Incidents where time to resolve will be exceeded"
 
-#: reports/alert.class.php:1580
+#: reports/alert.class.php:1593
 msgid "Requests where time to resolve will be exceeded"
 msgstr "Requests where time to resolve will be exceeded"
 
-#: reports/alert.class.php:1646
+#: reports/alert.class.php:1659
 msgid "Incidents where time to own is exceeded"
 msgstr "Incidents where time to own is exceeded"
 
-#: reports/alert.class.php:1650
+#: reports/alert.class.php:1663
 msgid "Requests where time to own is exceeded"
 msgstr "Requests where time to own is exceeded"
 
-#: reports/alert.class.php:1717
+#: reports/alert.class.php:1730
 msgid "Incidents where time to resolve is exceeded"
 msgstr "Incidents where time to resolve is exceeded"
 
-#: reports/alert.class.php:1721
+#: reports/alert.class.php:1734
 msgid "Requests where time to resolve is exceeded"
 msgstr "Requests where time to resolve is exceeded"
 
-#: reports/alert.class.php:1764 reports/alert.class.php:2406
+#: reports/alert.class.php:1777 reports/alert.class.php:2419
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see "
 "more"
@@ -882,23 +887,23 @@ msgstr ""
 "There is at least on planned scheduled maintenance. Please log in to see "
 "more"
 
-#: reports/alert.class.php:2561
+#: reports/alert.class.php:2574
 msgid "All categories"
 msgstr "All Categories"
 
-#: reports/alert.class.php:2740
+#: reports/alert.class.php:2753
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr "A network alert can impact you and will avoid creating a ticket"
 
-#: reports/alert.class.php:2778
+#: reports/alert.class.php:2791
 msgid "Problem with GLPI"
 msgstr "Problem with GLPI"
 
-#: reports/alert.class.php:2783
+#: reports/alert.class.php:2796
 msgid "GLPI is OK"
 msgstr "GLPI is OK"
 
-#: reports/alert.class.php:2788
+#: reports/alert.class.php:2801
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
@@ -906,40 +911,40 @@ msgstr ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 
-#: reports/alert.class.php:2806
+#: reports/alert.class.php:2819
 msgid "Curl PHP package not installed"
 msgstr "Curl PHP package not installed"
 
-#: reports/alert.class.php:3056 reports/alert.class.php:3460
+#: reports/alert.class.php:3108 reports/alert.class.php:3513
 #: reports/ticket.class.php:75 reports/ticket.class.php:1237
 msgid "New tickets"
 msgstr "New Tickets"
 
-#: reports/alert.class.php:3109 reports/alert.class.php:3466
+#: reports/alert.class.php:3161 reports/alert.class.php:3519
 msgid "Tickets late"
 msgstr "Tickets Late"
 
-#: reports/alert.class.php:3155 reports/alert.class.php:3472
+#: reports/alert.class.php:3207 reports/alert.class.php:3525
 msgid "Pending tickets"
 msgstr "Pending Tickets"
 
-#: reports/alert.class.php:3219 reports/alert.class.php:3478
+#: reports/alert.class.php:3271 reports/alert.class.php:3531
 msgid "Incidents in progress"
 msgstr "Incidents in Progress"
 
-#: reports/alert.class.php:3283 reports/alert.class.php:3484
+#: reports/alert.class.php:3335 reports/alert.class.php:3537
 msgid "Requests in progress"
 msgstr "Requests in Progress"
 
-#: reports/alert.class.php:3331 reports/alert.class.php:3490
+#: reports/alert.class.php:3383 reports/alert.class.php:3543
 msgid "Tickets solved"
 msgstr "Tickets Solved"
 
-#: reports/alert.class.php:3379
+#: reports/alert.class.php:3431
 msgid "Ticket closed"
 msgstr "Ticket Closed"
 
-#: reports/alert.class.php:3497
+#: reports/alert.class.php:3550
 msgid "Tickets closed"
 msgstr "Tickets Closed"
 
@@ -991,44 +996,44 @@ msgstr "projects to be processed"
 msgid "projects tasks to be processed"
 msgstr "projects tasks to be processed"
 
-#: reports/reports_bar.class.php:97 reports/reports_line.class.php:527
-#: reports/reports_line.class.php:811 reports/reports_line.class.php:1122
+#: reports/reports_bar.class.php:91 reports/reports_line.class.php:528
+#: reports/reports_line.class.php:812 reports/reports_line.class.php:1123
 msgid "Opened tickets backlog"
 msgstr "Opened tickets backlog"
 
-#: reports/reports_bar.class.php:99
+#: reports/reports_bar.class.php:93
 msgid "Display of opened tickets by month"
 msgstr "Display of opened tickets by month"
 
-#: reports/reports_bar.class.php:100
+#: reports/reports_bar.class.php:94
 msgid "Process time by technicians by month"
 msgstr "Process time by technicians by month"
 
-#: reports/reports_bar.class.php:102
+#: reports/reports_bar.class.php:96
 msgid "Sum of ticket tasks duration by technicians"
 msgstr "Sum of ticket tasks duration by technicians"
 
-#: reports/reports_bar.class.php:103
+#: reports/reports_bar.class.php:97
 msgid "Top ten ticket categories by type of ticket"
 msgstr "Top Ten ticket categories by type of ticket"
 
-#: reports/reports_bar.class.php:105
+#: reports/reports_bar.class.php:99
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr "Display of Top Ten ticket categories by type of ticket"
 
-#: reports/reports_bar.class.php:106
+#: reports/reports_bar.class.php:100
 msgid "Number of tickets affected by technicians by month"
 msgstr "Number of tickets affected by technicians by month"
 
-#: reports/reports_bar.class.php:108
+#: reports/reports_bar.class.php:102
 msgid "Sum of ticket affected by technicians"
 msgstr "Sum of ticket affected by technicians"
 
-#: reports/reports_bar.class.php:109
+#: reports/reports_bar.class.php:103
 msgid "Average real duration of treatment of the ticket"
 msgstr "Average real duration of treatment of the ticket"
 
-#: reports/reports_bar.class.php:111
+#: reports/reports_bar.class.php:105
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
@@ -1036,142 +1041,178 @@ msgstr ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
 
-#: reports/reports_bar.class.php:112
+#: reports/reports_bar.class.php:106
 msgid "Top ten technicians (by tickets number)"
 msgstr "Top Ten Technicians (by tickets number)"
 
-#: reports/reports_bar.class.php:114
+#: reports/reports_bar.class.php:108
 msgid "Display of number of tickets by technicians"
 msgstr "Display number of tickets by technicians"
 
-#: reports/reports_bar.class.php:115
+#: reports/reports_bar.class.php:109
 msgid "Age of tickets"
 msgstr "Age of Tickets"
 
-#: reports/reports_bar.class.php:118 reports/reports_pie.class.php:98
+#: reports/reports_bar.class.php:112 reports/reports_pie.class.php:90
 msgid "Number of opened tickets by priority"
 msgstr "Number of opened tickets by priority"
 
-#: reports/reports_bar.class.php:121
+#: reports/reports_bar.class.php:115
 msgid "Stock of tickets by status"
 msgstr "Stock of Tickets by Status"
 
-#: reports/reports_bar.class.php:124
+#: reports/reports_bar.class.php:118
 msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr "Number of opened ticket and average satisfaction per trimester"
 
-#: reports/reports_bar.class.php:127
+#: reports/reports_bar.class.php:121
 msgid "Responsiveness over 12 rolling months"
 msgstr "Responsiveness over 12 rolling months"
 
-#: reports/reports_bar.class.php:130
+#: reports/reports_bar.class.php:124
 msgid "Tickets request sources evolution"
 msgstr "Tickets request sources evolution"
 
-#: reports/reports_bar.class.php:132
+#: reports/reports_bar.class.php:126
 msgid "Evolution of tickets request sources types by year"
 msgstr "Evolution of tickets request sources types by year"
 
-#: reports/reports_bar.class.php:133
+#: reports/reports_bar.class.php:127
 msgid "Tickets solution types evolution"
 msgstr "Tickets Solution Types Evolution"
 
-#: reports/reports_bar.class.php:135
+#: reports/reports_bar.class.php:129
 msgid "Evolution of solution types by year"
 msgstr "Evolution of Solution Types by Year"
 
-#: reports/reports_bar.class.php:136
+#: reports/reports_bar.class.php:130
 msgid "Solve delay and take into account of tickets"
 msgstr "Solve Delay and Take into Account of Tickets"
 
-#: reports/reports_bar.class.php:139
+#: reports/reports_bar.class.php:133
 msgid "Evolution of ticket satisfaction by year"
 msgstr "Evolution of Ticket Satisfaction by Year"
+
+#: reports/reports_bar.class.php:136
+msgid "Evolution of TTO respect"
+msgstr "Evolution of TTO respect"
+
+#: reports/reports_bar.class.php:139
+msgid "Evolution of TTR respect"
+msgstr "Evolution of TTR respect"
 
 #: reports/reports_bar.class.php:144
 msgid "Last synchronization of computers by month"
 msgstr "Last Synchronization of Computers by Month"
 
-#: reports/reports_bar.class.php:221 reports/reports_bar.class.php:441
-#: reports/reports_bar.class.php:776 reports/reports_bar.class.php:1057
-#: reports/reports_line.class.php:224 reports/reports_line.class.php:1249
-#: reports/reports_line.class.php:1322 reports/reports_line.class.php:1417
-#: reports/reports_line.class.php:1510 reports/reports_line.class.php:1617
-#: reports/reports_line.class.php:1734
+#: reports/reports_bar.class.php:231 reports/reports_bar.class.php:451
+#: reports/reports_bar.class.php:785 reports/reports_bar.class.php:1076
+#: reports/reports_line.class.php:225 reports/reports_line.class.php:1250
+#: reports/reports_line.class.php:1323 reports/reports_line.class.php:1418
+#: reports/reports_line.class.php:1511 reports/reports_line.class.php:1618
+#: reports/reports_line.class.php:1735
 msgid "Tickets number"
 msgstr "Tickets Number"
 
-#: reports/reports_bar.class.php:662
+#: reports/reports_bar.class.php:672
 msgid "Tasks duration (minutes)"
 msgstr "Tasks Duration (mins)"
 
-#: reports/reports_bar.class.php:956
+#: reports/reports_bar.class.php:973
 msgid "Not resolved tickets"
 msgstr "Tickets Not Resolved"
 
-#: reports/reports_bar.class.php:1282
+#: reports/reports_bar.class.php:1304
 msgid "Trimester 1"
 msgstr "Trimester 1"
 
-#: reports/reports_bar.class.php:1301
+#: reports/reports_bar.class.php:1323
 msgid "Trimester 2"
 msgstr "Trimester 2"
 
-#: reports/reports_bar.class.php:1318
+#: reports/reports_bar.class.php:1340
 msgid "Trimester 3"
 msgstr "Trimester 3"
 
-#: reports/reports_bar.class.php:1334
+#: reports/reports_bar.class.php:1356
 msgid "Trimester 4"
 msgstr "Trimester 4"
 
-#: reports/reports_bar.class.php:1358 reports/reports_line.class.php:525
-#: reports/reports_line.class.php:809 reports/reports_line.class.php:1119
-#: reports/reports_pie.class.php:834 reports/reports_pie.class.php:836
+#: reports/reports_bar.class.php:1380 reports/reports_line.class.php:526
+#: reports/reports_line.class.php:810 reports/reports_line.class.php:1120
+#: reports/reports_pie.class.php:836 reports/reports_pie.class.php:838
 msgid "Opened tickets"
 msgstr "Opened Tickets"
 
-#: reports/reports_bar.class.php:1359
+#: reports/reports_bar.class.php:1381
 msgid "Average Satisfaction"
 msgstr "Average Satisfaction"
 
-#: reports/reports_bar.class.php:1599
+#: reports/reports_bar.class.php:1621
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr "Sum of Tickets Solved in less than 24 Hours"
 
-#: reports/reports_bar.class.php:1608
+#: reports/reports_bar.class.php:1630
 msgid "Sum of tickets solved in less than a week"
 msgstr "Sum of Tickets Solved in less than a week"
 
-#: reports/reports_bar.class.php:1617
+#: reports/reports_bar.class.php:1639
 msgid "Sum of tickets solved in more than a week"
 msgstr "Sum of Tickets Solved in more than a week"
 
-#: reports/reports_bar.class.php:1888
+#: reports/reports_bar.class.php:1910
 msgid "Solve delay average (hour)"
 msgstr "Solve Delay Average (hour)"
 
-#: reports/reports_bar.class.php:1889
+#: reports/reports_bar.class.php:1911
 msgid "Take into account average (hour)"
 msgstr "Take into Account Average (hour)"
 
-#: reports/reports_bar.class.php:2078
+#: reports/reports_bar.class.php:2100
 msgid "Number of surveys answered"
 msgstr "Number of Surveys Answered"
 
-#: reports/reports_bar.class.php:2086
+#: reports/reports_bar.class.php:2108
 msgid "Satisfy number"
 msgstr "Satisfy Number"
 
-#: reports/reports_bar.class.php:2092
+#: reports/reports_bar.class.php:2114
 msgid "Not satisfy number"
 msgstr "Number Not Satisfied"
 
-#: reports/reports_bar.class.php:2188
+#: reports/reports_bar.class.php:2210
 msgid "Computers number"
 msgstr "Computers Number"
 
-#: reports/reports_funnel.class.php:63
+#: reports/reports_bar.class.php:2318 reports/reports_pie.class.php:507
+#: reports/reports_pie.class.php:520
+msgid "Not respected TTO"
+msgstr "Not Respected TTO"
+
+#: reports/reports_bar.class.php:2324 reports/reports_pie.class.php:510
+#: reports/reports_pie.class.php:520
+msgid "Respected TTO"
+msgstr "Respected TTO"
+
+#: reports/reports_bar.class.php:2330
+msgid "Percent - Respected TTO"
+msgstr "Percent - Respected TTO"
+
+#: reports/reports_bar.class.php:2421 reports/reports_pie.class.php:416
+#: reports/reports_pie.class.php:430
+msgid "Not respected TTR"
+msgstr "Not Respected TTR"
+
+#: reports/reports_bar.class.php:2427 reports/reports_pie.class.php:419
+#: reports/reports_pie.class.php:429
+msgid "Respected TTR"
+msgstr "Respected TTR"
+
+#: reports/reports_bar.class.php:2433
+msgid "Percent - Respected TTR"
+msgstr "Percent - Respected TTR"
+
+#: reports/reports_funnel.class.php:55
 msgid "Age pyramid"
 msgstr "Age Pyramid"
 
@@ -1195,205 +1236,189 @@ msgstr "2-4 years"
 msgid "< 2 years"
 msgstr "< 2 years"
 
-#: reports/reports_line.class.php:61
+#: reports/reports_line.class.php:54
 msgid "Tickets stock by month"
 msgstr "Tickets stock by month"
 
-#: reports/reports_line.class.php:63
+#: reports/reports_line.class.php:56
 msgid "Sum of not solved tickets by month"
 msgstr "Sum of tickets not solved by month"
 
-#: reports/reports_line.class.php:64 reports/reports_line.class.php:520
+#: reports/reports_line.class.php:57 reports/reports_line.class.php:521
 msgid "Number of opened and closed tickets by month"
 msgstr "Number of Opened and Closed Tickets by Month"
 
-#: reports/reports_line.class.php:67 reports/reports_line.class.php:804
+#: reports/reports_line.class.php:60 reports/reports_line.class.php:805
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr "Number of Opened and Resolved / Closed Tickets by Month"
 
-#: reports/reports_line.class.php:70
+#: reports/reports_line.class.php:63
 msgid "Number of opened, closed, unplanned tickets by month"
 msgstr "Number of Opened, Closed, Unplanned Tickets by Month"
 
-#: reports/reports_line.class.php:73
+#: reports/reports_line.class.php:66
 msgid "Number of tickets created each months"
 msgstr "Number of Tickets Created each Months"
 
-#: reports/reports_line.class.php:76
+#: reports/reports_line.class.php:69
 msgid "Number of tickets created each week"
 msgstr "Number of Tickets Created each Week"
 
-#: reports/reports_line.class.php:79
+#: reports/reports_line.class.php:72
 msgid "Number of tickets with validation refusal"
 msgstr "Number of Tickets with Validation Refusal"
 
-#: reports/reports_line.class.php:82
+#: reports/reports_line.class.php:75
 msgid "Number of tickets linked with problems"
 msgstr "Number of Tickets Linked with Problems"
 
-#: reports/reports_line.class.php:85
+#: reports/reports_line.class.php:78
 msgid "Backlog tickets by week"
 msgstr "Backlog Tickets by Week"
 
-#: reports/reports_line.class.php:87
+#: reports/reports_line.class.php:80
 msgid "Number of in progress (not new and pending) tickets by week"
 msgstr "Number of in progress (not new and pending) tickets by week"
 
-#: reports/reports_line.class.php:88
+#: reports/reports_line.class.php:81
 msgid "Monthly tickets in progress"
 msgstr "Monthly Tickets in Progress"
 
-#: reports/reports_line.class.php:90
+#: reports/reports_line.class.php:83
 msgid "Number of open tickets in the month still in progress for each month"
 msgstr "Number of open tickets in the month still in progress for each month"
 
-#: reports/reports_line.class.php:526 reports/reports_line.class.php:1120
-#: reports/reports_pie.class.php:852 reports/reports_pie.class.php:854
+#: reports/reports_line.class.php:527 reports/reports_line.class.php:1121
+#: reports/reports_pie.class.php:854 reports/reports_pie.class.php:856
 msgid "Closed tickets"
 msgstr "Closed Tickets"
 
-#: reports/reports_line.class.php:810
+#: reports/reports_line.class.php:811
 msgid "Resolved / closed tickets"
 msgstr "Resolved / Closed Tickets"
 
-#: reports/reports_line.class.php:1114
+#: reports/reports_line.class.php:1115
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr "Number of Opened, Closed  and Unplanned Tickets by Month"
 
-#: reports/reports_line.class.php:1121 reports/reports_pie.class.php:872
-#: reports/reports_pie.class.php:874
+#: reports/reports_line.class.php:1122 reports/reports_pie.class.php:874
+#: reports/reports_pie.class.php:876
 msgid "Not planned"
 msgstr "Not Planned"
 
-#: reports/reports_map.class.php:60
+#: reports/reports_map.class.php:53
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr "OpenStreetMap - Opened Tickets by Location"
 
-#: reports/reports_map.class.php:62
+#: reports/reports_map.class.php:55
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr "Display Tickets by Location (Latitude / Longitude)"
 
-#: reports/reports_pie.class.php:101
+#: reports/reports_pie.class.php:93
 msgid "Top ten ticket requesters by month"
 msgstr "Top Ten ticket requesters by month"
 
-#: reports/reports_pie.class.php:104
+#: reports/reports_pie.class.php:96
 msgid "TTR Compliance"
 msgstr "TTR Compliance"
 
-#: reports/reports_pie.class.php:106
+#: reports/reports_pie.class.php:98
 msgid "Display tickets where time to resolve is respected (percent)"
 msgstr "Display tickets where time to resolve is respected (percent)"
 
-#: reports/reports_pie.class.php:107
+#: reports/reports_pie.class.php:99
 msgid "TTO Compliance"
 msgstr "TTO Compliance"
 
-#: reports/reports_pie.class.php:109
+#: reports/reports_pie.class.php:101
 msgid "Display tickets where time to own is respected (percent)"
 msgstr "Display tickets where time to own is respected (percent)"
 
-#: reports/reports_pie.class.php:110
+#: reports/reports_pie.class.php:102
 msgid "Number of opened incidents by category"
 msgstr "Number of Opened Incidents by Category"
 
-#: reports/reports_pie.class.php:113
+#: reports/reports_pie.class.php:105
 msgid "Number of opened requests by category"
 msgstr "Number of Opened Requests by Category"
 
-#: reports/reports_pie.class.php:116
+#: reports/reports_pie.class.php:108
 msgid "Number of opened, closed and unplanned tickets by month"
 msgstr "Number of Opened, Closed and Unplanned Tickets by Month"
 
-#: reports/reports_pie.class.php:119
+#: reports/reports_pie.class.php:111
 msgid "Percent of use of solution types"
 msgstr "Percent of use of solution types"
 
-#: reports/reports_pie.class.php:121
+#: reports/reports_pie.class.php:113
 msgid "Display percent of solution types for tickets"
 msgstr "Display percent of solution types for tickets"
 
-#: reports/reports_pie.class.php:122
+#: reports/reports_pie.class.php:114
 msgid "Top ten of opened tickets by requester groups"
 msgstr "Top Ten of opened tickets by requester groups"
 
-#: reports/reports_pie.class.php:125
+#: reports/reports_pie.class.php:117
 msgid "Global satisfaction level"
 msgstr "Global Satisfaction Level"
 
-#: reports/reports_pie.class.php:127
+#: reports/reports_pie.class.php:119
 msgid "Satisfaction average"
 msgstr "Satisfaction Average"
 
-#: reports/reports_pie.class.php:128
+#: reports/reports_pie.class.php:120
 msgid "Top ten of opened tickets by location"
 msgstr "Top Ten of opened tickets by location"
 
-#: reports/reports_pie.class.php:131
+#: reports/reports_pie.class.php:123
 msgid "Number of use of request sources"
 msgstr "Number of use of request sources"
 
-#: reports/reports_pie.class.php:133
+#: reports/reports_pie.class.php:125
 msgid "Display percent of request sources for closed tickets"
 msgstr "Display percent of request sources for closed tickets"
 
-#: reports/reports_pie.class.php:134
+#: reports/reports_pie.class.php:126
 msgid "Number of tickets per location per period"
 msgstr "Number of Tickets per Location per Period"
 
-#: reports/reports_pie.class.php:137
+#: reports/reports_pie.class.php:129
 msgid "Top ten of opened tickets by appliance"
 msgstr "Top Ten of Opened Tickets by Appliance"
 
-#: reports/reports_pie.class.php:415 reports/reports_pie.class.php:429
-msgid "Not respected TTR"
-msgstr "Not Respected TTR"
-
-#: reports/reports_pie.class.php:418 reports/reports_pie.class.php:428
-msgid "Respected TTR"
-msgstr "Respected TTR"
-
-#: reports/reports_pie.class.php:505 reports/reports_pie.class.php:518
-msgid "Not respected TTO"
-msgstr "Not Respected TTO"
-
-#: reports/reports_pie.class.php:508 reports/reports_pie.class.php:518
-msgid "Respected TTO"
-msgstr "Respected TTO"
-
-#: reports/reports_pie.class.php:1177 reports/reports_pie.class.php:1191
+#: reports/reports_pie.class.php:1184 reports/reports_pie.class.php:1198
 msgid "Satisfy percent"
 msgstr "Satisfy Percent"
 
-#: reports/reports_pie.class.php:1180 reports/reports_pie.class.php:1191
+#: reports/reports_pie.class.php:1187 reports/reports_pie.class.php:1198
 msgid "Not satisfy percent"
 msgstr "No Satisfied Percent"
 
-#: reports/reports_table.class.php:63
+#: reports/reports_table.class.php:56
 msgid "Number of opened tickets by technician and by status"
 msgstr "Number of opened tickets by technician and by status"
 
-#: reports/reports_table.class.php:74
+#: reports/reports_table.class.php:67
 msgid "Display if you have duplicates into inventory"
 msgstr "Display if you have duplicates into inventory"
 
-#: reports/reports_table.class.php:80
+#: reports/reports_table.class.php:73
 msgid "Display unpublished articles of Knowbase"
 msgstr "Display unpublished articles of the Knowledgebase"
 
-#: reports/reports_table.class.php:85
+#: reports/reports_table.class.php:78
 msgid "Internal annuary"
 msgstr "Internal Annual"
 
-#: reports/reports_table.class.php:87
+#: reports/reports_table.class.php:80
 msgid "Search users of your organisation"
 msgstr "Search users of your organization"
 
-#: reports/reports_table.class.php:514
+#: reports/reports_table.class.php:515
 msgid "Number of tickets open by technician and by status"
 msgstr "Number of tickets open by technician and by status"
 
-#: reports/reports_table.class.php:517
+#: reports/reports_table.class.php:518
 msgid "Technicians"
 msgstr "Technicians"
 
