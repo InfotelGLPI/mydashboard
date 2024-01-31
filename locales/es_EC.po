@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-16 13:06+0000\n"
+"POT-Creation-Date: 2024-01-31 11:51+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/teams/65490/es_EC/)\n"
@@ -47,11 +47,11 @@ msgstr[0] "Información"
 msgstr[1] "Información"
 msgstr[2] "Información"
 
-#: hook.php:301 hook.php:302
+#: hook.php:302 hook.php:303
 msgid "Incidents"
 msgstr "Incidentes"
 
-#: hook.php:310 hook.php:311
+#: hook.php:311 hook.php:312
 msgid "Requests"
 msgstr "Solicitudes"
 
