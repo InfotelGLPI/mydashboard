@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-16 13:06+0000\n"
+"POT-Creation-Date: 2024-01-31 11:51+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2024\n"
 "Language-Team: English (United States) (https://app.transifex.com/infotelGLPI/teams/65490/en_US/)\n"
@@ -45,11 +45,11 @@ msgid_plural "Informations"
 msgstr[0] "Information"
 msgstr[1] "Information"
 
-#: hook.php:301 hook.php:302
+#: hook.php:302 hook.php:303
 msgid "Incidents"
 msgstr "Incidents"
 
-#: hook.php:310 hook.php:311
+#: hook.php:311 hook.php:312
 msgid "Requests"
 msgstr "Requests"
 
