@@ -18,7 +18,7 @@ jobs:
     - name: Setup Perl environment
       # You may pin to the exact commit or the version.
       # uses: shogo82148/actions-setup-perl@8d2e3d59a9516b785ed32169d48a4888eaa9b514
-      uses: shogo82148/actions-setup-perl@v1.7.2
+      uses: shogo82148/actions-setup-perl@v1.20.1
     - name: msgfmt
       # You may pin to the exact commit or the version.
       # uses: whtsky/msgfmt-action@6b2181f051b002182d01a1e1f1aff216230c5a4d
