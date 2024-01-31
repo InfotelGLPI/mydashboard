@@ -284,6 +284,7 @@ function plugin_mydashboard_install()
         $config->initConfig();
     }
     PluginMydashboardProfile::initProfile();
+    
     PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     return true;
 }
