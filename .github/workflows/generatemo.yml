@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - name: Checkout repo
-      uses: actions/checkout@v2 
+      uses: actions/checkout@v4
       
     - name: Setup Perl environment
       # You may pin to the exact commit or the version.
@@ -27,7 +27,7 @@ jobs:
       run:  perl tools/update_mo.pl;
 
     - name: Commit changes
-      uses: EndBug/add-and-commit@v5.1.0
+      uses: EndBug/add-and-commit@v9
       with:
        
         message: "Generate mo"
