@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-21 08:59+0000\n"
+"POT-Creation-Date: 2024-09-12 13:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -787,7 +787,7 @@ msgid "Display alerts for requests"
 msgstr ""
 
 #: reports/alert.class.php:166 reports/reports_table.class.php:59
-#: reports/reports_table.class.php:747
+#: reports/reports_table.class.php:749
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
@@ -1401,11 +1401,11 @@ msgstr ""
 msgid "Search users of your organisation"
 msgstr ""
 
-#: reports/reports_table.class.php:515
+#: reports/reports_table.class.php:517
 msgid "Number of tickets open by technician and by status"
 msgstr ""
 
-#: reports/reports_table.class.php:518
+#: reports/reports_table.class.php:520
 msgid "Technicians"
 msgstr ""
 
