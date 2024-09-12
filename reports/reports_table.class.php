@@ -143,20 +143,21 @@ class PluginMydashboardReports_Table extends CommonGLPI
 
         switch ($widgetId) {
             case $this->getType() . "3":
-
-                $profile_user = new Profile_User();
-                $condition    = $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', 'entities_id', '', true);
-                $users        = $profile_user->find($condition);
-                $filtredUsers = [];
-                foreach ($users as $user) {
-                    $filtredUsers[$user['users_id']] = $user['users_id'];
-                }
+                
                 $query = "SELECT `firstname`, `realname`, `name`, `phone`, `phone2`, `mobile`
                         FROM `glpi_users`
+                        LEFT JOIN `glpi_profiles_users` ON (`glpi_users`.`id` = `glpi_profiles_users`.`users_id`)
                         WHERE `glpi_users`.`is_deleted` = '0'
-                        AND `id` IN ('" . implode("','", $filtredUsers) . "')
-                        AND `glpi_users`.`is_active`
-                        AND NOT `glpi_users`.`firstname` = ''
+                        AND `glpi_users`.`is_active` " .
+                    $dbu->getEntitiesRestrictRequest(
+                        "AND",
+                        'glpi_profiles_users',
+                        "entities_id",
+                        $_SESSION['glpiactiveentities'],
+                        true
+                    );
+
+                    $query .= "AND NOT `glpi_users`.`firstname` = ''
                         AND `glpi_users`.`firstname` IS NOT NULL
                         AND NOT `glpi_users`.`realname` = ''
                         AND `glpi_users`.`realname` IS NOT NULL
@@ -167,6 +168,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                         OR (NOT `glpi_users`.`mobile` = ''
                         AND `glpi_users`.`mobile` IS NOT NULL))
                         ORDER BY `realname`, `firstname` ASC";
+
 
                 $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
                 $headers = [__('First name'),

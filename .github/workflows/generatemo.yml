@@ -33,5 +33,5 @@ jobs:
         message: "Generate mo"
     - name: Push changes
  
-      uses: actions-go/push@v1
+      uses: actions-go/push@master
   

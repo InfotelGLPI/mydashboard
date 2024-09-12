@@ -113,7 +113,7 @@ class PluginMydashboardHTMLEditor extends CommonDBTM {
       $rand = mt_rand();
 
       Html::textarea(['name'            => 'content',
-                      'value'           => Html::entities_deep($item->fields['content']),
+                      'value'           => htmlspecialchars($item->fields['content']),
                       'editor_id'           => 'custom_css_code_'. $rand,
                       'enable_richtext' => false]);
 
