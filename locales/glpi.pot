@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 13:30+0000\n"
+"POT-Creation-Date: 2024-11-25 12:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -573,19 +573,19 @@ msgstr ""
 msgid "Configuration Access"
 msgstr ""
 
-#: inc/profile.class.php:182 inc/profile.class.php:280
+#: inc/profile.class.php:182 inc/profile.class.php:284
 msgid "See edit mode"
 msgstr ""
 
-#: inc/profile.class.php:193 inc/profile.class.php:268
+#: inc/profile.class.php:193 inc/profile.class.php:272
 msgid "Setup stock widget"
 msgstr ""
 
-#: inc/profile.class.php:272
+#: inc/profile.class.php:276
 msgid "See the dashboard"
 msgstr ""
 
-#: inc/profile.class.php:276
+#: inc/profile.class.php:280
 msgid "See the configuration"
 msgstr ""
 
