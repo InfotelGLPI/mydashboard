@@ -230,10 +230,14 @@ class PluginMydashboardProfile extends CommonDBTM
             }
         }
 
-        foreach ($DB->request("SELECT *
-                           FROM `glpi_profilerights` 
-                           WHERE `profiles_id`='" . $_SESSION['glpiactiveprofile']['id'] . "' 
-                           AND `name` LIKE '%plugin_mydashboard%'") as $prof) {
+        $it = $DB->request([
+            'FROM' => 'glpi_profilerights',
+            'WHERE' => [
+                'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
+                'name' => ['LIKE', '%plugin_mydashboard%']
+            ]
+        ]);
+        foreach ($it as $prof) {
             if (isset($_SESSION['glpiactiveprofile'])) {
                 $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
             }
@@ -335,19 +339,20 @@ class PluginMydashboardProfile extends CommonDBTM
             return true;
         }
 
-        foreach ($DB->request(
-            'glpi_plugin_mydashboard_profiles',
-            "`profiles_id`='$profiles_id'"
-        ) as $profile_data) {
+        $it = $DB->request([
+            'FROM' => 'glpi_plugin_mydashboard_profiles',
+            'WHERE' => ['profiles_id' => $profiles_id]
+        ]);
+        foreach ($it as $profile_data) {
             $matching       = ['mydashboard' => 'plugin_mydashboard',
                                'config'      => 'plugin_mydashboard_config'];
             $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
             foreach ($matching as $old => $new) {
                 if (!isset($current_rights[$old])) {
-                    $query = "UPDATE `glpi_profilerights` 
-                         SET `rights`='" . self::translateARight($profile_data[$old]) . "' 
-                         WHERE `name`='$new' AND `profiles_id`='$profiles_id'";
-                    $DB->query($query);
+                    $DB->update('glpi_profilerights', ['rights' => self::translateARight($profile_data[$old])], [
+                        'name'        => $new,
+                        'profiles_id' => $profiles_id
+                    ]);
                 }
             }
         }
@@ -361,7 +366,11 @@ class PluginMydashboardProfile extends CommonDBTM
     {
         global $DB;
         //Migration old rights in new ones
-        foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
+        $it = $DB->request([
+            'SELECT' => ['id'],
+            'FROM' => 'glpi_profiles'
+        ]);
+        foreach ($it as $prof) {
             self::migrateOneProfile($prof['id']);
         }
     }

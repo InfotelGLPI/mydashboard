@@ -272,7 +272,7 @@ function plugin_mydashboard_install()
     $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.9.sql");
     $mig->executeMigration();
 
-    if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "display_plugin_widget")) {
+    if (!$DB->fieldExists("glpi_plugin_mydashboard_preferences", "prefered_category")) {
         $mig = new Migration("2.1.2");
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.1.2.sql");
         $mig->executeMigration();
@@ -470,7 +470,7 @@ function plugin_mydashboard_uninstall()
        "glpi_plugin_mydashboard_stockticketindicators"];
 
     foreach ($tables as $table) {
-        $DB->query("DROP TABLE IF EXISTS `$table`;");
+        $DB->dropTable($table);
     }
 
     include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/profile.class.php");
