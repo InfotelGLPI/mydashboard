@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-25 12:51+0000\n"
+"POT-Creation-Date: 2025-01-22 12:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -573,19 +573,19 @@ msgstr ""
 msgid "Configuration Access"
 msgstr ""
 
-#: inc/profile.class.php:182 inc/profile.class.php:284
+#: inc/profile.class.php:182 inc/profile.class.php:285
 msgid "See edit mode"
 msgstr ""
 
-#: inc/profile.class.php:193 inc/profile.class.php:272
+#: inc/profile.class.php:193 inc/profile.class.php:273
 msgid "Setup stock widget"
 msgstr ""
 
-#: inc/profile.class.php:276
+#: inc/profile.class.php:277
 msgid "See the dashboard"
 msgstr ""
 
-#: inc/profile.class.php:280
+#: inc/profile.class.php:281
 msgid "See the configuration"
 msgstr ""
 
@@ -1373,11 +1373,11 @@ msgstr ""
 msgid "Top ten of opened tickets by appliance"
 msgstr ""
 
-#: reports/reports_pie.class.php:1184 reports/reports_pie.class.php:1198
+#: reports/reports_pie.class.php:1185 reports/reports_pie.class.php:1199
 msgid "Satisfy percent"
 msgstr ""
 
-#: reports/reports_pie.class.php:1187 reports/reports_pie.class.php:1198
+#: reports/reports_pie.class.php:1188 reports/reports_pie.class.php:1199
 msgid "Not satisfy percent"
 msgstr ""
 
