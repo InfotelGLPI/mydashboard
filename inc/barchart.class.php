@@ -173,6 +173,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
             //  console.log(params);
               if ($onclick) {
                  var idx = params.dataIndex;
+                 var componentIdx = params.componentIndex;
                  var tab = $ids;
                  var selected_id = tab[idx];
                  $.ajax({
@@ -181,6 +182,7 @@ abstract class PluginMydashboardBarChart extends PluginMydashboardChart
                     data:
                     {
                         selected_id:selected_id,
+                        selectedComponent_id:componentIdx,
                         params: $json_criterias
                       },
                     success:function(response) {

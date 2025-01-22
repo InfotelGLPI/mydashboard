@@ -217,7 +217,8 @@ class PluginMydashboardProfile extends CommonDBTM
      */
     public static function initProfile()
     {
-        global $DB, $GLPI_CACHE;
+        global $DB;
+
         $profile = new self();
         $dbu     = new DbUtils();
         //Add new rights in glpi_profilerights table

@@ -153,7 +153,8 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                               shadowOffsetX: 0,
                               shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
-                          }
+                          },
+                          top:'-20%' ,
                         }
                       ]
             };
@@ -233,9 +234,9 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                 formatter: '{a} <br/>{b} : {c} ({d}%)'
               },
               legend: {
-                left: 'center',
+//                left: 'center',
                 top: 'bottom',
-                data: $labels
+                data: $labels,
               },
               toolbox: {
                 show: true,
@@ -314,6 +315,7 @@ class PluginMydashboardPieChart extends PluginMydashboardChart
                             borderRadius: 8
                           },
                           data: $datas,
+                          top:'-20%' ,
                         }
                       ]
             };

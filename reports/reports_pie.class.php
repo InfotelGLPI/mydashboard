@@ -1176,6 +1176,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
 
                 $notsatisfy = 0;
                 $satisfy    = 0;
+                $datas = [];
                 if ($nb > 0 && $sum['satisfaction'] > 0) {
                     $satisfy    = round(($sum['satisfaction']) * 100 / (5), 2);
                     $notsatisfy = round(100 - $satisfy, 2);
