@@ -75,6 +75,7 @@
 .slidepanel.onright {
   right: 0;
   border-left: 1px solid #ccc;
+  z-index: 999;
 }
 
 .slidepanel.onright .close {

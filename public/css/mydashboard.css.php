@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/css; charset: UTF-8");
-include('../../../inc/includes.php');
+include('../../../../inc/includes.php');
 $config = new PluginMydashboardConfig();
 $gtheme = $config->getGridTheme();
 $wtheme = $config->getWidgetTheme();

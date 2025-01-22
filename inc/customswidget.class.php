@@ -69,7 +69,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown
 
         $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($data = $DB->fetchAssoc($result)) {
             $customsWidgets[] = $data;
@@ -91,7 +91,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown
         $query = "SELECT count(*) as count from " . PluginMydashboardCustomswidget::getTable();
         $query .= " WHERE id=" . $id;
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $data2 = $DB->fetchArray($result);
         return $data2['count'] > 0;
@@ -110,7 +110,7 @@ class PluginMydashboardCustomswidget extends CommonDropdown
         $query = "SELECT * from " . PluginMydashboardCustomswidget::getTable();
         $query .= " WHERE id=" . $id;
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($data = $DB->fetchAssoc($result)) {
             return $data;

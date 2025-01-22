@@ -206,7 +206,7 @@ class PluginMydashboardReports_Funnel extends CommonGLPI
                          $type_criteria";
 
 
-                $results = $DB->query($query);
+                $results = $DB->doQuery($query);
                 $tabage   = [];
                 $tabnames = [];
 

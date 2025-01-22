@@ -313,7 +313,7 @@ class PluginMydashboardReminder extends CommonGLPI
             }
         }
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $nb     = $DB->numrows($result);
 
         $output['title'] = "<span>$titre</span>";
@@ -415,7 +415,7 @@ class PluginMydashboardReminder extends CommonGLPI
 
         $titre = _n('Public reminder', 'Public reminders', 2);
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $nb     = $DB->numrows($result);
 
         if ($nb) {

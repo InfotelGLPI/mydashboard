@@ -26,10 +26,16 @@
 
 define('PLUGIN_MYDASHBOARD_VERSION', '2.1.5');
 
+global $CFG_GLPI;
+
+use Glpi\Plugin\Hooks;
+
 if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
     define("PLUGIN_MYDASHBOARD_DIR", Plugin::getPhpDir("mydashboard"));
     define("PLUGIN_MYDASHBOARD_NOTFULL_DIR", Plugin::getPhpDir("mydashboard", false));
-    define("PLUGIN_MYDASHBOARD_WEBDIR", Plugin::getWebDir("mydashboard"));
+
+    $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
+    define("PLUGIN_MYDASHBOARD_WEBDIR", $root);
 }
 
 // Init the hooks of the plugins -Needed
@@ -188,8 +194,8 @@ function plugin_version_mydashboard()
        'homepage'     => 'https://github.com/InfotelGLPI/mydashboard',
        'requirements' => [
           'glpi' => [
-             'min' => '10.0',
-             'max' => '11.0',
+             'min' => '11.0',
+             'max' => '12.0',
              'dev' => false
           ]
        ]];

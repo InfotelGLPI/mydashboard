@@ -123,11 +123,11 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
          . "WHERE `users_id` = " . $user_id . " "
          . "AND `plugin_name` = '$plugin_name';";
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       if ($result && $DB->numrows($result) == 0) {
          $query = "INSERT IGNORE INTO `glpi_plugin_mydashboard_preferenceuserblacklists` "
             . "VALUES (NULL,$user_id,'$plugin_name');";
-         $DB->query($query);
+         $DB->doQuery($query);
       }
    }
 
@@ -140,7 +140,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
       global $DB;
       $query = "DELETE FROM `glpi_plugin_mydashboard_preferenceuserblacklists` "
          . "WHERE (`users_id` = " . $user_id . " && `plugin_name` = '" . $plugin_name . "')";
-      $DB->query($query);
+      $DB->doQuery($query);
    }
 
    /**
@@ -154,7 +154,7 @@ class PluginMydashboardPreferenceUserBlacklist extends CommonDBTM {
       $query = "SELECT `plugin_name` "
          . "FROM `glpi_plugin_mydashboard_preferenceuserblacklists` "
          . "WHERE `users_id` = $user_id;";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
       $tab = [];
       while ($row = $DB->fetchArray($result)) {

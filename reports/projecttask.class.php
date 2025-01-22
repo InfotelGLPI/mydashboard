@@ -146,12 +146,12 @@ class PluginMydashboardProjectTask extends CommonGLPI
 
         $query .= " ORDER BY glpi_projecttasks.date_mod DESC";
 
-        $result  = $DB->query($query);
+        $result  = $DB->doQuery($query);
         $numrows = $DB->numrows($result);
 
       //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
       //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $number = $DB->numrows($result);
       //      } else {
       //         $number = 0;

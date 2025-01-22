@@ -1028,6 +1028,8 @@ class PluginMydashboardHelper
      */
     public static function getForm($widgetId, $opt, $criterias, $onsubmit = false)
     {
+        global $CFG_GLPI;
+
         $gsid = PluginMydashboardWidget::getGsID($widgetId);
 
         $form = self::getFormHeader($widgetId, $gsid, $onsubmit, $opt);
@@ -1690,10 +1692,11 @@ class PluginMydashboardHelper
             $params2 = ['value' => '__VALUE__',
 
             ];
+            $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
             $form    .= Ajax::updateItemOnSelectEvent(
                 'dropdown_display_data' . $rand,
                 "display_data_crit$rand",
-                Plugin::getWebDir('mydashboard') . "/ajax/dropdownUpdateDisplaydata.php",
+                $root . "/ajax/dropdownUpdateDisplaydata.php",
                 $params2,
                 false
             );
@@ -2075,7 +2078,7 @@ class PluginMydashboardHelper
         global $DB;
 
         if (stripos(trim($query), "SELECT") === 0) {
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             $tab    = [];
             if ($result) {
                 while ($row = $DB->fetchAssoc($result)) {

@@ -130,7 +130,7 @@ class PluginMydashboardRSSFeed extends CommonGLPI
             }
         }
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $items = [];
         $rssfeed = new RSSFeed();
         if ($nb = $DB->numrows($result)) {

@@ -37,7 +37,7 @@ class PluginMydashboardStockTicket extends CommonDBTM {
       $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
       $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stocktickets 
                   WHERE glpi_plugin_mydashboard_stocktickets.date = '$year-$month-$nbdays'";
-      $results = $DB->query($query);
+      $results = $DB->doQuery($query);
       $data    = $DB->fetchArray($results);
       if ($data["count"] > 0) {
          die("stock tickets of $year-$month is already filled");
@@ -48,27 +48,27 @@ class PluginMydashboardStockTicket extends CommonDBTM {
       $query      = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id` FROM `glpi_tickets`
                         WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                         AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
-      $results    = $DB->query($query);
+      $results    = $DB->doQuery($query);
       while ($data = $DB->fetchArray($results)) {
          $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`)
                         VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ")";
-         $DB->query($query);
+         $DB->doQuery($query);
       }
       $query   = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id`,`glpi_groups_tickets`.`groups_id` FROM `glpi_tickets`
                  LEFT JOIN `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
-      $results = $DB->query($query);
+      $results = $DB->doQuery($query);
       while ($data = $DB->fetchArray($results)) {
          $groups_id = $data["groups_id"];
          if (!empty($groups_id)) {
             $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`,`groups_id`) 
                      VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . "," . $data['groups_id'] . ")";
-            $DB->query($query);
+            $DB->doQuery($query);
          } else {
             $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`,`groups_id`) 
                      VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ",0)";
-            $DB->query($query);
+            $DB->doQuery($query);
          }
       }
    }

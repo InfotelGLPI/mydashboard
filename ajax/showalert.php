@@ -25,6 +25,8 @@
  */
 
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 include('../../../inc/includes.php');
 
 header("Content-Type: text/html; charset=UTF-8");
@@ -33,7 +35,7 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (!isset($_GET['id'])) {
-   exit();
+    throw new NotFoundHttpException();
 }
 
 PluginMydashboardAlert::displayTickerDescription($_GET['id']);

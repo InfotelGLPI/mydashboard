@@ -33,7 +33,7 @@ $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
-include('../../../inc/includes.php');
+include('../../../../inc/includes.php');
 
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';

@@ -259,7 +259,7 @@ class PluginMydashboardAlert extends CommonDBTM
             $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
         }
         $nb     = 0;
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         if ($DB->numrows($result) > 0) {
             $ligne  = $DB->fetchAssoc($result);
             $nb     = $ligne['cpt'];
@@ -391,7 +391,7 @@ class PluginMydashboardAlert extends CommonDBTM
                             __('Category')];
                 $widget->setTabNames($headers);
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $datas = [];
@@ -566,7 +566,7 @@ class PluginMydashboardAlert extends CommonDBTM
                             __('Status')];
                 $widget->setTabNames($headers);
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $datas = [];
@@ -615,7 +615,7 @@ class PluginMydashboardAlert extends CommonDBTM
                             __('Mails receiver')];
                 $widget->setTabNames($headers);
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $datas = [];
@@ -707,7 +707,7 @@ class PluginMydashboardAlert extends CommonDBTM
                             if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
                                 $q2 .= " AND `" . $itemtable . "`.`locations_id` = '" . $location_criteria . "' ";
                             }
-                            $r2  = $DB->query($q2);
+                            $r2  = $DB->doQuery($q2);
                             $nb2 = $DB->numrows($r2);
                             if ($nb2) {
                                 foreach ($DB->request($q2) as $data2) {
@@ -925,10 +925,10 @@ class PluginMydashboardAlert extends CommonDBTM
                         $left
                         WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q1 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-               . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+               . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
             AND `glpi_tickets`.`priority` > 4 AND `glpi_tickets`.`type` = '" . $type . "' AND $search_assign";
 
-        $r1             = $DB->query($q1);
+        $r1             = $DB->doQuery($q1);
         $stats_tickets1 = 0;
         $nb1            = $DB->numrows($r1);
         if ($nb1) {
@@ -950,10 +950,10 @@ class PluginMydashboardAlert extends CommonDBTM
                         $left
                         WHERE `glpi_problems`.`is_deleted` = '0' ";
             $q2 .= $dbu->getEntitiesRestrictRequest("AND", Problem::getTable())
-                   . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+                   . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
             AND `glpi_problems`.`priority` > 4 AND $search_assign";
 
-            $r2             = $DB->query($q2);
+            $r2             = $DB->doQuery($q2);
             $stats_tickets2 = 0;
             $nb2            = $DB->numrows($r2);
             if ($nb2) {
@@ -973,10 +973,10 @@ class PluginMydashboardAlert extends CommonDBTM
                         $left
                         WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q3 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-               . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ") 
+               . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ")
             AND `glpi_tickets`.`type` = '" . $type . "' ";
 
-        $r3             = $DB->query($q3);
+        $r3             = $DB->doQuery($q3);
         $stats_tickets3 = 0;
         $nb3            = $DB->numrows($r3);
         if ($nb3) {
@@ -1008,7 +1008,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
                . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
-        $r4             = $DB->query($q4);
+        $r4             = $DB->doQuery($q4);
         $stats_tickets4 = 0;
         $nb4            = $DB->numrows($r4);
         if ($nb4) {
@@ -1343,12 +1343,12 @@ class PluginMydashboardAlert extends CommonDBTM
                            $left
                            WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q2 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_own` > NOW())";
 
-        $r2  = $DB->query($q2);
+        $r2  = $DB->doQuery($q2);
         $nb2 = $DB->numrows($r2);
         if ($nb2) {
             foreach ($DB->request($q2) as $data2) {
@@ -1373,12 +1373,12 @@ class PluginMydashboardAlert extends CommonDBTM
                            $left
                            WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q3 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`solve_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_resolve` > NOW())";
 
-        $r3  = $DB->query($q3);
+        $r3  = $DB->doQuery($q3);
         $nb3 = $DB->numrows($r3);
 
         if ($nb3) {
@@ -1407,12 +1407,12 @@ class PluginMydashboardAlert extends CommonDBTM
                                        $left
                                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q4 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_own` < NOW())";
 
-        $r4  = $DB->query($q4);
+        $r4  = $DB->doQuery($q4);
         $nb4 = $DB->numrows($r4);
         if ($nb4) {
             foreach ($DB->request($q4) as $data4) {
@@ -1440,12 +1440,12 @@ class PluginMydashboardAlert extends CommonDBTM
                                        $left
                                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q5 .= $dbu->getEntitiesRestrictRequest("AND", Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") 
+               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`solve_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_resolve` < NOW())";
         //print_r($opt);
-        $r5  = $DB->query($q5);
+        $r5  = $DB->doQuery($q5);
         $nb5 = $DB->numrows($r5);
         if ($nb5) {
             foreach ($DB->request($q5) as $data5) {
@@ -1820,7 +1820,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $query .= "AND `" . $this->getTable() . "`.`type` = 1
                    ORDER BY `glpi_reminders`.`name`";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $nb     = $DB->numrows($result);
         if ($nb) {
             $wl               .= '<div id="nt_maint-container">';
@@ -1837,7 +1837,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
                 $style_title         = "text-align:center;color:orange";
                 $description         = ReminderTranslation::getTranslatedValue($note, 'text');
-                $cleaned_description = Html::entity_decode_deep($description);
+                $cleaned_description = $description;
                 if ($i == 1) {
                     $firstdescription = $cleaned_description;
                 }
@@ -2016,7 +2016,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $query .= "AND `" . $this->getTable() . "`.`type` = 2
                    ORDER BY `glpi_reminders`.`name`";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $nb     = $DB->numrows($result);
 
         if ($nb) {
@@ -2034,7 +2034,7 @@ class PluginMydashboardAlert extends CommonDBTM
 
                 $style_title         = "text-align:center;";
                 $description         = ReminderTranslation::getTranslatedValue($note, 'text');
-                $cleaned_description = Html::entity_decode_deep($description);
+                $cleaned_description = $description;
 
                 if ($i == 1) {
                     $firstdescription = $cleaned_description;
@@ -2182,7 +2182,7 @@ class PluginMydashboardAlert extends CommonDBTM
                  AND `" . $this->getTable() . "`.`type` = 0
                    ORDER BY `glpi_reminders`.`name`";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $nb     = $DB->numrows($result);
 
         if ($nb) {
@@ -2206,7 +2206,7 @@ class PluginMydashboardAlert extends CommonDBTM
                 $description       .= ReminderTranslation::getTranslatedValue($note, 'text');
                 $description       .= "</span>";
 
-                $cleaned_description = Html::entity_decode_deep($description);
+                $cleaned_description = $description;
                 if ($i == 1) {
                     $firstdescription = $cleaned_description;
                 }
@@ -2348,7 +2348,7 @@ class PluginMydashboardAlert extends CommonDBTM
                    ORDER BY `glpi_reminders`.`name`";
 
         $wl     = "";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $nb             = $DB->numrows($result);
         $nb_maintenance = self::countForAlerts($public, 1);
@@ -3580,7 +3580,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND `glpi_tickets`.`status` NOT IN (" . Ticket::SOLVED . ", " . Ticket::CLOSED . ") ";
         $sql_all .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
-        $result_all = $DB->query($sql_all);
+        $result_all = $DB->doQuery($sql_all);
         $total_all  = $DB->result($result_all, 0, 'total');
 
         return $total_all;
@@ -3607,7 +3607,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND `glpi_tickets`.`status` = " . Ticket::INCOMING . " " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
             return 0;
         }
@@ -3633,7 +3633,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
             return 0;
         }
@@ -3669,7 +3669,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND `glpi_tickets`.`time_to_resolve` < NOW() ";
         $sql_due .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
-        $result_due = $DB->query($sql_due);
+        $result_due = $DB->doQuery($sql_due);
         $total_due  = $DB->result($result_due, 0, 'due');
 
         return $total_due;
@@ -3689,7 +3689,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
             return 0;
         }
@@ -3724,7 +3724,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND `glpi_tickets`.`status` = " . Ticket::WAITING . " " .
                     $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
-        $result_pend = $DB->query($sql_pend);
+        $result_pend = $DB->doQuery($sql_pend);
         $total_pend  = $DB->result($result_pend, 0, 'total');
 
         return $total_pend;
@@ -3744,7 +3744,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
 
         if ($result_new == false) {
             return 0;
@@ -3785,7 +3785,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND `glpi_tickets`.`type` = '" . Ticket::INCIDENT_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
         $sql_incpro    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
-        $result_incpro = $DB->query($sql_incpro);
+        $result_incpro = $DB->doQuery($sql_incpro);
         $total_incpro  = $DB->result($result_incpro, 0, 'total');
         return $total_incpro;
     }
@@ -3808,7 +3808,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                     $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
 
         if ($result_new == false) {
             return 0;
@@ -3852,7 +3852,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                         AND `glpi_tickets`.`type` = '" . Ticket::DEMAND_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
         $sql_dempro    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
-        $result_dempro = $DB->query($sql_dempro);
+        $result_dempro = $DB->doQuery($sql_dempro);
         $total_dempro  = $DB->result($result_dempro, 0, 'total');
 
         return $total_dempro;
@@ -3876,7 +3876,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                     $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
             return 0;
         }
@@ -3916,7 +3916,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
 
-        $result_res = $DB->query($sql_res);
+        $result_res = $DB->doQuery($sql_res);
         $total_res  = $DB->result($result_res, 0, 'total');
 
         return $total_res;
@@ -3936,7 +3936,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
 
         if ($result_new == false) {
             return 0;
@@ -3968,7 +3968,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $sql_close .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
 
-        $result_close = $DB->query($sql_close);
+        $result_close = $DB->doQuery($sql_close);
 
         if ($result_close == false) {
             return 0;
@@ -3997,7 +3997,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
-        $result_new = $DB->query($sql_new);
+        $result_new = $DB->doQuery($sql_new);
 
         if ($result_new == false) {
             return 0;

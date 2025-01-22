@@ -174,7 +174,7 @@ class PluginMydashboardEvent extends Glpi\Event
                 LIMIT 0," . intval($_SESSION['glpilist_limit']);
 
         // Get results
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         // Number of results
         $number = $DB->numrows($result);

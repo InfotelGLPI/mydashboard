@@ -113,7 +113,7 @@ function plugin_mydashboard_install()
     //Profile migration
     if ($DB->tableExists("glpi_plugin_mydashboard_profiles")) {
         PluginMydashboardProfile::migrateRightsFrom84To85();
-        $DB->query("DROP TABLE `glpi_plugin_mydashboard_profiles`;");
+        $DB->doQuery("DROP TABLE `glpi_plugin_mydashboard_profiles`;");
     }
     //end---------------------------------------------------------------------
     if (!$DB->fieldExists("glpi_plugin_mydashboard_alerts", "is_public")) {
@@ -177,7 +177,7 @@ function plugin_mydashboard_install()
                WHERE TABLE_SCHEMA = '$DB->dbdefault' AND
                     TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND 
                     COLUMN_NAME = 'prefered_group'";
-    $result = $DB->query($query);
+    $result = $DB->doQuery($query);
     while ($data = $DB->fetchAssoc($result)) {
         $type = $data["DATA_TYPE"];
     }
@@ -202,7 +202,7 @@ function plugin_mydashboard_install()
         $mig = new Migration("1.7.8");
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.8.sql");
         $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stocktickets`";
-        $DB->query($queryTruncate);
+        $DB->doQuery($queryTruncate);
         $mig->executeMigration();
 //        fillTableMydashboardStocktickets();
 //        fillTableMydashboardStockticketsGroup();
@@ -242,7 +242,7 @@ function plugin_mydashboard_install()
 
 
     $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
-    $result     = $DB->query($query);
+    $result     = $DB->doQuery($query);
 
     while ($data = $DB->fetchArray($result)) {
         $id    = $data['id'];
@@ -261,7 +261,7 @@ function plugin_mydashboard_install()
         $newgrid      = json_encode($newwidgets);
         $query        = "UPDATE `glpi_plugin_mydashboard_dashboards`
         SET `grid` = '" . $newgrid . "' WHERE `glpi_plugin_mydashboard_dashboards`.`id` = " . $id . ";";
-        $DB->query($query);
+        $DB->doQuery($query);
     }
 
     $mig = new Migration("2.0.5");
@@ -340,7 +340,7 @@ function fillTableMydashboardStocktickets()
                     . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
                     . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
                     . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
-    $results      = $DB->query($query);
+    $results      = $DB->doQuery($query);
     while ($data = $DB->fetchArray($results)) {
         list($year, $month) = explode('-', $data['month']);
         $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -351,13 +351,13 @@ function fillTableMydashboardStocktickets()
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
                   OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-        $results2    = $DB->query($query);
+        $results2    = $DB->doQuery($query);
         $data2       = $DB->fetchArray($results2);
         $countTicket = $data2['count'];
         if ($countTicket > 0) {
             $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) 
                               VALUES (NULL,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-            $DB->query($query);
+            $DB->doQuery($query);
         }
     }
 }
@@ -375,7 +375,7 @@ function fillTableMydashboardStockticketsGroup()
       LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
       WHERE `glpi_tickets`.`is_deleted`= 0 
       GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
-    $results = $DB->query($query);
+    $results = $DB->doQuery($query);
     while ($data = $DB->fetchArray($results)) {
         list($year, $month) = explode('-', $data['month']);
         $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -389,13 +389,13 @@ function fillTableMydashboardStockticketsGroup()
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
                   OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-            $results2    = $DB->query($query);
+            $results2    = $DB->doQuery($query);
             $data2       = $DB->fetchArray($results2);
             $countTicket = $data2['count'];
             if ($countTicket > 0) {
                 $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`) 
                               VALUES (NULL,$groups_id,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                $DB->query($query);
+                $DB->doQuery($query);
             }
         } else {
             $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
@@ -405,13 +405,13 @@ function fillTableMydashboardStockticketsGroup()
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
                   OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-            $results2    = $DB->query($query);
+            $results2    = $DB->doQuery($query);
             $data2       = $DB->fetchArray($results2);
             $countTicket = $data2['count'];
             if ($countTicket > 0) {
                 $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`) 
                               VALUES (NULL,0,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                $DB->query($query);
+                $DB->doQuery($query);
             }
         }
     }

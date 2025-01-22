@@ -110,7 +110,7 @@ class PluginMydashboardUserWidget extends CommonDBTM {
                 . "ON `" . $this->getTable() . "`.`widgets_id` = `glpi_plugin_mydashboard_widgets`.`id` "
                 . "WHERE `" . $this->getTable() . "`.`users_id` = '" . $user_id . "' "
                 . "AND `profiles_id` = '".$_SESSION['glpiactiveprofile']['id']."' ";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
       $tab = [];
       while ($row = $DB->fetchArray($result)) {

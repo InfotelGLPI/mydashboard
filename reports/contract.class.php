@@ -97,7 +97,7 @@ class PluginMydashboardContract extends CommonGLPI
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )>-30
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )<'0'";
-        $result    = $DB->query($query);
+        $result    = $DB->doQuery($query);
         $contract0 = $DB->result($result, 0, 0);
         $dbu       = new DbUtils();
         // contrats  echeance j-7
@@ -109,7 +109,7 @@ class PluginMydashboardContract extends CommonGLPI
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )>'0'
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )<='7'";
-        $result    = $DB->query($query);
+        $result    = $DB->doQuery($query);
         $contract7 = $DB->result($result, 0, 0);
 
         // contrats echeance j -30
@@ -121,7 +121,7 @@ class PluginMydashboardContract extends CommonGLPI
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )>'7'
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            `glpi_contracts`.`duration` MONTH),CURDATE() )<'30'";
-        $result     = $DB->query($query);
+        $result     = $DB->doQuery($query);
         $contract30 = $DB->result($result, 0, 0);
 
         // contrats avec préavis echeance j-7
@@ -136,7 +136,7 @@ class PluginMydashboardContract extends CommonGLPI
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
                                            MONTH),CURDATE() )<='7'";
-        $result       = $DB->query($query);
+        $result       = $DB->doQuery($query);
         $contractpre7 = $DB->result($result, 0, 0);
 
         // contrats avec préavis echeance j -30
@@ -151,7 +151,7 @@ class PluginMydashboardContract extends CommonGLPI
                       AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
                                            (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
                                            MONTH),CURDATE() )<'30'";
-        $result        = $DB->query($query);
+        $result        = $DB->doQuery($query);
         $contractpre30 = $DB->result($result, 0, 0);
 
         $widget = new PluginMydashboardDatatable();

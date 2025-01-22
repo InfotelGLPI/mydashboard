@@ -126,7 +126,7 @@ class PluginMydashboardKnowbaseItem extends CommonGLPI
                 $orderby
                 LIMIT 10";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $tab    = [];
         $nb     = $DB->numrows($result);
         while ($row = $DB->fetchAssoc($result)) {

@@ -345,12 +345,12 @@ class PluginMydashboardTicket extends CommonGLPI
         }
 
         $query   .= " ORDER BY date_mod DESC";
-        $result  = $DB->query($query);
+        $result  = $DB->doQuery($query);
         $numrows = $DB->numrows($result);
 
       //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
       //         $query  .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $number = $DB->numrows($result);
       //      } else {
       //         $number = 0;
@@ -1076,8 +1076,8 @@ class PluginMydashboardTicket extends CommonGLPI
         $query_deleted .= " AND `glpi_tickets`.`is_deleted` = 1
                          GROUP BY `status`";
 
-        $result         = $DB->query($query);
-        $result_deleted = $DB->query($query_deleted);
+        $result         = $DB->doQuery($query);
+        $result_deleted = $DB->doQuery($query_deleted);
 
         $status = [];
         foreach (Ticket::getAllStatusArray() as $key => $val) {
@@ -1210,7 +1210,7 @@ class PluginMydashboardTicket extends CommonGLPI
                       AND NOT `is_deleted`
                 ORDER BY `glpi_tickets`.`date_mod` DESC
                 LIMIT " . intval($_SESSION['glpilist_limit']);
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $number = $DB->numrows($result);
 

@@ -199,7 +199,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
                 $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_priority = [];
@@ -389,7 +389,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
                 $all           .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
-                $result = $DB->query($all);
+                $result = $DB->doQuery($all);
                 $total  = $DB->fetchAssoc($result);
 
                 $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
@@ -402,7 +402,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                                       AND `glpi_tickets`.`time_to_resolve` < NOW()))";
                 $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
-                $result       = $DB->query($query);
+                $result       = $DB->doQuery($query);
                 $sum          = $DB->fetchAssoc($result);
                 $nb           = $DB->numrows($result);
                 $notrespected = 0;
@@ -480,7 +480,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                         AND `glpi_tickets`.`time_to_own` IS NOT NULL ";// AND ".getDateRequest("`$table`.`solvedate`", $begin, $end)."
                 $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
-                $result = $DB->query($all);
+                $result = $DB->doQuery($all);
                 $total  = $DB->fetchAssoc($result);
 
                 $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
@@ -495,7 +495,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                                                       AND `glpi_tickets`.`time_to_own` < NOW()))";
                 $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
-                $result       = $DB->query($query);
+                $result       = $DB->doQuery($query);
                 $sum          = $DB->fetchAssoc($result);
                 $nb           = $DB->numrows($result);
                 $notrespected = 0;
@@ -591,7 +591,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                         GROUP BY `glpi_itilcategories`.`id`";
 
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_category       = "";
@@ -714,7 +714,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                           . " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY `glpi_itilcategories`.`id` $limit_query";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_category = "";
@@ -827,7 +827,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                      $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria
                      AND $is_deleted";
 
-                $result   = $DB->query($query);
+                $result   = $DB->doQuery($query);
                 $nb       = $DB->numrows($result);
                 $dataspie = [];
                 $namespie = [];
@@ -846,7 +846,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                      $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria 
                      AND $is_deleted";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 if ($nb) {
@@ -866,7 +866,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                      $entities_criteria $type_criteria $requester_groups_criteria
                      AND $is_deleted $whereUnplanned";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 if ($nb) {
@@ -952,7 +952,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                       AND `glpi_itilsolutions`.`solutiontypes_id` > 0
                       GROUP BY `glpi_solutiontypes`.`id`";
 
-                $result_tot = $DB->query($query_tot);
+                $result_tot = $DB->doQuery($query_tot);
                 $nb_tot     = $DB->numrows($result_tot);
                 if ($nb_tot) {
                     while ($tot = $DB->fetchArray($result_tot)) {
@@ -975,7 +975,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                       AND `glpi_itilsolutions`.`solutiontypes_id` > 0
                       GROUP BY `glpi_solutiontypes`.`id`";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_solution = [];
@@ -1069,7 +1069,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
                 $query .= " GROUP BY `groups_id` $limit_query";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_groups = [];
@@ -1170,7 +1170,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                         AND `glpi_tickets`.`closedate` IS NOT NULL
                         AND `glpi_ticketsatisfactions`.`date_answered` IS NOT NULL ";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $sum    = $DB->fetchAssoc($result);
                 $nb     = $DB->numrows($result);
 
@@ -1272,7 +1272,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $query  .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
                 $query  .= " GROUP BY `glpi_locations`.`id` ORDER BY count DESC";
                 $query  .= " $limit_query";
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_location = [];
@@ -1380,7 +1380,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                       AND `glpi_tickets`.`requesttypes_id` > 0
                       GROUP BY `glpi_requesttypes`.`id`";
 
-                $result_tot = $DB->query($query_tot);
+                $result_tot = $DB->doQuery($query_tot);
                 $nb_tot     = $DB->numrows($result_tot);
                 if ($nb_tot) {
                     while ($tot = $DB->fetchArray($result_tot)) {
@@ -1401,7 +1401,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                       AND `glpi_tickets`.`requesttypes_id` > 0
                       GROUP BY `glpi_requesttypes`.`id`";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_requesttypes = [];
@@ -1497,7 +1497,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
                 $query .= " GROUP BY `locations_id`";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_location1 = [];
@@ -1618,7 +1618,7 @@ class PluginMydashboardReports_Pie extends CommonGLPI
                 $query  .= " WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria ";
                 $query  .= " GROUP BY `glpi_items_tickets`.`items_id` ORDER BY count DESC";
                 $query  .= " $limit_query";
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $name_appliance = [];

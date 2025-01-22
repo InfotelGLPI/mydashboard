@@ -32,7 +32,7 @@ class PluginMydashboardPreference extends CommonDBTM
     /**
      * @return bool
      */
-    public static function canCreate()
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE, READ]);
     }
@@ -40,7 +40,7 @@ class PluginMydashboardPreference extends CommonDBTM
     /**
      * @return bool
      */
-    public static function canView()
+    public static function canView(): bool
     {
         return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE, READ]);
     }
@@ -48,7 +48,7 @@ class PluginMydashboardPreference extends CommonDBTM
     /**
      * @return bool|booleen
      */
-    public static function canUpdate()
+    public static function canUpdate(): bool
     {
         return self::canCreate();
     }

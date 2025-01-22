@@ -196,12 +196,12 @@ class PluginMydashboardProblem extends CommonGLPI
         }
 
         $query   .= " ORDER BY date_mod DESC";
-        $result  = $DB->query($query);
+        $result  = $DB->doQuery($query);
         $numrows = $DB->numrows($result);
 
       //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
       //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $number = $DB->numrows($result);
       //      } else {
       //         $number = 0;
@@ -496,8 +496,8 @@ class PluginMydashboardProblem extends CommonGLPI
         $query_deleted .= " AND `glpi_problems`.`is_deleted`
                          GROUP BY `status`";
 
-        $result         = $DB->query($query);
-        $result_deleted = $DB->query($query_deleted);
+        $result         = $DB->doQuery($query);
+        $result_deleted = $DB->doQuery($query_deleted);
 
         $status = [];
         foreach (Problem::getAllStatusArray() as $key => $val) {

@@ -205,7 +205,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                          );
                 $query .= "ORDER BY `entities_id` DESC";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $widget  = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
@@ -305,7 +305,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $headers = [__('Subject'), __('Writer'), __('Category')];
                 $widget->setTabNames($headers);
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb     = $DB->numrows($result);
 
                 $datas = [];
@@ -417,7 +417,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                                                                  . " ORDER BY statusname";
                     $query_moreticket_type                     = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
                                                                  . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
-                    $result                                    = $DB->query($query_moreticket_type);
+                    $result                                    = $DB->doQuery($query_moreticket_type);
                     $i                                         = 0;
                     $moreTicketTypeName                        = [];
                     while ($data = $DB->fetchArray($result)) {
@@ -439,7 +439,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                                                          . " AND `glpi_tickets_users`.`users_id` = '%s'"
                                                          . $entities_criteria;
                 // Lists of tickets by technician by status
-                $result = $DB->query($query_technicians);
+                $result = $DB->doQuery($query_technicians);
                 $nb     = $DB->numrows($result);
                 $temp   = [];
 
@@ -460,7 +460,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                         foreach ($statusList as $status) {
                             $query        = sprintf($query_tickets_by_technician_by_status, $status, $userId);
                             $temp[$i][$j] = 0;
-                            $result2      = $DB->query($query);
+                            $result2      = $DB->doQuery($query);
                             $nb2          = $DB->numrows($result2);
                             if ($nb2) {
                                 while ($data = $DB->fetchAssoc($result2)) {
@@ -479,7 +479,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                             $j++;
                         }
                         if (Plugin::isPluginActive('moreticket')) {
-                            $result3       = $DB->query($query_moretickets_by_technician_by_status);
+                            $result3       = $DB->doQuery($query_moretickets_by_technician_by_status);
                             $hasMoreTicket = 1;
                             if ($DB->numrows($result3) > 0) {
                                 while ($dataMoreTicket = $DB->fetchAssoc($result3)) {
@@ -649,7 +649,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                     $query_moreticket_type = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
                                              . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid 
                                         FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
-                    $result                = $DB->query($query_moreticket_type);
+                    $result                = $DB->doQuery($query_moreticket_type);
                     $i                     = 0;
                     $moreTicketTypeName    = [];
                     while ($data = $DB->fetchArray($result)) {
@@ -696,7 +696,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
 
                             $temp[$i][$j] = 0;
 
-                            $result2 = $DB->query($query);
+                            $result2 = $DB->doQuery($query);
                             $nb2     = $DB->numrows($result2);
 
                             if ($nb2) {
@@ -716,7 +716,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                             $j++;
                         }
                         if (Plugin::isPluginActive('moreticket')) {
-                            $result3       = $DB->query($query_moretickets_by_group_by_status);
+                            $result3       = $DB->doQuery($query_moretickets_by_group_by_status);
                             $hasMoreTicket = 1;
                             if ($DB->numrows($result3) > 0) {
                                 while ($dataMoreTicket = $DB->fetchAssoc($result3)) {

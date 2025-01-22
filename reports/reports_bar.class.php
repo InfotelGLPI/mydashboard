@@ -223,7 +223,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $query .= " $entities_criteria AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                         GROUP BY period_name ORDER BY period ASC";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb = $DB->numrows($result);
                 $tabdata = [];
                 $tabnames = [];
@@ -431,7 +431,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                      ORDER BY count DESC
                      $limit_query";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb = $DB->numrows($result);
                 $tabdata = [];
                 $tabnames = [];
@@ -641,7 +641,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                               " . $entities_criteria . $type_criteria . "
                               GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-                $results = $DB->query($query);
+                $results = $DB->doQuery($query);
                 $i = 0;
 
                 $tabduration = [];
@@ -659,7 +659,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                            AND (`glpi_tickettasks`.`date` >= '$year-$month-01 00:00:01' 
                            AND `glpi_tickettasks`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
 
-                    $results_1 = $DB->query($query_1);
+                    $results_1 = $DB->doQuery($query_1);
                     $data_1 = $DB->fetchArray($results_1);
                     $average_by_ticket = 0;
 
@@ -771,7 +771,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                      GROUP BY `glpi_tickets_users`.`users_id`
                      ORDER BY count DESC
                      $limit_query";
-                $results = $DB->query($query);
+                $results = $DB->doQuery($query);
 
                 $tabtickets = [];
                 $tabtech = [];
@@ -957,7 +957,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                  $categories_criteria
                 AND `glpi_tickets`.`status` NOT IN ('" . Ticket::CLOSED . "', '" . Ticket::SOLVED . "')";
 
-                $results = $DB->query($query);
+                $results = $DB->doQuery($query);
                 $tabage = [];
                 $tabnames = [];
                 while ($data = $DB->fetchArray($results)) {
@@ -1062,7 +1062,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
                 $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb = $DB->numrows($result);
 
                 $name_priority = [];
@@ -1167,7 +1167,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 AND `glpi_tickets`.`status` IN (" . implode(",", Ticket::getNotSolvedStatusArray()) . ")
                 GROUP BY `glpi_tickets`.`status`";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb = $DB->numrows($result);
 
                 $name_status = [];
@@ -1215,7 +1215,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 //                          $entities_criteria
                 //                          GROUP BY status";
                 //
-                //               $result_more_ticket = $DB->query($query_moreticket);
+                //               $result_more_ticket = $DB->doQuery($query_moreticket);
                 //               $rows               = $DB->numrows($result_more_ticket);
                 //               if ($rows) {
                 //                  while ($ticket = $DB->fetchAssoc($result_more_ticket)) {
@@ -1306,7 +1306,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $query_openedTicketT1 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
-                    $result = $DB->query($query_openedTicketT1);
+                    $result = $DB->doQuery($query_openedTicketT1);
                     $dataT1 = $DB->fetchArray($result);
                     $opened_tickets_data['data'][] = round($dataT1[0] ?? 0, 2);
 
@@ -1315,7 +1315,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                         FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
-                    $result = $DB->query($query_satisfactionT1);
+                    $result = $DB->doQuery($query_satisfactionT1);
                     $data_satisfactionT1 = $DB->fetchArray($result);
                     $satisfaction_data['data'][] = round($data_satisfactionT1[0] ?? 0, 2);
                     // Checking T2
@@ -1324,7 +1324,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $query_openedTicketT2 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
-                    $result = $DB->query($query_openedTicketT2);
+                    $result = $DB->doQuery($query_openedTicketT2);
                     $dataT2 = $DB->fetchArray($result);
                     $opened_tickets_data['data'][] = round($dataT2[0] ?? 0, 2);
 
@@ -1333,7 +1333,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                         FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
-                    $result = $DB->query($query_satisfactionT2);
+                    $result = $DB->doQuery($query_satisfactionT2);
                     $data_satisfactionT2 = $DB->fetchArray($result);
                     $satisfaction_data['data'][] = round($data_satisfactionT2[0] ?? 0, 2);
                     // Checking T3
@@ -1341,7 +1341,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
-                    $result = $DB->query($query_openedTicketT3);
+                    $result = $DB->doQuery($query_openedTicketT3);
                     $dataT3 = $DB->fetchArray($result);
                     $opened_tickets_data['data'][] = round($dataT3[0] ?? 0, 2);
                     // Average Satisfaction
@@ -1349,7 +1349,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                         FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
-                    $result = $DB->query($query_satisfactionT3);
+                    $result = $DB->doQuery($query_satisfactionT3);
                     $data_satisfactionT3 = $DB->fetchArray($result);
                     $satisfaction_data['data'][] = round($data_satisfactionT3[0] ?? 0, 2);
                     // Checking T4
@@ -1357,7 +1357,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     $query_openedTicketT4 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets` 
                                         WHERE $is_deleted
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
-                    $result = $DB->query($query_openedTicketT4);
+                    $result = $DB->doQuery($query_openedTicketT4);
                     $dataT4 = $DB->fetchArray($result);
                     $opened_tickets_data['data'][] = round($dataT4[0] ?? 0, 2);
                     // Average Satisfaction
@@ -1365,7 +1365,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                         FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id` 
                                         WHERE `glpi_tickets`.`is_deleted` = 0 
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
-                    $result = $DB->query($query_satisfactionT4);
+                    $result = $DB->doQuery($query_satisfactionT4);
                     $data_satisfactionT4 = $DB->fetchArray($result);
                     $satisfaction_data['data'][] = round($data_satisfactionT4[0] ?? 0, 2);
                 }
@@ -1460,7 +1460,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                                 AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01'
                                                 AND `glpi_tickets`.`solve_delay_stat` <=  86400 GROUP BY month) t1";
 
-                $results = $DB->query($query_tickets);
+                $results = $DB->doQuery($query_tickets);
                 $nbResults = $DB->numrows($results);
                 $tabTicketsLessThanOneDay = [];
                 $tabTicketsLessThanOneDay['month_name'] = [];
@@ -1507,7 +1507,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                                 AND  `glpi_tickets`.`solve_delay_stat` <=  604800 GROUP BY month) t1
                                                          ";
 
-                $results = $DB->query($query_tickets2);
+                $results = $DB->doQuery($query_tickets2);
                 $nbResults = $DB->numrows($results);
                 $tabTicketsBetweenOneDayAndOneWeek = [];
                 $tabTicketsBetweenOneDayAndOneWeek['month_name'] = [];
@@ -1552,7 +1552,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                                                     AND `glpi_tickets`.`solve_delay_stat` >=  604800 GROUP BY month) t1
                                                          ";
 
-                $results = $DB->query($query_tickets3);
+                $results = $DB->doQuery($query_tickets3);
                 $nbResults = $DB->numrows($results);
                 $tabTicketsMoreThanOneWeek = [];
                 $tabTicketsMoreThanOneWeek['month_name'] = [];
@@ -1695,7 +1695,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $query .= $entities_criteria . " 
                      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y')";
 
-                $results = $DB->query($query);
+                $results = $DB->doQuery($query);
 
                 while ($data = $DB->fetchArray($results)) {
                     $year = $data['year'];
@@ -1710,7 +1710,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                      AND (`glpi_tickets`.`date` > ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY))
                      GROUP BY `requesttypes_id`";
 
-                    $results_1 = $DB->query($query_1);
+                    $results_1 = $DB->doQuery($query_1);
 
                     while ($data_1 = $DB->fetchArray($results_1)) {
                         $tabdata[$data_1['requesttypes_id']][$year] = $data_1['count'];
@@ -1811,7 +1811,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $query .= $entities_criteria . " 
                      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y')";
 
-                $results = $DB->query($query);
+                $results = $DB->doQuery($query);
 
                 while ($data = $DB->fetchArray($results)) {
                     $year = $data['year'];
@@ -1828,7 +1828,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                      AND (`glpi_tickets`.`date` > ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY))
                      GROUP BY `solutiontypes_id`";
 
-                    $results_1 = $DB->query($query_1);
+                    $results_1 = $DB->doQuery($query_1);
 
                     while ($data_1 = $DB->fetchArray($results_1)) {
                         $tabdata[$data_1['solutiontypes_id']][$year] = $data_1['count'];
@@ -2057,7 +2057,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                          AND `glpi_ticketsatisfactions`.`satisfaction` >= 3
                         GROUP BY period_name ORDER BY period ASC;";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb = $DB->numrows($result);
 
                 $satisfydatasset = [];
@@ -2080,7 +2080,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                         AND `glpi_tickets`.`status` IN (" . CommonITILObject::CLOSED . ")
                         AND `glpi_tickets`.`closedate` IS NOT NULL";
 
-                        $resultcount = $DB->query($querycount);
+                        $resultcount = $DB->doQuery($querycount);
                         while ($datacount = $DB->fetchAssoc($resultcount)) {
                             $count = $datacount['nb'];
                         }
@@ -2204,7 +2204,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                         $entities_criteria
                         GROUP BY periodsync_name ORDER BY periodsync ASC";
 
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $nb = $DB->numrows($result);
 
                 $nbcomputers = __('Computers number', 'mydashboard');
@@ -2517,7 +2517,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 . " GROUP BY `glpi_groups_users`.`users_id`
                                $limit_query";
 
-            $result_gu = $DB->query($query_group_member);
+            $result_gu = $DB->doQuery($query_group_member);
 
             while ($data = $DB->fetchAssoc($result_gu)) {
                 $techlist[] = $data['users_id'];
@@ -2528,7 +2528,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 . " GROUP BY `glpi_tickettasks`.`users_id_tech`
                                $limit_query";
 
-            $result_gu = $DB->query($query_group_member);
+            $result_gu = $DB->doQuery($query_group_member);
 
             while ($data = $DB->fetchAssoc($result_gu)) {
                 $techlist[] = $data['users_id_tech'];
@@ -2589,7 +2589,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                            AND `glpi_tickettasks`.`actiontime` != 0 $type_criteria ";
                 $querym_ai .= "GROUP BY DATE(`glpi_tickettasks`.`date`);
                         ";
-                $result_ai_q = $DB->query($querym_ai);
+                $result_ai_q = $DB->doQuery($querym_ai);
                 while ($data = $DB->fetchAssoc($result_ai_q)) {
                     //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                     if ($data['actiontime_date'] > 0) {
@@ -2672,7 +2672,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 . " GROUP BY `glpi_groups_users`.`users_id`
                                $limit_query";
 
-            $result_gu = $DB->query($query_group_member);
+            $result_gu = $DB->doQuery($query_group_member);
 
             while ($data = $DB->fetchAssoc($result_gu)) {
                 $techlist[] = $data['users_id'];
@@ -2683,7 +2683,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 . " GROUP BY `glpi_tickettasks`.`users_id_tech`
                                $limit_query";
 
-            $result_gu = $DB->query($query_group_member);
+            $result_gu = $DB->doQuery($query_group_member);
 
             while ($data = $DB->fetchAssoc($result_gu)) {
                 $techlist[] = $data['users_id_tech'];
@@ -2695,7 +2695,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
         //                  . "WHERE  `glpi_tickets_users`.`type` = ".CommonITILActor::ASSIGN."
         //         GROUP BY `glpi_tickets_users`.`users_id`";
         //
-        //         $result_gu = $DB->query($query);
+        //         $result_gu = $DB->doQuery($query);
         //
         //         while ($data = $DB->fetchAssoc($result_gu)) {
         //            $techlist[] = $data['users_id'];
@@ -2748,7 +2748,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                     . " $type_criteria ) ";
                 $querym_ai .= "GROUP BY DATE(`glpi_tickets`.`date`);
                         ";
-                $result_ai_q = $DB->query($querym_ai);
+                $result_ai_q = $DB->doQuery($querym_ai);
                 while ($data = $DB->fetchAssoc($result_ai_q)) {
                     $tickets_per_tech[$techid][$key] += $data['nbtickets'];
                 }
@@ -2778,7 +2778,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
         if (Plugin::isPluginActive('moreticket')) {
             $query = "SELECT `glpi_plugin_moreticket_waitingtypes`.`completename` as name, 
                    `glpi_plugin_moreticket_waitingtypes`.`id` as id  FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY id";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             while ($type = $DB->fetchAssoc($result)) {
                 $tabs[$type['id']] = $type['name'];
             }
@@ -2946,7 +2946,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
             }
-            $result = $DB->query($all);
+            $result = $DB->doQuery($all);
             $total = $DB->fetchAssoc($result);
 
             if ($sla == "TTO") {
@@ -2975,7 +2975,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
                 $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
             }
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             $nb = $DB->numrows($result);
 
             while ($sum = $DB->fetchAssoc($result)) {
@@ -3085,7 +3085,7 @@ class PluginMydashboardReports_Bar extends CommonGLPI
 
             $queryavg .= "GROUP BY DATE(`glpi_tickets`.`solvedate`);
                         ";
-            $result_avg = $DB->query($queryavg);
+            $result_avg = $DB->doQuery($queryavg);
             while ($data = $DB->fetchAssoc($result_avg)) {
                 $tickets_helpdesk[$key]['takeintoaccount'] += $data['takeintoaccount'];
                 $tickets_helpdesk[$key]['lifetime'] += $data['lifetime'];

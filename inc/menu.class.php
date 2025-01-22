@@ -996,9 +996,9 @@ class PluginMydashboardMenu extends CommonGLPI
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.css");
         //
         Html::requireJs('gridstack');
-        echo Html::css("/public/lib/gridstack.css");
-        echo Html::scss("/css/standalone/gridstack-grids.scss");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.css.php");
+        //TODO v11
+        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/gridstack/css/gridstack-extra.css");
+//        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.css.php");
         //       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js");
@@ -1019,14 +1019,18 @@ class PluginMydashboardMenu extends CommonGLPI
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/js/buttons.colVis.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/ColReorder-1.5.6/js/dataTables.colReorder.min.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/JSZip-2.5.0/jszip.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
+        //TODO v11
+//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
+//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
 
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/echarts.js");
+        //TODO v11
+//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/echarts.js");
+        Html::requireJs('charts');
         $theme = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
+        //TODO v11
+//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/html2canvas.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jspdf.umd.js");
+//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jspdf.umd.js");
 
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
         //        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js");
@@ -1161,21 +1165,26 @@ class PluginMydashboardMenu extends CommonGLPI
         $all_displayed_widgets_id = json_encode($displayed_widgets_id);
 
         echo "<div id='mygrid$rand' class='mygrid'>";
-        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
-        echo "</div>";
+//        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
+//        echo "</div>";
 
         echo "<script type='text/javascript'>
         $(function () {
+            GridStack.renderCB = function(el, w) {
+              el.innerHTML = w.content;
+            };
             var options = {
                  cellHeight: 41,
                  disableResize: $disableResize,
                  disableDrag: $disableDrag,
                  margin: 2,
+                 sizeToContent: true,
+                 disableOneColumnMode: false,
                  resizable: {
                     handles: 'e, se, s, sw, w'
                 }
             };
-            let grid = GridStack.init(options);
+            let grid = GridStack.init(options, 'mygrid$rand');
             new function () {
                 this.loadGrid = function () {
                     grid.removeAll();
@@ -1212,18 +1221,17 @@ class PluginMydashboardMenu extends CommonGLPI
 //                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"ti ti-refresh\"></i></button>';
 //                         }
                          if ( nodeid !== undefined ) {
-                         var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\" id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + widget + '</div></div>';
-
-                         grid.addWidget(el,
-                                            {
-                                               x: node.x,
-                                               y: node.y,
-                                               w: node.w,
-                                               h: node.h,
-                                               id: node.id,
-//                                               autoPosition: true,
-                                            }
-                                         );
+//                         var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\" id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + widget + '</div></div>';
+var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + widget + '</div>';
+                         grid.addWidget({
+                                                   x: node.x,
+                                                   y: node.y,
+                                                   w: node.w,
+                                                   h: node.h,
+                                                   id: node.id,
+                                                   content: el
+                                                }
+                                             );
                          refreshWidget(node.id);
                             }
                     }, this);
@@ -1242,20 +1250,21 @@ class PluginMydashboardMenu extends CommonGLPI
                 if (value != 0){
                         var widgetArray = $allwidgetjson; 
                         widget = widgetArray['' + value + ''];
-                        var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
-                                 '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + value + '\');\">' +
-                                  '<i class=\"ti ti-circle-x md-close\"></i></button>' + widget + '</div></div>';
+                        var el = '<div id=\"gridcontent' + value + '\">'  + widget + '</div>';
+//                        var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
+//                                 '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + value + '\');\">' +
+//                                  '<i class=\"ti ti-circle-x md-close\"></i></button>' + widget + '</div></div>';
         //                grid = $('.grid-stack').data('gridstack');
-                        grid.addWidget(
-                                                    el,
-                                                    {
-                                                       x: 0,
+                        grid.addWidget({
+                                                   x: 0,
                                                        y: 0,
                                                        w: 4,
                                                        h: 12,
-                                                       id: value
-                                                    }
-                                                 );
+                                                       id: value,
+                                                    content: el,
+                                                    sizeToContent: false
+                                                }
+                                             );
                         refreshWidget(value);
                      }
             }

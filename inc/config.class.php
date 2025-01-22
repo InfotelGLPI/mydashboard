@@ -68,7 +68,7 @@ class PluginMydashboardConfig extends CommonDBTM
      *
      * @return booleen
      **/
-    public static function canView()
+    public static function canView(): bool
     {
         return (Session::haveRight(self::$rightname, UPDATE));
     }
@@ -79,7 +79,7 @@ class PluginMydashboardConfig extends CommonDBTM
      *
      * @return booleen
      **/
-    public static function canCreate()
+    public static function canCreate(): bool
     {
         return (Session::haveRight(self::$rightname, CREATE));
     }
@@ -325,7 +325,7 @@ class PluginMydashboardConfig extends CommonDBTM
         //We first check if there is no configuration
         $query = "SELECT * FROM `" . $this->getTable() . "` LIMIT 1";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         if ($DB->numrows($result) == '0') {
             $input                              = [];
             $input['id']                        = "1";

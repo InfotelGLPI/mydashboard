@@ -33,7 +33,7 @@ $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
-include('../../../inc/includes.php');
+include('../../../../inc/includes.php');
 
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
@@ -59,7 +59,7 @@ if (Plugin::isPluginActive("mydashboard")) {
                    . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
                    . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
 
-   $results      = $DB->query($query);
+   $results      = $DB->doQuery($query);
    while ($data = $DB->fetchArray($results)) {
       list($year, $month) = explode('-', $data['month']);
       $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -70,13 +70,13 @@ if (Plugin::isPluginActive("mydashboard")) {
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
                   OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-      $results2    = $DB->query($query);
+      $results2    = $DB->doQuery($query);
       $data2       = $DB->fetchArray($results2);
       $countTicket = $data2['count'];
       if ($countTicket > 0) {
          $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) 
                               VALUES (NULL,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-         $DB->query($query);
+         $DB->doQuery($query);
       }
    }
 } else {
