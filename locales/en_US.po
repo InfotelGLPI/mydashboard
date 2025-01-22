@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-31 11:51+0000\n"
+"POT-Creation-Date: 2025-01-22 13:14+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2024\n"
 "Language-Team: English (United States) (https://app.transifex.com/infotelGLPI/teams/65490/en_US/)\n"
@@ -53,7 +53,7 @@ msgstr "Incidents"
 msgid "Requests"
 msgstr "Requests"
 
-#: setup.php:184 ajax/loadscripts.php:38 ajax/loadscripts.php:61
+#: setup.php:190 ajax/loadscripts.php:38 ajax/loadscripts.php:61
 #: inc/menu.class.php:89 inc/preference.class.php:66
 msgid "My Dashboard"
 msgstr "My Dashboard"
@@ -63,30 +63,30 @@ msgid "Grid cleared"
 msgstr "Grid Cleared"
 
 #: ajax/dropdownMonth.php:41 inc/helper.class.php:992
-#: inc/helper.class.php:1308 inc/helper.class.php:1497
-#: inc/helper.class.php:1531 inc/helper.class.php:1556
+#: inc/helper.class.php:1310 inc/helper.class.php:1499
+#: inc/helper.class.php:1533 inc/helper.class.php:1558
 msgid "Month"
 msgstr "Month"
 
-#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1613
+#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1615
 msgid "Start month"
 msgstr "Starting Month"
 
-#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1627
+#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1629
 msgid "Start year"
 msgstr "Starting Year"
 
-#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1645
+#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1647
 msgid "End month"
 msgstr "End Month"
 
-#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1659
+#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1661
 msgid "End year"
 msgstr "End Year"
 
 #: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:952
-#: inc/helper.class.php:1281 inc/helper.class.php:1684
-#: inc/helper.class.php:1758
+#: inc/helper.class.php:1283 inc/helper.class.php:1686
+#: inc/helper.class.php:1761
 msgid "Year"
 msgstr "Year"
 
@@ -106,7 +106,7 @@ msgstr "Please activate the plugin"
 msgid "No data is given to the widget"
 msgstr "No data is given to the widget"
 
-#: inc/chart.class.php:137 inc/menu.class.php:1146 inc/widget.class.php:616
+#: inc/chart.class.php:137 inc/menu.class.php:1150 inc/widget.class.php:616
 msgid "No data available"
 msgstr "No Data Available"
 
@@ -211,24 +211,24 @@ msgstr "Use profile group"
 msgid "Default groups"
 msgstr "Default Groups"
 
-#: inc/helper.class.php:956 inc/helper.class.php:1297
-#: inc/helper.class.php:1496
+#: inc/helper.class.php:956 inc/helper.class.php:1299
+#: inc/helper.class.php:1498
 msgid "Week"
 msgstr "Week"
 
-#: inc/helper.class.php:963 inc/helper.class.php:1424
+#: inc/helper.class.php:963 inc/helper.class.php:1426
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] "Technician"
 msgstr[1] "Technician's"
 
 #: inc/helper.class.php:983 inc/helper.class.php:986 inc/helper.class.php:989
-#: inc/helper.class.php:992 inc/helper.class.php:1508
-#: inc/helper.class.php:1544
+#: inc/helper.class.php:992 inc/helper.class.php:1510
+#: inc/helper.class.php:1546
 msgid "Time display"
 msgstr "Time Display"
 
-#: inc/helper.class.php:983 inc/helper.class.php:1530
+#: inc/helper.class.php:983 inc/helper.class.php:1532
 msgid "Last month"
 msgstr "Last Month"
 
@@ -236,7 +236,7 @@ msgstr "Last Month"
 msgid "Last year"
 msgstr "Last Year"
 
-#: inc/helper.class.php:989 inc/helper.class.php:1528
+#: inc/helper.class.php:989 inc/helper.class.php:1530
 msgid "Year to date"
 msgstr "Year to Date"
 
@@ -246,44 +246,44 @@ msgid "sliding %s-month period"
 msgstr "sliding %s-month period"
 
 #: inc/helper.class.php:1001 inc/helper.class.php:1005
-#: inc/helper.class.php:1784 inc/helper.class.php:1809
+#: inc/helper.class.php:1787 inc/helper.class.php:1812
 msgid "Category"
 msgstr "Category"
 
-#: inc/helper.class.php:1131
+#: inc/helper.class.php:1133
 msgid "Child locations"
 msgstr "Child Locations"
 
-#: inc/helper.class.php:1495
+#: inc/helper.class.php:1497
 msgid "Day"
 msgstr "Day"
 
-#: inc/helper.class.php:1529 inc/helper.class.php:1585
-#: inc/helper.class.php:1711
+#: inc/helper.class.php:1531 inc/helper.class.php:1587
+#: inc/helper.class.php:1714
 msgid "year"
 msgstr "Year"
 
-#: inc/helper.class.php:1586
+#: inc/helper.class.php:1588
 msgid "Start end"
 msgstr "Start End"
 
-#: inc/helper.class.php:1600
+#: inc/helper.class.php:1602
 msgid "Display"
 msgstr "Display"
 
-#: inc/helper.class.php:1712
+#: inc/helper.class.php:1715
 msgid "begin and end date"
 msgstr "Begin and End Date"
 
-#: inc/helper.class.php:1726
+#: inc/helper.class.php:1729
 msgid "Filter date"
 msgstr "Filter Date"
 
-#: inc/helper.class.php:1836
+#: inc/helper.class.php:1839
 msgid "Tag"
 msgstr "Tag"
 
-#: inc/helper.class.php:2127
+#: inc/helper.class.php:2130
 msgid "Not a valid SQL SELECT query"
 msgstr "Not a valid SQL SELECT query"
 
@@ -374,7 +374,7 @@ msgstr "Fullscreen"
 msgid "Close edit mode"
 msgstr "Close Edit Mode"
 
-#: inc/menu.class.php:562 inc/menu.class.php:1136
+#: inc/menu.class.php:562 inc/menu.class.php:1140
 msgid "Success"
 msgstr "Success"
 
@@ -483,27 +483,27 @@ msgstr "Updating all widgets"
 msgid "Widget added on Dashboard"
 msgstr "Widget added on Dashboard"
 
-#: inc/menu.class.php:1110
+#: inc/menu.class.php:1114
 msgid "Warning"
 msgstr "Warning"
 
-#: inc/menu.class.php:1111
+#: inc/menu.class.php:1115
 msgid "No widgets founded, please add widgets"
 msgstr "No widgets founded, please add widgets"
 
-#: inc/menu.class.php:1137
+#: inc/menu.class.php:1141
 msgid "Save grid to see widget"
 msgstr "Save grid to see widget"
 
-#: inc/menu.class.php:1145
+#: inc/menu.class.php:1149
 msgid "Delete widget"
 msgstr "Delete Widget"
 
-#: inc/menu.class.php:1147
+#: inc/menu.class.php:1151
 msgid "Refresh widget"
 msgstr "Refresh Widget"
 
-#: inc/menu.class.php:1497
+#: inc/menu.class.php:1506
 msgid "Export to PDF"
 msgstr "Export to PDF"
 
@@ -579,19 +579,19 @@ msgstr "Dashboard Access"
 msgid "Configuration Access"
 msgstr "Configuration Access"
 
-#: inc/profile.class.php:182 inc/profile.class.php:280
+#: inc/profile.class.php:182 inc/profile.class.php:285
 msgid "See edit mode"
 msgstr "See edit mode"
 
-#: inc/profile.class.php:193 inc/profile.class.php:268
+#: inc/profile.class.php:193 inc/profile.class.php:273
 msgid "Setup stock widget"
 msgstr "Setup stock widget"
 
-#: inc/profile.class.php:272
+#: inc/profile.class.php:277
 msgid "See the dashboard"
 msgstr "See the Dashboard"
 
-#: inc/profile.class.php:276
+#: inc/profile.class.php:281
 msgid "See the configuration"
 msgstr "See the Configuration"
 
@@ -793,7 +793,7 @@ msgid "Display alerts for requests"
 msgstr "Display alerts for requests"
 
 #: reports/alert.class.php:166 reports/reports_table.class.php:59
-#: reports/reports_table.class.php:747
+#: reports/reports_table.class.php:749
 msgid "Number of opened tickets by group and by status"
 msgstr "Number of opened tickets by group and by status"
 
@@ -996,8 +996,8 @@ msgstr "projects to be processed"
 msgid "projects tasks to be processed"
 msgstr "projects tasks to be processed"
 
-#: reports/reports_bar.class.php:91 reports/reports_line.class.php:528
-#: reports/reports_line.class.php:812 reports/reports_line.class.php:1123
+#: reports/reports_bar.class.php:91 reports/reports_line.class.php:532
+#: reports/reports_line.class.php:818 reports/reports_line.class.php:1131
 msgid "Opened tickets backlog"
 msgstr "Opened tickets backlog"
 
@@ -1107,10 +1107,10 @@ msgstr "Last Synchronization of Computers by Month"
 
 #: reports/reports_bar.class.php:231 reports/reports_bar.class.php:451
 #: reports/reports_bar.class.php:785 reports/reports_bar.class.php:1076
-#: reports/reports_line.class.php:225 reports/reports_line.class.php:1250
-#: reports/reports_line.class.php:1323 reports/reports_line.class.php:1418
-#: reports/reports_line.class.php:1511 reports/reports_line.class.php:1618
-#: reports/reports_line.class.php:1735
+#: reports/reports_line.class.php:227 reports/reports_line.class.php:1258
+#: reports/reports_line.class.php:1331 reports/reports_line.class.php:1426
+#: reports/reports_line.class.php:1519 reports/reports_line.class.php:1626
+#: reports/reports_line.class.php:1743
 msgid "Tickets number"
 msgstr "Tickets Number"
 
@@ -1138,8 +1138,8 @@ msgstr "Trimester 3"
 msgid "Trimester 4"
 msgstr "Trimester 4"
 
-#: reports/reports_bar.class.php:1380 reports/reports_line.class.php:526
-#: reports/reports_line.class.php:810 reports/reports_line.class.php:1120
+#: reports/reports_bar.class.php:1380 reports/reports_line.class.php:530
+#: reports/reports_line.class.php:816 reports/reports_line.class.php:1128
 #: reports/reports_pie.class.php:836 reports/reports_pie.class.php:838
 msgid "Opened tickets"
 msgstr "Opened Tickets"
@@ -1244,11 +1244,11 @@ msgstr "Tickets stock by month"
 msgid "Sum of not solved tickets by month"
 msgstr "Sum of tickets not solved by month"
 
-#: reports/reports_line.class.php:57 reports/reports_line.class.php:521
+#: reports/reports_line.class.php:57 reports/reports_line.class.php:525
 msgid "Number of opened and closed tickets by month"
 msgstr "Number of Opened and Closed Tickets by Month"
 
-#: reports/reports_line.class.php:60 reports/reports_line.class.php:805
+#: reports/reports_line.class.php:60 reports/reports_line.class.php:811
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr "Number of Opened and Resolved / Closed Tickets by Month"
 
@@ -1288,20 +1288,20 @@ msgstr "Monthly Tickets in Progress"
 msgid "Number of open tickets in the month still in progress for each month"
 msgstr "Number of open tickets in the month still in progress for each month"
 
-#: reports/reports_line.class.php:527 reports/reports_line.class.php:1121
+#: reports/reports_line.class.php:531 reports/reports_line.class.php:1129
 #: reports/reports_pie.class.php:854 reports/reports_pie.class.php:856
 msgid "Closed tickets"
 msgstr "Closed Tickets"
 
-#: reports/reports_line.class.php:811
+#: reports/reports_line.class.php:817
 msgid "Resolved / closed tickets"
 msgstr "Resolved / Closed Tickets"
 
-#: reports/reports_line.class.php:1115
+#: reports/reports_line.class.php:1123
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr "Number of Opened, Closed  and Unplanned Tickets by Month"
 
-#: reports/reports_line.class.php:1122 reports/reports_pie.class.php:874
+#: reports/reports_line.class.php:1130 reports/reports_pie.class.php:874
 #: reports/reports_pie.class.php:876
 msgid "Not planned"
 msgstr "Not Planned"
@@ -1386,11 +1386,11 @@ msgstr "Number of Tickets per Location per Period"
 msgid "Top ten of opened tickets by appliance"
 msgstr "Top Ten of Opened Tickets by Appliance"
 
-#: reports/reports_pie.class.php:1184 reports/reports_pie.class.php:1198
+#: reports/reports_pie.class.php:1185 reports/reports_pie.class.php:1199
 msgid "Satisfy percent"
 msgstr "Satisfy Percent"
 
-#: reports/reports_pie.class.php:1187 reports/reports_pie.class.php:1198
+#: reports/reports_pie.class.php:1188 reports/reports_pie.class.php:1199
 msgid "Not satisfy percent"
 msgstr "No Satisfied Percent"
 
@@ -1414,11 +1414,11 @@ msgstr "Internal Annual"
 msgid "Search users of your organisation"
 msgstr "Search users of your organization"
 
-#: reports/reports_table.class.php:515
+#: reports/reports_table.class.php:517
 msgid "Number of tickets open by technician and by status"
 msgstr "Number of tickets open by technician and by status"
 
-#: reports/reports_table.class.php:518
+#: reports/reports_table.class.php:520
 msgid "Technicians"
 msgstr "Technicians"
 
@@ -1433,9 +1433,3 @@ msgstr "Your Satisfaction Surveys"
 #: reports/ticket.class.php:111 reports/ticket.class.php:1111
 msgid "Ticket followup"
 msgstr "Ticket Followup"
-
-#: scripts/clean_stock_tickets.php:83
-#: scripts/insert_stock_ticketindicators.php:53
-#: scripts/insert_stock_tickets.php:53
-msgid "Plugin disabled"
-msgstr "Plugin Disabled"
