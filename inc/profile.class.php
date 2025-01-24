@@ -46,6 +46,11 @@ class PluginMydashboardProfile extends CommonDBTM
         return __('Rights management', 'mydashboard');
     }
 
+    public static function getIcon()
+    {
+        return "ti ti-dashboard";
+    }
+
     /**
      * @param CommonGLPI $item
      * @param int        $withtemplate
@@ -55,7 +60,7 @@ class PluginMydashboardProfile extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == 'Profile') {
-            return PluginMydashboardMenu::getTypeName(2);
+            return self::createTabEntry(PluginMydashboardDashboard::getTypeName());
         }
         return '';
     }

@@ -52,6 +52,7 @@ class PluginMydashboardDashboard extends CommonDBTM {
       return __('Dashboard', 'mydashboard');
    }
 
+
    /**
     * @param $options
     *

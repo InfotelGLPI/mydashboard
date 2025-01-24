@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -64,7 +66,7 @@ if (Plugin::isPluginActive("mydashboard")) {
       Html::footer();
    }
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

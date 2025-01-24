@@ -2938,6 +2938,7 @@ class PluginMydashboardAlert extends CommonDBTM
             $week_end = $dto->format('Y-m-d H:i:s');
         }
 
+        $category_criteria = "";
         if ($seeown == false) {
             if ($iswidget == true) {
                 if (Plugin::isPluginActive("Mydashboard")) {

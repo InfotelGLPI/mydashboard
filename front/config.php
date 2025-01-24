@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include('../../../inc/includes.php');
 
 global $CFG_GLPI;
@@ -34,11 +36,11 @@ if (Plugin::isPluginActive("mydashboard")) {
       Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR. "/front/config.form.php");
 
    } else {
-      Html::displayRightError();
+       throw new AccessDeniedHttpException();
    }
 
 } else {
-   Html::header(__('Setup'), '', "config", "plugins");
+   Html::header(__('Setup'), '', "config", "plugin");
    echo "<div class='alert alert-important alert-warning d-flex'>";
    echo "<b>" . __('Please activate the plugin', 'mydashboard') . "</b></div>";
    Html::footer();

@@ -54,6 +54,10 @@ class PluginMydashboardConfigTranslation extends CommonDBChild {
       return _n('Translation', 'Translations', $nb);
    }
 
+    public static function getIcon()
+    {
+        return 'ti ti-language';
+    }
 
    /**
     * Get the standard massive actions which are forbidden

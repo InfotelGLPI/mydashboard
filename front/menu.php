@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -67,7 +69,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 
    }
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'

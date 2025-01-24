@@ -1418,7 +1418,7 @@ class PluginMydashboardHelper
                 );
                 $params['values'][] = $data['id'];
             }
-            $users              = Toolbox::stripslashes_deep($users);
+
             $params['multiple'] = true;
             $params['display']  = false;
             $params['size']     = count($users);

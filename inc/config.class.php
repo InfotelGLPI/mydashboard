@@ -47,6 +47,20 @@ class PluginMydashboardConfig extends CommonDBTM
         return __('Plugin setup', 'mydashboard');
     }
 
+    public function getName($options = [])
+    {
+        return __('My Dashboard', 'mydashboard');
+    }
+
+
+    /**
+     * @return string
+     */
+    public static function getIcon()
+    {
+        return PluginMydashboardMenu::getIcon();
+    }
+
     /**
      * PluginMydashboardConfig constructor.
      */
@@ -82,14 +96,6 @@ class PluginMydashboardConfig extends CommonDBTM
     public static function canCreate(): bool
     {
         return (Session::haveRight(self::$rightname, CREATE));
-    }
-
-    /**
-     * @return string
-     */
-    public static function getIcon()
-    {
-        return PluginMydashboardMenu::getIcon();
     }
 
 
@@ -134,14 +140,7 @@ class PluginMydashboardConfig extends CommonDBTM
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        if (!$withtemplate) {
-            switch ($item->getType()) {
-                case __CLASS__:
-                    $ong[1] = self::getTypeName();
-                    return $ong;
-            }
-        }
-        return '';
+        return self::createTabEntry(self::getTypeName());
     }
 
     /**
@@ -304,6 +303,7 @@ class PluginMydashboardConfig extends CommonDBTM
             _sx('button', 'Reconstruct global backlog', 'mydashboard'),
             ['name' => 'reconstructBacklog', 'class' => 'btn btn-primary']
         );
+        echo "&nbsp;";
         echo Html::submit(
             _sx('button', 'Reconstruct global indicators per week', 'mydashboard'),
             ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary']
