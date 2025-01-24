@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-22 13:14+0000\n"
+"POT-Creation-Date: 2025-01-24 08:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:212 inc/config.class.php:335 inc/itilalert.class.php:118
+#: hook.php:212 inc/config.class.php:335 inc/itilalert.class.php:117
 #: reports/alert.class.php:121 reports/alert.class.php:2675
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:213 inc/config.class.php:336 inc/itilalert.class.php:119
+#: hook.php:213 inc/config.class.php:336 inc/itilalert.class.php:118
 #: reports/alert.class.php:124 reports/alert.class.php:2539
 #: reports/alert.class.php:2676
 msgid "Scheduled maintenance"
@@ -33,7 +33,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:214 inc/config.class.php:337 inc/itilalert.class.php:120
+#: hook.php:214 inc/config.class.php:337 inc/itilalert.class.php:119
 #: reports/alert.class.php:127 reports/alert.class.php:2540
 #: reports/alert.class.php:2677
 msgid "Information"
@@ -50,7 +50,7 @@ msgid "Requests"
 msgstr ""
 
 #: setup.php:190 ajax/loadscripts.php:38 ajax/loadscripts.php:61
-#: inc/menu.class.php:89 inc/preference.class.php:66
+#: inc/config.class.php:52 inc/menu.class.php:89 inc/preference.class.php:66
 msgid "My Dashboard"
 msgstr ""
 
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
-#: front/config.php:43
+#: front/config.php:45
 msgid "Please activate the plugin"
 msgstr ""
 
@@ -114,35 +114,35 @@ msgstr ""
 msgid "Plugin setup"
 msgstr ""
 
-#: inc/config.class.php:180 inc/config.class.php:285
+#: inc/config.class.php:179 inc/config.class.php:284
 msgid "Title of alerts widget"
 msgstr ""
 
-#: inc/config.class.php:189 inc/config.class.php:291
+#: inc/config.class.php:188 inc/config.class.php:290
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
-#: inc/config.class.php:198 inc/config.class.php:297
+#: inc/config.class.php:197 inc/config.class.php:296
 msgid "Title of informations widget"
 msgstr ""
 
-#: inc/config.class.php:233
+#: inc/config.class.php:232
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: inc/config.class.php:243 inc/preference.class.php:128
+#: inc/config.class.php:242 inc/preference.class.php:128
 msgid "Replace central interface"
 msgstr ""
 
-#: inc/config.class.php:250
+#: inc/config.class.php:249
 msgid "Impact colors for alerts"
 msgstr ""
 
-#: inc/config.class.php:272
+#: inc/config.class.php:271
 msgid "Level of categories to show"
 msgstr ""
 
-#: inc/config.class.php:304
+#: inc/config.class.php:303
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr ""
@@ -167,27 +167,27 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: inc/dashboard.class.php:118 inc/menu.class.php:105
+#: inc/dashboard.class.php:119 inc/menu.class.php:105
 msgid "GLPI admin grid"
 msgstr ""
 
-#: inc/dashboard.class.php:119
+#: inc/dashboard.class.php:120
 msgid "Inventory admin grid"
 msgstr ""
 
-#: inc/dashboard.class.php:120
+#: inc/dashboard.class.php:121
 msgid "Helpdesk supervisor grid"
 msgstr ""
 
-#: inc/dashboard.class.php:121
+#: inc/dashboard.class.php:122
 msgid "Incident supervisor grid"
 msgstr ""
 
-#: inc/dashboard.class.php:122
+#: inc/dashboard.class.php:123
 msgid "Request supervisor grid"
 msgstr ""
 
-#: inc/dashboard.class.php:123
+#: inc/dashboard.class.php:124
 msgid "Helpdesk technician grid"
 msgstr ""
 
@@ -290,24 +290,24 @@ msgstr ""
 msgid "Linked reminder"
 msgstr ""
 
-#: inc/itilalert.class.php:115 reports/alert.class.php:2535
+#: inc/itilalert.class.php:114 reports/alert.class.php:2535
 #: reports/alert.class.php:2538 reports/alert.class.php:2672
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/itilalert.class.php:130 reports/alert.class.php:2552
+#: inc/itilalert.class.php:129 reports/alert.class.php:2552
 #: reports/alert.class.php:2690
 msgid "No impact"
 msgstr ""
 
-#: inc/itilalert.class.php:135 reports/alert.class.php:2557
+#: inc/itilalert.class.php:134 reports/alert.class.php:2557
 #: reports/alert.class.php:2695
 msgid "Alert level"
 msgstr ""
 
-#: inc/itilalert.class.php:143 reports/alert.class.php:2568
+#: inc/itilalert.class.php:142 reports/alert.class.php:2568
 #: reports/alert.class.php:2706
 msgid "Linked with a ticket category"
 msgstr ""
@@ -557,35 +557,35 @@ msgstr ""
 msgid "Rights management"
 msgstr ""
 
-#: inc/profile.class.php:160
+#: inc/profile.class.php:165
 msgid "Full"
 msgstr ""
 
-#: inc/profile.class.php:160
+#: inc/profile.class.php:165
 msgid "Custom"
 msgstr ""
 
-#: inc/profile.class.php:162
+#: inc/profile.class.php:167
 msgid "Dashboard Access"
 msgstr ""
 
-#: inc/profile.class.php:174
+#: inc/profile.class.php:179
 msgid "Configuration Access"
 msgstr ""
 
-#: inc/profile.class.php:182 inc/profile.class.php:285
+#: inc/profile.class.php:187 inc/profile.class.php:290
 msgid "See edit mode"
 msgstr ""
 
-#: inc/profile.class.php:193 inc/profile.class.php:273
+#: inc/profile.class.php:198 inc/profile.class.php:278
 msgid "Setup stock widget"
 msgstr ""
 
-#: inc/profile.class.php:277
+#: inc/profile.class.php:282
 msgid "See the dashboard"
 msgstr ""
 
-#: inc/profile.class.php:281
+#: inc/profile.class.php:286
 msgid "See the configuration"
 msgstr ""
 
@@ -791,12 +791,12 @@ msgstr ""
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
-#: reports/alert.class.php:169 reports/alert.class.php:3480
-#: reports/alert.class.php:3501
+#: reports/alert.class.php:169 reports/alert.class.php:3481
+#: reports/alert.class.php:3502
 msgid "Global indicators"
 msgstr ""
 
-#: reports/alert.class.php:172 reports/alert.class.php:3480
+#: reports/alert.class.php:172 reports/alert.class.php:3481
 msgid "Global indicators by week"
 msgstr ""
 
@@ -904,36 +904,36 @@ msgstr ""
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: reports/alert.class.php:3108 reports/alert.class.php:3513
+#: reports/alert.class.php:3109 reports/alert.class.php:3514
 #: reports/ticket.class.php:75 reports/ticket.class.php:1237
 msgid "New tickets"
 msgstr ""
 
-#: reports/alert.class.php:3161 reports/alert.class.php:3519
+#: reports/alert.class.php:3162 reports/alert.class.php:3520
 msgid "Tickets late"
 msgstr ""
 
-#: reports/alert.class.php:3207 reports/alert.class.php:3525
+#: reports/alert.class.php:3208 reports/alert.class.php:3526
 msgid "Pending tickets"
 msgstr ""
 
-#: reports/alert.class.php:3271 reports/alert.class.php:3531
+#: reports/alert.class.php:3272 reports/alert.class.php:3532
 msgid "Incidents in progress"
 msgstr ""
 
-#: reports/alert.class.php:3335 reports/alert.class.php:3537
+#: reports/alert.class.php:3336 reports/alert.class.php:3538
 msgid "Requests in progress"
 msgstr ""
 
-#: reports/alert.class.php:3383 reports/alert.class.php:3543
+#: reports/alert.class.php:3384 reports/alert.class.php:3544
 msgid "Tickets solved"
 msgstr ""
 
-#: reports/alert.class.php:3431
+#: reports/alert.class.php:3432
 msgid "Ticket closed"
 msgstr ""
 
-#: reports/alert.class.php:3550
+#: reports/alert.class.php:3551
 msgid "Tickets closed"
 msgstr ""
 
