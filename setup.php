@@ -50,15 +50,15 @@ function plugin_init_mydashboard()
 
     $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
 
-    $PLUGIN_HOOKS['add_css']['mydashboard'] = [
+    $PLUGIN_HOOKS[Hooks::ADD_CSS]['mydashboard'] = [
        "css/mydashboard.scss",
        "css/jquery.newsTicker.css",
     ];
     if (Session::getCurrentInterface() == 'central') {
-        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuze.js';
-        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/fuzzysearch.js.php';
-        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
-        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/mydashboard.js';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/fuze.js';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/fuzzysearch.js.php';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/mydashboard.js';
 
         $PLUGIN_HOOKS["javascript"]['mydashboard']     = [PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js"];
         $PLUGIN_HOOKS["javascript"]['mydashboard']     = [PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuzzysearch.js.php"];
@@ -67,10 +67,10 @@ function plugin_init_mydashboard()
     if (Session::getCurrentInterface() == 'central'
         && isset($_SERVER['REQUEST_URI'])
         && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
-        $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
     }
-    $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
-//    $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
+//    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = [
 //       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
 //       "lib/fileSaver.min.js",
 //       "lib/fuze.js",
@@ -81,7 +81,7 @@ function plugin_init_mydashboard()
 //
 
 //        if (Session::getCurrentInterface() == 'central') {
-//            $PLUGIN_HOOKS["add_javascript"]['mydashboard'] = [
+//            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = [
 //               "scripts/mydashboard_load_scripts.js.php",
 //            ];
 //        }
@@ -153,11 +153,11 @@ function plugin_init_mydashboard()
                 if (Session::getCurrentInterface() == 'central') {
                     if (PluginMydashboardHelper::getReplaceCentral()
                         && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js.php';
+                        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js.php';
                     } elseif (PluginMydashboardHelper::getReplaceCentralConf()
                                && PluginMydashboardHelper::getReplaceCentral()
                                && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                        $PLUGIN_HOOKS["add_javascript"]['mydashboard'][] = 'scripts/replace_central.js.php';
+                        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js.php';
                     }
                 }
 
