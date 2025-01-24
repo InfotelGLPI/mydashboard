@@ -1566,10 +1566,11 @@ class PluginMydashboardHelper
             $params2 = ['value' => '__VALUE__',
 
             ];
+            $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
             $form    .= Ajax::updateItemOnSelectEvent(
                 'dropdown_multiple_year_time' . $rand,
                 "month_crit$rand",
-                Plugin::getWebDir('mydashboard') . "/ajax/dropdownMonth.php",
+                $root . "/ajax/dropdownMonth.php",
                 $params2,
                 false
             );
@@ -1767,10 +1768,11 @@ class PluginMydashboardHelper
             $params2 = ['value' => '__VALUE__',
 
             ];
+            $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
             $form    .= Ajax::updateItemOnSelectEvent(
                 'dropdown_filter_date' . $rand,
                 "filter_date_crit$rand",
-                Plugin::getWebDir('mydashboard') . "/ajax/dropdownUpdateDisplaydata.php",
+                $root . "/ajax/dropdownUpdateDisplaydata.php",
                 $params2,
                 false
             );
