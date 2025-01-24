@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-24 08:21+0000\n"
+"POT-Creation-Date: 2025-01-24 10:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,25 +64,25 @@ msgstr ""
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1615
+#: ajax/dropdownUpdateDisplaydata.php:44 inc/helper.class.php:1616
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1629
+#: ajax/dropdownUpdateDisplaydata.php:58 inc/helper.class.php:1630
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1647
+#: ajax/dropdownUpdateDisplaydata.php:76 inc/helper.class.php:1648
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1661
+#: ajax/dropdownUpdateDisplaydata.php:90 inc/helper.class.php:1662
 msgid "End year"
 msgstr ""
 
 #: ajax/dropdownUpdateDisplaydata.php:116 inc/helper.class.php:952
-#: inc/helper.class.php:1283 inc/helper.class.php:1686
-#: inc/helper.class.php:1761
+#: inc/helper.class.php:1283 inc/helper.class.php:1687
+#: inc/helper.class.php:1762
 msgid "Year"
 msgstr ""
 
@@ -240,7 +240,7 @@ msgid "sliding %s-month period"
 msgstr ""
 
 #: inc/helper.class.php:1001 inc/helper.class.php:1005
-#: inc/helper.class.php:1787 inc/helper.class.php:1812
+#: inc/helper.class.php:1789 inc/helper.class.php:1814
 msgid "Category"
 msgstr ""
 
@@ -252,32 +252,32 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: inc/helper.class.php:1531 inc/helper.class.php:1587
-#: inc/helper.class.php:1714
+#: inc/helper.class.php:1531 inc/helper.class.php:1588
+#: inc/helper.class.php:1715
 msgid "year"
 msgstr ""
 
-#: inc/helper.class.php:1588
+#: inc/helper.class.php:1589
 msgid "Start end"
 msgstr ""
 
-#: inc/helper.class.php:1602
+#: inc/helper.class.php:1603
 msgid "Display"
 msgstr ""
 
-#: inc/helper.class.php:1715
+#: inc/helper.class.php:1716
 msgid "begin and end date"
 msgstr ""
 
-#: inc/helper.class.php:1729
+#: inc/helper.class.php:1730
 msgid "Filter date"
 msgstr ""
 
-#: inc/helper.class.php:1839
+#: inc/helper.class.php:1841
 msgid "Tag"
 msgstr ""
 
-#: inc/helper.class.php:2130
+#: inc/helper.class.php:2132
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
