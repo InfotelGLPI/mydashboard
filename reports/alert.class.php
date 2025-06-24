@@ -780,7 +780,7 @@ class PluginMydashboardAlert extends CommonDBTM
                          });
                   </script>";
                 } else {
-                    $table .= "<i style='color:orange' class='ti ti-alert-triangle fa-3x'></i>";
+                    $table .= "<i style='font-size:3em;color:orange' class='ti ti-alert-triangle'></i>";
                     $table .= "<br><br><span class='b'>" . __("No alerts are setup", "mydashboard") . "</span>";
                 }
                 $table .= "</div>";
@@ -1193,8 +1193,8 @@ class PluginMydashboardAlert extends CommonDBTM
                 $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Requests with very high or major priority', 'mydashboard') . "'>";
             }
         }
-        $table .= "<i style='color:$colorstats1;font-size:34px' class=\"ti ti-alert-triangle fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
+        $table .= "<i style='color:$colorstats1;font-size:3em;' class=\"ti ti-alert-triangle fa-border\"></i>
+               <h3 style='font-size:34px;margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
         if ($type == Ticket::INCIDENT_TYPE) {
             $table .= "<p class=\"count-text \">" . __('Incidents with very high or major priority', 'mydashboard') . "</p>";
         } else {

@@ -991,6 +991,8 @@ class PluginMydashboardMenu extends CommonGLPI
      */
     public function loadDashboard($active_profile = -1, $predefined_grid = 0)
     {
+        global $CFG_GLPI;
+
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/style_bootstrap_new.css");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.js");
         echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.css");
@@ -1028,7 +1030,8 @@ class PluginMydashboardMenu extends CommonGLPI
         Html::requireJs('charts');
         $theme = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         //TODO v11
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
+        echo Html::script($CFG_GLPI['root_doc']."/lib/echarts.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
         echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/html2canvas.min.js");
 //        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jspdf.umd.js");
 
@@ -1178,7 +1181,7 @@ class PluginMydashboardMenu extends CommonGLPI
                  disableResize: $disableResize,
                  disableDrag: $disableDrag,
                  margin: 2,
-                 sizeToContent: true,
+                 sizeToContent: false,
                  disableOneColumnMode: false,
                  resizable: {
                     handles: 'e, se, s, sw, w'

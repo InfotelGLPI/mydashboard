@@ -95,7 +95,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
                  . "</td>";
             echo "</tr>";
             foreach ($widgetclasses as $widgetclass => $widgetlist) {
-                $this->displayList($widgetlist, '', 'from_' . $plugin);
+                $this->displayWidgetList($widgetlist, '', 'from_' . $plugin);
             }
         }
         echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
@@ -112,7 +112,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
      * @param string $category
      * @param        $pluginname
      */
-    private function displayList($widgetlist, $category, $pluginname)
+    private function displayWidgetList($widgetlist, $category, $pluginname)
     {
         $widgetlistclass  = new PluginMydashboardWidgetlist();
         $viewNames = $widgetlistclass->getViewNames();
@@ -167,7 +167,7 @@ class PluginMydashboardProfileAuthorizedWidget extends CommonDBTM
                         $widgetId = isset($viewNames[$widgetId])?$viewNames[$widgetId]:0;
                     }
                     $newcategory .= $widgetId;
-                    $this->displayList($widgetTitle, $newcategory, $pluginname);
+                    $this->displayWidgetList($widgetTitle, $newcategory, $pluginname);
                 }
             }
         }

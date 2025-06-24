@@ -280,7 +280,7 @@ class PluginMydashboardWidget extends CommonDBTM
             $message .= " - " . $id;
         }
         $msg = "<div class='center alert alert-warning alert-important' role='alert'><br><br>";
-        $msg .= "<i style='color:orange' class='ti ti-alert-triangle fa-3x'></i>";
+        $msg .= "<i style='font-size:3em;color:orange' class='ti ti-alert-triangle'></i>";
         $msg .= "<br><br><span class='b'>$message</span></div>";
 
         return $msg;
