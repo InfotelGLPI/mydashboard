@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 13:39+0000\n"
+"POT-Creation-Date: 2025-09-09 09:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:212 inc/config.class.php:335 inc/itilalert.class.php:117
+#: hook.php:213 inc/config.class.php:335 inc/itilalert.class.php:117
 #: reports/alert.class.php:121 reports/alert.class.php:2675
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:213 inc/config.class.php:336 inc/itilalert.class.php:118
+#: hook.php:214 inc/config.class.php:336 inc/itilalert.class.php:118
 #: reports/alert.class.php:124 reports/alert.class.php:2539
 #: reports/alert.class.php:2676
 msgid "Scheduled maintenance"
@@ -33,7 +33,7 @@ msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:214 inc/config.class.php:337 inc/itilalert.class.php:119
+#: hook.php:215 inc/config.class.php:337 inc/itilalert.class.php:119
 #: reports/alert.class.php:127 reports/alert.class.php:2540
 #: reports/alert.class.php:2677
 msgid "Information"
@@ -41,11 +41,11 @@ msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:302 hook.php:303
+#: hook.php:313 hook.php:314
 msgid "Incidents"
 msgstr ""
 
-#: hook.php:311 hook.php:312
+#: hook.php:322 hook.php:323
 msgid "Requests"
 msgstr ""
 
@@ -789,7 +789,7 @@ msgid "Display alerts for requests"
 msgstr ""
 
 #: reports/alert.class.php:166 reports/reports_table.class.php:59
-#: reports/reports_table.class.php:749
+#: reports/reports_table.class.php:769
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
@@ -1403,11 +1403,11 @@ msgstr ""
 msgid "Search users of your organisation"
 msgstr ""
 
-#: reports/reports_table.class.php:517
+#: reports/reports_table.class.php:537
 msgid "Number of tickets open by technician and by status"
 msgstr ""
 
-#: reports/reports_table.class.php:520
+#: reports/reports_table.class.php:540
 msgid "Technicians"
 msgstr ""
 
