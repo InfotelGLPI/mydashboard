@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '2.1.5');
+define('PLUGIN_MYDASHBOARD_VERSION', '2.2.0');
 
 global $CFG_GLPI;
 
@@ -32,7 +32,7 @@ use Glpi\Plugin\Hooks;
 
 if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
     define("PLUGIN_MYDASHBOARD_DIR", Plugin::getPhpDir("mydashboard"));
-    define("PLUGIN_MYDASHBOARD_NOTFULL_DIR", Plugin::getPhpDir("mydashboard", false));
+//    define("PLUGIN_MYDASHBOARD_WEBDIR", Plugin::getPhpDir("mydashboard", false));
 
     $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
     define("PLUGIN_MYDASHBOARD_WEBDIR", $root);
@@ -51,7 +51,7 @@ function plugin_init_mydashboard()
     $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
 
     $PLUGIN_HOOKS[Hooks::ADD_CSS]['mydashboard'] = [
-       "css/mydashboard.scss",
+       "css/mydashboard.css",
        "css/jquery.newsTicker.css",
     ];
     if (Session::getCurrentInterface() == 'central') {
@@ -60,8 +60,8 @@ function plugin_init_mydashboard()
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/mydashboard.js';
 
-        $PLUGIN_HOOKS["javascript"]['mydashboard']     = [PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js"];
-        $PLUGIN_HOOKS["javascript"]['mydashboard']     = [PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuzzysearch.js.php"];
+        $PLUGIN_HOOKS["javascript"]['mydashboard']     = [PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuze.js"];
+        $PLUGIN_HOOKS["javascript"]['mydashboard']     = [PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuzzysearch.js.php"];
     }
 
     if (Session::getCurrentInterface() == 'central'
@@ -86,16 +86,16 @@ function plugin_init_mydashboard()
 //            ];
 //        }
 //        $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js",
-//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js",
-//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard.js",
-//           PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php",
+//           PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fileSaver.min.js",
+//           PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js",
+//           PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/mydashboard.js",
+//           PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/mydashboard_load_scripts.js.php",
 //        ];
 //        if (Session::getCurrentInterface() == 'central') {
 //            $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-//               PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/scripts/mydashboard_load_scripts.js.php",
-//                PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js",
-//                 PLUGIN_MYDASHBOARD_NOTFULL_DIR . "lib/fuzzysearch.js.php"
+//               PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/mydashboard_load_scripts.js.php",
+//                PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuze.js",
+//                 PLUGIN_MYDASHBOARD_WEBDIR . "lib/fuzzysearch.js.php"
 //            ];
 //        }
 //    }
@@ -119,7 +119,7 @@ function plugin_init_mydashboard()
 
             if (Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
                 $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => 'PluginMydashboardMenu'];
-                $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = PLUGIN_MYDASHBOARD_NOTFULL_DIR.'/front/menu.php';
+                $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = PLUGIN_MYDASHBOARD_WEBDIR.'/front/menu.php';
                 $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['mydashboard'] = PluginMydashboardMenu::getIcon();
 
             //            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu']['PluginMydashboardConfig'] = ['colorpicker'];

@@ -143,7 +143,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
 
         switch ($widgetId) {
             case $this->getType() . "3":
-                
+
                 $query = "SELECT `firstname`, `realname`, `name`, `phone`, `phone2`, `mobile`
                         FROM `glpi_users`
                         LEFT JOIN `glpi_profiles_users` ON (`glpi_users`.`id` = `glpi_profiles_users`.`users_id`)
@@ -239,27 +239,47 @@ class PluginMydashboardReports_Table extends CommonGLPI
                             }
                             $fields_string = implode(',', $fields);
 
-                            if ($item->maybeTemplate()) {
-                                $where_template = " AND `" . $item->getTable() . "`.`is_template` = '0'";
-                            } else {
-                                $where_template = "";
-                            }
+//                            $where_template = [];
+//                            if ($item->maybeTemplate()) {
+//                                $where_template = " AND `" . $item->getTable() . "`.`is_template` = '0'";
+//                            } else {
+//
+//                            }
 
-                            $where_fields_string = "";
-                            foreach ($where_fields as $where_field) {
-                                if (getTableNameForForeignKeyField($where_field)) {
-                                    $where_fields_string .= " AND `$where_field` IS NOT NULL AND `$where_field` <> '0'";
-                                } else {
-                                    $where_fields_string .= " AND `$where_field` IS NOT NULL AND `$where_field` <> ''";
-                                }
+//                            $where_fields_string = [];
+//                            foreach ($where_fields as $where_field) {
+//                                if (getTableNameForForeignKeyField($where_field)) {
+//                                    $where_fields_string []= ['NOT' => [$where_field => null],
+//                                        $where_field => ['<>', 0]];
+//                                } else {
+//                                    $where_fields_string []= ['NOT' => [$where_field => null],
+//                                        $where_field => ['<>', '']];
+//                                }
+//                            }
+//                            $query_field             = "SELECT COUNT(*) AS cpt
+//                               FROM `" . $item->getTable() . "`
+//                               WHERE `" . $item->getTable() . "`.`entities_id` IN (" . implode(',', $entities) . ")
+//                                     $where_template
+//                                     $where_fields_string
+//                               GROUP BY $fields_string
+//                               ORDER BY cpt DESC";
+
+                            $query_field =[
+                                'SELECT'    => [
+                                    'COUNT' => '* AS cpt'
+                                ],
+                                'FROM'      => $item->getTable(),
+                                'WHERE'     => [
+                                    'entities_id'  => $entities
+                                ],
+                                'GROUPBY'   => $fields_string,
+                                'ORDERBY'    => ['cpt DESC']
+                            ];
+
+                            if ($item->maybeTemplate()) {
+                                $query_field['WHERE'] = $query_field['WHERE'] + ['is_template' => 0];
                             }
-                            $query_field             = "SELECT COUNT(*) AS cpt
-                               FROM `" . $item->getTable() . "`
-                               WHERE `" . $item->getTable() . "`.`entities_id` IN (" . implode(',', $entities) . ")
-                                     $where_template
-                                     $where_fields_string
-                               GROUP BY $fields_string
-                               ORDER BY cpt DESC";
+                            $query_field['WHERE'] = $query_field['WHERE'] + $where_fields_string;
                             $count                   = 0;
                             $datas[$i]["duplicates"] = 0;
                             foreach ($DB->request($query_field) as $uniq) {
@@ -269,7 +289,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                             }
                             $datas[$i]["duplicates"] = $count;
                         } else {
-                            $datas[$i]["duplicates"] = __('No item found');
+                            $datas[$i]["duplicates"] = __('No results found');
                         }
                         $i++;
                     }
@@ -286,17 +306,17 @@ class PluginMydashboardReports_Table extends CommonGLPI
 
             case $this->getType() . "14":
 
-                $query = "SELECT DISTINCT `glpi_knowbaseitems`.*, `glpi_knowbaseitemcategories`.`completename` AS category 
-                     FROM `glpi_knowbaseitems` 
-                     LEFT JOIN `glpi_knowbaseitems_users` ON (`glpi_knowbaseitems_users`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
-                     LEFT JOIN `glpi_groups_knowbaseitems` ON (`glpi_groups_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
-                     LEFT JOIN `glpi_knowbaseitems_profiles` ON (`glpi_knowbaseitems_profiles`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
-                     LEFT JOIN `glpi_entities_knowbaseitems` ON (`glpi_entities_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
-                     LEFT JOIN `glpi_knowbaseitems_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`) 
-                     LEFT JOIN `glpi_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitemcategories_id` = `glpi_knowbaseitemcategories`.`id`) 
-                     WHERE (`glpi_entities_knowbaseitems`.`entities_id` IS NULL 
-                     AND `glpi_knowbaseitems_profiles`.`profiles_id` IS NULL 
-                     AND `glpi_groups_knowbaseitems`.`groups_id` IS NULL 
+                $query = "SELECT DISTINCT `glpi_knowbaseitems`.*, `glpi_knowbaseitemcategories`.`completename` AS category
+                     FROM `glpi_knowbaseitems`
+                     LEFT JOIN `glpi_knowbaseitems_users` ON (`glpi_knowbaseitems_users`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
+                     LEFT JOIN `glpi_groups_knowbaseitems` ON (`glpi_groups_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
+                     LEFT JOIN `glpi_knowbaseitems_profiles` ON (`glpi_knowbaseitems_profiles`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
+                     LEFT JOIN `glpi_entities_knowbaseitems` ON (`glpi_entities_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
+                     LEFT JOIN `glpi_knowbaseitems_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
+                     LEFT JOIN `glpi_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitemcategories_id` = `glpi_knowbaseitemcategories`.`id`)
+                     WHERE (`glpi_entities_knowbaseitems`.`entities_id` IS NULL
+                     AND `glpi_knowbaseitems_profiles`.`profiles_id` IS NULL
+                     AND `glpi_groups_knowbaseitems`.`groups_id` IS NULL
                      AND `glpi_knowbaseitems_users`.`users_id` IS NULL)";
 
                 $widget = PluginMydashboardHelper::getWidgetsFromDBQuery('table', $query);
@@ -552,7 +572,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                      type: 'POST',
                      data:{
                         technician_group:$js_group,
-                        entities_id:$js_entity, 
+                        entities_id:$js_entity,
                         sons:$js_sons,
                         technician: _technician,
                         status: _status,
@@ -640,14 +660,14 @@ class PluginMydashboardReports_Table extends CommonGLPI
                                                             . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
                                                             . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
                                                             . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
-                                                            . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2 
+                                                            . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2
                                                             AND `glpi_tickets`.`is_deleted` = 0)"
                                                             . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
                                                             . " GROUP BY groups_id,statusname"
                                                             . " ORDER BY statusname";
 
                     $query_moreticket_type = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
-                                             . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid 
+                                             . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid
                                         FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
                     $result                = $DB->doQuery($query_moreticket_type);
                     $i                     = 0;
@@ -666,7 +686,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
                 $query_tickets_by_groups_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
                                                      . " FROM `glpi_tickets`"
                                                      . " LEFT JOIN `glpi_groups_tickets`"
-                                                     . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "' 
+                                                     . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "'
                                                   AND `glpi_tickets`.`is_deleted` = 0)"
                                                      . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
                                                      . " WHERE `glpi_tickets`.`status` = %s"
@@ -830,7 +850,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
         global $CFG_GLPI;
 
         $options['reset'][] = 'reset';
-        
+
         // ENTITY | SONS
         $options = PluginMydashboardChart::addCriteria(PluginMydashboardChart::ENTITIES_ID, (isset($params["params"]["sons"])
                                   && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');

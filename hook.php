@@ -141,7 +141,8 @@ function plugin_mydashboard_install()
         update133to150();
     }
 
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")) {
+    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")
+    && !$DB->fieldExists("glpi_plugin_mydashboard_configs", "replace_central")) {
         $mig = new Migration("1.5.1");
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.5.1.sql");
         $mig->executeMigration();
@@ -172,10 +173,10 @@ function plugin_mydashboard_install()
         insertDefaultTitles();
     }
 
-    $query  = "SELECT DATA_TYPE 
+    $query  = "SELECT DATA_TYPE
                FROM INFORMATION_SCHEMA.COLUMNS
                WHERE TABLE_SCHEMA = '$DB->dbdefault' AND
-                    TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND 
+                    TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND
                     COLUMN_NAME = 'prefered_group'";
     $result = $DB->doQuery($query);
     while ($data = $DB->fetchAssoc($result)) {
@@ -221,7 +222,7 @@ function plugin_mydashboard_install()
 
         //new table to fix bug about stock tickets
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.9.sql");
-      
+
 
         $mig->executeMigration();
     }
@@ -239,7 +240,7 @@ function plugin_mydashboard_install()
     $mig = new Migration("2.0.0");
     $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.0.sql");
     $mig->executeMigration();
-
+//ALTER TABLE `glpi_plugin_mydashboard_userwidgets` DROP CONSTRAINT `glpi_plugin_mydashboard_userwidgets_ibfk_1`;
 
     $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
     $result     = $DB->doQuery($query);
@@ -274,6 +275,16 @@ function plugin_mydashboard_install()
 
     if (!$DB->fieldExists("glpi_plugin_mydashboard_preferences", "prefered_category")) {
         $mig = new Migration("2.1.2");
+
+        if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "display_plugin_widget")) {
+            $query = "ALTER TABLE `glpi_plugin_mydashboard_configs` DROP `display_plugin_widget`;";
+            $DB->doQuery($query);
+        }
+        if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")) {
+            $query = "ALTER TABLE `glpi_plugin_mydashboard_configs` DROP `google_api_key`;";
+            $DB->doQuery($query);
+        }
+
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.1.2.sql");
         $mig->executeMigration();
     }
@@ -284,7 +295,7 @@ function plugin_mydashboard_install()
         $config->initConfig();
     }
     PluginMydashboardProfile::initProfile();
-    
+
     PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     return true;
 }
@@ -347,15 +358,15 @@ function fillTableMydashboardStocktickets()
         $entities_id = $data["entities_id"];
         $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
                   WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) 
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
+                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
+                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
         $results2    = $DB->doQuery($query);
         $data2       = $DB->fetchArray($results2);
         $countTicket = $data2['count'];
         if ($countTicket > 0) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`) 
+            $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`)
                               VALUES (NULL,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
             $DB->doQuery($query);
         }
@@ -371,9 +382,9 @@ function fillTableMydashboardStockticketsGroup()
     $query   = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
                      DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id`,
                       `glpi_groups_tickets`.`groups_id` as groups_id
-      FROM `glpi_tickets` 
+      FROM `glpi_tickets`
       LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-      WHERE `glpi_tickets`.`is_deleted`= 0 
+      WHERE `glpi_tickets`.`is_deleted`= 0
       GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
     $results = $DB->doQuery($query);
     while ($data = $DB->fetchArray($results)) {
@@ -385,15 +396,15 @@ function fillTableMydashboardStockticketsGroup()
             $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
                   LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_groups_tickets`.`groups_id` = $groups_id
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
             $results2    = $DB->doQuery($query);
             $data2       = $DB->fetchArray($results2);
             $countTicket = $data2['count'];
             if ($countTicket > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`) 
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`)
                               VALUES (NULL,$groups_id,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
                 $DB->doQuery($query);
             }
@@ -401,15 +412,15 @@ function fillTableMydashboardStockticketsGroup()
             $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
                   LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
                   WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_tickets`.`id` NOT IN  (SELECT tickets_id FROM `glpi_groups_tickets`)
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                   AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59') 
+                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
                   AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
             $results2    = $DB->doQuery($query);
             $data2       = $DB->fetchArray($results2);
             $countTicket = $data2['count'];
             if ($countTicket > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`) 
+                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`)
                               VALUES (NULL,0,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
                 $DB->doQuery($query);
             }

@@ -212,7 +212,7 @@ class PluginMydashboardHelper
         if ($params["canvas"] == true) {
             if ($params["nb"] < 1) {
                 $graph .= "<div class='center'><br><br><h3><span class ='maint-color'>";
-                $graph .= __("No item found");
+                $graph .= __("No results found");
                 $graph .= "</span></h3></div>";
             }
             $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
@@ -641,11 +641,11 @@ class PluginMydashboardHelper
                 }
                 $crit['crit']['year'] = $opt['year'];
 
-                $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01' 
+                $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01'
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
-                $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
+                $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01'
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
-                $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-01-01 00:00:01' 
+                $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-01-01 00:00:01'
                               AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
             } elseif ($opt["filter_date"] == "BEGIN_END") {
                 if (isset($params['opt']['begin'])
@@ -666,11 +666,11 @@ class PluginMydashboardHelper
                 $end = $opt["end"];
                 $start = $opt["begin"];
 
-                $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$start' 
+                $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$start'
                               AND `glpi_tickets`.`date` <= '$end' )";
-                $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$start' 
+                $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$start'
                               AND `glpi_tickets`.`closedate` <= '$end' )";
-                $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$start' 
+                $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$start'
                               AND `glpi_ticketsatisfactions`.`date_answered` <= '$end' )";
             }
         }
@@ -699,20 +699,20 @@ class PluginMydashboardHelper
 
         if (!in_array('filter_date', $criterias)) {
             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-            $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01' 
+            $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$year-$month-01 00:00:01'
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
-            $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01' 
+            $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-$month-01 00:00:01'
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
-            $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-$month-01 00:00:01' 
+            $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-$month-01 00:00:01'
                               AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
         }
 
         if (!in_array("month", $criterias) && !in_array('filter_date', $criterias)) {
-            $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01' 
+            $crit['crit']['date'] = "(`glpi_tickets`.`date` >= '$year-01-01 00:00:01'
                               AND `glpi_tickets`.`date` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
-            $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01' 
+            $crit['crit']['closedate'] = "(`glpi_tickets`.`closedate` >= '$year-01-01 00:00:01'
                               AND `glpi_tickets`.`closedate` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
-            $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-01-01 00:00:01' 
+            $crit['crit']['satisfactiondate'] = "(`glpi_ticketsatisfactions`.`date_answered` >= '$year-01-01 00:00:01'
                               AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY) )";
         }
         // USER
@@ -2254,7 +2254,7 @@ class PluginMydashboardHelper
 
         $widget = null;
 
-        if (is_array($query['SELECT'])) {
+        if (is_array($query)) {
 
             $tab = [];
             if ($iterator = $DB->request($query)) {

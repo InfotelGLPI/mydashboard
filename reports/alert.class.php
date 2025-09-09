@@ -710,7 +710,7 @@ class PluginMydashboardAlert extends CommonDBTM
                             $r2  = $DB->doQuery($q2);
                             $nb2 = $DB->numrows($r2);
                             if ($nb2) {
-                                foreach ($DB->request($q2) as $data2) {
+                                while ($data = $DB->fetchArray($r2)) {
                                     $stock = $data2['nb'];
                                 }
                             }
@@ -932,7 +932,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $stats_tickets1 = 0;
         $nb1            = $DB->numrows($r1);
         if ($nb1) {
-            foreach ($DB->request($q1) as $data1) {
+            while ($data1 = $DB->fetchArray($r1)) {
                 $stats_tickets1 = $data1['nb'];
             }
         }
@@ -957,7 +957,7 @@ class PluginMydashboardAlert extends CommonDBTM
             $stats_tickets2 = 0;
             $nb2            = $DB->numrows($r2);
             if ($nb2) {
-                foreach ($DB->request($q2) as $data6) {
+                while ($data6 = $DB->fetchArray($r2)) {
                     $stats_tickets2 = $data6['nb'];
                 }
             }
@@ -980,7 +980,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $stats_tickets3 = 0;
         $nb3            = $DB->numrows($r3);
         if ($nb3) {
-            foreach ($DB->request($q3) as $data3) {
+            while ($data3 = $DB->fetchArray($r3)) {
                 $stats_tickets3 = $data3['nb'];
             }
         }
@@ -1012,7 +1012,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $stats_tickets4 = 0;
         $nb4            = $DB->numrows($r4);
         if ($nb4) {
-            foreach ($DB->request($q4) as $data4) {
+            while ($data4 = $DB->fetchArray($r4)) {
                 $stats_tickets4 = $data4['nb'];
             }
         }
@@ -1351,7 +1351,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $r2  = $DB->doQuery($q2);
         $nb2 = $DB->numrows($r2);
         if ($nb2) {
-            foreach ($DB->request($q2) as $data2) {
+            while ($data2 = $DB->fetchArray($r2)) {
                 $stats2 = $data2['nb'];
             }
         }
@@ -1382,7 +1382,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $nb3 = $DB->numrows($r3);
 
         if ($nb3) {
-            foreach ($DB->request($q3) as $data3) {
+            while ($data3 = $DB->fetchArray($r3)) {
                 $stats3 = $data3['nb'];
             }
         }
@@ -1415,7 +1415,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $r4  = $DB->doQuery($q4);
         $nb4 = $DB->numrows($r4);
         if ($nb4) {
-            foreach ($DB->request($q4) as $data4) {
+            while ($data4 = $DB->fetchArray($r4)) {
                 $stats4 = $data4['nb'];
             }
         }
@@ -1448,7 +1448,7 @@ class PluginMydashboardAlert extends CommonDBTM
         $r5  = $DB->doQuery($q5);
         $nb5 = $DB->numrows($r5);
         if ($nb5) {
-            foreach ($DB->request($q5) as $data5) {
+            while ($data5 = $DB->fetchArray($r5)) {
                 $stats5 = $data5['nb'];
             }
         }
@@ -2178,7 +2178,7 @@ class PluginMydashboardAlert extends CommonDBTM
         } else {
             $query .= "AND `" . $this->getTable() . "`.`is_public`";
         }
-        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL 
+        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL
                  AND `" . $this->getTable() . "`.`type` = 0
                    ORDER BY `glpi_reminders`.`name`";
 
@@ -2343,7 +2343,7 @@ class PluginMydashboardAlert extends CommonDBTM
         } else {
             $query .= "AND `" . $this->getTable() . "`.`is_public`";
         }
-        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL 
+        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL
                  AND `" . $this->getTable() . "`.`type` = 0
                    ORDER BY `glpi_reminders`.`name`";
 
@@ -2353,11 +2353,11 @@ class PluginMydashboardAlert extends CommonDBTM
         $nb             = $DB->numrows($result);
         $nb_maintenance = self::countForAlerts($public, 1);
         if ($nb || $nb_maintenance > 0) {
-            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.scss");
+            $wl .= Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/mydashboard.css");
 
-            //            $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css";
+            //            $css_file = PLUGIN_MYDASHBOARD_WEBDIR . "/css/info.css";
             //            if (file_exists($css_file) && $public == 1) {
-            //                $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/info.css");
+            //                $wl .= Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/info.css");
             //                $wl .= "<div id='info_img'>&nbsp;</div>";
             //                $wl .= "<div class='bt-row info_weather_public_block'>";
             //            } else {
@@ -2426,12 +2426,12 @@ class PluginMydashboardAlert extends CommonDBTM
             $wl .= $this->displayContent('1', [], 0);
         }
 
-        //        $css_file = PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/hideinfo.css";
+        //        $css_file = PLUGIN_MYDASHBOARD_WEBDIR . "/css/hideinfo.css";
         //        if (file_exists($css_file)
         //            && !$nb
         //            && $nb_maintenance == 0
         //            && $public == 1) {
-        //            $wl .= Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/hideinfo.css");
+        //            $wl .= Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/hideinfo.css");
         //        }
         return $wl;
     }
@@ -3003,7 +3003,7 @@ class PluginMydashboardAlert extends CommonDBTM
         }
 
         $search_assign = "1=1";
-        $left          = "LEFT JOIN glpi_entities 
+        $left          = "LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
         $is_deleted    = " `glpi_tickets`.`is_deleted` = 0 ";
         //if (Session::haveRight("ticket", Ticket::READMY)) {
@@ -3629,7 +3629,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::NEWT . " 
+                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::NEWT . "
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
@@ -3684,8 +3684,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::LATET . " 
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ") 
+                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::LATET . "
+                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
@@ -3739,8 +3739,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::PENDINGT . " 
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ") 
+                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::PENDINGT . "
+                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
@@ -3931,8 +3931,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::SOLVEDT . " 
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ") 
+                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::SOLVEDT . "
+                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
@@ -3992,8 +3992,8 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?' .
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::CLOSEDT . " 
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ") 
+                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . PluginMydashboardStockTicketIndicator::CLOSEDT . "
+                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year " .
                    $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");

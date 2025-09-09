@@ -114,10 +114,10 @@ function update133to150() {
    }
 
    $query = "ALTER TABLE `glpi_plugin_mydashboard_userwidgets` DROP `place`;";
-   $DB->doQueryOrDie($query, "DROP Place field");
+   $DB->doQuery($query);
 
    $query = "ALTER TABLE `glpi_plugin_mydashboard_userwidgets` DROP `interface`;";
-   $DB->doQueryOrDie($query, "DROP interface field");
+   $DB->doQuery($query);
 
    return true;
 }

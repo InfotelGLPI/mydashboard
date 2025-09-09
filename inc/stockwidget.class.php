@@ -198,28 +198,31 @@ class PluginMydashboardStockWidget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Icon') . "</td>";
       echo "<td>";
-//      echo Html::input('icon', ['value' => $this->fields['icon'], 'size' => 40]);
        $icon_selector_id = 'icon_' . mt_rand();
        echo Html::select(
            'icon',
            [$this->fields['icon'] => $this->fields['icon']],
            [
-               'id'       => $icon_selector_id,
+               'id' => $icon_selector_id,
                'selected' => $this->fields['icon'],
-               'style'    => 'width:175px;'
+               'style' => 'width:175px;',
            ]
        );
 
-       echo Html::script('js/Forms/FaIconSelector.js');
-       echo Html::scriptBlock(<<<JAVASCRIPT
+       echo Html::script('js/modules/Form/WebIconSelector.js');
+       echo Html::scriptBlock(
+           <<<JAVASCRIPT
          $(
             function() {
-               var icon_selector = new GLPI.Forms.FaIconSelector(document.getElementById('{$icon_selector_id}'));
+            import('/js/modules/Form/WebIconSelector.js').then((m) => {
+               var icon_selector = new m.default(document.getElementById('{$icon_selector_id}'));
                icon_selector.init();
+               });
             }
          );
-JAVASCRIPT
+        JAVASCRIPT
        );
+
       echo "</td>";
 
       echo "<td>" . __('Alert threshold') . "</td>";

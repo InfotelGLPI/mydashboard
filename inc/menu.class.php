@@ -373,7 +373,7 @@ class PluginMydashboardMenu extends CommonGLPI
 
         echo $this->getscripts();
 
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/style_bootstrap_new.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
         if ($edit > 0) {
             //force loading new widgets
             self::installWidgets();
@@ -382,7 +382,7 @@ class PluginMydashboardMenu extends CommonGLPI
         if ($edit > 0) {
             echo "<div class='left'>";
 
-            echo "<form method='post' 
+            echo "<form method='post'
                      action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
 
             echo "<table class='tab_cadre_fixe' width='100%'>";
@@ -559,7 +559,7 @@ class PluginMydashboardMenu extends CommonGLPI
 
 
             echo "<div class='alert alert-success' id='success-alert'>
-                <strong>" . __('Success', 'mydashboard') . "</strong> - 
+                <strong>" . __('Success', 'mydashboard') . "</strong> -
                 " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
             </div>";
             echo Html::scriptBlock('
@@ -668,7 +668,7 @@ class PluginMydashboardMenu extends CommonGLPI
                       menu = false;
                   }
                 });
-            
+
                 //===================Stop:Showing Menu=====================================
                 //===================Start:AccordionEffect=================================
                 //Now the accordion effect w/o jQuery Accordion (wasn't really customizable, and css from other plugin can override dashboard one)
@@ -993,53 +993,53 @@ class PluginMydashboardMenu extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/style_bootstrap_new.css");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.js");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-ui/jquery-ui.min.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.js");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.css");
         //
-        Html::requireJs('gridstack');
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/js/gridstack-all.js");
         //TODO v11
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/gridstack/css/gridstack-extra.css");
-//        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/css/mydashboard.css.php");
-        //       echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR."/lib/gridstack/src/gridstack.jQueryUI.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuze.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fuzzysearch.js.php");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/css/gridstack-extra.css");
+//        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/mydashboard.css.php");
+        //       echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR."/lib/gridstack/src/gridstack.jQueryUI.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuze.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuzzysearch.js.php");
 
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/css/buttons.dataTables.min.css");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/ColReorder-1.5.6/css/colReorder.dataTables.min.css");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/datatables.min.css");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Responsive-2.3.0/css/responsive.dataTables.min.css");
-        echo Html::css(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Select-1.4.0/css/select.dataTables.min.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Buttons-2.2.3/css/buttons.dataTables.min.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/ColReorder-1.5.6/css/colReorder.dataTables.min.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Responsive-2.3.0/css/responsive.dataTables.min.css");
+        echo Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Select-1.4.0/css/select.dataTables.min.css");
 
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/datatables.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Responsive-2.3.0/js/dataTables.responsive.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Select-1.4.0/js/dataTables.select.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/js/dataTables.buttons.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/js/buttons.html5.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/js/buttons.print.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/Buttons-2.2.3/js/buttons.colVis.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/ColReorder-1.5.6/js/dataTables.colReorder.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/JSZip-2.5.0/jszip.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Responsive-2.3.0/js/dataTables.responsive.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Select-1.4.0/js/dataTables.select.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Buttons-2.2.3/js/dataTables.buttons.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Buttons-2.2.3/js/buttons.html5.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Buttons-2.2.3/js/buttons.print.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/Buttons-2.2.3/js/buttons.colVis.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/ColReorder-1.5.6/js/dataTables.colReorder.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/JSZip-2.5.0/jszip.min.js");
         //TODO v11
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
+//        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/pdfmake-0.1.36/pdfmake.min.js");
+//        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/pdfmake-0.1.36/vfs_fonts.js");
 
         //TODO v11
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/echarts.js");
+//        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/echarts.js");
         Html::requireJs('charts');
         $theme = PluginMydashboardPreference::getPalette(Session::getLoginUserID());
         //TODO v11
         echo Html::script($CFG_GLPI['root_doc']."/lib/echarts.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/echarts/theme/$theme.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/html2canvas.min.js");
-//        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jspdf.umd.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/theme/$theme.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/html2canvas.min.js");
+//        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jspdf.umd.js");
 
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
-        //        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/fileSaver.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/circles/circles.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/countUp.min.js");
-        echo Html::script(PLUGIN_MYDASHBOARD_NOTFULL_DIR . "/lib/countUp-jquery.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
+        //        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fileSaver.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/circles/circles.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/countUp.min.js");
+        echo Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/countUp-jquery.js");
 
         $rand           = mt_rand();
         $this->users_id = Session::getLoginUserID();
@@ -1140,7 +1140,7 @@ class PluginMydashboardMenu extends CommonGLPI
                 //            }
                 foreach ($widgets as $k => $val) {
                     $allwidgetjson[$k] = ["<div class='alert alert-success' id='success-alert'>
-                <strong>" . __('Success', 'mydashboard') . "</strong> - 
+                <strong>" . __('Success', 'mydashboard') . "</strong> -
                 " . __('Save grid to see widget', 'mydashboard') . "
             </div>"];
                     //NOT LOAD ALL WIDGETS FOR PERF
@@ -1195,7 +1195,7 @@ class PluginMydashboardMenu extends CommonGLPI
                      items.forEach(function(node)  {
                          var nodeid = node.id;
 //                         var optArray = $optjson;
-                         var widgetArray = $datajson; 
+                         var widgetArray = $datajson;
                          var widget = widgetArray['' + nodeid + ''];
                          if ( widget !== undefined ) {
                             widget = widgetArray['' + nodeid + ''];
@@ -1240,18 +1240,18 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                     }, this);
                     return false;
                 }.bind(this);
-                
+
                 this.loadGrid();
-                
+
             };
             deleteWidget = function(value) {
                 widget = 'div[gs-id='+ value + ']';
                 grid.removeWidget(widget);
             }
-            
+
             addNewWidget = function(value) {
                 if (value != 0){
-                        var widgetArray = $allwidgetjson; 
+                        var widgetArray = $allwidgetjson;
                         widget = widgetArray['' + value + ''];
                         var el = '<div id=\"gridcontent' + value + '\">'  + widget + '</div>';
 //                        var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
@@ -1288,7 +1288,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                        }
                    });
             }
-            
+
             launchSaveDefaultGrid = function() {
                 delete serializedFull;
                 serializedData = grid.save(false);
@@ -1305,7 +1305,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                          var redirectUrl = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
                          var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
                          '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
-                         '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+ 
+                         '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+
                         '</form>');
                          $('body').append(form);
                          $(form).submit();
@@ -1313,8 +1313,8 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                    });
             }
         });
-        
-     
+
+
     </script>";
         echo "<script type='text/javascript'>
         function launchloadWidgets() {
@@ -1449,7 +1449,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                     widgetOptionsObject[name] = v.value;
                  }
               }
-           );           
+           );
            var widget = $('div[id='+ id + ']');
            $.ajax({
               url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
@@ -1465,15 +1465,15 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
            });
            return false;
         };
-         
-          
+
+
 //         function downloadGraph(id) {
 ////             if (!isChartRendered) return; // return if chart not rendered
 //                html2canvas(document.getElementById(id), {
 //                 onrendered: function(canvas) {
 //                     var link = document.createElement('a');
 //                    link.href = canvas.toDataURL('image/png');
-//                    
+//
 //                    if (!HTMLCanvasElement.prototype.toBlob) {
 //                     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
 //                       value: function (callback, type, quality) {
@@ -1482,21 +1482,21 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
 //                           var binStr = atob( canvas.toDataURL(type, quality).split(',')[1] ),
 //                           len = binStr.length,
 //                           arr = new Uint8Array(len);
-//                  
+//
 //                           for (var i = 0; i < len; i++ ) {
 //                              arr[i] = binStr.charCodeAt(i);
 //                           }
-//                  
+//
 //                           callback( new Blob( [arr], {type: type || 'image/png'} ) );
 //                         });
 //                       }
 //                    });
 //                  }
-//                       
+//
 //                  canvas.toBlob(function(blob){
 //                   link.href = URL.createObjectURL(blob);
 //                   saveAs(blob, 'myChart.png');
-//                 },'image/png');                      
+//                 },'image/png');
 //              }
 //            })
 //         }
@@ -1518,11 +1518,11 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                 img.src = src;
               });
             }
-            
+
             function getChartImage(chart) {
               return loadImage(chart.getDataURL());
             }
-            
+
             const btnExportHTML = document.getElementById('exportByHTML');
             widgets = $all_displayed_widgets;
             widgetsid = $all_displayed_widgets_id;
@@ -1535,7 +1535,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                       hotfixes: ['px_scaling']
                     });
                     // another way:
-                    
+
                     for (var i = 0; i < widgets.length; i++) {
                         var widgetname ='#'+widgets[i];
 
@@ -1543,19 +1543,19 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                         const img = await loadImage(canvas.toDataURL());
                         chart1 = echarts.init(document.getElementById(widgets[i]));
                         dpr = chart1.getDevicePixelRatio();
-                        
+
                         const pageWidth = doc.internal.pageSize.getWidth();
                         const pageHeight = doc.internal.pageSize.getHeight();
-                    
+
                         const widthRatio = pageWidth / canvas.width;
                         const heightRatio = pageHeight / canvas.height;
 
                         const canvasWidth = img.width / dpr;
                         const canvasHeight = img.height / dpr;
-                        
+
                         const marginX = (pageWidth - canvasWidth) / 2;
                         const marginY = (pageHeight - canvasHeight) / 2;
-                    
+
                         doc.addImage(img.src, 'PNG', marginX, marginY, canvasWidth, canvasHeight);
                         if (i < widgets.length-1) {
                             doc.addPage();
