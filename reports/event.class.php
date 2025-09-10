@@ -180,7 +180,7 @@ class PluginMydashboardEvent extends Glpi\Event
         $number = $DB->numrows($result);
         // No Events in database
         if ($number < 1) {
-            $output['title'] = "<br><div class='spaced'><table class='tab_cadrehov'>";
+            $output['title'] = "<br><div class='spaced'><table class='tab_cadre_fixe'>";
             $output['title'] .= "<tr><th>" . __('No Event') . "</th></tr>";
             $output['title'] .= "</table></div>";
         }

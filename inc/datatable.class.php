@@ -250,7 +250,7 @@ class PluginMydashboardDatatable extends PluginMydashboardModule
         $scripts = [];
         $scripts[] = "var liwidget = $('#" . $this->getWidgetId() . "');";
         $scripts[] = "liwidget.find('table').removeClass('sDashboardTableView');";
-        $scripts[] = "liwidget.find('table').addClass('tab_cadrehov');";
+        $scripts[] = "liwidget.find('table').addClass('tab_cadre_fixe');";
         $scripts[] = "liwidget.find('table').css('width','100%');";
         $this->appendWidgetScripts($scripts);
     }

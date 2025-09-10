@@ -67,7 +67,7 @@ class PluginMydashboardTicket extends CommonGLPI
            ]
         ];
         if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
-            $widgets[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = ["title"   => __('Your tickets to validate'),
+            $widgets[PluginMydashboardMenu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = ["title"   => __('Your tickets to validate', "mydashboard"),
                                                                                                     "type"    => PluginMydashboardWidget::$TABLE,
                                                                                                     "comment" => ""];
         }
@@ -507,7 +507,7 @@ class PluginMydashboardTicket extends CommonGLPI
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" .
                                        Toolbox::append_params($options, '&amp;') . "\">" .
-                                       Html::makeTitle(__('Your tickets to validate'), $number, $numrows) . "</a>";
+                                       Html::makeTitle(__('Your tickets to validate', "mydashboard"), $number, $numrows) . "</a>";
 
                     break;
 

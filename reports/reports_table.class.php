@@ -68,7 +68,7 @@ class PluginMydashboardReports_Table extends CommonGLPI
             ],
             PluginMydashboardMenu::$TOOLS => [
 
-                $this->getType() . "14" => ["title"   => __("All unpublished articles"),
+                $this->getType() . "14" => ["title"   => __("All unpublished articles", "mydashboard"),
                                             "type"    => PluginMydashboardWidget::$TABLE,
                                             "comment" => __("Display unpublished articles of Knowbase", "mydashboard")],
 
