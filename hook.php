@@ -481,7 +481,7 @@ function plugin_mydashboard_uninstall()
        "glpi_plugin_mydashboard_stockticketindicators"];
 
     foreach ($tables as $table) {
-        $DB->dropTable($table);
+        $DB->dropTable($table, true);
     }
 
     include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/profile.class.php");

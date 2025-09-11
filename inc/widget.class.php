@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Badges\Badge;
+
 /**
  * Class PluginMydashboardWidget
  */
@@ -467,10 +469,10 @@ class PluginMydashboardWidget extends CommonDBTM
                                   if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
                                    data.profiles_id = document.getElementsByName('profiles_id')[0].value;
                                  }
-                                }, 
+                                },
                                 'stateSaveCallback': function (settings, data) {
                                     // Send an Ajax request to the server with the state object
-                                    
+
                                     $.ajax({
                                        'url': '$root_doc/ajax/state_save.php',
                                        'data': data,
@@ -479,7 +481,7 @@ class PluginMydashboardWidget extends CommonDBTM
                                        'success': function(response) {},
                                        'error': function(response) {}
                                     });
-                               },       
+                               },
                                'stateLoadCallback': function (settings, callback) {
                                  profiles_id='';
                                  if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
@@ -488,9 +490,9 @@ class PluginMydashboardWidget extends CommonDBTM
                                 $.ajax({
                                     url: '$root_doc/ajax/state_load.php?gsId={$widgetindex}&profiles_id='+profiles_id,
                                     dataType: 'json',
-                                    success: function (json) {                               
-                                      //JSON parse the saved filter and set the time equal to now.          
-                                      json.time = +new Date();                                         
+                                    success: function (json) {
+                                      //JSON parse the saved filter and set the time equal to now.
+                                      json.time = +new Date();
                                       callback(json);
                                     },
                                     error: function () {
@@ -896,7 +898,7 @@ class PluginMydashboardWidget extends CommonDBTM
 
                     $display .= "</br>";
 
-                    //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense','PluginBadgesBadge'];
+                    //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense',Badge:class];
                     $icon = $item->getIcon();
                     if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])
                         && Session::getCurrentInterface() == 'central') {
@@ -973,7 +975,7 @@ class PluginMydashboardWidget extends CommonDBTM
                   'Phone',
                   'Printer',
                   'SoftwareLicense',
-                  'PluginBadgesBadge'];
+                  Badge::class];
 
         $users_id = Session::getLoginUserID();
         foreach ($types as $itemtype) {
