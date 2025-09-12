@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 09:36+0000\n"
+"POT-Creation-Date: 2025-09-12 07:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: inc/chart.class.php:137 inc/menu.class.php:1153 inc/widget.class.php:618
+#: inc/chart.class.php:137 inc/menu.class.php:1153 inc/widget.class.php:619
 msgid "No data available"
 msgstr ""
 
@@ -451,7 +451,7 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
-#: inc/menu.class.php:955 inc/widget.class.php:457
+#: inc/menu.class.php:955 inc/widget.class.php:458
 msgid "Show all"
 msgstr ""
 
@@ -617,72 +617,72 @@ msgstr ""
 msgid "user_widget management"
 msgstr ""
 
-#: inc/widget.class.php:51
+#: inc/widget.class.php:52
 msgid "Widget management"
 msgstr ""
 
-#: inc/widget.class.php:90
+#: inc/widget.class.php:91
 msgid "Indicators"
 msgstr ""
 
-#: inc/widget.class.php:92
+#: inc/widget.class.php:93
 msgid "Tables"
 msgstr ""
 
-#: inc/widget.class.php:94
+#: inc/widget.class.php:95
 msgid "Pie charts"
 msgstr ""
 
-#: inc/widget.class.php:96
+#: inc/widget.class.php:97
 msgid "Bar charts"
 msgstr ""
 
-#: inc/widget.class.php:98
+#: inc/widget.class.php:99
 msgid "Line charts"
 msgstr ""
 
-#: inc/widget.class.php:100
+#: inc/widget.class.php:101
 msgid "Map"
 msgstr ""
 
-#: inc/widget.class.php:280
+#: inc/widget.class.php:281
 msgid "This widget doesn't exist anymore"
 msgstr ""
 
-#: inc/widget.class.php:453
+#: inc/widget.class.php:454
 msgid "5 rows"
 msgstr ""
 
-#: inc/widget.class.php:454
+#: inc/widget.class.php:455
 msgid "10 rows"
 msgstr ""
 
-#: inc/widget.class.php:455
+#: inc/widget.class.php:456
 msgid "25 rows"
 msgstr ""
 
-#: inc/widget.class.php:456
+#: inc/widget.class.php:457
 msgid "50 rows"
 msgstr ""
 
-#: inc/widget.class.php:676 reports/alert.class.php:2290
+#: inc/widget.class.php:677 reports/alert.class.php:2290
 #: reports/alert.class.php:2503
 msgid "No problem detected"
 msgstr ""
 
-#: inc/widget.class.php:745 reports/alert.class.php:1921
+#: inc/widget.class.php:746 reports/alert.class.php:1921
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: inc/widget.class.php:813 reports/alert.class.php:2123
+#: inc/widget.class.php:814 reports/alert.class.php:2123
 msgid "No informations founded"
 msgstr ""
 
-#: inc/widget.class.php:846 reports/alert.class.php:145
+#: inc/widget.class.php:847 reports/alert.class.php:145
 msgid "Your equipments"
 msgstr ""
 
-#: inc/widget.class.php:952
+#: inc/widget.class.php:953
 msgid "No equipments founded"
 msgstr ""
 
