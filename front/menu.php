@@ -25,6 +25,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Servicecatalog\Main;
 
 include('../../../inc/includes.php');
 
@@ -35,7 +36,7 @@ if (Session::getCurrentInterface() == 'central') {
 } else {
 
    if (Plugin::isPluginActive('servicecatalog')) {
-      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginMydashboardMenu::getTypeName(1));
+      Main::showDefaultHeaderHelpdesk(PluginMydashboardMenu::getTypeName(1));
    } else {
       Html::helpHeader(PluginMydashboardMenu::getTypeName(1));
    }
@@ -75,7 +76,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
 
-   PluginServicecatalogMain::showNavBarFooter('mydashboard');
+   Main::showNavBarFooter('mydashboard');
 }
 
 if (Session::getCurrentInterface() == 'central') {

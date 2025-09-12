@@ -25,6 +25,7 @@
  */
 
 use GlpiPlugin\Badges\Badge;
+use GlpiPlugin\Servicecatalog\Config;
 
 /**
  * Class PluginMydashboardWidget
@@ -853,8 +854,8 @@ class PluginMydashboardWidget extends CommonDBTM
         if (count($allUsedItemsForUser) > 0) {
             if ($fromsc == true) {
                 $class  = "";
-                $config = new PluginServicecatalogConfig();
-                if ($config->getLayout() == PluginServicecatalogConfig::THUMBNAIL) {
+                $config = new Config();
+                if ($config->getLayout() == Config::THUMBNAIL) {
                     $class = "visitedchildbg widgetrow";
                 }
                 $display .= "<div class=\"bt-feature bt-col-md-12 count-title\">";
@@ -866,8 +867,8 @@ class PluginMydashboardWidget extends CommonDBTM
                 //            if ($i % 2 == 0 && $nb > 1) {
                 $class = "";
                 if ($fromsc == true) {
-                    $config = new PluginServicecatalogConfig();
-                    if ($config->getLayout() == PluginServicecatalogConfig::THUMBNAIL) {
+                    $config = new Config();
+                    if ($config->getLayout() == Config::THUMBNAIL) {
                         $class = "visitedchildbg widgetrow";
                     }
                 }
