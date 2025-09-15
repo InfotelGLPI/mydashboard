@@ -928,14 +928,15 @@ class Alert extends CommonDBTM
 
         $opt = $options['opt'];
 
-        if (!isset($opt['technicians_groups_id']) || count($opt['technicians_groups_id']) == 0) {
+        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count($opt['technicians_groups_id']) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
         }
 
 
-        if (count($technicians_groups_id) > 0) {
+        if (is_array($technicians_groups_id) > 0
+        && count($technicians_groups_id) > 0) {
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
@@ -1025,7 +1026,8 @@ class Alert extends CommonDBTM
         $left          = "";
         $search_assign = "1=1";
 
-        if (count($technicians_groups_id) > 0) {
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
@@ -1128,7 +1130,7 @@ class Alert extends CommonDBTM
                 'link'       => 'AND',
             ];
 
-            if (isset($opt['technicians_groups_id'])
+            if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
@@ -1198,7 +1200,7 @@ class Alert extends CommonDBTM
                 'link'       => 'AND',
             ];
 
-            if (isset($opt['technicians_groups_id'])
+            if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
@@ -1347,13 +1349,14 @@ class Alert extends CommonDBTM
 
         $opt = $options['opt'];
 
-        if (!isset($opt['technicians_groups_id']) || count($opt['technicians_groups_id']) == 0) {
+        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count($opt['technicians_groups_id']) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
         }
 
-        if (count($technicians_groups_id) > 0) {
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -1395,7 +1398,8 @@ class Alert extends CommonDBTM
         $search_assign = "1=1";
         $left          = "";
         $stats3        = 0;
-        if (count($technicians_groups_id) > 0) {
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
@@ -1428,7 +1432,8 @@ class Alert extends CommonDBTM
         $left          = "";
         $stats4        = 0;
 
-        if (count($technicians_groups_id) > 0) {
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -1461,7 +1466,8 @@ class Alert extends CommonDBTM
         $left          = "";
         $stats5        = 0;
 
-        if (count($technicians_groups_id) > 0) {
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
             $left          = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
@@ -1515,7 +1521,7 @@ class Alert extends CommonDBTM
                 'link'       => 'AND',
             ];
 
-            if (isset($opt['technicians_groups_id'])
+            if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
@@ -1585,7 +1591,7 @@ class Alert extends CommonDBTM
                 'link'       => 'AND',
             ];
 
-            if (isset($opt['technicians_groups_id'])
+            if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
@@ -1655,7 +1661,7 @@ class Alert extends CommonDBTM
                 'link'       => 'AND',
             ];
 
-            if (isset($opt['technicians_groups_id'])
+            if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
@@ -1726,7 +1732,7 @@ class Alert extends CommonDBTM
                 'link'       => 'AND',
             ];
 
-            if (isset($opt['technicians_groups_id'])
+            if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
                 $nb     = 0;
