@@ -28,7 +28,7 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
 use DateTime;
-use Ticket;
+use GlpiPlugin\Mydashboard\Reports\Ticket;
 
 class StockTicketIndicator extends CommonDBTM
 {
