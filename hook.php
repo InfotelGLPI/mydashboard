@@ -31,6 +31,8 @@ use GlpiPlugin\Mydashboard\Groupprofile;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Profile;
 use GlpiPlugin\Mydashboard\Widget;
+use GlpiPlugin\Mydashboard\Preference;
+
 /**
  * @return bool
  */
@@ -492,7 +494,7 @@ function plugin_mydashboard_uninstall()
     //Delete rights associated with the plugin
     $profileRight = new ProfileRight();
 
-    foreach (dProfile::getAllRights() as $right) {
+    foreach (Profile::getAllRights() as $right) {
         $profileRight->deleteByCriteria(['name' => $right['field']]);
     }
     Profile::removeRightsFromSession();
