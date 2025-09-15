@@ -24,13 +24,13 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Preference;
 
 Session::checkLoginUser();
 
 //Save user preferences
 if (isset ($_POST['update'])) {
-   $pref = new PluginMydashboardPreference();
+   $pref = new Preference();
    $pref->check(-1, UPDATE, $_POST);
    if(isset($_POST["prefered_group"])){
       $_POST["prefered_group"] = json_encode($_POST["prefered_group"]);

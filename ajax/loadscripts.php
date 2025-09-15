@@ -24,7 +24,8 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Preference;
 
 Html::header_nocache();
 Session::checkLoginUser();
@@ -42,7 +43,7 @@ if (isset($_POST['action'])) {
          $style = "#000";
          $title = __("Go to mydashboard actions", "mydashboard");
 
-         $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+         $edit = Preference::checkEditMode(Session::getLoginUserID());
          if ($edit > 0) {
             $style = "red";
             $title = __("Edit mode is enabled, please close it for better performance", "mydashboard");
@@ -51,11 +52,11 @@ if (isset($_POST['action'])) {
          $out .= "if ($('#showMyDashboardLateralMenu').length === 0) {
             $('.ms-lg-auto').after(\"<a class='ti ti-dashboard slidelink' title='$title' href='#' id='showMyDashboardLateralMenuLink'></a>\");
          };";
-         
+
          $out .= "</script>";
          echo $out;
 
-         PluginMydashboardMenu::createSlidePanel(
+         Menu::createSlidePanel(
             'showMyDashboardLateralMenu',
             [
                'title'     => __('My Dashboard', 'mydashboard'),

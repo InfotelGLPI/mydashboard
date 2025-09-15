@@ -24,12 +24,12 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+use GlpiPlugin\Mydashboard\Preference;
 
 Session::checkLoginUser();
 
 if (isset($_POST['drag_mode'])) {
-   $pref = new PluginMydashboardPreference();
+   $pref = new Preference();
    $input['drag_mode'] = $_POST['drag_mode'];
    $input['id'] = Session::getLoginUserID();
    $pref->update($input);

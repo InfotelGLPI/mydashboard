@@ -26,8 +26,7 @@
 
 
 use Glpi\Exception\Http\NotFoundHttpException;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Alert;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
@@ -38,6 +37,6 @@ if (!isset($_GET['id'])) {
     throw new NotFoundHttpException();
 }
 
-PluginMydashboardAlert::displayTickerDescription($_GET['id']);
+Alert::displayTickerDescription($_GET['id']);
 
 

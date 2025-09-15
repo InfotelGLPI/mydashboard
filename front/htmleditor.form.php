@@ -24,9 +24,9 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Customswidget;
 
-$customsWidget = new PluginMydashboardCustomswidget();
+$customsWidget = new Customswidget();
 
 if(isset($_POST['update'])){
    //decode html marks

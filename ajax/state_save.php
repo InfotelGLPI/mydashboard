@@ -30,6 +30,10 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Dashboard;
+use GlpiPlugin\Mydashboard\Preference;
+use GlpiPlugin\Mydashboard\Widget;
+
 include('../../../inc/includes.php');
 Session::checkLoginUser();
 
@@ -44,7 +48,7 @@ if (!isset($_POST)) {
 } else if (!empty($_POST)) {
    $gsIdName = $_POST['gsId'];
    unset($_POST['gsId']);
-   $dashboardWidgets = new PluginMydashboardWidget();
+   $dashboardWidgets = new Widget();
    $dashboardWidgets->getFromDBByCrit(['name' => $gsIdName]);
 
    if (isset($dashboardWidgets->fields['id'])) {
@@ -58,9 +62,9 @@ if (!isset($_POST)) {
       $idUser    = $_SESSION['glpiID'];
       $idProfile = $_SESSION['glpiactiveprofile']['id'];
 
-      $dashboard = new  PluginMydashboardDashboard();
+      $dashboard = new  Dashboard();
 
-      $edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+      $edit = Preference::checkEditMode(Session::getLoginUserID());
       if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
          $idUser    = 0;
          $idProfile = $_SESSION['plugin_mydashboard_profiles_id'] ?? $idProfile;

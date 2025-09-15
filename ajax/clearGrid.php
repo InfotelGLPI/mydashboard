@@ -24,16 +24,17 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+
+use GlpiPlugin\Mydashboard\Dashboard;
 
 Session::checkLoginUser();
 
-$dashboard = new PluginMydashboardDashboard();
+$dashboard = new Dashboard();
 
 $profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
 
 $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
-$id = PluginMydashboardDashboard::checkIfPreferenceExists($options);
+$id = Dashboard::checkIfPreferenceExists($options);
 if ($id) {
    $input['id'] = $id;
    $dashboard->delete($input);

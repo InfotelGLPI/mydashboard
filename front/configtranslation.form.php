@@ -25,9 +25,9 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\ConfigTranslation;
 
-$translation = new PluginMydashboardConfigTranslation();
+$translation = new ConfigTranslation();
 if (isset($_POST['add'])) {
    $translation->add($_POST);
 } else if (isset($_POST['update'])) {

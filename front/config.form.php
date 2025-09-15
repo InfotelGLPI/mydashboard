@@ -25,19 +25,20 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Config;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\StockTicketIndicator;
 
 Session::checkLoginUser();
 
-Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'PluginMydashboardConfig');
+Html::header(Menu::getTypeName(2), '', "tools", Menu::class);
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "1";
 }
 if (Plugin::isPluginActive("mydashboard")) {
 
-   $config = new PluginMydashboardConfig();
+   $config = new Config();
 
     if (isset($_POST["reconstructBacklog"])) {
         ini_set("max_execution_time", "0");
@@ -49,7 +50,7 @@ if (Plugin::isPluginActive("mydashboard")) {
     } else if (isset($_POST["reconstructIndicators"])) {
         ini_set("max_execution_time", "0");
         ini_set("memory_limit", "-1");
-        $record = new PluginMydashboardStockTicketIndicator();
+        $record = new StockTicketIndicator();
         $record->cronMydashboardInfotelUpdateStockTicketIndicator("all");
         Html::back();
 

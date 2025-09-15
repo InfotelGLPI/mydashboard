@@ -24,11 +24,11 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\ProfileAuthorizedWidget;
 
 Session::checkLoginUser();
 
-$paw = new PluginMydashboardProfileAuthorizedWidget();
+$paw = new ProfileAuthorizedWidget();
 
 $paw->save($_POST);
 

@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\StockTicketIndicator;
+
 ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 
@@ -32,9 +34,6 @@ $USEDBREPLICATE = 0;
 $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
-
-include('../../../../inc/includes.php');
-
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
 
@@ -47,7 +46,7 @@ if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
 
 //Check if plugin is installed
 if (Plugin::isPluginActive("mydashboard")) {
-    $record = new PluginMydashboardStockTicketIndicator();
+    $record = new StockTicketIndicator();
     $record->cronMydashboardInfotelUpdateStockTicketIndicator();
 } else {
     echo __('Plugin disabled', 'mydashboard');

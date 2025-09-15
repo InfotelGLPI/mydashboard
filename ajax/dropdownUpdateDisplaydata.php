@@ -24,8 +24,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Helper;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownUpdateDisplaydata.php")) {
-   include("../../../inc/includes.php");
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
@@ -115,7 +116,7 @@ if (isset($_POST["value"])) {
       }
       $form .= __('Year', 'mydashboard');
       $form .= "&nbsp;";
-      $form .= PluginMydashboardHelper::YearDropdown($annee_courante);
+      $form .= Helper::YearDropdown($annee_courante);
 
 
    } else if ($_POST['value'] == 'BEGIN_END') {

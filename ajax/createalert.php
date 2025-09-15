@@ -24,6 +24,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Alert;
+use GlpiPlugin\Mydashboard\ItilAlert;
+
 if (strpos($_SERVER['PHP_SELF'], "createalert.php")) {
    $AJAX_INCLUDE = 1;
    include('../../../inc/includes.php');
@@ -53,13 +56,13 @@ if (isset($_POST['itemtype'])) {
             $reminders_id = $reminder->add(['name' => addslashes($item->fields['name']),
                'text' => addslashes($item->fields['content']),
                'users_id' => $_SESSION['glpiID']]);
-            $alert = new PluginMydashboardItilAlert();
+            $alert = new ItilAlert();
             $alert->add(['items_id' => $_POST['items_id'],
                'itemtype' => $_POST['itemtype'],
                'reminders_id' => $reminders_id]);
          }
       }
-   } else if (in_array($class,PluginMydashboardAlert::getTypes())){
+   } else if (in_array($class,Alert::getTypes())){
       if (isset($_POST['items_id'])) {
          if ($item->getFromDB($_POST['items_id'])) {
             $name = method_exists($item,"getNameAlert")?$item->getNameAlert():$item->fields["name"];
@@ -68,7 +71,7 @@ if (isset($_POST['itemtype'])) {
             $reminders_id = $reminder->add(['name'     => addslashes($name),
                'text'     => addslashes($content),
                'users_id' => $_SESSION['glpiID']]);
-            $alert        = new PluginMydashboardItilAlert();
+            $alert        = new ItilAlert();
             $alert->add(['items_id'  => $_POST['items_id'],
                'itemtype'  => $_POST['itemtype'],
                'reminders_id' => $reminders_id]);

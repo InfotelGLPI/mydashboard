@@ -24,6 +24,13 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Alert;
+use GlpiPlugin\Mydashboard\Config;
+use GlpiPlugin\Mydashboard\Customswidget;
+use GlpiPlugin\Mydashboard\Groupprofile;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Profile;
+use GlpiPlugin\Mydashboard\Widget;
 /**
  * @return bool
  */
@@ -31,18 +38,12 @@ function plugin_mydashboard_install()
 {
     global $DB;
 
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/profile.class.php");
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/helper.class.php");
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/preference.class.php");
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/config.class.php");
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/menu.class.php");
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/widget.class.php");
     //First install 1.0.0 (0.84)
     if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
         //Creates all tables
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/empty-2.1.2.sql");
 
-        PluginMydashboardMenu::installWidgets();
+        Menu::installWidgets();
         insertDefaultTitles();
     }
     //end---------------------------------------------------------------------
@@ -112,7 +113,7 @@ function plugin_mydashboard_install()
     //From 1.0.4 (0.84) to 1.1.0 (0.85)------------------------------------
     //Profile migration
     if ($DB->tableExists("glpi_plugin_mydashboard_profiles")) {
-        PluginMydashboardProfile::migrateRightsFrom84To85();
+        Profile::migrateRightsFrom84To85();
         $DB->doQuery("DROP TABLE `glpi_plugin_mydashboard_profiles`;");
     }
     //end---------------------------------------------------------------------
@@ -195,7 +196,7 @@ function plugin_mydashboard_install()
         $mig = new Migration("1.7.7");
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.7.sql");
         $mig->executeMigration();
-        $widget = new PluginMydashboardWidget();
+        $widget = new Widget();
         $widget->migrateWidgets();
     }
 
@@ -208,7 +209,7 @@ function plugin_mydashboard_install()
 //        fillTableMydashboardStocktickets();
 //        fillTableMydashboardStockticketsGroup();
 
-        $config                             = new PluginMydashboardConfig();
+        $config                             = new Config();
         $input['id']                        = "1";
         $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
         $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
@@ -289,14 +290,18 @@ function plugin_mydashboard_install()
         $mig->executeMigration();
     }
 
+    $mig = new Migration("2.2.0");
+    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.2.0.sql");
+    $mig->executeMigration();
 
-    $config = new PluginMydashboardConfig();
+
+    $config = new Config();
     if (!$config->getFromDB("1")) {
         $config->initConfig();
     }
-    PluginMydashboardProfile::initProfile();
+    Profile::initProfile();
 
-    PluginMydashboardProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+    Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     return true;
 }
 
@@ -430,7 +435,7 @@ function fillTableMydashboardStockticketsGroup()
 
 function transform_prefered_group_to_prefered_groups()
 {
-    $pref  = new PluginMydashboardPreference();
+    $pref  = new Preference();
     $prefs = $pref->find();
     foreach ($prefs as $p) {
         if ($p["prefered_group"] == "0") {
@@ -441,7 +446,7 @@ function transform_prefered_group_to_prefered_groups()
         $pref->update($p);
     }
 
-    $prefgroup  = new PluginMydashboardGroupprofile();
+    $prefgroup  = new Groupprofile();
     $prefgroups = $prefgroup->find();
     foreach ($prefgroups as $p) {
         if ($p["prefered_group"] == "0") {
@@ -484,15 +489,13 @@ function plugin_mydashboard_uninstall()
         $DB->dropTable($table, true);
     }
 
-    include_once(PLUGIN_MYDASHBOARD_DIR . "/inc/profile.class.php");
-
     //Delete rights associated with the plugin
     $profileRight = new ProfileRight();
 
-    foreach (PluginMydashboardProfile::getAllRights() as $right) {
+    foreach (dProfile::getAllRights() as $right) {
         $profileRight->deleteByCriteria(['name' => $right['field']]);
     }
-    PluginMydashboardProfile::removeRightsFromSession();
+    Profile::removeRightsFromSession();
 
     return true;
 }
@@ -521,7 +524,7 @@ function plugin_mydashboard_postinit()
 
 function plugin_mydashboard_display_login()
 {
-    $alerts = new PluginMydashboardAlert();
+    $alerts = new Alert();
     echo $alerts->getAlertSummary(1);
 }
 
@@ -546,7 +549,7 @@ function plugin_mydashboard_getDropdown()
 {
     if (Plugin::isPluginActive("mydashboard")) {
         return [
-           'PluginMydashboardCustomswidget' => PluginMydashboardCustomswidget::getTypeName(2),];
+           Customswidget::class => Customswidget::getTypeName(2),];
     } else {
         return [];
     }

@@ -24,28 +24,28 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+use GlpiPlugin\Mydashboard\Widget;
 
 Session::checkLoginUser();
 
-$widgets = PluginMydashboardWidget::getWidgetList();
+$widgets = Widget::getWidgetList();
+
 
 if (isset($_POST['gsid']) && isset($_POST['id'])) {
-   $gsid = $_POST['gsid'];
-   $opt  = [];
-   if (isset($_POST['params']) && is_array($_POST['params'])) {
-      $opt = $_POST['params'];
-   }
-   $widget = PluginMydashboardWidget::getWidget($gsid, $widgets, $opt);
-   echo $widget;
+    $gsid = $_POST['gsid'];
+    $opt  = [];
+    if (isset($_POST['params']) && is_array($_POST['params'])) {
+        $opt = $_POST['params'];
+    }
+    $widget = Widget::getWidget($gsid, $widgets, $opt);
+    echo $widget;
 } else {
-   $gsid    = $_POST['gsid'];
-   $data = [];
-   if (isset($widgets[$gsid])) {
-      $opt    = [];
-      $widget = PluginMydashboardWidget::getWidget($gsid, $widgets, $opt);
-      $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
-   }
-
-   echo json_encode($data);
+    $gsid    = $_POST['gsid'];
+    $data = [];
+    if (isset($widgets[$gsid])) {
+        $opt    = [];
+        $widget = Widget::getWidget($gsid, $widgets, $opt);
+        $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
+    }
+    echo json_encode($data);
 }

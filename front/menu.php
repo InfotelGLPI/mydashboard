@@ -25,20 +25,19 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Servicecatalog\Main;
-
-include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginMydashboardMenu::getTypeName(1), '', "tools", "pluginmydashboardmenu");
+   Html::header(Menu::getTypeName(1), '', "tools", Menu::class);
 } else {
 
    if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginMydashboardMenu::getTypeName(1));
+      Main::showDefaultHeaderHelpdesk(Menu::getTypeName(1));
    } else {
-      Html::helpHeader(PluginMydashboardMenu::getTypeName(1));
+      Html::helpHeader(Menu::getTypeName(1));
    }
 }
 
@@ -52,7 +51,7 @@ if (isset($_POST["predefined_grid"])) {
 if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
    if (isset($_POST["add_ticket"])) {
 
-      Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
+      \Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
 
    } else {
 
@@ -65,7 +64,7 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
       if (isset($_POST["predefined_grid"])) {
          $predefined_grid = $_POST["predefined_grid"];
       }
-      $dashboard = new PluginMydashboardMenu();
+      $dashboard = new Menu();
       $dashboard->loadDashboard($profile, $predefined_grid);
 
    }

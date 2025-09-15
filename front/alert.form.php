@@ -24,9 +24,9 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Alert;
 
-$alert = new PluginMydashboardAlert();
+$alert = new Alert();
 
 if (isset($_POST['update'])) {
    if (isset($_POST['id'])) {

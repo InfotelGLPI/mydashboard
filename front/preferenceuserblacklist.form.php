@@ -24,11 +24,11 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\PreferenceUserBlacklist;
 
 Session::checkLoginUser();
 
-$pub = new PluginMydashboardPreferenceUserBlacklist();
+$pub = new PreferenceUserBlacklist();
 
 $pub->save($_POST);
 

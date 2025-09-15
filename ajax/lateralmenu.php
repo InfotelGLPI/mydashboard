@@ -24,15 +24,16 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-//header('Content-Type: application/json; charset=UTF-8');
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Preference;
+
 Html::header_nocache();
 
 Session::checkLoginUser();
 
 header("Content-Type: text/html; charset=UTF-8");
 
-$menu = new PluginMydashboardMenu();
+$menu = new Menu();
 $rand = mt_rand();
 
 $selected_profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
@@ -45,7 +46,7 @@ if (isset($_SESSION['plugin_mydashboard_predefined_grid'])) {
    $predefined_grid = $_SESSION['plugin_mydashboard_predefined_grid'];
 }
 
-$edit = PluginMydashboardPreference::checkEditMode(Session::getLoginUserID());
+$edit = Preference::checkEditMode(Session::getLoginUserID());
 
 $menu->displayEditMode($rand, $edit, $selected_profile, $predefined_grid);
 

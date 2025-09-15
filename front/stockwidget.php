@@ -25,21 +25,21 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\StockWidget;
 
 Session::checkLoginUser();
 
-Html::header(PluginMydashboardMenu::getTypeName(2), '', "tools", "pluginmydashboardmenu",'pluginmydashboardstockwidget');
+Html::header(Menu::getTypeName(2), '', "tools", Menu::class,'pluginmydashboardstockwidget');
 
 if (Plugin::isPluginActive("mydashboard")) {
 
-   $config = new PluginMydashboardStockWidget();
+   $config = new StockWidget();
    $config->checkGlobal(READ);
 
    if ($config->canView()) {
 
-      Search::show("PluginMydashboardStockWidget");
+      Search::show(StockWidget::class);
 
    } else {
        throw new AccessDeniedHttpException();

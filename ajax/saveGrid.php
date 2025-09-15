@@ -24,22 +24,23 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+use GlpiPlugin\Mydashboard\Dashboard;
+use GlpiPlugin\Mydashboard\Widget;
 
 Session::checkLoginUser();
 
 $data      = stripslashes($_POST['data']);
-$dashboard = new PluginMydashboardDashboard();
+$dashboard = new Dashboard();
 
 $profile = $_POST['profiles_id'];
 $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
-$id      = PluginMydashboardDashboard::checkIfPreferenceExists($options);
+$id      = Dashboard::checkIfPreferenceExists($options);
 
 if (isset($_POST['users_id'])
     && $_POST['users_id'] == 0) {
    $options              = ["users_id" => 0,
                             "profiles_id" => $profile];
-   $id                   = PluginMydashboardDashboard::checkIfPreferenceExists($options);
+   $id                   = Dashboard::checkIfPreferenceExists($options);
    $input['profiles_id'] = $profile;
    if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
       if ($id) {
@@ -65,8 +66,8 @@ if (isset($_POST['users_id'])
    }
 }
 //Save in CACHE
-$widgets      = PluginMydashboardWidget::getWidgetList();
-$widgetclasse = new PluginMydashboardWidget();
+$widgets      = Widget::getWidgetList();
+$widgetclasse = new Widget();
 
 if (isset($data)) {
    $widgetdata = json_decode($data, true);
@@ -76,7 +77,7 @@ if (isset($data)) {
       $datajson = [];
       foreach ($widgetdata as $k => $v) {
          if (isset($v["id"])) {
-            $datajson[$v["id"]] = PluginMydashboardWidget::getWidget($v["id"], $widgets, []);
+            $datajson[$v["id"]] = Widget::getWidget($v["id"], $widgets, []);
 
             //         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
             //            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {

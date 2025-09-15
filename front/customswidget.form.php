@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Customswidget;
 
-$dropdown = new PluginMydashboardCustomswidget();
+$dropdown = new Customswidget();
 include (GLPI_ROOT . "/front/dropdown.common.form.php");

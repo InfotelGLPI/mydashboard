@@ -24,14 +24,14 @@
  --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+use GlpiPlugin\Mydashboard\Widget;
 
 Session::checkLoginUser();
 ini_set("memory_limit", "-1");
 if (!isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
     || count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) < 1) {
-   $widgets = PluginMydashboardWidget::getWidgetList(true);
+   $widgets = Widget::getWidgetList(true);
    foreach ($widgets as $k => $val) {
-      $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = PluginMydashboardWidget::getWidget($k, $widgets, []);
+      $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::getWidget($k, $widgets, []);
    }
 }

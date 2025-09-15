@@ -24,9 +24,9 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Mydashboard\Groupprofile;
 
-$group = new PluginMydashboardGroupprofile();
+$group = new Groupprofile();
 if (isset($_POST["addGroup"])) {
    if (empty($_POST['groups_id'])) {
       Html::back();

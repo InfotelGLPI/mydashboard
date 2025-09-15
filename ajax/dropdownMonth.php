@@ -24,8 +24,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Helper;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownMonth.php")) {
-   include("../../../inc/includes.php");
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
@@ -40,7 +41,7 @@ if (isset($_POST["value"])) {
 //     $form .= "<span class='md-widgetcrit'>";
      $form .= __('Month', 'mydashboard');
      $form .= "&nbsp;";
-     $form .= PluginMydashboardHelper::monthDropdown("month_year", (isset($opt['month_year']) ? $opt['month_year'] : 0));
+     $form .= Helper::monthDropdown("month_year", (isset($opt['month_year']) ? $opt['month_year'] : 0));
 //     $form .= "</span>";
 
 
