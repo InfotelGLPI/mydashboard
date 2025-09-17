@@ -366,11 +366,16 @@ class Alert extends CommonDBTM
                 $widget   = new MydashboardHtml();
                 $url      = $CFG_GLPI['url_base'] . "/status.php?format=json";
                 $contents = StatusChecker::getServiceStatus($_REQUEST['service'] ?? null, true, false);
-                $table    = self::handleShellcommandResult($contents, $url);
-                if (!empty($contents)) {
-                    $contents = nl2br($contents);
+                $table    = self::handleShellcommandResult($contents['glpi']['status'], $url);
+
+
+                if (is_array($contents) && count($contents) > 0) {
                     $table    .= "<div class='md-status'>";
-                    $table    .= $contents;
+                    foreach ($contents as $module => $content) {
+                        if ($module != 'glpi') {
+                            $table    .= $module." : ".$content['status']."<br>";
+                        }
+                    }
                     $table    .= "</div>";
                 }
                 $widget->setWidgetHtmlContent(
@@ -2811,36 +2816,40 @@ class Alert extends CommonDBTM
     public static function handleShellcommandResult(&$message, $url)
     {
         global $CFG_GLPI;
-
+//        Toolbox::logInfo($message);
         $alert = "";
-        if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
-            $alert .= "<div class='center' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
-            $alert .= "<b>";
-            $alert .= __('Service is down for maintenance. It will be back shortly.');
-            $alert .= "</b></div>";
-            if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
-                $alert .= "<div class='md-status'>";
-                $alert .= "<p>" . nl2br($CFG_GLPI["maintenance_text"]) . "</p>";
-                $alert .= "</div>";
+        if ($message != null) {
+
+            if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
+                $alert .= "<div class='center' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
+                $alert .= "<b>";
+                $alert .= __('Service is down for maintenance. It will be back shortly.');
+                $alert .= "</b></div>";
+                if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
+                    $alert .= "<div class='md-status'>";
+                    $alert .= "<p>" . nl2br($CFG_GLPI["maintenance_text"]) . "</p>";
+                    $alert .= "</div>";
+                }
+                $message = "";
+            } elseif (preg_match('/PROBLEM/is', $message)) {
+                $alert .= "<div class='md-title-status' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
+                $alert .= "<b>";
+                $alert .= __("Problem with GLPI", "mydashboard");
+                $alert .= "</b></div>";
+            } elseif (preg_match('/OK/is', $message)) {
+                $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fas fa-circle-check fa-4x'></i><br><br>";
+                $alert .= "<b>";
+                $alert .= __("GLPI is OK", "mydashboard");
+                $alert .= "</b></div>";
+            } else {
+                $alert .= "<div class='md-title-status' style='color:orange'><i class='fas fa-triangle-exclamation fa-4x'></i><br><br>";
+                $alert .= "<b>";
+                $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
+                $alert .= "</b>";
+                $alert .= "<br><br><a href='$url' target='_blank'>" . $url . "</a></div>";
             }
-            $message = "";
-        } elseif (preg_match('/PROBLEM/is', $message)) {
-            $alert .= "<div class='md-title-status' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
-            $alert .= "<b>";
-            $alert .= __("Problem with GLPI", "mydashboard");
-            $alert .= "</b></div>";
-        } elseif (preg_match('/OK/is', $message)) {
-            $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fas fa-circle-check fa-4x'></i><br><br>";
-            $alert .= "<b>";
-            $alert .= __("GLPI is OK", "mydashboard");
-            $alert .= "</b></div>";
-        } else {
-            $alert .= "<div class='md-title-status' style='color:orange'><i class='fas fa-triangle-exclamation fa-4x'></i><br><br>";
-            $alert .= "<b>";
-            $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
-            $alert .= "</b>";
-            $alert .= "<br><br><a href='$url' target='_blank'>" . $url . "</a></div>";
         }
+
 
         return $alert;
     }

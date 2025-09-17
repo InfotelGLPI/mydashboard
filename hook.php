@@ -31,7 +31,7 @@ use GlpiPlugin\Mydashboard\Groupprofile;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Profile;
 use GlpiPlugin\Mydashboard\Widget;
-use GlpiPlugin\Mydashboard\Preference;
+use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 
 /**
  * @return bool
@@ -437,7 +437,7 @@ function fillTableMydashboardStockticketsGroup()
 
 function transform_prefered_group_to_prefered_groups()
 {
-    $pref  = new Preference();
+    $pref  = new MydashboardPreference();
     $prefs = $pref->find();
     foreach ($prefs as $p) {
         if ($p["prefered_group"] == "0") {
