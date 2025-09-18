@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-17 08:23+0000\n"
+"POT-Creation-Date: 2025-09-18 07:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:216 src/Alert.php:147 src/Alert.php:2719 src/Config.php:345
+#: hook.php:216 src/Alert.php:155 src/Alert.php:2727 src/Config.php:345
 #: src/Itilalert.php:126
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:217 src/Alert.php:150 src/Alert.php:2583 src/Alert.php:2720
+#: hook.php:217 src/Alert.php:158 src/Alert.php:2591 src/Alert.php:2728
 #: src/Config.php:346 src/Itilalert.php:127
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:218 src/Alert.php:153 src/Alert.php:2584 src/Alert.php:2721
+#: hook.php:218 src/Alert.php:161 src/Alert.php:2592 src/Alert.php:2729
 #: src/Config.php:347 src/Itilalert.php:128
 msgid "Information"
 msgid_plural "Informations"
@@ -100,282 +100,282 @@ msgid_plural "Alerts Dashboard"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Alert.php:149
+#: src/Alert.php:157
 msgid "See network alert block"
 msgstr ""
 
-#: src/Alert.php:152
+#: src/Alert.php:160
 msgid "See scheduled maintenances information block"
 msgstr ""
 
-#: src/Alert.php:155
+#: src/Alert.php:163
 msgid "See informations block"
 msgstr ""
 
-#: src/Alert.php:156 src/Alert.php:386
+#: src/Alert.php:164 src/Alert.php:394
 msgid "GLPI Status"
 msgstr ""
 
-#: src/Alert.php:158 src/Alert.php:387
+#: src/Alert.php:166 src/Alert.php:395
 msgid "Check if GLPI have no problem"
 msgstr ""
 
-#: src/Alert.php:159
+#: src/Alert.php:167
 msgid "Automatic actions in error"
 msgstr ""
 
-#: src/Alert.php:161
+#: src/Alert.php:169
 msgid "Display automatic actions in error"
 msgstr ""
 
-#: src/Alert.php:162
+#: src/Alert.php:170
 msgid "Not imported mails in collectors"
 msgstr ""
 
-#: src/Alert.php:164
+#: src/Alert.php:172
 msgid "Display of mails which are not imported"
 msgstr ""
 
-#: src/Alert.php:168
+#: src/Alert.php:176
 msgid "Inventory stock alerts"
 msgstr ""
 
-#: src/Alert.php:170
+#: src/Alert.php:178
 msgid "Display alerts for inventory stocks"
 msgstr ""
 
-#: src/Alert.php:171 src/Widget.php:863
+#: src/Alert.php:179 src/Widget.php:863
 msgid "Your equipments"
 msgstr ""
 
-#: src/Alert.php:173
+#: src/Alert.php:181
 msgid "Display your equipments"
 msgstr ""
 
-#: src/Alert.php:177 src/Alert.php:1314
+#: src/Alert.php:185 src/Alert.php:1322
 msgid "Incidents alerts"
 msgstr ""
 
-#: src/Alert.php:179 src/Alert.php:1315
+#: src/Alert.php:187 src/Alert.php:1323
 msgid "Display alerts for incidents and problems"
 msgstr ""
 
-#: src/Alert.php:180 src/Alert.php:1803
+#: src/Alert.php:188 src/Alert.php:1811
 msgid "SLA Incidents alerts"
 msgstr ""
 
-#: src/Alert.php:182 src/Alert.php:1804
+#: src/Alert.php:190 src/Alert.php:1812
 msgid "Display alerts for SLA of Incidents tickets"
 msgstr ""
 
-#: src/Alert.php:183
+#: src/Alert.php:191
 msgid "User ticket alerts"
 msgstr ""
 
-#: src/Alert.php:185
+#: src/Alert.php:193
 msgid "Display tickets where last modification is a user action"
 msgstr ""
 
-#: src/Alert.php:186 src/Alert.php:1806
+#: src/Alert.php:194 src/Alert.php:1814
 msgid "SLA Requests alerts"
 msgstr ""
 
-#: src/Alert.php:188 src/Alert.php:1807
+#: src/Alert.php:196 src/Alert.php:1815
 msgid "Display alerts for SLA of Requests tickets"
 msgstr ""
 
-#: src/Alert.php:189 src/Alert.php:1317
+#: src/Alert.php:197 src/Alert.php:1325
 msgid "Requests alerts"
 msgstr ""
 
-#: src/Alert.php:191 src/Alert.php:1318
+#: src/Alert.php:199 src/Alert.php:1326
 msgid "Display alerts for requests"
 msgstr ""
 
-#: src/Alert.php:192
+#: src/Alert.php:200
 msgid "Number of opened tickets by group and by status"
 msgstr ""
 
-#: src/Alert.php:195 src/Alert.php:3529 src/Alert.php:3550
+#: src/Alert.php:203 src/Alert.php:3537 src/Alert.php:3558
 msgid "Global indicators"
 msgstr ""
 
-#: src/Alert.php:198 src/Alert.php:3529
+#: src/Alert.php:206 src/Alert.php:3537
 msgid "Global indicators by week"
 msgstr ""
 
-#: src/Alert.php:414
+#: src/Alert.php:422
 msgid "ID and priority"
 msgstr ""
 
-#: src/Alert.php:520
+#: src/Alert.php:528
 msgid "New document"
 msgstr ""
 
-#: src/Alert.php:822
+#: src/Alert.php:830
 msgid "No alerts are setup"
 msgstr ""
 
-#: src/Alert.php:1092 src/Alert.php:1101
+#: src/Alert.php:1100 src/Alert.php:1109
 msgid "New incidents"
 msgstr ""
 
-#: src/Alert.php:1094 src/Alert.php:1103
+#: src/Alert.php:1102 src/Alert.php:1111
 msgid "New requests"
 msgstr ""
 
-#: src/Alert.php:1161 src/Alert.php:1171
+#: src/Alert.php:1169 src/Alert.php:1179
 msgid "Opened incidents without assigned technicians"
 msgstr ""
 
-#: src/Alert.php:1163 src/Alert.php:1173
+#: src/Alert.php:1171 src/Alert.php:1181
 msgid "Opened requests without assigned technicians"
 msgstr ""
 
-#: src/Alert.php:1231 src/Alert.php:1239
+#: src/Alert.php:1239 src/Alert.php:1247
 msgid "Incidents with very high or major priority"
 msgstr ""
 
-#: src/Alert.php:1233 src/Alert.php:1241
+#: src/Alert.php:1241 src/Alert.php:1249
 msgid "Requests with very high or major priority"
 msgstr ""
 
-#: src/Alert.php:1276 src/Alert.php:1280
+#: src/Alert.php:1284 src/Alert.php:1288
 msgid "Problems with very high or major priority"
 msgstr ""
 
-#: src/Alert.php:1563
+#: src/Alert.php:1571
 msgid "Incidents where time to own will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1567
+#: src/Alert.php:1575
 msgid "Requests where time to own will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1633
+#: src/Alert.php:1641
 msgid "Incidents where time to resolve will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1637
+#: src/Alert.php:1645
 msgid "Requests where time to resolve will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1703
+#: src/Alert.php:1711
 msgid "Incidents where time to own is exceeded"
 msgstr ""
 
-#: src/Alert.php:1707
+#: src/Alert.php:1715
 msgid "Requests where time to own is exceeded"
 msgstr ""
 
-#: src/Alert.php:1774
+#: src/Alert.php:1782
 msgid "Incidents where time to resolve is exceeded"
 msgstr ""
 
-#: src/Alert.php:1778
+#: src/Alert.php:1786
 msgid "Requests where time to resolve is exceeded"
 msgstr ""
 
-#: src/Alert.php:1821 src/Alert.php:2463
+#: src/Alert.php:1829 src/Alert.php:2471
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: src/Alert.php:1965 src/Widget.php:762
+#: src/Alert.php:1973 src/Widget.php:762
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: src/Alert.php:2167 src/Widget.php:830
+#: src/Alert.php:2175 src/Widget.php:830
 msgid "No informations founded"
 msgstr ""
 
-#: src/Alert.php:2334 src/Alert.php:2547 src/Widget.php:693
+#: src/Alert.php:2342 src/Alert.php:2555 src/Widget.php:693
 msgid "No problem detected"
 msgstr ""
 
-#: src/Alert.php:2579 src/Alert.php:2582 src/Alert.php:2716
+#: src/Alert.php:2587 src/Alert.php:2590 src/Alert.php:2724
 #: src/Itilalert.php:123
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Alert.php:2596 src/Alert.php:2734 src/Itilalert.php:138
+#: src/Alert.php:2604 src/Alert.php:2742 src/Itilalert.php:138
 msgid "No impact"
 msgstr ""
 
-#: src/Alert.php:2601 src/Alert.php:2739 src/Itilalert.php:143
+#: src/Alert.php:2609 src/Alert.php:2747 src/Itilalert.php:143
 msgid "Alert level"
 msgstr ""
 
-#: src/Alert.php:2612 src/Alert.php:2750 src/Itilalert.php:151
+#: src/Alert.php:2620 src/Alert.php:2758 src/Itilalert.php:151
 msgid "Linked with a ticket category"
 msgstr ""
 
-#: src/Alert.php:2618
+#: src/Alert.php:2626
 msgid "All categories"
 msgstr ""
 
-#: src/Alert.php:2655 src/Alert.php:2658 src/Itilalert.php:60
+#: src/Alert.php:2663 src/Alert.php:2666 src/Itilalert.php:60
 #: src/Itilalert.php:63
 msgid "Create a new alert"
 msgstr ""
 
-#: src/Alert.php:2683 src/Itilalert.php:89
+#: src/Alert.php:2691 src/Itilalert.php:89
 msgid "Linked reminder"
 msgstr ""
 
-#: src/Alert.php:2797
+#: src/Alert.php:2805
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
-#: src/Alert.php:2837
+#: src/Alert.php:2845
 msgid "Problem with GLPI"
 msgstr ""
 
-#: src/Alert.php:2842
+#: src/Alert.php:2850
 msgid "GLPI is OK"
 msgstr ""
 
-#: src/Alert.php:2847
+#: src/Alert.php:2855
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
 
-#: src/Alert.php:2867
+#: src/Alert.php:2875
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: src/Alert.php:3157 src/Alert.php:3562
+#: src/Alert.php:3165 src/Alert.php:3570
 msgid "New tickets"
 msgstr ""
 
-#: src/Alert.php:3210 src/Alert.php:3568
+#: src/Alert.php:3218 src/Alert.php:3576
 msgid "Tickets late"
 msgstr ""
 
-#: src/Alert.php:3256 src/Alert.php:3574
+#: src/Alert.php:3264 src/Alert.php:3582
 msgid "Pending tickets"
 msgstr ""
 
-#: src/Alert.php:3320 src/Alert.php:3580
+#: src/Alert.php:3328 src/Alert.php:3588
 msgid "Incidents in progress"
 msgstr ""
 
-#: src/Alert.php:3384 src/Alert.php:3586
+#: src/Alert.php:3392 src/Alert.php:3594
 msgid "Requests in progress"
 msgstr ""
 
-#: src/Alert.php:3432 src/Alert.php:3592
+#: src/Alert.php:3440 src/Alert.php:3600
 msgid "Tickets solved"
 msgstr ""
 
-#: src/Alert.php:3480
+#: src/Alert.php:3488
 msgid "Ticket closed"
 msgstr ""
 
-#: src/Alert.php:3599
+#: src/Alert.php:3607
 msgid "Tickets closed"
 msgstr ""
 
