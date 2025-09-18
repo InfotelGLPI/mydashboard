@@ -83,6 +83,14 @@ class Alert extends CommonDBTM
         return '';
     }
 
+    /**
+     * @return string
+     */
+    public static function getIcon()
+    {
+        return "ti ti-dashboard";
+    }
+
 
     /**
      * @param bool $withtemplate
@@ -2821,7 +2829,7 @@ class Alert extends CommonDBTM
         if ($message != null) {
 
             if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
-                $alert .= "<div class='center' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
+                $alert .= "<div class='center' style='color:darkred'><i class='ti ti-exclamation-circle' style='font-size:4em'></i><br><br>";
                 $alert .= "<b>";
                 $alert .= __('Service is down for maintenance. It will be back shortly.');
                 $alert .= "</b></div>";
@@ -2832,17 +2840,17 @@ class Alert extends CommonDBTM
                 }
                 $message = "";
             } elseif (preg_match('/PROBLEM/is', $message)) {
-                $alert .= "<div class='md-title-status' style='color:darkred'><i class='fas fa-circle-exclamation fa-4x'></i><br><br>";
+                $alert .= "<div class='md-title-status' style='color:darkred'><i class='ti ti-exclamation-circle' style='font-size:4em'></i><br><br>";
                 $alert .= "<b>";
                 $alert .= __("Problem with GLPI", "mydashboard");
                 $alert .= "</b></div>";
             } elseif (preg_match('/OK/is', $message)) {
-                $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='fas fa-circle-check fa-4x'></i><br><br>";
+                $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='ti ti-circle-check' style='font-size:4em'></i><br><br>";
                 $alert .= "<b>";
                 $alert .= __("GLPI is OK", "mydashboard");
                 $alert .= "</b></div>";
             } else {
-                $alert .= "<div class='md-title-status' style='color:orange'><i class='fas fa-triangle-exclamation fa-4x'></i><br><br>";
+                $alert .= "<div class='md-title-status' style='color:orange'><i class='ti ti-alert-triangle' style='font-size:4em'></i><br><br>";
                 $alert .= "<b>";
                 $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
                 $alert .= "</b>";
