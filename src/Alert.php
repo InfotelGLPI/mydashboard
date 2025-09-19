@@ -38,8 +38,10 @@ use Document;
 use Dropdown;
 use Glpi\System\Status\StatusChecker;
 use GLPIKey;
+use GlpiPlugin\Eventsmanager\Event;
 use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Reports\Reminder;
+use GlpiPlugin\Releases\Release;
 use Group_User;
 use ITILCategory;
 use ITILFollowup;
@@ -58,8 +60,8 @@ class Alert extends CommonDBTM
     public static $types = ['Reminder',
         'Problem',
         'Change',
-        'PluginEventsmanagerEvent',
-        'PluginReleasesRelease'];
+        Event::class,
+        Release::class];
 
     /**
      * @param CommonGLPI $item
@@ -72,8 +74,8 @@ class Alert extends CommonDBTM
         //      if ($item->getType() == 'Reminder'
         //          || $item->getType() == 'Problem'
         //          || $item->getType() == 'Change'
-        //          || $item->getType() == 'PluginEventsmanagerEvent'
-        //          || $item->getType() == 'PluginReleasesRelease') {
+        //          || $item->getType() == Event::class
+        //          || $item->getType() == Release::class) {
         //         return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
         //      }*
         if (Session::getCurrentInterface() == 'central'
@@ -133,7 +135,7 @@ class Alert extends CommonDBTM
                 break;
             case "Problem":
             case "Change":
-            case "PluginReleasesRelease":
+            case Release::class:
                 $itil_alert->showForItem($item);
                 break;
             default:
