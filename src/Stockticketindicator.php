@@ -106,7 +106,7 @@ class StockTicketIndicator extends CommonDBTM
                   WHERE `glpi_tickets`.`is_deleted` = 0
                         AND WEEK(`glpi_tickets`.`date`) = '$week'
                         AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`status` = " . Ticket::INCOMING . "
+                        AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . "
                         GROUP BY `glpi_tickets`.`entities_id`";
         $results = $DB->doQuery($sql_new);
         while ($data = $DB->fetchArray($results)) {

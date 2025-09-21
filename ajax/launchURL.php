@@ -29,6 +29,7 @@ use GlpiPlugin\Mydashboard\Reports\Reports_Funnel;
 use GlpiPlugin\Mydashboard\Reports\Reports_Line;
 use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
 use GlpiPlugin\Mydashboard\Reports\Reports_Table;
+use GlpiPlugin\Ocsinventoryng\Dashboard;
 
 Session::checkLoginUser();
 
@@ -58,7 +59,7 @@ if ($_POST["selected_id"] == "") {
 if (isset($_POST["params"]["widget"])
     && $_POST["params"]["widget"] == "PluginOcsinventoryngDashboard1") {
     //inventory
-    $link = PluginOcsinventoryngDashboard::pluginOcsinventoryngDashboard1link($_POST);
+    $link = Dashboard::pluginOcsinventoryngDashboard1link($_POST);
 } elseif (isset($_POST["params"]["widget"])
           && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar1") {
     $link = Reports_Bar::pluginMydashboardReports_Bar1link($_POST);

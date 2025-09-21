@@ -125,7 +125,7 @@ class Planning extends CommonGLPI
         \Html::requireJs('planning');
         echo \Html::css("/public/lib/fullcalendar.css");
 
-        $widget = new Html();
+        $widget = new \Html();
         $title  = __("Your planning");
         $widget->setWidgetTitle($title);
 

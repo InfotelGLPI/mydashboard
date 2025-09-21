@@ -26,7 +26,5 @@
 
 use GlpiPlugin\Mydashboard\Customswidget;
 
-include ('../../../inc/includes.php');
-
 $dropdown = new Customswidget();
 include (GLPI_ROOT . "/front/dropdown.common.php");

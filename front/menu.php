@@ -51,7 +51,7 @@ if (isset($_POST["predefined_grid"])) {
 if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
    if (isset($_POST["add_ticket"])) {
 
-      \Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
+      Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
 
    } else {
 

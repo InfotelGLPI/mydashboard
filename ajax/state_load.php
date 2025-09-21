@@ -34,7 +34,6 @@ use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Preference;
 
-include('../../../inc/includes.php');
 Session::checkLoginUser();
 $result  = null;
 $gsId    = "";

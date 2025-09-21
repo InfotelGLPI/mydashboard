@@ -28,6 +28,7 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use Glpi\RichText\RichText;
+use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Html;
@@ -90,7 +91,7 @@ class RSSFeed extends CommonGLPI
     *
     * @param $personal boolean   display rssfeeds created by me ? (true by default)
     *
-    * @return \Datatable (display function)
+    * @return Datatable (display function)
     */
     public static function showListForCentral($personal = true)
     {

@@ -26,8 +26,6 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
-include('../../../inc/includes.php');
-
 global $CFG_GLPI;
 
 if (Plugin::isPluginActive("mydashboard")) {

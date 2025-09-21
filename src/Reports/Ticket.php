@@ -35,7 +35,6 @@ use Dropdown;
 use Glpi\RichText\RichText;
 use Glpi\Toolbox\Sanitizer;
 use GlpiPlugin\Mydashboard\Chart;
-use GlpiPlugin\Mydashboard\BarChart;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;

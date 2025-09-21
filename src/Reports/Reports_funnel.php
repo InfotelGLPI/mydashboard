@@ -28,6 +28,7 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use GlpiPlugin\Mydashboard\Chart;
+use GlpiPlugin\Mydashboard\Charts\FunnelChart;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;

@@ -29,6 +29,9 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonDBTM;
 use CommonITILObject;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use DbUtils;
 use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Charts\BarChart;
@@ -38,6 +41,7 @@ use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 use GlpiPlugin\Mydashboard\Widget;
 use Group_Ticket;
+use Plugin;
 use Session;
 use Toolbox;
 

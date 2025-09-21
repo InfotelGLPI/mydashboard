@@ -32,6 +32,7 @@ use Dropdown;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
+use Html;
 use Session;
 use Toolbox;
 /**

@@ -2006,7 +2006,7 @@ class Alert extends CommonDBTM
                 echo "</span>";
             }
             $iterator = $DB->request([
-                'FIELDS' => 'documents_id',
+                'SELECT' => 'documents_id',
                 'FROM'   => 'glpi_documents_items',
                 'WHERE'  => [
                     'items_id' => $id,

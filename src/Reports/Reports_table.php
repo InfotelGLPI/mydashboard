@@ -28,6 +28,7 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
+use CommonITILActor;
 use CommonITILObject;
 use DbUtils;
 use FieldUnicity;
@@ -344,7 +345,7 @@ class Reports_Table extends CommonGLPI
                 $datas = [];
                 $i     = 0;
 
-                $knowbaseitem = new KnowbaseItem();
+                $knowbaseitem = new \KnowbaseItem();
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
                         $knowbaseitem->getFromDB($data['id']);
