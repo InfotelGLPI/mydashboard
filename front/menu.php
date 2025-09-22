@@ -49,25 +49,17 @@ if (isset($_POST["predefined_grid"])) {
 };
 
 if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
-   if (isset($_POST["add_ticket"])) {
+    $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+    $predefined_grid = 0;
 
-      Ticket::showFormHelpdesk(Session::getLoginUserID(), $_POST["tickettemplates_id"]);
-
-   } else {
-
-      $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
-      $predefined_grid = 0;
-
-      if (isset($_POST["profiles_id"])) {
-         $profile = $_POST["profiles_id"];
-      }
-      if (isset($_POST["predefined_grid"])) {
-         $predefined_grid = $_POST["predefined_grid"];
-      }
-      $dashboard = new Menu();
-      $dashboard->loadDashboard($profile, $predefined_grid);
-
-   }
+    if (isset($_POST["profiles_id"])) {
+        $profile = $_POST["profiles_id"];
+    }
+    if (isset($_POST["predefined_grid"])) {
+        $predefined_grid = $_POST["predefined_grid"];
+    }
+    $dashboard = new Menu();
+    $dashboard->loadDashboard($profile, $predefined_grid);
 } else {
     throw new AccessDeniedHttpException();
 }

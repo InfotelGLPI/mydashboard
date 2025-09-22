@@ -687,7 +687,7 @@ class Reports_Bar extends CommonDBTM
                         && $data_1['count'] > 0) {
                         $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
                     }
-                    $tabduration['data'][] = round($average_by_ticket ?? 0, 2);
+                    $tabduration['data'][] = round($average_by_ticket ?? 0, 2, PHP_ROUND_HALF_UP);
                     $tabduration['type'] = 'bar';
                     $tabduration['name'] = __('Tasks duration (minutes)', 'mydashboard');
                     $tabnames[] = $data['monthname'];
@@ -1329,7 +1329,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
                     $result = $DB->doQuery($query_openedTicketT1);
                     $dataT1 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT1[0] ?? 0, 2);
+                    $opened_tickets_data['data'][] = round($dataT1[0] ?? 0, 2, PHP_ROUND_HALF_UP);
 
                     // Average Satisfaction
                     $query_satisfactionT1 = "SELECT AVG(satisfaction)
@@ -1338,7 +1338,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
                     $result = $DB->doQuery($query_satisfactionT1);
                     $data_satisfactionT1 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT1[0] ?? 0, 2);
+                    $satisfaction_data['data'][] = round($data_satisfactionT1[0] ?? 0, 2, PHP_ROUND_HALF_UP);
                     // Checking T2
 
                     array_push($tabnames, __('Trimester 2', 'mydashboard') . ' ' . $starting_year);
@@ -1347,7 +1347,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
                     $result = $DB->doQuery($query_openedTicketT2);
                     $dataT2 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT2[0] ?? 0, 2);
+                    $opened_tickets_data['data'][] = round($dataT2[0] ?? 0, 2, PHP_ROUND_HALF_UP);
 
                     // Average Satisfaction
                     $query_satisfactionT2 = "SELECT AVG(satisfaction)
@@ -1356,7 +1356,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
                     $result = $DB->doQuery($query_satisfactionT2);
                     $data_satisfactionT2 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT2[0] ?? 0, 2);
+                    $satisfaction_data['data'][] = round($data_satisfactionT2[0] ?? 0, 2, PHP_ROUND_HALF_UP);
                     // Checking T3
                     array_push($tabnames, __('Trimester 3', 'mydashboard') . ' ' . $starting_year);
                     $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
@@ -1364,7 +1364,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
                     $result = $DB->doQuery($query_openedTicketT3);
                     $dataT3 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT3[0] ?? 0, 2);
+                    $opened_tickets_data['data'][] = round($dataT3[0] ?? 0, 2, PHP_ROUND_HALF_UP);
                     // Average Satisfaction
                     $query_satisfactionT3 = "SELECT AVG(satisfaction)
                                         FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
@@ -1372,7 +1372,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
                     $result = $DB->doQuery($query_satisfactionT3);
                     $data_satisfactionT3 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT3[0] ?? 0, 2);
+                    $satisfaction_data['data'][] = round($data_satisfactionT3[0] ?? 0, 2, PHP_ROUND_HALF_UP);
                     // Checking T4
                     array_push($tabnames, __('Trimester 4', 'mydashboard') . ' ' . $starting_year);
                     $query_openedTicketT4 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
@@ -1380,7 +1380,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
                     $result = $DB->doQuery($query_openedTicketT4);
                     $dataT4 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT4[0] ?? 0, 2);
+                    $opened_tickets_data['data'][] = round($dataT4[0] ?? 0, 2, PHP_ROUND_HALF_UP);
                     // Average Satisfaction
                     $query_satisfactionT4 = "SELECT AVG(satisfaction)
                                         FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
@@ -1388,7 +1388,7 @@ class Reports_Bar extends CommonDBTM
                                         AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
                     $result = $DB->doQuery($query_satisfactionT4);
                     $data_satisfactionT4 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT4[0] ?? 0, 2);
+                    $satisfaction_data['data'][] = round($data_satisfactionT4[0] ?? 0, 2, PHP_ROUND_HALF_UP);
                 }
 
                 $widget = new Html();
@@ -1964,8 +1964,8 @@ class Reports_Bar extends CommonDBTM
 
                 foreach ($lifetime_avg_ticket as $avg_tickets_d) {
                     if ($avg_tickets_d['nb'] > 0) {
-                        $avg_lifetime_ticket_data [] = round(($avg_tickets_d['lifetime'] / $avg_tickets_d['nb']) ?? 0, 2);
-                        $avg_takeintoaccount_ticket_data [] = round(($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb']) ?? 0, 2);
+                        $avg_lifetime_ticket_data [] = round(($avg_tickets_d['lifetime'] / $avg_tickets_d['nb']) ?? 0, 2, PHP_ROUND_HALF_UP);
+                        $avg_takeintoaccount_ticket_data [] = round(($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb']) ?? 0, 2, PHP_ROUND_HALF_UP);
                     } else {
                         $avg_lifetime_ticket_data [] = 0;
                         $avg_takeintoaccount_ticket_data [] = 0;
@@ -2616,9 +2616,9 @@ class Reports_Bar extends CommonDBTM
                     //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                     if ($data['actiontime_date'] > 0) {
                         if (isset($time_per_tech[$techid][$key])) {
-                            $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2);
+                            $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2, PHP_ROUND_HALF_UP);
                         } else {
-                            $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2);
+                            $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2, PHP_ROUND_HALF_UP);
                         }
                     }
                 }
@@ -3005,7 +3005,7 @@ class Reports_Bar extends CommonDBTM
                     $notrespected = $sum['nb'];
                     $respected = $total['nb'] - $sum['nb'];
 
-                    $respected_percent = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2);
+                    $respected_percent = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2, PHP_ROUND_HALF_UP);
 
                     $tickets_helpdesk[$key]['notrespected'] = $notrespected;
                     $tickets_helpdesk[$key]['respected'] = $respected;

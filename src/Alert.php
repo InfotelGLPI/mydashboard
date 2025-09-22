@@ -909,7 +909,7 @@ class Alert extends CommonDBTM
      * @param $opt
      * @param $type
      *
-     * @return \PluginMydashboardHtml
+     * @return PluginMydashboardHtml
      * @throws \GlpitestSQLError
      */
     public function displayTicketsAlertsWidgets($name, $widgetId, $opt, $type)

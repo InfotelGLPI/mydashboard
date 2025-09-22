@@ -27,16 +27,12 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
-use CommonITILObject;
 use DbUtils;
-use GlpiPlugin\Mydashboard\Chart;
-use GlpiPlugin\Mydashboard\Charts\BarChart;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 use GlpiPlugin\Mydashboard\Html;
-use Group_Ticket;
 use Search;
 use Session;
 use Toolbox;
@@ -422,7 +418,6 @@ class Reports_Map extends CommonGLPI
                 );
 
                 return $widget;
-                break;
 
             default:
                 break;
