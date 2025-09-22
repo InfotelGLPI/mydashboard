@@ -99,10 +99,10 @@ class KnowbaseItem extends CommonGLPI
 
         $faq_limit = "";
         // Force all joins for not published to verify no visibility set
-        $join = \KnowbaseItem::addVisibilityJoins(true);
+        $join = KnowbaseItem::addVisibilityJoins(true);
 
         if (Session::getLoginUserID()) {
-            $faq_limit .= "WHERE " . \KnowbaseItem::addVisibilityRestrict();
+            $faq_limit .= "WHERE " . KnowbaseItem::addVisibilityRestrict();
         } else {
             // Anonymous access
             if (Session::isMultiEntitiesMode()) {
@@ -165,5 +165,56 @@ class KnowbaseItem extends CommonGLPI
         }
 
         return $widget;
+    }
+
+    /**
+     * Return visibility SQL restriction to add
+     *
+     * @return string restrict to add
+     **/
+    public static function addVisibilityRestrict()
+    {
+        //not deprecated because used in Search
+
+        //get and clean criteria
+        $criteria = \KnowbaseItem::getVisibilityCriteria();
+        unset($criteria['LEFT JOIN']);
+        $criteria['FROM'] = \KnowbaseItem::getTable();
+
+        $it = new \DBmysqlIterator(null);
+        $it->buildQuery($criteria);
+        $sql = $it->getSql();
+        $sql = preg_replace('/.*WHERE /', '', $sql);
+
+        return $sql;
+    }
+
+    /**
+     * Return visibility joins to add to SQL
+     *
+     * @param $forceall force all joins (false by default)
+     *
+     * @return string joins to add
+     **/
+    public static function addVisibilityJoins($forceall = false)
+    {
+        //not deprecated because used in Search
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        //get and clean criteria
+        $criteria = \KnowbaseItem::getVisibilityCriteria();
+        unset($criteria['WHERE']);
+        $criteria['FROM'] = \KnowbaseItem::getTable();
+
+        $it = new \DBmysqlIterator(null);
+        $it->buildQuery($criteria);
+        $sql = $it->getSql();
+        $sql = trim(str_replace(
+            'SELECT * FROM ' . $DB->quoteName(\KnowbaseItem::getTable()),
+            '',
+            $sql
+        ));
+        return $sql;
     }
 }

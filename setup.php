@@ -143,11 +143,36 @@ function plugin_init_mydashboard()
                         if (Session::getCurrentInterface() == 'central') {
                             if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
                                 $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
+//                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
+                                $dest = PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
+                                $toadd = '';
+                                $dest = addslashes($dest);
+
+                                echo "<script type='text/javascript'>
+                            NomNav = navigator.appName;
+                            if (NomNav=='Konqueror') {
+                               window.location='" . $dest . $toadd . "';
+                            } else {
+                               window.location='" . $dest . "';
+                            }
+                         </script>";
+                                exit();
                             } elseif (!Plugin::isPluginActive("servicecatalog")
                                        || Session::haveRight("plugin_servicecatalog", 1)) {
                                 $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
+//                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
+                                $dest = PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
+                                $toadd = '';
+                                $dest = addslashes($dest);
+
+                                echo "<script type='text/javascript'>
+                            NomNav = navigator.appName;
+                            if (NomNav=='Konqueror') {
+                               window.location='" . $dest . $toadd . "';
+                            } else {
+                               window.location='" . $dest . "';
+                            }
+                         </script>";
                             }
                         }
                     }

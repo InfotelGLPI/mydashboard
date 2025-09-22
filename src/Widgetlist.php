@@ -314,7 +314,7 @@ class Widgetlist
      */
     public static function loadWidgetsListForFuzzy($widgetlist)
     {
-        $widgetslist = Widget::getWidgetList();
+        $widgetslist = Widget::getInitialWidgetList();
         $gslist      = [];
         foreach ($widgetslist as $gs => $widgetclasses) {
             $gslist[$widgetclasses['id']] = $gs;

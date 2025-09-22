@@ -177,6 +177,7 @@ class Reports_Pie extends CommonGLPI
 
         switch ($widgetId) {
             case $this->getType() . "2":
+
                 $onclick = 0;
                 $name    = 'TicketsByPriorityPieChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -1749,7 +1750,7 @@ class Reports_Pie extends CommonGLPI
 
         $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
 
-        $options = Chart::addCriteria(Chart::TYPE, 'equals', (($params["params"]["widget"] == "PluginMydashboardReports_Pie16") ? \Ticket::INCIDENT_TYPE : \Ticket::DEMAND_TYPE), 'AND');
+        $options = Chart::addCriteria(Chart::TYPE, 'equals', (($params["params"]["widget"] == PieChart::class."16") ? \Ticket::INCIDENT_TYPE : \Ticket::DEMAND_TYPE), 'AND');
 
         $options = Chart::addCriteria(Chart::CATEGORY, ((empty($params["selected_id"])) ? 'contains' : 'equals'), ((empty($params["selected_id"])) ? '^$' : $params["selected_id"]), 'AND');
 

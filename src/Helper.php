@@ -243,8 +243,8 @@ class Helper
             }
             $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
 
-            //            $graph .= "<div id=\"$name\" style='width: 100%; height: 400px;'></div>";
-            //            $graph .= "</div>";
+                        $graph .= "<div id=\"$name\" style='width: 100%; height: 400px;'></div>";
+                        $graph .= "</div>";
         }
 
 
@@ -426,11 +426,14 @@ class Helper
                 //                $opt['technicians_groups_id'] = [];
             }
             $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
+            $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
+
             if (isset($params['opt']['technicians_groups_id'])
                 && is_array($params['opt']['technicians_groups_id'])
                 && count($params['opt']['technicians_groups_id']) > 0) {
                 $none = false;
-                if ($params['opt']['technicians_groups_id'][0] == "0") {
+                if (isset($params['opt']['technicians_groups_id'][0])
+                    && $params['opt']['technicians_groups_id'][0] == "0") {
                     $none = true;
                 }
                 if (in_array(
@@ -442,6 +445,8 @@ class Helper
                     foreach ($opt['technicians_groups_id'] as $k => $v) {
                         $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
                     }
+                    $childs = array_filter($childs);
+                    $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
                     if ($none) {
                         $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
                         $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
@@ -1125,10 +1130,10 @@ class Helper
         $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
         if ($onsubmit) {
             $form .= "<form id='" . $formId . "' action='' "
-                . "onsubmit=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "'); return false;\">";
+                . "onsubmit=\"refreshWidgetByForm('" . Widget::removeBackslashes($widgetId) . "','" . $gsid . "','" . $formId . "'); return false;\">";
         } else {
             $form .= "<form id='" . $formId . "' action='' onsubmit='return false;' ";
-            $form .= "onchange=\"refreshWidgetByForm('" . $widgetId . "','" . $gsid . "','" . $formId . "');\">";
+            $form .= "onchange=\"refreshWidgetByForm('" . Widget::removeBackslashes($widgetId) . "','" . $gsid . "','" . $formId . "');\">";
         }
 
         return $form;
@@ -2475,7 +2480,7 @@ class Helper
         $dbu = new DbUtils();
 
         $query = [
-            'SELECT' => ['glpi_groups'.'id'],
+            'SELECT' => ['glpi_groups.id'],
             'FROM' => 'glpi_groups_users',
             'INNER JOIN' => [
                 'glpi_groups' => [

@@ -28,7 +28,7 @@ use GlpiPlugin\Mydashboard\Widget;
 
 Session::checkLoginUser();
 
-$widgets = Widget::getWidgetList();
+$widgets = Widget::getInitialWidgetList();
 
 
 if (isset($_POST['gsid']) && isset($_POST['id'])) {
@@ -45,7 +45,7 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
     if (isset($widgets[$gsid])) {
         $opt    = [];
         $widget = Widget::getWidget($gsid, $widgets, $opt);
-        $data = ["id" => $widgets[$gsid]["id"], "widget" => $widget];
+        $data = ["id" => Widget::removeBackslashes($widgets[$gsid]["id"]), "widget" => $widget];
     }
     echo json_encode($data);
 }

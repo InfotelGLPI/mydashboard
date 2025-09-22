@@ -61,75 +61,75 @@ if (isset($_POST["params"]["widget"])
     //inventory
     $link = Dashboard::pluginOcsinventoryngDashboard1link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar1") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."1") {
     $link = Reports_Bar::pluginMydashboardReports_Bar1link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar15") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."15") {
     $link = Reports_Bar::pluginMydashboardReports_Bar15link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar24") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."24") {
     $link = Reports_Bar::pluginMydashboardReports_Bar24link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar35") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."35") {
     $link = Reports_Bar::pluginMydashboardReports_Bar35link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar36") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."36") {
     $link = Reports_Bar::pluginMydashboardReports_Bar36link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar37") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."37") {
     $link = Reports_Bar::pluginMydashboardReports_Bar37link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar43") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."43") {
     $link = Reports_Bar::pluginMydashboardReports_Bar43link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Bar44") {
+          && $_POST["params"]["widget"] == Reports_Bar::class."44") {
     //inventory
     $link = Reports_Bar::pluginMydashboardReports_Bar44link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && ($_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Pie2")) {
+          && ($_POST["params"]["widget"] == Reports_Pie::class."2")) {
     $link = Reports_Pie::pluginMydashboardReports_Pie2link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && ($_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Pie16"
-              || $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Pie17")) {
+          && ($_POST["params"]["widget"] == Reports_Pie::class."16"
+              || $_POST["params"]["widget"] == Reports_Pie::class."17")) {
     $link = Reports_Pie::pluginMydashboardReports_Pie16link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Pie25") {
+          && $_POST["params"]["widget"] == Reports_Pie::class."25") {
     $link = Reports_Pie::pluginMydashboardReports_Pie25link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Pie27") {
+          && $_POST["params"]["widget"] == Reports_Pie::class."27") {
     $link = Reports_Pie::pluginMydashboardReports_Pie27link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Table32") {
+          && $_POST["params"]["widget"] == Reports_Table::class."32") {
     $link = Reports_Table::pluginMydashboardReports_Table32link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Table33") {
+          && $_POST["params"]["widget"] == Reports_Table::class."33") {
     $link = Reports_Table::pluginMydashboardReports_Table33link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line22") {
+          && $_POST["params"]["widget"] == Reports_Line::class."22") {
     $link = Reports_Line::pluginMydashboardReports_Line22link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line34") {
+          && $_POST["params"]["widget"] == Reports_Line::class."34") {
     $link = Reports_Line::pluginMydashboardReports_Line34link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line35") {
+          && $_POST["params"]["widget"] == Reports_Line::class."35") {
     $link = Reports_Line::pluginMydashboardReports_Line35link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line43") {
+          && $_POST["params"]["widget"] == Reports_Line::class."43") {
     $link = Reports_Line::pluginMydashboardReports_Line43link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line44") {
+          && $_POST["params"]["widget"] == Reports_Line::class."44") {
     $link = Reports_Line::pluginMydashboardReports_Line44link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line45") {
+          && $_POST["params"]["widget"] == Reports_Line::class."45") {
     $link = Reports_Line::pluginMydashboardReports_Line45link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line46") {
+          && $_POST["params"]["widget"] == Reports_Line::class."46") {
     $link = Reports_Line::pluginMydashboardReports_Line46link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Line48") {
+          && $_POST["params"]["widget"] == Reports_Line::class."48") {
     $link = Reports_Line::pluginMydashboardReports_Line48link($_POST);
 } elseif (isset($_POST["params"]["widget"])
-          && $_POST["params"]["widget"] == "GlpiPlugin\Mydashboard\Reports\Reports_Funnel1") {
+          && $_POST["params"]["widget"] == Reports_Funnel::class."1") {
     //inventory
     $link = Reports_Funnel::pluginMydashboardReports_Funnel1link($_POST);
 }

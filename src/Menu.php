@@ -29,6 +29,12 @@ namespace GlpiPlugin\Mydashboard;
 use CommonGLPI;
 use DbUtils;
 use Dropdown;
+use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
+use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
+use GlpiPlugin\Mydashboard\Reports\Reports_Funnel;
+use GlpiPlugin\Mydashboard\Reports\Reports_Line;
+use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
+use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use Plugin;
 use Profile;
 use Session;
@@ -404,7 +410,7 @@ class Menu extends CommonGLPI
             echo "</tr>";
 
             /**** Loading widgets****/
-            $widgetslist = Widget::getWidgetList();
+            $widgetslist = Widget::getInitialWidgetList();
             $gslist      = [];
             foreach ($widgetslist as $gs => $widgetclasses) {
                 $gslist[$widgetclasses['id']] = $gs;
@@ -872,7 +878,7 @@ class Menu extends CommonGLPI
     /**
      * Get all plugin names of plugin hooked with mydashboard
      * @return array of string
-     * @global type $PLUGIN_HOOKS
+     * @global $PLUGIN_HOOKS
      */
     private function getPluginsNames()
     {
@@ -901,7 +907,7 @@ class Menu extends CommonGLPI
     /**
      * Display an information in the top left corner of the mydashboard
      *
-     * @param type $text
+     * @param $text
      */
     //    private function displayInfo($text) {
     //        if(is_string($text)) {
@@ -1084,26 +1090,28 @@ class Menu extends CommonGLPI
         $displayed_widgets_id = [];
 
         if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-            $widgets = Widget::getWidgetList();
+            $widgets = Widget::getInitialWidgetList();
 
             foreach ($datagrid as $k => $v) {
                 if (isset($v["id"])) {
-                    $datajson[$v["id"]] = Widget::getWidget($v["id"], $widgets, []);
+                    $datajson[Widget::removeBackslashes($v["id"])] = Widget::getWidget($v["id"], $widgets, []);
 
                     $obj = new Widget();
 
                     $id          = substr($v["id"], 2);
-                    $widget_name = $obj->getWidgetNameById($id);
-                    if ($widget_name != null && (strpos($widget_name, "GlpiPlugin\Mydashboard\Reports\Reports_Bar") === 0
-                        || strpos($widget_name, "GlpiPlugin\Mydashboard\Reports\Reports_Line") === 0
-                        || strpos($widget_name, "GlpiPlugin\Mydashboard\Reports\Reports_Pie") === 0
-                        || strpos($widget_name, "GlpiPlugin\Mydashboard\Reports\Reports_Funnel") === 0
-                        || strpos($widget_name, "GlpiPlugin\Mydashboard\Reports\Reports_Custom") === 0)) {
-                        $displayed_widgets[]    = $widget_name;
-                        $displayed_widgets_id[] = $v["id"];
+                    $widget_name = Widget::removeBackslashes($obj->getWidgetNameById($id));
+                    if ($widget_name != null && (strpos($widget_name, Widget::removeBackslashes(Reports_Bar::class)) === 0
+                        || strpos($widget_name, Widget::removeBackslashes(Reports_Line::class)) === 0
+                        || strpos($widget_name, Widget::removeBackslashes(Reports_Pie::class)) === 0
+                            || strpos($widget_name, Widget::removeBackslashes(Reports_Table::class)) === 0
+                        || strpos($widget_name, Widget::removeBackslashes(Reports_Funnel::class)) === 0
+                        || strpos($widget_name, Widget::removeBackslashes(Reports_Custom::class)) === 0)) {
+                        $displayed_widgets[]    = Widget::removeBackslashes($widget_name);
+                        $displayed_widgets_id[] = Widget::removeBackslashes($v["id"]);
                     }
                 }
             }
+
         } else {
             echo "<div class='alert alert-warning alert-important' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
@@ -1127,9 +1135,9 @@ class Menu extends CommonGLPI
                 && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
                 $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
             } else {
-                //            if (empty($grid) && count($widgets) < 1) {
+                //without slashes
                 $widgets = Widget::getWidgetList();
-                //            }
+
                 foreach ($widgets as $k => $val) {
                     $allwidgetjson[$k] = ["<div class='alert alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> -
@@ -1140,6 +1148,7 @@ class Menu extends CommonGLPI
                 }
             }
         }
+
         $allwidgetjson = json_encode($allwidgetjson);
         $msg_delete    = __('Delete widget', 'mydashboard');
         $msg_error     = __('No data available', 'mydashboard');
@@ -1207,6 +1216,7 @@ class Menu extends CommonGLPI
 //                         }
                          var delbutton = '';
                          var refreshbutton = '';
+
                          if ($delete_button == 1) {
                             var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"ti ti-circle-x md-close\"></i></button>';
                          }

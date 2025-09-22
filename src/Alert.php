@@ -3989,7 +3989,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         $dbu     = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . TicketIndicator::SOLVEDT . "
+                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::SOLVEDT . "
                   AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "

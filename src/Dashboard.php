@@ -29,6 +29,11 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
 use DbUtils;
+use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
+use GlpiPlugin\Mydashboard\Reports\Reports_Line;
+use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
+use GlpiPlugin\Mydashboard\Reports\Reports_Table;
+use GlpiPlugin\Ocsinventoryng\Dashboard as OCSDashboard;
 use Plugin;
 
 if (!defined('GLPI_ROOT')) {
@@ -90,9 +95,9 @@ class Dashboard extends CommonDBTM
     }
 
     /**
-     * @param array|\datas $input
+     * @param array $input
      *
-     * @return array|\datas|\the
+     * @return array
      */
     public function prepareInputForAdd($input)
     {
@@ -100,9 +105,9 @@ class Dashboard extends CommonDBTM
     }
 
     /**
-     * @param array|\datas $input
+     * @param array$input
      *
-     * @return array|\datas|\the
+     * @return array
      */
     public function prepareInputForUpdate($input)
     {
@@ -145,11 +150,11 @@ class Dashboard extends CommonDBTM
 
         $data = '';
         if ($id == self::$GLPI_VIEW) {
-            $gs1  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert8");
-            $gs2  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert9");
-            $gs3  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert6");
+            $gs1  = Widget::getGsID(Alert::class . "8");
+            $gs2  = Widget::getGsID(Alert::class . "9");
+            $gs3  = Widget::getGsID(Alert::class . "6");
             $gs4  = Widget::getGsID("eventwidgetglobal");
-            $gs5  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Table3");
+            $gs5  = Widget::getGsID(Reports_Table::class . "3");
             $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
          {"id":"' . $gs2 . '","x":4,"y":0,"w":4,"h":8},
          {"id":"' . $gs3 . '","x":8,"y":0,"w":4,"h":8},
@@ -159,15 +164,15 @@ class Dashboard extends CommonDBTM
         if ($id == self::$INVENTORY_VIEW) {
             $data_ocs = '';
             if (Plugin::isPluginActive("ocsinventoryng")) {
-                $gs4      = Widget::getGsID("PluginOcsinventoryngDashboard1");
-                $gs5      = Widget::getGsID("PluginOcsinventoryngDashboard2");
+                $gs4      = Widget::getGsID(OCSDashboard::class . "1");
+                $gs5      = Widget::getGsID(OCSDashboard::class . "2");
                 $data_ocs = ',{"id":"' . $gs4 . '","x":0,"y":9,"w":5,"h":12},
                         {"id":"' . $gs5 . '","x":5,"y":9,"w":5,"h":12}';
             }
 
-            $gs1  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Table5");
+            $gs1  = Widget::getGsID(Reports_Table::class . "5");
             $gs2  = Widget::getGsID("contractwidget");
-            $gs3  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Table3");
+            $gs3  = Widget::getGsID(Reports_Table::class . "3");
             $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":9},
          {"id":"' . $gs2 . '","x":4,"y":0,"w":4,"h":9},
          {"id":"' . $gs3 . '","x":8,"y":0,"w":4,"h":8}';
@@ -175,18 +180,18 @@ class Dashboard extends CommonDBTM
             $data .= ']';
         }
         if ($id == self::$HELPDESK_SUPERVISOR_VIEW) {
-            $gs1  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert4");
-            $gs2  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Bar24");
-            $gs3  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Bar1");
-            $gs4  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Line22");
-            $gs5  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert5");
-            $gs6  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Line6");
-            $gs7  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Pie25");
-            $gs8  = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Pie12");
-            $gs9  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert2");
-            $gs10 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert1");
-            $gs11 = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Pie7");
-            $gs12 = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Pie18");
+            $gs1  = Widget::getGsID(Alert::class . "4");
+            $gs2  = Widget::getGsID(Reports_Bar::class . "24");
+            $gs3  = Widget::getGsID(Reports_Bar::class . "1");
+            $gs4  = Widget::getGsID(Reports_Line::class . "22");
+            $gs5  = Widget::getGsID(Alert::class . "5");
+            $gs6  = Widget::getGsID(Reports_Line::class . "6");
+            $gs7  = Widget::getGsID(Reports_Pie::class . "25");
+            $gs8  = Widget::getGsID(Reports_Pie::class . "12");
+            $gs9  = Widget::getGsID(Alert::class . "2");
+            $gs10 = Widget::getGsID(Alert::class . "1");
+            $gs11 = Widget::getGsID(Reports_Pie::class . "7");
+            $gs12 = Widget::getGsID(Reports_Pie::class . "18");
 
             $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
          {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
@@ -202,13 +207,13 @@ class Dashboard extends CommonDBTM
          {"id":"' . $gs12 . '","x":8,"y":31,"w":4,"h":12}]';
         }
         if ($id == self::$INCIDENT_SUPERVISOR_VIEW) {
-            $gs1 = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Pie16");
-            $gs2 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert5");
-            $gs3 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert2");
-            $gs4 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert1");
-            $gs5 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert4");
-            $gs6 = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Line6");
-            $gs7 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert7");
+            $gs1 = Widget::getGsID(Reports_Pie::class . "16");
+            $gs2 = Widget::getGsID(Alert::class . "5");
+            $gs3 = Widget::getGsID(Alert::class . "2");
+            $gs4 = Widget::getGsID(Alert::class . "1");
+            $gs5 = Widget::getGsID(Alert::class . "4");
+            $gs6 = Widget::getGsID(Reports_Line::class . "6");
+            $gs7 = Widget::getGsID(Alert::class . "7");
 
             $data = '[{"id":"' . $gs1 . '","x":0,"y":8,"w":4,"h":11},
          {"id":"' . $gs2 . '","x":8,"y":0,"w":4,"h":8},
@@ -219,11 +224,11 @@ class Dashboard extends CommonDBTM
          {"id":"' . $gs7 . '","x":4,"y":0,"w":4,"h":8}]';
         }
         if ($id == self::$REQUEST_SUPERVISOR_VIEW) {
-            $gs1 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert7");
-            $gs2 = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Pie17");
-            $gs3 = Widget::getGsID("GlpiPlugin\Mydashboard\Reports\Reports_Bar1");
-            $gs4 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert1");
-            $gs5 = Widget::getGsID("GlpiPlugin\Mydashboard\Alert2");
+            $gs1 = Widget::getGsID(Alert::class . "7");
+            $gs2 = Widget::getGsID(Reports_Pie::class . "17");
+            $gs3 = Widget::getGsID(Reports_Bar::class . "1");
+            $gs4 = Widget::getGsID(Alert::class . "1");
+            $gs5 = Widget::getGsID(Alert::class . "2");
 
             $data = '[{"id":"' . $gs1 . '","x":4,"y":0,"w":5,"h":11},
          {"id":"' . $gs2 . '","x":0,"y":0,"w":4,"h":12},
@@ -232,15 +237,15 @@ class Dashboard extends CommonDBTM
          {"id":"' . $gs5 . '","x":9,"y":11,"w":3,"h":8}]';
         }
         if ($id == self::$HELPDESK_TECHNICIAN_VIEW) {
-            $gs1  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert4");
-            $gs2  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert7");
-            $gs3  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert5");
+            $gs1  = Widget::getGsID(Alert::class . "4");
+            $gs2  = Widget::getGsID(Alert::class . "7");
+            $gs3  = Widget::getGsID(Alert::class . "5");
             $gs4  = Widget::getGsID("tickettaskstodowidget");
             $gs5  = Widget::getGsID("ticketlistprocesswidget");
-            $gs6  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert1");
+            $gs6  = Widget::getGsID(Alert::class . "1");
             $gs7  = Widget::getGsID("tickettaskstodowidgetgroup");
             $gs8  = Widget::getGsID("ticketlistprocesswidgetgroup");
-            $gs9  = Widget::getGsID("GlpiPlugin\Mydashboard\Alert2");
+            $gs9  = Widget::getGsID(Alert::class . "2");
             $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
          {"id":"' . $gs2 . '","x":4,"y":0,"w":4,"h":8},
          {"id":"' . $gs3 . '","x":8,"y":0,"w":4,"h":8},

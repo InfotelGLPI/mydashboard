@@ -30,10 +30,8 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DbUtils;
 use GlpiPlugin\Badges\Badge;
-use GlpiPlugin\Mydashboard\Config;
-use GlpiPlugin\Mydashboard\Alert;
-use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
+use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
 use GlpiPlugin\Mydashboard\Reports\Reports_Line;
 use GlpiPlugin\Mydashboard\Reports\Reports_Map;
 use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
@@ -206,19 +204,19 @@ class Widget extends CommonDBTM
                     $widgetName = "";
                     foreach ($matches[0] as $k => $v) {
                         if (in_array($v, Reports_Bar::$reports)) {
-                            $widgetName = "GlpiPlugin\Mydashboard\Reports\Reports_Bar" . $v;
+                            $widgetName = Reports_Bar::class . $v;
                         }
                         if (in_array($v, Reports_Pie::$reports)) {
-                            $widgetName = "GlpiPlugin\Mydashboard\Reports\Reports_Pie" . $v;
+                            $widgetName =  Reports_Pie::class . $v;
                         }
                         if (in_array($v, Reports_Table::$reports)) {
-                            $widgetName = "GlpiPlugin\Mydashboard\Reports\Reports_Table" . $v;
+                            $widgetName = Reports_Table::class . $v;
                         }
                         if (in_array($v, Reports_Line::$reports)) {
-                            $widgetName = "GlpiPlugin\Mydashboard\Reports\Reports_Line" . $v;
+                            $widgetName = Reports_Line::class . $v;
                         }
                         if (in_array($v, Reports_Map::$reports)) {
-                            $widgetName = "GlpiPlugin\Mydashboard\Reports\Reports_Map" . $v;
+                            $widgetName = Reports_Map::class . $v;
                         }
                         if ($widgetName != "") {
                             $this->update(["id" => $report['id'], "name" => $widgetName]);
@@ -230,7 +228,7 @@ class Widget extends CommonDBTM
                 $widgettmp = preg_match_all('!\d+!', $name, $matches);
                 if ($widgettmp == 1) {
                     foreach ($matches[0] as $k => $v) {
-                        $widgetName = "GlpiPlugin\Mydashboard\Reports\Reports_Custom" . $v;
+                        $widgetName = Reports_Custom::class . $v;
                         if ($widgetName != "") {
                             $this->update(["id" => $report['id'], "name" => $widgetName]);
                         }
@@ -238,6 +236,50 @@ class Widget extends CommonDBTM
                 }
             }
         }
+    }
+
+    public static function removeBackslashes($classname)
+    {
+        if ($classname != null) {
+            $replace = str_replace('\\', '', $classname);
+            $replace = str_replace('_', '', $replace);
+            return $replace;
+        }
+    }
+
+    public static function getInitialWidgetList($preload = false)
+    {
+
+        //Load widgets
+        $widgetlist = Widgetlist::getList(true, -1, "central", $preload);
+        $i          = 1;
+        $self       = new self();
+        $widgets    = [];
+        foreach ($widgetlist as $plugin => $widgetclasses) {
+            foreach ($widgetclasses as $widgetclass => $list) {
+                if (is_array($list)) {
+                    foreach ($list as $k => $namelist) {
+                        if (is_array($namelist)) {
+                            foreach ($namelist as $idl => $val) {
+                                $id                  = $self->getWidgetIdByName($idl);
+                                //                str_replace("\"", "", $idl)
+                                $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $idl, "parent" => $k];
+                                $i++;
+                            }
+                        } else {
+                            $id                  = $self->getWidgetIdByName($k);
+                            $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $k, "parent" => $widgetclass];
+                            $i++;
+                        }
+                    }
+                } else {
+                    $id                  = $self->getWidgetIdByName($widgetclass);
+                    $widgets['gs' . $id] = ["class" => $widgetclasses, "id" =>  $widgetclass];
+                    $i++;
+                }
+            }
+        }
+        return $widgets;
     }
 
     /**
@@ -258,18 +300,19 @@ class Widget extends CommonDBTM
                         if (is_array($namelist)) {
                             foreach ($namelist as $idl => $val) {
                                 $id                  = $self->getWidgetIdByName($idl);
-                                $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $idl, "parent" => $k];
+                                //                str_replace("\"", "", $idl)
+                                $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclass), "id" => self::removeBackslashes($idl), "parent" => $k];
                                 $i++;
                             }
                         } else {
                             $id                  = $self->getWidgetIdByName($k);
-                            $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $k, "parent" => $widgetclass];
+                            $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclass), "id" => self::removeBackslashes($k), "parent" => $widgetclass];
                             $i++;
                         }
                     }
                 } else {
                     $id                  = $self->getWidgetIdByName($widgetclass);
-                    $widgets['gs' . $id] = ["class" => $widgetclasses, "id" => $widgetclass];
+                    $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclasses), "id" =>  self::removeBackslashes($widgetclass)];
                     $i++;
                 }
             }
@@ -317,8 +360,8 @@ class Widget extends CommonDBTM
             $gslist[$widgetclasses['id']] = $gs;
         }
 
-        if (isset($gslist[$id])) {
-            return $gslist[$id];
+        if (isset($gslist[self::removeBackslashes($id)])) {
+            return $gslist[self::removeBackslashes($id)];
         }
         return false;
     }
@@ -336,6 +379,7 @@ class Widget extends CommonDBTM
     public static function loadWidget($classname, $widgetindex, $parent, $class, $opt = [])
     {
 
+
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);
             if ($classobject && method_exists($classobject, "getWidgetContentForItem")) {
@@ -349,7 +393,9 @@ class Widget extends CommonDBTM
                     $displayloadwidget = "";
                 }
 
+                $widgetindex = self::removeBackslashes($widgetindex);
                 if (isset($widget) && ($widget instanceof Module)) {
+
                     $widget->setWidgetId($widgetindex);
                     //Then its Html content
                     $htmlContent = $widget->getWidgetHtmlContent();
@@ -366,16 +412,16 @@ class Widget extends CommonDBTM
                     $scripts = $widget->getWidgetScripts();
 
                     //We prepare a "JSon object" compatible with sDashboard
-                    $widgetTitle                                                         = $widget->getWidgetTitle();
+                    $widgetTitle = $widget->getWidgetTitle();
                     $json
                         = [
                             "widgetTitle"     => $widgetTitle,
                             "widgetComment"   => $widget->getWidgetComment(),
-                            "widgetId"        => $widget->getWidgetId(),
+                            "widgetId"        => self::removeBackslashes($widget->getWidgetId()),
                             "widgetType"      => $widget->getWidgetType(),
                             "widgetContent"   => "%widgetContent%",
                             "enableRefresh"   => json_decode($widget->getWidgetEnableRefresh()),
-                            "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . Menu::DASHBOARD_NAME . "','" .$classname. "', '" . $widget->getWidgetId() . "');}",
+                            "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . Menu::DASHBOARD_NAME . "','" . $classname . "', '" . $widget->getWidgetId() . "');}",
                             "html"            => $htmlContent,
                             "scripts"         => $scripts,
                             //                        "_glpi_csrf_token" => Session::getNewCSRFToken()

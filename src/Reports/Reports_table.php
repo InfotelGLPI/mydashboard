@@ -400,7 +400,7 @@ class Reports_Table extends CommonGLPI
                 $entities_criteria   = $crit['entities_id'];
                 $users_criteria      = "";
                 $technician_group    = $opt['technicians_groups_id'];
-
+                $technician_group = array_filter($technician_group);
                 // GROUP
                 if (isset($technician_group) && $technician_group != 0 && !empty($technician_group)) {
                     $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
@@ -501,7 +501,7 @@ class Reports_Table extends CommonGLPI
                                     $value            = "";
                                     $nbWaitingTickets = $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
-                                        $value .= "<a href='#' onclick='" . $widgetId . "_search($userId, $status, $hasMoreTicket)'>";
+                                        $value .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $status, $hasMoreTicket)'>";
                                     }
                                     $value .= $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
@@ -525,7 +525,7 @@ class Reports_Table extends CommonGLPI
                                     $statusId = $value['id'];
                                     if (isset($array[$status][$userId])) {
                                         $value        = '';
-                                        $value        .= "<a href='#' onclick='" . $widgetId . "_search($userId, $statusId , $hasMoreTicket)'>";
+                                        $value        .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $statusId , $hasMoreTicket)'>";
                                         $value        .= $array[$status][$userId];
                                         $value        .= "</a>";
                                         $temp[$i][$j] = $value;
@@ -579,7 +579,7 @@ class Reports_Table extends CommonGLPI
                 $js_group  = json_encode($technician_group);
                 $js_entity = $crit['entity'];
                 $js_sons   = $crit['sons'];
-
+                $widgetId = Widget::removeBackslashes($widgetId);
                 $js = "var " . $widgetId . "_search = function(_technician, _status, _hasMoreTicket){
                   $.ajax({
                      url: '" . $linkURL . "',
@@ -822,7 +822,7 @@ class Reports_Table extends CommonGLPI
 
                 $js_entity = $crit['entity'];
                 $js_sons   = $crit['sons'];
-
+                $widgetId = Widget::removeBackslashes($widgetId);
                 $js = "var " . $widgetId . "_searchgroup = function(_group, _status, _hasMoreTicket){
                                   $.ajax({
                                      url: '" . $linkURL . "',

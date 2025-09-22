@@ -1164,34 +1164,34 @@ a#showMyDashboardLateralMenuLink {
     min-height: 180px;
 }
 
-#PluginMydashboardAlert1, #PluginMydashboardAlert2, #PluginMydashboardAlert3 {
+#GlpiPluginMydashboardAlert1, #GlpiPluginMydashboardAlert2, #GlpiPluginMydashboardAlert3 {
     min-height: 220px;
 }
 
-#PluginMydashboardAlert1 h3, #PluginMydashboardAlert1 h5,
-#PluginMydashboardAlert2 h3, #PluginMydashboardAlert2 h5,
-#PluginMydashboardAlert3 h3, #PluginMydashboardAlert3 h5 {
+#GlpiPluginMydashboardAlert1 h3, #GlpiPluginMydashboardAlert1 h5,
+#GlpiPluginMydashboardAlert2 h3, #GlpiPluginMydashboardAlert2 h5,
+#GlpiPluginMydashboardAlert3 h3, #GlpiPluginMydashboardAlert3 h5 {
     display: none;
 }
 
-#PluginMydashboardAlert1 #display-sc, #PluginMydashboardAlert1 #display-sc #nt_alert-container,
-#PluginMydashboardAlert2 #display-sc, #PluginMydashboardAlert2 #display-sc #nt_maint-container,
-#PluginMydashboardAlert3 #display-sc, #PluginMydashboardAlert3 #display-sc #nt_info-container {
+#GlpiPluginMydashboardAlert1 #display-sc, #GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container,
+#GlpiPluginMydashboardAlert2 #display-sc, #GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container,
+#GlpiPluginMydashboardAlert3 #display-sc, #GlpiPluginMydashboardAlert3 #display-sc #nt_info-container {
     width: 100%;
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert,
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert,
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos {
     max-width: 100%;
     margin-left: 100px;
 }
 
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container::before {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container::before {
     margin-top: 100px;
 //margin-left: 10px;
     text-rendering: auto;
@@ -1208,7 +1208,7 @@ a#showMyDashboardLateralMenuLink {
     transform: rotate(350deg);
 }
 
-#PluginMydashboardAlert2 #display-sc #nt_maint-container::before {
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container::before {
     margin-top: 100px;
 //margin-left: 10px;
     text-rendering: auto;
@@ -1224,7 +1224,7 @@ a#showMyDashboardLateralMenuLink {
 }
 
 
-#PluginMydashboardAlert3 #display-sc #nt_info-container::before {
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container::before {
     margin-top: 100px;
 //margin-left: 10px;
     text-rendering: auto;
@@ -1240,16 +1240,16 @@ a#showMyDashboardLateralMenuLink {
 }
 
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos {
     background-color: transparent;
     padding-top: 0px;
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos-container,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos-container,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos-container {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos-container,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos-container,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos-container {
     padding-left: 40px;
 }
 
@@ -1257,30 +1257,30 @@ a#showMyDashboardLateralMenuLink {
     font-size: 30px;
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos {
     display: flex;
     flex-direction: column;
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos > div:first-child,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos > div:first-child,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos > div:first-child {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos > div:first-child,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos > div:first-child,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos > div:first-child {
     order: 1
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos > div:last-child,
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos > div:last-child,
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos > div:last-child {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos > div:last-child,
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos > div:last-child,
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info-infos > div:last-child {
     order: -1
 }
 
-#gridcontentPluginMydashboardAlert1 {
+#gridcontentGlpiPluginMydashboardAlert1 {
     border-left: 5px solid #AE2217;
 }
 
-#PluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert li {
+#GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert li {
     text-align: left !important;
     color: #AE2217 !important;
     font-weight: 900;
@@ -1289,11 +1289,11 @@ a#showMyDashboardLateralMenuLink {
     /*height:40px!important;*/
 }
 
-#gridcontentPluginMydashboardAlert2 {
+#gridcontentGlpiPluginMydashboardAlert2 {
     border-left: 5px solid #F66D0A;
 }
 
-#PluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint li {
+#GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint li {
     text-align: left !important;
     color: #F66D0A !important;
     font-weight: 900;
@@ -1302,11 +1302,11 @@ a#showMyDashboardLateralMenuLink {
     /*height:40px!important;*/
 }
 
-#gridcontentPluginMydashboardAlert3 {
+#gridcontentGlpiPluginMydashboardAlert3 {
     border-left: 5px solid #0D8DB6;
 }
 
-#PluginMydashboardAlert3 #display-sc #nt_info-container #nt_info li {
+#GlpiPluginMydashboardAlert3 #display-sc #nt_info-container #nt_info li {
     text-align: left !important;
     color: #0D8DB6 !important;
     font-weight: 900;

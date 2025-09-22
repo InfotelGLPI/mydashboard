@@ -128,9 +128,9 @@ class RSSFeed extends CommonGLPI
 
             $query = "SELECT `glpi_rssfeeds`.*
                    FROM `glpi_rssfeeds` " .
-            \RSSFeed::addVisibilityJoins() . "
+            RSSFeed::addVisibilityJoins() . "
                    WHERE $restrict_user
-                         AND " . \RSSFeed::addVisibilityRestrict() . "
+                         AND " . RSSFeed::addVisibilityRestrict() . "
                    ORDER BY `glpi_rssfeeds`.`name`";
 
             if (Session::getCurrentInterface() != 'helpdesk') {
@@ -222,5 +222,179 @@ class RSSFeed extends CommonGLPI
         $widget->setOption("bInfo", false);
 
         return $widget;
+    }
+
+    /**
+     * Return visibility joins to add to DBIterator parameters
+     *
+     * @since 9.4
+     *
+     * @param boolean $forceall force all joins (false by default)
+     *
+     * @return array
+     */
+    public static function getVisibilityCriteria(bool $forceall = false): array
+    {
+        $where = [\RSSFeed::getTable() . '.users_id' => Session::getLoginUserID()];
+        $join = [];
+
+        if (!\RSSFeed::canView()) {
+            return [
+                'LEFT JOIN' => $join,
+                'WHERE'     => $where
+            ];
+        }
+
+        //JOINs
+        // Users
+        $join['glpi_rssfeeds_users'] = [
+            'ON' => [
+                'glpi_rssfeeds_users'   => 'rssfeeds_id',
+                'glpi_rssfeeds'         => 'id'
+            ]
+        ];
+
+        $where = [
+            'OR' => [
+                \RSSFeed::getTable() . '.users_id'   => Session::getLoginUserID(),
+                'glpi_rssfeeds_users.users_id'   => Session::getLoginUserID()
+            ]
+        ];
+        $orwhere = [];
+
+        // Groups
+        if (
+            $forceall
+            || (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"]))
+        ) {
+            $join['glpi_groups_rssfeeds'] = [
+                'ON' => [
+                    'glpi_groups_rssfeeds'  => 'rssfeeds_id',
+                    'glpi_rssfeeds'         => 'id'
+                ]
+            ];
+        }
+
+        if (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"])) {
+            $restrict = getEntitiesRestrictCriteria('glpi_groups_rssfeeds', '', '', true);
+            $orwhere[] = [
+                'glpi_groups_rssfeeds.groups_id' => count($_SESSION["glpigroups"])
+                    ? $_SESSION["glpigroups"]
+                    : [-1],
+                'OR' => [
+                        'glpi_groups_rssfeeds.no_entity_restriction' => 1,
+                    ] + $restrict
+            ];
+        }
+
+        // Profiles
+        if (
+            $forceall
+            || (isset($_SESSION["glpiactiveprofile"])
+                && isset($_SESSION["glpiactiveprofile"]['id']))
+        ) {
+            $join['glpi_profiles_rssfeeds'] = [
+                'ON' => [
+                    'glpi_profiles_rssfeeds'   => 'rssfeeds_id',
+                    'glpi_rssfeeds'            => 'id'
+                ]
+            ];
+        }
+
+        if (isset($_SESSION["glpiactiveprofile"]) && isset($_SESSION["glpiactiveprofile"]['id'])) {
+            $restrict = getEntitiesRestrictCriteria('glpi_entities_rssfeeds', '', '', true);
+            if (!count($restrict)) {
+                $restrict = [true];
+            }
+            $ors = [
+                'glpi_profiles_rssfeeds.no_entity_restriction' => 1,
+                $restrict
+            ];
+
+            $orwhere[] = [
+                'glpi_profiles_rssfeeds.profiles_id' => $_SESSION["glpiactiveprofile"]['id'],
+                'OR' => $ors
+            ];
+        }
+
+        // Entities
+        if (
+            $forceall
+            || (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"]))
+        ) {
+            $join['glpi_entities_rssfeeds'] = [
+                'ON' => [
+                    'glpi_entities_rssfeeds'   => 'rssfeeds_id',
+                    'glpi_rssfeeds'            => 'id'
+                ]
+            ];
+        }
+
+        if (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"])) {
+            // Force complete SQL not summary when access to all entities
+            $restrict = getEntitiesRestrictCriteria('glpi_entities_rssfeeds', '', '', true, true);
+            if (count($restrict)) {
+                $orwhere[] = $restrict;
+            }
+        }
+
+        $where['OR'] = array_merge($where['OR'], $orwhere);
+        $criteria = ['LEFT JOIN' => $join];
+        if (count($where)) {
+            $criteria['WHERE'] = $where;
+        }
+
+        return $criteria;
+    }
+
+    /**
+     * Return visibility SQL restriction to add
+     *
+     * @return string restrict to add
+     **/
+    public static function addVisibilityRestrict()
+    {
+        //not deprecated because used in Search
+
+        //get and clean criteria
+        $criteria = self::getVisibilityCriteria();
+        unset($criteria['LEFT JOIN']);
+        $criteria['FROM'] = \RSSFeed::getTable();
+
+        $it = new \DBmysqlIterator(null);
+        $it->buildQuery($criteria);
+        $sql = $it->getSql();
+        $sql = preg_replace('/.*WHERE /', '', $sql);
+
+        return $sql;
+    }
+
+    /**
+     * Return visibility joins to add to SQL
+     *
+     * @param $forceall force all joins (false by default)
+     *
+     * @return string joins to add
+     **/
+    public static function addVisibilityJoins($forceall = false)
+    {
+        //not deprecated because used in Search
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        //get and clean criteria
+        $criteria = self::getVisibilityCriteria();
+        unset($criteria['WHERE']);
+        $criteria['FROM'] = \RSSFeed::getTable();
+
+        $it = new \DBmysqlIterator(null);
+        $it->buildQuery($criteria);
+        $sql = $it->getSql();
+        $sql = trim(str_replace(
+            'SELECT * FROM ' . $DB->quoteName(\RSSFeed::getTable()),
+            '',
+            $sql
+        ));
+        return $sql;
     }
 }
