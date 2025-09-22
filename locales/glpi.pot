@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-22 11:59+0000\n"
+"POT-Creation-Date: 2025-09-22 17:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,7 +225,7 @@ msgstr ""
 msgid "Global indicators by week"
 msgstr ""
 
-#: src/Alert.php:424 src/Reports/Ticket.php:384 src/Reports/Ticket.php:707
+#: src/Alert.php:424 src/Reports/Ticket.php:382 src/Reports/Ticket.php:705
 msgid "ID and priority"
 msgstr ""
 
@@ -368,8 +368,8 @@ msgstr ""
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: src/Alert.php:3167 src/Alert.php:3572 src/Reports/Ticket.php:100
-#: src/Reports/Ticket.php:1262
+#: src/Alert.php:3167 src/Alert.php:3572 src/Reports/Ticket.php:98
+#: src/Reports/Ticket.php:1260
 msgid "New tickets"
 msgstr ""
 
@@ -822,11 +822,11 @@ msgstr ""
 msgid "Not satisfy percent"
 msgstr ""
 
-#: src/Reports/Reports_map.php:70
+#: src/Reports/Reports_map.php:66
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr ""
 
-#: src/Reports/Reports_map.php:72
+#: src/Reports/Reports_map.php:68
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr ""
 
@@ -936,19 +936,19 @@ msgstr ""
 msgid "Modification date"
 msgstr ""
 
-#: src/Reports/Ticket.php:83
+#: src/Reports/Ticket.php:81
 msgid "Your rejected tickets"
 msgstr ""
 
-#: src/Reports/Ticket.php:89
+#: src/Reports/Ticket.php:87
 msgid "Your satisfaction surveys"
 msgstr ""
 
-#: src/Reports/Ticket.php:95 src/Reports/Ticket.php:535
+#: src/Reports/Ticket.php:93 src/Reports/Ticket.php:533
 msgid "Your tickets to validate"
 msgstr ""
 
-#: src/Reports/Ticket.php:136 src/Reports/Ticket.php:1136
+#: src/Reports/Ticket.php:134 src/Reports/Ticket.php:1134
 msgid "Ticket followup"
 msgstr ""
 
