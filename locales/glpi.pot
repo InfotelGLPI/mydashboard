@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-22 17:24+0000\n"
+"POT-Creation-Date: 2025-09-23 12:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,29 +35,29 @@ msgstr ""
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
-#: ajax/dropdownMonth.php:42 src/Helper.php:1104 src/Helper.php:1451
-#: src/Helper.php:1654 src/Helper.php:1688 src/Helper.php:1713
+#: ajax/dropdownMonth.php:42 src/Helper.php:1106 src/Helper.php:1453
+#: src/Helper.php:1656 src/Helper.php:1690 src/Helper.php:1715
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:45 src/Helper.php:1775
+#: ajax/dropdownUpdateDisplaydata.php:45 src/Helper.php:1777
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:59 src/Helper.php:1789
+#: ajax/dropdownUpdateDisplaydata.php:59 src/Helper.php:1791
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:77 src/Helper.php:1807
+#: ajax/dropdownUpdateDisplaydata.php:77 src/Helper.php:1809
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:91 src/Helper.php:1821
+#: ajax/dropdownUpdateDisplaydata.php:91 src/Helper.php:1823
 msgid "End year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:117 src/Helper.php:1044
-#: src/Helper.php:1424 src/Helper.php:1846 src/Helper.php:1928
+#: ajax/dropdownUpdateDisplaydata.php:117 src/Helper.php:1046
+#: src/Helper.php:1426 src/Helper.php:1848 src/Helper.php:1930
 msgid "Year"
 msgstr ""
 
@@ -1274,76 +1274,76 @@ msgstr ""
 msgid "See the configuration"
 msgstr ""
 
-#: src/Helper.php:1048 src/Helper.php:1440 src/Helper.php:1653
+#: src/Helper.php:1050 src/Helper.php:1442 src/Helper.php:1655
 msgid "Week"
 msgstr ""
 
-#: src/Helper.php:1058 src/Helper.php:1577
+#: src/Helper.php:1060 src/Helper.php:1579
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Helper.php:1085 src/Helper.php:1091 src/Helper.php:1097
-#: src/Helper.php:1103 src/Helper.php:1665 src/Helper.php:1701
+#: src/Helper.php:1087 src/Helper.php:1093 src/Helper.php:1099
+#: src/Helper.php:1105 src/Helper.php:1667 src/Helper.php:1703
 msgid "Time display"
 msgstr ""
 
-#: src/Helper.php:1086 src/Helper.php:1687
+#: src/Helper.php:1088 src/Helper.php:1689
 msgid "Last month"
 msgstr ""
 
-#: src/Helper.php:1092
+#: src/Helper.php:1094
 msgid "Last year"
 msgstr ""
 
-#: src/Helper.php:1098 src/Helper.php:1685
+#: src/Helper.php:1100 src/Helper.php:1687
 msgid "Year to date"
 msgstr ""
 
-#: src/Helper.php:1112
+#: src/Helper.php:1114
 #, php-format
 msgid "sliding %s-month period"
 msgstr ""
 
-#: src/Helper.php:1115 src/Helper.php:1122 src/Helper.php:1956
-#: src/Helper.php:1993
+#: src/Helper.php:1117 src/Helper.php:1124 src/Helper.php:1958
+#: src/Helper.php:1995
 msgid "Category"
 msgstr ""
 
-#: src/Helper.php:1259
+#: src/Helper.php:1261
 msgid "Child locations"
 msgstr ""
 
-#: src/Helper.php:1652
+#: src/Helper.php:1654
 msgid "Day"
 msgstr ""
 
-#: src/Helper.php:1686 src/Helper.php:1747 src/Helper.php:1875
+#: src/Helper.php:1688 src/Helper.php:1749 src/Helper.php:1877
 msgid "year"
 msgstr ""
 
-#: src/Helper.php:1748
+#: src/Helper.php:1750
 msgid "Start end"
 msgstr ""
 
-#: src/Helper.php:1762
+#: src/Helper.php:1764
 msgid "Display"
 msgstr ""
 
-#: src/Helper.php:1876
+#: src/Helper.php:1878
 msgid "begin and end date"
 msgstr ""
 
-#: src/Helper.php:1890
+#: src/Helper.php:1892
 msgid "Filter date"
 msgstr ""
 
-#: src/Helper.php:2032
+#: src/Helper.php:2034
 msgid "Tag"
 msgstr ""
 
-#: src/Helper.php:2382
+#: src/Helper.php:2384
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
