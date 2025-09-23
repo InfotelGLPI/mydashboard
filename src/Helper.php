@@ -426,7 +426,9 @@ class Helper
                 //                $opt['technicians_groups_id'] = [];
             }
             $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
-            $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
+            if (is_array($params['opt']['technicians_groups_id'])) {
+                $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
+            }
 
             if (isset($params['opt']['technicians_groups_id'])
                 && is_array($params['opt']['technicians_groups_id'])

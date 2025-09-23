@@ -7,28 +7,29 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-jobs: 
+jobs:
   run:
     
     name: Update POT
-      
-    runs-on: ubuntu-latest
-    steps: 
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: install xgettext
     
-      run: sudo apt-get install gettext;
-    - name: Update POT
-      run: sh tools/extract_template.sh;
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
+      - name: install xgettext
+        
+        run: sudo apt-get install gettext;
+      - name: Update POT
+        run: sh tools/extract_template.sh;
 
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v9
-      with:
-        message: "Update POT"
-    - name: Push changes
- 
-      uses: actions-go/push@master
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update POT"
+
+      - name: Push changes
+        uses: actions-go/push@master
+        with:
+          commit-message: ''
   
