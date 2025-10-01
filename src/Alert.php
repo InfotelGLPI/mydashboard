@@ -2553,7 +2553,7 @@ class Alert extends CommonDBTM
                 $l .= "</div>";
             }
         } else {
-            $l .= "<div align='center'><br><br><h3><span class ='alert-color'>";
+            $l .= "<div class='center'><br><br><h3><span class ='alert-color'>";
             $l .= __("No problem detected", "mydashboard");
             $l .= "</span></h3></div>";
         }
