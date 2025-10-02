@@ -293,7 +293,6 @@ class Preference extends CommonDBTM
         $input['automatic_refresh_delay']  = "10";
         $input['nb_widgets_width']         = "3";
         $input['replace_central']          = "0";
-        $input['prefered_group']           = "[]";
         $input['requester_prefered_group'] = "[]";
         $input['prefered_group']           = "[]";
         $input['prefered_entity']          = "0";

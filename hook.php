@@ -296,6 +296,9 @@ function plugin_mydashboard_install()
     $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.2.0.sql");
     $mig->executeMigration();
 
+    $mig = new Migration("2.2.2");
+    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.2.2.sql");
+    $mig->executeMigration();
 
     $config = new Config();
     if (!$config->getFromDB("1")) {
