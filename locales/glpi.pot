@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-02 10:34+0000\n"
+"POT-Creation-Date: 2025-10-02 16:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,11 +48,11 @@ msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:320 hook.php:321
+#: hook.php:323 hook.php:324
 msgid "Incidents"
 msgstr ""
 
-#: hook.php:329 hook.php:330
+#: hook.php:332 hook.php:333
 msgid "Requests"
 msgstr ""
 
