@@ -462,9 +462,9 @@ class Reports_Pie extends CommonGLPI
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         $is_deleted,
-                        'NOT'       => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
-                        'NOT'       => ['solvedate' => null],
-                        'NOT'       => ['time_to_resolve' => null],
+                        'NOT'       => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                            'solvedate' => null,
+                            'time_to_resolve' => null],
                     ],
                 ];
 
@@ -497,9 +497,9 @@ class Reports_Pie extends CommonGLPI
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
-                        'NOT' => ['solvedate' => null],
-                        'NOT' => ['time_to_resolve' => null],
+                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                            'solvedate' => null,
+                            'time_to_resolve' => null],
                         ['solvedate' => ['>', new QueryExpression($DB::quoteName('time_to_resolve'))],
                             'OR' => [
                                 'solvedate' => null,
@@ -600,9 +600,9 @@ class Reports_Pie extends CommonGLPI
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         $is_deleted,
-                        'NOT'       => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
-                        'NOT'       => ['takeintoaccount_delay_stat' => null],
-                        'NOT'       => ['time_to_own' => null],
+                        'NOT'       => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                            'takeintoaccount_delay_stat' => null,
+                            'time_to_own' => null],
                     ],
                 ];
 
@@ -633,9 +633,9 @@ class Reports_Pie extends CommonGLPI
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
-                        'NOT' => ['takeintoaccount_delay_stat' => null],
-                        'NOT' => ['time_to_own' => null],
+                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                            'takeintoaccount_delay_stat' => null,
+                            'time_to_own' => null],
                         ['takeintoaccount_delay_stat' => ['>', new QueryExpression("TIMESTAMPDIFF(SECOND," . $DB::quoteName('date') . ",
                                                                                " . $DB::quoteName('time_to_own') . ")")],
                             'OR' => [
@@ -1640,8 +1640,7 @@ class Reports_Pie extends CommonGLPI
                     'WHERE' => [
                         $is_deleted,
                         'status' => [CommonITILObject::CLOSED],
-                        'NOT'       => ['glpi_tickets.closedate' => null],
-                        'NOT'       => ['glpi_ticketsatisfactions.date_answered' => null],
+                        'NOT'       => ['glpi_tickets.closedate' => null, 'glpi_ticketsatisfactions.date_answered' => null],
                         new QueryExpression($closedate_criteria),
                     ],
                 ];
