@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-02 16:14+0000\n"
+"POT-Creation-Date: 2025-10-22 12:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Show all"
 msgstr ""
 
-#: src/Widget.php:681 src/Menu.php:1154 src/Chart.php:150
+#: src/Widget.php:681 src/Menu.php:1153 src/Chart.php:150
 msgid "No data available"
 msgstr ""
 
@@ -716,11 +716,11 @@ msgstr ""
 msgid "Top ten of opened tickets by appliance"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1664 src/Reports/Reports_Pie.php:1682
+#: src/Reports/Reports_Pie.php:1663 src/Reports/Reports_Pie.php:1681
 msgid "Satisfy percent"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1669 src/Reports/Reports_Pie.php:1682
+#: src/Reports/Reports_Pie.php:1668 src/Reports/Reports_Pie.php:1681
 msgid "Not satisfy percent"
 msgstr ""
 
@@ -1146,7 +1146,7 @@ msgstr ""
 msgid "Close edit mode"
 msgstr ""
 
-#: src/Menu.php:578 src/Menu.php:1143
+#: src/Menu.php:578 src/Menu.php:1142
 msgid "Success"
 msgstr ""
 
@@ -1251,27 +1251,27 @@ msgstr ""
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: src/Menu.php:1117
+#: src/Menu.php:1116
 msgid "Warning"
 msgstr ""
 
-#: src/Menu.php:1118
+#: src/Menu.php:1117
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: src/Menu.php:1144
+#: src/Menu.php:1143
 msgid "Save grid to see widget"
 msgstr ""
 
-#: src/Menu.php:1153
+#: src/Menu.php:1152
 msgid "Delete widget"
 msgstr ""
 
-#: src/Menu.php:1155
+#: src/Menu.php:1154
 msgid "Refresh widget"
 msgstr ""
 
-#: src/Menu.php:1511
+#: src/Menu.php:1510
 msgid "Export to PDF"
 msgstr ""
 
