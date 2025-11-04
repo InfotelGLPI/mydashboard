@@ -614,7 +614,7 @@ class Alert extends CommonDBTM
                 $i     = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
-                        $datas[$i]["lastrun"] = MydashboardHtml::convDateTime($data['lastrun']);
+                        $datas[$i]["lastrun"] = \Html::convDateTime($data['lastrun']);
 
                         $name = $data["name"];
                         if ($isplug = isPluginItemType($data["itemtype"])) {
