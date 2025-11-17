@@ -2673,6 +2673,7 @@ class Reports_Bar extends CommonDBTM
 
         $selected_group = [];
         if (isset($params["technicians_groups_id"])
+            && is_array($params["technicians_groups_id"])
             && count($params["technicians_groups_id"]) > 0) {
             $selected_group = $params['technicians_groups_id'];
         } elseif (count($_SESSION['glpigroups']) > 0) {

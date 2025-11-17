@@ -2003,7 +2003,7 @@ class Helper
                     $_POST["params"]['sons']
                 );
             } else {
-                $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $opt['entities_id'], $opt['sons']);
+                $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $_POST["params"]['entities_id'], $_POST["params"]['sons']);
             }
 
             $dropdown = ITILCategory::dropdown(
