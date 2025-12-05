@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 08:39+0000\n"
+"POT-Creation-Date: 2025-12-05 11:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,32 +27,32 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: hook.php:216 src/Config.php:345 src/Alert.php:157 src/Alert.php:2729
+#: hook.php:217 src/Config.php:345 src/Alert.php:157 src/Alert.php:2729
 #: src/ItilAlert.php:126
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:217 src/Config.php:346 src/Alert.php:160 src/Alert.php:2593
+#: hook.php:218 src/Config.php:346 src/Alert.php:160 src/Alert.php:2593
 #: src/Alert.php:2730 src/ItilAlert.php:127
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:218 src/Config.php:347 src/Alert.php:163 src/Alert.php:2594
+#: hook.php:219 src/Config.php:347 src/Alert.php:163 src/Alert.php:2594
 #: src/Alert.php:2731 src/ItilAlert.php:128
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:323 hook.php:324
+#: hook.php:355 hook.php:356
 msgid "Incidents"
 msgstr ""
 
-#: hook.php:332 hook.php:333
+#: hook.php:364 hook.php:365
 msgid "Requests"
 msgstr ""
 
@@ -227,11 +227,11 @@ msgstr ""
 msgid "Helpdesk technician grid"
 msgstr ""
 
-#: src/Widgetlist.php:430
+#: src/Widgetlist.php:432
 msgid "No widgets available"
 msgstr ""
 
-#: src/Widgetlist.php:549
+#: src/Widgetlist.php:551
 msgid "Find a widget"
 msgstr ""
 
