@@ -639,7 +639,7 @@ class Widget extends CommonDBTM
                             $nb = count($nb_data);
                         }
 
-                        $widgetdisplay .= '<table id="' . $widgetindex . $rand . '" class="display" cellspacing="0" width="100%">';
+                        $widgetdisplay .= '<table id="' . $widgetindex . $rand . '" class="display tab_cadre" cellspacing="0" width="100%">';
                         $widgetdisplay .= '<thead>';
                         $widgetdisplay .= '<tr>';
                         foreach ($head as $k => $th) {

@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -29,9 +30,9 @@ use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Customswidget;
 use GlpiPlugin\Mydashboard\Groupprofile;
 use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 use GlpiPlugin\Mydashboard\Profile;
 use GlpiPlugin\Mydashboard\Widget;
-use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 
 /**
  * @return bool
@@ -77,8 +78,8 @@ function plugin_mydashboard_install()
             "replace_central",
             "bool",
             [
-               "update" => $replace_central,
-               "value"  => 0
+                "update" => $replace_central,
+                "value"  => 0,
             ]
         );
 
@@ -95,7 +96,7 @@ function plugin_mydashboard_install()
             "interface",
             "bool",
             [
-               "update" => 1
+                "update" => 1,
             ]
         );
         $mig->executeMigration();
@@ -108,7 +109,7 @@ function plugin_mydashboard_install()
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.5.sql");
 
         //fill the new table with the data of previous month of this year
-//        fillTableMydashboardStocktickets();
+        //        fillTableMydashboardStocktickets();
 
         $mig->executeMigration();
     }
@@ -191,7 +192,7 @@ function plugin_mydashboard_install()
         $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.5.sql");
         $mig->executeMigration();
         transform_prefered_group_to_prefered_groups();
-//        fillTableMydashboardStockticketsGroup();
+        //        fillTableMydashboardStockticketsGroup();
     }
 
     if (!$DB->tableExists("glpi_plugin_mydashboard_itilalerts")) {
@@ -208,8 +209,8 @@ function plugin_mydashboard_install()
         $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stocktickets`";
         $DB->doQuery($queryTruncate);
         $mig->executeMigration();
-//        fillTableMydashboardStocktickets();
-//        fillTableMydashboardStockticketsGroup();
+        //        fillTableMydashboardStocktickets();
+        //        fillTableMydashboardStockticketsGroup();
 
         $config                             = new Config();
         $input['id']                        = "1";
@@ -243,7 +244,7 @@ function plugin_mydashboard_install()
     $mig = new Migration("2.0.0");
     $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.0.sql");
     $mig->executeMigration();
-//ALTER TABLE `glpi_plugin_mydashboard_userwidgets` DROP CONSTRAINT `glpi_plugin_mydashboard_userwidgets_ibfk_1`;
+    //ALTER TABLE `glpi_plugin_mydashboard_userwidgets` DROP CONSTRAINT `glpi_plugin_mydashboard_userwidgets_ibfk_1`;
 
     $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
     $result     = $DB->doQuery($query);
@@ -257,8 +258,8 @@ function plugin_mydashboard_install()
             $newwidget['id'] = $widgets['id'];
             $newwidget['x']  = $widgets['x'];
             $newwidget['y']  = $widgets['y'];
-            $newwidget['w']  = isset($widgets['width']) ? $widgets['width'] : $widgets['w'];
-            $newwidget['h']  = isset($widgets['height']) ? $widgets['height'] : $widgets['h'];
+            $newwidget['w']  = $widgets['width'] ?? $widgets['w'];
+            $newwidget['h']  = $widgets['height'] ?? $widgets['h'];
 
             $newwidgets[] = $newwidget;
         }
@@ -300,6 +301,37 @@ function plugin_mydashboard_install()
     $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.2.2.sql");
     $mig->executeMigration();
 
+    //widgetname Migration
+    $classes = ['GlpiPluginActivityDashboard' => 'GlpiPlugin\\\Activity\\\Dashboard',
+        'GlpiPluginManageentitiesDashboard' => 'GlpiPlugin\\\Manageentities\\\Dashboard',
+        'GlpiPluginEventsmanagerDashboard' => 'GlpiPlugin\\\Eventsmanager\\\Dashboard',
+        'GlpiPluginOcsinventoryngDashboard' => 'GlpiPlugin\\\Ocsinventoryng\\\Dashboard',
+        'GlpiPluginResourcesDashboard' => 'GlpiPlugin\\\Resources\\\Dashboard',
+        'GlpiPluginSatisfactionDashboard' => 'GlpiPlugin\\\Satisfaction\\\Dashboard',
+        'GlpiPluginServicecatalogIndicator' => 'GlpiPlugin\\\Servicecatalog\\\Indicator',
+        'GlpiPluginTasklistsDashboard' => 'GlpiPlugin\\\Tasklists\\\Dashboard',
+        'GlpiPluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard'];
+
+    foreach ($classes as $old => $new) {
+        $iterator = $DB->request([
+            'SELECT' => [
+                'id',
+                'name',
+            ],
+            'FROM' => 'glpi_plugin_mydashboard_widgets',
+            'WHERE' => [
+                'name'   => ['LIKE', $old . '%']
+            ],
+        ]);
+
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
+                $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'$old','$new') where id = '" . $data['id'] . "'";
+                $DB->doQuery($query);
+            }
+        }
+    }
+
     $config = new Config();
     if (!$config->getFromDB("1")) {
         $config->initConfig();
@@ -320,27 +352,27 @@ function insertDefaultTitles()
     $DB->insert(
         "glpi_plugin_mydashboard_customswidgets",
         [
-           'name'    => __('Incidents', 'mydashboard'),
-           'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
-           'comment' => ''
+            'name'    => __('Incidents', 'mydashboard'),
+            'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
+            'comment' => '',
         ]
     );
 
     $DB->insert(
         "glpi_plugin_mydashboard_customswidgets",
         [
-           'name'    => __('Requests', 'mydashboard'),
-           'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
-           'comment' => ''
+            'name'    => __('Requests', 'mydashboard'),
+            'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
+            'comment' => '',
         ]
     );
 
     $DB->insert(
         "glpi_plugin_mydashboard_customswidgets",
         [
-           'name'    => __('Problems'),
-           'content' => $startTitle . __("Problems") . $endTitle,
-           'comment' => ''
+            'name'    => __('Problems'),
+            'content' => $startTitle . __("Problems") . $endTitle,
+            'comment' => '',
         ]
     );
 }
@@ -363,7 +395,7 @@ function fillTableMydashboardStocktickets()
                     . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
     $results      = $DB->doQuery($query);
     while ($data = $DB->fetchArray($results)) {
-        list($year, $month) = explode('-', $data['month']);
+        [$year, $month] = explode('-', $data['month']);
         $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
         $entities_id = $data["entities_id"];
         $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
@@ -398,7 +430,7 @@ function fillTableMydashboardStockticketsGroup()
       GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
     $results = $DB->doQuery($query);
     while ($data = $DB->fetchArray($results)) {
-        list($year, $month) = explode('-', $data['month']);
+        [$year, $month] = explode('-', $data['month']);
         $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
         $entities_id = $data["entities_id"];
         $groups_id   = $data["groups_id"];
@@ -473,22 +505,22 @@ function plugin_mydashboard_uninstall()
 
     // Plugin tables deletion
     $tables = [
-       "glpi_plugin_mydashboard_profileauthorizedwidgets",
-       "glpi_plugin_mydashboard_widgets",
-       "glpi_plugin_mydashboard_userwidgets",
-       "glpi_plugin_mydashboard_configs",
-       "glpi_plugin_mydashboard_preferences",
-       "glpi_plugin_mydashboard_preferenceuserblacklists",
-       "glpi_plugin_mydashboard_alerts",
-       "glpi_plugin_mydashboard_stockwidgets",
-       "glpi_plugin_mydashboard_stocktickets",
-       "glpi_plugin_mydashboard_itilalerts",
-       "glpi_plugin_mydashboard_changealerts",
-       "glpi_plugin_mydashboard_dashboards",
-       "glpi_plugin_mydashboard_groupprofiles",
-       "glpi_plugin_mydashboard_customswidgets",
-       "glpi_plugin_mydashboard_configtranslations",
-       "glpi_plugin_mydashboard_stockticketindicators"];
+        "glpi_plugin_mydashboard_profileauthorizedwidgets",
+        "glpi_plugin_mydashboard_widgets",
+        "glpi_plugin_mydashboard_userwidgets",
+        "glpi_plugin_mydashboard_configs",
+        "glpi_plugin_mydashboard_preferences",
+        "glpi_plugin_mydashboard_preferenceuserblacklists",
+        "glpi_plugin_mydashboard_alerts",
+        "glpi_plugin_mydashboard_stockwidgets",
+        "glpi_plugin_mydashboard_stocktickets",
+        "glpi_plugin_mydashboard_itilalerts",
+        "glpi_plugin_mydashboard_changealerts",
+        "glpi_plugin_mydashboard_dashboards",
+        "glpi_plugin_mydashboard_groupprofiles",
+        "glpi_plugin_mydashboard_customswidgets",
+        "glpi_plugin_mydashboard_configtranslations",
+        "glpi_plugin_mydashboard_stockticketindicators"];
 
     foreach ($tables as $table) {
         $DB->dropTable($table, true);
@@ -540,12 +572,12 @@ function plugin_mydashboard_display_login()
 function plugin_mydashboard_getDatabaseRelations()
 {
     return ["glpi_groups" => [
-       'glpi_plugin_mydashboard_stocktickets' => "groups_id",
+        'glpi_plugin_mydashboard_stocktickets' => "groups_id",
     ],
-            "glpi_reminders" => [
-               'glpi_plugin_mydashboard_itilalerts' => "reminders_id",
-               'glpi_plugin_mydashboard_alerts' => "reminders_id",
-            ],
+        "glpi_reminders" => [
+            'glpi_plugin_mydashboard_itilalerts' => "reminders_id",
+            'glpi_plugin_mydashboard_alerts' => "reminders_id",
+        ],
     ];
 }
 
@@ -554,7 +586,7 @@ function plugin_mydashboard_getDropdown()
 {
     if (Plugin::isPluginActive("mydashboard")) {
         return [
-           Customswidget::class => Customswidget::getTypeName(2),];
+            Customswidget::class => Customswidget::getTypeName(2),];
     } else {
         return [];
     }

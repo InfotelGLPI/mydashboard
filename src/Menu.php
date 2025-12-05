@@ -389,7 +389,7 @@ class Menu extends CommonGLPI
 
         echo $this->getscripts();
 
-        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
+//        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
         if ($edit > 0) {
             //force loading new widgets
             self::installWidgets();
@@ -1009,7 +1009,7 @@ class Menu extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
+//        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.js");
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.css");
         //

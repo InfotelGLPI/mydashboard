@@ -1314,3 +1314,7 @@ a#showMyDashboardLateralMenuLink {
     background-color: transparent;
     /*height:40px!important;*/
 }
+
+.grid-stack>.grid-stack-item>.grid-stack-item-content {
+    background: white;
+}

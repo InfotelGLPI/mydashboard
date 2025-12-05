@@ -341,9 +341,11 @@ class Widgetlist
                         $list[] = [
                             'type' => '',
                             'title'    => $widgetTitle['title'],
-                            'icon'     => Widget::getIconByType($widgetTitle['type']),
                             'widgetid' => $gsid,
                         ];
+                        if (isset($widgetTitle['type'])) {
+                            $list['icon'] = Widget::getIconByType($widgetTitle['type']);
+                        }
                     }
                 }
             }
