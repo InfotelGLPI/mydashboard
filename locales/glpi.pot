@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 11:46+0000\n"
+"POT-Creation-Date: 2026-02-01 15:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,32 +27,32 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: hook.php:217 src/Config.php:345 src/Alert.php:157 src/Alert.php:2729
+#: hook.php:220 src/Config.php:345 src/Alert.php:157 src/Alert.php:2729
 #: src/ItilAlert.php:126
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:218 src/Config.php:346 src/Alert.php:160 src/Alert.php:2593
+#: hook.php:221 src/Config.php:346 src/Alert.php:160 src/Alert.php:2593
 #: src/Alert.php:2730 src/ItilAlert.php:127
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:219 src/Config.php:347 src/Alert.php:163 src/Alert.php:2594
+#: hook.php:222 src/Config.php:347 src/Alert.php:163 src/Alert.php:2594
 #: src/Alert.php:2731 src/ItilAlert.php:128
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:355 hook.php:356
+#: hook.php:504 hook.php:505
 msgid "Incidents"
 msgstr ""
 
-#: hook.php:364 hook.php:365
+#: hook.php:513 hook.php:514
 msgid "Requests"
 msgstr ""
 
@@ -328,92 +328,96 @@ msgstr ""
 msgid "Technicians"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:69
+#: src/Reports/Reports_Line.php:70
 msgid "Tickets stock by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:71
+#: src/Reports/Reports_Line.php:72
 msgid "Sum of not solved tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:72 src/Reports/Reports_Line.php:542
+#: src/Reports/Reports_Line.php:75 src/Reports/Reports_Line.php:567
 msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:75 src/Reports/Reports_Line.php:829
+#: src/Reports/Reports_Line.php:80 src/Reports/Reports_Line.php:854
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:78
+#: src/Reports/Reports_Line.php:85
 msgid "Number of opened, closed, unplanned tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:81
+#: src/Reports/Reports_Line.php:90
 msgid "Number of tickets created each months"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:84
+#: src/Reports/Reports_Line.php:95
 msgid "Number of tickets created each week"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:87
+#: src/Reports/Reports_Line.php:100
 msgid "Number of tickets with validation refusal"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:90
+#: src/Reports/Reports_Line.php:105
 msgid "Number of tickets linked with problems"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:93
+#: src/Reports/Reports_Line.php:110
 msgid "Backlog tickets by week"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:95
+#: src/Reports/Reports_Line.php:112
 msgid "Number of in progress (not new and pending) tickets by week"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:96
+#: src/Reports/Reports_Line.php:115
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:98
+#: src/Reports/Reports_Line.php:117
 msgid "Number of open tickets in the month still in progress for each month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:243 src/Reports/Reports_Line.php:1277
-#: src/Reports/Reports_Line.php:1350 src/Reports/Reports_Line.php:1445
-#: src/Reports/Reports_Line.php:1538 src/Reports/Reports_Line.php:1645
-#: src/Reports/Reports_Line.php:1762 src/Reports/Reports_Bar.php:252
-#: src/Reports/Reports_Bar.php:471 src/Reports/Reports_Bar.php:806
-#: src/Reports/Reports_Bar.php:1097
+#: src/Reports/Reports_Line.php:120
+msgid "Number of tickets with more than one solution"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:268 src/Reports/Reports_Line.php:1302
+#: src/Reports/Reports_Line.php:1375 src/Reports/Reports_Line.php:1470
+#: src/Reports/Reports_Line.php:1563 src/Reports/Reports_Line.php:1670
+#: src/Reports/Reports_Line.php:1787 src/Reports/Reports_Line.php:1892
+#: src/Reports/Reports_Bar.php:252 src/Reports/Reports_Bar.php:471
+#: src/Reports/Reports_Bar.php:806 src/Reports/Reports_Bar.php:1097
 msgid "Tickets number"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:547 src/Reports/Reports_Line.php:834
-#: src/Reports/Reports_Line.php:1147 src/Reports/Reports_Bar.php:1401
+#: src/Reports/Reports_Line.php:572 src/Reports/Reports_Line.php:859
+#: src/Reports/Reports_Line.php:1172 src/Reports/Reports_Bar.php:1401
 #: src/Reports/Reports_Pie.php:1148 src/Reports/Reports_Pie.php:1150
 msgid "Opened tickets"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:548 src/Reports/Reports_Line.php:1148
+#: src/Reports/Reports_Line.php:573 src/Reports/Reports_Line.php:1173
 #: src/Reports/Reports_Pie.php:1223 src/Reports/Reports_Pie.php:1225
 msgid "Closed tickets"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:549 src/Reports/Reports_Line.php:836
-#: src/Reports/Reports_Line.php:1150 src/Reports/Reports_Bar.php:112
+#: src/Reports/Reports_Line.php:574 src/Reports/Reports_Line.php:861
+#: src/Reports/Reports_Line.php:1175 src/Reports/Reports_Bar.php:112
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:835
+#: src/Reports/Reports_Line.php:860
 msgid "Resolved / closed tickets"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:1142
+#: src/Reports/Reports_Line.php:1167
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:1149 src/Reports/Reports_Pie.php:1295
+#: src/Reports/Reports_Line.php:1174 src/Reports/Reports_Pie.php:1295
 #: src/Reports/Reports_Pie.php:1297
 msgid "Not planned"
 msgstr ""
