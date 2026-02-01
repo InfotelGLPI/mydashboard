@@ -34,11 +34,10 @@ Session::checkLoginUser();
 Html::header(Menu::getTypeName(2), '', "tools", Menu::class);
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "1";
+    $_GET["id"] = "1";
 }
 if (Plugin::isPluginActive("mydashboard")) {
-
-   $config = new Config();
+        $config = new Config();
 
     if (isset($_POST["reconstructBacklog"])) {
         ini_set("max_execution_time", "0");
@@ -46,21 +45,17 @@ if (Plugin::isPluginActive("mydashboard")) {
         fillTableMydashboardStocktickets();
         fillTableMydashboardStockticketsGroup();
         Html::back();
-
-    } else if (isset($_POST["reconstructIndicators"])) {
+    } elseif (isset($_POST["reconstructIndicators"])) {
         ini_set("max_execution_time", "0");
         ini_set("memory_limit", "-1");
         $record = new StockTicketIndicator();
         $record->cronMydashboardInfotelUpdateStockTicketIndicator("all");
         Html::back();
+    } elseif (isset($_POST['update'])) {
+        $config->update($_POST);
+    }
 
-    } else if (isset($_POST['update'])) {
-
-      $config->update($_POST);
-   }
-
-   $config->display($_GET);
-
+    $config->display($_GET);
 } else {
     throw new AccessDeniedHttpException();
 }

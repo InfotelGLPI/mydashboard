@@ -47,7 +47,7 @@ class Reports_Line extends CommonGLPI
 {
     private $options;
     private $pref;
-    public static $reports = [6, 22, 34, 35, 43, 44, 45, 46, 47, 48];
+    public static $reports = [6, 22, 34, 35, 43, 44, 45, 46, 47, 48, 49];
 
     /**
      * Reports_Line constructor.
@@ -65,38 +65,63 @@ class Reports_Line extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-            Menu::$HELPDESK => [
-                $this->getType() . "6"  => ["title"   => __("Tickets stock by month", "mydashboard"),
+            Menu::$HELPDESK => array(
+                $this->getType() . "6"  => array(
+                    "title"   => __("Tickets stock by month", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => __("Sum of not solved tickets by month", "mydashboard")],
-                $this->getType() . "22" => ["title"   => __("Number of opened and closed tickets by month", "mydashboard"),
+                    "comment" => __("Sum of not solved tickets by month", "mydashboard")
+                ),
+                $this->getType() . "22" => array(
+                    "title"   => __("Number of opened and closed tickets by month", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "34" => ["title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "34" => array(
+                    "title"   => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "35" => ["title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "35" => array(
+                    "title"   => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "43" => ["title"   => __("Number of tickets created each months", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "43" => array(
+                    "title"   => __("Number of tickets created each months", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "44" => ["title"   => __("Number of tickets created each week", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "44" => array(
+                    "title"   => __("Number of tickets created each week", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "45" => ["title"   => __("Number of tickets with validation refusal", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "45" => array(
+                    "title"   => __("Number of tickets with validation refusal", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "46" => ["title"   => __("Number of tickets linked with problems", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "46" => array(
+                    "title"   => __("Number of tickets linked with problems", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => ""],
-                $this->getType() . "47" => ["title"   => __("Backlog tickets by week", "mydashboard"),
+                    "comment" => ""
+                ),
+                $this->getType() . "47" => array(
+                    "title"   => __("Backlog tickets by week", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard")],
-                $this->getType() . "48" => ["title"   => __("Monthly tickets in progress", "mydashboard"),
+                    "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard")
+                ),
+                $this->getType() . "48" => array(
+                    "title"   => __("Monthly tickets in progress", "mydashboard"),
                     "type"    => Widget::$LINE,
-                    "comment" => __("Number of open tickets in the month still in progress for each month", "mydashboard")],
-            ],
+                    "comment" => __("Number of open tickets in the month still in progress for each month", "mydashboard")
+                ),
+                $this->getType() . "49" => array(
+                    "title"   => __("Number of tickets with more than one solution", "mydashboard"),
+                    "type"    => Widget::$LINE,
+                    "comment" => ""
+                ),
+            ),
         ];
         return $widgets;
     }
@@ -1807,6 +1832,103 @@ class Reports_Line extends CommonGLPI
 
                 return $widget;
                 break;
+            case $this->getType() . "49":
+                $name      = 'reportLineChartRefusedSolutionTicketsByMonths';
+                $criterias = ['year',
+                    'type',
+                    'entities_id',
+                    'is_recursive'];
+                $params    = ["preferences" => $preferences,
+                    "criterias"   => $criterias,
+                    "opt"         => $opt];
+                $options   = Helper::manageCriterias($params);
+
+                $opt  = $options['opt'];
+                $crit = $options['crit'];
+
+                $isDeleted         = " AND `glpi_tickets`.`is_deleted` = 0 ";
+                $type_criteria     = $crit['type'];
+                $entities_criteria = $crit['entities_id'];
+
+                $currentmonth = date("m");
+                $currentyear  = date("Y");
+                $now          = date("Y-m-d");
+                if (isset($opt["year"]) && $opt["year"] > 0) {
+                    $currentyear = $opt["year"];
+                }
+                $previousyear      = $currentyear - 1;
+                $tabdates          = [];
+                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
+                                         DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
+                                         count(*) as count
+                                  FROM `glpi_tickets`
+                                  INNER JOIN glpi_itilsolutions ON (`glpi_tickets`.`id` = `glpi_itilsolutions`.`items_id`
+                                                                        AND `glpi_itilsolutions`.`itemtype` = 'Ticket')
+                                  WHERE  (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                                  AND `glpi_itilsolutions`.`items_id` IN (SELECT items_id FROM `glpi_itilsolutions`
+                                                                                          WHERE `glpi_itilsolutions`.`itemtype` = 'Ticket'
+                                                                                          GROUP BY items_id HAVING (COUNT(items_id) > 1))
+                                  AND (`glpi_tickets`.`date` <= '$now 23:59:59')
+                                  " . $entities_criteria . $isDeleted . $type_criteria . "
+                                  GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $tabdata           = [];
+                $tabnames          = [];
+                $results           = $DB->doQuery($queryOpenedTicket);
+//                Toolbox::logInfo($queryOpenedTicket);
+                while ($data = $DB->fetchArray($results)) {
+                    $tabdata[]  = $data['count'];
+                    $tabnames[] = $data['monthname'];
+                    $tabdates[] = $data['period'];
+                }
+
+
+                $widget  = new Html();
+                $title   = $this->getTitleForWidget($widgetId);
+                $comment = $this->getCommentForWidget($widgetId);
+                $widget->setWidgetTitle((($isDebug) ? "45 " : "") . $title);
+                $widget->setWidgetComment($comment);
+                $widget->toggleWidgetRefresh();
+
+                $nbtickets = __('Tickets number', 'mydashboard');
+
+                $datasets[]
+                    = ['type'   => 'line',
+                    'data'   => $tabdata,
+                    'name'   => $nbtickets,
+                    'smooth' => false,
+                ];
+
+                $dataLineset = json_encode($datasets);
+                $labelsLine  = json_encode($tabnames);
+                $tabdatesset = json_encode($tabdates);
+
+                $graph_datas = ['title'   => $title,
+                    'comment' => $comment,
+                    'name'    => $name,
+                    'ids'     => $tabdatesset,
+                    'data'    => $dataLineset,
+                    'labels'  => $labelsLine];
+
+                $graph_criterias = ['type'   => $options['crit']["type"],
+                    'year'   => $options['crit']['year'],
+                    'widget' => $widgetId];
+
+
+                $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
+
+                $params = ["widgetId"  => $widgetId,
+                    "name"      => $name,
+                    "onsubmit"  => true,
+                    "opt"       => $opt,
+                    "criterias" => $criterias,
+                    "export"    => true,
+                    "canvas"    => true,
+                    "nb"        => 1];
+                $widget->setWidgetHeader(Helper::getGraphHeader($params));
+
+                $widget->setWidgetHtmlContent($graph);
+
+                return $widget;
             default:
                 break;
         }

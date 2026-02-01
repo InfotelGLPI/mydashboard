@@ -52,6 +52,8 @@ if (isset($_POST["params"]["requester_groups"])) {
     $_POST["params"]["requester_groups"] = [];
 }
 
+$link = '';
+
 if ($_POST["selected_id"] == "") {
     $link = '';
 }
