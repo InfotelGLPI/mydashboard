@@ -287,7 +287,7 @@ class Reports_Table extends CommonGLPI
                                 'WHERE'     => [
                                     'entities_id'  => $entities,
                                 ],
-                                'GROUPBY'   => $fields_string,
+                                'GROUPBY'   => $fields,
                                 'ORDERBY'    => ['cpt DESC'],
                             ];
 

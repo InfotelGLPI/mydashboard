@@ -22,7 +22,7 @@ CREATE TABLE `glpi_plugin_mydashboard_profiles`
 
 --
 -- Structure de la table 'glpi_plugin_mydashboard_widgets'
--- 
+--
 --
 
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_widgets`;
@@ -39,7 +39,7 @@ CREATE TABLE `glpi_plugin_mydashboard_widgets`
 
 --
 -- Structure de la table 'glpi_plugin_mydashboard_userwidgets'
--- 
+--
 --
 
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_userwidgets`;
@@ -59,7 +59,7 @@ CREATE TABLE `glpi_plugin_mydashboard_userwidgets`
 
 --
 -- Structure de la table 'glpi_plugin_mydashboard_configs'
--- 
+--
 --
 
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_configs`;
@@ -78,13 +78,13 @@ CREATE TABLE `glpi_plugin_mydashboard_configs`
 
 --
 -- Structure de la table 'glpi_plugin_mydashboard_preferences'
--- 
+--
 --
 
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_preferences`;
 CREATE TABLE `glpi_plugin_mydashboard_preferences`
 (
-    `id`                      int unsigned    NOT NULL
+    `id`                      int unsigned  AUTO_INCREMENT  NOT NULL
         COMMENT 'RELATION to glpi_users(id)',
     `automatic_refresh`       tinyint NOT NULL DEFAULT '0',
     `automatic_refresh_delay` int unsigned    NOT NULL DEFAULT '10',
@@ -97,7 +97,7 @@ CREATE TABLE `glpi_plugin_mydashboard_preferences`
 
 --
 -- Structure de la table 'glpi_plugin_mydashboard_preferenceuserblacklists'
--- 
+--
 --
 DROP TABLE IF EXISTS `glpi_plugin_mydashboard_preferenceuserblacklists`;
 CREATE TABLE `glpi_plugin_mydashboard_preferenceuserblacklists`
