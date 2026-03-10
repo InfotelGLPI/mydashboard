@@ -34,7 +34,8 @@ use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Preference;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+
 $result  = null;
 $gsId    = "";
 $gsExist = false;

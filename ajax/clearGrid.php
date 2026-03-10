@@ -27,7 +27,7 @@
 
 use GlpiPlugin\Mydashboard\Dashboard;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 $dashboard = new Dashboard();
 

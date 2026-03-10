@@ -31,7 +31,7 @@ use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
 use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use GlpiPlugin\Ocsinventoryng\Dashboard;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 //Case PluginMydashboardReports_Table32 / PluginMydashboardReports_Table33
 if (isset($_POST['widget'])) {

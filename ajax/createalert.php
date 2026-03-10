@@ -27,6 +27,8 @@
 use GlpiPlugin\Mydashboard\Alert;
 use GlpiPlugin\Mydashboard\ItilAlert;
 
+Session::checkRight("plugin_mydashboard_config", UPDATE);
+
 if (strpos($_SERVER['PHP_SELF'], "createalert.php")) {
    $AJAX_INCLUDE = 1;
    header("Content-Type: text/html; charset=UTF-8");

@@ -31,7 +31,7 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownUpdateDisplaydata.php")) {
    Html::header_nocache();
 }
 
-Session::checkCentralAccess();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 // Make a select box
 if (isset($_POST["value"])) {

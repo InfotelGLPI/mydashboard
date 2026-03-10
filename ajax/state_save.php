@@ -34,7 +34,7 @@ use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Preference;
 use GlpiPlugin\Mydashboard\Widget;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 $result      = [];
 $grids_saved = [];

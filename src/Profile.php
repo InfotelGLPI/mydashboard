@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -30,7 +31,6 @@ use CommonGLPI;
 use DbUtils;
 use ProfileRight;
 use Session;
-use GlpiPlugin\Mydashboard\Config;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -90,9 +90,9 @@ class Profile extends \Profile
             self::addDefaultProfileInfos(
                 $ID,
                 ['plugin_mydashboard'             => 0,
-                 'plugin_mydashboard_config'      => 0,
-                 'plugin_mydashboard_edit'        => 0,
-                 'plugin_mydashboard_stockwidget' => 0]
+                    'plugin_mydashboard_config'      => 0,
+                    'plugin_mydashboard_edit'        => 0,
+                    'plugin_mydashboard_stockwidget' => 0]
             );
             $prof->showForm($ID);
         }
@@ -126,7 +126,7 @@ class Profile extends \Profile
                 $myright['rights']      = $value;
                 $profileRight->add($myright);
                 //Add right to the current session
-            //            $_SESSION['glpiactiveprofile'][$right] = $value;
+                //            $_SESSION['glpiactiveprofile'][$right] = $value;
             }
         }
     }
@@ -141,9 +141,9 @@ class Profile extends \Profile
         self::addDefaultProfileInfos(
             $ID,
             ['plugin_mydashboard'             => 6,
-             'plugin_mydashboard_config'      => CREATE + UPDATE + PURGE,
-             'plugin_mydashboard_edit'        => 6,
-             'plugin_mydashboard_stockwidget' => READ + CREATE + UPDATE + PURGE],
+                'plugin_mydashboard_config'      => CREATE + UPDATE + PURGE,
+                'plugin_mydashboard_edit'        => 6,
+                'plugin_mydashboard_stockwidget' => READ + CREATE + UPDATE + PURGE],
             true
         );
     }
@@ -165,7 +165,7 @@ class Profile extends \Profile
 
         $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget', 'plugin_mydashboard', 'plugin_mydashboard_config', 'plugin_mydashboard_edit']);
 
-      //      Toolbox::logDebug($effective_rights);
+        //      Toolbox::logDebug($effective_rights);
         echo "<table class='tab_cadre_fixehov'>";
         echo "<tr class='tab_bg_2'>";
         echo "<th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), self::getTypeName(1), $profile->fields["name"]) . "</th>";
@@ -175,35 +175,35 @@ class Profile extends \Profile
         echo "<td>" . __("Dashboard Access", "mydashboard") . "</td><td>";
         $checked = ($effective_rights["plugin_mydashboard"] > 1) ? 1 : 0;
         \Html::showCheckbox(['name'    => '_plugin_mydashboard[6_0]',
-                            'checked' => $checked]);
+            'checked' => $checked]);
         echo "</td>";
         echo "<td>";
         $checked = ($effective_rights["plugin_mydashboard"] == 1) ? 1 : 0;
         \Html::showCheckbox(['name'    => '_plugin_mydashboard[1_0]',
-                            'checked' => $checked]);
+            'checked' => $checked]);
         echo "</td>";
         echo "</tr>";
         echo "<tr class='tab_bg_2'>";
         echo "<td>" . __("Configuration Access", "mydashboard") . "</td><td>";
-      //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
+        //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
         \Html::showCheckbox(['name'    => '_plugin_mydashboard_config[22_0]',
-                            'checked' => $effective_rights["plugin_mydashboard_config"]]);
+            'checked' => $effective_rights["plugin_mydashboard_config"]]);
         echo "</td>";
         echo "<td></td>";
         echo "</tr>";
         echo "<tr class='tab_bg_2'>";
         echo "<td>" . __("See edit mode", "mydashboard") . "</td><td>";
-      //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
+        //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
         \Html::showCheckbox(['name'    => '_plugin_mydashboard_edit[6_0]',
-                            'checked' => $effective_rights["plugin_mydashboard_edit"]]);
+            'checked' => $effective_rights["plugin_mydashboard_edit"]]);
         echo "</td>";
         echo "<td></td>";
         echo "</tr>";
 
         $rights = $this->getAllRights();
         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                                                      'default_class' => 'tab_bg_2',
-                                                      'title'         => __('Setup stock widget', 'mydashboard')]);
+            'default_class' => 'tab_bg_2',
+            'title'         => __('Setup stock widget', 'mydashboard')]);
 
         if ($canedit
             && $closeform) {
@@ -248,8 +248,8 @@ class Profile extends \Profile
             'FROM' => 'glpi_profilerights',
             'WHERE' => [
                 'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
-                'name' => ['LIKE', '%plugin_mydashboard%']
-            ]
+                'name' => ['LIKE', '%plugin_mydashboard%'],
+            ],
         ]);
         foreach ($it as $prof) {
             if (isset($_SESSION['glpiactiveprofile'])) {
@@ -268,9 +268,9 @@ class Profile extends \Profile
             unset($_SESSION["glpi_plugin_mydashboard_activating"]);
         }
         unset($_SESSION["glpi_plugin_mydashboard_allwidgets"]);
-//      $widgetclasse = new Widget();
-//      $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-//      $GLPI_CACHE->delete($ckey);
+        //      $widgetclasse = new Widget();
+        //      $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
+        //      $GLPI_CACHE->delete($ckey);
     }
 
     /**
@@ -283,20 +283,20 @@ class Profile extends \Profile
         $rights = [];
 
         $rights[] = ['itemtype' => StockWidget::class,
-                     'label'    => __('Setup stock widget', 'mydashboard'),
-                     'field'    => 'plugin_mydashboard_stockwidget'];
+            'label'    => __('Setup stock widget', 'mydashboard'),
+            'field'    => 'plugin_mydashboard_stockwidget'];
         if ($all) {
             $rights[] = ['itemtype' => Menu::class,
-                         'label'    => __('See the dashboard', 'mydashboard'),
-                         'field'    => 'plugin_mydashboard'];
+                'label'    => __('See the dashboard', 'mydashboard'),
+                'field'    => 'plugin_mydashboard'];
 
             $rights[] = ['itemtype' => Config::class,
-                         'label'    => __('See the configuration', 'mydashboard'),
-                         'field'    => 'plugin_mydashboard_config'];
+                'label'    => __('See the configuration', 'mydashboard'),
+                'field'    => 'plugin_mydashboard_config'];
 
             $rights[] = ['itemtype' => Menu::class,
-                         'label'    => __('See edit mode', 'mydashboard'),
-                         'field'    => 'plugin_mydashboard_edit'];
+                'label'    => __('See edit mode', 'mydashboard'),
+                'field'    => 'plugin_mydashboard_edit'];
         }
 
         return $rights;
@@ -355,17 +355,17 @@ class Profile extends \Profile
 
         $it = $DB->request([
             'FROM' => 'glpi_plugin_mydashboard_profiles',
-            'WHERE' => ['profiles_id' => $profiles_id]
+            'WHERE' => ['profiles_id' => $profiles_id],
         ]);
         foreach ($it as $profile_data) {
             $matching       = ['mydashboard' => 'plugin_mydashboard',
-                               'config'      => 'plugin_mydashboard_config'];
+                'config'      => 'plugin_mydashboard_config'];
             $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
             foreach ($matching as $old => $new) {
                 if (!isset($current_rights[$old])) {
                     $DB->update('glpi_profilerights', ['rights' => self::translateARight($profile_data[$old])], [
                         'name'        => $new,
-                        'profiles_id' => $profiles_id
+                        'profiles_id' => $profiles_id,
                     ]);
                 }
             }
@@ -382,7 +382,7 @@ class Profile extends \Profile
         //Migration old rights in new ones
         $it = $DB->request([
             'SELECT' => ['id'],
-            'FROM' => 'glpi_profiles'
+            'FROM' => 'glpi_profiles',
         ]);
         foreach ($it as $prof) {
             self::migrateOneProfile($prof['id']);

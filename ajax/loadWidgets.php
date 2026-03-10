@@ -26,7 +26,8 @@
 
 use GlpiPlugin\Mydashboard\Widget;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+
 ini_set("memory_limit", "-1");
 //if (!isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
 //    || count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) < 1) {

@@ -31,7 +31,7 @@ use GlpiPlugin\Mydashboard\Alert;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 if (!isset($_GET['id'])) {
     throw new NotFoundHttpException();

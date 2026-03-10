@@ -28,8 +28,9 @@ use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference;
 
 Html::header_nocache();
-Session::checkLoginUser();
 header("Content-Type: text/html; charset=UTF-8");
+
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 if (isset($_POST['action'])) {
    switch ($_POST['action']) {

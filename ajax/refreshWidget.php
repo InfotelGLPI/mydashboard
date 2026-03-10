@@ -26,7 +26,7 @@
 
 use GlpiPlugin\Mydashboard\Widget;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 $widgets = Widget::getInitialWidgetList();
 

@@ -29,7 +29,7 @@ use GlpiPlugin\Mydashboard\Preference;
 
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 header("Content-Type: text/html; charset=UTF-8");
 

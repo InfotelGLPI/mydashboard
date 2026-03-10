@@ -26,7 +26,7 @@
 
 use GlpiPlugin\Mydashboard\Preference;
 
-Session::checkLoginUser();
+Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 if (isset($_POST['edit_mode'])) {
    $pref = new Preference();
