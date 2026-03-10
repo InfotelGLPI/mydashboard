@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 08:42+0000\n"
+"POT-Creation-Date: 2026-03-10 09:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,16 +53,16 @@ msgstr ""
 msgid "Plugin disabled"
 msgstr ""
 
-#: ajax/loadscripts.php:39 ajax/loadscripts.php:62 src/Preference.php:80
+#: ajax/loadscripts.php:40 ajax/loadscripts.php:63 src/Preference.php:80
 #: src/Config.php:62 src/Menu.php:105 setup.php:218
 msgid "My Dashboard"
 msgstr ""
 
-#: ajax/loadscripts.php:44
+#: ajax/loadscripts.php:45
 msgid "Go to mydashboard actions"
 msgstr ""
 
-#: ajax/loadscripts.php:49
+#: ajax/loadscripts.php:50
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
