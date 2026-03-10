@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-11 16:22+0000\n"
+"POT-Creation-Date: 2026-03-10 08:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-
-#: setup.php:218 ajax/loadscripts.php:39 ajax/loadscripts.php:62
-#: src/Config.php:62 src/Menu.php:105 src/Preference.php:80
-msgid "My Dashboard"
-msgstr ""
-
-#: front/config.php:43
-msgid "Please activate the plugin"
-msgstr ""
 
 #: hook.php:220 src/Config.php:345 src/Alert.php:157 src/Alert.php:2729
 #: src/ItilAlert.php:126
@@ -56,19 +47,15 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: public/scripts/insert_stock_ticketindicators.php:52
 #: public/scripts/insert_stock_tickets.php:52
+#: public/scripts/insert_stock_ticketindicators.php:52
 #: public/scripts/clean_stock_tickets.php:84
 msgid "Plugin disabled"
 msgstr ""
 
-#: ajax/dropdownMonth.php:42 src/Helper.php:1106 src/Helper.php:1453
-#: src/Helper.php:1656 src/Helper.php:1690 src/Helper.php:1715
-msgid "Month"
-msgstr ""
-
-#: ajax/clearGrid.php:41
-msgid "Grid cleared"
+#: ajax/loadscripts.php:39 ajax/loadscripts.php:62 src/Preference.php:80
+#: src/Config.php:62 src/Menu.php:105 setup.php:218
+msgid "My Dashboard"
 msgstr ""
 
 #: ajax/loadscripts.php:44
@@ -77,6 +64,11 @@ msgstr ""
 
 #: ajax/loadscripts.php:49
 msgid "Edit mode is enabled, please close it for better performance"
+msgstr ""
+
+#: ajax/dropdownMonth.php:42 src/Helper.php:1106 src/Helper.php:1453
+#: src/Helper.php:1656 src/Helper.php:1690 src/Helper.php:1715
+msgid "Month"
 msgstr ""
 
 #: ajax/dropdownUpdateDisplaydata.php:45 src/Helper.php:1777
@@ -100,139 +92,48 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: src/Groupprofile.php:63
-msgid "Default dashboard group"
+#: ajax/clearGrid.php:41
+msgid "Grid cleared"
 msgstr ""
 
-#: src/Groupprofile.php:73
-msgid "Use profile group"
+#: src/Preference.php:125
+msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr ""
 
-#: src/Groupprofile.php:75
-msgid "Default groups"
+#: src/Preference.php:131
+msgid "Refresh every "
 msgstr ""
 
-#: src/Widget.php:64
-msgid "Widget management"
+#: src/Preference.php:138
+msgid "minute(s)"
 msgstr ""
 
-#: src/Widget.php:103
-msgid "Indicators"
+#: src/Preference.php:142 src/Config.php:252
+msgid "Replace central interface"
 msgstr ""
 
-#: src/Widget.php:105
-msgid "Tables"
+#: src/Preference.php:150
+msgid "My prefered groups for widget"
 msgstr ""
 
-#: src/Widget.php:107
-msgid "Pie charts"
+#: src/Preference.php:184
+msgid "My requester prefered groups for widget"
 msgstr ""
 
-#: src/Widget.php:109
-msgid "Bar charts"
+#: src/Preference.php:217
+msgid "My prefered entity for widget"
 msgstr ""
 
-#: src/Widget.php:111
-msgid "Line charts"
+#: src/Preference.php:227
+msgid "My favorite category for widgets"
 msgstr ""
 
-#: src/Widget.php:113
-msgid "Map"
+#: src/Preference.php:245
+msgid "My prefered type for widget"
 msgstr ""
 
-#: src/Widget.php:338
-msgid "This widget doesn't exist anymore"
-msgstr ""
-
-#: src/Widget.php:515
-msgid "5 rows"
-msgstr ""
-
-#: src/Widget.php:516
-msgid "10 rows"
-msgstr ""
-
-#: src/Widget.php:517
-msgid "25 rows"
-msgstr ""
-
-#: src/Widget.php:518
-msgid "50 rows"
-msgstr ""
-
-#: src/Widget.php:519 src/Menu.php:971
-msgid "Show all"
-msgstr ""
-
-#: src/Widget.php:681 src/Menu.php:1153 src/Chart.php:150
-msgid "No data available"
-msgstr ""
-
-#: src/Widget.php:739 src/Alert.php:2344 src/Alert.php:2557
-msgid "No problem detected"
-msgstr ""
-
-#: src/Widget.php:808 src/Alert.php:1975
-msgid "No scheduled maintenance"
-msgstr ""
-
-#: src/Widget.php:876 src/Alert.php:2177
-msgid "No informations founded"
-msgstr ""
-
-#: src/Widget.php:909 src/Alert.php:181
-msgid "Your equipments"
-msgstr ""
-
-#: src/Widget.php:1015
-msgid "No equipments founded"
-msgstr ""
-
-#: src/ProfileAuthorizedWidget.php:88
-msgid "Authorized widgets"
-msgstr ""
-
-#: src/ProfileAuthorizedWidget.php:100
-msgid "Authorize/Unauthorize all"
-msgstr ""
-
-#: src/Dashboard.php:65 src/Html.php:54 src/Reports/ProjectTask.php:50
-#: src/Reports/Planning.php:48 src/Reports/Problem.php:51
-#: src/Reports/Project.php:49 src/Reports/Change.php:52 src/Menu.php:977
-#: src/Datatable.php:56 src/Chart.php:79 src/Module.php:64
-msgid "Dashboard"
-msgstr ""
-
-#: src/Dashboard.php:137 src/Menu.php:121
-msgid "GLPI admin grid"
-msgstr ""
-
-#: src/Dashboard.php:138
-msgid "Inventory admin grid"
-msgstr ""
-
-#: src/Dashboard.php:139
-msgid "Helpdesk supervisor grid"
-msgstr ""
-
-#: src/Dashboard.php:140
-msgid "Incident supervisor grid"
-msgstr ""
-
-#: src/Dashboard.php:141
-msgid "Request supervisor grid"
-msgstr ""
-
-#: src/Dashboard.php:142
-msgid "Helpdesk technician grid"
-msgstr ""
-
-#: src/Widgetlist.php:432
-msgid "No widgets available"
-msgstr ""
-
-#: src/Widgetlist.php:551
-msgid "Find a widget"
+#: src/Preference.php:252
+msgid "Palette color"
 msgstr ""
 
 #: src/StockWidget.php:48
@@ -245,181 +146,33 @@ msgstr[1] ""
 msgid "Cannot create alert without a type"
 msgstr ""
 
-#: src/Customswidget.php:48
-msgid "Custom Widgets"
+#: src/Reports/KnowbaseItem.php:153
+msgid "Publication date"
 msgstr ""
 
-#: src/Profile.php:54
-msgid "Rights management"
+#: src/Reports/KnowbaseItem.php:155
+msgid "Modification date"
 msgstr ""
 
-#: src/Profile.php:173
-msgid "Full"
+#: src/Reports/Project.php:49 src/Reports/Problem.php:51
+#: src/Reports/Change.php:52 src/Reports/ProjectTask.php:50
+#: src/Reports/Planning.php:48 src/Dashboard.php:65 src/Html.php:54
+#: src/Datatable.php:56 src/Module.php:64 src/Menu.php:977 src/Chart.php:79
+msgid "Dashboard"
 msgstr ""
 
-#: src/Profile.php:173
-msgid "Custom"
+#: src/Reports/Project.php:64 src/Reports/Project.php:70
+#: src/Reports/Project.php:116 src/Reports/Project.php:197
+#: src/Reports/Project.php:215
+msgid "projects to be processed"
 msgstr ""
 
-#: src/Profile.php:175
-msgid "Dashboard Access"
+#: src/Reports/Reports_Map.php:66
+msgid "OpenStreetMap - Opened tickets by location"
 msgstr ""
 
-#: src/Profile.php:187
-msgid "Configuration Access"
-msgstr ""
-
-#: src/Profile.php:195 src/Profile.php:298
-msgid "See edit mode"
-msgstr ""
-
-#: src/Profile.php:206 src/Profile.php:286
-msgid "Setup stock widget"
-msgstr ""
-
-#: src/Profile.php:290
-msgid "See the dashboard"
-msgstr ""
-
-#: src/Profile.php:294
-msgid "See the configuration"
-msgstr ""
-
-#: src/Reports/ProjectTask.php:65 src/Reports/ProjectTask.php:71
-#: src/Reports/ProjectTask.php:117 src/Reports/ProjectTask.php:193
-#: src/Reports/ProjectTask.php:211
-msgid "projects tasks to be processed"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:73
-msgid "Number of opened tickets by technician and by status"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:76 src/Reports/Reports_Table.php:783
-#: src/Alert.php:202
-msgid "Number of opened tickets by group and by status"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:84
-msgid "Display if you have duplicates into inventory"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:88
-msgid "All unpublished articles"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:90
-msgid "Display unpublished articles of Knowbase"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:95
-msgid "Internal annuary"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:97
-msgid "Search users of your organisation"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:551
-msgid "Number of tickets open by technician and by status"
-msgstr ""
-
-#: src/Reports/Reports_Table.php:554
-msgid "Technicians"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:70
-msgid "Tickets stock by month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:72
-msgid "Sum of not solved tickets by month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:75 src/Reports/Reports_Line.php:567
-msgid "Number of opened and closed tickets by month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:80 src/Reports/Reports_Line.php:854
-msgid "Number of opened and resolved / closed tickets by month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:85
-msgid "Number of opened, closed, unplanned tickets by month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:90
-msgid "Number of tickets created each months"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:95
-msgid "Number of tickets created each week"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:100
-msgid "Number of tickets with validation refusal"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:105
-msgid "Number of tickets linked with problems"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:110
-msgid "Backlog tickets by week"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:112
-msgid "Number of in progress (not new and pending) tickets by week"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:115
-msgid "Monthly tickets in progress"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:117
-msgid "Number of open tickets in the month still in progress for each month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:120
-msgid "Number of tickets with more than one solution"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:268 src/Reports/Reports_Line.php:1302
-#: src/Reports/Reports_Line.php:1375 src/Reports/Reports_Line.php:1470
-#: src/Reports/Reports_Line.php:1563 src/Reports/Reports_Line.php:1670
-#: src/Reports/Reports_Line.php:1787 src/Reports/Reports_Line.php:1892
-#: src/Reports/Reports_Bar.php:252 src/Reports/Reports_Bar.php:471
-#: src/Reports/Reports_Bar.php:806 src/Reports/Reports_Bar.php:1097
-msgid "Tickets number"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:572 src/Reports/Reports_Line.php:859
-#: src/Reports/Reports_Line.php:1172 src/Reports/Reports_Bar.php:1401
-#: src/Reports/Reports_Pie.php:1148 src/Reports/Reports_Pie.php:1150
-msgid "Opened tickets"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:573 src/Reports/Reports_Line.php:1173
-#: src/Reports/Reports_Pie.php:1223 src/Reports/Reports_Pie.php:1225
-msgid "Closed tickets"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:574 src/Reports/Reports_Line.php:861
-#: src/Reports/Reports_Line.php:1175 src/Reports/Reports_Bar.php:112
-msgid "Opened tickets backlog"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:860
-msgid "Resolved / closed tickets"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:1167
-msgid "Number of opened, closed  and unplanned tickets by month"
-msgstr ""
-
-#: src/Reports/Reports_Line.php:1174 src/Reports/Reports_Pie.php:1295
-#: src/Reports/Reports_Pie.php:1297
-msgid "Not planned"
+#: src/Reports/Reports_Map.php:68
+msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr ""
 
 #: src/Reports/Reports_Funnel.php:68
@@ -444,6 +197,39 @@ msgstr ""
 
 #: src/Reports/Reports_Funnel.php:230
 msgid "< 2 years"
+msgstr ""
+
+#: src/Reports/Contract.php:61
+msgid "Contracts status"
+msgstr ""
+
+#: src/Reports/Problem.php:84
+msgid "Problem followup"
+msgstr ""
+
+#: src/Reports/Change.php:67 src/Reports/Change.php:79
+#: src/Reports/Change.php:148 src/Reports/Change.php:273
+#: src/Reports/Change.php:324
+msgid "Changes to be processed"
+msgstr ""
+
+#: src/Reports/Change.php:70 src/Reports/Change.php:82
+#: src/Reports/Change.php:146 src/Reports/Change.php:255
+#: src/Reports/Change.php:308
+msgid "Changes on pending status"
+msgstr ""
+
+#: src/Reports/Change.php:73 src/Reports/Change.php:335
+msgid "Applied changes"
+msgstr ""
+
+#: src/Reports/Change.php:88 src/Reports/Change.php:552
+msgid "Change followup"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:112 src/Reports/Reports_Line.php:574
+#: src/Reports/Reports_Line.php:861 src/Reports/Reports_Line.php:1175
+msgid "Opened tickets backlog"
 msgstr ""
 
 #: src/Reports/Reports_Bar.php:114
@@ -548,6 +334,15 @@ msgstr ""
 msgid "Last synchronization of computers by month"
 msgstr ""
 
+#: src/Reports/Reports_Bar.php:252 src/Reports/Reports_Bar.php:471
+#: src/Reports/Reports_Bar.php:806 src/Reports/Reports_Bar.php:1097
+#: src/Reports/Reports_Line.php:268 src/Reports/Reports_Line.php:1302
+#: src/Reports/Reports_Line.php:1375 src/Reports/Reports_Line.php:1470
+#: src/Reports/Reports_Line.php:1563 src/Reports/Reports_Line.php:1670
+#: src/Reports/Reports_Line.php:1787 src/Reports/Reports_Line.php:1892
+msgid "Tickets number"
+msgstr ""
+
 #: src/Reports/Reports_Bar.php:692
 msgid "Tasks duration (minutes)"
 msgstr ""
@@ -570,6 +365,12 @@ msgstr ""
 
 #: src/Reports/Reports_Bar.php:1377
 msgid "Trimester 4"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1401 src/Reports/Reports_Pie.php:1148
+#: src/Reports/Reports_Pie.php:1150 src/Reports/Reports_Line.php:572
+#: src/Reports/Reports_Line.php:859 src/Reports/Reports_Line.php:1172
+msgid "Opened tickets"
 msgstr ""
 
 #: src/Reports/Reports_Bar.php:1402
@@ -638,14 +439,6 @@ msgstr ""
 
 #: src/Reports/Reports_Bar.php:2454
 msgid "Percent - Respected TTR"
-msgstr ""
-
-#: src/Reports/KnowbaseItem.php:153
-msgid "Publication date"
-msgstr ""
-
-#: src/Reports/KnowbaseItem.php:155
-msgid "Modification date"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:114
@@ -720,6 +513,16 @@ msgstr ""
 msgid "Top ten of opened tickets by appliance"
 msgstr ""
 
+#: src/Reports/Reports_Pie.php:1223 src/Reports/Reports_Pie.php:1225
+#: src/Reports/Reports_Line.php:573 src/Reports/Reports_Line.php:1173
+msgid "Closed tickets"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:1295 src/Reports/Reports_Pie.php:1297
+#: src/Reports/Reports_Line.php:1174
+msgid "Not planned"
+msgstr ""
+
 #: src/Reports/Reports_Pie.php:1663 src/Reports/Reports_Pie.php:1681
 msgid "Satisfy percent"
 msgstr ""
@@ -728,46 +531,111 @@ msgstr ""
 msgid "Not satisfy percent"
 msgstr ""
 
-#: src/Reports/Problem.php:84
-msgid "Problem followup"
+#: src/Reports/ProjectTask.php:65 src/Reports/ProjectTask.php:71
+#: src/Reports/ProjectTask.php:117 src/Reports/ProjectTask.php:193
+#: src/Reports/ProjectTask.php:211
+msgid "projects tasks to be processed"
 msgstr ""
 
-#: src/Reports/Contract.php:61
-msgid "Contracts status"
+#: src/Reports/Reports_Line.php:70
+msgid "Tickets stock by month"
 msgstr ""
 
-#: src/Reports/Project.php:64 src/Reports/Project.php:70
-#: src/Reports/Project.php:116 src/Reports/Project.php:197
-#: src/Reports/Project.php:215
-msgid "projects to be processed"
+#: src/Reports/Reports_Line.php:72
+msgid "Sum of not solved tickets by month"
 msgstr ""
 
-#: src/Reports/Change.php:67 src/Reports/Change.php:79
-#: src/Reports/Change.php:148 src/Reports/Change.php:273
-#: src/Reports/Change.php:324
-msgid "Changes to be processed"
+#: src/Reports/Reports_Line.php:75 src/Reports/Reports_Line.php:567
+msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: src/Reports/Change.php:70 src/Reports/Change.php:82
-#: src/Reports/Change.php:146 src/Reports/Change.php:255
-#: src/Reports/Change.php:308
-msgid "Changes on pending status"
+#: src/Reports/Reports_Line.php:80 src/Reports/Reports_Line.php:854
+msgid "Number of opened and resolved / closed tickets by month"
 msgstr ""
 
-#: src/Reports/Change.php:73 src/Reports/Change.php:335
-msgid "Applied changes"
+#: src/Reports/Reports_Line.php:85
+msgid "Number of opened, closed, unplanned tickets by month"
 msgstr ""
 
-#: src/Reports/Change.php:88 src/Reports/Change.php:552
-msgid "Change followup"
+#: src/Reports/Reports_Line.php:90
+msgid "Number of tickets created each months"
 msgstr ""
 
-#: src/Reports/Reports_Map.php:66
-msgid "OpenStreetMap - Opened tickets by location"
+#: src/Reports/Reports_Line.php:95
+msgid "Number of tickets created each week"
 msgstr ""
 
-#: src/Reports/Reports_Map.php:68
-msgid "Display Tickets by location (Latitude / Longitude)"
+#: src/Reports/Reports_Line.php:100
+msgid "Number of tickets with validation refusal"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:105
+msgid "Number of tickets linked with problems"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:110
+msgid "Backlog tickets by week"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:112
+msgid "Number of in progress (not new and pending) tickets by week"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:115
+msgid "Monthly tickets in progress"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:117
+msgid "Number of open tickets in the month still in progress for each month"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:120
+msgid "Number of tickets with more than one solution"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:860
+msgid "Resolved / closed tickets"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:1167
+msgid "Number of opened, closed  and unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:73
+msgid "Number of opened tickets by technician and by status"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:76 src/Reports/Reports_Table.php:783
+#: src/Alert.php:202
+msgid "Number of opened tickets by group and by status"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:84
+msgid "Display if you have duplicates into inventory"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:88
+msgid "All unpublished articles"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:90
+msgid "Display unpublished articles of Knowbase"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:95
+msgid "Internal annuary"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:97
+msgid "Search users of your organisation"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:551
+msgid "Number of tickets open by technician and by status"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:554
+msgid "Technicians"
 msgstr ""
 
 #: src/Reports/Ticket.php:81
@@ -795,6 +663,30 @@ msgstr ""
 msgid "ID and priority"
 msgstr ""
 
+#: src/Dashboard.php:137 src/Menu.php:121
+msgid "GLPI admin grid"
+msgstr ""
+
+#: src/Dashboard.php:138
+msgid "Inventory admin grid"
+msgstr ""
+
+#: src/Dashboard.php:139
+msgid "Helpdesk supervisor grid"
+msgstr ""
+
+#: src/Dashboard.php:140
+msgid "Incident supervisor grid"
+msgstr ""
+
+#: src/Dashboard.php:141
+msgid "Request supervisor grid"
+msgstr ""
+
+#: src/Dashboard.php:142
+msgid "Helpdesk technician grid"
+msgstr ""
+
 #: src/Config.php:57
 msgid "Plugin setup"
 msgstr ""
@@ -813,10 +705,6 @@ msgstr ""
 
 #: src/Config.php:242
 msgid "Enable the possibility to display Dashboard in full screen"
-msgstr ""
-
-#: src/Config.php:252 src/Preference.php:142
-msgid "Replace central interface"
 msgstr ""
 
 #: src/Config.php:259
@@ -839,6 +727,34 @@ msgstr ""
 
 #: src/Config.php:322
 msgid "Can take many time if you have many tickets"
+msgstr ""
+
+#: src/Servicecatalog.php:84 src/Servicecatalog.php:91
+msgid "Dashboard access"
+msgstr ""
+
+#: src/Datatable.php:127 src/Chart.php:156
+msgid "Not an array"
+msgstr ""
+
+#: src/Datatable.php:234
+msgid "No column defined"
+msgstr ""
+
+#: src/Groupprofile.php:63
+msgid "Default dashboard group"
+msgstr ""
+
+#: src/Groupprofile.php:73
+msgid "Use profile group"
+msgstr ""
+
+#: src/Groupprofile.php:75
+msgid "Default groups"
+msgstr ""
+
+#: src/Customswidget.php:48
+msgid "Custom Widgets"
 msgstr ""
 
 #: src/Alert.php:83
@@ -889,6 +805,10 @@ msgstr ""
 
 #: src/Alert.php:180
 msgid "Display alerts for inventory stocks"
+msgstr ""
+
+#: src/Alert.php:181 src/Widget.php:909
+msgid "Your equipments"
 msgstr ""
 
 #: src/Alert.php:183
@@ -1016,6 +936,18 @@ msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
+#: src/Alert.php:1975 src/Widget.php:808
+msgid "No scheduled maintenance"
+msgstr ""
+
+#: src/Alert.php:2177 src/Widget.php:876
+msgid "No informations founded"
+msgstr ""
+
+#: src/Alert.php:2344 src/Alert.php:2557 src/Widget.php:739
+msgid "No problem detected"
+msgstr ""
+
 #: src/Alert.php:2589 src/Alert.php:2592 src/Alert.php:2726
 #: src/ItilAlert.php:123
 msgid "Alert"
@@ -1096,6 +1028,103 @@ msgstr ""
 
 #: src/Alert.php:3609
 msgid "Tickets closed"
+msgstr ""
+
+#: src/ProfileAuthorizedWidget.php:88
+msgid "Authorized widgets"
+msgstr ""
+
+#: src/ProfileAuthorizedWidget.php:100
+msgid "Authorize/Unauthorize all"
+msgstr ""
+
+#: src/Module.php:176 src/Module.php:373
+msgid "notice"
+msgstr ""
+
+#: src/Module.php:177 src/Module.php:381
+msgid "warning"
+msgstr ""
+
+#: src/Module.php:178 src/Module.php:389
+msgid "error"
+msgstr ""
+
+#: src/Helper.php:1050 src/Helper.php:1442 src/Helper.php:1655
+msgid "Week"
+msgstr ""
+
+#: src/Helper.php:1060 src/Helper.php:1579
+msgid "Technician"
+msgid_plural "Technicians"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Helper.php:1087 src/Helper.php:1093 src/Helper.php:1099
+#: src/Helper.php:1105 src/Helper.php:1667 src/Helper.php:1703
+msgid "Time display"
+msgstr ""
+
+#: src/Helper.php:1088 src/Helper.php:1689
+msgid "Last month"
+msgstr ""
+
+#: src/Helper.php:1094
+msgid "Last year"
+msgstr ""
+
+#: src/Helper.php:1100 src/Helper.php:1687
+msgid "Year to date"
+msgstr ""
+
+#: src/Helper.php:1114
+#, php-format
+msgid "sliding %s-month period"
+msgstr ""
+
+#: src/Helper.php:1117 src/Helper.php:1124 src/Helper.php:1958
+#: src/Helper.php:1995
+msgid "Category"
+msgstr ""
+
+#: src/Helper.php:1261
+msgid "Child locations"
+msgstr ""
+
+#: src/Helper.php:1654
+msgid "Day"
+msgstr ""
+
+#: src/Helper.php:1688 src/Helper.php:1749 src/Helper.php:1877
+msgid "year"
+msgstr ""
+
+#: src/Helper.php:1750
+msgid "Start end"
+msgstr ""
+
+#: src/Helper.php:1764
+msgid "Display"
+msgstr ""
+
+#: src/Helper.php:1878
+msgid "begin and end date"
+msgstr ""
+
+#: src/Helper.php:1892
+msgid "Filter date"
+msgstr ""
+
+#: src/Helper.php:2034
+msgid "Tag"
+msgstr ""
+
+#: src/Helper.php:2384
+msgid "Not a valid SQL SELECT query"
+msgstr ""
+
+#: src/PreferenceUserBlacklist.php:62
+msgid "From which plugins you want to display the widgets?"
 msgstr ""
 
 #: src/Menu.php:120
@@ -1231,6 +1260,10 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
+#: src/Menu.php:971 src/Widget.php:519
+msgid "Show all"
+msgstr ""
+
 #: src/Menu.php:978
 msgid "Dashboard saved"
 msgstr ""
@@ -1271,6 +1304,10 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
+#: src/Menu.php:1153 src/Chart.php:150 src/Widget.php:681
+msgid "No data available"
+msgstr ""
+
 #: src/Menu.php:1154
 msgid "Refresh widget"
 msgstr ""
@@ -1279,147 +1316,110 @@ msgstr ""
 msgid "Export to PDF"
 msgstr ""
 
-#: src/Servicecatalog.php:84 src/Servicecatalog.php:91
-msgid "Dashboard access"
+#: src/Profile.php:54
+msgid "Rights management"
 msgstr ""
 
-#: src/Datatable.php:127 src/Chart.php:156
-msgid "Not an array"
+#: src/Profile.php:173
+msgid "Full"
 msgstr ""
 
-#: src/Datatable.php:234
-msgid "No column defined"
+#: src/Profile.php:173
+msgid "Custom"
+msgstr ""
+
+#: src/Profile.php:175
+msgid "Dashboard Access"
+msgstr ""
+
+#: src/Profile.php:187
+msgid "Configuration Access"
+msgstr ""
+
+#: src/Profile.php:195 src/Profile.php:298
+msgid "See edit mode"
+msgstr ""
+
+#: src/Profile.php:206 src/Profile.php:286
+msgid "Setup stock widget"
+msgstr ""
+
+#: src/Profile.php:290
+msgid "See the dashboard"
+msgstr ""
+
+#: src/Profile.php:294
+msgid "See the configuration"
 msgstr ""
 
 #: src/Chart.php:132
 msgid "No data is given to the widget"
 msgstr ""
 
-#: src/Module.php:176 src/Module.php:373
-msgid "notice"
+#: src/Widget.php:64
+msgid "Widget management"
 msgstr ""
 
-#: src/Module.php:177 src/Module.php:381
-msgid "warning"
+#: src/Widget.php:103
+msgid "Indicators"
 msgstr ""
 
-#: src/Module.php:178 src/Module.php:389
-msgid "error"
+#: src/Widget.php:105
+msgid "Tables"
+msgstr ""
+
+#: src/Widget.php:107
+msgid "Pie charts"
+msgstr ""
+
+#: src/Widget.php:109
+msgid "Bar charts"
+msgstr ""
+
+#: src/Widget.php:111
+msgid "Line charts"
+msgstr ""
+
+#: src/Widget.php:113
+msgid "Map"
+msgstr ""
+
+#: src/Widget.php:338
+msgid "This widget doesn't exist anymore"
+msgstr ""
+
+#: src/Widget.php:515
+msgid "5 rows"
+msgstr ""
+
+#: src/Widget.php:516
+msgid "10 rows"
+msgstr ""
+
+#: src/Widget.php:517
+msgid "25 rows"
+msgstr ""
+
+#: src/Widget.php:518
+msgid "50 rows"
+msgstr ""
+
+#: src/Widget.php:1015
+msgid "No equipments founded"
 msgstr ""
 
 #: src/UserWidget.php:69
 msgid "user_widget management"
 msgstr ""
 
-#: src/PreferenceUserBlacklist.php:62
-msgid "From which plugins you want to display the widgets?"
+#: src/Widgetlist.php:432
+msgid "No widgets available"
 msgstr ""
 
-#: src/Helper.php:1050 src/Helper.php:1442 src/Helper.php:1655
-msgid "Week"
+#: src/Widgetlist.php:551
+msgid "Find a widget"
 msgstr ""
 
-#: src/Helper.php:1060 src/Helper.php:1579
-msgid "Technician"
-msgid_plural "Technicians"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Helper.php:1087 src/Helper.php:1093 src/Helper.php:1099
-#: src/Helper.php:1105 src/Helper.php:1667 src/Helper.php:1703
-msgid "Time display"
-msgstr ""
-
-#: src/Helper.php:1088 src/Helper.php:1689
-msgid "Last month"
-msgstr ""
-
-#: src/Helper.php:1094
-msgid "Last year"
-msgstr ""
-
-#: src/Helper.php:1100 src/Helper.php:1687
-msgid "Year to date"
-msgstr ""
-
-#: src/Helper.php:1114
-#, php-format
-msgid "sliding %s-month period"
-msgstr ""
-
-#: src/Helper.php:1117 src/Helper.php:1124 src/Helper.php:1958
-#: src/Helper.php:1995
-msgid "Category"
-msgstr ""
-
-#: src/Helper.php:1261
-msgid "Child locations"
-msgstr ""
-
-#: src/Helper.php:1654
-msgid "Day"
-msgstr ""
-
-#: src/Helper.php:1688 src/Helper.php:1749 src/Helper.php:1877
-msgid "year"
-msgstr ""
-
-#: src/Helper.php:1750
-msgid "Start end"
-msgstr ""
-
-#: src/Helper.php:1764
-msgid "Display"
-msgstr ""
-
-#: src/Helper.php:1878
-msgid "begin and end date"
-msgstr ""
-
-#: src/Helper.php:1892
-msgid "Filter date"
-msgstr ""
-
-#: src/Helper.php:2034
-msgid "Tag"
-msgstr ""
-
-#: src/Helper.php:2384
-msgid "Not a valid SQL SELECT query"
-msgstr ""
-
-#: src/Preference.php:125
-msgid "Automatic refreshing of the widgets that can be refreshed"
-msgstr ""
-
-#: src/Preference.php:131
-msgid "Refresh every "
-msgstr ""
-
-#: src/Preference.php:138
-msgid "minute(s)"
-msgstr ""
-
-#: src/Preference.php:150
-msgid "My prefered groups for widget"
-msgstr ""
-
-#: src/Preference.php:184
-msgid "My requester prefered groups for widget"
-msgstr ""
-
-#: src/Preference.php:217
-msgid "My prefered entity for widget"
-msgstr ""
-
-#: src/Preference.php:227
-msgid "My favorite category for widgets"
-msgstr ""
-
-#: src/Preference.php:245
-msgid "My prefered type for widget"
-msgstr ""
-
-#: src/Preference.php:252
-msgid "Palette color"
+#: front/config.php:43
+msgid "Please activate the plugin"
 msgstr ""
