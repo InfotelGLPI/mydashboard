@@ -222,7 +222,7 @@ class Ticket extends CommonGLPI
                 if ($showticket) {
                     return self::showCentralTaskList(0, "todo", false);
                 }
-                // no break
+                break;
             case "tickettaskstodowidgetgroup":
                 if ($showticket) {
                     return self::showCentralTaskList(0, "todo", true);
