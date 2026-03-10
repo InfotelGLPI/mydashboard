@@ -369,7 +369,7 @@ class Ticket extends CommonGLPI
 
         $query   .= " ORDER BY date_mod DESC";
         $result  = $DB->doQuery($query);
-        $numrows = $DB->numrows($result);
+        $number = $DB->numrows($result);
 
         $output['header'][] = __('ID and priority', 'mydashboard');
         $output['header'][] = __('Requester');
