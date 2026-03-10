@@ -112,7 +112,7 @@ class Ticket extends CommonGLPI
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Tickets on pending status'),
                 "type"    => Widget::$TABLE,
                 "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Your tickets to close'),
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlisttoapprovewidgetgroup"]       = ["title"   => __('Your tickets to close'),
                 "type"    => Widget::$TABLE,
                 "comment" => ""];
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistrequestbyselfwidgetgroup"] = ["title"   => __('Your tickets in progress'),
