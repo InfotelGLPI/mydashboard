@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 08:39+0000\n"
+"POT-Creation-Date: 2026-03-10 08:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -646,20 +646,20 @@ msgstr ""
 msgid "Your satisfaction surveys"
 msgstr ""
 
-#: src/Reports/Ticket.php:93 src/Reports/Ticket.php:533
+#: src/Reports/Ticket.php:93 src/Reports/Ticket.php:525
 msgid "Your tickets to validate"
 msgstr ""
 
-#: src/Reports/Ticket.php:98 src/Reports/Ticket.php:1260 src/Alert.php:3167
+#: src/Reports/Ticket.php:98 src/Reports/Ticket.php:1252 src/Alert.php:3167
 #: src/Alert.php:3572
 msgid "New tickets"
 msgstr ""
 
-#: src/Reports/Ticket.php:134 src/Reports/Ticket.php:1134
+#: src/Reports/Ticket.php:134 src/Reports/Ticket.php:1126
 msgid "Ticket followup"
 msgstr ""
 
-#: src/Reports/Ticket.php:382 src/Reports/Ticket.php:705 src/Alert.php:424
+#: src/Reports/Ticket.php:374 src/Reports/Ticket.php:697 src/Alert.php:424
 msgid "ID and priority"
 msgstr ""
 
