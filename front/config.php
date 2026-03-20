@@ -39,7 +39,7 @@ if (Plugin::isPluginActive("mydashboard")) {
 
 } else {
    Html::header(__('Setup'), '', "config", "plugin");
-   echo "<div class='alert alert-important alert-warning d-flex'>";
+   echo "<div class='alert  alert-warning d-flex'>";
    echo "<b>" . __('Please activate the plugin', 'mydashboard') . "</b></div>";
    Html::footer();
 

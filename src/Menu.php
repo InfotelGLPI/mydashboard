@@ -1112,7 +1112,7 @@ class Menu extends CommonGLPI
             }
 
         } else {
-            echo "<div class='alert alert-warning alert-important' id='warning-alert'>
+            echo "<div class='alert alert-warning ' id='warning-alert'>
                 <strong>" . __('Warning', 'mydashboard') . "!</strong>
                 " . __('No widgets founded, please add widgets', 'mydashboard') . "
             </div>";

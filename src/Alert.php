@@ -2799,7 +2799,7 @@ class Alert extends CommonDBTM
         if (Alert::countForAlerts(0, 0) > 0) {
             $display = "<div class=\"bt-feature $class \">";
             $display .= "<h3>";
-            $display .= "<div class='alert alert-danger alert-important' role='alert'>";
+            $display .= "<div class='alert alert-danger ' role='alert'>";
             $config  = new Config();
             $config->getFromDB(1);
             $display .= Config::displayField($config, 'title_alerts_widget');

@@ -28,6 +28,7 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
+use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use GlpiPlugin\Badges\Badge;
@@ -46,7 +47,8 @@ use Session;
  */
 class Widget extends CommonDBTM
 {
-    public static $rightname = "plugin_mydashboard";
+    public static $rightname = "plugin_mydashboard_config";
+    public $dohistory = true;
 
     public static $KPI      = 0;
     public static $TABLE    = 1;
@@ -63,7 +65,94 @@ class Widget extends CommonDBTM
      */
     public static function getTypeName($nb = 0)
     {
-        return __('Widget management', 'mydashboard');
+        return __('Widget', 'mydashboard');
+    }
+
+    public static function getIcon()
+    {
+        return Menu::getIcon();
+    }
+
+    public static function canCreate(): bool
+    {
+        return Session::haveRightsOr('plugin_mydashboard_config', [CREATE, UPDATE]);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function canView(): bool
+    {
+        return Session::haveRight('plugin_mydashboard_config', UPDATE);
+    }
+
+    public static function canUpdate(): bool
+    {
+        return Session::haveRight('plugin_mydashboard_config', UPDATE);
+    }
+
+
+    public function defineTabs($options = [])
+    {
+
+        $ong = [];
+        $this->addDefaultFormTab($ong)
+            ->addStandardTab(self::class, $ong, $options)
+            ->addStandardTab('Log', $ong, $options);
+
+        return $ong;
+    }
+
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        if (self::canView()) {
+            switch (get_class($item)) {
+                case self::class:
+                    return self::createTabEntry(__s("Filters", "mydashboard"), 0, $item::getType(), "ti ti-filter");
+            }
+        }
+        return '';
+    }
+
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        /** @var Widget $item */
+        switch ($item->getType()) {
+            case self::class:
+                $item->showFilters();
+                return true;
+        }
+        return false;
+    }
+
+    public function showForm($ID, array $options = [])
+    {
+        $this->initForm($ID, $options);
+        $this->showFormHeader($options);
+        $rand = mt_rand();
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td><label for='textfield_name$rand'>" . __s('Name') . "</label></td>";
+        echo "<td>";
+        echo \Html::input(
+            'name',
+            [
+                'value' => $this->fields["name"],
+                'id'    => "textfield_name$rand",
+                'readonly' => 'readonly',
+            ],
+        );
+        echo "</td></tr>";
+
+        return true;
+    }
+
+
+
+    public function showFilters()
+    {
+
     }
 
     /**
@@ -341,7 +430,7 @@ class Widget extends CommonDBTM
         if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
             $message .= " - " . $id;
         }
-        $msg = "<div class='center alert alert-warning alert-important' role='alert'><br><br>";
+        $msg = "<div class='center alert alert-warning ' role='alert'><br><br>";
         $msg .= "<i style='font-size:3em;' class='ti ti-alert-triangle'></i>";
         $msg .= "<br><br><span class='b'>$message</span></div>";
 
@@ -714,7 +803,7 @@ class Widget extends CommonDBTM
         } else {
             $display .= "<h5>";
         }
-        $display .= "<div class='alert alert-danger alert-important' role='alert'>";
+        $display .= "<div class='alert alert-danger ' role='alert'>";
         $config  = new Config();
         $config->getFromDB(1);
         $display .= Config::displayField($config, 'title_alerts_widget');
@@ -784,7 +873,7 @@ class Widget extends CommonDBTM
         } else {
             $display .= "<h5>";
         }
-        $display .= "<div class='alert alert-warning alert-important' role='alert'>";
+        $display .= "<div class='alert alert-warning ' role='alert'>";
         $config  = new Config();
         $config->getFromDB(1);
         $display .= Config::displayField($config, 'title_maintenances_widget');
@@ -853,7 +942,7 @@ class Widget extends CommonDBTM
         } else {
             $display .= "<h5>";
         }
-        $display .= "<div class='alert alert-info alert-important' role='alert'>";
+        $display .= "<div class='alert alert-info ' role='alert'>";
         $config  = new Config();
         $config->getFromDB(1);
         $display .= Config::displayField($config, 'title_informations_widget');
@@ -907,7 +996,7 @@ class Widget extends CommonDBTM
         if ($fromsc == true) {
             $display .= "<div class=\"bt-feature $class\">";
             $display .= "<h3>";
-            $display .= "<div class='alert alert-light alert-important' role='alert'>";
+            $display .= "<div class='alert alert-light ' role='alert'>";
             $display .= __('Your equipments', 'mydashboard');
             $display .= "</div>";
             $display .= "</h3>";
@@ -1067,6 +1156,15 @@ class Widget extends CommonDBTM
             }
         }
         return $items;
+    }
+
+    public function getForbiddenStandardMassiveAction()
+    {
+
+        $forbidden   = parent::getForbiddenStandardMassiveAction();
+        $forbidden[] = 'update';
+        $forbidden[] = 'purge';
+        return $forbidden;
     }
 
     public static function install(Migration $migration)

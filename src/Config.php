@@ -321,7 +321,7 @@ class Config extends CommonDBTM
             _sx('button', 'Reconstruct global indicators per week', 'mydashboard'),
             ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary']
         );
-        echo "<br/><br/><div class='alert alert-important alert-warning d-flex'>";
+        echo "<br/><br/><div class='alert  alert-warning d-flex'>";
         echo  __('Can take many time if you have many tickets', 'mydashboard');
         echo "</div>";
 

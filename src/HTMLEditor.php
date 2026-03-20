@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -32,138 +33,152 @@ use DbUtils;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-class HTMLEditor extends CommonDBTM {
-   public $itemtype = Customswidget::class;
-   public $items_id = 'id';
+class HTMLEditor extends CommonDBTM
+{
+    public $itemtype = Customswidget::class;
+    public $items_id = 'id';
 
-   static $types = [Customswidget::class];
+    public static $types = [Customswidget::class];
 
-   static $rightname = 'plugin_mydashboard';
+    public static $rightname = 'plugin_mydashboard';
 
-   function rawSearchOptions() {
-      $tab = [];
+    public function rawSearchOptions()
+    {
+        $tab = [];
 
-      $tab[] = [
-         'id'            => '66',
-         'table'         => $this->getTable(),
-         'field'         => 'content',
-         'name'          => __('Content'),
-         'datatype'      => 'text',
-         'itemlink_type' => $this->getType()
-      ];
-   }
+        $tab[] = [
+            'id'            => '66',
+            'table'         => $this->getTable(),
+            'field'         => 'content',
+            'name'          => __('Content'),
+            'datatype'      => 'text',
+            'itemlink_type' => $this->getType(),
+        ];
+    }
 
-   /**
-    * Display tab for each users
-    *
-    * @param CommonGLPI $item
-    * @param int        $withtemplate
-    *
-    * @return array|string
-    */
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public static function getIcon()
+    {
+        return Menu::getIcon();
+    }
 
-      $dbu = new DbUtils();
-      if (!$withtemplate) {
-         if ($item->getType() == Customswidget::class) {
-            if ($_SESSION['glpishow_count_on_tabs']) {
-               return self::createTabEntry(Customswidget::getTypeName(),
-                                                                     $dbu->countElementsInTable(Customswidget::getTable(),
-                                                                                                ["`id`" => $item->getID()]));
+    /**
+     * Display tab for each users
+     *
+     * @param CommonGLPI $item
+     * @param int        $withtemplate
+     *
+     * @return array|string
+     */
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+
+        $dbu = new DbUtils();
+        if (!$withtemplate) {
+            if ($item->getType() == Customswidget::class) {
+                if ($_SESSION['glpishow_count_on_tabs']) {
+                    return self::createTabEntry(
+                        Customswidget::getTypeName(),
+                        $dbu->countElementsInTable(
+                            Customswidget::getTable(),
+                            ["`id`" => $item->getID()]
+                        )
+                    );
+                }
+                return self::createTabEntry(Customswidget::getTypeName());
             }
-            return self::createTabEntry(Customswidget::getTypeName());
-         }
-      }
-      return '';
-   }
+        }
+        return '';
+    }
 
-   /**
-    * Display content for each users
-    *
-    * @static
-    *
-    * @param CommonGLPI $item
-    * @param int        $tabnum
-    * @param int        $withtemplate
-    *
-    * @return bool|true
-    */
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    /**
+     * Display content for each users
+     *
+     * @static
+     *
+     * @param CommonGLPI $item
+     * @param int        $tabnum
+     * @param int        $withtemplate
+     *
+     * @return bool|true
+     */
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
 
-      $field = new self();
+        $field = new self();
 
-      $field->showForm($item);
+        $field->showForm($item);
 
-      return true;
-   }
+        return true;
+    }
 
-   function showForm($item, $openform = true, $closeform = true) {
+    public function showForm($item, $openform = true, $closeform = true)
+    {
 
-      // Codemirror lib
-      echo \Html::css('lib/codemirror.css');
-      echo \Html::script("lib/codemirror.js");
+        // Codemirror lib
+//        echo \Html::css('/lib/codemirror.css');
+//        echo \Html::script("/lib/codemirror.js");
 
-      echo "<div class='firstbloc'>";
-      if ($openform) {
-         echo "<form method='post' action='" . Toolbox::getItemTypeFormURL(HTMLEditor::class) . "'>";
-      }
+        echo "<div class='firstbloc'>";
+        if ($openform) {
+            echo "<form method='post' action='" . Toolbox::getItemTypeFormURL(HTMLEditor::class) . "'>";
+        }
 
-      echo "<table class='tab_cadre_fixe'>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>" . $item->fields['name'] . "</th></tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
+        echo "<table class='tab_cadre_fixe'>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<th>" . $item->fields['name'] . "</th></tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>";
 
-      $rand = mt_rand();
+        $rand = mt_rand();
 
-      \Html::textarea(['name'            => 'content',
-                      'value'           => htmlspecialchars($item->fields['content']),
-                      'editor_id'           => 'custom_css_code_'. $rand,
-                      'enable_richtext' => false]);
+        \Html::textarea(['name'            => 'content',
+            'value'           => htmlspecialchars($item->fields['content']),
+            'editor_id'           => 'custom_css_code_' . $rand,
+            'enable_richtext' => true]);
 
-      $editor_options = [
-         'mode'         => 'text/css',
-         'lineNumbers'  => true,
-//         'lineWrapping' => true,
-         // Autocomplete with CTRL+SPACE
-         'extraKeys'    => [
-            'Ctrl-Space' => 'autocomplete',
-         ],
+//        $editor_options = [
+//            'mode'         => 'text/css',
+//            'lineNumbers'  => true,
+//            //         'lineWrapping' => true,
+//            // Autocomplete with CTRL+SPACE
+//            'extraKeys'    => [
+//                'Ctrl-Space' => 'autocomplete',
+//            ],
+//
+//            // Code folding configuration
+//            'foldGutter'   => true,
+//            'gutters'      => [
+//                'CodeMirror-linenumbers',
+//                'CodeMirror-foldgutter',
+//            ],
+//        ];
+//
+//        echo \Html::scriptBlock('
+//              $(function() {
+//                 var textarea = document.getElementById("custom_css_code_' . $rand . '");
+//                 var editor = CodeMirror.fromTextArea(textarea, ' . json_encode($editor_options) . ');
+//
+//                 // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
+//                 setTimeout(function () {editor.refresh();}, 10);
+//
+//              });
+//           ');
 
-         // Code folding configuration
-         'foldGutter'   => true,
-         'gutters'      => [
-            'CodeMirror-linenumbers',
-            'CodeMirror-foldgutter'
-         ],
-      ];
+        echo "</td></tr>\n";
 
-      echo \Html::scriptBlock('
-      $(function() {
-         var textarea = document.getElementById("custom_css_code_' . $rand . '");
-         var editor = CodeMirror.fromTextArea(textarea, ' . json_encode($editor_options) . ');
-
-         // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
-         setTimeout(function () {editor.refresh();}, 10);
-
-      });
-   ');
-
-      echo "</td></tr>\n";
-
-      if ($closeform) {
-         echo "<tr class='tab_bg_1 center'>";
-         echo "<td>";
-         echo \Html::hidden('id', ['value' => $item->getID()]);
-         echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-         echo "</td></tr>\n";
-         echo "</table>";
-         \Html::closeForm();
-      } else {
-         echo "</table>";
-      }
-   }
+        if ($closeform) {
+            echo "<tr class='tab_bg_1 center'>";
+            echo "<td>";
+            echo \Html::hidden('id', ['value' => $item->fields['id']]);
+            echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
+            echo "</td></tr>\n";
+            echo "</table>";
+            \Html::closeForm();
+        } else {
+            echo "</table>";
+        }
+    }
 }

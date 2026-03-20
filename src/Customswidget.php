@@ -50,6 +50,11 @@ class Customswidget extends CommonDropdown
         return __('Custom Widgets', 'mydashboard');
     }
 
+    public static function getIcon()
+    {
+        return Menu::getIcon();
+    }
+
     /**
      * Display tab for each customwidget
      * @override
