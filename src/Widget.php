@@ -28,6 +28,7 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
+use DBConnection;
 use DbUtils;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
@@ -37,6 +38,7 @@ use GlpiPlugin\Mydashboard\Reports\Reports_Map;
 use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
 use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use GlpiPlugin\Servicecatalog\Config as ServiceCatalogConfig;
+use Migration;
 use Session;
 
 /**
@@ -1065,5 +1067,72 @@ class Widget extends CommonDBTM
             }
         }
         return $items;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `name` varchar(255) NOT NULL,
+                        PRIMARY KEY (`id`),
+                        UNIQUE (`name`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        //widgetname Migration
+        $classes = ['GlpiPluginActivityDashboard' => 'GlpiPlugin\\\Activity\\\Dashboard',
+            'GlpiPluginManageentitiesDashboard' => 'GlpiPlugin\\\Manageentities\\\Dashboard',
+            'GlpiPluginEventsmanagerDashboard' => 'GlpiPlugin\\\Eventsmanager\\\Dashboard',
+            'GlpiPluginOcsinventoryngDashboard' => 'GlpiPlugin\\\Ocsinventoryng\\\Dashboard',
+            'GlpiPluginResourcesDashboard' => 'GlpiPlugin\\\Resources\\\Dashboard',
+            'GlpiPluginSatisfactionDashboard' => 'GlpiPlugin\\\Satisfaction\\\Dashboard',
+            'GlpiPluginServicecatalogIndicator' => 'GlpiPlugin\\\Servicecatalog\\\Indicator',
+            'GlpiPluginTasklistsDashboard' => 'GlpiPlugin\\\Tasklists\\\Dashboard',
+            'GlpiPluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard'];
+
+        foreach ($classes as $old => $new) {
+            $iterator = $DB->request([
+                'SELECT' => [
+                    'id',
+                    'name',
+                ],
+                'FROM' => 'glpi_plugin_mydashboard_widgets',
+                'WHERE' => [
+                    'name'   => ['LIKE', $old . '%']
+                ],
+            ]);
+
+            if (count($iterator) > 0) {
+                foreach ($iterator as $data) {
+                    $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'$old','$new') where id = '" . $data['id'] . "'";
+                    $DB->doQuery($query);
+                }
+            }
+        }
+
+        $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'PluginMydashboardReports','GlpiPlugin\\\Mydashboard\\\Reports\\\Reports')";
+        $DB->doQuery($query);
+
+        $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'PluginMydashboardAlert','GlpiPlugin\\\Mydashboard\\\Alert')";
+        $DB->doQuery($query);
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

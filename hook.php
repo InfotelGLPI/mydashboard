@@ -27,11 +27,17 @@
 
 use GlpiPlugin\Mydashboard\Alert;
 use GlpiPlugin\Mydashboard\Config;
+use GlpiPlugin\Mydashboard\ConfigTranslation;
 use GlpiPlugin\Mydashboard\Customswidget;
 use GlpiPlugin\Mydashboard\Groupprofile;
+use GlpiPlugin\Mydashboard\ItilAlert;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
+use GlpiPlugin\Mydashboard\PreferenceUserBlacklist;
 use GlpiPlugin\Mydashboard\Profile;
+use GlpiPlugin\Mydashboard\StockTicket;
+use GlpiPlugin\Mydashboard\StockTicketIndicator;
+use GlpiPlugin\Mydashboard\StockWidget;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\ProfileAuthorizedWidget;
 use GlpiPlugin\Mydashboard\UserWidget;
@@ -42,607 +48,34 @@ use GlpiPlugin\Mydashboard\Dashboard;
  */
 function plugin_mydashboard_install()
 {
-    global $DB;
 
-    //First install 1.0.0 (0.84)
-    if (!$DB->tableExists("glpi_plugin_mydashboard_widgets")) {
-        //Creates all tables
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/empty-2.1.2.sql");
+    $migration = new Migration(PLUGIN_MYDASHBOARD_VERSION);
+
+    Widget::install($migration);
+    UserWidget::install($migration);
+    Config::install($migration);
+    MydashboardPreference::install($migration);
+    PreferenceUserBlacklist::install($migration);
+    StockWidget::install($migration);
+    Customswidget::install($migration);
+    ProfileAuthorizedWidget::install($migration);
+    Alert::install($migration);
+    StockTicket::install($migration);
+    Dashboard::install($migration);
+    ItilAlert::install($migration);
+    Groupprofile::install($migration);
+    ConfigTranslation::install($migration);
+    StockTicketIndicator::install($migration);
+
+    Menu::installWidgets();
 
-        Menu::installWidgets();
-        insertDefaultTitles();
-    }
-    //end---------------------------------------------------------------------
-    //From 1.0.0 (0.84) to 1.0.1 (0.84)------------------------------------
-    if (!$DB->tableExists("glpi_plugin_mydashboard_profileauthorizedwidgets")) {
-        //A new table to manage widgets by profile
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.1.sql");
-    }
-    //end---------------------------------------------------------------------
-    //From 1.0.1 (0.84) to 1.0.2 (0.84)------------------------------------
-    if (!$DB->tableExists("glpi_plugin_mydashboard_alerts")) {
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.2.sql");
-    }
-    //end---------------------------------------------------------------------
-    //From 1.0.2 (0.84) to 1.0.3 (0.84)------------------------------------
-    if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "replace_central")
-        && !$DB->fieldExists("glpi_plugin_mydashboard_preferences", "replace_central")) {
-        //Adding the new field to preferences
-        $mig             = new Migration("1.0.3");
-        $dbu             = new DbUtils();
-        $configs         = $dbu->getAllDataFromTable("glpi_plugin_mydashboard_configs");
-        $replace_central = 0;
-        //Basically there is only one config for Dashboard (this foreach may be useless)
-        foreach ($configs as $config) {
-            $replace_central = $config['replace_central'];
-        }
-        $mig->addField(
-            "glpi_plugin_mydashboard_preferences",
-            "replace_central",
-            "bool",
-            [
-                "update" => $replace_central,
-                "value"  => 0,
-            ]
-        );
-
-        $mig->dropField("glpi_plugin_mydashboard_configs", "replace_central");
-        $mig->executeMigration();
-    }
-    //From 1.0.3 (0.84) to 1.0.4 (0.84)------------------------------------
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_userwidgets", "interface")) {
-        //Adding the new field to userwidgets to precise of which interface this dashboard is
-        $mig = new Migration("1.0.4");
-
-        $mig->addField(
-            "glpi_plugin_mydashboard_userwidgets",
-            "interface",
-            "bool",
-            [
-                "update" => 1,
-            ]
-        );
-        $mig->executeMigration();
-    }
-    //fix bug about widget
-    if (!$DB->tableExists("glpi_plugin_mydashboard_stocktickets")) {
-        $mig = new Migration("1.0.5");
-
-        //new table to fix bug about stock tickets
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.0.5.sql");
-
-        //fill the new table with the data of previous month of this year
-        //        fillTableMydashboardStocktickets();
-
-        $mig->executeMigration();
-    }
-    //From 1.0.4 (0.84) to 1.1.0 (0.85)------------------------------------
-    //Profile migration
-    if ($DB->tableExists("glpi_plugin_mydashboard_profiles")) {
-        Profile::migrateRightsFrom84To85();
-        $DB->doQuery("DROP TABLE `glpi_plugin_mydashboard_profiles`;");
-    }
-    //end---------------------------------------------------------------------
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_alerts", "is_public")) {
-        $mig = new Migration("1.2.1");
-
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.2.1.sql");
-
-        $mig->executeMigration();
-    }
-
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_alerts", "type")) {
-        $mig = new Migration("1.3.3");
-
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.3.3.sql");
-
-        $mig->executeMigration();
-    }
-
-    if (!$DB->tableExists("glpi_plugin_mydashboard_dashboards")) {
-        $mig = new Migration("1.5.0");
-        //new table to fix bug about stock tickets
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.5.0.sql");
-        $mig->executeMigration();
-        include_once(PLUGIN_MYDASHBOARD_DIR . "/install/update_133_150.php");
-        update133to150();
-    }
-
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")
-    && !$DB->fieldExists("glpi_plugin_mydashboard_configs", "replace_central")) {
-        $mig = new Migration("1.5.1");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.5.1.sql");
-        $mig->executeMigration();
-    }
-
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "impact_1")) {
-        $mig = new Migration("1.6.2");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.6.2.sql");
-        $mig->executeMigration();
-    }
-
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_dashboards", "grid_statesave")) {
-        $mig = new Migration("1.6.3");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.6.3.sql");
-        $mig->executeMigration();
-    }
-
-    if (!$DB->tableExists("glpi_plugin_mydashboard_stockwidgets")) {
-        $mig = new Migration("1.7.0");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.0.sql");
-        $mig->executeMigration();
-    }
-
-    if (!$DB->tableExists("glpi_plugin_mydashboard_customswidgets")) {
-        $mig = new Migration("1.7.2");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.2.sql");
-        $mig->executeMigration();
-        insertDefaultTitles();
-    }
-
-    $query  = "SELECT DATA_TYPE
-               FROM INFORMATION_SCHEMA.COLUMNS
-               WHERE TABLE_SCHEMA = '$DB->dbdefault' AND
-                    TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND
-                    COLUMN_NAME = 'prefered_group'";
-    $result = $DB->doQuery($query);
-    while ($data = $DB->fetchAssoc($result)) {
-        $type = $data["DATA_TYPE"];
-    }
-
-    if ($type != "varchar") {
-        $mig = new Migration("1.7.5");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.5.sql");
-        $mig->executeMigration();
-        transform_prefered_group_to_prefered_groups();
-        //        fillTableMydashboardStockticketsGroup();
-    }
-
-    if (!$DB->tableExists("glpi_plugin_mydashboard_itilalerts")) {
-        $mig = new Migration("1.7.7");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.7.sql");
-        $mig->executeMigration();
-        $widget = new Widget();
-        $widget->migrateWidgets();
-    }
-
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_configs", "title_informations_widget")) {
-        $mig = new Migration("1.7.8");
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.8.sql");
-        $queryTruncate = "TRUNCATE TABLE `glpi_plugin_mydashboard_stocktickets`";
-        $DB->doQuery($queryTruncate);
-        $mig->executeMigration();
-        //        fillTableMydashboardStocktickets();
-        //        fillTableMydashboardStockticketsGroup();
-
-        $config                             = new Config();
-        $input['id']                        = "1";
-        $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
-        $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
-        $input['title_informations_widget'] = _n("Information", "Informations", 2, 'mydashboard');
-        $config->update($input);
-    }
-
-    //fix bug about widget
-    if (!$DB->tableExists("glpi_plugin_mydashboard_stockticketindicators")) {
-        $mig = new Migration("1.7.9");
-
-        //new table to fix bug about stock tickets
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.7.9.sql");
-
-
-        $mig->executeMigration();
-    }
-
-    //Add config for prefered type
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_preferences", "prefered_type")) {
-        $mig = new Migration("1.8.2");
-
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-1.8.2.sql");
-
-
-        $mig->executeMigration();
-    }
-
-    $mig = new Migration("2.0.0");
-    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.0.sql");
-    $mig->executeMigration();
-    //ALTER TABLE `glpi_plugin_mydashboard_userwidgets` DROP CONSTRAINT `glpi_plugin_mydashboard_userwidgets_ibfk_1`;
-
-    $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
-    $result     = $DB->doQuery($query);
-
-    while ($data = $DB->fetchArray($result)) {
-        $id    = $data['id'];
-        $grids = json_decode($data['grid'], true);
-        $newwidgets = [];
-        $newwidget  = [];
-        foreach ($grids as $k => $widgets) {
-            $newwidget['id'] = $widgets['id'];
-            $newwidget['x']  = $widgets['x'];
-            $newwidget['y']  = $widgets['y'];
-            $newwidget['w']  = $widgets['width'] ?? $widgets['w'];
-            $newwidget['h']  = $widgets['height'] ?? $widgets['h'];
-
-            $newwidgets[] = $newwidget;
-        }
-        $newgrid      = json_encode($newwidgets);
-        $query        = "UPDATE `glpi_plugin_mydashboard_dashboards`
-        SET `grid` = '" . $newgrid . "' WHERE `glpi_plugin_mydashboard_dashboards`.`id` = " . $id . ";";
-        $DB->doQuery($query);
-    }
-
-    $mig = new Migration("2.0.5");
-    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.5.sql");
-    $mig->executeMigration();
-
-    $mig = new Migration("2.0.9");
-    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.0.9.sql");
-    $mig->executeMigration();
-
-    if (!$DB->fieldExists("glpi_plugin_mydashboard_preferences", "prefered_category")) {
-        $mig = new Migration("2.1.2");
-
-        if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "display_plugin_widget")) {
-            $query = "ALTER TABLE `glpi_plugin_mydashboard_configs` DROP `display_plugin_widget`;";
-            $DB->doQuery($query);
-        }
-        if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "google_api_key")) {
-            $query = "ALTER TABLE `glpi_plugin_mydashboard_configs` DROP `google_api_key`;";
-            $DB->doQuery($query);
-        }
-
-        $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.1.2.sql");
-        $mig->executeMigration();
-    }
-
-    $mig = new Migration("2.2.0");
-    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.2.0.sql");
-    $mig->executeMigration();
-
-    $mig = new Migration("2.2.2");
-    $DB->runFile(PLUGIN_MYDASHBOARD_DIR . "/install/sql/update-2.2.2.sql");
-    $mig->executeMigration();
-
-    //widgetname Migration
-    $classes = ['GlpiPluginActivityDashboard' => 'GlpiPlugin\\\Activity\\\Dashboard',
-        'GlpiPluginManageentitiesDashboard' => 'GlpiPlugin\\\Manageentities\\\Dashboard',
-        'GlpiPluginEventsmanagerDashboard' => 'GlpiPlugin\\\Eventsmanager\\\Dashboard',
-        'GlpiPluginOcsinventoryngDashboard' => 'GlpiPlugin\\\Ocsinventoryng\\\Dashboard',
-        'GlpiPluginResourcesDashboard' => 'GlpiPlugin\\\Resources\\\Dashboard',
-        'GlpiPluginSatisfactionDashboard' => 'GlpiPlugin\\\Satisfaction\\\Dashboard',
-        'GlpiPluginServicecatalogIndicator' => 'GlpiPlugin\\\Servicecatalog\\\Indicator',
-        'GlpiPluginTasklistsDashboard' => 'GlpiPlugin\\\Tasklists\\\Dashboard',
-        'GlpiPluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard'];
-
-    foreach ($classes as $old => $new) {
-        $iterator = $DB->request([
-            'SELECT' => [
-                'id',
-                'name',
-            ],
-            'FROM' => 'glpi_plugin_mydashboard_widgets',
-            'WHERE' => [
-                'name'   => ['LIKE', $old . '%']
-            ],
-        ]);
-
-        if (count($iterator) > 0) {
-            foreach ($iterator as $data) {
-                $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'$old','$new') where id = '" . $data['id'] . "'";
-                $DB->doQuery($query);
-            }
-        }
-    }
-
-    $grid = new Dashboard();
-    $grids = $grid->find();
-    $allmapping = [];
-    $grid_widgets = [];
-    $grid_statesave_widgets = [];
-    foreach ($grids as $grid_user) {
-        if (!empty($grid_user['grid'])) {
-            $grid_widgets = json_decode($grid_user['grid'], true);
-        }
-        if (!empty($grid_user['grid_statesave'])) {
-            $grid_statesave_widgets = json_decode($grid_user['grid_statesave'], true);
-        }
-
-
-        $user = $grid_user['users_id'];
-        $classes = [
-            'PluginActivityDashboard' => 'GlpiPlugin\\\Activity\\\Dashboard',
-            'PluginManageentitiesDashboard' => 'GlpiPlugin\\\Manageentities\\\Dashboard',
-            'PluginEventsmanagerDashboard' => 'GlpiPlugin\\\Eventsmanager\\\Dashboard',
-            'PluginOcsinventoryngDashboard' => 'GlpiPlugin\\\Ocsinventoryng\\\Dashboard',
-            'PluginResourcesDashboard' => 'GlpiPlugin\\\Resources\\\Dashboard',
-            'PluginSatisfactionDashboard' => 'GlpiPlugin\\\Satisfaction\\\Dashboard',
-            'PluginServicecatalogIndicator' => 'GlpiPlugin\\\Servicecatalog\\\Indicator',
-            'PluginTasklistsDashboard' => 'GlpiPlugin\\\Tasklists\\\Dashboard',
-            'PluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard'
-        ];
-
-        $grid_dest_widgets = $grid_widgets;
-        $grid_statesave_dest_widgets = $grid_statesave_widgets;
-
-        foreach ($grid_widgets as $grid_widget) {
-            $id_origin = substr($grid_widget['id'], 2);
-            $widget = new Widget();
-            if ($widget->getFromDB($id_origin)) {
-
-                $result = preg_replace('/\d+$/', '', $widget->fields['name']);
-
-                if (preg_match('/^(.*?)(\d+)$/', $widget->fields['name'], $matches)) {
-                    $baseName = $matches[1]; // sans les chiffres
-                    $number = $matches[2]; // chiffres supprimés
-
-                    if (isset($classes[$baseName])) {
-                        $widget2 = new Widget();
-                        $name_dest = stripslashes($classes[$baseName] . $number);
-
-                        if ($widget2->getFromDBByCrit(['name' => $name_dest])) {
-                            $id_dest = $widget2->fields['id'];
-
-                            $mapping = [
-                                $id_origin => $id_dest,
-                            ];
-                            $allmapping[$id_origin] = $id_dest;
-
-                            foreach ($grid_dest_widgets as &$grid_dest_widget) {
-                                if (preg_match('/^([a-zA-Z]+)(\d+)$/', $grid_dest_widget['id'], $m)) {
-                                    $prefix = $m[1];           // gs
-                                    $number = (int) $m[2];     // 142
-
-                                    if (isset($mapping[$number])) {
-                                        $grid_dest_widget['id'] = $prefix . $mapping[$number];
-
-                                    }
-                                }
-                            }
-                            unset($grid_dest_widget);
-                        }
-                    }
-                }
-            }
-        }
-//Toolbox::logInfo($grid_statesave_dest_widgets);
-        foreach ($grid_statesave_widgets as $k => $grid_statesave_widget) {
-            $id_origin = substr($k, 2);
-            $widget = new Widget();
-            if ($widget->getFromDB($id_origin)) {
-
-                $result = preg_replace('/\d+$/', '', $widget->fields['name']);
-
-                if (preg_match('/^(.*?)(\d+)$/', $widget->fields['name'], $matches)) {
-                    $baseName2 = $matches[1]; // sans les chiffres
-                    $number2 = $matches[2]; // chiffres supprimés
-
-                    if (isset($classes[$baseName2])) {
-                        $widget2 = new Widget();
-                        $name_dest = stripslashes($classes[$baseName2] . $number2);
-
-                        if ($widget2->getFromDBByCrit(['name' => $name_dest])) {
-                            $id_dest = $widget2->fields['id'];
-
-                            $mapping2 = [
-                                $id_origin => $id_dest,
-                            ];
-
-                            foreach ($grid_statesave_dest_widgets as $key => $value) {
-
-                                // $key = gs177
-                                if (preg_match('/^([a-zA-Z]+)(\d+)$/', $key, $m)) {
-
-                                    $prefix = $m[1];          // gs
-                                    $number3 = (int) $m[2];    // 177
-
-                                    // mapping : id_origin => id_dest
-                                    if (isset($mapping2[$number3])) {
-
-                                        $newKey = $prefix . $mapping2[$number3];
-
-                                        // créer la nouvelle clé
-                                        $grid_statesave_dest_widgets[$newKey] = $value;
-
-                                        // supprimer l'ancienne
-                                        unset($grid_statesave_dest_widgets[$key]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $ifg = $grid_user['id'];
-
-        $grid->update(['id' => $ifg,
-            'grid' => json_encode($grid_dest_widgets),
-            'grid_statesave' => json_encode($grid_statesave_dest_widgets)]);
-
-    }
-
-    $widgetuser = new UserWidget();
-    if ($ids = $widgetuser->find()) {
-        foreach ($ids as $values) {
-            if (isset($allmapping[$values['widgets_id']])) {
-                $widgetuser->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
-            }
-        }
-    }
-
-    $widgetprofile = new ProfileAuthorizedWidget();
-    if ($ids = $widgetprofile->find()) {
-        foreach ($ids as $values) {
-            if (isset($allmapping[$values['widgets_id']])) {
-                $widgetprofile->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
-            }
-        }
-    }
-
-    $config = new Config();
-    if (!$config->getFromDB("1")) {
-        $config->initConfig();
-    }
     Profile::initProfile();
 
     Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     return true;
 }
 
-function insertDefaultTitles()
-{
-    global $DB;
-    $startTitle = '<p style="background-color: lightgrey; padding: 5px; font-weight: bold; border: solid 1px black;">';
-    $endTitle   = ' </p>';
 
-    // Insert default title in table customwidgets
-    $DB->insert(
-        "glpi_plugin_mydashboard_customswidgets",
-        [
-            'name'    => __('Incidents', 'mydashboard'),
-            'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
-            'comment' => '',
-        ]
-    );
-
-    $DB->insert(
-        "glpi_plugin_mydashboard_customswidgets",
-        [
-            'name'    => __('Requests', 'mydashboard'),
-            'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
-            'comment' => '',
-        ]
-    );
-
-    $DB->insert(
-        "glpi_plugin_mydashboard_customswidgets",
-        [
-            'name'    => __('Problems'),
-            'content' => $startTitle . __("Problems") . $endTitle,
-            'comment' => '',
-        ]
-    );
-}
-
-function fillTableMydashboardStocktickets()
-{
-    global $DB;
-
-    ini_set("memory_limit", "-1");
-    ini_set("max_execution_time", "0");
-    $currentmonth = date("m");
-    $currentyear  = date("Y");
-    $previousyear = $currentyear - 1;
-    $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id` "
-                    . "FROM `glpi_tickets` "
-                    . "WHERE `glpi_tickets`.`is_deleted`= 0 "
-                    . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
-                    . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
-                    . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
-    $results      = $DB->doQuery($query);
-    while ($data = $DB->fetchArray($results)) {
-        [$year, $month] = explode('-', $data['month']);
-        $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $entities_id = $data["entities_id"];
-        $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-        $results2    = $DB->doQuery($query);
-        $data2       = $DB->fetchArray($results2);
-        $countTicket = $data2['count'];
-        if ($countTicket > 0) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`)
-                              VALUES (NULL,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-            $DB->doQuery($query);
-        }
-    }
-}
-
-function fillTableMydashboardStockticketsGroup()
-{
-    global $DB;
-
-    ini_set("memory_limit", "-1");
-    ini_set("max_execution_time", "0");
-    $query   = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id`,
-                      `glpi_groups_tickets`.`groups_id` as groups_id
-      FROM `glpi_tickets`
-      LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-      WHERE `glpi_tickets`.`is_deleted`= 0
-      GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`, `glpi_groups_tickets`.`groups_id`";
-    $results = $DB->doQuery($query);
-    while ($data = $DB->fetchArray($results)) {
-        [$year, $month] = explode('-', $data['month']);
-        $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $entities_id = $data["entities_id"];
-        $groups_id   = $data["groups_id"];
-        if (!empty($groups_id)) {
-            $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                  LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_groups_tickets`.`groups_id` = $groups_id
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-            $results2    = $DB->doQuery($query);
-            $data2       = $DB->fetchArray($results2);
-            $countTicket = $data2['count'];
-            if ($countTicket > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`)
-                              VALUES (NULL,$groups_id,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                $DB->doQuery($query);
-            }
-        } else {
-            $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                  LEFT JOIN  `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id AND `glpi_tickets`.`id` NOT IN  (SELECT tickets_id FROM `glpi_groups_tickets`)
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-            $results2    = $DB->doQuery($query);
-            $data2       = $DB->fetchArray($results2);
-            $countTicket = $data2['count'];
-            if ($countTicket > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`)
-                              VALUES (NULL,0,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                $DB->doQuery($query);
-            }
-        }
-    }
-}
-
-function transform_prefered_group_to_prefered_groups()
-{
-    $pref  = new MydashboardPreference();
-    $prefs = $pref->find();
-    foreach ($prefs as $p) {
-        if ($p["prefered_group"] == "0") {
-            $p["prefered_group"] = "[]";
-        } else {
-            $p["prefered_group"] = "[\"" . $p["prefered_group"] . "\"]";
-        }
-        $pref->update($p);
-    }
-
-    $prefgroup  = new Groupprofile();
-    $prefgroups = $prefgroup->find();
-    foreach ($prefgroups as $p) {
-        if ($p["prefered_group"] == "0") {
-            $p["prefered_group"] = "[]";
-        } else {
-            $p["prefered_group"] = "[\"" . $p["prefered_group"] . "\"]";
-        }
-        $prefgroup->update($p);
-    }
-}
 
 // Uninstall process for plugin : need to return true if succeeded
 /**
@@ -650,30 +83,22 @@ function transform_prefered_group_to_prefered_groups()
  */
 function plugin_mydashboard_uninstall()
 {
-    global $DB;
 
-    // Plugin tables deletion
-    $tables = [
-        "glpi_plugin_mydashboard_profileauthorizedwidgets",
-        "glpi_plugin_mydashboard_widgets",
-        "glpi_plugin_mydashboard_userwidgets",
-        "glpi_plugin_mydashboard_configs",
-        "glpi_plugin_mydashboard_preferences",
-        "glpi_plugin_mydashboard_preferenceuserblacklists",
-        "glpi_plugin_mydashboard_alerts",
-        "glpi_plugin_mydashboard_stockwidgets",
-        "glpi_plugin_mydashboard_stocktickets",
-        "glpi_plugin_mydashboard_itilalerts",
-        "glpi_plugin_mydashboard_changealerts",
-        "glpi_plugin_mydashboard_dashboards",
-        "glpi_plugin_mydashboard_groupprofiles",
-        "glpi_plugin_mydashboard_customswidgets",
-        "glpi_plugin_mydashboard_configtranslations",
-        "glpi_plugin_mydashboard_stockticketindicators"];
-
-    foreach ($tables as $table) {
-        $DB->dropTable($table, true);
-    }
+    Widget::uninstall();
+    UserWidget::uninstall();
+    Config::uninstall();
+    MydashboardPreference::uninstall();
+    PreferenceUserBlacklist::uninstall();
+    StockWidget::uninstall();
+    Customswidget::uninstall();
+    ProfileAuthorizedWidget::uninstall();
+    Alert::uninstall();
+    StockTicket::uninstall();
+    Dashboard::uninstall();
+    ItilAlert::uninstall();
+    Groupprofile::uninstall();
+    ConfigTranslation::uninstall();
+    StockTicketIndicator::uninstall();
 
     //Delete rights associated with the plugin
     $profileRight = new ProfileRight();

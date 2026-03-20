@@ -27,6 +27,8 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
+use DBConnection;
+use Migration;
 use Session;
 
 /**
@@ -138,4 +140,99 @@ class UserWidget extends CommonDBTM {
       return is_numeric($widgetId) && $widgetId >= 0;
    }
 
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `users_id`    int {$default_key_sign} NOT NULL COMMENT 'RELATION to glpi_users(id)',
+                        `profiles_id` int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `widgets_id`  int {$default_key_sign} NOT NULL,
+                        PRIMARY KEY (`id`),
+                        KEY `users_id` (`users_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        if (!$DB->fieldExists($table, "profiles_id")) {
+            $migration->addField($table, "profiles_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if ($DB->fieldExists($table, "place")) {
+            $migration->dropField($table, "place");
+            $migration->migrationOneTable($table);
+        }
+
+        if ($DB->fieldExists($table, "interface")) {
+
+            //No default profile
+            $query_userwidgets = "SELECT DISTINCT `users_id`
+                                    FROM `glpi_plugin_mydashboard_userwidgets`
+                                    WHERE `profiles_id` = 0
+                                      AND `users_id` != 0
+                                      AND `interface` != 0;";
+
+            if ($result_userwidgets = $DB->doQuery($query_userwidgets)) {
+                if ($DB->numrows($result_userwidgets) > 0) {
+                    while ($data_userwidgets = $DB->fetchAssoc($result_userwidgets)) {
+
+                        $user_id        = $data_userwidgets['users_id'];
+                        //Search for user profiles
+                        $query_profiles_users = "SELECT *
+                                                FROM `glpi_profiles_users`
+                                                WHERE `users_id` = " . $user_id . "
+                                                ORDER BY `id`";
+
+                        if ($result_profiles_users = $DB->doQuery($query_profiles_users)) {
+                            if ($DB->numrows($result_profiles_users) > 0) {
+                                while ($data_profiles_users = $DB->fetchAssoc($result_profiles_users)) {
+                                    $profiles_id = $data_profiles_users['profiles_id'];
+
+                                    //Check if profile has rights on the plugin
+                                    $query  = "SELECT *
+                                               FROM `glpi_profilerights`
+                                               WHERE `profiles_id` = '" . $profiles_id . "'
+                                               AND `name` LIKE 'plugin_mydashboard'
+                                               AND `rights` > 0;";
+                                    $result = $DB->doQuery($query);
+
+                                    if ($DB->numrows($result) > 0) {
+
+                                        // update default profiles_id
+                                        $query = "UPDATE `glpi_plugin_mydashboard_userwidgets`
+                                                SET `profiles_id` = '$profiles_id'
+                                                WHERE `glpi_plugin_mydashboard_userwidgets`.`users_id` = $user_id
+                                                  AND `interface` != 0;";
+                                        $DB->doQuery($query);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $migration->dropField($table, "interface");
+            $migration->migrationOneTable($table);
+        }
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
+    }
 }

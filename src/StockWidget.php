@@ -29,8 +29,10 @@ namespace GlpiPlugin\Mydashboard;
 
 use Ajax;
 use CommonDBTM;
+use DBConnection;
 use DbUtils;
 use Dropdown;
+use Migration;
 use Session;
 use State;
 
@@ -242,4 +244,44 @@ class StockWidget extends CommonDBTM {
 
       $this->showFormButtons($options);
    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign}                              NOT NULL auto_increment,
+                        `entities_id`     int {$default_key_sign}                 NOT NULL DEFAULT '0',
+                        `is_recursive`    tinyint                                 NOT NULL DEFAULT '0',
+                        `name`            varchar(255)                            NOT NULL,
+                        `states`          longtext COLLATE utf8mb4_unicode_ci     DEFAULT NULL,
+                        `itemtype`        varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
+                        `icon`            varchar(255)                            NOT NULL,
+                        `types`           longtext COLLATE utf8mb4_unicode_ci     DEFAULT NULL,
+                        `alarm_threshold` int {$default_key_sign}                 NOT NULL DEFAULT '5',
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        $migration->changeField($table, "alarm_threshold", "alarm_threshold", "INT {$default_key_sign} NOT NULL DEFAULT '5'");
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
+    }
 }

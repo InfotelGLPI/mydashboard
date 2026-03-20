@@ -27,9 +27,11 @@
 namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use CommonITILObject;
+use DBConnection;
 use Dropdown;
 use GlpiPlugin\Mydashboard\Alert;
 use ITILCategory;
+use Migration;
 use Reminder;
 use Session;
 
@@ -193,4 +195,54 @@ class ItilAlert extends CommonDBTM {
       $itilalert = new self();
       $itilalert->deleteByCriteria(['reminders_id' => $reminder->getField("id")]);
    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if ($DB->tableExists("glpi_plugin_mydashboard_problemalerts")) {
+            $query = "RENAME TABLE `glpi_plugin_mydashboard_problemalerts` TO `$table`;";
+            $DB->doQuery($query);
+        }
+        if (!$DB->fieldExists($table, "itemtype")) {
+            $migration->addField($table, "itemtype", "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file'");
+            $migration->migrationOneTable($table);
+        }
+        if (!$DB->fieldExists($table, "items_id")) {
+
+            $migration->changeField($table, "problems_id", "items_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+
+            $query = "UPDATE `$table` SET `itemtype` = 'Problem';";
+            $DB->doQuery($query);
+        }
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `reminders_id` int {$default_key_sign}                            NOT NULL DEFAULT '0',
+                        `items_id`     int {$default_key_sign}                            NOT NULL DEFAULT '0',
+                        `itemtype`     varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable("glpi_plugin_mydashboard_problemalerts", true);
+
+        $DB->dropTable(self::getTable(), true);
+
+    }
 }

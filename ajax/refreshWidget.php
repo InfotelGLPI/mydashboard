@@ -30,7 +30,6 @@ Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 $widgets = Widget::getInitialWidgetList();
 
-
 if (isset($_POST['gsid']) && isset($_POST['id'])) {
     $gsid = $_POST['gsid'];
     $opt  = [];

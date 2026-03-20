@@ -382,9 +382,12 @@ class Helper
                 $params['opt']['requesters_groups_id']
             ) ? $params['opt']['requesters_groups_id'] : [$params['opt']['requesters_groups_id']];
 
+            $params['opt']['requesters_groups_id'] = array_filter($params['opt']['requesters_groups_id']);
+
             if (isset($params['opt']['requesters_groups_id'])
                 && is_array($params['opt']['requesters_groups_id'])
                 && count($params['opt']['requesters_groups_id']) > 0) {
+
                 //            if (in_array("group_is_recursive", $criterias) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
                 //               $dbu    = new DbUtils();
                 //               $childs = [];
@@ -460,6 +463,7 @@ class Helper
                     $opt['ancestors'] = $params['opt']['ancestors'];
                     $crit['crit']['ancestors'] = $opt['ancestors'];
                 } else {
+                    $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
                     if ($none) {
                         $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
                         $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`

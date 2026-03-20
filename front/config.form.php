@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -27,6 +28,7 @@
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\StockTicket;
 use GlpiPlugin\Mydashboard\StockTicketIndicator;
 
 Session::checkLoginUser();
@@ -37,13 +39,13 @@ if (!isset($_GET["id"])) {
     $_GET["id"] = "1";
 }
 if (Plugin::isPluginActive("mydashboard")) {
-        $config = new Config();
+    $config = new Config();
 
     if (isset($_POST["reconstructBacklog"])) {
         ini_set("max_execution_time", "0");
         ini_set("memory_limit", "-1");
-        fillTableMydashboardStocktickets();
-        fillTableMydashboardStockticketsGroup();
+        StockTicket::fillTableMydashboardStocktickets();
+        StockTicket::fillTableMydashboardStockticketsGroup();
         Html::back();
     } elseif (isset($_POST["reconstructIndicators"])) {
         ini_set("max_execution_time", "0");

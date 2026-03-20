@@ -27,8 +27,10 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
+use DBConnection;
 use DbUtils;
 use Dropdown;
+use Migration;
 use Plugin;
 use ProfileRight;
 
@@ -231,5 +233,44 @@ class ProfileAuthorizedWidget extends CommonDBTM
         $infos = Plugin::getInfo($plugin_name);
 
         return isset($infos['name']) ? $infos['name'] : $plugin_name;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `profiles_id` int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_profiles (id)',
+                        `widgets_id`  int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_mydashboard_widgets (id)',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        $migration->changeField($table, "widgets_id", "widgets_id", "int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_mydashboard_widgets (id)'");
+        $migration->migrationOneTable($table);
+
+        $DB->update(
+            $table,
+            ['widgets_id' => 0],
+            ['widgets_id' => -1],
+        );
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

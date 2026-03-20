@@ -28,7 +28,9 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
 use DateTime;
+use DBConnection;
 use GlpiPlugin\Mydashboard\Reports\Ticket;
+use Migration;
 
 class StockTicketIndicator extends CommonDBTM
 {
@@ -457,5 +459,42 @@ class StockTicketIndicator extends CommonDBTM
         }
 
         return true;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} AUTO_INCREMENT,
+                        `year`         int {$default_key_sign} NOT NULL,
+                        `week`         int {$default_key_sign} NOT NULL,
+                        `nbTickets`    int {$default_key_sign} NOT NULL,
+                        `indicator_id` int {$default_key_sign} NOT NULL,
+                        `groups_id`    int {$default_key_sign} NOT NULL DEFAULT 0,
+                        `entities_id`  int {$default_key_sign} NOT NULL,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        $migration->changeField($table, "groups_id", "groups_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+        $migration->migrationOneTable($table);
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

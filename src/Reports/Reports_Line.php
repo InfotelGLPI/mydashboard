@@ -680,6 +680,7 @@ class Reports_Line extends CommonGLPI
                 $requester_groups          = $opt['requesters_groups_id'];
 
                 $technician_groups_criteria = $crit['technicians_groups_id'];
+
                 $technician_group           = $opt['technicians_groups_id'];
                 $mdentities                 = Helper::getSpecificEntityRestrict("glpi_plugin_mydashboard_stocktickets", $opt);
 
@@ -704,7 +705,8 @@ class Reports_Line extends CommonGLPI
                 $tech_groups_crit      = "";
                 $technician_groups_ids = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
                 $technician_groups_ids = array_filter($technician_groups_ids);
-                if (is_array($opt['technicians_groups_id']) && count($opt['technicians_groups_id']) > 0) {
+                if (is_array($opt['technicians_groups_id'])
+                    && count($opt['technicians_groups_id']) > 0) {
                     $tech_groups_crit = " AND `groups_id` IN (" . implode(",", $technician_groups_ids) . ")";
                 } else {
                     $tech_groups_crit = " AND `groups_id` = 0";

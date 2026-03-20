@@ -2686,8 +2686,12 @@ class Reports_Bar extends CommonDBTM
         if ($limit > 0) {
             $limit_query = "LIMIT $limit";
         }
+
+        $selected_group = array_filter($selected_group);
+
         if (count($selected_group) > 0) {
             $groups = implode(",", $selected_group);
+
             $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
                 . "FROM `glpi_groups_users` "
                 . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "

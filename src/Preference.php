@@ -29,11 +29,13 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Entity;
 use Group;
 use ITILCategory;
+use Migration;
 use Plugin;
 use Session;
 use Ticket;
@@ -330,5 +332,171 @@ class Preference extends CommonDBTM
     public static function getPalette($users_id)
     {
         return self::checkPreferenceValue('color_palette', $users_id);
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `automatic_refresh`        tinyint      NOT NULL DEFAULT '0',
+                        `automatic_refresh_delay`  int {$default_key_sign} NOT NULL DEFAULT '10',
+                        `replace_central`          tinyint      NOT NULL DEFAULT 0,
+                        `nb_widgets_width`         int {$default_key_sign} NOT NULL DEFAULT '3',
+                        `prefered_group`           varchar(255) NOT NULL DEFAULT '[]',
+                        `requester_prefered_group` varchar(255) NOT NULL DEFAULT '[]',
+                        `prefered_entity`          int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `edit_mode`                tinyint      NOT NULL DEFAULT '0',
+                        `drag_mode`                tinyint      NOT NULL DEFAULT '0',
+                        `color_palette`            varchar(50)  NOT NULL DEFAULT '',
+                        `prefered_type`            int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `prefered_category`        int {$default_key_sign} NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        if ($DB->fieldExists("glpi_plugin_mydashboard_configs", "replace_central")
+            && !$DB->fieldExists($table, "replace_central")) {
+            //Adding the new field to preferences
+            $mig             = new Migration("1.0.3");
+            $configs         = getAllDataFromTable("glpi_plugin_mydashboard_configs");
+            $replace_central = 0;
+            //Basically there is only one config for Dashboard (this foreach may be useless)
+            foreach ($configs as $config) {
+                $replace_central = $config['replace_central'];
+            }
+            $mig->addField(
+                "glpi_plugin_mydashboard_preferences",
+                "replace_central",
+                "bool",
+                [
+                    "update" => $replace_central,
+                    "value"  => 0,
+                ]
+            );
+            $mig->executeMigration();
+        }
+
+        if (!$DB->fieldExists($table, "prefered_group")) {
+            $migration->addField($table, "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "prefered_entity")) {
+            $migration->addField($table, "prefered_entity", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "edit_mode")) {
+            $migration->addField($table, "edit_mode", "tinyint NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "drag_mode")) {
+            $migration->addField($table, "drag_mode", "tinyint NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "requester_prefered_group")) {
+            $migration->addField($table, "requester_prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
+            $migration->migrationOneTable($table);
+        }
+
+        $query  = "SELECT DATA_TYPE
+               FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = '$DB->dbdefault' AND
+                    TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND
+                    COLUMN_NAME = 'prefered_group'";
+        $result = $DB->doQuery($query);
+        while ($data = $DB->fetchAssoc($result)) {
+            $type = $data["DATA_TYPE"];
+        }
+
+        if ($type != "varchar") {
+
+            $migration->changeField($table, "prefered_group" , "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
+            $migration->migrationOneTable($table);
+
+            $migration->changeField("glpi_plugin_mydashboard_groupprofiles", "prefered_group" , "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
+            $migration->migrationOneTable($table);
+
+            $pref  = new self();
+            $prefs = $pref->find();
+            foreach ($prefs as $p) {
+                if ($p["prefered_group"] == "0") {
+                    $p["prefered_group"] = "[]";
+                } else {
+                    $p["prefered_group"] = "[\"" . $p["prefered_group"] . "\"]";
+                }
+                $pref->update($p);
+            }
+
+            $prefgroup  = new Groupprofile();
+            $prefgroups = $prefgroup->find();
+            foreach ($prefgroups as $p) {
+                if ($p["prefered_group"] == "0") {
+                    $p["prefered_group"] = "[]";
+                } else {
+                    $p["prefered_group"] = "[\"" . $p["prefered_group"] . "\"]";
+                }
+                $prefgroup->update($p);
+            }
+        }
+
+        if (!$DB->fieldExists($table, "color_palette")) {
+            $migration->addField($table, "color_palette", "varchar(50)  NOT NULL DEFAULT ''");
+            $migration->migrationOneTable($table);
+        }
+        if (!$DB->fieldExists($table, "prefered_type")) {
+            $migration->addField($table, "prefered_type", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "prefered_category")) {
+            $migration->addField($table, "prefered_category", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "automatic_refresh_delay")) {
+            $migration->addField($table, "automatic_refresh_delay", "int {$default_key_sign} NOT NULL DEFAULT '10'");
+            $migration->migrationOneTable($table);
+        }
+
+        $migration->changeField($table, "color_palette", "color_palette", "varchar(50)  NOT NULL DEFAULT ''");
+        $migration->migrationOneTable($table);
+
+        $migration->changeField($table, "id", "id", "int {$default_key_sign} NOT NULL AUTO_INCREMENT");
+        $migration->migrationOneTable($table);
+
+        $migration->changeField($table, "nb_widgets_width", "nb_widgets_width", "int {$default_key_sign} NOT NULL DEFAULT '3'");
+        $migration->migrationOneTable($table);
+
+        $migration->changeField($table, "prefered_entity", "prefered_entity", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+        $migration->migrationOneTable($table);
+
+        $migration->changeField($table, "replace_central", "replace_central", "tinyint NOT NULL DEFAULT 0");
+        $migration->migrationOneTable($table);
+
+        $migration->changeField($table, "automatic_refresh_delay", "automatic_refresh_delay", "int {$default_key_sign} NOT NULL DEFAULT '10'");
+        $migration->migrationOneTable($table);
+
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

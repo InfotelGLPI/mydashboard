@@ -27,6 +27,8 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDropdown;
+use DBConnection;
+use Migration;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -133,5 +135,66 @@ class Customswidget extends CommonDropdown
         $temp = self::getCustomWidgetById($id);
 
         return $temp;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `name`    varchar(255) NOT NULL,
+                        `comment` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `content` text         NOT NULL,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $startTitle = '<p style="background-color: lightgrey; padding: 5px; font-weight: bold; border: solid 1px black;">';
+            $endTitle   = ' </p>';
+
+            // Insert default title in table customwidgets
+            $DB->insert(
+                "glpi_plugin_mydashboard_customswidgets",
+                [
+                    'name'    => __('Incidents', 'mydashboard'),
+                    'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
+                    'comment' => '',
+                ]
+            );
+
+            $DB->insert(
+                "glpi_plugin_mydashboard_customswidgets",
+                [
+                    'name'    => __('Requests', 'mydashboard'),
+                    'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
+                    'comment' => '',
+                ]
+            );
+
+            $DB->insert(
+                "glpi_plugin_mydashboard_customswidgets",
+                [
+                    'name'    => __('Problems'),
+                    'content' => $startTitle . __("Problems") . $endTitle,
+                    'comment' => '',
+                ]
+            );
+        }
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

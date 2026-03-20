@@ -28,12 +28,14 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
+use DBConnection;
 use DbUtils;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
 use GlpiPlugin\Mydashboard\Reports\Reports_Line;
 use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
 use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use GlpiPlugin\Ocsinventoryng\Dashboard as OCSDashboard;
+use Migration;
 use Plugin;
 
 if (!defined('GLPI_ROOT')) {
@@ -258,5 +260,212 @@ class Dashboard extends CommonDBTM
         }
 
         return $data;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `users_id`       int {$default_key_sign} NOT NULL               DEFAULT '0',
+                        `grid`           longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `profiles_id`    int {$default_key_sign} NOT NULL               DEFAULT '0',
+                        `grid_statesave` longtext  NULL  DEFAULT NULL,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        if (!$DB->fieldExists($table, "grid_statesave")) {
+            $migration->addField($table, "grid_statesave", "longtext NULL DEFAULT NULL");
+            $migration->migrationOneTable($table);
+        }
+
+        $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
+        $result     = $DB->doQuery($query);
+
+        while ($data = $DB->fetchArray($result)) {
+            $id    = $data['id'];
+            $grids = json_decode($data['grid'], true);
+            $newwidgets = [];
+            $newwidget  = [];
+            foreach ($grids as $k => $widgets) {
+                $newwidget['id'] = $widgets['id'];
+                $newwidget['x']  = $widgets['x'];
+                $newwidget['y']  = $widgets['y'];
+                $newwidget['w']  = $widgets['width'] ?? $widgets['w'];
+                $newwidget['h']  = $widgets['height'] ?? $widgets['h'];
+
+                $newwidgets[] = $newwidget;
+            }
+            $newgrid      = json_encode($newwidgets);
+
+            $DB->update(
+                $table,
+                ['grid' => $newgrid],
+                ['id' => $id],
+            );
+        }
+
+        $grid = new self();
+        $grids = $grid->find();
+        $allmapping = [];
+        $grid_widgets = [];
+        $grid_statesave_widgets = [];
+        foreach ($grids as $grid_user) {
+            if (!empty($grid_user['grid'])) {
+                $grid_widgets = json_decode($grid_user['grid'], true);
+            }
+            if (!empty($grid_user['grid_statesave'])) {
+                $grid_statesave_widgets = json_decode($grid_user['grid_statesave'], true);
+            }
+
+            $classes = [
+                'PluginActivityDashboard' => 'GlpiPlugin\\\Activity\\\Dashboard',
+                'PluginManageentitiesDashboard' => 'GlpiPlugin\\\Manageentities\\\Dashboard',
+                'PluginEventsmanagerDashboard' => 'GlpiPlugin\\\Eventsmanager\\\Dashboard',
+                'PluginOcsinventoryngDashboard' => 'GlpiPlugin\\\Ocsinventoryng\\\Dashboard',
+                'PluginResourcesDashboard' => 'GlpiPlugin\\\Resources\\\Dashboard',
+                'PluginSatisfactionDashboard' => 'GlpiPlugin\\\Satisfaction\\\Dashboard',
+                'PluginServicecatalogIndicator' => 'GlpiPlugin\\\Servicecatalog\\\Indicator',
+                'PluginTasklistsDashboard' => 'GlpiPlugin\\\Tasklists\\\Dashboard',
+                'PluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard'
+            ];
+
+            $grid_dest_widgets = $grid_widgets;
+            $grid_statesave_dest_widgets = $grid_statesave_widgets;
+
+            foreach ($grid_widgets as $grid_widget) {
+                $id_origin = substr($grid_widget['id'], 2);
+                $widget = new Widget();
+                if ($widget->getFromDB($id_origin)) {
+
+                    $result = preg_replace('/\d+$/', '', $widget->fields['name']);
+
+                    if (preg_match('/^(.*?)(\d+)$/', $widget->fields['name'], $matches)) {
+                        $baseName = $matches[1]; // sans les chiffres
+                        $number = $matches[2]; // chiffres supprimés
+
+                        if (isset($classes[$baseName])) {
+                            $widget2 = new Widget();
+                            $name_dest = stripslashes($classes[$baseName] . $number);
+
+                            if ($widget2->getFromDBByCrit(['name' => $name_dest])) {
+                                $id_dest = $widget2->fields['id'];
+
+                                $mapping = [
+                                    $id_origin => $id_dest,
+                                ];
+                                $allmapping[$id_origin] = $id_dest;
+
+                                foreach ($grid_dest_widgets as &$grid_dest_widget) {
+                                    if (preg_match('/^([a-zA-Z]+)(\d+)$/', $grid_dest_widget['id'], $m)) {
+                                        $prefix = $m[1];           // gs
+                                        $number = (int) $m[2];     // 142
+
+                                        if (isset($mapping[$number])) {
+                                            $grid_dest_widget['id'] = $prefix . $mapping[$number];
+
+                                        }
+                                    }
+                                }
+                                unset($grid_dest_widget);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach ($grid_statesave_widgets as $k => $grid_statesave_widget) {
+                $id_origin = substr($k, 2);
+                $widget = new Widget();
+                if ($widget->getFromDB($id_origin)) {
+
+                    $result = preg_replace('/\d+$/', '', $widget->fields['name']);
+
+                    if (preg_match('/^(.*?)(\d+)$/', $widget->fields['name'], $matches)) {
+                        $baseName2 = $matches[1]; // sans les chiffres
+                        $number2 = $matches[2]; // chiffres supprimés
+
+                        if (isset($classes[$baseName2])) {
+                            $widget2 = new Widget();
+                            $name_dest = stripslashes($classes[$baseName2] . $number2);
+
+                            if ($widget2->getFromDBByCrit(['name' => $name_dest])) {
+                                $id_dest = $widget2->fields['id'];
+
+                                $mapping2 = [
+                                    $id_origin => $id_dest,
+                                ];
+
+                                foreach ($grid_statesave_dest_widgets as $key => $value) {
+
+                                    // $key = gs177
+                                    if (preg_match('/^([a-zA-Z]+)(\d+)$/', $key, $m)) {
+
+                                        $prefix = $m[1];          // gs
+                                        $number3 = (int) $m[2];    // 177
+
+                                        // mapping : id_origin => id_dest
+                                        if (isset($mapping2[$number3])) {
+
+                                            $newKey = $prefix . $mapping2[$number3];
+
+                                            // créer la nouvelle clé
+                                            $grid_statesave_dest_widgets[$newKey] = $value;
+
+                                            // supprimer l'ancienne
+                                            unset($grid_statesave_dest_widgets[$key]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $ifg = $grid_user['id'];
+
+            $grid->update(['id' => $ifg,
+                'grid' => json_encode($grid_dest_widgets),
+                'grid_statesave' => json_encode($grid_statesave_dest_widgets)]);
+
+        }
+
+        $widgetuser = new UserWidget();
+        if ($ids = $widgetuser->find()) {
+            foreach ($ids as $values) {
+                if (isset($allmapping[$values['widgets_id']])) {
+                    $widgetuser->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
+                }
+            }
+        }
+
+        $widgetprofile = new ProfileAuthorizedWidget();
+        if ($ids = $widgetprofile->find()) {
+            foreach ($ids as $values) {
+                if (isset($allmapping[$values['widgets_id']])) {
+                    $widgetprofile->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
+                }
+            }
+        }
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

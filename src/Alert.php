@@ -33,6 +33,7 @@ use CommonITILActor;
 use CommonITILObject;
 use CronTask;
 use DateTime;
+use DBConnection;
 use DbUtils;
 use Document;
 use Dropdown;
@@ -46,6 +47,7 @@ use Group_User;
 use ITILCategory;
 use ITILFollowup;
 use MailCollector;
+use Migration;
 use NotImportedEmail;
 use Plugin;
 use ReminderTranslation;
@@ -4069,5 +4071,59 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         }
 
         return $total_new;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `reminders_id`      int {$default_key_sign} NOT NULL,
+                        `impact`            tinyint      NOT NULL,
+                        `type`              tinyint      NOT NULL,
+                        `is_public`         tinyint      NOT NULL,
+                        `itilcategories_id` int {$default_key_sign} NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        if (!$DB->fieldExists($table, "is_public")) {
+            $migration->addField($table, "is_public", "tinyint NOT NULL");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "type")) {
+            $migration->addField($table, "type", "tinyint NOT NULL");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "itilcategories_id")) {
+            $migration->addField($table, "itilcategories_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        $DB->update(
+            $table,
+            ['itilcategories_id' => 0],
+            ['itilcategories_id' => -1],
+        );
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }

@@ -29,9 +29,11 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use Dropdown;
 use Html;
 use ITILCategory;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -161,6 +163,7 @@ class Config extends CommonDBTM
         $ong = [];
         $this->addStandardTab(__CLASS__, $ong, $options);
         $this->addStandardTab(ConfigTranslation::class, $ong, $options);
+        $this->addStandardTab(CheckSchema::class, $ong, $options);
         return $ong;
     }
 
@@ -442,5 +445,129 @@ class Config extends CommonDBTM
         } else {
             return '#000000';
         }
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `enable_fullscreen`         tinyint      NOT NULL DEFAULT '1',
+                        `display_menu`              tinyint      NOT NULL DEFAULT '1',
+                        `replace_central`           int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `impact_1`                  varchar(200) NOT NULL DEFAULT '#228b22',
+                        `impact_2`                  varchar(200) NOT NULL DEFAULT '#fff03a',
+                        `impact_3`                  varchar(200) NOT NULL DEFAULT '#ffa500',
+                        `impact_4`                  varchar(200) NOT NULL DEFAULT '#cd5c5c',
+                        `impact_5`                  varchar(200) NOT NULL DEFAULT '#8b0000',
+                        `levelCat`                  int {$default_key_sign} NOT NULL DEFAULT '2',
+                        `title_alerts_widget`       varchar(255) COLLATE utf8mb4_unicode_ci,
+                        `title_maintenances_widget` varchar(255) COLLATE utf8mb4_unicode_ci,
+                        `title_informations_widget` varchar(255) COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+        }
+
+        if (!$DB->fieldExists($table, "replace_central")) {
+            $migration->addField($table, "replace_central", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "impact_1")) {
+            $migration->addField($table, "impact_1", "varchar(200) NOT NULL DEFAULT '#228b22'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "impact_2")) {
+            $migration->addField($table, "impact_2", "varchar(200) NOT NULL DEFAULT '#fff03a'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "impact_3")) {
+            $migration->addField($table, "impact_3", "varchar(200) NOT NULL DEFAULT '#ffa500'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "impact_4")) {
+            $migration->addField($table, "impact_4", "varchar(200) NOT NULL DEFAULT '#cd5c5c'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "impact_5")) {
+            $migration->addField($table, "impact_5", "varchar(200) NOT NULL DEFAULT '#8b0000'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "levelCat")) {
+            $migration->addField($table, "levelCat", "int {$default_key_sign} NOT NULL DEFAULT '2'");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "title_alerts_widget")) {
+            $migration->addField($table, "title_alerts_widget", "varchar(255) COLLATE utf8mb4_unicode_ci");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "title_maintenances_widget")) {
+            $migration->addField($table, "title_maintenances_widget", "varchar(255) COLLATE utf8mb4_unicode_ci");
+            $migration->migrationOneTable($table);
+        }
+
+        if (!$DB->fieldExists($table, "title_informations_widget")) {
+            $migration->addField($table, "title_informations_widget", "varchar(255) COLLATE utf8mb4_unicode_ci");
+            $migration->migrationOneTable($table);
+
+            $config                             = new self();
+            $input['id']                        = "1";
+            $input['title_alerts_widget']       = _n("Network alert", "Network alerts", 2, 'mydashboard');
+            $input['title_maintenances_widget'] = _n("Scheduled maintenance", "Scheduled maintenances", 2, 'mydashboard');
+            $input['title_informations_widget'] = _n("Information", "Informations", 2, 'mydashboard');
+            $config->update($input);
+
+        }
+
+        if ($DB->fieldExists($table, "display_plugin_widget")) {
+            $migration->dropField($table, "display_plugin_widget");
+            $migration->migrationOneTable($table);
+        }
+
+        if ($DB->fieldExists($table, "display_special_plugin_widget")) {
+        $migration->dropField($table, "display_special_plugin_widget");
+            $migration->migrationOneTable($table);
+        }
+
+        if ($DB->fieldExists($table, "google_api_key")) {
+            $migration->dropField($table, "google_api_key");
+            $migration->migrationOneTable($table);
+        }
+
+        $migration->changeField($table, "levelCat", "levelCat", "int {$default_key_sign} NOT NULL DEFAULT '2'");
+        $migration->migrationOneTable($table);
+
+        $migration->changeField($table, "replace_central", "replace_central", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+        $migration->migrationOneTable($table);
+
+        $config = new self();
+        if (!$config->getFromDB("1")) {
+            $config->initConfig();
+        }
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
     }
 }
