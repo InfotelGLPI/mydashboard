@@ -65,10 +65,12 @@ class Reports_Funnel extends CommonGLPI
         $widgets = [
             Menu::$INVENTORY =>
                 [
-                    $this->getType() . "1"  => ["title"   => __("Age pyramid", "mydashboard"),
-                                                "type"    => Widget::$OTHERS,
-                                                "icon"    => "ti ti-triangle",
-                                                "comment" => ""],
+                    $this->getType() . "1" => [
+                        "title" => __("Age pyramid", "mydashboard"),
+                        "type" => Widget::$OTHERS,
+                        "icon" => "ti ti-triangle",
+                        "comment" => ""
+                    ],
                 ]
         ];
 
@@ -137,11 +139,12 @@ class Reports_Funnel extends CommonGLPI
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
-                                  'is_recursive',
-                                  'type_computer'
+                    $criterias = [
+                        'entities_id',
+                        'is_recursive',
+                        'type_computer'
                     ];
-                    $onclick   = 1;
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -150,19 +153,21 @@ class Reports_Funnel extends CommonGLPI
                     ];
                 }
 
-                $params  = ["preferences" => $preferences,
-                            "criterias"   => $criterias,
-                            "opt"         => $opt];
+                $params = [
+                    "preferences" => $preferences,
+                    "criterias" => $criterias,
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
-                $opt  = $options['opt'];
+                $opt = $options['opt'];
                 $crit = $options['crit'];
 
-                $entities_criteria          = $crit['entities_id'];
-                $entities_id_criteria       = $crit['entity'];
-                $sons_criteria              = $crit['sons'];
-                $type                       = $opt['type_computer'];
-                $type_criteria              = $crit['type_computer'];
+                $entities_criteria = $crit['entities_id'];
+                $entities_id_criteria = $crit['entity'];
+                $sons_criteria = $crit['sons'];
+                $type = $opt['type_computer'];
+                $type_criteria = $crit['type_computer'];
 
 
                 $is_deleted = "`glpi_computers`.`is_deleted` = 0";
@@ -220,81 +225,97 @@ class Reports_Funnel extends CommonGLPI
 
 
                 $results = $DB->doQuery($query);
-                $tabage   = [];
+                $tabage = [];
                 $tabnames = [];
 
-                $ages = [__('Without buy date', 'mydashboard'),
-                         __('> 6 years', 'mydashboard'),
-                         __('4-6 years', 'mydashboard'),
-                         __('2-4 years', 'mydashboard'),
-                         __('< 2 years', 'mydashboard'),
-                         ];
+                $ages = [
+                    __('Without buy date', 'mydashboard'),
+                    __('> 6 years', 'mydashboard'),
+                    __('4-6 years', 'mydashboard'),
+                    __('2-4 years', 'mydashboard'),
+                    __('< 2 years', 'mydashboard'),
+                ];
                 $i = 0;
                 while ($data = $DB->fetchArray($results)) {
                     $tabnames[] = $ages[$i];
                     $tabdate[] = $data['AgeCrit'];
 
                     if ($i == 0) {
-                        $tabage[] = ['value' => $data['Total'],
-                                     'name' => $ages[$i],
-                                     'itemStyle' => ['color' => '#CCC']];
+                        $tabage[] = [
+                            'value' => $data['Total'],
+                            'name' => $ages[$i],
+                            'itemStyle' => ['color' => '#CCC']
+                        ];
                     } elseif ($i == 1) {
-                        $tabage[] = ['value' => $data['Total'],
-                                     'name' => $ages[$i],
-                                     'itemStyle' => ['color' => '#E19494FF']];
+                        $tabage[] = [
+                            'value' => $data['Total'],
+                            'name' => $ages[$i],
+                            'itemStyle' => ['color' => '#E19494FF']
+                        ];
                     } elseif ($i == 2) {
-                        $tabage[] = ['value' => $data['Total'],
-                                     'name' => $ages[$i],
-                                     'itemStyle' => ['color' => '#EAAC4EFF']];
+                        $tabage[] = [
+                            'value' => $data['Total'],
+                            'name' => $ages[$i],
+                            'itemStyle' => ['color' => '#EAAC4EFF']
+                        ];
                     } elseif ($i == 3) {
-                        $tabage[] = ['value' => $data['Total'],
-                                     'name' => $ages[$i],
-                                     'itemStyle' => ['color' => '#599CD0FF']];
+                        $tabage[] = [
+                            'value' => $data['Total'],
+                            'name' => $ages[$i],
+                            'itemStyle' => ['color' => '#599CD0FF']
+                        ];
                     } elseif ($i == 4) {
-
-                        $tabage[] = ['value' => $data['Total'],
-                                     'name' => $ages[$i],
-                                     'itemStyle' => ['color' => '#9EB778FF']];
+                        $tabage[] = [
+                            'value' => $data['Total'],
+                            'name' => $ages[$i],
+                            'itemStyle' => ['color' => '#9EB778FF']
+                        ];
                     }
                     $i++;
                 }
 
-                $widget      = new Html();
+                $widget = new Html();
                 $dataLineset = json_encode($tabage);
                 $dataDateset = json_encode($tabdate);
-                $labelsLine  = json_encode($tabnames);
+                $labelsLine = json_encode($tabnames);
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "35 " : "") . $title);
                 $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
-                $graph_datas = ['title'   => $title,
-                                'comment' => $comment,
-                                'name'    => $name,
-                                'ids'     => $dataDateset,
-                                'data'    => $dataLineset,
-                                'labels'  => $labelsLine];
+                $graph_datas = [
+                    'title' => $title,
+                    'comment' => $comment,
+                    'name' => $name,
+                    'ids' => $dataDateset,
+                    'data' => $dataLineset,
+                    'labels' => $labelsLine
+                ];
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id'        => $entities_id_criteria,
-                                        'sons'               => $sons_criteria,
-                                        'type_computer'      => $type,
-                                        'widget'             => $widgetId];
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
+                        'sons' => $sons_criteria,
+                        'type_computer' => $type,
+                        'widget' => $widgetId
+                    ];
                 }
                 $graph = FunnelChart::launchFunnelGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
 
-                $params = ["widgetId"  => $widgetId,
-                           "name"      => $name,
-                           "onsubmit"  => true,
-                           "opt"       => $opt,
-                           "criterias" => $criterias,
-                           "export"    => true,
-                           "canvas"    => true,
-                           "nb"        => 1];
+                $params = [
+                    "widgetId" => $widgetId,
+                    "name" => $name,
+                    "onsubmit" => true,
+                    "opt" => $opt,
+                    "criterias" => $criterias,
+                    "export" => true,
+                    "canvas" => true,
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
                     $graph
@@ -309,7 +330,7 @@ class Reports_Funnel extends CommonGLPI
     }
 
     /**
-     * @param $params['selected_id']
+     * @param $params ['selected_id']
      *
      * @return string
      */
@@ -340,6 +361,6 @@ class Reports_Funnel extends CommonGLPI
         }
 
         return $CFG_GLPI["root_doc"] . '/front/computer.php?is_deleted=0&' .
-                Toolbox::append_params($options, "&");
+            Toolbox::append_params($options, "&");
     }
 }

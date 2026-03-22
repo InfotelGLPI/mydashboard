@@ -70,9 +70,11 @@ class Event extends \Glpi\Event
         if (Session::haveRight("logs", READ)) {
             $widgets = [
                 Menu::$SYSTEM => [
-                    "eventwidgetglobal" => ["title"   => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
-                                            "type"    => Widget::$TABLE,
-                                            "comment" => ""],
+                    "eventwidgetglobal" => [
+                        "title" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
+                        "type" => Widget::$TABLE,
+                        "comment" => ""
+                    ],
                 ]
             ];
         }
@@ -115,13 +117,13 @@ class Event extends \Glpi\Event
             switch ($type) {
                 case "rules":
                     $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rule.generic.form.php?id=" .
-                            $items_id . "\">" . $items_id . "</a>";
+                        $items_id . "\">" . $items_id . "</a>";
                     break;
 
                 case "infocom":
                     $out .= "<a href='#' onClick=\"window.open('" . $CFG_GLPI["root_doc"] .
-                            "/front/infocom.form.php?id=" . $items_id . "','infocoms','location=infocoms,width=" .
-                            "1000,height=400,scrollbars=no')\">" . $items_id . "</a>";
+                        "/front/infocom.form.php?id=" . $items_id . "','infocoms','location=infocoms,width=" .
+                        "1000,height=400,scrollbars=no')\">" . $items_id . "</a>";
                     break;
 
                 case "devices":
@@ -130,12 +132,12 @@ class Event extends \Glpi\Event
 
                 case "reservationitem":
                     $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reservation.php?reservationitems_id=" .
-                            $items_id . "\">" . $items_id . "</a>";
+                        $items_id . "\">" . $items_id . "</a>";
                     break;
 
                 default:
                     $type = getSingular($type);
-                    $url  = '';
+                    $url = '';
                     if ($item = getItemForItemtype($type)) {
                         $url = $item->getFormURL();
                     }
@@ -197,7 +199,7 @@ class Event extends \Glpi\Event
 
         //TRANS: %d is the number of item to display
         $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
-                           sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
+            sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
 
         $output['header'][] = __('Source');
         $output['header'][] = __('id');
@@ -210,10 +212,10 @@ class Event extends \Glpi\Event
         while ($i < $number) {
             $DB->result($result, $i, "id");
             $items_id = $DB->result($result, $i, "items_id");
-            $type     = $DB->result($result, $i, "type");
-            $date     = $DB->result($result, $i, "date");
-            $service  = $DB->result($result, $i, "service");
-            $message  = $DB->result($result, $i, "message");
+            $type = $DB->result($result, $i, "type");
+            $date = $DB->result($result, $i, "date");
+            $service = $DB->result($result, $i, "service");
+            $message = $DB->result($result, $i, "message");
 
             $itemtype = "&nbsp;";
             if (isset($logItemtype[$type])) {

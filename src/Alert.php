@@ -59,15 +59,17 @@ use Toolbox;
  */
 class Alert extends CommonDBTM
 {
-    public static $types = ['Reminder',
+    public static $types = [
+        'Reminder',
         'Problem',
         'Change',
         Event::class,
-        Release::class];
+        Release::class
+    ];
 
     /**
      * @param CommonGLPI $item
-     * @param int        $withtemplate
+     * @param int $withtemplate
      *
      * @return string|translated
      */
@@ -122,14 +124,14 @@ class Alert extends CommonDBTM
 
     /**
      * @param CommonGLPI $item
-     * @param int        $tabnum
-     * @param int        $withtemplate
+     * @param int $tabnum
+     * @param int $withtemplate
      *
      * @return bool
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        $alert      = new self();
+        $alert = new self();
         $itil_alert = new ItilAlert();
         switch ($item->getType()) {
             case "Reminder":
@@ -155,62 +157,94 @@ class Alert extends CommonDBTM
     public function getWidgetsForItem()
     {
         $widgets = [
-            Menu::$SYSTEM    => [
-                $this->getType() . "1" => ["title"   => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
-                    "type"    => Widget::$KPI,
-                    "comment" => __("See network alert block", "mydashboard")],
-                $this->getType() . "2" => ["title"   => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
-                    "type"    => Widget::$KPI,
-                    "comment" => __("See scheduled maintenances information block", "mydashboard")],
-                $this->getType() . "3" => ["title"   => _n('Information', 'Informations', 2, 'mydashboard'),
-                    "type"    => Widget::$KPI,
-                    "comment" => __("See informations block", "mydashboard")],
-                $this->getType() . "6" => ["title"   => __("GLPI Status", "mydashboard"),
-                    "type"    => Widget::$KPI,
-                    "comment" => __("Check if GLPI have no problem", "mydashboard")],
-                $this->getType() . "8" => ["title"   => __('Automatic actions in error', 'mydashboard'),
-                    "type"    => Widget::$KPI,
-                    "comment" => __("Display automatic actions in error", "mydashboard")],
-                $this->getType() . "9" => ["title"   => __("Not imported mails in collectors", "mydashboard"),
-                    "type"    => Widget::$TABLE,
-                    "comment" => __("Display of mails which are not imported", "mydashboard")],
+            Menu::$SYSTEM => [
+                $this->getType() . "1" => [
+                    "title" => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
+                    "type" => Widget::$KPI,
+                    "comment" => __("See network alert block", "mydashboard")
+                ],
+                $this->getType() . "2" => [
+                    "title" => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
+                    "type" => Widget::$KPI,
+                    "comment" => __("See scheduled maintenances information block", "mydashboard")
+                ],
+                $this->getType() . "3" => [
+                    "title" => _n('Information', 'Informations', 2, 'mydashboard'),
+                    "type" => Widget::$KPI,
+                    "comment" => __("See informations block", "mydashboard")
+                ],
+                $this->getType() . "6" => [
+                    "title" => __("GLPI Status", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Check if GLPI have no problem", "mydashboard")
+                ],
+                $this->getType() . "8" => [
+                    "title" => __('Automatic actions in error', 'mydashboard'),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display automatic actions in error", "mydashboard")
+                ],
+                $this->getType() . "9" => [
+                    "title" => __("Not imported mails in collectors", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => __("Display of mails which are not imported", "mydashboard")
+                ],
             ],
             Menu::$INVENTORY
-                => [
-                    $this->getType() . "10" => ["title"   => __("Inventory stock alerts", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => __("Display alerts for inventory stocks", "mydashboard")],
-                    $this->getType() . "11" => ["title"   => __('Your equipments', 'mydashboard'),
-                        "type"    => Widget::$KPI,
-                        "comment" => __("Display your equipments", "mydashboard")],
+            => [
+                $this->getType() . "10" => [
+                    "title" => __("Inventory stock alerts", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display alerts for inventory stocks", "mydashboard")
                 ],
+                $this->getType() . "11" => [
+                    "title" => __('Your equipments', 'mydashboard'),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display your equipments", "mydashboard")
+                ],
+            ],
             Menu::$HELPDESK
-                => [
-                    $this->getType() . "4"    => ["title"   => __("Incidents alerts", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => __("Display alerts for incidents and problems", "mydashboard")],
-                    $this->getType() . "5"    => ["title"   => __("SLA Incidents alerts", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard")],
-                    $this->getType() . "7"    => ["title"   => __("User ticket alerts", "mydashboard"),
-                        "type"   => Widget::$TABLE,
-                        "comment" => __("Display tickets where last modification is a user action", "mydashboard")],
-                    $this->getType() . "12"   => ["title"   => __("SLA Requests alerts", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard")],
-                    $this->getType() . "13"   => ["title"   => __("Requests alerts", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => __("Display alerts for requests", "mydashboard")],
-                    $this->getType() . "33"   => ["title"   => __("Number of opened tickets by group and by status", "mydashboard"),
-                        "type"    => Widget::$TABLE,
-                        "comment" => ""],
-                    $this->getType() . "SC32" => ["title"   => __("Global indicators", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => ""],
-                    $this->getType() . "SC33" => ["title"   => __("Global indicators by week", "mydashboard"),
-                        "type"    => Widget::$KPI,
-                        "comment" => ""],
+            => [
+                $this->getType() . "4" => [
+                    "title" => __("Incidents alerts", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display alerts for incidents and problems", "mydashboard")
                 ],
+                $this->getType() . "5" => [
+                    "title" => __("SLA Incidents alerts", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard")
+                ],
+                $this->getType() . "7" => [
+                    "title" => __("User ticket alerts", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => __("Display tickets where last modification is a user action", "mydashboard")
+                ],
+                $this->getType() . "12" => [
+                    "title" => __("SLA Requests alerts", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard")
+                ],
+                $this->getType() . "13" => [
+                    "title" => __("Requests alerts", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => __("Display alerts for requests", "mydashboard")
+                ],
+//                $this->getType() . "33" => [
+//                    "title" => __("Number of opened tickets by group and by status", "mydashboard"),
+//                    "type" => Widget::$TABLE,
+//                    "comment" => ""
+//                ],
+                $this->getType() . "SC32" => [
+                    "title" => __("Global indicators", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => ""
+                ],
+                $this->getType() . "SC33" => [
+                    "title" => __("Global indicators by week", "mydashboard"),
+                    "type" => Widget::$KPI,
+                    "comment" => ""
+                ],
+            ],
         ];
 
         return $widgets;
@@ -267,15 +301,15 @@ class Alert extends CommonDBTM
     {
         global $DB;
 
-        $now                 = date('Y-m-d H:i:s');
+        $now = date('Y-m-d H:i:s');
         $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
                               AND (`glpi_reminders`.`end_view_date` IS NULL
                                    OR `glpi_reminders`.`end_view_date` > '$now') ";
-        $addwhere            = "";
+        $addwhere = "";
         if ($public == 0) {
             if (count($itilcategories_id) > 0) {
-                $cats     = implode("','", $itilcategories_id);
+                $cats = implode("','", $itilcategories_id);
                 $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
             } else {
                 $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = 0";
@@ -284,10 +318,10 @@ class Alert extends CommonDBTM
 
         $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
                    FROM `glpi_reminders` "
-                 . Reminder::addVisibilityJoins()
-                 . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
-                 . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
-                 . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
+            . Reminder::addVisibilityJoins()
+            . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
+            . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
+            . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
                          $addwhere
                          $restrict_visibility ";
 
@@ -296,11 +330,11 @@ class Alert extends CommonDBTM
         } else {
             $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
         }
-        $nb     = 0;
+        $nb = 0;
         $result = $DB->doQuery($query);
         if ($DB->numrows($result) > 0) {
-            $ligne  = $DB->fetchAssoc($result);
-            $nb     = $ligne['cpt'];
+            $ligne = $DB->fetchAssoc($result);
+            $nb = $ligne['cpt'];
         }
 
 
@@ -320,7 +354,7 @@ class Alert extends CommonDBTM
         global $CFG_GLPI, $DB;
 
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $preference = new Preference();
         if (Session::getLoginUserID() !== false
             && !$preference->getFromDB(Session::getLoginUserID())) {
@@ -329,7 +363,7 @@ class Alert extends CommonDBTM
         $preference->getFromDB(Session::getLoginUserID());
         $preferences = $preference->fields;
 
-        $config  = new Config();
+        $config = new Config();
         $config->getFromDB(1);
 
         switch ($widgetId) {
@@ -343,7 +377,7 @@ class Alert extends CommonDBTM
 
             case $this->getType() . "2":
                 $widget = new MydashboardHtml();
-                $datas  = $this->getMaintenanceList();
+                $datas = $this->getMaintenanceList();
                 $widget->setWidgetHeaderType('warning');
                 $widget->setWidgetHtmlContent(
                     $datas
@@ -354,7 +388,7 @@ class Alert extends CommonDBTM
 
             case $this->getType() . "3":
                 $widget = new MydashboardHtml();
-                $datas  = $this->getInformationList();
+                $datas = $this->getInformationList();
                 $widget->setWidgetHeaderType('info');
                 $widget->setWidgetHtmlContent(
                     $datas
@@ -364,31 +398,41 @@ class Alert extends CommonDBTM
                 break;
 
             case $this->getType() . "4":
-                $widget = $this->displayTicketsAlertsWidgets('GlpiPlugin\Mydashboard\Alert4', $widgetId, $opt, \Ticket::INCIDENT_TYPE);
+                $widget = $this->displayTicketsAlertsWidgets(
+                    'GlpiPlugin\Mydashboard\Alert4',
+                    $widgetId,
+                    $opt,
+                    \Ticket::INCIDENT_TYPE
+                );
                 return $widget;
                 break;
 
             case $this->getType() . "5":
-                $widget = $this->displaySLATicketsAlertsWidgets('GlpiPlugin\Mydashboard\Alert5', $widgetId, $opt, \Ticket::INCIDENT_TYPE);
+                $widget = $this->displaySLATicketsAlertsWidgets(
+                    'GlpiPlugin\Mydashboard\Alert5',
+                    $widgetId,
+                    $opt,
+                    \Ticket::INCIDENT_TYPE
+                );
                 return $widget;
                 break;
 
             case $this->getType() . "6":
 
-                $widget   = new MydashboardHtml();
-                $url      = $CFG_GLPI['url_base'] . "/status.php?format=json";
+                $widget = new MydashboardHtml();
+                $url = $CFG_GLPI['url_base'] . "/status.php?format=json";
                 $contents = StatusChecker::getServiceStatus($_REQUEST['service'] ?? null, true, false);
-                $table    = self::handleShellcommandResult($contents['glpi']['status'], $url);
+                $table = self::handleShellcommandResult($contents['glpi']['status'], $url);
 
 
                 if (is_array($contents) && count($contents) > 0) {
-                    $table    .= "<div class='md-status'>";
+                    $table .= "<div class='md-status'>";
                     foreach ($contents as $module => $content) {
                         if ($module != 'glpi') {
-                            $table    .= $module." : ".$content['status']."<br>";
+                            $table .= $module . " : " . $content['status'] . "<br>";
                         }
                     }
-                    $table    .= "</div>";
+                    $table .= "</div>";
                 }
                 $widget->setWidgetHtmlContent(
                     $table
@@ -406,12 +450,15 @@ class Alert extends CommonDBTM
                 $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
                 $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), ['glpi_groups.is_assign' => 1]);
-                $groups   = [];
+                $groups = [];
                 foreach ($mygroups as $mygroup) {
                     $groups[] = $mygroup["id"];
                 }
-                $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(",", $_SESSION['glpiactiveentities']) . ") ";
-                $query    = "SELECT  `glpi_tickets`.`id` as tickets_id,
+                $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(
+                        ",",
+                        $_SESSION['glpiactiveentities']
+                    ) . ") ";
+                $query = "SELECT  `glpi_tickets`.`id` as tickets_id,
                                           `glpi_tickets`.`status` as status,
                                           `glpi_tickets`.`date_mod` as date_mod
                                  FROM `glpi_tickets`
@@ -422,8 +469,9 @@ class Alert extends CommonDBTM
 
                 $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";
 
-                $widget  = Helper::getWidgetsFromDBQuery('table', $query);
-                $headers = [__('ID and priority', 'mydashboard'),
+                $widget = Helper::getWidgetsFromDBQuery('table', $query);
+                $headers = [
+                    __('ID and priority', 'mydashboard'),
                     _n('Requester', 'Requesters', 2),
                     __('Status'),
                     __('Last update'),
@@ -431,11 +479,12 @@ class Alert extends CommonDBTM
                     __('Action'),
                     __('ID'),
                     __('Priority'),
-                    __('Category')];
+                    __('Category')
+                ];
                 $widget->setTabNames($headers);
 
                 $result = $DB->doQuery($query);
-                $nb     = $DB->numrows($result);
+                $nb = $DB->numrows($result);
 
                 $datas = [];
 
@@ -446,10 +495,10 @@ class Alert extends CommonDBTM
                         $ticket->getFromDB($data['tickets_id']);
 
                         $users_requesters = [];
-                        $userdata         = '';
+                        $userdata = '';
                         if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
                             foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
-                                $k                                = $u['users_id'];
+                                $k = $u['users_id'];
                                 $users_requesters[$u['users_id']] = $u['users_id'];
 
                                 if ($k) {
@@ -463,15 +512,20 @@ class Alert extends CommonDBTM
                         }
                         if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
                             $itilfollowup = new ITILFollowup();
-                            $followups    = $itilfollowup->find(['items_id' => $ticket->fields['id'],
-                                'itemtype' => 'Ticket'], 'date DESC');
+                            $followups = $itilfollowup->find([
+                                'items_id' => $ticket->fields['id'],
+                                'itemtype' => 'Ticket'
+                            ], 'date DESC');
 
                             $ticketdocument = new Document();
-                            $documents      = $ticketdocument->find(['tickets_id' => $ticket->fields['id']], ['date_mod DESC']);
+                            $documents = $ticketdocument->find(['tickets_id' => $ticket->fields['id']],
+                                ['date_mod DESC']);
 
                             if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
-                                || (count($documents) > 0 && current($documents)['date_mod'] >= $ticket->fields['date_mod'])) {
-                                $bgcolor   = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
+                                || (count($documents) > 0 && current(
+                                        $documents
+                                    )['date_mod'] >= $ticket->fields['date_mod'])) {
+                                $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
                                 $textColor = "color:black!important;";
                                 if ($bgcolor == '#000000') {
                                     $textColor = "color:white!important;";
@@ -535,15 +589,17 @@ class Alert extends CommonDBTM
                                 $datas[$i]["action"] = $action;
 
 
-                                $ticketId        = "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
-                                $ticketId        .= $data['tickets_id'];
-                                $ticketId        .= "</a>";
+                                $ticketId = "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
+                                $ticketId .= $data['tickets_id'];
+                                $ticketId .= "</a>";
                                 $datas[$i]["id"] = $ticketId;
 
                                 // Priorities
-                                $priority              = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
-                                $priority              .= "<span class='b'>" . $ticket->fields["priority"] . " - " . \Ticket::getPriorityName($ticket->fields["priority"]) . "</span>";
-                                $priority              .= "</div>";
+                                $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
+                                $priority .= "<span class='b'>" . $ticket->fields["priority"] . " - " . \Ticket::getPriorityName(
+                                        $ticket->fields["priority"]
+                                    ) . "</span>";
+                                $priority .= "</div>";
                                 $datas[$i]["priority"] = $priority;
 
                                 // Categories
@@ -552,12 +608,12 @@ class Alert extends CommonDBTM
                                 $itilCategory = new ITILCategory();
                                 if ($itilCategory->getFromDB($ticket->fields["itilcategories_id"])) {
                                     $haystack = $itilCategory->getField('completename');
-                                    $needle   = '>';
-                                    $offset   = 0;
-                                    $allpos   = [];
+                                    $needle = '>';
+                                    $offset = 0;
+                                    $allpos = [];
 
                                     while (($pos = strpos($haystack, $needle, $offset)) !== false) {
-                                        $offset   = $pos + 1;
+                                        $offset = $pos + 1;
                                         $allpos[] = $pos;
                                     }
 
@@ -566,7 +622,11 @@ class Alert extends CommonDBTM
                                     } else {
                                         $pos = strlen($haystack);
                                     }
-                                    $datas[$i]["category"] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
+                                    $datas[$i]["category"] = "<span class='b'>" . substr(
+                                            $haystack,
+                                            0,
+                                            $pos
+                                        ) . "</span>";
                                 } else {
                                     $datas[$i]["category"] = "<span></span>";
                                 }
@@ -586,7 +646,7 @@ class Alert extends CommonDBTM
 
                 $widget->setWidgetHeaderType('warning');
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "7 " : "") . $title);
@@ -603,17 +663,19 @@ class Alert extends CommonDBTM
                       AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
                            OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
 
-                $widget  = Helper::getWidgetsFromDBQuery('table', $query);
-                $headers = [__('Last run'),
+                $widget = Helper::getWidgetsFromDBQuery('table', $query);
+                $headers = [
+                    __('Last run'),
                     __('Name'),
-                    __('Status')];
+                    __('Status')
+                ];
                 $widget->setTabNames($headers);
 
                 $result = $DB->doQuery($query);
-                $nb     = $DB->numrows($result);
+                $nb = $DB->numrows($result);
 
                 $datas = [];
-                $i     = 0;
+                $i = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
                         $datas[$i]["lastrun"] = \Html::convDateTime($data['lastrun']);
@@ -636,7 +698,7 @@ class Alert extends CommonDBTM
                 if ($nb) {
                     $widget->setOption("bSort", [1, 'desc']);
                 }
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "8 " : "") . $title);
@@ -653,17 +715,19 @@ class Alert extends CommonDBTM
                         FROM `glpi_notimportedemails`
                         ORDER BY `date` ASC";
                 $result = $DB->doQuery($query);
-                $nb     = $DB->numrows($result);
+                $nb = $DB->numrows($result);
 
                 //                $widget  = Helper::getWidgetsFromDBQuery('table', $query);
-                $headers = [__('Date'),
+                $headers = [
+                    __('Date'),
                     __('From email header'),
                     __('Reason of rejection'),
-                    __('Mails receiver')];
+                    __('Mails receiver')
+                ];
                 //                $widget->setTabNames($headers);
 
                 $datas = [];
-                $i     = 0;
+                $i = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
                         $datas[$i]["date"] = \Html::convDateTime($data['date']);
@@ -690,11 +754,10 @@ class Alert extends CommonDBTM
                 //                    $widget->setOption("bSort", [0, 'desc']);
                 //                }
                 //                $widget->setWidgetHeaderType('danger');
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 //                $comment = $this->getCommentForWidget($widgetId);
                 //                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "9 " : "") . $title);
-
 
 
                 return $widget;
@@ -706,58 +769,67 @@ class Alert extends CommonDBTM
 
                 $setuplink = StockWidget::getSearchURL(true);
                 $criterias = ["locations_id"];
-                $params    = ["preferences" => $preferences,
-                    "criterias"   => $criterias,
-                    "opt"         => $opt];
-                $options   = Helper::manageCriterias($params);
+                $params = [
+                    "preferences" => $preferences,
+                    "criterias" => $criterias,
+                    "opt" => $opt
+                ];
+                $options = Helper::manageCriterias($params);
 
-                $opt               = $options['opt'];
-                $crit              = $options['crit'];
+                $opt = $options['opt'];
+                $crit = $options['crit'];
                 $location_criteria = $crit['locations_id'];
 
-                $params = ["widgetId"  => $widgetId,
-                    "name"      => 'GlpiPlugin\Mydashboard\Alert10',
-                    "onsubmit"  => false,
-                    "opt"       => $opt,
+                $params = [
+                    "widgetId" => $widgetId,
+                    "name" => 'GlpiPlugin\Mydashboard\Alert10',
+                    "onsubmit" => false,
+                    "opt" => $opt,
                     "criterias" => $criterias,
-                    "setup"     => $setuplink,
-                    "export"    => false,
-                    "canvas"    => false,
-                    "nb"        => 1];
-                $table  = Helper::getGraphHeader($params);
+                    "setup" => $setuplink,
+                    "export" => false,
+                    "canvas" => false,
+                    "nb" => 1
+                ];
+                $table = Helper::getGraphHeader($params);
 
-                $table       .= "<div class=\"tickets-stats\">";
+                $table .= "<div class=\"tickets-stats\">";
                 $stockwidget = new StockWidget();
-                $stocks      = $stockwidget->find();
-                $script      = "";
+                $stocks = $stockwidget->find();
+                $script = "";
                 if (count($stocks) > 0) {
                     $nb = 0;
                     foreach ($stocks as $data) {
                         $nb++;
-                        $alarm    = $data['alarm_threshold'];
-                        $stock    = 0;
-                        $color    = "olivedrab";
+                        $alarm = $data['alarm_threshold'];
+                        $stock = 0;
+                        $color = "olivedrab";
                         $itemtype = $data['itemtype'];
                         if ($item = getItemForItemtype($itemtype)) {
                             $itemtable = getTableForItemType($itemtype);
-                            $typefield = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype . "Type"));
+                            $typefield = $dbu->getForeignKeyFieldForTable(
+                                $dbu->getTableForItemType($itemtype . "Type")
+                            );
 
-                            $types  = json_decode($data["types"], true);
+                            $types = json_decode($data["types"], true);
                             $states = json_decode($data["states"], true);
-                            $q2     = "SELECT DISTINCT COUNT(`" . $itemtable . "`.`id`) AS nb
+                            $q2 = "SELECT DISTINCT COUNT(`" . $itemtable . "`.`id`) AS nb
                         FROM `" . $itemtable . "`
                         WHERE `" . $itemtable . "`.`is_deleted` = '0' AND `" . $itemtable . "`.`is_template` = '0' ";
-                            $q2     .= $dbu->getEntitiesRestrictRequest("AND", $itemtype::getTable());
+                            $q2 .= $dbu->getEntitiesRestrictRequest("AND", $itemtype::getTable());
                             if (is_array($states) && count($states) > 0) {
                                 $q2 .= " AND `" . $itemtable . "`.`states_id` IN('" . implode("', '", $states) . "') ";
                             }
                             if (is_array($types) && count($types) > 0) {
-                                $q2 .= "AND `" . $itemtable . "`.`" . $typefield . "` IN('" . implode("', '", $types) . "')";
+                                $q2 .= "AND `" . $itemtable . "`.`" . $typefield . "` IN('" . implode(
+                                        "', '",
+                                        $types
+                                    ) . "')";
                             }
                             if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
                                 $q2 .= " AND `" . $itemtable . "`.`locations_id` = '" . $location_criteria . "' ";
                             }
-                            $r2  = $DB->doQuery($q2);
+                            $r2 = $DB->doQuery($q2);
                             $nb2 = $DB->numrows($r2);
                             if ($nb2) {
                                 while ($data2 = $DB->fetchArray($r2)) {
@@ -769,12 +841,12 @@ class Alert extends CommonDBTM
                             }
 
                             //////////////////////////////////////////
-                            $search                              = [];
-                            $search['reset']                     = 'reset';
-                            $search['criteria'][0]['field']      = "view";
+                            $search = [];
+                            $search['reset'] = 'reset';
+                            $search['criteria'][0]['field'] = "view";
                             $search['criteria'][0]['searchtype'] = 'contains';
-                            $search['criteria'][0]['value']      = "^";
-                            $search['criteria'][0]['link']       = 'AND';
+                            $search['criteria'][0]['value'] = "^";
+                            $search['criteria'][0]['link'] = 'AND';
                             if (is_array($types) && count($types) > 0) {
                                 $nbs = 1;
                                 foreach ($types as $type) {
@@ -785,31 +857,31 @@ class Alert extends CommonDBTM
                                         $search['criteria'][1]['criteria'][$nbs]['field'] = "4";
                                     }
                                     $search['criteria'][1]['criteria'][$nbs]['searchtype'] = 'equals';
-                                    $search['criteria'][1]['criteria'][$nbs]['value']      = $type;
-                                    $search['criteria'][1]['criteria'][$nbs]['link']       = 'OR';
+                                    $search['criteria'][1]['criteria'][$nbs]['value'] = $type;
+                                    $search['criteria'][1]['criteria'][$nbs]['link'] = 'OR';
                                 }
                             }
                             if (is_array($states) && count($states) > 0) {
                                 $nbs = 1;
                                 foreach ($states as $state) {
                                     $nbs++;
-                                    $search['criteria'][2]['criteria'][$nbs]['field']      = 31; // type
+                                    $search['criteria'][2]['criteria'][$nbs]['field'] = 31; // type
                                     $search['criteria'][2]['criteria'][$nbs]['searchtype'] = 'equals';
-                                    $search['criteria'][2]['criteria'][$nbs]['value']      = $state;
-                                    $search['criteria'][2]['criteria'][$nbs]['link']       = 'OR';
+                                    $search['criteria'][2]['criteria'][$nbs]['value'] = $state;
+                                    $search['criteria'][2]['criteria'][$nbs]['link'] = 'OR';
                                 }
                             }
                             if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
-                                $search['criteria'][3]['field']      = "3";
+                                $search['criteria'][3]['field'] = "3";
                                 $search['criteria'][3]['searchtype'] = 'equals';
-                                $search['criteria'][3]['value']      = $opt['locations_id'];
-                                $search['criteria'][3]['link']       = 'AND';
+                                $search['criteria'][3]['value'] = $opt['locations_id'];
+                                $search['criteria'][3]['link'] = 'AND';
                             }
                             $form = $itemtype::getSearchURL(false);
                             $link = $CFG_GLPI["root_doc"] . $form . '?is_deleted=0&'
-                                    . Toolbox::append_params($search, "&");
+                                . Toolbox::append_params($search, "&");
 
-                            $icon  = $data['icon'];
+                            $icon = $data['icon'];
                             $table .= "<div class=\"nbstock\" style=\"color:$color\">";
                             $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $data['name'] . "'>";
                             $table .= "<i style='color:$color;font-size:34px' class=\"fas $icon fa-3x fa-border\"></i>";
@@ -841,7 +913,7 @@ class Alert extends CommonDBTM
 
                 $widget->setWidgetHeaderType('danger');
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "10 " : "") . $title);
@@ -851,12 +923,12 @@ class Alert extends CommonDBTM
                 break;
 
             case $this->getType() . "11":
-                $widget  = new MydashboardHtml();
-                $class   = "bt-col-md-12";
+                $widget = new MydashboardHtml();
+                $class = "bt-col-md-12";
                 $display = Widget::getWidgetMydashboardEquipments($class, false);
                 $widget->setWidgetHtmlContent($display);
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "11 " : "") . $title);
@@ -865,19 +937,29 @@ class Alert extends CommonDBTM
                 break;
 
             case $this->getType() . "12":
-                $widget = $this->displaySLATicketsAlertsWidgets('GlpiPlugin\Mydashboard\Alert12', $widgetId, $opt, \Ticket::DEMAND_TYPE);
+                $widget = $this->displaySLATicketsAlertsWidgets(
+                    'GlpiPlugin\Mydashboard\Alert12',
+                    $widgetId,
+                    $opt,
+                    \Ticket::DEMAND_TYPE
+                );
                 return $widget;
                 break;
 
             case $this->getType() . "13":
 
-                $widget = $this->displayTicketsAlertsWidgets('GlpiPlugin\Mydashboard\Alert13', $widgetId, $opt, \Ticket::DEMAND_TYPE);
+                $widget = $this->displayTicketsAlertsWidgets(
+                    'GlpiPlugin\Mydashboard\Alert13',
+                    $widgetId,
+                    $opt,
+                    \Ticket::DEMAND_TYPE
+                );
                 return $widget;
                 break;
 
             case $this->getType() . "SC32":
                 $widget = new MydashboardHtml();
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "SC32 " : "") . $title);
@@ -890,7 +972,7 @@ class Alert extends CommonDBTM
             case $this->getType() . "SC33":
                 $widget = new MydashboardHtml();
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "SC33 " : "") . $title);
@@ -919,7 +1001,7 @@ class Alert extends CommonDBTM
         global $CFG_GLPI, $DB;
 
         $widget = new MydashboardHtml();
-        $dbu    = new DbUtils();
+        $dbu = new DbUtils();
         $preference = new Preference();
         if (Session::getLoginUserID() !== false
             && !$preference->getFromDB(Session::getLoginUserID())) {
@@ -934,18 +1016,22 @@ class Alert extends CommonDBTM
         $colorstats4 = "#CCC";
         /*Stats1*/
         $search_assign = "1=1";
-        $left          = "";
+        $left = "";
 
         $criterias = ['technicians_groups_id'];
 
-        $params  = ["preferences" => $preferences,
-            "criterias"   => $criterias,
-            "opt"         => $opt];
+        $params = [
+            "preferences" => $preferences,
+            "criterias" => $criterias,
+            "opt" => $opt
+        ];
         $options = Helper::manageCriterias($params);
 
         $opt = $options['opt'];
 
-        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count($opt['technicians_groups_id']) == 0)) {
+        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
+                    $opt['technicians_groups_id']
+                ) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
@@ -953,22 +1039,24 @@ class Alert extends CommonDBTM
 
 
         if (is_array($technicians_groups_id) > 0
-        && count($technicians_groups_id) > 0) {
-            $left          = "LEFT JOIN `glpi_groups_tickets`
+            && count($technicians_groups_id) > 0) {
+            $left = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
         }
 
 
-        $params = ["widgetId"  => $widgetId,
-            "name"      => $name,
-            "onsubmit"  => true,
-            "opt"       => $opt,
+        $params = [
+            "widgetId" => $widgetId,
+            "name" => $name,
+            "onsubmit" => true,
+            "opt" => $opt,
             "criterias" => $criterias,
-            "export"    => false,
-            "canvas"    => false,
-            "nb"        => 1];
+            "export" => false,
+            "canvas" => false,
+            "nb" => 1
+        ];
         $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
         $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
@@ -976,12 +1064,12 @@ class Alert extends CommonDBTM
                         $left
                         WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q1 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
             AND `glpi_tickets`.`priority` > 4 AND `glpi_tickets`.`type` = '" . $type . "' AND $search_assign";
 
-        $r1             = $DB->doQuery($q1);
+        $r1 = $DB->doQuery($q1);
         $stats_tickets1 = 0;
-        $nb1            = $DB->numrows($r1);
+        $nb1 = $DB->numrows($r1);
         if ($nb1) {
             while ($data1 = $DB->fetchArray($r1)) {
                 $stats_tickets1 = $data1['nb'];
@@ -994,19 +1082,19 @@ class Alert extends CommonDBTM
         /*Stats2*/
         if ($type == \Ticket::INCIDENT_TYPE) {
             $search_assign = "1=1";
-            $left          = "";
+            $left = "";
 
             $q2 = "SELECT DISTINCT COUNT(`glpi_problems`.`id`) AS nb
                         FROM `glpi_problems`
                         $left
                         WHERE `glpi_problems`.`is_deleted` = '0' ";
             $q2 .= $dbu->getEntitiesRestrictRequest("AND", \Problem::getTable())
-                   . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+                . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
             AND `glpi_problems`.`priority` > 4 AND $search_assign";
 
-            $r2             = $DB->doQuery($q2);
+            $r2 = $DB->doQuery($q2);
             $stats_tickets2 = 0;
-            $nb2            = $DB->numrows($r2);
+            $nb2 = $DB->numrows($r2);
             if ($nb2) {
                 while ($data6 = $DB->fetchArray($r2)) {
                     $stats_tickets2 = $data6['nb'];
@@ -1024,12 +1112,12 @@ class Alert extends CommonDBTM
                         $left
                         WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q3 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ")
+            . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ")
             AND `glpi_tickets`.`type` = '" . $type . "' ";
 
-        $r3             = $DB->doQuery($q3);
+        $r3 = $DB->doQuery($q3);
         $stats_tickets3 = 0;
-        $nb3            = $DB->numrows($r3);
+        $nb3 = $DB->numrows($r3);
         if ($nb3) {
             while ($data3 = $DB->fetchArray($r3)) {
                 $stats_tickets3 = $data3['nb'];
@@ -1040,12 +1128,12 @@ class Alert extends CommonDBTM
         }
 
         /*Stats4*/
-        $left          = "";
+        $left = "";
         $search_assign = "1=1";
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left          = "LEFT JOIN `glpi_groups_tickets`
+            $left = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
@@ -1058,11 +1146,11 @@ class Alert extends CommonDBTM
                         $left
                         WHERE $search_assign  AND `glpi_tickets`.`type` = '" . $type . "' AND `glpi_tickets`.`is_deleted` = 0 ";
         $q4 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
-        $r4             = $DB->doQuery($q4);
+        $r4 = $DB->doQuery($q4);
         $stats_tickets4 = 0;
-        $nb4            = $DB->numrows($r4);
+        $nb4 = $DB->numrows($r4);
         if ($nb4) {
             while ($data4 = $DB->fetchArray($r4)) {
                 $stats_tickets4 = $data4['nb'];
@@ -1081,29 +1169,35 @@ class Alert extends CommonDBTM
             $options3['reset'][] = 'reset';
 
             $options3['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 1,
-                'link'       => 'AND',
+                'value' => 1,
+                'link' => 'AND',
             ];
 
             $options3['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             $stats3link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options3, "&");
+                . Toolbox::append_params($options3, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats3\">";
         if ($stats_tickets3 > 0) {
             if ($type == \Ticket::INCIDENT_TYPE) {
-                $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __('New incidents', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
+                        'New incidents',
+                        'mydashboard'
+                    ) . "'>";
             } else {
-                $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __('New requests', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
+                        'New requests',
+                        'mydashboard'
+                    ) . "'>";
             }
         }
         $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
@@ -1127,36 +1221,36 @@ class Alert extends CommonDBTM
             $options4['reset'][] = 'reset';
 
             $options4['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
 
             $options4['criteria'][] = [
-                'field'      => 5, // tech
+                'field' => 5, // tech
                 'searchtype' => 'contains',
-                'value'      => '^$',
-                'link'       => 'AND',
+                'value' => '^$',
+                'link' => 'AND',
             ];
 
             $options4['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -1164,15 +1258,21 @@ class Alert extends CommonDBTM
             }
 
             $stats4link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options4, "&");
+                . Toolbox::append_params($options4, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
         if ($stats_tickets4 > 0) {
             if ($type == \Ticket::INCIDENT_TYPE) {
-                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __('Opened incidents without assigned technicians', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
+                        'Opened incidents without assigned technicians',
+                        'mydashboard'
+                    ) . "'>";
             } else {
-                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __('Opened requests without assigned technicians', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
+                        'Opened requests without assigned technicians',
+                        'mydashboard'
+                    ) . "'>";
             }
         }
 
@@ -1180,9 +1280,15 @@ class Alert extends CommonDBTM
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets4'></span></h3>";
 
         if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<p class=\"count-text \">" . __('Opened incidents without assigned technicians', 'mydashboard') . "</p>";
+            $table .= "<p class=\"count-text \">" . __(
+                    'Opened incidents without assigned technicians',
+                    'mydashboard'
+                ) . "</p>";
         } else {
-            $table .= "<p class=\"count-text \">" . __('Opened requests without assigned technicians', 'mydashboard') . "</p>";
+            $table .= "<p class=\"count-text \">" . __(
+                    'Opened requests without assigned technicians',
+                    'mydashboard'
+                ) . "</p>";
         }
 
         if ($stats_tickets4 > 0) {
@@ -1197,36 +1303,36 @@ class Alert extends CommonDBTM
             $options1['reset'][] = 'reset';
 
             $options1['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
 
             $options1['criteria'][] = [
-                'field'      => 3, // priority
+                'field' => 3, // priority
                 'searchtype' => 'equals',
-                'value'      => -5,
-                'link'       => 'AND',
+                'value' => -5,
+                'link' => 'AND',
             ];
 
             $options1['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -1234,23 +1340,35 @@ class Alert extends CommonDBTM
             }
 
             $stats1link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options1, "&");
+                . Toolbox::append_params($options1, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats1\">";
         if ($stats_tickets1 > 0) {
             if ($type == \Ticket::INCIDENT_TYPE) {
-                $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Incidents with very high or major priority', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
+                        'Incidents with very high or major priority',
+                        'mydashboard'
+                    ) . "'>";
             } else {
-                $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __('Requests with very high or major priority', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
+                        'Requests with very high or major priority',
+                        'mydashboard'
+                    ) . "'>";
             }
         }
         $table .= "<i style='color:$colorstats1;font-size:3em;' class=\"ti ti-alert-triangle fa-border\"></i>
                <h3 style='font-size:34px;margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
         if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<p class=\"count-text \">" . __('Incidents with very high or major priority', 'mydashboard') . "</p>";
+            $table .= "<p class=\"count-text \">" . __(
+                    'Incidents with very high or major priority',
+                    'mydashboard'
+                ) . "</p>";
         } else {
-            $table .= "<p class=\"count-text \">" . __('Requests with very high or major priority', 'mydashboard') . "</p>";
+            $table .= "<p class=\"count-text \">" . __(
+                    'Requests with very high or major priority',
+                    'mydashboard'
+                ) . "</p>";
         }
 
         if ($stats_tickets1 > 0) {
@@ -1266,30 +1384,36 @@ class Alert extends CommonDBTM
                 $options2['reset'][] = 'reset';
 
                 $options2['criteria'][] = [
-                    'field'      => 12,//status
+                    'field' => 12,//status
                     'searchtype' => 'equals',
-                    'value'      => 'notold',
-                    'link'       => 'AND',
+                    'value' => 'notold',
+                    'link' => 'AND',
                 ];
 
                 $options2['criteria'][] = [
-                    'field'      => 3, // priority
+                    'field' => 3, // priority
                     'searchtype' => 'equals',
-                    'value'      => -5,
-                    'link'       => 'AND',
+                    'value' => -5,
+                    'link' => 'AND',
                 ];
 
                 $stats2link = $CFG_GLPI["root_doc"] . '/front/problem.php?is_deleted=0&'
-                              . Toolbox::append_params($options2, "&");
+                    . Toolbox::append_params($options2, "&");
             }
 
             $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
             if ($stats_tickets2 > 0) {
-                $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __('Problems with very high or major priority', 'mydashboard') . "'>";
+                $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __(
+                        'Problems with very high or major priority',
+                        'mydashboard'
+                    ) . "'>";
             }
             $table .= "<i style='color:$colorstats2;font-size:34px' class=\"ti ti-bug fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets2'></span></h3>";
-            $table .= "<p class=\"count-text \">" . __('Problems with very high or major priority', 'mydashboard') . "</p>";
+            $table .= "<p class=\"count-text \">" . __(
+                    'Problems with very high or major priority',
+                    'mydashboard'
+                ) . "</p>";
             if ($stats_tickets2 > 0) {
                 $table .= "</a>";
             }
@@ -1338,7 +1462,7 @@ class Alert extends CommonDBTM
         global $CFG_GLPI, $DB;
 
         $widget = new MydashboardHtml();
-        $dbu    = new DbUtils();
+        $dbu = new DbUtils();
 
         $colorstats2 = "#CCC";
         $colorstats3 = "#CCC";
@@ -1354,19 +1478,23 @@ class Alert extends CommonDBTM
 
         /*Stats2*/
         $search_assign = "1=1";
-        $left          = "";
-        $stats2        = 0;
+        $left = "";
+        $stats2 = 0;
 
         $criterias = ['technicians_groups_id'];
 
-        $params  = ["preferences" => $preferences,
-            "criterias"   => $criterias,
-            "opt"         => $opt];
+        $params = [
+            "preferences" => $preferences,
+            "criterias" => $criterias,
+            "opt" => $opt
+        ];
         $options = Helper::manageCriterias($params);
 
         $opt = $options['opt'];
 
-        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count($opt['technicians_groups_id']) == 0)) {
+        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
+                    $opt['technicians_groups_id']
+                ) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
@@ -1374,21 +1502,23 @@ class Alert extends CommonDBTM
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left          = "LEFT JOIN `glpi_groups_tickets`
+            $left = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
         }
 
 
-        $params = ["widgetId"  => $widgetId,
-            "name"      => $name,
-            "onsubmit"  => true,
-            "opt"       => $opt,
+        $params = [
+            "widgetId" => $widgetId,
+            "name" => $name,
+            "onsubmit" => true,
+            "opt" => $opt,
             "criterias" => $criterias,
-            "export"    => false,
-            "canvas"    => false,
-            "nb"        => 1];
+            "export" => false,
+            "canvas" => false,
+            "nb" => 1
+        ];
         $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
         $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
@@ -1396,12 +1526,12 @@ class Alert extends CommonDBTM
                            $left
                            WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q2 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_own` > NOW())";
 
-        $r2  = $DB->doQuery($q2);
+        $r2 = $DB->doQuery($q2);
         $nb2 = $DB->numrows($r2);
         if ($nb2) {
             while ($data2 = $DB->fetchArray($r2)) {
@@ -1413,11 +1543,11 @@ class Alert extends CommonDBTM
         }
         /*Stats3*/
         $search_assign = "1=1";
-        $left          = "";
-        $stats3        = 0;
+        $left = "";
+        $stats3 = 0;
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left          = "LEFT JOIN `glpi_groups_tickets`
+            $left = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
@@ -1427,12 +1557,12 @@ class Alert extends CommonDBTM
                            $left
                            WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q3 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`solve_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_resolve` > NOW())";
 
-        $r3  = $DB->doQuery($q3);
+        $r3 = $DB->doQuery($q3);
         $nb3 = $DB->numrows($r3);
 
         if ($nb3) {
@@ -1446,12 +1576,12 @@ class Alert extends CommonDBTM
 
         /*Stats4*/
         $search_assign = "1=1";
-        $left          = "";
-        $stats4        = 0;
+        $left = "";
+        $stats4 = 0;
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left          = "LEFT JOIN `glpi_groups_tickets`
+            $left = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
@@ -1462,12 +1592,12 @@ class Alert extends CommonDBTM
                                        $left
                                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q4 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_own` < NOW())";
 
-        $r4  = $DB->doQuery($q4);
+        $r4 = $DB->doQuery($q4);
         $nb4 = $DB->numrows($r4);
         if ($nb4) {
             while ($data4 = $DB->fetchArray($r4)) {
@@ -1480,12 +1610,12 @@ class Alert extends CommonDBTM
 
         /*Stats5*/
         $search_assign = "1=1";
-        $left          = "";
-        $stats5        = 0;
+        $left = "";
+        $stats5 = 0;
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left          = "LEFT JOIN `glpi_groups_tickets`
+            $left = "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
             $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
                                     AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
@@ -1496,12 +1626,12 @@ class Alert extends CommonDBTM
                                        $left
                                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
         $q5 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-               . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
                          AND `glpi_tickets`.`type` = '" . $type . "'
                          AND (`glpi_tickets`.`solve_delay_stat` = '0'
                          AND `glpi_tickets`.`time_to_resolve` < NOW())";
         //print_r($opt);
-        $r5  = $DB->doQuery($q5);
+        $r5 = $DB->doQuery($q5);
         $nb5 = $DB->numrows($r5);
         if ($nb5) {
             while ($data5 = $DB->fetchArray($r5)) {
@@ -1518,36 +1648,36 @@ class Alert extends CommonDBTM
             $options2['reset'][] = 'reset';
 
             $options2['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
 
             $options2['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             $options2['criteria'][] = [
-                'field'      => 155, // time_to_own
+                'field' => 155, // time_to_own
                 'searchtype' => 'morethan',
-                'value'      => 'NOW',
-                'link'       => 'AND',
+                'value' => 'NOW',
+                'link' => 'AND',
             ];
 
             if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -1555,14 +1685,14 @@ class Alert extends CommonDBTM
             }
 
             $options2['criteria'][] = [
-                'field'      => 150, // takeintoaccount_delay_stat
+                'field' => 150, // takeintoaccount_delay_stat
                 'searchtype' => 'contains',
-                'value'      => 0,
-                'link'       => 'AND',
+                'value' => 0,
+                'link' => 'AND',
             ];
 
             $stats2link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options2, "&");
+                . Toolbox::append_params($options2, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
@@ -1588,36 +1718,36 @@ class Alert extends CommonDBTM
             $options2['reset'][] = 'reset';
 
             $options3['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
 
             $options3['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             $options3['criteria'][] = [
-                'field'      => 18, // time_to_resolve
+                'field' => 18, // time_to_resolve
                 'searchtype' => 'morethan',
-                'value'      => 'NOW',
-                'link'       => 'AND',
+                'value' => 'NOW',
+                'link' => 'AND',
             ];
 
             if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -1625,14 +1755,14 @@ class Alert extends CommonDBTM
             }
 
             $options3['criteria'][] = [
-                'field'      => 154, // solve_delay_stat
+                'field' => 154, // solve_delay_stat
                 'searchtype' => 'contains',
-                'value'      => 0,
-                'link'       => 'AND',
+                'value' => 0,
+                'link' => 'AND',
             ];
 
             $stats3link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options3, "&");
+                . Toolbox::append_params($options3, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats3\">";
@@ -1642,11 +1772,17 @@ class Alert extends CommonDBTM
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
-               <p class=\"count-text \">" . __('Incidents where time to resolve will be exceeded', 'mydashboard') . "</p>";
+               <p class=\"count-text \">" . __(
+                    'Incidents where time to resolve will be exceeded',
+                    'mydashboard'
+                ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
-               <p class=\"count-text \">" . __('Requests where time to resolve will be exceeded', 'mydashboard') . "</p>";
+               <p class=\"count-text \">" . __(
+                    'Requests where time to resolve will be exceeded',
+                    'mydashboard'
+                ) . "</p>";
         }
         if ($stats3 > 0) {
             $table .= "</a>";
@@ -1658,36 +1794,36 @@ class Alert extends CommonDBTM
             $options4['reset'][] = 'reset';
 
             $options4['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
 
             $options4['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             $options4['criteria'][] = [
-                'field'      => 155, // time_to_own
+                'field' => 155, // time_to_own
                 'searchtype' => 'lessthan',
-                'value'      => 'NOW',
-                'link'       => 'AND',
+                'value' => 'NOW',
+                'link' => 'AND',
             ];
 
             if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -1695,14 +1831,14 @@ class Alert extends CommonDBTM
             }
 
             $options4['criteria'][] = [
-                'field'      => 150, // takeintoaccount_delay_stat
+                'field' => 150, // takeintoaccount_delay_stat
                 'searchtype' => 'contains',
-                'value'      => 0,
-                'link'       => 'AND',
+                'value' => 0,
+                'link' => 'AND',
             ];
 
             $stats4link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options4, "&");
+                . Toolbox::append_params($options4, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
@@ -1712,11 +1848,17 @@ class Alert extends CommonDBTM
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
-                           <p class=\"count-text \">" . __('Incidents where time to own is exceeded', 'mydashboard') . "</p>";
+                           <p class=\"count-text \">" . __(
+                    'Incidents where time to own is exceeded',
+                    'mydashboard'
+                ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
-                           <p class=\"count-text \">" . __('Requests where time to own is exceeded', 'mydashboard') . "</p>";
+                           <p class=\"count-text \">" . __(
+                    'Requests where time to own is exceeded',
+                    'mydashboard'
+                ) . "</p>";
         }
 
         if ($stats4 > 0) {
@@ -1729,36 +1871,36 @@ class Alert extends CommonDBTM
             $options5['reset'][] = 'reset';
 
             $options5['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
 
             $options5['criteria'][] = [
-                'field'      => 14, // type
+                'field' => 14, // type
                 'searchtype' => 'equals',
-                'value'      => $type,
-                'link'       => 'AND',
+                'value' => $type,
+                'link' => 'AND',
             ];
 
             $options5['criteria'][] = [
-                'field'      => 18, // time_to_resolve
+                'field' => 18, // time_to_resolve
                 'searchtype' => 'lessthan',
-                'value'      => 'NOW',
-                'link'       => 'AND',
+                'value' => 'NOW',
+                'link' => 'AND',
             ];
 
             if (is_array($opt['technicians_groups_id'])
                 && count($opt['technicians_groups_id']) > 0) {
                 $groups = $opt['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -1766,14 +1908,14 @@ class Alert extends CommonDBTM
             }
 
             $options5['criteria'][] = [
-                'field'      => 154, // solve_delay_stat
+                'field' => 154, // solve_delay_stat
                 'searchtype' => 'contains',
-                'value'      => 0,
-                'link'       => 'AND',
+                'value' => 0,
+                'link' => 'AND',
             ];
 
             $stats5link = $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                          . Toolbox::append_params($options5, "&");
+                . Toolbox::append_params($options5, "&");
         }
 
         $table .= "<div class=\"nb\" style=\"color:$colorstats5\">";
@@ -1783,11 +1925,17 @@ class Alert extends CommonDBTM
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
-                           <p class=\"count-text \">" . __('Incidents where time to resolve is exceeded', 'mydashboard') . "</p>";
+                           <p class=\"count-text \">" . __(
+                    'Incidents where time to resolve is exceeded',
+                    'mydashboard'
+                ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
-                           <p class=\"count-text \">" . __('Requests where time to resolve is exceeded', 'mydashboard') . "</p>";
+                           <p class=\"count-text \">" . __(
+                    'Requests where time to resolve is exceeded',
+                    'mydashboard'
+                ) . "</p>";
         }
 
         if ($stats5 > 0) {
@@ -1843,7 +1991,7 @@ class Alert extends CommonDBTM
         global $DB, $CFG_GLPI;
 
         $now = date('Y-m-d H:i:s');
-        $wl  = "";
+        $wl = "";
 
         $restrict_user = '1';
         // Only personal on central so do not keep it
@@ -1852,7 +2000,7 @@ class Alert extends CommonDBTM
         //      }
         $addwhere = "";
         if (count($itilcategories_id) > 0) {
-            $cats     = implode("','", $itilcategories_id);
+            $cats = implode("','", $itilcategories_id);
             $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
         }
 
@@ -1864,10 +2012,10 @@ class Alert extends CommonDBTM
         $query = "SELECT `glpi_reminders`.`id`,
                        `glpi_reminders`.`name`
                    FROM `glpi_reminders` "
-                 . Reminder::addVisibilityJoins()
-                 . "LEFT JOIN `" . $this->getTable() . "`"
-                 . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-                 . "WHERE $restrict_user
+            . Reminder::addVisibilityJoins()
+            . "LEFT JOIN `" . $this->getTable() . "`"
+            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+            . "WHERE $restrict_user
                         $addwhere
                          $restrict_visibility ";
 
@@ -1877,11 +2025,11 @@ class Alert extends CommonDBTM
                    ORDER BY `glpi_reminders`.`name`";
 
         $result = $DB->doQuery($query);
-        $nb     = $DB->numrows($result);
+        $nb = $DB->numrows($result);
         if ($nb) {
-            $wl               .= '<div id="nt_maint-container">';
-            $wl               .= '<ul id="nt_maint">';
-            $i                = 1;
+            $wl .= '<div id="nt_maint-container">';
+            $wl .= '<ul id="nt_maint">';
+            $i = 1;
             $firstdescription = "";
 
             while ($row = $DB->fetchArray($result)) {
@@ -1891,8 +2039,8 @@ class Alert extends CommonDBTM
                 //                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
                 $name = ReminderTranslation::getTranslatedValue($note, 'name');
 
-                $style_title         = "text-align:center;color:orange";
-                $description         = ReminderTranslation::getTranslatedValue($note, 'text');
+                $style_title = "text-align:center;color:orange";
+                $description = ReminderTranslation::getTranslatedValue($note, 'text');
                 $cleaned_description = $description;
                 if ($i == 1) {
                     $firstdescription = $cleaned_description;
@@ -1926,7 +2074,7 @@ class Alert extends CommonDBTM
             $wl .= "</div>";
             if ($nb > 1) {
                 $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-                $wl       .= "<script type='text/javascript'>
+                $wl .= "<script type='text/javascript'>
                     var nt_maint = $('#nt_maint').newsTicker({
                         row_height: 60,
                         max_rows: 1,
@@ -1958,8 +2106,8 @@ class Alert extends CommonDBTM
         } else {
             $wl .= '<div id="nt_maint-container">';
 
-            $wl     .= '<ul id="nt_maint">';
-            $wl     .= "<li>";
+            $wl .= '<ul id="nt_maint">';
+            $wl .= "<li>";
             $config = new Config();
             $config->getFromDB(1);
             $wl .= Config::displayField($config, 'title_maintenances_widget');
@@ -2009,8 +2157,8 @@ class Alert extends CommonDBTM
             }
             $iterator = $DB->request([
                 'SELECT' => 'documents_id',
-                'FROM'   => 'glpi_documents_items',
-                'WHERE'  => [
+                'FROM' => 'glpi_documents_items',
+                'WHERE' => [
                     'items_id' => $id,
                     'itemtype' => 'Reminder',
                 ],
@@ -2039,8 +2187,8 @@ class Alert extends CommonDBTM
     {
         global $DB;
 
-        $now           = date('Y-m-d H:i:s');
-        $wl            = "";
+        $now = date('Y-m-d H:i:s');
+        $wl = "";
         $restrict_user = '1';
         // Only personal on central so do not keep it
         //      if (Session::getCurrentInterface() == 'central') {
@@ -2048,7 +2196,7 @@ class Alert extends CommonDBTM
         //      }
         $addwhere = "";
         if (count($itilcategories_id) > 0) {
-            $cats     = implode("','", $itilcategories_id);
+            $cats = implode("','", $itilcategories_id);
             $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
         }
 
@@ -2060,10 +2208,10 @@ class Alert extends CommonDBTM
         $query = "SELECT `glpi_reminders`.`id`,
                        `glpi_reminders`.`name`
                    FROM `glpi_reminders` "
-                 . Reminder::addVisibilityJoins()
-                 . "LEFT JOIN `" . $this->getTable() . "`"
-                 . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-                 . "WHERE $restrict_user
+            . Reminder::addVisibilityJoins()
+            . "LEFT JOIN `" . $this->getTable() . "`"
+            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+            . "WHERE $restrict_user
                         $addwhere
                          $restrict_visibility ";
 
@@ -2073,12 +2221,12 @@ class Alert extends CommonDBTM
                    ORDER BY `glpi_reminders`.`name`";
 
         $result = $DB->doQuery($query);
-        $nb     = $DB->numrows($result);
+        $nb = $DB->numrows($result);
 
         if ($nb) {
-            $wl               .= '<div id="nt_info-container">';
-            $wl               .= '<ul id="nt_info">';
-            $i                = 1;
+            $wl .= '<div id="nt_info-container">';
+            $wl .= '<ul id="nt_info">';
+            $i = 1;
             $firstdescription = "";
 
             while ($row = $DB->fetchArray($result)) {
@@ -2088,8 +2236,8 @@ class Alert extends CommonDBTM
                 //                $name = "<i class='ti ti-info-circle'></i>";
                 $name = ReminderTranslation::getTranslatedValue($note, 'name');
 
-                $style_title         = "text-align:center;";
-                $description         = ReminderTranslation::getTranslatedValue($note, 'text');
+                $style_title = "text-align:center;";
+                $description = ReminderTranslation::getTranslatedValue($note, 'text');
                 $cleaned_description = $description;
 
                 if ($i == 1) {
@@ -2126,7 +2274,7 @@ class Alert extends CommonDBTM
 
             if ($nb > 1) {
                 $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-                $wl       .= "<script type='text/javascript'>
+                $wl .= "<script type='text/javascript'>
                     var nt_info = $('#nt_info').newsTicker({
                         row_height: 60,
                         max_rows: 1,
@@ -2160,8 +2308,8 @@ class Alert extends CommonDBTM
         } else {
             $wl .= '<div id="nt_info-container">';
 
-            $wl     .= '<ul id="nt_info">';
-            $wl     .= "<li>";
+            $wl .= '<ul id="nt_info">';
+            $wl .= "<li>";
             $config = new Config();
             $config->getFromDB(1);
             $wl .= Config::displayField($config, 'title_informations_widget');
@@ -2202,12 +2350,12 @@ class Alert extends CommonDBTM
         $config->getFromDB(1);
         $now = date('Y-m-d H:i:s');
 
-        $wl            = "";
+        $wl = "";
         $restrict_user = '1';
 
         $addwhere = "";
         if (count($itilcategories_id) > 0) {
-            $cats     = implode("','", $itilcategories_id);
+            $cats = implode("','", $itilcategories_id);
             $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
         }
 
@@ -2222,10 +2370,10 @@ class Alert extends CommonDBTM
                        `glpi_reminders`.`end_view_date`,
                        `" . $this->getTable() . "`.`impact`
                    FROM `glpi_reminders` "
-                 . Reminder::addVisibilityJoins()
-                 . "LEFT JOIN `" . $this->getTable() . "`"
-                 . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-                 . "WHERE $restrict_user
+            . Reminder::addVisibilityJoins()
+            . "LEFT JOIN `" . $this->getTable() . "`"
+            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+            . "WHERE $restrict_user
                         $addwhere
                          $restrict_visibility ";
 
@@ -2239,28 +2387,28 @@ class Alert extends CommonDBTM
                    ORDER BY `glpi_reminders`.`name`";
 
         $result = $DB->doQuery($query);
-        $nb     = $DB->numrows($result);
+        $nb = $DB->numrows($result);
 
         if ($nb) {
-            $wl               .= '<div id="nt_alert-container">';
-            $wl               .= '<ul id="nt_alert">';
-            $i                = 1;
+            $wl .= '<div id="nt_alert-container">';
+            $wl .= '<ul id="nt_alert">';
+            $i = 1;
             $firstdescription = "";
             while ($row = $DB->fetchArray($result)) {
                 $note = new \Reminder();
                 $note->getFromDB($row["id"]);
 
                 $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
-                $name  = "<i class='fas $class'></i>";
-                $name  .= ReminderTranslation::getTranslatedValue($note, 'name');
+                $name = "<i class='fas $class'></i>";
+                $name .= ReminderTranslation::getTranslatedValue($note, 'name');
 
                 $description = "";
                 //            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
-                $style_title       = "text-align: center;color:" . $config->getField('impact_' . $row['impact']);
+                $style_title = "text-align: center;color:" . $config->getField('impact_' . $row['impact']);
                 $style_description = "color:" . $config->getField('impact_' . $row['impact']);
-                $description       .= "<span style='$style_description'>";
-                $description       .= ReminderTranslation::getTranslatedValue($note, 'text');
-                $description       .= "</span>";
+                $description .= "<span style='$style_description'>";
+                $description .= ReminderTranslation::getTranslatedValue($note, 'text');
+                $description .= "</span>";
 
                 $cleaned_description = $description;
                 if ($i == 1) {
@@ -2295,7 +2443,7 @@ class Alert extends CommonDBTM
             $wl .= "</div>";
             if ($nb > 1) {
                 $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-                $wl       .= "<script type='text/javascript'>
+                $wl .= "<script type='text/javascript'>
                      var nt_alert = $('#nt_alert').newsTicker({
                         row_height: 60,
                         max_rows: 1,
@@ -2327,8 +2475,8 @@ class Alert extends CommonDBTM
         } else {
             $wl .= '<div id="nt_alert-container">';
 
-            $wl     .= '<ul id="nt_alert">';
-            $wl     .= "<li>";
+            $wl .= '<ul id="nt_alert">';
+            $wl .= "<li>";
             $config = new Config();
             $config->getFromDB(1);
             $wl .= Config::displayField($config, 'title_alerts_widget');
@@ -2388,10 +2536,10 @@ class Alert extends CommonDBTM
                        `" . $this->getTable() . "`.`impact`,
                        `" . $this->getTable() . "`.`is_public`
                    FROM `glpi_reminders` "
-                 . Reminder::addVisibilityJoins()
-                 . " LEFT JOIN `" . $this->getTable() . "`"
-                 . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-                 . " WHERE $restrict_user
+            . Reminder::addVisibilityJoins()
+            . " LEFT JOIN `" . $this->getTable() . "`"
+            . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+            . " WHERE $restrict_user
                          $restrict_visibility ";
 
         if ($public == 0) {
@@ -2403,10 +2551,10 @@ class Alert extends CommonDBTM
                  AND `" . $this->getTable() . "`.`type` = 0
                    ORDER BY `glpi_reminders`.`name`";
 
-        $wl     = "";
+        $wl = "";
         $result = $DB->doQuery($query);
 
-        $nb             = $DB->numrows($result);
+        $nb = $DB->numrows($result);
         $nb_maintenance = self::countForAlerts($public, 1);
         if ($nb || $nb_maintenance > 0) {
             $wl .= \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/mydashboard.css");
@@ -2440,19 +2588,19 @@ class Alert extends CommonDBTM
             //            }
             while ($row = $DB->fetchArray($result)) {
                 if ($row['impact'] == 1) {
-                    $f1[]   = $row;
+                    $f1[] = $row;
                     $list[] = $row;
                 } elseif ($row['impact'] == 2) {
-                    $f2[]   = $row;
+                    $f2[] = $row;
                     $list[] = $row;
                 } elseif ($row['impact'] == 3) {
-                    $f3[]   = $row;
+                    $f3[] = $row;
                     $list[] = $row;
                 } elseif ($row['impact'] == 4) {
-                    $f4[]   = $row;
+                    $f4[] = $row;
                     $list[] = $row;
                 } elseif ($row['impact'] == 5) {
-                    $f5[]   = $row;
+                    $f5[] = $row;
                     $list[] = $row;
                 }
             }
@@ -2472,7 +2620,10 @@ class Alert extends CommonDBTM
             //maintenance message
             if ($nb_maintenance > 0) {
                 $wl .= "<div class='red bt-col-xs-11 alert-title-div red '>";
-                $wl .= __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
+                $wl .= __(
+                    'There is at least on planned scheduled maintenance. Please log on to see more',
+                    'mydashboard'
+                );
                 $wl .= "</div>";
             }
             //            $wl .= "</div>";
@@ -2495,13 +2646,13 @@ class Alert extends CommonDBTM
     /**
      * @param       $impact
      * @param array $list
-     * @param int   $public
+     * @param int $public
      *
      * @return string
      */
     private function displayContent($impact, $list = [], $public = 0)
     {
-        $div    = "";
+        $div = "";
         $config = new Config();
         $config->getFromDB(1);
 
@@ -2528,7 +2679,7 @@ class Alert extends CommonDBTM
      */
     private function getMessage($list, $public)
     {
-        $l      = "";
+        $l = "";
         $config = new Config();
         $config->getFromDB(1);
         if (!empty($list)) {
@@ -2539,9 +2690,10 @@ class Alert extends CommonDBTM
                 $style = "background-color : " . $configColor;
                 //            $classfont = ' alert_fontimpact' . $listitem['impact'];
                 $styleFont = 'color : ' . $configColor;
-                $rand      = mt_rand();
-                $name      = (Session::haveRight("reminder_public", READ))
-                    ? "<a  href='" . \Reminder::getFormURL() . "?id=" . $listitem['id'] . "'>" . $listitem['name'] . "</a>"
+                $rand = mt_rand();
+                $name = (Session::haveRight("reminder_public", READ))
+                    ? "<a  href='" . \Reminder::getFormURL(
+                    ) . "?id=" . $listitem['id'] . "'>" . $listitem['name'] . "</a>"
                     : $listitem['name'];
 
                 $l .= "<div id='alert$rand'>";
@@ -2574,23 +2726,23 @@ class Alert extends CommonDBTM
         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
         if (isset($this->fields['id'])) {
-            $id                = $this->fields['id'];
-            $impact            = $this->fields['impact'];
+            $id = $this->fields['id'];
+            $impact = $this->fields['impact'];
             $itilcategories_id = $this->fields['itilcategories_id'];
-            $type              = $this->fields['type'];
-            $is_public         = $this->fields['is_public'];
+            $type = $this->fields['type'];
+            $is_public = $this->fields['is_public'];
         } else {
-            $id                = -1;
-            $type              = 0;
-            $impact            = 0;
+            $id = -1;
+            $type = 0;
+            $impact = 0;
             $itilcategories_id = 0;
-            $is_public         = 0;
+            $is_public = 0;
         }
         echo "<form action='" . $this->getFormURL() . "' method='post' >";
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
-        $types    = [];
+        $types = [];
         $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
         $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
         $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
@@ -2604,7 +2756,7 @@ class Alert extends CommonDBTM
         );
         echo "</td></tr>";
 
-        $impacts    = [];
+        $impacts = [];
         $impacts[0] = __("No impact", "mydashboard");
         for ($i = 1; $i <= 5; $i++) {
             $impacts[$i] = CommonITILObject::getImpactName($i);
@@ -2623,11 +2775,13 @@ class Alert extends CommonDBTM
         echo "<tr class='tab_bg_2'>";
         echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
         echo "<td>";
-        $opt = ['name'   => 'itilcategories_id',
-            'value'  => $itilcategories_id,
+        $opt = [
+            'name' => 'itilcategories_id',
+            'value' => $itilcategories_id,
             'entity' => $_SESSION['glpiactiveentities'],
             //              'entity_sons' => true,
-            'toadd'  => [-1 => __('All categories', 'mydashboard')]];
+            'toadd' => [-1 => __('All categories', 'mydashboard')]
+        ];
         ITILCategory::dropdown($opt);
         echo "</td>";
         echo "</tr>";
@@ -2664,7 +2818,10 @@ class Alert extends CommonDBTM
             echo "<table class='tab_cadre_fixe'>";
             echo "<th>" . Menu::getTypeName(2) . "</th>";
             echo "<tr class='tab_bg_1'><td class='center'>";
-            echo "<button type='submit' class='submit btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __("Create a new alert", "mydashboard") . "</button>";
+            echo "<button type='submit' class='submit btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __(
+                    "Create a new alert",
+                    "mydashboard"
+                ) . "</button>";
             echo '<script>
             function createAlert(itemtype, items_id) {
               $conf = confirm("' . __('Create a new alert', 'mydashboard') . '");
@@ -2711,23 +2868,23 @@ class Alert extends CommonDBTM
             $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
             if (isset($this->fields['id'])) {
-                $id                = $this->fields['id'];
-                $impact            = $this->fields['impact'];
+                $id = $this->fields['id'];
+                $impact = $this->fields['impact'];
                 $itilcategories_id = $this->fields['itilcategories_id'];
-                $type              = $this->fields['type'];
-                $is_public         = $this->fields['is_public'];
+                $type = $this->fields['type'];
+                $is_public = $this->fields['is_public'];
             } else {
-                $id                = -1;
-                $type              = 0;
-                $impact            = 0;
+                $id = -1;
+                $type = 0;
+                $impact = 0;
                 $itilcategories_id = 0;
-                $is_public         = 0;
+                $is_public = 0;
             }
             echo "<form action='" . $this->getFormURL() . "' method='post' >";
             echo "<table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
-            $types    = [];
+            $types = [];
             $types[0] = _n('Network alert', 'Network alerts', 1, 'mydashboard');
             $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
             $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
@@ -2742,7 +2899,7 @@ class Alert extends CommonDBTM
             );
             echo "</td></tr>";
 
-            $impacts    = [];
+            $impacts = [];
             $impacts[0] = __("No impact", "mydashboard");
             for ($i = 1; $i <= 5; $i++) {
                 $impacts[$i] = CommonITILObject::getImpactName($i);
@@ -2761,8 +2918,9 @@ class Alert extends CommonDBTM
             echo "<tr class='tab_bg_2'>";
             echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
             echo "<td>";
-            $opt = ['name'   => 'itilcategories_id',
-                'value'  => $itilcategories_id,
+            $opt = [
+                'name' => 'itilcategories_id',
+                'value' => $itilcategories_id,
                 'entity' => $_SESSION['glpiactiveentities'],
                 //                 'entity_sons' => true
             ];
@@ -2800,15 +2958,18 @@ class Alert extends CommonDBTM
             $display = "<div class=\"bt-feature $class \">";
             $display .= "<h3>";
             $display .= "<div class='alert alert-danger ' role='alert'>";
-            $config  = new Config();
+            $config = new Config();
             $config->getFromDB(1);
             $display .= Config::displayField($config, 'title_alerts_widget');
             $display .= "</div>";
             $display .= "</h3>";
             $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
-            $display .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
+            $display .= __(
+                    'A network alert can impact you and will avoid creating a ticket',
+                    'mydashboard'
+                ) . "</small></div>";
             $display .= "<div id=\"display-sc\">";
-            $alerts  = new self();
+            $alerts = new self();
             $display .= $alerts->getAlertList(0);
             $display .= "</div>";
             $display .= "</div>";
@@ -2831,7 +2992,6 @@ class Alert extends CommonDBTM
 //        Toolbox::logInfo($message);
         $alert = "";
         if ($message != null) {
-
             if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
                 $alert .= "<div class='center' style='color:darkred'><i class='ti ti-exclamation-circle' style='font-size:4em'></i><br><br>";
                 $alert .= "<b>";
@@ -2856,7 +3016,10 @@ class Alert extends CommonDBTM
             } else {
                 $alert .= "<div class='md-title-status' style='color:orange'><i class='ti ti-alert-triangle' style='font-size:4em'></i><br><br>";
                 $alert .= "<b>";
-                $alert .= __("Alert is not properly configured or is not reachable (or exceeded the timeout)", "mydashboard");
+                $alert .= __(
+                    "Alert is not properly configured or is not reachable (or exceeded the timeout)",
+                    "mydashboard"
+                );
                 $alert .= "</b>";
                 $alert .= "<br><br><a href='$url' target='_blank'>" . $url . "</a></div>";
             }
@@ -2878,10 +3041,10 @@ class Alert extends CommonDBTM
         if (!function_exists('curl_init')) {
             return __('Curl PHP package not installed', 'mydashboard') . "\n";
         }
-        $timeout     = 15;
-        $proxy_host  = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
+        $timeout = 15;
+        $proxy_host = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
         $proxy_ident = $CFG_GLPI["proxy_user"] . ":"
-                       . (new GLPIKey())->decrypt($CFG_GLPI["proxy_passwd"]); // username:password
+            . (new GLPIKey())->decrypt($CFG_GLPI["proxy_passwd"]); // username:password
 
         $url = $options["url"];
 
@@ -2945,7 +3108,7 @@ class Alert extends CommonDBTM
         //}
 
         if (//!$options["download"] &&
-            !$data
+        !$data
         ) {
             curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch); // make sure we closeany current curl sessions
@@ -2958,7 +3121,7 @@ class Alert extends CommonDBTM
         //fclose($fp);
         //}
         if (//!$options["download"] &&
-            $data
+        $data
         ) {
             return $data;
         } else {
@@ -2977,7 +3140,7 @@ class Alert extends CommonDBTM
         $seeown = false;
 
         $week_start = null;
-        $week_end   = null;
+        $week_end = null;
         if (isset($params['year']) && isset($params['week'])) {
             $dto = new DateTime();
             $dto->setISODate($params['year'], $params['week']);
@@ -2989,7 +3152,7 @@ class Alert extends CommonDBTM
         } else {
             $params['year'] = date("Y");
             $params['week'] = date("W");
-            $dto            = new DateTime();
+            $dto = new DateTime();
             $dto->setISODate($params['year'], $params['week']);
             $dto->setTime(0, 0, 1);
             $week_start = $dto->format('Y-m-d H:i:s');
@@ -3056,16 +3219,17 @@ class Alert extends CommonDBTM
                 $params['sons'] = 0;
 
                 if (isset($params['technicians_groups_id'])) {
-                    $params['technicians_groups_id'] = (is_array($params['technicians_groups_id']) ? $params['technicians_groups_id'] : [$params['technicians_groups_id']]);
-
+                    $params['technicians_groups_id'] = (is_array(
+                        $params['technicians_groups_id']
+                    ) ? $params['technicians_groups_id'] : [$params['technicians_groups_id']]);
                 }
             }
         }
 
         $search_assign = "1=1";
-        $left          = "LEFT JOIN glpi_entities
+        $left = "LEFT JOIN glpi_entities
                   ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
-        $is_deleted    = " `glpi_tickets`.`is_deleted` = 0 ";
+        $is_deleted = " `glpi_tickets`.`is_deleted` = 0 ";
         //if (Session::haveRight("ticket", Ticket::READMY)) {
         //   $left          .= "LEFT JOIN `glpi_tickets_users`
         //            ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id`) ";
@@ -3080,10 +3244,13 @@ class Alert extends CommonDBTM
             }
             if ($type == "all") {
                 if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
-                    $left                  .= "LEFT JOIN `glpi_groups_tickets`
+                    $left .= "LEFT JOIN `glpi_groups_tickets`
                   ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
                     $technicians_groups_id = $params['technicians_groups_id'];
-                    $search_assign         .= " AND (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
+                    $search_assign .= " AND (`glpi_groups_tickets`.`groups_id` IN (" . implode(
+                            ",",
+                            $technicians_groups_id
+                        ) . ")
                                 AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
                 }
 
@@ -3116,13 +3283,21 @@ class Alert extends CommonDBTM
                 //Waiting tickets
                 $total_pend = self::queryPendingTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
                 //Processing incidents
-                $total_incpro = self::queryIncidentTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
+                $total_incpro = self::queryIncidentTicketsWeek(
+                    $params['year'],
+                    $params['week'],
+                    $technicians_groups_id
+                );
                 //Processing requests
                 $total_dempro = self::queryRequestTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
                 //Validate tickets
                 //            $total_validate = self::queryValidateTickets($left, $is_deleted, $search_assign);
                 //Resolved tickets
-                $total_resolved = self::queryResolvedTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
+                $total_resolved = self::queryResolvedTicketsWeek(
+                    $params['year'],
+                    $params['week'],
+                    $technicians_groups_id
+                );
                 //Resolved tickets
                 $total_closed = self::queryClosedTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
             }
@@ -3145,53 +3320,53 @@ class Alert extends CommonDBTM
         $options_new['reset'][] = 'reset';
 
         $options_new['criteria'][] = [
-            'field'      => 12,//status
+            'field' => 12,//status
             'searchtype' => 'equals',
-            'value'      => \Ticket::INCOMING,
-            'link'       => 'AND',
+            'value' => \Ticket::INCOMING,
+            'link' => 'AND',
         ];
         if ($type == "week") {
             $options_new['criteria'][] = [
-                'field'      => 15,//date
+                'field' => 15,//date
                 'searchtype' => 'lessthan',
-                'value'      => $week_end,
-                'link'       => 'AND',
+                'value' => $week_end,
+                'link' => 'AND',
             ];
             $options_new['criteria'][] = [
-                'field'      => 15,//date
+                'field' => 15,//date
                 'searchtype' => 'morethan',
-                'value'      => $week_start,
-                'link'       => 'AND',
+                'value' => $week_start,
+                'link' => 'AND',
             ];
         }
 
 
         $href_new = "<a $target style='color:#D9534F !important;$size' title='" . __('New tickets', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                    . Toolbox::append_params($options_new, '&amp;') . "' ><span class='$span'>"
-                    . $total_new . "</span></a>";
+            . Toolbox::append_params($options_new, '&amp;') . "' ><span class='$span'>"
+            . $total_new . "</span></a>";
 
         //$href_due
         // Reset criterias
         $options_due['reset'][] = 'reset';
 
         $options_due['criteria'][] = [
-            'field'      => 12,//status
+            'field' => 12,//status
             'searchtype' => 'equals',
-            'value'      => 'notold',
-            'link'       => 'AND',
+            'value' => 'notold',
+            'link' => 'AND',
         ];
 
         if (isset($params['technicians_groups_id'])
             && count($params['technicians_groups_id']) > 0) {
             $groups = $params['technicians_groups_id'];
-            $nb     = 0;
+            $nb = 0;
             foreach ($groups as $group) {
                 $criterias['criteria'][$nb] = [
-                    'field'      => 8, // groups_id_assign
+                    'field' => 8, // groups_id_assign
                     'searchtype' => 'equals',
-                    'value'      => $group,
-                    'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                    'value' => $group,
+                    'link' => (($nb == 0) ? 'AND' : 'OR'),
                 ];
                 $nb++;
             }
@@ -3199,52 +3374,52 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         }
         if ($type == "week") {
             $options_due['criteria'][] = [
-                'field'      => 15,//date
+                'field' => 15,//date
                 'searchtype' => 'lessthan',
-                'value'      => $week_end,
-                'link'       => 'AND',
+                'value' => $week_end,
+                'link' => 'AND',
             ];
             $options_due['criteria'][] = [
-                'field'      => 15,//date
+                'field' => 15,//date
                 'searchtype' => 'morethan',
-                'value'      => $week_start,
-                'link'       => 'AND',
+                'value' => $week_start,
+                'link' => 'AND',
             ];
         }
 
         $options_due['criteria'][] = [
-            'field'      => 82,//due date
+            'field' => 82,//due date
             'searchtype' => 'equals',
-            'value'      => 1,
-            'link'       => 'AND',
+            'value' => 1,
+            'link' => 'AND',
         ];
 
         $href_due = "<a $target style='$size' title='" . __('Tickets late', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                    . Toolbox::append_params($options_due, '&amp;') . "' ><span class='$span'>"
-                    . $total_due . "</span></a>";
+            . Toolbox::append_params($options_due, '&amp;') . "' ><span class='$span'>"
+            . $total_due . "</span></a>";
 
         //$href_pend
         // Reset criterias
         $options_pend['reset'][] = 'reset';
 
         $options_pend['criteria'][] = [
-            'field'      => 12,//status
+            'field' => 12,//status
             'searchtype' => 'equals',
-            'value'      => \Ticket::WAITING,
-            'link'       => 'AND',
+            'value' => \Ticket::WAITING,
+            'link' => 'AND',
         ];
 
         if (isset($params['technicians_groups_id'])
             && count($params['technicians_groups_id']) > 0) {
             $groups = $params['technicians_groups_id'];
-            $nb     = 0;
+            $nb = 0;
             foreach ($groups as $group) {
                 $criterias['criteria'][$nb] = [
-                    'field'      => 8, // groups_id_assign
+                    'field' => 8, // groups_id_assign
                     'searchtype' => 'equals',
-                    'value'      => $group,
-                    'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                    'value' => $group,
+                    'link' => (($nb == 0) ? 'AND' : 'OR'),
                 ];
                 $nb++;
             }
@@ -3252,23 +3427,23 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         }
         if ($type == "week") {
             $options_pend['criteria'][] = [
-                'field'      => 15,//date
+                'field' => 15,//date
                 'searchtype' => 'lessthan',
-                'value'      => $week_end,
-                'link'       => 'AND',
+                'value' => $week_end,
+                'link' => 'AND',
             ];
             $options_pend['criteria'][] = [
-                'field'      => 15,//date
+                'field' => 15,//date
                 'searchtype' => 'morethan',
-                'value'      => $week_start,
-                'link'       => 'AND',
+                'value' => $week_start,
+                'link' => 'AND',
             ];
         }
 
         $href_pend = "<a $target style='$size' title='" . __('Pending tickets', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                     . Toolbox::append_params($options_pend, '&amp;') . "' ><span class='$span'>"
-                     . $total_pend . "</span></a>";
+            . Toolbox::append_params($options_pend, '&amp;') . "' ><span class='$span'>"
+            . $total_pend . "</span></a>";
 
         //$href_incpro
         // Reset criterias
@@ -3276,38 +3451,38 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
         if ($seeown == false) {
             $options_incpro['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'process',
-                'link'       => 'AND',
+                'value' => 'process',
+                'link' => 'AND',
             ];
         } else {
             $options_incpro['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
         }
 
         $options_incpro['criteria'][] = [
-            'field'      => 14, // type
+            'field' => 14, // type
             'searchtype' => 'equals',
-            'value'      => \Ticket::INCIDENT_TYPE,
-            'link'       => 'AND',
+            'value' => \Ticket::INCIDENT_TYPE,
+            'link' => 'AND',
         ];
 
         if ($seeown == false) {
             if (isset($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -3315,24 +3490,24 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
             if ($type == "week") {
                 $options_incpro['criteria'][] = [
-                    'field'      => 15,//date
+                    'field' => 15,//date
                     'searchtype' => 'lessthan',
-                    'value'      => $week_end,
-                    'link'       => 'AND',
+                    'value' => $week_end,
+                    'link' => 'AND',
                 ];
                 $options_incpro['criteria'][] = [
-                    'field'      => 15,//date
+                    'field' => 15,//date
                     'searchtype' => 'morethan',
-                    'value'      => $week_start,
-                    'link'       => 'AND',
+                    'value' => $week_start,
+                    'link' => 'AND',
                 ];
             }
         }
 
         $href_incpro = "<a $target style='$size' title='" . __('Incidents in progress', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                       . Toolbox::append_params($options_incpro, '&amp;') . "' ><span class='$span'>"
-                       . $total_incpro . "</span></a>";
+            . Toolbox::append_params($options_incpro, '&amp;') . "' ><span class='$span'>"
+            . $total_incpro . "</span></a>";
 
         //$href_dempro
         // Reset criterias
@@ -3340,38 +3515,38 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
         if ($seeown == false) {
             $options_dempro['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'process',
-                'link'       => 'AND',
+                'value' => 'process',
+                'link' => 'AND',
             ];
         } else {
             $options_dempro['criteria'][] = [
-                'field'      => 12,//status
+                'field' => 12,//status
                 'searchtype' => 'equals',
-                'value'      => 'notold',
-                'link'       => 'AND',
+                'value' => 'notold',
+                'link' => 'AND',
             ];
         }
 
         $options_dempro['criteria'][] = [
-            'field'      => 14, // type
+            'field' => 14, // type
             'searchtype' => 'equals',
-            'value'      => \Ticket::DEMAND_TYPE,
-            'link'       => 'AND',
+            'value' => \Ticket::DEMAND_TYPE,
+            'link' => 'AND',
         ];
 
         if ($seeown == false) {
             if (isset($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -3379,33 +3554,33 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
             if ($type == "week") {
                 $options_dempro['criteria'][] = [
-                    'field'      => 15,//date
+                    'field' => 15,//date
                     'searchtype' => 'lessthan',
-                    'value'      => $week_end,
-                    'link'       => 'AND',
+                    'value' => $week_end,
+                    'link' => 'AND',
                 ];
                 $options_dempro['criteria'][] = [
-                    'field'      => 15,//date
+                    'field' => 15,//date
                     'searchtype' => 'morethan',
-                    'value'      => $week_start,
-                    'link'       => 'AND',
+                    'value' => $week_start,
+                    'link' => 'AND',
                 ];
             }
         }
 
         $href_dempro = "<a $target style='$size' title='" . __('Requests in progress', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                       . Toolbox::append_params($options_dempro, '&amp;') . "' ><span class='$span'>"
-                       . $total_dempro . "</span></a>";
+            . Toolbox::append_params($options_dempro, '&amp;') . "' ><span class='$span'>"
+            . $total_dempro . "</span></a>";
 
         ///resolved
         $options_resolved['reset'][] = 'reset';
 
         $options_resolved['criteria'][] = [
-            'field'      => 12,//status
+            'field' => 12,//status
             'searchtype' => 'equals',
-            'value'      => \Ticket::SOLVED,
-            'link'       => 'AND',
+            'value' => \Ticket::SOLVED,
+            'link' => 'AND',
         ];
 
 
@@ -3413,13 +3588,13 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             if (isset($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -3427,33 +3602,33 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
             if ($type == "week") {
                 $options_resolved['criteria'][] = [
-                    'field'      => 16,//solvedate
+                    'field' => 16,//solvedate
                     'searchtype' => 'lessthan',
-                    'value'      => $week_end,
-                    'link'       => 'AND',
+                    'value' => $week_end,
+                    'link' => 'AND',
                 ];
                 $options_resolved['criteria'][] = [
-                    'field'      => 16,//solvedate
+                    'field' => 16,//solvedate
                     'searchtype' => 'morethan',
-                    'value'      => $week_start,
-                    'link'       => 'AND',
+                    'value' => $week_start,
+                    'link' => 'AND',
                 ];
             }
         }
 
         $href_resolved = "<a $target style='$size' title='" . __('Tickets solved', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                         . Toolbox::append_params($options_resolved, '&amp;') . "' ><span class='$span'>"
-                         . $total_resolved . "</span></a>";
+            . Toolbox::append_params($options_resolved, '&amp;') . "' ><span class='$span'>"
+            . $total_resolved . "</span></a>";
 
         ///closed
         $options_closed['reset'][] = 'reset';
 
         $options_closed['criteria'][] = [
-            'field'      => 12,//status
+            'field' => 12,//status
             'searchtype' => 'equals',
-            'value'      => \Ticket::CLOSED,
-            'link'       => 'AND',
+            'value' => \Ticket::CLOSED,
+            'link' => 'AND',
         ];
 
 
@@ -3461,13 +3636,13 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             if (isset($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
-                $nb     = 0;
+                $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
-                        'field'      => 8, // groups_id_assign
+                        'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
-                        'value'      => $group,
-                        'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                        'value' => $group,
+                        'link' => (($nb == 0) ? 'AND' : 'OR'),
                     ];
                     $nb++;
                 }
@@ -3475,24 +3650,24 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
             if ($type == "week") {
                 $options_closed['criteria'][] = [
-                    'field'      => 17,//closedate
+                    'field' => 17,//closedate
                     'searchtype' => 'lessthan',
-                    'value'      => $week_end,
-                    'link'       => 'AND',
+                    'value' => $week_end,
+                    'link' => 'AND',
                 ];
                 $options_closed['criteria'][] = [
-                    'field'      => 17,//closedate
+                    'field' => 17,//closedate
                     'searchtype' => 'morethan',
-                    'value'      => $week_start,
-                    'link'       => 'AND',
+                    'value' => $week_start,
+                    'link' => 'AND',
                 ];
             }
         }
 
         $href_closed = "<a $target style='$size' title='" . __('Ticket closed', 'mydashboard') . "' \
 href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-                       . Toolbox::append_params($options_closed, '&amp;') . "' ><span class='$span'>"
-                       . $total_closed . "</span></a>";
+            . Toolbox::append_params($options_closed, '&amp;') . "' ><span class='$span'>"
+            . $total_closed . "</span></a>";
 
 
         if ($iswidget == false) {
@@ -3528,29 +3703,35 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             if ($iswidget == true
                 && Session::haveRightsOr("ticket", [\Ticket::READALL, \Ticket::READGROUP])) {
                 if ($type == "week") {
-                    $criterias = ['technicians_groups_id',
+                    $criterias = [
+                        'technicians_groups_id',
                         'week',
                         'year',
                     ];
                 } else {
-                    $criterias      = ['technicians_groups_id', 'itilcategorielvl1'];
+                    $criterias = ['technicians_groups_id', 'itilcategorielvl1'];
                     $params["year"] = null;
                     $params["week"] = null;
                 }
-                $params_header = ["widgetId"  => $id,
-                    "name"      => ($type == "all") ? __("Global indicators", "mydashboard") : __("Global indicators by week", "mydashboard"),
-                    "onsubmit"  => true,
-                    "opt"       => $params,
+                $params_header = [
+                    "widgetId" => $id,
+                    "name" => ($type == "all") ? __("Global indicators", "mydashboard") : __(
+                        "Global indicators by week",
+                        "mydashboard"
+                    ),
+                    "onsubmit" => true,
+                    "opt" => $params,
                     "criterias" => $criterias,
-                    "export"    => false,
-                    "canvas"    => false,
-                    "nb"        => 1];
-                $stats         .= Helper::getGraphHeader($params_header);
+                    "export" => false,
+                    "canvas" => false,
+                    "nb" => 1
+                ];
+                $stats .= Helper::getGraphHeader($params_header);
             }
 
             if ($seeown == true) {
                 $delclass = "";
-                $class    = "bt-col-md-12";
+                $class = "bt-col-md-12";
                 if (Session::haveRight("plugin_servicecatalog_view", CREATE)
                     || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
                     $delclass = "delclass";
@@ -3633,7 +3814,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //all tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_all = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
@@ -3642,7 +3823,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         $sql_all .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $result_all = $DB->doQuery($sql_all);
-        $total_all  = $DB->result($result_all, 0, 'total');
+        $total_all = $DB->result($result_all, 0, 'total');
 
         return $total_all;
     }
@@ -3659,14 +3840,14 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
                   WHERE $criteria
                         $category_criteria
                         AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . " "
-                   . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
@@ -3686,13 +3867,13 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::NEWT . "
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                   . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
@@ -3718,7 +3899,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due
                   FROM glpi_tickets
                   $left
@@ -3731,7 +3912,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         $sql_due .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $result_due = $DB->doQuery($sql_due);
-        $total_due  = $DB->result($result_due, 0, 'due');
+        $total_due = $DB->result($result_due, 0, 'due');
 
         return $total_due;
     }
@@ -3741,14 +3922,14 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::LATET . "
                   AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                   . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
@@ -3775,7 +3956,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-        $dbu      = new DbUtils();
+        $dbu = new DbUtils();
         $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
@@ -3783,10 +3964,10 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                         AND ($search_assign)
                         $category_criteria
                         AND `glpi_tickets`.`status` = " . \Ticket::WAITING . " "
-                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $result_pend = $DB->doQuery($sql_pend);
-        $total_pend  = $DB->result($result_pend, 0, 'total');
+        $total_pend = $DB->result($result_pend, 0, 'total');
 
         return $total_pend;
     }
@@ -3796,14 +3977,14 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::PENDINGT . "
                   AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                   . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
 
@@ -3831,13 +4012,13 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-        $dbu      = new DbUtils();
+        $dbu = new DbUtils();
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
         if (Session::getCurrentInterface() == 'helpdesk') {
             $statuses = [\Ticket::SOLVED, \Ticket::CLOSED];
         }
 
-        $sql_incpro    = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
                   WHERE $criteria
@@ -3845,9 +4026,9 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                         $category_criteria
                         AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
-        $sql_incpro    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        $sql_incpro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
         $result_incpro = $DB->doQuery($sql_incpro);
-        $total_incpro  = $DB->result($result_incpro, 0, 'total');
+        $total_incpro = $DB->result($result_incpro, 0, 'total');
         return $total_incpro;
     }
 
@@ -3856,18 +4037,21 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
+        $dbu = new DbUtils();
+        $sql_new = "SELECT SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = '" . StockTicketIndicator::INCIDENTPROGRESST . "' ";
-        if (count($groups_id) > 0) {
-            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")  ";
+        if (is_array($groups_id) && count($groups_id) > 0) {
+            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(
+                    ",",
+                    $groups_id
+                ) . ")  ";
         } else {
             $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  = 0 ";
         }
         $sql_new .= " AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
 
@@ -3904,7 +4088,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             $statuses = [\Ticket::SOLVED, \Ticket::CLOSED];
         }
 
-        $sql_dempro    = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
                   WHERE $criteria
@@ -3912,9 +4096,9 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                         $category_criteria
                         AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
                         AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
-        $sql_dempro    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        $sql_dempro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
         $result_dempro = $DB->doQuery($sql_dempro);
-        $total_dempro  = $DB->result($result_dempro, 0, 'total');
+        $total_dempro = $DB->result($result_dempro, 0, 'total');
 
         return $total_dempro;
     }
@@ -3924,18 +4108,21 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = '" . StockTicketIndicator::REQUESTPROGRESST . "' ";
-        if (count($groups_id) > 0) {
-            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")  ";
+        if (is_array($groups_id) && count($groups_id) > 0) {
+            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(
+                    ",",
+                    $groups_id
+                ) . ")  ";
         } else {
             $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  = 0 ";
         }
         $sql_new .= " AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
         if ($result_new == false) {
@@ -3964,9 +4151,9 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-        $dbu     = new DbUtils();
-        $week    = date('W');
-        $year    = date('Y');
+        $dbu = new DbUtils();
+        $week = date('W');
+        $year = date('Y');
         $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
@@ -3978,7 +4165,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
 
         $result_res = $DB->doQuery($sql_res);
-        $total_res  = $DB->result($result_res, 0, 'total');
+        $total_res = $DB->result($result_res, 0, 'total');
 
         return $total_res;
     }
@@ -3988,14 +4175,14 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::SOLVEDT . "
                   AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                   . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
 
@@ -4017,9 +4204,9 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //closed tickets
-        $dbu       = new DbUtils();
-        $week      = date('W');
-        $year      = date('Y');
+        $dbu = new DbUtils();
+        $week = date('W');
+        $year = date('Y');
         $sql_close = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
                   FROM glpi_tickets
                   $left
@@ -4049,14 +4236,14 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         //New tickets
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
                   FROM glpi_plugin_mydashboard_stockticketindicators
                   WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::CLOSEDT . "
                   AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
                     AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-                   . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
 
         $result_new = $DB->doQuery($sql_new);
 
@@ -4077,10 +4264,10 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-        $default_charset   = DBConnection::getDefaultCharset();
+        $default_charset = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
-        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
-        $table  = self::getTable();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $table = self::getTable();
 
         if (!$DB->tableExists($table)) {
             $query = "CREATE TABLE `$table` (
@@ -4094,7 +4281,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
             $DB->doQuery($query);
-
         }
 
         if (!$DB->fieldExists($table, "is_public")) {
@@ -4124,6 +4310,5 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         global $DB;
 
         $DB->dropTable(self::getTable(), true);
-
     }
 }

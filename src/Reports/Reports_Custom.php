@@ -57,17 +57,19 @@ class Reports_Custom extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-      //      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $widgets        = [];
+        //      $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
+        $widgets = [];
         $customsWidgets = Customswidget::listCustomsWidgets();
         if (!empty($customsWidgets)) {
             foreach ($customsWidgets as $customWidget) {
-                $addwidgets[$this->getType() . "cw" . $customWidget['id']] = ["title"   => $customWidget['name'],
-                                                                       "type"    => Widget::$OTHERS,
-                                                                       "icon"    => "ti ti-edit",
-                                                                       "comment" => ""];
+                $addwidgets[$this->getType() . "cw" . $customWidget['id']] = [
+                    "title" => $customWidget['name'],
+                    "type" => Widget::$OTHERS,
+                    "icon" => "ti ti-edit",
+                    "comment" => ""
+                ];
             }
-            $widgets[Menu::$OTHERS]        = $addwidgets;
+            $widgets[Menu::$OTHERS] = $addwidgets;
         }
 
         return $widgets;
@@ -84,8 +86,8 @@ class Reports_Custom extends CommonGLPI
     {
         switch ($widgetId) {
             default:
-                {
-                    // It's a custom widget
+            {
+                // It's a custom widget
                 if (strpos($widgetId, "cw")) {
                     // Last letter of widgetId is customWidget index in database
                     $id = intval(substr($widgetId, -1));
@@ -100,15 +102,15 @@ class Reports_Custom extends CommonGLPI
 
                     // Edit style to avoid padding, margin, and limited width
 
-               //               $htmlContent .= "<script>
-               //                $( document ).ready(function() {
-               //                    let $widgetId = document.getElementById('$widgetId');
-               //                    " . $widgetId . ".children[0].style.marginTop = '-5px';
-               //                    " . $widgetId . ".children[0].children[0].classList.remove('bt-col-md-11');
-               //                    " . $widgetId . ".children[0].children[0].classList.add('bt-col-md-12');
-               //                    " . $widgetId . ".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';
-               //                });
-               //                </script>";
+                    //               $htmlContent .= "<script>
+                    //                $( document ).ready(function() {
+                    //                    let $widgetId = document.getElementById('$widgetId');
+                    //                    " . $widgetId . ".children[0].style.marginTop = '-5px';
+                    //                    " . $widgetId . ".children[0].children[0].classList.remove('bt-col-md-11');
+                    //                    " . $widgetId . ".children[0].children[0].classList.add('bt-col-md-12');
+                    //                    " . $widgetId . ".children[0].children[0].children[0].style = 'padding-left : 0% !important; margin-right : 28px;margin-bottom: -10px;';
+                    //                });
+                    //                </script>";
 
                     if (isset($opt["is_widget"]) && $opt["is_widget"] == false) {
                         return $htmlContent;

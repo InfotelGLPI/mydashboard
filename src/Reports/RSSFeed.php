@@ -48,30 +48,35 @@ class RSSFeed extends CommonGLPI
     {
         return __('RSS');
     }
-   /**
-    * @return array
-    */
+
+    /**
+     * @return array
+     */
     public function getWidgetsForItem()
     {
         $widgets = [];
         if (Session::getCurrentInterface() != 'helpdesk') {
-            $widgets[Menu::$TOOLS]["rssfeedpersonalwidget"] = ["title"   =>  _n('Personal RSS feed', 'Personal RSS feeds', 2),
-                                                                                   "type"    => Widget::$TABLE,
-                                                                                "comment" => ""];
+            $widgets[Menu::$TOOLS]["rssfeedpersonalwidget"] = [
+                "title" => _n('Personal RSS feed', 'Personal RSS feeds', 2),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
         if (Session::haveRight("rssfeed_public", READ)) {
-            $widgets[Menu::$TOOLS]["rssfeedpublicwidget"] = ["title"   => _n('Public RSS feed', 'Public RSS feeds', 2),
-                                                                                 "type"    => Widget::$TABLE,
-                                                                              "comment" => ""];
+            $widgets[Menu::$TOOLS]["rssfeedpublicwidget"] = [
+                "title" => _n('Public RSS feed', 'Public RSS feeds', 2),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
 
         return $widgets;
     }
 
-   /**
-    * @param $widgetId
-    * @return Nothing
-    */
+    /**
+     * @param $widgetId
+     * @return Nothing
+     */
     public function getWidgetContentForItem($widgetId)
     {
         switch ($widgetId) {
@@ -86,13 +91,13 @@ class RSSFeed extends CommonGLPI
         }
     }
 
-   /**
-    * Show list for central view
-    *
-    * @param $personal boolean   display rssfeeds created by me ? (true by default)
-    *
-    * @return Datatable (display function)
-    */
+    /**
+     * Show list for central view
+     *
+     * @param $personal boolean   display rssfeeds created by me ? (true by default)
+     *
+     * @return Datatable (display function)
+     */
     public static function showListForCentral($personal = true)
     {
         global $DB, $CFG_GLPI;
@@ -113,7 +118,11 @@ class RSSFeed extends CommonGLPI
                          AND `glpi_rssfeeds`.`is_active` = '1'
                    ORDER BY `glpi_rssfeeds`.`name`";
 
-            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Personal RSS feed', 'Personal RSS feeds', 2) . "</a>";
+            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
+                    'Personal RSS feed',
+                    'Personal RSS feeds',
+                    2
+                ) . "</a>";
         } else {
             // Show public rssfeeds / not mines : need to have access to public rssfeeds
             if (!Session::haveRight('rssfeed_public', READ)) {
@@ -128,13 +137,17 @@ class RSSFeed extends CommonGLPI
 
             $query = "SELECT `glpi_rssfeeds`.*
                    FROM `glpi_rssfeeds` " .
-            RSSFeed::addVisibilityJoins() . "
+                RSSFeed::addVisibilityJoins() . "
                    WHERE $restrict_user
                          AND " . RSSFeed::addVisibilityRestrict() . "
                    ORDER BY `glpi_rssfeeds`.`name`";
 
             if (Session::getCurrentInterface() != 'helpdesk') {
-                $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n('Public RSS feed', 'Public RSS feeds', 2) . "</a>";
+                $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
+                        'Public RSS feed',
+                        'Public RSS feeds',
+                        2
+                    ) . "</a>";
             } else {
                 $titre = _n('Public RSS feed', 'Public RSS feeds', 2);
             }
@@ -163,7 +176,7 @@ class RSSFeed extends CommonGLPI
         if (\RSSFeed::canCreate()) {
             $output['title'] .= "<span class=\"rssfeed_right\">";
             $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.form.php\">";
-            $output['title'] .= "<i class='ti ti-plus'></i><span class='sr-only'>". __s('Add')."</span></a></span>";
+            $output['title'] .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a></span>";
         }
 
         $count = 0;
@@ -180,7 +193,8 @@ class RSSFeed extends CommonGLPI
                 if (empty($link)) {
                     $output['body'][$count][1] = $item->feed->get_title();
                 } else {
-                    $output['body'][$count][1] = "<a target=\"_blank'\" href=\"$link\">" . $item->feed->get_title() . '</a>';
+                    $output['body'][$count][1] = "<a target=\"_blank'\" href=\"$link\">" . $item->feed->get_title(
+                        ) . '</a>';
                 }
                 $link = $item->get_permalink();
                 $rand = mt_rand();
@@ -195,8 +209,10 @@ class RSSFeed extends CommonGLPI
                 $output['body'][$count][1] .= "</div>";
                 $output['body'][$count][1] .= \Html::showToolTip(
                     RichText::getSafeHtml($item->get_content()),
-                    ['applyto' => "rssitem$rand",
-                    'display' => false]
+                    [
+                        'applyto' => "rssitem$rand",
+                        'display' => false
+                    ]
                 );
                 $count++;
             }
@@ -227,11 +243,11 @@ class RSSFeed extends CommonGLPI
     /**
      * Return visibility joins to add to DBIterator parameters
      *
-     * @since 9.4
-     *
      * @param boolean $forceall force all joins (false by default)
      *
      * @return array
+     * @since 9.4
+     *
      */
     public static function getVisibilityCriteria(bool $forceall = false): array
     {
@@ -241,7 +257,7 @@ class RSSFeed extends CommonGLPI
         if (!\RSSFeed::canView()) {
             return [
                 'LEFT JOIN' => $join,
-                'WHERE'     => $where
+                'WHERE' => $where
             ];
         }
 
@@ -249,15 +265,15 @@ class RSSFeed extends CommonGLPI
         // Users
         $join['glpi_rssfeeds_users'] = [
             'ON' => [
-                'glpi_rssfeeds_users'   => 'rssfeeds_id',
-                'glpi_rssfeeds'         => 'id'
+                'glpi_rssfeeds_users' => 'rssfeeds_id',
+                'glpi_rssfeeds' => 'id'
             ]
         ];
 
         $where = [
             'OR' => [
-                \RSSFeed::getTable() . '.users_id'   => Session::getLoginUserID(),
-                'glpi_rssfeeds_users.users_id'   => Session::getLoginUserID()
+                \RSSFeed::getTable() . '.users_id' => Session::getLoginUserID(),
+                'glpi_rssfeeds_users.users_id' => Session::getLoginUserID()
             ]
         ];
         $orwhere = [];
@@ -269,8 +285,8 @@ class RSSFeed extends CommonGLPI
         ) {
             $join['glpi_groups_rssfeeds'] = [
                 'ON' => [
-                    'glpi_groups_rssfeeds'  => 'rssfeeds_id',
-                    'glpi_rssfeeds'         => 'id'
+                    'glpi_groups_rssfeeds' => 'rssfeeds_id',
+                    'glpi_rssfeeds' => 'id'
                 ]
             ];
         }
@@ -295,8 +311,8 @@ class RSSFeed extends CommonGLPI
         ) {
             $join['glpi_profiles_rssfeeds'] = [
                 'ON' => [
-                    'glpi_profiles_rssfeeds'   => 'rssfeeds_id',
-                    'glpi_rssfeeds'            => 'id'
+                    'glpi_profiles_rssfeeds' => 'rssfeeds_id',
+                    'glpi_rssfeeds' => 'id'
                 ]
             ];
         }
@@ -324,8 +340,8 @@ class RSSFeed extends CommonGLPI
         ) {
             $join['glpi_entities_rssfeeds'] = [
                 'ON' => [
-                    'glpi_entities_rssfeeds'   => 'rssfeeds_id',
-                    'glpi_rssfeeds'            => 'id'
+                    'glpi_entities_rssfeeds' => 'rssfeeds_id',
+                    'glpi_rssfeeds' => 'id'
                 ]
             ];
         }
@@ -390,11 +406,13 @@ class RSSFeed extends CommonGLPI
         $it = new \DBmysqlIterator(null);
         $it->buildQuery($criteria);
         $sql = $it->getSql();
-        $sql = trim(str_replace(
-            'SELECT * FROM ' . $DB->quoteName(\RSSFeed::getTable()),
-            '',
-            $sql
-        ));
+        $sql = trim(
+            str_replace(
+                'SELECT * FROM ' . $DB->quoteName(\RSSFeed::getTable()),
+                '',
+                $sql
+            )
+        );
         return $sql;
     }
 }

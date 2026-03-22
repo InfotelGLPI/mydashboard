@@ -54,7 +54,6 @@ class Reports_Map extends CommonGLPI
     public function __construct($_options = [])
     {
         $this->options = $_options;
-
     }
 
     /**
@@ -63,9 +62,11 @@ class Reports_Map extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets[Menu::$HELPDESK] = [
-            $this->getType() . "29" => ["title"   => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
-                                        "type"    => Widget::$MAP,
-                                        "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")],
+            $this->getType() . "29" => [
+                "title" => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
+                "type" => Widget::$MAP,
+                "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")
+            ],
         ];
         return $widgets;
     }
@@ -117,7 +118,7 @@ class Reports_Map extends CommonGLPI
     {
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
 
         $preference = new MydashboardPreference();
         if (Session::getLoginUserID() !== false
@@ -132,98 +133,102 @@ class Reports_Map extends CommonGLPI
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
-                                  'is_recursive',
-                                  'type',
-                                  'technicians_groups_id',
-                                  'group_is_recursive'];
+                    $criterias = [
+                        'entities_id',
+                        'is_recursive',
+                        'type',
+                        'technicians_groups_id',
+                        'group_is_recursive'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = ['type'];
                 }
 
-                $paramsc = ["preferences" => $preferences,
-                            "criterias"   => $criterias,
-                            "opt"         => $opt];
+                $paramsc = [
+                    "preferences" => $preferences,
+                    "criterias" => $criterias,
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($paramsc);
 
-                $opt  = $options['opt'];
+                $opt = $options['opt'];
                 $crit = $options['crit'];
 
-                $type                 = $opt['type'];
+                $type = $opt['type'];
                 $entities_id_criteria = $crit['entity'];
-                $sons_criteria        = $crit['sons'];
-                $groups_criteria      = $crit['technicians_groups_id'];
+                $sons_criteria = $crit['sons'];
+                $groups_criteria = $crit['technicians_groups_id'];
 
                 $widget = new Html();
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "29 " : "") . $title);
                 $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
-                $params['as_map']     = 1;
+                $params['as_map'] = 1;
                 $params['is_deleted'] = 0;
-                $params['order']      = 'DESC';
-                $params['sort']       = 19;
-                $params['start']      = 0;
+                $params['order'] = 'DESC';
+                $params['sort'] = 19;
+                $params['start'] = 0;
                 $params['list_limit'] = 999999;
-                $itemtype             = 'Ticket';
+                $itemtype = 'Ticket';
 
                 if (isset($sons_criteria) && $sons_criteria > 0) {
                     $params['criteria'][] = [
-                       'field'      => 80,
-                       'searchtype' => 'under',
-                       'value'      => $entities_id_criteria
+                        'field' => 80,
+                        'searchtype' => 'under',
+                        'value' => $entities_id_criteria
                     ];
                 } else {
                     $params['criteria'][] = [
-                       'field'      => 80,
-                       'searchtype' => 'equals',
-                       'value'      => $entities_id_criteria
+                        'field' => 80,
+                        'searchtype' => 'equals',
+                        'value' => $entities_id_criteria
                     ];
                 }
                 $params['criteria'][] = [
-                   'link'       => 'AND',
-                   'field'      => 12,
-                   'searchtype' => 'equals',
-                   'value'      => 'notold'
+                    'link' => 'AND',
+                    'field' => 12,
+                    'searchtype' => 'equals',
+                    'value' => 'notold'
                 ];
                 $params['criteria'][] = [
-                   'link'       => 'AND NOT',
-                   'field'      => 998,
-                   'searchtype' => 'contains',
-                   'value'      => 'NULL'
+                    'link' => 'AND NOT',
+                    'field' => 998,
+                    'searchtype' => 'contains',
+                    'value' => 'NULL'
                 ];
                 $params['criteria'][] = [
-                   'link'       => 'AND NOT',
-                   'field'      => 999,
-                   'searchtype' => 'contains',
-                   'value'      => 'NULL'
+                    'link' => 'AND NOT',
+                    'field' => 999,
+                    'searchtype' => 'contains',
+                    'value' => 'NULL'
                 ];
 
                 if ($type > 0) {
                     $params['criteria'][] = [
-                       'link'       => 'AND',
-                       'field'      => 14,
-                       'searchtype' => 'equals',
-                       'value'      => $type
+                        'link' => 'AND',
+                        'field' => 14,
+                        'searchtype' => 'equals',
+                        'value' => $type
                     ];
                 }
                 $grp_criteria = is_array($groups_criteria) ? $groups_criteria : [$groups_criteria];
                 if (is_array($grp_criteria) && count($grp_criteria) > 0) {
                     $options['criteria'][7]['link'] = 'AND';
-                    $nb                             = 0;
+                    $nb = 0;
                     foreach ($grp_criteria as $group) {
                         if ($nb == 0) {
                             $options['criteria'][7]['criteria'][$nb]['link'] = 'AND';
                         } else {
                             $options['criteria'][7]['criteria'][$nb]['link'] = 'OR';
                         }
-                        $options['criteria'][7]['criteria'][$nb]['field']      = 8;
+                        $options['criteria'][7]['criteria'][$nb]['field'] = 8;
                         $options['criteria'][7]['criteria'][$nb]['searchtype'] = 'equals';
-                        $options['criteria'][7]['criteria'][$nb]['value']      = $group;
+                        $options['criteria'][7]['criteria'][$nb]['value'] = $group;
                         $nb++;
                     }
                 }
@@ -240,34 +245,36 @@ class Reports_Map extends CommonGLPI
                 Search::constructSQL($data);
                 Search::constructData($data);
 
-                $paramsh = ["widgetId"  => $widgetId,
-                            "name"      => 'TicketsByLocationOpenStreetMap',
-                            "onsubmit"  => false,
-                            "opt"       => $opt,
-                            "criterias" => $criterias,
-                            "export"    => false,
-                            "canvas"    => false,
-                            "nb"        => 1];
-                $graph   = Helper::getGraphHeader($paramsh);
+                $paramsh = [
+                    "widgetId" => $widgetId,
+                    "name" => 'TicketsByLocationOpenStreetMap',
+                    "onsubmit" => false,
+                    "opt" => $opt,
+                    "criterias" => $criterias,
+                    "export" => false,
+                    "canvas" => false,
+                    "nb" => 1
+                ];
+                $graph = Helper::getGraphHeader($paramsh);
 
                 if ($data['data']['totalcount'] > 0) {
-                    $target   = $data['search']['target'];
+                    $target = $data['search']['target'];
                     $criteria = $data['search']['criteria'];
 
-                    $criteria[]   = [
-                       'link'       => 'AND',
-                       'field'      => 83,
-                       'searchtype' => 'equals',
-                       'value'      => 'CURLOCATION'
+                    $criteria[] = [
+                        'link' => 'AND',
+                        'field' => 83,
+                        'searchtype' => 'equals',
+                        'value' => 'CURLOCATION'
                     ];
                     $globallinkto = Toolbox::append_params(
                         [
-                           'criteria'     => $criteria,
-                           'metacriteria' => $data['search']['metacriteria']
+                            'criteria' => $criteria,
+                            'metacriteria' => $data['search']['metacriteria']
                         ],
                         '&amp;'
                     );
-                    $parameters   = "as_map=0&amp;" . $globallinkto;
+                    $parameters = "as_map=0&amp;" . $globallinkto;
 
                     $typename = $itemtype::getTypeName(2);
 
@@ -277,7 +284,7 @@ class Reports_Map extends CommonGLPI
                         $fulltarget = $target . "&" . $parameters;
                     }
                     $root_doc = PLUGIN_MYDASHBOARD_WEBDIR;
-                    $graph    .= "<script>
+                    $graph .= "<script>
                 var _loadMap = function(map_elt, itemtype) {
                   L.AwesomeMarkers.Icon.prototype.options.prefix = 'fas';
                   var _micon = 'circle';
@@ -349,7 +356,11 @@ class Reports_Map extends CommonGLPI
                      });
 
                      $.each(_points, function(index, point) {
-                        var _title = '<strong>' + point.title + '</strong><br/><a target=\'_blank\' href=\''+'$fulltarget'.replace(/CURLOCATION/, point.loc_id)+'\'>" . sprintf(__('%1$s %2$s'), 'COUNT', $typename) . "'.replace(/COUNT/, point.count)+'</a>';
+                        var _title = '<strong>' + point.title + '</strong><br/><a target=\'_blank\' href=\''+'$fulltarget'.replace(/CURLOCATION/, point.loc_id)+'\'>" . sprintf(
+                            __('%1$s %2$s'),
+                            'COUNT',
+                            $typename
+                        ) . "'.replace(/COUNT/, point.count)+'</a>';
                         if (point.types) {
                            $.each(point.types, function(tindex, type) {
                               _title += '<br/>" . sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE') . "'.replace(/COUNT/, type.count).replace(/TYPE/, type.name);
@@ -391,7 +402,9 @@ class Reports_Map extends CommonGLPI
                      var fail_info = L.control();
                      fail_info.onAdd = function (map) {
                         this._div = L.DomUtil.create('div', 'fail_info');
-                        this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'ti ti-refresh\'></i> " . __s('Reload') . "</span>';
+                        this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'ti ti-refresh\'></i> " . __s(
+                            'Reload'
+                        ) . "</span>';
                         return this._div;
                      };
                      fail_info.addTo(map_elt);

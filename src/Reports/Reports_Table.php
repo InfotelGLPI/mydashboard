@@ -66,35 +66,44 @@ class Reports_Table extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-
         $widgets = [
             Menu::$HELPDESK => [
 
-                $this->getType() . "32" => ["title"   => __("Number of opened tickets by technician and by status", "mydashboard"),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
-                $this->getType() . "33" => ["title"   => __("Number of opened tickets by group and by status", "mydashboard"),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
+                $this->getType() . "32" => [
+                    "title" => __("Number of opened tickets by technician and by status", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                $this->getType() . "33" => [
+                    "title" => __("Number of opened tickets by group and by status", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
             ],
             Menu::$INVENTORY => [
 
-                $this->getType() . "5"  => ["title"   => __("Fields unicity"),
-                    "type"    => Widget::$TABLE,
-                    "comment" => __("Display if you have duplicates into inventory", "mydashboard")],
+                $this->getType() . "5" => [
+                    "title" => __("Fields unicity"),
+                    "type" => Widget::$TABLE,
+                    "comment" => __("Display if you have duplicates into inventory", "mydashboard")
+                ],
             ],
             Menu::$TOOLS => [
 
-                $this->getType() . "14" => ["title"   => __("All unpublished articles", "mydashboard"),
-                    "type"    => Widget::$TABLE,
-                    "comment" => __("Display unpublished articles of Knowbase", "mydashboard")],
+                $this->getType() . "14" => [
+                    "title" => __("All unpublished articles", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => __("Display unpublished articles of Knowbase", "mydashboard")
+                ],
 
             ],
             Menu::$USERS => [
 
-                $this->getType() . "3"  => ["title"   => __("Internal annuary", "mydashboard"),
-                    "type"    => Widget::$TABLE,
-                    "comment" => __("Search users of your organisation", "mydashboard")],
+                $this->getType() . "3" => [
+                    "title" => __("Internal annuary", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => __("Search users of your organisation", "mydashboard")
+                ],
             ],
         ];
 
@@ -149,7 +158,7 @@ class Reports_Table extends CommonGLPI
     {
         global $DB, $CFG_GLPI;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $dbu     = new DbUtils();
+        $dbu = new DbUtils();
         $preference = new MydashboardPreference();
         if (Session::getLoginUserID() !== false
             && !$preference->getFromDB(Session::getLoginUserID())) {
@@ -186,19 +195,21 @@ class Reports_Table extends CommonGLPI
                         ORDER BY `realname`, `firstname` ASC";
 
 
-                $widget  = Helper::getWidgetsFromDBQuery('table', $query);
-                $headers = [__('First name'),
+                $widget = Helper::getWidgetsFromDBQuery('table', $query);
+                $headers = [
+                    __('First name'),
                     __('Name'),
                     __('Login'),
                     __('Phone'),
                     __('Phone 2'),
-                    __('Mobile phone')];
+                    __('Mobile phone')
+                ];
 
                 $widget->setTabNames($headers);
                 $hidden[] = ["targets" => 2, "visible" => false];
                 $widget->setOption("bDef", $hidden);
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "3 " : "") . $title);
                 $widget->setWidgetComment($comment);
@@ -211,24 +222,24 @@ class Reports_Table extends CommonGLPI
                 $query = "SELECT id
                 FROM `glpi_fieldunicities`
                 WHERE `is_active` = '1' "
-                         . $dbu->getEntitiesRestrictRequest(
-                             "AND",
-                             'glpi_fieldunicities',
-                             "",
-                             $_SESSION['glpiactive_entity'],
-                             true
-                         );
+                    . $dbu->getEntitiesRestrictRequest(
+                        "AND",
+                        'glpi_fieldunicities',
+                        "",
+                        $_SESSION['glpiactive_entity'],
+                        true
+                    );
                 $query .= "ORDER BY `entities_id` DESC";
 
                 $result = $DB->doQuery($query);
-                $nb     = $DB->numrows($result);
+                $nb = $DB->numrows($result);
 
-                $widget  = Helper::getWidgetsFromDBQuery('table', $query);
+                $widget = Helper::getWidgetsFromDBQuery('table', $query);
                 $headers = [__('Name'), __('Duplicates')];
                 $widget->setTabNames($headers);
 
                 $datas = [];
-                $i     = 0;
+                $i = 0;
                 if ($nb) {
                     while ($data = $DB->fetchAssoc($result)) {
                         $unicity = new FieldUnicity();
@@ -239,11 +250,11 @@ class Reports_Table extends CommonGLPI
                         }
                         $datas[$i]["name"] = $unicity->fields["name"];
 
-                        $fields       = [];
+                        $fields = [];
                         $where_fields = [];
 
                         foreach (explode(',', $unicity->fields['fields']) as $field) {
-                            $fields[]       = $field;
+                            $fields[] = $field;
                             $where_fields[] = $field;
                         }
 
@@ -280,22 +291,22 @@ class Reports_Table extends CommonGLPI
                             //                               ORDER BY cpt DESC";
 
                             $query_field = [
-                                'SELECT'    => [
+                                'SELECT' => [
                                     'COUNT' => '* AS cpt',
                                 ],
-                                'FROM'      => $item->getTable(),
-                                'WHERE'     => [
-                                    'entities_id'  => $entities,
+                                'FROM' => $item->getTable(),
+                                'WHERE' => [
+                                    'entities_id' => $entities,
                                 ],
-                                'GROUPBY'   => $fields,
-                                'ORDERBY'    => ['cpt DESC'],
+                                'GROUPBY' => $fields,
+                                'ORDERBY' => ['cpt DESC'],
                             ];
 
                             if ($item->maybeTemplate()) {
                                 $query_field['WHERE'] = $query_field['WHERE'] + ['is_template' => 0];
                             }
                             $query_field['WHERE'] = $query_field['WHERE'] + $where_fields_string;
-                            $count                   = 0;
+                            $count = 0;
                             $datas[$i]["duplicates"] = 0;
                             foreach ($DB->request($query_field) as $uniq) {
                                 if ($uniq['cpt'] > 1) {
@@ -311,7 +322,7 @@ class Reports_Table extends CommonGLPI
                 }
 
                 $widget->setTabDatas($datas);
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "5 " : "") . $title);
                 $widget->setWidgetComment($comment);
@@ -340,10 +351,10 @@ class Reports_Table extends CommonGLPI
                 $widget->setTabNames($headers);
 
                 $result = $DB->doQuery($query);
-                $nb     = $DB->numrows($result);
+                $nb = $DB->numrows($result);
 
                 $datas = [];
-                $i     = 0;
+                $i = 0;
 
                 $knowbaseitem = new \KnowbaseItem();
                 if ($nb) {
@@ -351,11 +362,11 @@ class Reports_Table extends CommonGLPI
                         $knowbaseitem->getFromDB($data['id']);
 
                         $datas[$i]["name"] = $knowbaseitem->getLink();
-                        $showuserlink      = 0;
+                        $showuserlink = 0;
                         if (Session::haveRight('user', READ)) {
                             $showuserlink = 1;
                         }
-                        $datas[$i]["users"]    = getUserName($data["users_id"]);
+                        $datas[$i]["users"] = getUserName($data["users_id"]);
                         $datas[$i]["category"] = $data["category"];
 
                         $i++;
@@ -364,7 +375,7 @@ class Reports_Table extends CommonGLPI
 
                 $widget->setTabDatas($datas);
 
-                $title   = $this->getTitleForWidget($widgetId);
+                $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "14 " : "") . $title);
                 $widget->setWidgetComment($comment);
@@ -377,29 +388,33 @@ class Reports_Table extends CommonGLPI
                 $name = 'NumberOfTicketsByTechnicianAndStatus';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'technicians_groups_id',
                         'group_is_recursive',
-                        'users_id'];
+                        'users_id'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = [];
                 }
 
-                $params = ["preferences" => $preferences,
-                    "criterias"   => $criterias,
-                    "opt"         => $opt];
+                $params = [
+                    "preferences" => $preferences,
+                    "criterias" => $criterias,
+                    "opt" => $opt
+                ];
 
                 $options = Helper::manageCriterias($params);
-                $crit    = $options['crit'];
-                $opt     = $options['opt'];
+                $crit = $options['crit'];
+                $opt = $options['opt'];
 
                 $groups_sql_criteria = "";
-                $entities_criteria   = $crit['entities_id'];
-                $users_criteria      = "";
-                $technician_group    = $opt['technicians_groups_id'];
+                $entities_criteria = $crit['entities_id'];
+                $users_criteria = "";
+                $technician_group = $opt['technicians_groups_id'];
                 $technician_group = array_filter($technician_group);
                 // GROUP
                 if (isset($technician_group) && $technician_group != 0 && !empty($technician_group)) {
@@ -426,37 +441,37 @@ class Reports_Table extends CommonGLPI
 
                 // List of technicians active and not deleted
                 $query_technicians = "SELECT `glpi_groups_users`.`users_id`"
-                                     . " FROM `glpi_groups_users`"
-                                     . " LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`)"
-                                     . " INNER JOIN `glpi_users` ON (`glpi_users`.`id` = `glpi_groups_users`.`users_id`)"
-                                     . " WHERE `glpi_groups`.`is_assign` = 1"
-                                     . " AND `glpi_users`.`is_active` = 1"
-                                     . " AND `glpi_users`.`is_deleted` = 0"
-                                     . $groups_sql_criteria
-                                     . $users_criteria
-                                     . " GROUP BY `glpi_groups_users`.`users_id`";
+                    . " FROM `glpi_groups_users`"
+                    . " LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`)"
+                    . " INNER JOIN `glpi_users` ON (`glpi_users`.`id` = `glpi_groups_users`.`users_id`)"
+                    . " WHERE `glpi_groups`.`is_assign` = 1"
+                    . " AND `glpi_users`.`is_active` = 1"
+                    . " AND `glpi_users`.`is_deleted` = 0"
+                    . $groups_sql_criteria
+                    . $users_criteria
+                    . " GROUP BY `glpi_groups_users`.`users_id`";
                 // Number of tickets by technician and by status more ticket
                 $moreTicketType = [];
                 if (Plugin::isPluginActive('moreticket')) {
                     $query_moretickets_by_technician_by_status = "SELECT count(*) as nb, `glpi_tickets_users`.`users_id` as userid,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
-                                                                 . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
-                                                                 . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
-                                                                 . " FROM `glpi_plugin_moreticket_waitingtickets`"
-                                                                 . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
-                                                                 . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
-                                                                 . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
-                                                                 . " INNER JOIN `glpi_tickets_users` ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
-                                                                 . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-                                                                 . " GROUP BY userid,statusname"
-                                                                 . " ORDER BY statusname";
-                    $query_moreticket_type                     = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
-                                                                 . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
-                    $result                                    = $DB->doQuery($query_moreticket_type);
-                    $i                                         = 0;
-                    $moreTicketTypeName                        = [];
+                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
+                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
+                        . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                        . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                        . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                        . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                        . " INNER JOIN `glpi_tickets_users` ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                        . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                        . " GROUP BY userid,statusname"
+                        . " ORDER BY statusname";
+                    $query_moreticket_type = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
+                        . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
+                    $result = $DB->doQuery($query_moreticket_type);
+                    $i = 0;
+                    $moreTicketTypeName = [];
                     while ($data = $DB->fetchArray($result)) {
                         $moreTicketType[$i]['name'] = $data['typename'];
-                        $moreTicketType[$i]['id']   = $data['typeid'];
+                        $moreTicketType[$i]['id'] = $data['typeid'];
                         array_push($moreTicketTypeName, $data['typename']);
                         $i++;
                     }
@@ -465,43 +480,47 @@ class Reports_Table extends CommonGLPI
                 // Tickets are not deleted
                 // User Type is 2
                 $query_tickets_by_technician_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
-                                                         . " FROM `glpi_tickets`"
-                                                         . " INNER JOIN `glpi_tickets_users`"
-                                                         . " ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
-                                                         . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-                                                         . " WHERE `glpi_tickets`.`status` = %s"
-                                                         . " AND `glpi_tickets_users`.`users_id` = '%s'"
-                                                         . $entities_criteria;
+                    . " FROM `glpi_tickets`"
+                    . " INNER JOIN `glpi_tickets_users`"
+                    . " ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                    . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                    . " WHERE `glpi_tickets`.`status` = %s"
+                    . " AND `glpi_tickets_users`.`users_id` = '%s'"
+                    . $entities_criteria;
                 // Lists of tickets by technician by status
                 $result = $DB->doQuery($query_technicians);
-                $nb     = $DB->numrows($result);
-                $temp   = [];
+                $nb = $DB->numrows($result);
+                $temp = [];
 
-                $typesTicketStatus = [__('Technician'),
+                $typesTicketStatus = [
+                    __('Technician'),
                     _x('status', 'Processing (assigned)'),
                     _x('status', 'Processing (planned)'),
                     __('Pending'),
-                    _x('status', 'Solved')];
+                    _x('status', 'Solved')
+                ];
                 if ($nb) {
                     $i = 0;
                     while ($data = $DB->fetchArray($result)) {
                         $nbWaitingTickets = "";
-                        $hasMoreTicket    = 0;
-                        $userId           = $data['users_id'];
-                        $username         = getUserName($userId);
-                        $temp[$i]         = [0 => $username];
-                        $j                = 1;
+                        $hasMoreTicket = 0;
+                        $userId = $data['users_id'];
+                        $username = getUserName($userId);
+                        $temp[$i] = [0 => $username];
+                        $j = 1;
                         foreach ($statusList as $status) {
-                            $query        = sprintf($query_tickets_by_technician_by_status, $status, $userId);
+                            $query = sprintf($query_tickets_by_technician_by_status, $status, $userId);
                             $temp[$i][$j] = 0;
-                            $result2      = $DB->doQuery($query);
-                            $nb2          = $DB->numrows($result2);
+                            $result2 = $DB->doQuery($query);
+                            $nb2 = $DB->numrows($result2);
                             if ($nb2) {
                                 while ($data = $DB->fetchAssoc($result2)) {
-                                    $value            = "";
+                                    $value = "";
                                     $nbWaitingTickets = $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
-                                        $value .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $status, $hasMoreTicket)'>";
+                                        $value .= "<a href='#' onclick='" . Widget::removeBackslashes(
+                                                $widgetId
+                                            ) . "_search($userId, $status, $hasMoreTicket)'>";
                                     }
                                     $value .= $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
@@ -513,7 +532,7 @@ class Reports_Table extends CommonGLPI
                             $j++;
                         }
                         if (Plugin::isPluginActive('moreticket')) {
-                            $result3       = $DB->doQuery($query_moretickets_by_technician_by_status);
+                            $result3 = $DB->doQuery($query_moretickets_by_technician_by_status);
                             $hasMoreTicket = 1;
                             if ($DB->numrows($result3) > 0) {
                                 while ($dataMoreTicket = $DB->fetchAssoc($result3)) {
@@ -521,16 +540,22 @@ class Reports_Table extends CommonGLPI
                                 }
 
                                 foreach ($moreTicketType as $key => $value) {
-                                    $status   = $value['name'];
+                                    $status = $value['name'];
                                     $statusId = $value['id'];
                                     if (isset($array[$status][$userId])) {
-                                        $value        = '';
-                                        $value        .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $statusId , $hasMoreTicket)'>";
-                                        $value        .= $array[$status][$userId];
-                                        $value        .= "</a>";
+                                        $value = '';
+                                        $value .= "<a href='#' onclick='" . Widget::removeBackslashes(
+                                                $widgetId
+                                            ) . "_search($userId, $statusId , $hasMoreTicket)'>";
+                                        $value .= $array[$status][$userId];
+                                        $value .= "</a>";
                                         $temp[$i][$j] = $value;
                                         $newNbTickets = $nbWaitingTickets - $array[$status][$userId];
-                                        $temp[$i][3]  = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
+                                        $temp[$i][3] = str_replace(
+                                            '>' . $nbWaitingTickets . '<',
+                                            '>' . $newNbTickets . '<',
+                                            $temp[$i][3]
+                                        );
                                     } else {
                                         $temp[$i][$j] = 0;
                                     }
@@ -548,7 +573,7 @@ class Reports_Table extends CommonGLPI
                 }
 
                 $widget = new Datatable();
-                $title  = __("Number of tickets open by technician and by status", "mydashboard");
+                $title = __("Number of tickets open by technician and by status", "mydashboard");
                 if ($nb > 1 || $nb == 0) {
                     // String technicians never translated in glpi
                     $title .= " : $nb " . __('Technicians', 'mydashboard');
@@ -566,19 +591,21 @@ class Reports_Table extends CommonGLPI
                 $widget->setTabDatas($temp);
                 $widget->toggleWidgetRefresh();
 
-                $params = ["widgetId"  => $widgetId,
-                    "name"      => $name,
-                    "onsubmit"  => true,
-                    "opt"       => $opt,
+                $params = [
+                    "widgetId" => $widgetId,
+                    "name" => $name,
+                    "onsubmit" => true,
+                    "opt" => $opt,
                     "criterias" => $criterias,
-                    "export"    => false,
-                    "canvas"    => false,
-                    "nb"        => $nb];
+                    "export" => false,
+                    "canvas" => false,
+                    "nb" => $nb
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params) . "<br>");
-                $linkURL   = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-                $js_group  = json_encode($technician_group);
+                $linkURL = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
+                $js_group = json_encode($technician_group);
                 $js_entity = $crit['entity'];
-                $js_sons   = $crit['sons'];
+                $js_sons = $crit['sons'];
                 $widgetId = Widget::removeBackslashes($widgetId);
                 $js = "var " . $widgetId . "_search = function(_technician, _status, _hasMoreTicket){
                   $.ajax({
@@ -610,28 +637,32 @@ class Reports_Table extends CommonGLPI
                 $name = 'NumberOfTicketsByGroupAndStatus';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'technicians_groups_id',
                         'group_is_recursive',
-                        'itilcategory'];
+                        'itilcategory'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = [];
                 }
 
-                $params = ["preferences" => $preferences,
-                    "criterias"   => $criterias,
-                    "opt"         => $opt];
+                $params = [
+                    "preferences" => $preferences,
+                    "criterias" => $criterias,
+                    "opt" => $opt
+                ];
 
                 $options = Helper::manageCriterias($params);
-                $crit    = $options['crit'];
-                $opt     = $options['opt'];
+                $crit = $options['crit'];
+                $opt = $options['opt'];
                 $category_criteria = $crit['itilcategory'];
                 $groups_sql_criteria = "";
-                $entities_criteria   = $crit['entities_id'];
-                $technician_group    = $opt['technicians_groups_id'];
+                $entities_criteria = $crit['entities_id'];
+                $technician_group = $opt['technicians_groups_id'];
 
                 // Allowed status
                 $statusList = [
@@ -642,8 +673,11 @@ class Reports_Table extends CommonGLPI
                 ];
 
                 // List of group active
-                $condition        = "1=1";
+                $condition = "1=1";
+
                 $technician_group = (is_array($technician_group) ? $technician_group : [$technician_group]);
+                $technician_group = array_filter($technician_group);
+
                 if (count($technician_group) > 0) {
                     if (isset($opt['ancestors']) && $opt['ancestors'] != 0) {
                         $childs = [];
@@ -658,8 +692,8 @@ class Reports_Table extends CommonGLPI
                 }
                 $iterator = $DB->request([
                     'SELECT' => ['id', 'name'],
-                    'FROM'   => 'glpi_groups',
-                    'WHERE'  => [
+                    'FROM' => 'glpi_groups',
+                    'WHERE' => [
                         'is_assign' => 1,
                         $condition,
                     ],
@@ -668,27 +702,27 @@ class Reports_Table extends CommonGLPI
                 $moreTicketType = [];
                 if (Plugin::isPluginActive('moreticket')) {
                     $query_moretickets_by_group_by_status = "SELECT count(*) as nb, `glpi_groups_tickets`.`groups_id` as groups_id,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
-                                                            . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
-                                                            . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
-                                                            . " FROM `glpi_plugin_moreticket_waitingtickets`"
-                                                            . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
-                                                            . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
-                                                            . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
-                                                            . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2
+                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
+                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
+                        . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                        . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                        . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                        . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                        . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2
                                                             AND `glpi_tickets`.`is_deleted` = 0)"
-                                                            . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-                                                            . " GROUP BY groups_id,statusname"
-                                                            . " ORDER BY statusname";
+                        . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                        . " GROUP BY groups_id,statusname"
+                        . " ORDER BY statusname";
 
                     $query_moreticket_type = "SELECT DISTINCT `glpi_plugin_moreticket_waitingtypes`.`completename` AS typename,"
-                                             . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid
+                        . " `glpi_plugin_moreticket_waitingtypes`.`id` AS typeid
                                         FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY typename";
-                    $result                = $DB->doQuery($query_moreticket_type);
-                    $i                     = 0;
-                    $moreTicketTypeName    = [];
+                    $result = $DB->doQuery($query_moreticket_type);
+                    $i = 0;
+                    $moreTicketTypeName = [];
                     while ($data = $DB->fetchArray($result)) {
                         $moreTicketType[$i]['name'] = $data['typename'];
-                        $moreTicketType[$i]['id']   = $data['typeid'];
+                        $moreTicketType[$i]['id'] = $data['typeid'];
                         array_push($moreTicketTypeName, $data['typename']);
                         $i++;
                     }
@@ -698,15 +732,16 @@ class Reports_Table extends CommonGLPI
                 // Tickets are not deleted
                 // group Type is 2
                 $query_tickets_by_groups_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
-                                                     . " FROM `glpi_tickets`"
-                                                     . " LEFT JOIN `glpi_groups_tickets`"
-                                                     . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "'
+                    . " FROM `glpi_tickets`"
+                    . " LEFT JOIN `glpi_groups_tickets`"
+                    . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "'
                                                   AND `glpi_tickets`.`is_deleted` = 0)"
-                                                     . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-                                                     . " WHERE `glpi_tickets`.`status` = %s"
-                                                     . " AND `glpi_groups_tickets`.`groups_id` = '%s'"
-                                                     . $entities_criteria
-                                                     . $category_criteria;
+                    . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                    . " WHERE `glpi_tickets`.`status` = %s"
+                    . " AND `glpi_groups_tickets`.`groups_id` = '%s'"
+                    . $entities_criteria
+                    . $category_criteria;
+
 
                 // Lists of tickets by group by status
                 $nb = count($iterator);
@@ -718,9 +753,9 @@ class Reports_Table extends CommonGLPI
 
                     foreach ($iterator as $data) {
                         $nbWaitingTickets = "";
-                        $hasMoreTicket    = 0;
-                        $groupId          = $data['id'];
-                        $groupname        = $data['name'];
+                        $hasMoreTicket = 0;
+                        $groupId = $data['id'];
+                        $groupname = $data['name'];
 
                         $temp[$i] = [0 => $groupname];
 
@@ -731,11 +766,11 @@ class Reports_Table extends CommonGLPI
                             $temp[$i][$j] = 0;
 
                             $result2 = $DB->doQuery($query);
-                            $nb2     = $DB->numrows($result2);
+                            $nb2 = $DB->numrows($result2);
 
                             if ($nb2) {
                                 while ($data = $DB->fetchAssoc($result2)) {
-                                    $value            = "";
+                                    $value = "";
                                     $nbWaitingTickets = $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
                                         $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $status, $hasMoreTicket)'>";
@@ -750,23 +785,27 @@ class Reports_Table extends CommonGLPI
                             $j++;
                         }
                         if (Plugin::isPluginActive('moreticket')) {
-                            $result3       = $DB->doQuery($query_moretickets_by_group_by_status);
+                            $result3 = $DB->doQuery($query_moretickets_by_group_by_status);
                             $hasMoreTicket = 1;
                             if ($DB->numrows($result3) > 0) {
                                 while ($dataMoreTicket = $DB->fetchAssoc($result3)) {
                                     $array[$dataMoreTicket['statusname']][$dataMoreTicket['groups_id']] = $dataMoreTicket['nb'];
                                 }
                                 foreach ($moreTicketType as $key => $value) {
-                                    $status   = $value['name'];
+                                    $status = $value['name'];
                                     $statusId = $value['id'];
                                     if (isset($array[$status][$groupId])) {
-                                        $value        = '';
-                                        $value        .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $statusId , $hasMoreTicket)'>";
-                                        $value        .= $array[$status][$groupId];
-                                        $value        .= "</a>";
+                                        $value = '';
+                                        $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $statusId , $hasMoreTicket)'>";
+                                        $value .= $array[$status][$groupId];
+                                        $value .= "</a>";
                                         $temp[$i][$j] = $value;
                                         $newNbTickets = $nbWaitingTickets - $array[$status][$groupId];
-                                        $temp[$i][3]  = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
+                                        $temp[$i][3] = str_replace(
+                                            '>' . $nbWaitingTickets . '<',
+                                            '>' . $newNbTickets . '<',
+                                            $temp[$i][3]
+                                        );
                                     } else {
                                         $temp[$i][$j] = 0;
                                     }
@@ -794,11 +833,13 @@ class Reports_Table extends CommonGLPI
                 $widget->setWidgetTitle((($isDebug) ? "33 " : "") . $title);
                 $widget->setWidgetComment($comment);
 
-                $typesTicketStatus = [__('Group'),
+                $typesTicketStatus = [
+                    __('Group'),
                     _x('status', 'Processing (assigned)'),
                     _x('status', 'Processing (planned)'),
                     __('Pending'),
-                    _x('status', 'Solved')];
+                    _x('status', 'Solved')
+                ];
                 if (count($moreTicketType) > 0) {
                     $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
                 }
@@ -808,20 +849,22 @@ class Reports_Table extends CommonGLPI
                 $widget->setTabDatas($temp);
                 $widget->toggleWidgetRefresh();
 
-                $params = ["widgetId"  => $widgetId,
-                    "name"      => $name,
-                    "onsubmit"  => true,
-                    "opt"       => $opt,
+                $params = [
+                    "widgetId" => $widgetId,
+                    "name" => $name,
+                    "onsubmit" => true,
+                    "opt" => $opt,
                     "criterias" => $criterias,
-                    "export"    => false,
-                    "canvas"    => false,
-                    "nb"        => $nb];
+                    "export" => false,
+                    "canvas" => false,
+                    "nb" => $nb
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params) . "<br>");
 
                 $linkURL = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
                 $js_entity = $crit['entity'];
-                $js_sons   = $crit['sons'];
+                $js_sons = $crit['sons'];
                 $widgetId = Widget::removeBackslashes($widgetId);
                 $js = "var " . $widgetId . "_searchgroup = function(_group, _status, _hasMoreTicket){
                                   $.ajax({
@@ -866,8 +909,13 @@ class Reports_Table extends CommonGLPI
         $options['reset'][] = 'reset';
 
         // ENTITY | SONS
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
         // USER
         if (isset($params["params"]["technician"])) {
@@ -881,8 +929,8 @@ class Reports_Table extends CommonGLPI
             $options = Chart::addCriteria(Chart::STATUS, 'equals', $params["params"]["status"], 'AND');
         }
 
-        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                . Toolbox::append_params($options, "&");
+        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
+            . Toolbox::append_params($options, "&");
     }
 
 
@@ -897,8 +945,13 @@ class Reports_Table extends CommonGLPI
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-                                  && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
         // STATUS
         if ($params["params"]['moreticket'] == 1) {
@@ -908,12 +961,15 @@ class Reports_Table extends CommonGLPI
         }
 
         // Group
-        $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
-                                          && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+        $options = Chart::groupCriteria(
+            Chart::TECHNICIAN_GROUP,
+            ((isset($params["params"]["group_is_recursive"])
+                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            $params["params"]["technician_group"]
+        );
 
 
-
-        return  $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-                . Toolbox::append_params($options, "&");
+        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
+            . Toolbox::append_params($options, "&");
     }
 }

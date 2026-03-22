@@ -442,14 +442,14 @@ class Dashboard extends CommonDBTM
 
         }
 
-        $widgetuser = new UserWidget();
-        if ($ids = $widgetuser->find()) {
-            foreach ($ids as $values) {
-                if (isset($allmapping[$values['widgets_id']])) {
-                    $widgetuser->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
-                }
-            }
-        }
+//        $widgetuser = new UserWidget();
+//        if ($ids = $widgetuser->find()) {
+//            foreach ($ids as $values) {
+//                if (isset($allmapping[$values['widgets_id']])) {
+//                    $widgetuser->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
+//                }
+//            }
+//        }
 
         $widgetprofile = new ProfileAuthorizedWidget();
         if ($ids = $widgetprofile->find()) {

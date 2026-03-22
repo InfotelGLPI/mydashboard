@@ -37,6 +37,7 @@ use Session;
 /**
  *
  */
+
 /**
  * This class extends GLPI class reminder to add the functions to display widgets on Dashboard
  */
@@ -54,14 +55,18 @@ class Reminder extends CommonGLPI
     {
         $widgets = [];
         if (Session::getCurrentInterface() != 'helpdesk') {
-            $widgets[Menu::$TOOLS]["reminderpersonalwidget"] = ["title"   => _n('Personal reminder', 'Personal reminders', 2),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$TOOLS]["reminderpersonalwidget"] = [
+                "title" => _n('Personal reminder', 'Personal reminders', 2),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
         if (Session::haveRight("reminder_public", READ)) {
-            $widgets[Menu::$TOOLS]["reminderpublicwidget"] = ["title"   => _n('Public reminder', 'Public reminders', 2),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$TOOLS]["reminderpublicwidget"] = [
+                "title" => _n('Public reminder', 'Public reminders', 2),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
 
         return $widgets;
@@ -127,14 +132,14 @@ class Reminder extends CommonGLPI
             ];
         }
 
-        $join  = [];
+        $join = [];
         $where = [];
 
         // Users
         $join['glpi_reminders_users'] = [
             'FKEY' => [
                 'glpi_reminders_users' => 'reminders_id',
-                'glpi_reminders'       => 'id',
+                'glpi_reminders' => 'id',
             ],
         ];
         //disabled for plugin
@@ -156,20 +161,20 @@ class Reminder extends CommonGLPI
             $join['glpi_groups_reminders'] = [
                 'FKEY' => [
                     'glpi_groups_reminders' => 'reminders_id',
-                    'glpi_reminders'        => 'id',
+                    'glpi_reminders' => 'id',
                 ],
             ];
 
-            $or       = ['glpi_groups_reminders.entities_id' => ['<', 0]];
+            $or = ['glpi_groups_reminders.entities_id' => ['<', 0]];
             $restrict = getEntitiesRestrictCriteria('glpi_groups_reminders', '', '', true);
             if (count($restrict)) {
                 $or = $or + $restrict;
             }
             $where['OR'][] = [
                 'glpi_groups_reminders.groups_id' => count($_SESSION["glpigroups"])
-                   ? $_SESSION["glpigroups"]
-                   : [-1],
-                'OR'                              => $or,
+                    ? $_SESSION["glpigroups"]
+                    : [-1],
+                'OR' => $or,
             ];
         }
 
@@ -180,18 +185,18 @@ class Reminder extends CommonGLPI
             $join['glpi_profiles_reminders'] = [
                 'FKEY' => [
                     'glpi_profiles_reminders' => 'reminders_id',
-                    'glpi_reminders'          => 'id',
+                    'glpi_reminders' => 'id',
                 ],
             ];
 
-            $or       = ['glpi_profiles_reminders.entities_id' => ['<', 0]];
+            $or = ['glpi_profiles_reminders.entities_id' => ['<', 0]];
             $restrict = getEntitiesRestrictCriteria('glpi_profiles_reminders', '', '', true);
             if (count($restrict)) {
                 $or = $or + $restrict;
             }
             $where['OR'][] = [
                 'glpi_profiles_reminders.profiles_id' => $_SESSION["glpiactiveprofile"]['id'],
-                'OR'                                  => $or,
+                'OR' => $or,
             ];
         }
 
@@ -201,7 +206,7 @@ class Reminder extends CommonGLPI
             $join['glpi_entities_reminders'] = [
                 'FKEY' => [
                     'glpi_entities_reminders' => 'reminders_id',
-                    'glpi_reminders'          => 'id',
+                    'glpi_reminders' => 'id',
                 ],
             ];
         }
@@ -214,7 +219,7 @@ class Reminder extends CommonGLPI
 
         $criteria = [
             'LEFT JOIN' => $join,
-            'WHERE'     => $where,
+            'WHERE' => $where,
         ];
 
         return $criteria;
@@ -275,8 +280,8 @@ class Reminder extends CommonGLPI
         $output = [];
 
         $users_id = Session::getLoginUserID();
-        $today    = date('Y-m-d');
-        $now      = date('Y-m-d H:i:s');
+        $today = date('Y-m-d');
+        $now = date('Y-m-d H:i:s');
 
         $restrict_visibility = " AND (`glpi_reminders`.`begin_view_date` IS NULL
                                     OR `glpi_reminders`.`begin_view_date` < '$now')
@@ -297,7 +302,11 @@ class Reminder extends CommonGLPI
                          $restrict_visibility
                    ORDER BY `glpi_reminders`.`name`";
 
-            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" . _n('Personal reminder', 'Personal reminders', 2) . "</a>";
+            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">" . _n(
+                    'Personal reminder',
+                    'Personal reminders',
+                    2
+                ) . "</a>";
         } else {
             // Show public reminders / not mines : need to have access to public reminders
             if (!Session::haveRight('reminder_public', READ)) {
@@ -312,7 +321,7 @@ class Reminder extends CommonGLPI
 
             $query = "SELECT `glpi_reminders`.*
                    FROM `glpi_reminders` "
-                     . self::addVisibilityJoins() . "
+                . self::addVisibilityJoins() . "
                    WHERE $restrict_user
                          $restrict_visibility
                          AND " . \Reminder::addVisibilityRestrict() . "
@@ -320,14 +329,14 @@ class Reminder extends CommonGLPI
 
             if (Session::getCurrentInterface() != 'helpdesk') {
                 $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php\">"
-                         . _n('Public reminder', 'Public reminders', 2) . "</a>";
+                    . _n('Public reminder', 'Public reminders', 2) . "</a>";
             } else {
                 $titre = _n('Public reminder', 'Public reminders', 2);
             }
         }
 
         $result = $DB->doQuery($query);
-        $nb     = $DB->numrows($result);
+        $nb = $DB->numrows($result);
 
         $output['title'] = "<span>$titre</span>";
 
@@ -349,29 +358,31 @@ class Reminder extends CommonGLPI
             $rand = mt_rand();
 
             while ($data = $DB->fetchAssoc($result)) {
-                $output['body'][$count]    = [];
+                $output['body'][$count] = [];
                 $output['body'][$count][0] = '';
                 $output['body'][$count][0] .= "<div class=\"relative reminder_list\">";
-                $link                      = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
+                $link = "<a id=\"content_reminder_" . $data["id"] . $rand . "\"  href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php?id=" . $data["id"] . "\">" . $data["name"] . "</a>";
 
                 $tooltip = \Html::showToolTip(
                     RichText::getSafeHtml($data["text"]),
-                    ['applyto' => "content_reminder_" . $data["id"] . $rand,
-                        'display' => false]
+                    [
+                        'applyto' => "content_reminder_" . $data["id"] . $rand,
+                        'display' => false
+                    ]
                 );
 
                 $output['body'][$count][0] .= $link . ' ' . $tooltip;
 
                 if ($data["is_planned"]) {
-                    $tab                       = explode(" ", $data["begin"]);
-                    $date_url                  = $tab[0];
+                    $tab = explode(" ", $data["begin"]);
+                    $date_url = $tab[0];
                     $output['body'][$count][0] .= "<span class=\"reminder_right\">";
                     $output['body'][$count][0] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/planning.php?date=" . $date_url . "&amp;type=day\">";
                     $output['body'][$count][0] .= "<i class='ti ti-clock' title=\"" . sprintf(
-                        __s('From %1$s to %2$s'),
-                        \Html::convDateTime($data["begin"]),
-                        \Html::convDateTime($data["end"])
-                    ) . "\"></i><span class='sr-only'></span>";
+                            __s('From %1$s to %2$s'),
+                            \Html::convDateTime($data["begin"]),
+                            \Html::convDateTime($data["end"])
+                        ) . "\"></i><span class='sr-only'></span>";
                     $output['body'][$count][0] .= "</a></span>";
                 }
 
@@ -429,7 +440,7 @@ class Reminder extends CommonGLPI
         $titre = _n('Public reminder', 'Public reminders', 2);
 
         $result = $DB->doQuery($query);
-        $nb     = $DB->numrows($result);
+        $nb = $DB->numrows($result);
 
         if ($nb) {
             echo "<table class='treetable'>";
@@ -441,7 +452,7 @@ class Reminder extends CommonGLPI
             while ($data = $DB->fetchArray($result)) {
                 echo "<li>";
                 echo '<h1>' . $data["name"] . '</h1>';
-                echo  RichText::getSafeHtml($data["text"]);
+                echo RichText::getSafeHtml($data["text"]);
                 echo "</li>";
             }
             echo "</ul>";

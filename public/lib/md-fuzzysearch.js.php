@@ -1,6 +1,5 @@
 <?php
-use Glpi\Event;
-include('../../../../inc/includes.php');
+
 header('Content-Type: text/javascript');
 
 ?>
@@ -25,11 +24,11 @@ $(function() {
 
    // when a key is pressed in fuzzy input, launch match
    $(document).on('click', ".md-home-trigger-fuzzy", function(key) {
-      trigger_homesearch_fuzzy();
+       md_trigger_homesearch_fuzzy();
    });
 
    var fuzzy_started = false;
-    var trigger_homesearch_fuzzy = function() {
+    var md_trigger_homesearch_fuzzy = function() {
         // remove old fuzzy modal
         removeFuzzy();
 
@@ -38,6 +37,7 @@ $(function() {
             'action': 'getHtml',
         }, function(html) {
             // add modal to body and show it
+
             $('#searchwidgets').append(html);
             //$('#md-fuzzysearch').modal('show');
 

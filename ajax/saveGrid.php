@@ -65,34 +65,34 @@ if (isset($_POST['users_id'])
       $dashboard->add($input);
    }
 }
-//Save in CACHE
-$widgets      = Widget::getWidgetList();
-$widgetclasse = new Widget();
 
-if (isset($data)) {
-   $widgetdata = json_decode($data, true);
-   if (isset($widgetdata)
-       && is_array($widgetdata)
-       && count($widgetdata) > 0) {
-      $datajson = [];
-      foreach ($widgetdata as $k => $v) {
-         if (isset($v["id"])) {
-            $datajson[$v["id"]] = Widget::getWidget($v["id"], $widgets, []);
-
-            //         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
-            //            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
-            //               if (isset($widgets[$v["id"]]["id"])
-            //                   && $widgets[$v["id"]]["id"] == $w) {
-            //                  $optjson[$v["id"]]["enableRefresh"] = $r;
-            //               }
-            //            }
-            //         }
-         }
-      }
-      //      $ckey = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
-      //      $GLPI_CACHE->delete($ckey);
-      //      $GLPI_CACHE->set($ckey, $datajson);
-   }
-}
+//$widgets      = Widget::getWidgetList();
+//$widgetclasse = new Widget();
+//
+//if (isset($data)) {
+//   $widgetdata = json_decode($data, true);
+//   if (isset($widgetdata)
+//       && is_array($widgetdata)
+//       && count($widgetdata) > 0) {
+//      $datajson = [];
+//      foreach ($widgetdata as $k => $v) {
+//         if (isset($v["id"])) {
+//            $datajson[$v["id"]] = Widget::getWidget($v["id"], $widgets, []);
+//
+//            //         if (isset($_SESSION["glpi_plugin_mydashboard_widgets"])) {
+//            //            foreach ($_SESSION["glpi_plugin_mydashboard_widgets"] as $w => $r) {
+//            //               if (isset($widgets[$v["id"]]["id"])
+//            //                   && $widgets[$v["id"]]["id"] == $w) {
+//            //                  $optjson[$v["id"]]["enableRefresh"] = $r;
+//            //               }
+//            //            }
+//            //         }
+//         }
+//      }
+//      //      $ckey = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
+//      //      $GLPI_CACHE->delete($ckey);
+//      //      $GLPI_CACHE->set($ckey, $datajson);
+//   }
+//}
 
 echo Session::getNewCSRFToken();

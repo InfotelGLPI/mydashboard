@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -27,8 +28,6 @@
 namespace GlpiPlugin\Mydashboard;
 
 use DbUtils;
-use GlpiPlugin\Mydashboard\Alert;
-use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Reports\Change;
 use GlpiPlugin\Mydashboard\Reports\Contract;
 use GlpiPlugin\Mydashboard\Reports\Event;
@@ -38,15 +37,15 @@ use GlpiPlugin\Mydashboard\Reports\Problem;
 use GlpiPlugin\Mydashboard\Reports\Project;
 use GlpiPlugin\Mydashboard\Reports\ProjectTask;
 use GlpiPlugin\Mydashboard\Reports\Reminder;
+use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
+use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
+use GlpiPlugin\Mydashboard\Reports\Reports_Funnel;
+use GlpiPlugin\Mydashboard\Reports\Reports_Line;
+use GlpiPlugin\Mydashboard\Reports\Reports_Map;
+use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
+use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use GlpiPlugin\Mydashboard\Reports\RSSFeed;
 use GlpiPlugin\Mydashboard\Reports\Ticket;
-use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
-use GlpiPlugin\Mydashboard\Reports\Reports_Line;
-use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
-use GlpiPlugin\Mydashboard\Reports\Reports_Funnel;
-use GlpiPlugin\Mydashboard\Reports\Reports_Table;
-use GlpiPlugin\Mydashboard\Reports\Reports_Map;
-use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
 use Session;
 use Toolbox;
 
@@ -72,9 +71,9 @@ class Widgetlist
         global $PLUGIN_HOOKS;
         $widgets = [];
 
-      //        We get hooked plugin widgets
+        //        We get hooked plugin widgets
         if (isset($PLUGIN_HOOKS['mydashboard']) && $preload != 1) {
-            $widgets = (isset($PLUGIN_HOOKS['mydashboard'])?$PLUGIN_HOOKS['mydashboard']:[]);
+            $widgets = ($PLUGIN_HOOKS['mydashboard'] ?? []);
         }
 
         //We add classes from mydashboard
@@ -87,25 +86,25 @@ class Widgetlist
             Reports_Map::class,
             Reports_Table::class,];
 
-//        $autoloader = new PluginMydasboardAutoloader();
-//        $classes = $autoloader->listReports();
-//        foreach ($classes as $class) {
-//            $widgets['mydashboard'][] = $class;
-//        }
+        //        $autoloader = new PluginMydasboardAutoloader();
+        //        $classes = $autoloader->listReports();
+        //        foreach ($classes as $class) {
+        //            $widgets['mydashboard'][] = $class;
+        //        }
 
         //We add classes for GLPI core widgets
         $widgets['GLPI'] = [
-                            Reminder::class,
-                            Planning::class,
-                            Event::class,
-                            Problem::class,
-                            Change::class,
-                            Ticket::class,
-                            RSSFeed::class,
-                            Project::class,
-                            ProjectTask::class,
-                            Contract::class,
-                            KnowbaseItem::class,
+            Reminder::class,
+            Planning::class,
+            Event::class,
+            Problem::class,
+            Change::class,
+            Ticket::class,
+            RSSFeed::class,
+            Project::class,
+            ProjectTask::class,
+            Contract::class,
+            KnowbaseItem::class,
         ];
         $dbu             = new DbUtils();
 
@@ -124,12 +123,13 @@ class Widgetlist
 
                 $item = $dbu->getItemForItemtype($pluginclass);
 
-            //            if ($item->canview) {
+                //            if ($item->canview) {
                 $widgets[$plugin][$pluginclass] = [];
                 //We try get the list of widgets for this class
                 if ($item && is_callable([$item, 'getWidgetsForItem'])) {
                     if (isset($item->interfaces)) {
-                        if (is_array($item->interfaces) && in_array($profile_interface, $item->interfaces)) {
+                        if (is_array($item->interfaces)
+                            && in_array($profile_interface, $item->interfaces)) {
                             $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
                         } else {
                             unset($widgets[$plugin]);
@@ -138,7 +138,7 @@ class Widgetlist
                         $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
                     }
                 }
-            //            }
+                //            }
             }
         }
 
@@ -308,13 +308,13 @@ class Widgetlist
      *
      * @param array $used
      *
-     * @return string|boolean
+     * @return string|bool
      * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
      *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
      */
     public static function loadWidgetsListForFuzzy($widgetlist)
     {
-        $widgetslist = Widget::getInitialWidgetList();
+        $widgetslist = Widget::getCompleteWidgetList();
         $gslist      = [];
         foreach ($widgetslist as $gs => $widgetclasses) {
             $gslist[$widgetclasses['id']] = $gs;
@@ -360,7 +360,7 @@ class Widgetlist
      *
      * @param array $used
      *
-     * @return string|boolean
+     * @return string|bool
      * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
      *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
      */
@@ -382,7 +382,7 @@ class Widgetlist
             $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle1'>";
             $tmp .= "<span class='media-left'>";
             $icon = self::getIconByType($globaltype);
-            $tmp .= "<i class='".$icon."'></i>";
+            $tmp .= "<i class='" . $icon . "'></i>";
             $tmp .= "</span>&nbsp;";
             $tmp .= self::getFolderByType($globaltype);
             $tmp .= "</h5>";

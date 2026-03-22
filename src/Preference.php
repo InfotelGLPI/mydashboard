@@ -158,8 +158,11 @@ class Preference extends CommonDBTM
 
             $dbu    = new DbUtils();
             $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
-            $pref   = json_decode($this->fields['prefered_group']);
+            $pref   = json_decode($this->fields['prefered_group'], true);
 
+            if (!is_array($pref)) {
+                $pref = [];
+            }
             //      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
             $temp = [];
             foreach ($result as $item) {
@@ -192,8 +195,11 @@ class Preference extends CommonDBTM
 
         $dbu    = new DbUtils();
         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
-        $pref   = json_decode($this->fields['requester_prefered_group']);
+        $pref   = json_decode($this->fields['requester_prefered_group'], true);
 
+        if (!is_array($pref)) {
+            $pref = [];
+        }
         //      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
         $temp = [];
         foreach ($result as $item) {

@@ -209,18 +209,6 @@ class ItilAlert extends CommonDBTM {
             $query = "RENAME TABLE `glpi_plugin_mydashboard_problemalerts` TO `$table`;";
             $DB->doQuery($query);
         }
-        if (!$DB->fieldExists($table, "itemtype")) {
-            $migration->addField($table, "itemtype", "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file'");
-            $migration->migrationOneTable($table);
-        }
-        if (!$DB->fieldExists($table, "items_id")) {
-
-            $migration->changeField($table, "problems_id", "items_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
-            $migration->migrationOneTable($table);
-
-            $query = "UPDATE `$table` SET `itemtype` = 'Problem';";
-            $DB->doQuery($query);
-        }
 
         if (!$DB->tableExists($table)) {
             $query = "CREATE TABLE `$table` (
@@ -233,6 +221,19 @@ class ItilAlert extends CommonDBTM {
 
             $DB->doQuery($query);
 
+        }
+
+        if (!$DB->fieldExists($table, "itemtype")) {
+            $migration->addField($table, "itemtype", "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file'");
+            $migration->migrationOneTable($table);
+        }
+        if (!$DB->fieldExists($table, "items_id")) {
+
+            $migration->changeField($table, "problems_id", "items_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+
+            $query = "UPDATE `$table` SET `itemtype` = 'Problem';";
+            $DB->doQuery($query);
         }
     }
 

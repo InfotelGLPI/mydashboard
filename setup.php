@@ -59,7 +59,7 @@ function plugin_init_mydashboard()
     ];
     if (Session::getCurrentInterface() == 'central') {
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/fuze.js';
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/fuzzysearch.js.php';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/md-fuzzysearch.js.php';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/mydashboard.js';
 

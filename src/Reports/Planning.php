@@ -73,11 +73,13 @@ class Planning extends CommonGLPI
         $widgets = [];
         if (Session::haveRight(Planning::$rightname, \Planning::READMY)) {
             $widgets = [
-               Menu::$TICKET_TECHVIEW => [
-                   "planningwidget" => ["title"   => __('Your planning'),
-                                        "type"    => Widget::$PLANNING,
-                                        "comment" => ""],
-               ]
+                Menu::$TICKET_TECHVIEW => [
+                    "planningwidget" => [
+                        "title" => __('Your planning'),
+                        "type" => Widget::$PLANNING,
+                        "comment" => ""
+                    ],
+                ]
             ];
         }
         return $widgets;
@@ -94,12 +96,14 @@ class Planning extends CommonGLPI
         switch ($widgetId) {
             case "planningwidget":
                 $who_group = "";
-                $who       = 0;
+                $who = 0;
                 if (Session::haveRight(\Planning::$rightname, \Planning::READMY)) {
                     $who = Session::getLoginUserID();
                 }
-                if (Session::haveRightsOr(\Planning::$rightname, [\Planning::READGROUP,
-                                                                 \Planning::READALL])) {
+                if (Session::haveRightsOr(\Planning::$rightname, [
+                    \Planning::READGROUP,
+                    \Planning::READALL
+                ])) {
                     $who_group = "mine";
                 }
                 return self::showCentral($who, $who_group);
@@ -126,25 +130,27 @@ class Planning extends CommonGLPI
         echo \Html::css("/public/lib/fullcalendar.css");
 
         $widget = new \Html();
-        $title  = __("Your planning");
+        $title = __("Your planning");
         $widget->setWidgetTitle($title);
 
-        $rand    = rand();
+        $rand = rand();
         $options = [
-           'full_view'    => false,
-           'default_view' => 'listFull',
-           'header'       => false,
-           'height'       => 'auto',
-           'rand'         => $rand,
-           'now'          => date("Y-m-d H:i:s"),
+            'full_view' => false,
+            'default_view' => 'listFull',
+            'header' => false,
+            'height' => 'auto',
+            'rand' => $rand,
+            'now' => date("Y-m-d H:i:s"),
         ];
-        $graph     = "<div id='planning$rand' class='flex-fill'></div>";
-        $graph     .= "</div>";
+        $graph = "<div id='planning$rand' class='flex-fill'></div>";
+        $graph .= "</div>";
 
-        $js = \Html::scriptBlock("$(function() {
+        $js = \Html::scriptBlock(
+            "$(function() {
          GLPIPlanning.display(" . json_encode($options) . ");
          GLPIPlanning.planningFilters();
-      });");
+      });"
+        );
         $widget->appendWidgetScriptContent($js);
         $widget->toggleWidgetRefresh();
         $widget->setWidgetHtmlContent(

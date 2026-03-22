@@ -133,7 +133,7 @@ class Widget extends CommonDBTM
         $rand = mt_rand();
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td><label for='textfield_name$rand'>" . __s('Name') . "</label></td>";
+        echo "<td><label for='textfield_name$rand'>" . __s('Internal name', 'mydashboard') . "</label></td>";
         echo "<td>";
         echo \Html::input(
             'name',
@@ -145,15 +145,24 @@ class Widget extends CommonDBTM
         );
         echo "</td></tr>";
 
+        echo "<tr class='tab_bg_1'>";
+        echo "<td><label for='textfield_title$rand'>" . __s('Title') . "</label></td>";
+        echo "<td>";
+        echo \Html::input(
+            'title',
+            [
+                'value' => $this->fields["title"],
+                'id'    => "textfield_title$rand",
+            ],
+        );
+        echo "</td></tr>";
+
         return true;
     }
 
 
 
-    public function showFilters()
-    {
-
-    }
+    public function showFilters() {}
 
     /**
      * @param $type
@@ -250,7 +259,7 @@ class Widget extends CommonDBTM
      *
      * @param string $widgetName
      *
-     * @return TRUE if the new widget name has been added, FALSE otherwise
+     * @return true if the new widget name has been added, FALSE otherwise
      * @global type  $DB
      *
      */
@@ -338,7 +347,7 @@ class Widget extends CommonDBTM
         }
     }
 
-    public static function getInitialWidgetList($preload = false)
+    public static function getCompleteWidgetList($preload = false, $withslashes = false)
     {
 
         //Load widgets
@@ -353,63 +362,37 @@ class Widget extends CommonDBTM
                         if (is_array($namelist)) {
                             foreach ($namelist as $idl => $val) {
                                 $id                  = $self->getWidgetIdByName($idl);
-                                //                str_replace("\"", "", $idl)
-                                $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $idl, "parent" => $k];
+
+                                if ($withslashes == true) {
+                                    $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclass), "id" => self::removeBackslashes($idl), "parent" => $k];
+                                } else {
+                                    $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $idl, "parent" => $k];
+                                }
+
                                 $i++;
                             }
                         } else {
                             $id                  = $self->getWidgetIdByName($k);
-                            $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $k, "parent" => $widgetclass];
-                            $i++;
+                            if ($withslashes == true) {
+                                $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclass), "id" => self::removeBackslashes($k), "parent" => $widgetclass];
+                            } else {
+                                $widgets['gs' . $id] = ["class" => $widgetclass, "id" => $k, "parent" => $widgetclass];
+                            }
                         }
                     }
                 } else {
                     $id                  = $self->getWidgetIdByName($widgetclass);
-                    $widgets['gs' . $id] = ["class" => $widgetclasses, "id" =>  $widgetclass];
-                    $i++;
+                    if ($withslashes == true) {
+                        $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclasses), "id" =>  self::removeBackslashes($widgetclass)];
+                    } else {
+                        $widgets['gs' . $id] = ["class" => $widgetclasses, "id" => $widgetclass];
+                    }
                 }
             }
         }
         return $widgets;
     }
 
-    /**
-     * @return array
-     */
-    public static function getWidgetList($preload = false)
-    {
-
-        //Load widgets
-        $widgetlist = Widgetlist::getList(true, -1, "central", $preload);
-        $i          = 1;
-        $self       = new self();
-        $widgets    = [];
-        foreach ($widgetlist as $plugin => $widgetclasses) {
-            foreach ($widgetclasses as $widgetclass => $list) {
-                if (is_array($list)) {
-                    foreach ($list as $k => $namelist) {
-                        if (is_array($namelist)) {
-                            foreach ($namelist as $idl => $val) {
-                                $id                  = $self->getWidgetIdByName($idl);
-                                //                str_replace("\"", "", $idl)
-                                $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclass), "id" => self::removeBackslashes($idl), "parent" => $k];
-                                $i++;
-                            }
-                        } else {
-                            $id                  = $self->getWidgetIdByName($k);
-                            $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclass), "id" => self::removeBackslashes($k), "parent" => $widgetclass];
-                            $i++;
-                        }
-                    }
-                } else {
-                    $id                  = $self->getWidgetIdByName($widgetclass);
-                    $widgets['gs' . $id] = ["class" => self::removeBackslashes($widgetclasses), "id" =>  self::removeBackslashes($widgetclass)];
-                    $i++;
-                }
-            }
-        }
-        return $widgets;
-    }
 
     /**
      * Returns the widget with the ID
@@ -423,7 +406,7 @@ class Widget extends CommonDBTM
     {
         $class = "bt-col-md-11";
         if (isset($widgets[$id])) {
-            return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $widgets[$id]["parent"], $class, $opt);
+            return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $class, $opt);
         }
 
         $message = __("This widget doesn't exist anymore", 'mydashboard');
@@ -445,7 +428,7 @@ class Widget extends CommonDBTM
      */
     public static function getGsID($id)
     {
-        $widgets = self::getWidgetList();
+        $widgets = self::getCompleteWidgetList(false, true);
 
         foreach ($widgets as $gs => $widgetclasses) {
             $gslist[$widgetclasses['id']] = $gs;
@@ -467,9 +450,8 @@ class Widget extends CommonDBTM
      *
      * @return string
      */
-    public static function loadWidget($classname, $widgetindex, $parent, $class, $opt = [])
+    public static function loadWidget($classname, $widgetindex, $class, $opt = [])
     {
-
 
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);
@@ -485,6 +467,7 @@ class Widget extends CommonDBTM
                 }
 
                 $widgetindex = self::removeBackslashes($widgetindex);
+
                 if (isset($widget) && ($widget instanceof Module)) {
 
                     $widget->setWidgetId($widgetindex);
@@ -523,10 +506,6 @@ class Widget extends CommonDBTM
                     $widgetlistclass = new Widgetlist();
                     $menu = new Menu();
                     $views = $widgetlistclass->getViewNames();
-                    $view  = -1;
-                    if (is_numeric($parent)) {
-                        $view = $views[$parent];
-                    }
 
                     $type  = $json['widgetType'];
                     $title = $json['widgetTitle'];
@@ -1207,7 +1186,7 @@ class Widget extends CommonDBTM
                 ],
                 'FROM' => 'glpi_plugin_mydashboard_widgets',
                 'WHERE' => [
-                    'name'   => ['LIKE', $old . '%']
+                    'name'   => ['LIKE', $old . '%'],
                 ],
             ]);
 

@@ -62,8 +62,6 @@ class Reports_Bar extends CommonDBTM
     public function __construct($_options = [])
     {
         $this->options = $_options;
-
-
     }
 
     /**
@@ -109,62 +107,101 @@ class Reports_Bar extends CommonDBTM
     {
         $widgets = [
             Menu::$HELPDESK => [
-                $this->getType() . "1" => ["title" => __("Opened tickets backlog", "mydashboard"),
+                $this->getType() . "1" => [
+                    "title" => __("Opened tickets backlog", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Display of opened tickets by month", "mydashboard")],
-                $this->getType() . "8" => ["title" => __("Process time by technicians by month", "mydashboard"),
+                    "comment" => __("Display of opened tickets by month", "mydashboard")
+                ],
+                $this->getType() . "8" => [
+                    "title" => __("Process time by technicians by month", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Sum of ticket tasks duration by technicians", "mydashboard")],
-                $this->getType() . "15" => ["title" => __("Top ten ticket categories by type of ticket", "mydashboard"),
+                    "comment" => __("Sum of ticket tasks duration by technicians", "mydashboard")
+                ],
+                $this->getType() . "15" => [
+                    "title" => __("Top ten ticket categories by type of ticket", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Display of Top ten ticket categories by type of ticket", "mydashboard")],
-                $this->getType() . "21" => ["title" => __("Number of tickets affected by technicians by month", "mydashboard"),
+                    "comment" => __("Display of Top ten ticket categories by type of ticket", "mydashboard")
+                ],
+                $this->getType() . "21" => [
+                    "title" => __("Number of tickets affected by technicians by month", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Sum of ticket affected by technicians", "mydashboard")],
-                $this->getType() . "23" => ["title" => __("Average real duration of treatment of the ticket", "mydashboard"),
+                    "comment" => __("Sum of ticket affected by technicians", "mydashboard")
+                ],
+                $this->getType() . "23" => [
+                    "title" => __("Average real duration of treatment of the ticket", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Display of average real duration of treatment of tickets (actiontime of tasks)", "mydashboard")],
-                $this->getType() . "24" => ["title" => __("Top ten technicians (by tickets number)", "mydashboard"),
+                    "comment" => __(
+                        "Display of average real duration of treatment of tickets (actiontime of tasks)",
+                        "mydashboard"
+                    )
+                ],
+                $this->getType() . "24" => [
+                    "title" => __("Top ten technicians (by tickets number)", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Display of number of tickets by technicians", "mydashboard")],
-                $this->getType() . "35" => ["title" => __("Age of tickets", "mydashboard"),
+                    "comment" => __("Display of number of tickets by technicians", "mydashboard")
+                ],
+                $this->getType() . "35" => [
+                    "title" => __("Age of tickets", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "36" => ["title" => __("Number of opened tickets by priority", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "36" => [
+                    "title" => __("Number of opened tickets by priority", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "37" => ["title" => __("Stock of tickets by status", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "37" => [
+                    "title" => __("Stock of tickets by status", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "38" => ["title" => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "38" => [
+                    "title" => __("Number of opened ticket and average satisfaction per trimester", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "39" => ["title" => __("Responsiveness over 12 rolling months", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "39" => [
+                    "title" => __("Responsiveness over 12 rolling months", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "40" => ["title" => __("Tickets request sources evolution", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "40" => [
+                    "title" => __("Tickets request sources evolution", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Evolution of tickets request sources types by year", "mydashboard")],
-                $this->getType() . "41" => ["title" => __("Tickets solution types evolution", "mydashboard"),
+                    "comment" => __("Evolution of tickets request sources types by year", "mydashboard")
+                ],
+                $this->getType() . "41" => [
+                    "title" => __("Tickets solution types evolution", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => __("Evolution of solution types by year", "mydashboard")],
-                $this->getType() . "42" => ["title" => __("Solve delay and take into account of tickets", "mydashboard"),
+                    "comment" => __("Evolution of solution types by year", "mydashboard")
+                ],
+                $this->getType() . "42" => [
+                    "title" => __("Solve delay and take into account of tickets", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "43" => ["title" => __("Evolution of ticket satisfaction by year", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "43" => [
+                    "title" => __("Evolution of ticket satisfaction by year", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "45" => ["title" => __("Evolution of TTO respect", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "45" => [
+                    "title" => __("Evolution of TTO respect", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
-                $this->getType() . "46" => ["title" => __("Evolution of TTR respect", "mydashboard"),
+                    "comment" => ""
+                ],
+                $this->getType() . "46" => [
+                    "title" => __("Evolution of TTR respect", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
+                    "comment" => ""
+                ],
             ],
             Menu::$INVENTORY => [
-                $this->getType() . "44" => ["title" => __("Last synchronization of computers by month", "mydashboard"),
+                $this->getType() . "44" => [
+                    "title" => __("Last synchronization of computers by month", "mydashboard"),
                     "type" => Widget::$BAR,
-                    "comment" => ""],
+                    "comment" => ""
+                ],
             ],
         ];
         return $widgets;
@@ -198,25 +235,31 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'technicians_groups_id',
                         'group_is_recursive',
                         'requesters_groups_id',
                         'type',
-                        'locations_id'];
+                        'locations_id'
+                    ];
                     $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['type',
+                    $criterias = [
+                        'type',
                         'locations_id',
-                        'requesters_groups_id'];
+                        'requesters_groups_id'
+                    ];
                 }
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -273,34 +316,40 @@ class Reports_Bar extends CommonDBTM
 
                 $js_ancestors = $crit['ancestors'];
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $databacklogset,
-                    'labels' => $labelsback];
+                    'labels' => $labelsback
+                ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         'requester_groups' => $requester_groups,
                         'technician_group' => $technician_group,
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
                         'locations_id' => $location,
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
 
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
 
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->toggleWidgetRefresh();
@@ -313,23 +362,29 @@ class Reports_Bar extends CommonDBTM
                 $name = 'TimeByTechChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'technicians_groups_id',
                         'type',
                         'year',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['type',
+                    $criterias = [
+                        'type',
                         'year',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 $opt['limit'] ??= 10;
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
                 $opt = $options['opt'];
 
@@ -374,23 +429,27 @@ class Reports_Bar extends CommonDBTM
                 $dataLineset = json_encode($dataset);
                 $labelsLine = json_encode($months);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => count($dataset)];
+                    "nb" => count($dataset)
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
@@ -404,25 +463,31 @@ class Reports_Bar extends CommonDBTM
                 $name = 'TopTenTicketCategoriesBarChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['requesters_groups_id',
+                    $criterias = [
+                        'requesters_groups_id',
                         'technicians_groups_id',
                         'filter_date',
                         'entities_id',
                         'is_recursive',
                         'type',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['requesters_groups_id',
+                    $criterias = [
+                        'requesters_groups_id',
                         'type',
                         'year',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 $opt['limit'] ??= 10;
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -469,7 +534,8 @@ class Reports_Bar extends CommonDBTM
                 }
 
                 $nbtickets = __('Tickets number', 'mydashboard');
-                $dataset[] = ["type" => 'bar',
+                $dataset[] = [
+                    "type" => 'bar',
                     "name" => $nbtickets,
                     "data" => $tabdata,
                 ];
@@ -485,13 +551,15 @@ class Reports_Bar extends CommonDBTM
                 $labelsback = json_encode($tabnames);
                 $idsback = json_encode($tabcat);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $idsback,
                     'data' => $databacklogset,
                     //                                'label'           => $title,
-                    'labels' => $labelsback];
+                    'labels' => $labelsback
+                ];
 
                 $js_ancestors = $crit['ancestors'];
 
@@ -500,24 +568,28 @@ class Reports_Bar extends CommonDBTM
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
                 $year = $opt['year'] ?? '';
-                $graph_criterias = ['entities_id' => $entities_id_criteria,
+                $graph_criterias = [
+                    'entities_id' => $entities_id_criteria,
                     'sons' => $sons_criteria,
                     'group_is_recursive' => $js_ancestors,
                     'technician_group' => $opt['technicians_groups_id'] ?? [],
                     'type' => $type,
                     'year' => $year ?? '',
-                    'widget' => $widgetId];
+                    'widget' => $widgetId
+                ];
 
                 $graph = BarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => $nb];
+                    "nb" => $nb
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent($graph);
 
@@ -528,24 +600,30 @@ class Reports_Bar extends CommonDBTM
                 $name = 'TicketsByTechChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'technicians_groups_id',
                         'group_is_recursive',
                         'type',
                         'year',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['type',
+                    $criterias = [
+                        'type',
                         'year',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 $opt['limit'] ??= 10;
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
                 $opt = $options['opt'];
 
@@ -588,23 +666,27 @@ class Reports_Bar extends CommonDBTM
                 $dataLineset = json_encode($dataset);
                 $labelsLine = json_encode($months);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => count($dataset)];
+                    "nb" => count($dataset)
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
                     $graph
@@ -617,20 +699,26 @@ class Reports_Bar extends CommonDBTM
                 $name = 'AverageBarChart';
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'year',
-                        'type'];
+                        'type'
+                    ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['year',
-                        'type'];
+                    $criterias = [
+                        'year',
+                        'type'
+                    ];
                 }
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -707,25 +795,29 @@ class Reports_Bar extends CommonDBTM
                 $tabdatesset = json_encode($tabdates);
 
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
                 $graph_criterias = [];
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
                     $graph
@@ -739,29 +831,34 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'year',
                         'type',
                         'begin',
                         'end',
-                        'limit'];
+                        'limit'
+                    ];
                     $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['year',
+                    $criterias = [
+                        'year',
                         'type',
-                        'limit'];
+                        'limit'
+                    ];
                 }
                 $opt['limit'] ??= 10;
-                $opt['begin'] ??= date('Y-m-d H:i:s', strtotime('-1 year'));
-                ;
+                $opt['begin'] ??= date('Y-m-d H:i:s', strtotime('-1 year'));;
                 $opt['end'] ??= date('Y-m-d H:i:s');
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -828,7 +925,8 @@ class Reports_Bar extends CommonDBTM
                 $tabIdTechset = json_encode($tabtechid);
 
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabIdTechset,
@@ -838,24 +936,28 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         'type' => $type,
                         //                                'year'        => $year_criteria,
                         'begin' => $opt['begin'],
                         'end' => $opt['end'],
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
                 $graph = BarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => count($tabtickets)];
+                    "nb" => count($tabtickets)
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->toggleWidgetRefresh();
                 $widget->setWidgetHtmlContent(
@@ -870,23 +972,27 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'type',
                         'technicians_groups_id',
                         'group_is_recursive',
                         'group_is_recursive',
-                        'itilcategory'];
-                    $onclick   = 1;
+                        'itilcategory'
+                    ];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = ['type'];
                 }
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -900,7 +1006,7 @@ class Reports_Bar extends CommonDBTM
                 $js_ancestors = $crit['ancestors'];
                 $technician_group = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria        = $crit['itilcategory'];
+                $categories_criteria = $crit['itilcategory'];
 
 
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
@@ -1005,33 +1111,39 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $dataDateset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         'technician_group' => $technician_group,
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
                     $graph
@@ -1045,22 +1157,26 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'type',
                         'technicians_groups_id',
                         'group_is_recursive',
-                        'itilcategory'];
-                    $onclick   = 1;
+                        'itilcategory'
+                    ];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = ['type'];
                 }
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -1107,14 +1223,16 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $dataset = json_encode($datas);
@@ -1122,20 +1240,24 @@ class Reports_Bar extends CommonDBTM
                 $tabpriorityset = json_encode($tabpriority);
                 $js_ancestors = $crit['ancestors'];
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabpriorityset,
                     'data' => $dataset,
-                    'labels' => $labels];
+                    'labels' => $labels
+                ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         'technician_group' => $technician_group,
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
@@ -1148,22 +1270,26 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'type',
                         'technicians_groups_id',
                         'group_is_recursive',
-                        'itilcategory'];
-                    $onclick   = 1;
+                        'itilcategory'
+                    ];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = ['type'];
                 }
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -1176,7 +1302,7 @@ class Reports_Bar extends CommonDBTM
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
                 $technician_group = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria        = $crit['itilcategory'];
+                $categories_criteria = $crit['itilcategory'];
 
                 $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
                 FROM glpi_tickets
@@ -1266,14 +1392,16 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetComment($comment);
                 $widget->toggleWidgetRefresh();
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $dataset = json_encode($datas);
@@ -1281,20 +1409,24 @@ class Reports_Bar extends CommonDBTM
                 $tabstatusset = json_encode($tabstatus);
                 $js_ancestors = $crit['ancestors'];
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabstatusset,
                     'data' => $dataset,
-                    'labels' => $labels];
+                    'labels' => $labels
+                ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         'technician_group' => $technician_group,
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
@@ -1305,9 +1437,11 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "38":
                 $name = 'NumberOfOpenedTicketAndAverageSatisfactionPerTrimester';
                 $criterias = [];
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -1402,36 +1536,42 @@ class Reports_Bar extends CommonDBTM
                 $titleSatisfactionTicket = __("Average Satisfaction", "mydashboard");
                 $labels = json_encode($tabnames);
                 $datasets[]
-                    = ['type' => 'bar',
-                        'data' => $opened_tickets_data['data'],
-                        'name' => $titleOpenedTicket,
-                    ];
+                    = [
+                    'type' => 'bar',
+                    'data' => $opened_tickets_data['data'],
+                    'name' => $titleOpenedTicket,
+                ];
 
                 $datasets[]
-                    = ['type' => 'line',
-                        'data' => $satisfaction_data['data'],
-                        'name' => $titleSatisfactionTicket,
-                        'smooth' => false,
-                        'yAxisIndex' => 1,
-                    ];
+                    = [
+                    'type' => 'line',
+                    'data' => $satisfaction_data['data'],
+                    'name' => $titleSatisfactionTicket,
+                    'smooth' => false,
+                    'yAxisIndex' => 1,
+                ];
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => json_encode($datasets),
-                    'labels' => $labels];
+                    'labels' => $labels
+                ];
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
 
@@ -1442,9 +1582,11 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "39":
                 $name = 'ResponsivenessRollingPendingByYear';
                 $criterias = ['requesters_groups_id', 'year', 'type'];
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
 
                 $options = Helper::manageCriterias($params);
 
@@ -1585,7 +1727,10 @@ class Reports_Bar extends CommonDBTM
                         $i++;
                         foreach ($datesTab as $datePeriod) {
                             if (!array_key_exists('month', $tabTicketsMoreThanOneWeek)) {
-                                if (!in_array($data['Monthname'], $tabTicketsMoreThanOneWeek['month_name']) && !in_array($datePeriod, $tabTicketsMoreThanOneWeek['month_name'])) {
+                                if (!in_array(
+                                        $data['Monthname'],
+                                        $tabTicketsMoreThanOneWeek['month_name']
+                                    ) && !in_array($datePeriod, $tabTicketsMoreThanOneWeek['month_name'])) {
                                     if ($data['Monthname'] !== $datePeriod) {
                                         $tabTicketsMoreThanOneWeek['month_name'][] = $datePeriod;
                                         $tabTicketsMoreThanOneWeek['total'][] = 0;
@@ -1637,32 +1782,33 @@ class Reports_Bar extends CommonDBTM
 
                 $datasets[]
                     = [
-                        "type" => "bar",
-                        "data" => $tabTicketsLessThanOneDay['total'],
-                        "name" => __('Sum of tickets solved in less than 24 hours', "mydashboard"),
-                        //                                  'backgroundColor' => '#BBD4F9',
-                        //                        'yAxisID' => 'bar-y-axis'
-                    ];
+                    "type" => "bar",
+                    "data" => $tabTicketsLessThanOneDay['total'],
+                    "name" => __('Sum of tickets solved in less than 24 hours', "mydashboard"),
+                    //                                  'backgroundColor' => '#BBD4F9',
+                    //                        'yAxisID' => 'bar-y-axis'
+                ];
 
                 $datasets[]
                     = [
-                        "type" => "bar",
-                        "data" => $tabTicketsBetweenOneDayAndOneWeek['total'],
-                        "name" => __('Sum of tickets solved in less than a week', "mydashboard"),
-                        //                                  'backgroundColor' => '#2B68C4',
-                        //                        'yAxisID' => 'bar-y-axis'
-                    ];
+                    "type" => "bar",
+                    "data" => $tabTicketsBetweenOneDayAndOneWeek['total'],
+                    "name" => __('Sum of tickets solved in less than a week', "mydashboard"),
+                    //                                  'backgroundColor' => '#2B68C4',
+                    //                        'yAxisID' => 'bar-y-axis'
+                ];
 
                 $datasets[]
                     = [
-                        "type" => "bar",
-                        "data" => $tabTicketsMoreThanOneWeek['total'],
-                        "name" => __('Sum of tickets solved in more than a week', "mydashboard"),
-                        //                                  'backgroundColor' => '#033A5F',
-                        //                        'yAxisID' => 'bar-y-axis'
-                    ];
+                    "type" => "bar",
+                    "data" => $tabTicketsMoreThanOneWeek['total'],
+                    "name" => __('Sum of tickets solved in more than a week', "mydashboard"),
+                    //                                  'backgroundColor' => '#033A5F',
+                    //                        'yAxisID' => 'bar-y-axis'
+                ];
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
@@ -1674,14 +1820,16 @@ class Reports_Bar extends CommonDBTM
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
@@ -1693,9 +1841,11 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "40":
                 $criterias = ['entities_id', 'is_recursive'];
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -1779,24 +1929,28 @@ class Reports_Bar extends CommonDBTM
 
                 $jsonsets = json_encode($datasets);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $jsonsets,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
@@ -1809,9 +1963,11 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "41":
                 $criterias = ['entities_id', 'is_recursive'];
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -1877,14 +2033,15 @@ class Reports_Bar extends CommonDBTM
 
                 foreach ($tabdata as $k => $v) {
                     $datasets[]
-                        = ['data' => array_values($v),
-                            'name' => ($tabnames[$k] == null) ? __('None') : $tabnames[$k],
-                            'type' => 'bar',
-                            'stack' => 'Ad',
-                            'emphasis' => [
-                                'focus' => 'series',
-                            ],
-                        ];
+                        = [
+                        'data' => array_values($v),
+                        'name' => ($tabnames[$k] == null) ? __('None') : $tabnames[$k],
+                        'type' => 'bar',
+                        'stack' => 'Ad',
+                        'emphasis' => [
+                            'focus' => 'series',
+                        ],
+                    ];
                 }
 
                 $widget = new Html();
@@ -1898,24 +2055,28 @@ class Reports_Bar extends CommonDBTM
 
                 $jsonsets = json_encode($datasets);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $jsonsets,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
@@ -1931,16 +2092,20 @@ class Reports_Bar extends CommonDBTM
                 $lifetime = __('Solve delay average (hour)', 'mydashboard');
                 $taken_into_account = __('Take into account average (hour)', 'mydashboard');
 
-                $criterias = ['entities_id',
+                $criterias = [
+                    'entities_id',
                     'is_recursive',
                     'type',
                     'year',
                     'multiple_locations_id',
-                    'technicians_groups_id'];
+                    'technicians_groups_id'
+                ];
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
 
                 $options = Helper::manageCriterias($params);
 
@@ -1950,7 +2115,10 @@ class Reports_Bar extends CommonDBTM
                 $technician_group = $opt['technicians_groups_id'];
                 $technician_groups_criteria = $crit['technicians_groups_id'];
 
-                $lifetime_avg_ticket = self::getLifetimeOrTakeIntoAccountTicketAverage($crit, $technician_groups_criteria);
+                $lifetime_avg_ticket = self::getLifetimeOrTakeIntoAccountTicketAverage(
+                    $crit,
+                    $technician_groups_criteria
+                );
 
                 $months_t = Toolbox::getMonthsOfYearArray();
                 $months = [];
@@ -1964,8 +2132,16 @@ class Reports_Bar extends CommonDBTM
 
                 foreach ($lifetime_avg_ticket as $avg_tickets_d) {
                     if ($avg_tickets_d['nb'] > 0) {
-                        $avg_lifetime_ticket_data [] = round(($avg_tickets_d['lifetime'] / $avg_tickets_d['nb']) ?? 0, 2, PHP_ROUND_HALF_UP);
-                        $avg_takeintoaccount_ticket_data [] = round(($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb']) ?? 0, 2, PHP_ROUND_HALF_UP);
+                        $avg_lifetime_ticket_data [] = round(
+                            ($avg_tickets_d['lifetime'] / $avg_tickets_d['nb']) ?? 0,
+                            2,
+                            PHP_ROUND_HALF_UP
+                        );
+                        $avg_takeintoaccount_ticket_data [] = round(
+                            ($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb']) ?? 0,
+                            2,
+                            PHP_ROUND_HALF_UP
+                        );
                     } else {
                         $avg_lifetime_ticket_data [] = 0;
                         $avg_takeintoaccount_ticket_data [] = 0;
@@ -1997,24 +2173,28 @@ class Reports_Bar extends CommonDBTM
                 $dataLineset = json_encode($dataset);
                 $labelsLine = json_encode($months);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => count($dataset)];
+                    "nb" => count($dataset)
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent($graph);
 
@@ -2027,7 +2207,8 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         'year',
                     ];
@@ -2038,9 +2219,11 @@ class Reports_Bar extends CommonDBTM
                     $criterias = ['year'];
                 }
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -2116,24 +2299,24 @@ class Reports_Bar extends CommonDBTM
                     }
                     $datasets[]
                         = [
-                            "type" => "line",
-                            "data" => $numberanswered,
-                            "name" => __('Number of surveys answered', "mydashboard"),
-                            'smooth' => false,
-                            'yAxisIndex' => 1,
-                        ];
+                        "type" => "line",
+                        "data" => $numberanswered,
+                        "name" => __('Number of surveys answered', "mydashboard"),
+                        'smooth' => false,
+                        'yAxisIndex' => 1,
+                    ];
                     $datasets[]
                         = [
-                            "type" => "bar",
-                            "data" => $satisfydatasset,
-                            "name" => __("Satisfy number", "mydashboard"),
-                        ];
+                        "type" => "bar",
+                        "data" => $satisfydatasset,
+                        "name" => __("Satisfy number", "mydashboard"),
+                    ];
                     $datasets[]
                         = [
-                            "type" => "bar",
-                            "data" => $notsatisfydatasset,
-                            "name" => __("Not satisfy number", "mydashboard"),
-                        ];
+                        "type" => "bar",
+                        "data" => $notsatisfydatasset,
+                        "name" => __("Not satisfy number", "mydashboard"),
+                    ];
                 }
 
                 $labels = json_encode($tabnames);
@@ -2146,31 +2329,36 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetTitle((($isDebug) ? "42 " : "") . $title);
                 $widget->toggleWidgetRefresh();
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => json_encode($datasets),
-                    'labels' => $labels];
+                    'labels' => $labels
+                ];
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
                     $graph_criterias = [
                         'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
 
                 $graph = BarChart::launchMultipleGraph($graph_datas, $graph_criterias);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1];
+                    "nb" => 1
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
@@ -2185,7 +2373,8 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = ['entities_id',
+                    $criterias = [
+                        'entities_id',
                         'is_recursive',
                         //                                  'type_computer'
                     ];
@@ -2198,9 +2387,11 @@ class Reports_Bar extends CommonDBTM
                     ];
                 }
 
-                $params = ["preferences" => [],
+                $params = [
+                    "preferences" => [],
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
@@ -2254,31 +2445,37 @@ class Reports_Bar extends CommonDBTM
                 $labelsBar = json_encode($tabnames);
                 $tabsyncset = json_encode($tabsyncdates);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => $tabsyncset,
                     'data' => $dataBarset,
-                    'labels' => $labelsBar];
+                    'labels' => $labelsBar
+                ];
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = ['entities_id' => $entities_id_criteria,
+                    $graph_criterias = [
+                        'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         //                                        'type_computer'      => $type,
-                        'widget' => $widgetId];
+                        'widget' => $widgetId
+                    ];
                 }
 
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => $nb];
+                    "nb" => $nb
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
                     $graph
@@ -2289,14 +2486,18 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "45":
                 $name = 'reportBarTTORespectByMonth';
 
-                $criterias = ['entities_id',
+                $criterias = [
+                    'entities_id',
                     'is_recursive',
                     'type',
-                    'year'];
+                    'year'
+                ];
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
 
                 $options = Helper::manageCriterias($params);
 
@@ -2365,24 +2566,28 @@ class Reports_Bar extends CommonDBTM
                 $dataLineset = json_encode($dataset);
                 $labelsLine = json_encode($months);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => count($dataset)];
+                    "nb" => count($dataset)
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent($graph);
 
@@ -2392,14 +2597,18 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "46":
                 $name = 'reportBarTTRRespectByMonth';
 
-                $criterias = ['entities_id',
+                $criterias = [
+                    'entities_id',
                     'is_recursive',
                     'type',
-                    'year'];
+                    'year'
+                ];
 
-                $params = ["preferences" => $preferences,
+                $params = [
+                    "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt];
+                    "opt" => $opt
+                ];
 
                 $options = Helper::manageCriterias($params);
 
@@ -2468,24 +2677,28 @@ class Reports_Bar extends CommonDBTM
                 $dataLineset = json_encode($dataset);
                 $labelsLine = json_encode($months);
 
-                $graph_datas = ['title' => $title,
+                $graph_datas = [
+                    'title' => $title,
                     'comment' => $comment,
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $dataLineset,
-                    'labels' => $labelsLine];
+                    'labels' => $labelsLine
+                ];
 
 
                 $graph = BarChart::launchGraph($graph_datas, []);
 
-                $params = ["widgetId" => $widgetId,
+                $params = [
+                    "widgetId" => $widgetId,
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => count($dataset)];
+                    "nb" => count($dataset)
+                ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent($graph);
 
@@ -2616,9 +2829,17 @@ class Reports_Bar extends CommonDBTM
                     //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                     if ($data['actiontime_date'] > 0) {
                         if (isset($time_per_tech[$techid][$key])) {
-                            $time_per_tech[$techid][$key] += round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2, PHP_ROUND_HALF_UP);
+                            $time_per_tech[$techid][$key] += round(
+                                ($data['actiontime_date'] / 3600 / 8) ?? 0,
+                                2,
+                                PHP_ROUND_HALF_UP
+                            );
                         } else {
-                            $time_per_tech[$techid][$key] = round(($data['actiontime_date'] / 3600 / 8) ?? 0, 2, PHP_ROUND_HALF_UP);
+                            $time_per_tech[$techid][$key] = round(
+                                ($data['actiontime_date'] / 3600 / 8) ?? 0,
+                                2,
+                                PHP_ROUND_HALF_UP
+                            );
                         }
                     }
                 }
@@ -2971,7 +3192,6 @@ class Reports_Bar extends CommonDBTM
                         AND `glpi_tickets`.`solvedate` IS NOT NULL
                         AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
                 $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-
             }
             $result = $DB->doQuery($all);
             $total = $DB->fetchAssoc($result);
@@ -3000,7 +3220,6 @@ class Reports_Bar extends CommonDBTM
                                                  OR (`glpi_tickets`.`solvedate` IS NULL
                                                       AND `glpi_tickets`.`time_to_resolve` < NOW()))";
                 $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
-
             }
             $result = $DB->doQuery($query);
             $nb = $DB->numrows($result);
@@ -3010,7 +3229,11 @@ class Reports_Bar extends CommonDBTM
                     $notrespected = $sum['nb'];
                     $respected = $total['nb'] - $sum['nb'];
 
-                    $respected_percent = round(($total['nb'] - $sum['nb']) * 100 / ($total['nb']), 2, PHP_ROUND_HALF_UP);
+                    $respected_percent = round(
+                        ($total['nb'] - $sum['nb']) * 100 / ($total['nb']),
+                        2,
+                        PHP_ROUND_HALF_UP
+                    );
 
                     $tickets_helpdesk[$key]['notrespected'] = $notrespected;
                     $tickets_helpdesk[$key]['respected'] = $respected;
@@ -3145,15 +3368,24 @@ class Reports_Bar extends CommonDBTM
 
         $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
 
-        $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
-            && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+        $options = Chart::groupCriteria(
+            Chart::TECHNICIAN_GROUP,
+            ((isset($params["params"]["group_is_recursive"])
+                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            $params["params"]["technician_group"]
+        );
 
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -3182,8 +3414,13 @@ class Reports_Bar extends CommonDBTM
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
         $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["selected_id"], 'AND');
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }
@@ -3199,14 +3436,24 @@ class Reports_Bar extends CommonDBTM
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::TECHNICIAN, (($params["selected_id"] == -1) ? 'contains' : 'equals'), (($params["selected_id"] == -1) ? '^$' : $params["selected_id"]), 'AND');
+        $options = Chart::addCriteria(
+            Chart::TECHNICIAN,
+            (($params["selected_id"] == -1) ? 'contains' : 'equals'),
+            (($params["selected_id"] == -1) ? '^$' : $params["selected_id"]),
+            'AND'
+        );
 
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
         $options = Chart::addCriteria(Chart::OPEN_DATE, 'morethan', $params["params"]["begin"], 'AND');
 
@@ -3250,15 +3497,24 @@ class Reports_Bar extends CommonDBTM
             $options = Chart::addCriteria(Chart::OPEN_DATE, 'lessthan', $begin, 'AND');
             $options = Chart::addCriteria(Chart::OPEN_DATE, 'morethan', $end, 'AND');
         }
-        $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
-            && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+        $options = Chart::groupCriteria(
+            Chart::TECHNICIAN_GROUP,
+            ((isset($params["params"]["group_is_recursive"])
+                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            $params["params"]["technician_group"]
+        );
 
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -3285,11 +3541,20 @@ class Reports_Bar extends CommonDBTM
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
-        $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
-            && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+        $options = Chart::groupCriteria(
+            Chart::TECHNICIAN_GROUP,
+            ((isset($params["params"]["group_is_recursive"])
+                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            $params["params"]["technician_group"]
+        );
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -3308,8 +3573,13 @@ class Reports_Bar extends CommonDBTM
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
 
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
@@ -3327,8 +3597,12 @@ class Reports_Bar extends CommonDBTM
         }
 
         // Group
-        $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, ((isset($params["params"]["group_is_recursive"])
-            && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'), $params["params"]["technician_group"]);
+        $options = Chart::groupCriteria(
+            Chart::TECHNICIAN_GROUP,
+            ((isset($params["params"]["group_is_recursive"])
+                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            $params["params"]["technician_group"]
+        );
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -3399,8 +3673,13 @@ class Reports_Bar extends CommonDBTM
         } else {
             $options = Chart::addCriteria(9, 'contains', 'NULL', 'AND');
         }
-        $options = Chart::addCriteria(Chart::ENTITIES_ID, (isset($params["params"]["sons"])
-            && $params["params"]["sons"] > 0) ? 'under' : 'equals', $params["params"]["entities_id"], 'AND');
+        $options = Chart::addCriteria(
+            Chart::ENTITIES_ID,
+            (isset($params["params"]["sons"])
+                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            $params["params"]["entities_id"],
+            'AND'
+        );
         return $CFG_GLPI["root_doc"] . '/front/computer.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }

@@ -141,7 +141,6 @@ class Menu extends CommonGLPI
             $predefined_grid = $_POST["predefined_grid"];
         }
         $self = new self();
-        $self->initDBWidgets();
 
         if ($item->getType() == __CLASS__) {
             switch ($tabnum) {
@@ -410,7 +409,8 @@ class Menu extends CommonGLPI
             echo "</tr>";
 
             /**** Loading widgets****/
-            $widgetslist = Widget::getInitialWidgetList();
+            $widgetslist = Widget::getCompleteWidgetList();
+
             $gslist      = [];
             foreach ($widgetslist as $gs => $widgetclasses) {
                 $gslist[$widgetclasses['id']] = $gs;
@@ -444,6 +444,7 @@ class Menu extends CommonGLPI
             }
 
             $widgetlist = Widgetlist::getList(true, $selected_profile);
+
             /**** End Loading widgets****/
 
             echo "<div id='searchwidgets'>";
@@ -829,25 +830,25 @@ class Menu extends CommonGLPI
     /**
      * Stores every widgets in Database (see Widget)
      */
-    private function initDBWidgets()
-    {
-        $widgetDB    = new Widget();
-        $dbu         = new DbUtils();
-        $widgetsinDB = $dbu->getAllDataFromTable(Widget::getTable());
-
-        $widgetsnames = [];
-        foreach ($widgetsinDB as $widget) {
-            $widgetsnames[$widget['name']] = $widget['id'];
-        }
-
-        foreach ($this->widgets as $classname => $classwidgets) {
-            foreach ($classwidgets as $widgetId => $view) {
-                if (!isset($widgetsnames[$widgetId])) {
-                    $widgetDB->saveWidget($widgetId);
-                }
-            }
-        }
-    }
+//    private function initDBWidgets()
+//    {
+//        $widgetDB    = new Widget();
+//        $dbu         = new DbUtils();
+//        $widgetsinDB = $dbu->getAllDataFromTable(Widget::getTable());
+//
+//        $widgetsnames = [];
+//        foreach ($widgetsinDB as $widget) {
+//            $widgetsnames[$widget['name']] = $widget['id'];
+//        }
+//
+//        foreach ($this->widgets as $classname => $classwidgets) {
+//            foreach ($classwidgets as $widgetId => $view) {
+//                if (!isset($widgetsnames[$widgetId])) {
+//                    $widgetDB->saveWidget($widgetId);
+//                }
+//            }
+//        }
+//    }
 
 
     /**
@@ -857,12 +858,12 @@ class Menu extends CommonGLPI
      *
      * @return array of string
      */
-    private function getDashboardForUser($id)
-    {
-        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-        $user_widget     = new UserWidget($id, $interface);
-        return $user_widget->getWidgets();
-    }
+//    private function getDashboardForUser($id)
+//    {
+//        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+//        $user_widget     = new UserWidget($id, $interface);
+//        return $user_widget->getWidgets();
+//    }
 
     //   /**
     //    * Get the widget index on dash, to add it in the correct order
@@ -1018,7 +1019,7 @@ class Menu extends CommonGLPI
         //       echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuze.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuzzysearch.js.php");
+        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/md-fuzzysearch.js.php");
 
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.js");
@@ -1042,20 +1043,20 @@ class Menu extends CommonGLPI
         $this->users_id = Session::getLoginUserID();
         $this->showMenu($rand, $this->users_id, $active_profile, $predefined_grid);
 
-        $this->initDBWidgets();
+//        $this->initDBWidgets();
         $grid = [];
 
-        $list = $this->getDashboardForUser($this->users_id);
-        $data = [];
-        if (count($list) > 0) {
-            foreach ($list as $k => $v) {
-                $id = Widget::getGsID($v);
-                if ($id) {
-                    $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
-                }
-            }
-            $grid = json_encode($data);
-        }
+//        $list = $this->getDashboardForUser($this->users_id);
+//        $data = [];
+//        if (count($list) > 0) {
+//            foreach ($list as $k => $v) {
+//                $id = Widget::getGsID($v);
+//                if ($id) {
+//                    $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
+//                }
+//            }
+//            $grid = json_encode($data);
+//        }
         //LOAD WIDGETS
         $edit = MydashboardPreference::checkEditMode(Session::getLoginUserID());
         $drag = MydashboardPreference::checkDragMode(Session::getLoginUserID());
@@ -1083,30 +1084,50 @@ class Menu extends CommonGLPI
         }
         $datagrid             = [];
         $datajson             = [];
-        $optjson              = [];
         $widgets              = [];
         $displayed_widgets    = [];
         $displayed_widgets_id = [];
 
-        if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-            $widgets = Widget::getInitialWidgetList();
+        if (!empty($grid)
+            && ($datagrid = json_decode($grid, true)) == !null) {
+
+            $widgets = Widget::getCompleteWidgetList();
 
             foreach ($datagrid as $k => $v) {
                 if (isset($v["id"])) {
-                    $datajson[Widget::removeBackslashes($v["id"])] = Widget::getWidget($v["id"], $widgets, []);
 
-                    $obj = new Widget();
+                    $wid = new Widget();
+                    $wid->getFromDB($v["id"]);
 
-                    $id          = substr($v["id"], 2);
-                    $widget_name = Widget::removeBackslashes($obj->getWidgetNameById($id));
-                    if ($widget_name != null && (strpos($widget_name, Widget::removeBackslashes(Reports_Bar::class)) === 0
-                        || strpos($widget_name, Widget::removeBackslashes(Reports_Line::class)) === 0
-                        || strpos($widget_name, Widget::removeBackslashes(Reports_Pie::class)) === 0
-                            || strpos($widget_name, Widget::removeBackslashes(Reports_Table::class)) === 0
-                        || strpos($widget_name, Widget::removeBackslashes(Reports_Funnel::class)) === 0
-                        || strpos($widget_name, Widget::removeBackslashes(Reports_Custom::class)) === 0)) {
-                        $displayed_widgets[]    = Widget::removeBackslashes($widget_name);
-                        $displayed_widgets_id[] = Widget::removeBackslashes($v["id"]);
+                    $class = preg_replace('/\d+$/', '', $wid->fields['name']);
+                    $id_class = $wid->fields['name'];
+
+                    $datajson[$v["id"]] = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
+
+                    $widget_name = Widget::removeBackslashes($wid->fields['name']);
+                    $displayed_widgets[]    = $widget_name;
+                    $displayed_widgets_id[] = $v["id"];
+                }
+            }
+
+            //FOR ADD NEW WIDGET
+            $allwidgetjson = [];
+
+            if ($edit > 0) {
+                if (isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
+                    && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
+                    $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
+                } else {
+
+                    foreach ($widgets as $k => $val) {
+                        $allwidgetjson[$k] = [
+                            "<div class='alert alert-success' id='success-alert'>
+                            <strong>" . __('Success', 'mydashboard') . "</strong> -
+                            " . __('Save grid to see widget', 'mydashboard') . "
+                        </div>"
+                        ];
+                        //NOT LOAD ALL WIDGETS FOR PERF
+                        //               $allwidgetjson[$k] = Widget::getWidget($k, [], $widgets);
                     }
                 }
             }
@@ -1123,30 +1144,9 @@ class Menu extends CommonGLPI
             $grid = json_encode($grid);
         }
 
+
         $datajson = json_encode($datajson);
-        $optjson  = json_encode($optjson);
 
-        //FOR ADD NEW WIDGET
-        $allwidgetjson = [];
-
-        if ($edit > 0) {
-            if (isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
-                && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
-                $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
-            } else {
-                //without slashes
-                $widgets = Widget::getWidgetList();
-
-                foreach ($widgets as $k => $val) {
-                    $allwidgetjson[$k] = ["<div class='alert alert-success' id='success-alert'>
-                <strong>" . __('Success', 'mydashboard') . "</strong> -
-                " . __('Save grid to see widget', 'mydashboard') . "
-            </div>"];
-                    //NOT LOAD ALL WIDGETS FOR PERF
-                    //               $allwidgetjson[$k] = Widget::getWidget($k, [], $widgets);
-                }
-            }
-        }
 
         $allwidgetjson = json_encode($allwidgetjson);
         $msg_delete    = __('Delete widget', 'mydashboard');
@@ -1194,7 +1194,7 @@ class Menu extends CommonGLPI
                     var items = $grid;
                      items.forEach(function(node)  {
                          var nodeid = node.id;
-//                         var optArray = $optjson;
+
                          var widgetArray = $datajson;
                          var widget = widgetArray['' + nodeid + ''];
                          if ( widget !== undefined ) {

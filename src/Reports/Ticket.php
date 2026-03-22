@@ -67,73 +67,107 @@ class Ticket extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-        $showticket   = Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
+        $showticket = Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
         $createticket = Session::haveRight("ticket", CREATE);
 
         $widgets = [
             Menu::$TICKET_REQUESTERVIEW => [
-                "ticketlistrequestbyselfwidget" => ["title"   => __('Your tickets in progress'),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
-                "ticketlistobservedwidget"      => ["title"   => __('Your observed tickets'),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
-                "ticketlistrejectedwidget"      => ["title"   => __('Your rejected tickets', 'mydashboard'),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
-                "ticketlisttoapprovewidget"     => ["title"   => __('Your tickets to close'),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
-                "ticketlistsurveywidget"        => ["title"   => __('Your satisfaction surveys', 'mydashboard'),
-                    "type"    => Widget::$TABLE,
-                    "comment" => ""],
+                "ticketlistrequestbyselfwidget" => [
+                    "title" => __('Your tickets in progress'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                "ticketlistobservedwidget" => [
+                    "title" => __('Your observed tickets'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                "ticketlistrejectedwidget" => [
+                    "title" => __('Your rejected tickets', 'mydashboard'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                "ticketlisttoapprovewidget" => [
+                    "title" => __('Your tickets to close'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                "ticketlistsurveywidget" => [
+                    "title" => __('Your satisfaction surveys', 'mydashboard'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
             ],
         ];
         if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
-            $widgets[Menu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = ["title"   => __('Your tickets to validate', "mydashboard"),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = [
+                "title" => __('Your tickets to validate', "mydashboard"),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
         if ($showticket) {
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketcountwidget2"]      = ["title"   => __('New tickets', 'mydashboard'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = ["title"   => __('Tickets to be processed'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = ["title"   => __('Tickets on pending status'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["tickettaskstodowidget"]   = ["title"   => __("Ticket tasks to do"),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketcountwidget2"] = [
+                "title" => __('New tickets', 'mydashboard'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = [
+                "title" => __('Tickets to be processed'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = [
+                "title" => __('Tickets on pending status'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$TICKET_TECHVIEW]["tickettaskstodowidget"] = [
+                "title" => __("Ticket tasks to do"),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
         if (Session::haveRight('ticket', \Ticket::READGROUP)) {
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"]       = ["title"   => __('Tickets on pending status'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlisttoapprovewidgetgroup"]       = ["title"   => __('Your tickets to close'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistrequestbyselfwidgetgroup"] = ["title"   => __('Your tickets in progress'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistobservedwidgetgroup"]      = ["title"   => __('Your observed tickets'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"] = [
+                "title" => __('Tickets on pending status'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlisttoapprovewidgetgroup"] = [
+                "title" => __('Your tickets to close'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistrequestbyselfwidgetgroup"] = [
+                "title" => __('Your tickets in progress'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$TICKET_TECHVIEW]["ticketlistobservedwidgetgroup"] = [
+                "title" => __('Your observed tickets'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
         if ($showticket) {
-            $widgets[Menu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = ["title"   => __('Tickets to be processed'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
-            $widgets[Menu::$GROUP_VIEW]["tickettaskstodowidgetgroup"]   = ["title"   => __("Ticket tasks to do"),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = [
+                "title" => __('Tickets to be processed'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
+            $widgets[Menu::$GROUP_VIEW]["tickettaskstodowidgetgroup"] = [
+                "title" => __("Ticket tasks to do"),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
         if ($showticket || $createticket) {
-            $widgets[Menu::$HELPDESK]["ticketcountwidget"] = ["title"   => __('Ticket followup', 'mydashboard'),
-                "type"    => Widget::$TABLE,
-                "comment" => ""];
+            $widgets[Menu::$HELPDESK]["ticketcountwidget"] = [
+                "title" => __('Ticket followup', 'mydashboard'),
+                "type" => Widget::$TABLE,
+                "comment" => ""
+            ];
         }
 
         return $widgets;
@@ -147,7 +181,7 @@ class Ticket extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId)
     {
-        $showticket   = Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
+        $showticket = Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
         $createticket = Session::haveRight("ticket", CREATE);
         switch ($widgetId) {
             //Personnal
@@ -181,7 +215,7 @@ class Ticket extends CommonGLPI
                     return self::showCentralList(0, "waiting", false);
                 };
                 break;
-                //Group
+            //Group
             case "ticketlistwaitingwidgetgroup":
                 if (Session::haveRight('ticket', \Ticket::READGROUP)) {
                     return self::showCentralList(0, "waiting", true);
@@ -207,7 +241,7 @@ class Ticket extends CommonGLPI
                     return self::showCentralList(0, "process", true);
                 }
                 break;
-                //Global
+            //Global
             case "ticketcountwidget":
                 if ($showticket || $createticket) {
                     return self::showCentralCount($createticket && (Session::getCurrentInterface() == 'helpdesk'));
@@ -251,18 +285,18 @@ class Ticket extends CommonGLPI
 
         $search_users_id = " (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_tickets_users`.`type` = '" . CommonITILActor::REQUESTER . "') ";
-        $search_assign   = " (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "'
+        $search_assign = " (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
         $search_observer = " (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_tickets_users`.`type` = '" . CommonITILActor::OBSERVER . "')";
-        $is_deleted      = " `glpi_tickets`.`is_deleted` = 0 ";
+        $is_deleted = " `glpi_tickets`.`is_deleted` = 0 ";
 
         if ($showgrouptickets) {
             $search_users_id = " 0 = 1 ";
-            $search_assign   = " 0 = 1 ";
+            $search_assign = " 0 = 1 ";
 
             if (count($_SESSION['glpigroups'])) {
-                $groups        = implode("','", $_SESSION['glpigroups']);
+                $groups = implode("','", $_SESSION['glpigroups']);
                 $search_assign = " (`glpi_groups_tickets`.`groups_id` IN ('$groups')
                                 AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
 
@@ -278,7 +312,7 @@ class Ticket extends CommonGLPI
                 }
             }
         }
-        $dbu   = new DbUtils();
+        $dbu = new DbUtils();
         $query = "SELECT DISTINCT `glpi_tickets`.`id`
                 FROM `glpi_tickets`
                 LEFT JOIN `glpi_tickets_users`
@@ -291,14 +325,14 @@ class Ticket extends CommonGLPI
                 $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND `status` = '" . \Ticket::WAITING . "' "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "process": // on affiche les tickets planifiés ou assignés au user
                 $query .= "WHERE $is_deleted
                              AND ( $search_assign )
                              AND (`status` IN ('" . implode("','", \Ticket::getProcessStatusArray()) . "')) "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "toapprove": // on affiche les tickets planifiés ou assignés au user
@@ -309,7 +343,7 @@ class Ticket extends CommonGLPI
                     $query .= " OR `glpi_tickets`.users_id_recipient = '" . Session::getLoginUserID() . "' ";
                 }
                 $query .= ")"
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "tovalidate": // on affiche les tickets à valider
@@ -319,7 +353,7 @@ class Ticket extends CommonGLPI
                               AND `glpi_ticketvalidations`.`status` = '" . CommonITILValidation::WAITING . "'
                               AND (`glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "',
                                                                    '" . \Ticket::SOLVED . "')) "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "rejected": // on affiche les tickets rejetés
@@ -327,7 +361,7 @@ class Ticket extends CommonGLPI
                              AND ($search_assign)
                              AND `status` <> '" . \Ticket::CLOSED . "'
                              AND `global_validation` = '" . CommonITILValidation::REFUSED . "' "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "observed":
@@ -339,7 +373,7 @@ class Ticket extends CommonGLPI
                                                '" . \Ticket::WAITING . "'))
                              AND NOT ( $search_assign )
                              AND NOT ( $search_users_id ) "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "survey": // on affiche les tickets dont l'enquête de satisfaction n'est pas remplie
@@ -350,7 +384,7 @@ class Ticket extends CommonGLPI
                                    OR `glpi_tickets`.`users_id_recipient` = '" . Session::getLoginUserID() . "')
                               AND `glpi_tickets`.`status` = '" . \Ticket::CLOSED . "'
                               AND `glpi_ticketsatisfactions`.`date_answered` IS NULL "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
                 break;
 
             case "requestbyself": // on affiche les tickets demandés le user qui sont planifiés ou assignés
@@ -364,11 +398,11 @@ class Ticket extends CommonGLPI
                                                '" . \Ticket::ASSIGNED . "',
                                                '" . \Ticket::WAITING . "'))
                              AND NOT ( $search_assign ) "
-                          . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
         }
 
-        $query   .= " ORDER BY date_mod DESC";
-        $result  = $DB->doQuery($query);
+        $query .= " ORDER BY date_mod DESC";
+        $result = $DB->doQuery($query);
         $number = $DB->numrows($result);
         $numrows = $number;
 
@@ -380,260 +414,260 @@ class Ticket extends CommonGLPI
         $output['header'][] = __('Priority');
         $output['header'][] = __('Category');
         $output['header'][] = __('Status');
-        $output['body']     = [];
-        $output['title']    = "default";
+        $output['body'] = [];
+        $output['title'] = "default";
 
         //if ($numrows > 0) {
         $options['reset'] = 'reset';
-        $forcetab         = '';
-        $num              = 0;
+        $forcetab = '';
+        $num = 0;
         if ($showgrouptickets) {
             switch ($status) {
                 case "toapprove":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = \Ticket::SOLVED;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = \Ticket::SOLVED;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 71; // groups_id
+                    $options['criteria'][1]['field'] = 71; // groups_id
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'mygroups';
-                    $options['criteria'][1]['link']       = 'AND';
-                    $forcetab                             = 'Ticket$2';
+                    $options['criteria'][1]['value'] = 'mygroups';
+                    $options['criteria'][1]['link'] = 'AND';
+                    $forcetab = 'Ticket$2';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your tickets to close'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your tickets to close'), $number, $numrows) . "</a>";
                     break;
 
                 case "waiting":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = \Ticket::WAITING;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = \Ticket::WAITING;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 8; // groups_id_assign
+                    $options['criteria'][1]['field'] = 8; // groups_id_assign
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'mygroups';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'mygroups';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Tickets on pending status'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Tickets on pending status'), $number, $numrows) . "</a>";
                     break;
 
                 case "process":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = 'process';
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = 'process';
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 8; // groups_id_assign
+                    $options['criteria'][1]['field'] = 8; // groups_id_assign
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'mygroups';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'mygroups';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Tickets to be processed'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Tickets to be processed'), $number, $numrows) . "</a>";
                     break;
 
                 case "observed":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = 'notold';
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = 'notold';
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 65; // groups_id
+                    $options['criteria'][1]['field'] = 65; // groups_id
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'mygroups';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'mygroups';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your observed tickets'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your observed tickets'), $number, $numrows) . "</a>";
                     break;
 
                 case "requestbyself":
                 default:
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = 'notold';
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = 'notold';
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 71; // groups_id
+                    $options['criteria'][1]['field'] = 71; // groups_id
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'mygroups';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'mygroups';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
             }
         } else {
             switch ($status) {
                 case "waiting":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = \Ticket::WAITING;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = \Ticket::WAITING;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 5; // users_id_assign
+                    $options['criteria'][1]['field'] = 5; // users_id_assign
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = Session::getLoginUserID();
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = Session::getLoginUserID();
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Tickets on pending status'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Tickets on pending status'), $number, $numrows) . "</a>";
                     break;
 
                 case "process":
-                    $options['criteria'][0]['field']      = 5; // users_id_assign
+                    $options['criteria'][0]['field'] = 5; // users_id_assign
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = Session::getLoginUserID();
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = Session::getLoginUserID();
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 12; // status
+                    $options['criteria'][1]['field'] = 12; // status
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'process';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'process';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Tickets to be processed'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Tickets to be processed'), $number, $numrows) . "</a>";
                     break;
 
                 case "tovalidate":
-                    $options['criteria'][0]['field']      = 55; // validation status
+                    $options['criteria'][0]['field'] = 55; // validation status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = CommonITILValidation::WAITING;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = CommonITILValidation::WAITING;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 59; // validation aprobator
+                    $options['criteria'][1]['field'] = 59; // validation aprobator
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = Session::getLoginUserID();
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = Session::getLoginUserID();
+                    $options['criteria'][1]['link'] = 'AND';
 
-                    $options['criteria'][2]['field']      = 12; // validation aprobator
+                    $options['criteria'][2]['field'] = 12; // validation aprobator
                     $options['criteria'][2]['searchtype'] = 'equals';
-                    $options['criteria'][2]['value']      = 'old';
-                    $options['criteria'][2]['link']       = 'AND NOT';
-                    $forcetab                             = 'TicketValidation$1';
+                    $options['criteria'][2]['value'] = 'old';
+                    $options['criteria'][2]['link'] = 'AND NOT';
+                    $forcetab = 'TicketValidation$1';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your tickets to validate', "mydashboard"), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your tickets to validate', "mydashboard"), $number, $numrows) . "</a>";
 
                     break;
 
                 case "rejected":
-                    $options['criteria'][0]['field']      = 52; // validation status
+                    $options['criteria'][0]['field'] = 52; // validation status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = CommonITILValidation::REFUSED;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = CommonITILValidation::REFUSED;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 5; // assign user
+                    $options['criteria'][1]['field'] = 5; // assign user
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = Session::getLoginUserID();
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = Session::getLoginUserID();
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your rejected tickets'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your rejected tickets'), $number, $numrows) . "</a>";
 
                     break;
 
                 case "toapprove":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = \Ticket::SOLVED;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = \Ticket::SOLVED;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 4; // users_id_assign
+                    $options['criteria'][1]['field'] = 4; // users_id_assign
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = Session::getLoginUserID();
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = Session::getLoginUserID();
+                    $options['criteria'][1]['link'] = 'AND';
 
-                    $options['criteria'][2]['field']      = 22; // users_id_recipient
+                    $options['criteria'][2]['field'] = 22; // users_id_recipient
                     $options['criteria'][2]['searchtype'] = 'equals';
-                    $options['criteria'][2]['value']      = Session::getLoginUserID();
-                    $options['criteria'][2]['link']       = 'OR';
+                    $options['criteria'][2]['value'] = Session::getLoginUserID();
+                    $options['criteria'][2]['link'] = 'OR';
 
-                    $options['criteria'][3]['field']      = 12; // status
+                    $options['criteria'][3]['field'] = 12; // status
                     $options['criteria'][3]['searchtype'] = 'equals';
-                    $options['criteria'][3]['value']      = \Ticket::SOLVED;
-                    $options['criteria'][3]['link']       = 'AND';
-                    $forcetab                             = 'Ticket$2';
+                    $options['criteria'][3]['value'] = \Ticket::SOLVED;
+                    $options['criteria'][3]['link'] = 'AND';
+                    $forcetab = 'Ticket$2';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your tickets to close'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your tickets to close'), $number, $numrows) . "</a>";
                     break;
 
                 case "observed":
-                    $options['criteria'][0]['field']      = 66; // users_id
+                    $options['criteria'][0]['field'] = 66; // users_id
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = Session::getLoginUserID();
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = Session::getLoginUserID();
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 12; // status
+                    $options['criteria'][1]['field'] = 12; // status
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'notold';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'notold';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your observed tickets'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your observed tickets'), $number, $numrows) . "</a>";
                     break;
 
                 case "survey":
-                    $options['criteria'][0]['field']      = 12; // status
+                    $options['criteria'][0]['field'] = 12; // status
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = \Ticket::CLOSED;
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = \Ticket::CLOSED;
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 60; // enquete generee
+                    $options['criteria'][1]['field'] = 60; // enquete generee
                     $options['criteria'][1]['searchtype'] = 'contains';
-                    $options['criteria'][1]['value']      = '^';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = '^';
+                    $options['criteria'][1]['link'] = 'AND';
 
-                    $options['criteria'][2]['field']      = 61; // date_answered
+                    $options['criteria'][2]['field'] = 61; // date_answered
                     $options['criteria'][2]['searchtype'] = 'contains';
-                    $options['criteria'][2]['value']      = 'NULL';
-                    $options['criteria'][2]['link']       = 'AND';
+                    $options['criteria'][2]['value'] = 'NULL';
+                    $options['criteria'][2]['link'] = 'AND';
 
-                    $options['criteria'][3]['field']      = 22; // auteur
+                    $options['criteria'][3]['field'] = 22; // auteur
                     $options['criteria'][3]['searchtype'] = 'equals';
-                    $options['criteria'][3]['value']      = Session::getLoginUserID();
-                    $options['criteria'][3]['link']       = 'AND';
-                    $forcetab                             = 'Ticket$3';
+                    $options['criteria'][3]['value'] = Session::getLoginUserID();
+                    $options['criteria'][3]['link'] = 'AND';
+                    $forcetab = 'Ticket$3';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Satisfaction survey'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Satisfaction survey'), $number, $numrows) . "</a>";
                     break;
 
                 case "requestbyself":
                 default:
-                    $options['criteria'][0]['field']      = 4; // users_id
+                    $options['criteria'][0]['field'] = 4; // users_id
                     $options['criteria'][0]['searchtype'] = 'equals';
-                    $options['criteria'][0]['value']      = Session::getLoginUserID();
-                    $options['criteria'][0]['link']       = 'AND';
+                    $options['criteria'][0]['value'] = Session::getLoginUserID();
+                    $options['criteria'][0]['link'] = 'AND';
 
-                    $options['criteria'][1]['field']      = 12; // status
+                    $options['criteria'][1]['field'] = 12; // status
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'notold';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'notold';
+                    $options['criteria'][1]['link'] = 'AND';
 
                     $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                       . Toolbox::append_params($options, '&amp;') . "\">"
-                                       . \Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
+                        . Toolbox::append_params($options, '&amp;') . "\">"
+                        . \Html::makeTitle(__('Your tickets in progress'), $number, $numrows) . "</a>";
             }
         }
 
         for ($i = 0; $i < $number; $i++) {
-            $ID               = $DB->result($result, $i, "id");
+            $ID = $DB->result($result, $i, "id");
             $output['body'][] = self::showVeryShort($ID, $forcetab);
         }
 
@@ -671,7 +705,7 @@ class Ticket extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        $req     = TicketTask::getTaskList($status, $showgrouptickets);
+        $req = TicketTask::getTaskList($status, $showgrouptickets);
         $numrows = 0;
         if ($req !== false) {
             $numrows = $req->numrows();
@@ -680,15 +714,15 @@ class Ticket extends CommonGLPI
         $number = 0;
         //      $_SESSION['glpidisplay_count_on_home'] > 0 &&
         if ($req !== false) {
-            $start = (int) $start;
+            $start = (int)$start;
             $limit = "";
             //         $limit  = (int)$_SESSION['glpidisplay_count_on_home'];
-            $req    = TicketTask::getTaskList($status, $showgrouptickets, $start, $limit);
+            $req = TicketTask::getTaskList($status, $showgrouptickets, $start, $limit);
             $number = $req->numrows();
         }
 
         $itemtype = "TicketTask";
-        $type     = "";
+        $type = "";
         if ($itemtype == "TicketTask") {
             $type = \Ticket::getTypeName();
         } elseif ($itemtype == "ProblemTask") {
@@ -701,35 +735,35 @@ class Ticket extends CommonGLPI
         $output['header'][] = __('ID');
         $output['header'][] = __('Priority');
         $output['header'][] = __('Category');
-        $output['body']     = [];
-        $output['title']    = "default";
+        $output['body'] = [];
+        $output['title'] = "default";
 
         //if ($numrows > 0) {
         $options['reset'] = 'reset';
-        $forcetab         = '';
-        $num              = 0;
+        $forcetab = '';
+        $num = 0;
 
         switch ($status) {
             case "todo":
-                $options['criteria'][0]['field']      = 12; // status
+                $options['criteria'][0]['field'] = 12; // status
                 $options['criteria'][0]['searchtype'] = 'equals';
-                $options['criteria'][0]['value']      = "notold";
-                $options['criteria'][0]['link']       = 'AND';
+                $options['criteria'][0]['value'] = "notold";
+                $options['criteria'][0]['link'] = 'AND';
                 if ($showgrouptickets) {
-                    $options['criteria'][1]['field']      = 112; // tech in charge of task
+                    $options['criteria'][1]['field'] = 112; // tech in charge of task
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = 'mygroups';
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = 'mygroups';
+                    $options['criteria'][1]['link'] = 'AND';
                 } else {
-                    $options['criteria'][1]['field']      = 95; // tech in charge of task
+                    $options['criteria'][1]['field'] = 95; // tech in charge of task
                     $options['criteria'][1]['searchtype'] = 'equals';
-                    $options['criteria'][1]['value']      = $_SESSION['glpiID'];
-                    $options['criteria'][1]['link']       = 'AND';
+                    $options['criteria'][1]['value'] = $_SESSION['glpiID'];
+                    $options['criteria'][1]['link'] = 'AND';
                 }
-                $options['criteria'][2]['field']      = 33; // task status
+                $options['criteria'][2]['field'] = 33; // task status
                 $options['criteria'][2]['searchtype'] = 'equals';
-                $options['criteria'][2]['value']      = \Planning::TODO;
-                $options['criteria'][2]['link']       = 'AND';
+                $options['criteria'][2]['value'] = \Planning::TODO;
+                $options['criteria'][2]['link'] = 'AND';
 
                 if ($itemtype == "TicketTask") {
                     $title = __("Ticket tasks to do");
@@ -737,8 +771,8 @@ class Ticket extends CommonGLPI
                     $title = __("Problem tasks to do");
                 }
                 $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                   . Toolbox::append_params($options, '&amp;') . "\">"
-                                   . \Html::makeTitle($title, $number, $numrows) . "</a>";
+                    . Toolbox::append_params($options, '&amp;') . "\">"
+                    . \Html::makeTitle($title, $number, $numrows) . "</a>";
                 break;
         }
         if ($req !== false) {
@@ -787,17 +821,17 @@ class Ticket extends CommonGLPI
         // Make new job object and fill it from database, if success, print it
         $showprivate = Session::haveRight("show_full_ticket", 1);
 
-        $job  = new \Ticket();
+        $job = new \Ticket();
         $rand = mt_rand();
         if ($job->getFromDBwithData($ID, 0)) {
-            $bgcolor   = $_SESSION["glpipriority_" . $job->fields["priority"]];
+            $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
             $textColor = "color:black!important;";
             if ($bgcolor == '#000000') {
                 $textColor = "color:white!important;";
             }
 
             $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                    . "/front/ticket.form.php?id=" . $job->fields["id"];
+                . "/front/ticket.form.php?id=" . $job->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
             }
@@ -805,19 +839,19 @@ class Ticket extends CommonGLPI
 
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>"
-                               . $link
-                               . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</a></div>";
+                . $link
+                . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</a></div>";
 
             $colnum++;
             $output[$colnum] = '';
-            $userrequesters  = $job->getUsers(CommonITILActor::REQUESTER);
+            $userrequesters = $job->getUsers(CommonITILActor::REQUESTER);
             if (isset($userrequesters)
                 && count($userrequesters)
             ) {
                 foreach ($userrequesters as $d) {
                     if ($d["users_id"] > 0) {
                         $userdata = getUserName($d["users_id"]);
-                        $name     = "<div class='b center'>" . $userdata;
+                        $name = "<div class='b center'>" . $userdata;
                         //                        $name     = sprintf(
                         //                            __('%1$s %2$s'),
                         //                            $name,
@@ -863,8 +897,8 @@ class Ticket extends CommonGLPI
 
             $colnum++;
 
-            $link            .= "<span class='b'>" . $job->getNameID() . "</span></a>";
-            $link            = sprintf(
+            $link .= "<span class='b'>" . $job->getNameID() . "</span></a>";
+            $link = sprintf(
                 __('%1$s (%2$s)'),
                 $link,
                 sprintf(
@@ -873,13 +907,15 @@ class Ticket extends CommonGLPI
                     $job->numberOfTasks($showprivate)
                 )
             );
-            $link            = sprintf(
+            $link = sprintf(
                 __('%1$s %2$s'),
                 $link,
                 \Html::showToolTip(
                     nl2br(RichText::getSafeHtml($job->fields['content'])),
-                    ['applyto' => 'ticket' . $job->fields["id"] . $rand,
-                        'display' => false]
+                    [
+                        'applyto' => 'ticket' . $job->fields["id"] . $rand,
+                        'display' => false
+                    ]
                 )
             );
             $output[$colnum] = $link;
@@ -887,11 +923,11 @@ class Ticket extends CommonGLPI
             //Ticket ID
             $colnum++;
             $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                    . "/front/ticket.form.php?id=" . $job->fields["id"];
+                . "/front/ticket.form.php?id=" . $job->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
             }
-            $link            .= "'>";
+            $link .= "'>";
             $output[$colnum] = $link . "<span class='b'>" . $job->fields["id"] . "</span></a>";
 
             //Priority
@@ -899,7 +935,9 @@ class Ticket extends CommonGLPI
             $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>
-                                <span class='b'>" . $job->fields["priority"] . " - " . \Ticket::getPriorityName($job->fields["priority"]) . "</span>
+                                <span class='b'>" . $job->fields["priority"] . " - " . \Ticket::getPriorityName(
+                    $job->fields["priority"]
+                ) . "</span>
                              </div>";
             //Categories
             $colnum++;
@@ -908,12 +946,12 @@ class Ticket extends CommonGLPI
             $itilCategory = new ITILCategory();
             if ($itilCategory->getFromDB($job->fields['itilcategories_id'])) {
                 $haystack = $itilCategory->getField('completename');
-                $needle   = '>';
-                $offset   = 0;
-                $allpos   = [];
+                $needle = '>';
+                $offset = 0;
+                $allpos = [];
 
                 while (($pos = strpos($haystack, $needle, $offset)) !== false) {
-                    $offset   = $pos + 1;
+                    $offset = $pos + 1;
                     $allpos[] = $pos;
                 }
 
@@ -929,8 +967,8 @@ class Ticket extends CommonGLPI
 
             //status
             $colnum++;
-            $statusId        = $job->fields["status"];
-            $statusArray     = \Ticket::getAllowedStatusArray($statusId);
+            $statusId = $job->fields["status"];
+            $statusArray = \Ticket::getAllowedStatusArray($statusId);
             $output[$colnum] = $statusArray[$statusId];
         }
         return $output;
@@ -941,7 +979,7 @@ class Ticket extends CommonGLPI
      * Very short table to display the task
      *
      * @param integer $ID The ID of the task
-     * @param string  $itemtype The itemtype (TicketTask, ProblemTask)
+     * @param string $itemtype The itemtype (TicketTask, ProblemTask)
      *
      * @return void
      * @since 9.2
@@ -954,7 +992,7 @@ class Ticket extends CommonGLPI
         $colnum = 0;
         $output = [];
 
-        $job  = new $itemtype();
+        $job = new $itemtype();
         $rand = mt_rand();
         if ($job->getFromDB($ID)) {
             if ($DB->fieldExists($job->getTable(), 'tickets_id')) {
@@ -970,30 +1008,32 @@ class Ticket extends CommonGLPI
             $bgcolor = $_SESSION["glpipriority_" . $item_link->fields["priority"]];
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>"
-                               . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</div>";
+                . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</div>";
 
             $colnum++;
             $output[$colnum] = $item_link->fields['name'];
             $colnum++;
             //echo "<td>";
-            $link = "<a id='" . strtolower($item_link->getType()) . "ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                    . "/front/" . strtolower($item_link->getType()) . ".form.php?id=" . $item_link->fields["id"];
+            $link = "<a id='" . strtolower(
+                    $item_link->getType()
+                ) . "ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
+                . "/front/" . strtolower($item_link->getType()) . ".form.php?id=" . $item_link->fields["id"];
             $link .= "&amp;forcetab=" . $tab_name . "$1";
             $link .= "'>";
 
             $colnum++;
 
             $content = $job->fields['content'];
-            $link    .= "<span class='b'>" . $content . "</span></a>";
+            $link .= "<span class='b'>" . $content . "</span></a>";
 
             $output[$colnum] = $link;
 
             //Ticket ID
             $colnum++;
             $link = "<a id='ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                    . "/front/ticket.form.php?id=" . $item_link->fields["id"];
+                . "/front/ticket.form.php?id=" . $item_link->fields["id"];
 
-            $link            .= "'>";
+            $link .= "'>";
             $output[$colnum] = $link . "<span class='b'>" . $item_link->fields["id"] . "</span></a>";
 
             //Priority
@@ -1012,12 +1052,12 @@ class Ticket extends CommonGLPI
             $itilCategory->getFromDB($item_link->fields['itilcategories_id']);
 
             $haystack = $itilCategory->getField('completename');
-            $needle   = '>';
-            $offset   = 0;
-            $allpos   = [];
+            $needle = '>';
+            $offset = 0;
+            $allpos = [];
 
             while (($pos = strpos($haystack, $needle, $offset)) !== false) {
-                $offset   = $pos + 1;
+                $offset = $pos + 1;
                 $allpos[] = $pos;
             }
 
@@ -1070,7 +1110,7 @@ class Ticket extends CommonGLPI
                                AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')";
             }
         }
-        $dbu   = new DbUtils();
+        $dbu = new DbUtils();
         $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_tickets");
 
         if ($foruser) {
@@ -1081,18 +1121,18 @@ class Ticket extends CommonGLPI
                 && count($_SESSION["glpigroups"])
             ) {
                 $groups = implode("','", $_SESSION['glpigroups']);
-                $query  .= " OR `glpi_groups_tickets`.`groups_id` IN ('$groups') ";
+                $query .= " OR `glpi_groups_tickets`.`groups_id` IN ('$groups') ";
             }
             $query .= ")";
         }
         $query_deleted = $query;
 
-        $query         .= " AND `glpi_tickets`.`is_deleted` = 0
+        $query .= " AND `glpi_tickets`.`is_deleted` = 0
                          GROUP BY `status`";
         $query_deleted .= " AND `glpi_tickets`.`is_deleted` = 1
                          GROUP BY `status`";
 
-        $result         = $DB->doQuery($query);
+        $result = $DB->doQuery($query);
         $result_deleted = $DB->doQuery($query_deleted);
 
         $status = [];
@@ -1113,18 +1153,20 @@ class Ticket extends CommonGLPI
             }
         }
 
-        $options['criteria'][0]['field']      = 12;
+        $options['criteria'][0]['field'] = 12;
         $options['criteria'][0]['searchtype'] = 'equals';
-        $options['criteria'][0]['value']      = 'process';
-        $options['criteria'][0]['link']       = 'AND';
-        $options['reset']                     = 'reset';
+        $options['criteria'][0]['value'] = 'process';
+        $options['criteria'][0]['link'] = 'AND';
+        $options['reset'] = 'reset';
 
         if (Session::getCurrentInterface() != "central") {
             $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1\" class='pointer'>"
-                               . __('Create a ticket') . "&nbsp;<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
+                . __('Create a ticket') . "&nbsp;<i class='ti ti-plus'></i><span class='sr-only'>" . __s(
+                    'Add'
+                ) . "</span></a>";
         } else {
             $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                               . Toolbox::append_params($options, '&amp;') . "\">" . __('Ticket followup', 'mydashboard') . "</a>";
+                . Toolbox::append_params($options, '&amp;') . "\">" . __('Ticket followup', 'mydashboard') . "</a>";
         }
 
         $output['header'][] = _n('Ticket', 'Tickets', 2);
@@ -1133,17 +1175,17 @@ class Ticket extends CommonGLPI
         $count = 0;
         foreach ($status as $key => $val) {
             $options['criteria'][0]['value'] = $key;
-            $output['body'][$count][0]       = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                               . Toolbox::append_params($options, '&amp;') . "\">" . \Ticket::getStatus($key) . "</a>";
-            $output['body'][$count][1]       = $val;
+            $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
+                . Toolbox::append_params($options, '&amp;') . "\">" . \Ticket::getStatus($key) . "</a>";
+            $output['body'][$count][1] = $val;
             $count++;
         }
 
         $options['criteria'][0]['value'] = 'all';
-        $options['is_deleted']           = 1;
-        $output['body'][$count][0]       = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                                           . Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
-        $output['body'][$count][1]       = $number_deleted;
+        $options['is_deleted'] = 1;
+        $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
+            . Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
+        $output['body'][$count][1] = $number_deleted;
 
         $widget = new Datatable();
         $widget->setWidgetTitle($output['title']);
@@ -1218,11 +1260,11 @@ class Ticket extends CommonGLPI
         }
 
         $output = [];
-        $dbu    = new DbUtils();
-        $query  = "SELECT " . self::getCommonSelect() . "
+        $dbu = new DbUtils();
+        $query = "SELECT " . self::getCommonSelect() . "
                 FROM `glpi_tickets` " . self::getCommonLeftJoin() . "
                 WHERE `status` = '" . \Ticket::INCOMING . "' "
-                  . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets") . "
+            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets") . "
                       AND NOT `is_deleted`
                 ORDER BY `glpi_tickets`.`date_mod` DESC
                 LIMIT " . intval($_SESSION['glpilist_limit']);
@@ -1233,15 +1275,18 @@ class Ticket extends CommonGLPI
         if ($number > 0) {
             Session::initNavigateListItems('Ticket');
 
-            $options['criteria'][0]['field']      = 12;
+            $options['criteria'][0]['field'] = 12;
             $options['criteria'][0]['searchtype'] = 'equals';
-            $options['criteria'][0]['value']      = \Ticket::INCOMING;
-            $options['criteria'][0]['link']       = 'AND';
-            $options['reset']                     = 'reset';
+            $options['criteria'][0]['value'] = \Ticket::INCOMING;
+            $options['criteria'][0]['link'] = 'AND';
+            $options['reset'] = 'reset';
 
             //TRANS: %d is the number of new tickets
             $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
-            $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params($options, '&amp;') . "\">" . __('Show all') . "</a>)";
+            $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params(
+                    $options,
+                    '&amp;'
+                ) . "\">" . __('Show all') . "</a>)";
 
             $output['header'] = self::commonListHeader();
 
@@ -1250,9 +1295,9 @@ class Ticket extends CommonGLPI
                 $output['body'][] = self::showShort($data["id"], 0);
             }
         } else {
-            $output['title']  = __('New tickets', 'mydashboard');
+            $output['title'] = __('New tickets', 'mydashboard');
             $output['header'] = self::commonListHeader();
-            $output['body']   = [];
+            $output['body'] = [];
         }
 
         $widget = new Datatable();
@@ -1325,8 +1370,8 @@ class Ticket extends CommonGLPI
             // ID
             $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
             if ($output_type == Search::HTML_OUTPUT) {
-                $class     = CommonITILObject::getStatusClass($job->fields["status"]);
-                $label     = CommonITILObject::getStatus($job->fields["status"]);
+                $class = CommonITILObject::getStatusClass($job->fields["status"]);
+                $label = CommonITILObject::getStatus($job->fields["status"]);
                 $first_col .= "<br><i class='" . $class . "'
                                 alt=\"" . $label . "\">";
             } else {
@@ -1384,16 +1429,16 @@ class Ticket extends CommonGLPI
             // Priority
             $colnum++;
             $output[$colnum] = "<span class='b'><div class='center' style='background-color:$bgcolor; padding: 10px;'>"
-                               . \Ticket::getPriorityName($job->fields["priority"]) . "</div></span>";
+                . \Ticket::getPriorityName($job->fields["priority"]) . "</div></span>";
 
             // Requester
-            $fourth_col     = "";
+            $fourth_col = "";
             $userrequesters = $job->getUsers(CommonITILActor::REQUESTER);
             if (isset($userrequesters)
                 && count($userrequesters)
             ) {
                 foreach ($userrequesters as $d) {
-                    $userdata   = getUserName($d["users_id"]);
+                    $userdata = getUserName($d["users_id"]);
                     $fourth_col .= "<span class='b'>" . $userdata . "</span>";
                     $fourth_col .= "<br>";
                 }
@@ -1412,7 +1457,7 @@ class Ticket extends CommonGLPI
             $output[$colnum] = $fourth_col;
 
             // Sixth Colum
-            $sixth_col  = "";
+            $sixth_col = "";
             $is_deleted = false;
             if (!empty($job->fields["itemtype"])
                 && ($job->fields["items_id"] > 0)
@@ -1444,7 +1489,7 @@ class Ticket extends CommonGLPI
             // Add link
             if ($job->canViewItem()) {
                 $eigth_column = "<a id='ticket" . $job->fields["id"] . "$rand' href=\"" . $CFG_GLPI["root_doc"]
-                                . "/front/ticket.form.php?id=" . $job->fields["id"] . "\">$eigth_column</a>";
+                    . "/front/ticket.form.php?id=" . $job->fields["id"] . "\">$eigth_column</a>";
 
                 if ($followups
                     && ($output_type == Search::HTML_OUTPUT)
@@ -1477,9 +1522,11 @@ class Ticket extends CommonGLPI
                     $eigth_column,
                     \Html::showToolTip(
                         $job->fields['content'],
-                        ['display' => false,
+                        [
+                            'display' => false,
                             'applyto' => "ticket" . $job->fields["id"]
-                                         . $rand]
+                                . $rand
+                        ]
                     )
                 );
             }

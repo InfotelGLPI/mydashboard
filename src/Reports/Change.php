@@ -57,38 +57,50 @@ class Change extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-        $widgets      = [];
+        $widgets = [];
         $showchange = Session::haveRightsOr('change', [\Change::READALL, \Change::READMY]);
 
         if ($showchange) {
             $widgets = [
-               Menu::$HELPDESK =>
-                  [
-                     "changeprocesswidget" => ["title"   => __('Changes to be processed', 'mydashboard'),
-                                                "type"    => Widget::$TABLE,
-                                                "comment" => ""],
-                     "changewaitingwidget" => ["title"   => __('Changes on pending status', 'mydashboard'),
-                                               "type"    => Widget::$TABLE,
-                                               "comment" => ""],
-                     "changeappliedwidget" => ["title"   => __('Applied changes', 'mydashboard'),
-                                               "type"    => Widget::$TABLE,
-                                               "comment" => ""],
-                  ],
-                Menu::$GROUP_VIEW   =>
-                  [
-                     "changeprocesswidgetgroup" => ["title"   => __('Changes to be processed', 'mydashboard'),
-                                                     "type"    => Widget::$TABLE,
-                                                     "comment" => ""],
-                     "changewaitingwidgetgroup" => ["title"   => __('Changes on pending status', 'mydashboard'),
-                                               "type"    => Widget::$TABLE,
-                                               "comment" => ""],
-                  ],
-                Menu::$HELPDESK   =>
-                  [
-                     "changecountwidget" => ["title"   =>  __('Change followup', 'mydashboard'),
-                                                     "type"    => Widget::$TABLE,
-                                                     "comment" => ""],
-                  ]
+                Menu::$HELPDESK =>
+                    [
+                        "changeprocesswidget" => [
+                            "title" => __('Changes to be processed', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => ""
+                        ],
+                        "changewaitingwidget" => [
+                            "title" => __('Changes on pending status', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => ""
+                        ],
+                        "changeappliedwidget" => [
+                            "title" => __('Applied changes', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => ""
+                        ],
+                    ],
+                Menu::$GROUP_VIEW =>
+                    [
+                        "changeprocesswidgetgroup" => [
+                            "title" => __('Changes to be processed', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => ""
+                        ],
+                        "changewaitingwidgetgroup" => [
+                            "title" => __('Changes on pending status', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => ""
+                        ],
+                    ],
+                Menu::$HELPDESK =>
+                    [
+                        "changecountwidget" => [
+                            "title" => __('Change followup', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => ""
+                        ],
+                    ]
             ];
         }
         return $widgets;
@@ -131,7 +143,7 @@ class Change extends CommonGLPI
     /**
      * @param        $start
      * @param string $status
-     * @param bool   $showgroupchanges
+     * @param bool $showgroupchanges
      *
      * @return Datatable
      */
@@ -160,16 +172,16 @@ class Change extends CommonGLPI
 
         $search_users_id = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_changes_users`.`type` = '" . CommonITILActor::REQUESTER . "') ";
-        $search_assign   = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
+        $search_assign = " (`glpi_changes_users`.`users_id` = '" . Session::getLoginUserID() . "'
                             AND `glpi_changes_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
-        $is_deleted      = " `glpi_changes`.`is_deleted` = 0 ";
+        $is_deleted = " `glpi_changes`.`is_deleted` = 0 ";
 
         if ($showgroupchanges) {
             $search_users_id = " 0 = 1 ";
-            $search_assign   = " 0 = 1 ";
+            $search_assign = " 0 = 1 ";
 
             if (count($_SESSION['glpigroups'])) {
-                $groups        = implode("','", $_SESSION['glpigroups']);
+                $groups = implode("','", $_SESSION['glpigroups']);
                 $search_assign = " (`glpi_changes_groups`.`groups_id` IN ('$groups')
                                   AND `glpi_changes_groups`.`type`
                                         = '" . CommonITILActor::ASSIGN . "')";
@@ -179,7 +191,7 @@ class Change extends CommonGLPI
                                         = '" . CommonITILActor::REQUESTER . "') ";
             }
         }
-        $dbu   = new DbUtils();
+        $dbu = new DbUtils();
         $query = "SELECT DISTINCT `glpi_changes`.`id`
                 FROM `glpi_changes`
                 LEFT JOIN `glpi_changes_users`
@@ -192,163 +204,170 @@ class Change extends CommonGLPI
                 $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND `status` = '" . \Change::WAITING . "' " .
-                          $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
                 break;
 
             case "process": // on affiche les changements planifiés ou assignés au user
                 $query .= "WHERE $is_deleted
                              AND ($search_assign)
                              AND (`status` IN ('" . implode("','", \Change::getProcessStatusArray()) . "')) " .
-                          $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
                 break;
 
             case "applied": // on affiche les changements qui vont être mis en production
                 $query .= "WHERE $is_deleted
                              AND (`status` IN ('" . implode("','", \Change::getSolvedStatusArray()) . "'))
                              AND solvedate > DATE_SUB(CURDATE(), interval 30 DAY) " .
-                          $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
                 break;
 
             default:
                 $query .= "WHERE $is_deleted
                              AND ($search_users_id)
-                             AND (`status` IN ('" . implode("','", \Change::getNewStatusArray()) . "','" . implode("','", \Change::getProcessStatusArray()) . "',
+                             AND (`status` IN ('" . implode("','", \Change::getNewStatusArray()) . "','" . implode(
+                        "','",
+                        \Change::getProcessStatusArray()
+                    ) . "',
                                                '" . \Change::WAITING . "'))
                              AND NOT ($search_assign) " .
-                          $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
         }
 
-        $query   .= " ORDER BY date_mod DESC";
-        $result  = $DB->doQuery($query);
+        $query .= " ORDER BY date_mod DESC";
+        $result = $DB->doQuery($query);
         $numrows = $DB->numrows($result);
 
-      //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-      //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
+        //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
+        //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
         $result = $DB->doQuery($query);
         $number = $DB->numrows($result);
-      //      } else {
-      //         $number = 0;
-      //      }
+        //      } else {
+        //         $number = 0;
+        //      }
 
         if ($numrows > 0) {
-            $output['title']  = "";
+            $output['title'] = "";
             $options['reset'] = 'reset';
-            $forcetab         = '';
-            $num              = 0;
+            $forcetab = '';
+            $num = 0;
             if ($showgroupchanges) {
                 switch ($status) {
                     case "waiting":
                         foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num]      = 8; // groups_id_assign
+                            $options['field'][$num] = 8; // groups_id_assign
                             $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num]   = $gID;
-                            $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
+                            $options['contains'][$num] = $gID;
+                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
                             $num++;
-                            $options['field'][$num]      = 12; // status
+                            $options['field'][$num] = 12; // status
                             $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num]   = \Change::WAITING;
-                            $options['link'][$num]       = 'AND';
+                            $options['contains'][$num] = \Change::WAITING;
+                            $options['link'][$num] = 'AND';
                             $num++;
                         }
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
                         break;
 
                     case "process":
                         foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num]      = 8; // groups_id_assign
+                            $options['field'][$num] = 8; // groups_id_assign
                             $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num]   = $gID;
-                            $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
+                            $options['contains'][$num] = $gID;
+                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
                             $num++;
-                            $options['field'][$num]      = 12; // status
+                            $options['field'][$num] = 12; // status
                             $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num]   = 'process';
-                            $options['link'][$num]       = 'AND';
+                            $options['contains'][$num] = 'process';
+                            $options['link'][$num] = 'AND';
                             $num++;
                         }
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            \Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            \Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
                         break;
 
                     default:
                         foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num]      = 71; // groups_id
+                            $options['field'][$num] = 71; // groups_id
                             $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num]   = $gID;
-                            $options['link'][$num]       = (($num == 0) ? 'AND' : 'OR');
+                            $options['contains'][$num] = $gID;
+                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
                             $num++;
-                            $options['field'][$num]      = 12; // status
+                            $options['field'][$num] = 12; // status
                             $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num]   = 'process';
-                            $options['link'][$num]       = 'AND';
+                            $options['contains'][$num] = 'process';
+                            $options['link'][$num] = 'AND';
                             $num++;
                         }
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            \Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            \Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
                 }
             } else {
                 switch ($status) {
                     case "waiting":
-                        $options['field'][0]      = 12; // status
+                        $options['field'][0] = 12; // status
                         $options['searchtype'][0] = 'equals';
-                        $options['contains'][0]   = \Change::WAITING;
-                        $options['link'][0]       = 'AND';
+                        $options['contains'][0] = \Change::WAITING;
+                        $options['link'][0] = 'AND';
 
-                        $options['field'][1]      = 5; // users_id_assign
+                        $options['field'][1] = 5; // users_id_assign
                         $options['searchtype'][1] = 'equals';
-                        $options['contains'][1]   = Session::getLoginUserID();
-                        $options['link'][1]       = 'AND';
+                        $options['contains'][1] = Session::getLoginUserID();
+                        $options['link'][1] = 'AND';
 
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            \Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            \Html::makeTitle(
+                                __('Changes on pending status', 'mydashboard'),
+                                $number,
+                                $numrows
+                            ) . "</a>";
                         break;
 
                     case "process":
-                        $options['field'][0]      = 5; // users_id_assign
+                        $options['field'][0] = 5; // users_id_assign
                         $options['searchtype'][0] = 'equals';
-                        $options['contains'][0]   = Session::getLoginUserID();
-                        $options['link'][0]       = 'AND';
+                        $options['contains'][0] = Session::getLoginUserID();
+                        $options['link'][0] = 'AND';
 
-                        $options['field'][1]      = 12; // status
+                        $options['field'][1] = 12; // status
                         $options['searchtype'][1] = 'equals';
-                        $options['contains'][1]   = 'process';
-                        $options['link'][1]       = 'AND';
+                        $options['contains'][1] = 'process';
+                        $options['link'][1] = 'AND';
 
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            \Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            \Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
                         break;
 
                     case "applied":
-                        $options['field'][$num]      = 12; // status
+                        $options['field'][$num] = 12; // status
                         $options['searchtype'][$num] = 'equals';
-                        $options['contains'][$num]   = 'solved';
-                        $options['link'][$num]       = 'AND';
+                        $options['contains'][$num] = 'solved';
+                        $options['link'][$num] = 'AND';
                         $num++;
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            \Html::makeTitle(__('Applied changes', 'mydashboard'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            \Html::makeTitle(__('Applied changes', 'mydashboard'), $number, $numrows) . "</a>";
                         break;
 
                     default:
-                        $options['field'][0]      = 4; // users_id
+                        $options['field'][0] = 4; // users_id
                         $options['searchtype'][0] = 'equals';
-                        $options['contains'][0]   = Session::getLoginUserID();
-                        $options['link'][0]       = 'AND';
+                        $options['contains'][0] = Session::getLoginUserID();
+                        $options['link'][0] = 'AND';
 
-                        $options['field'][1]      = 12; // status
+                        $options['field'][1] = 12; // status
                         $options['searchtype'][1] = 'equals';
-                        $options['contains'][1]   = 'notold';
-                        $options['link'][1]       = 'AND';
+                        $options['contains'][1] = 'notold';
+                        $options['link'][1] = 'AND';
 
                         $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                            Toolbox::append_params($options, '&amp;') . "\">" .
-                                            \Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
+                            Toolbox::append_params($options, '&amp;') . "\">" .
+                            \Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
                 }
             }
 
@@ -358,7 +377,7 @@ class Change extends CommonGLPI
                 $output['header'][] = __('Description');
                 $output['header'][] = __('Date of solving');
                 for ($i = 0; $i < $number; $i++) {
-                    $ID               = $DB->result($result, $i, "id");
+                    $ID = $DB->result($result, $i, "id");
                     $output['body'][] = self::showVeryShort($ID, $forcetab);
                 }
             }
@@ -400,27 +419,27 @@ class Change extends CommonGLPI
         $viewusers = Session::haveRight("user", READ);
 
         $change = new \Change();
-        $rand   = mt_rand();
+        $rand = mt_rand();
 
         if ($change->getFromDBwithData($ID, 0)) {
             $bgcolor = $_SESSION["glpipriority_" . $change->fields["priority"]];
-         //      $rand    = mt_rand();
+            //      $rand    = mt_rand();
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                __('%1$s: %2$s'),
-                __('ID'),
-                $change->fields["id"]
-            ) . "</div>";
+                    __('%1$s: %2$s'),
+                    __('ID'),
+                    $change->fields["id"]
+                ) . "</div>";
             $colnum++;
 
             $output[$colnum] = '';
-            $userrequesters  = $change->getUsers(CommonITILActor::REQUESTER);
+            $userrequesters = $change->getUsers(CommonITILActor::REQUESTER);
             if (isset($userrequesters)
                 && count($userrequesters)
             ) {
                 foreach ($userrequesters as $d) {
                     if ($d["users_id"] > 0) {
                         $userdata = getUserName($d["users_id"]);
-                        $name     = "<div class='b center'>" . $userdata;
+                        $name = "<div class='b center'>" . $userdata;
                         $output[$colnum] .= $name . "</div>";
                     } else {
                         $output[$colnum] .= $d['alternative_email'] . "&nbsp;";
@@ -440,7 +459,7 @@ class Change extends CommonGLPI
             $colnum++;
             //$output[$colnum] = '';
             $link = "<a id='change" . $change->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-                    "/front/change.form.php?id=" . $change->fields["id"];
+                "/front/change.form.php?id=" . $change->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
             }
@@ -453,8 +472,10 @@ class Change extends CommonGLPI
                 $link,
                 \Html::showToolTip(
                     $change->fields['content'],
-                    ['applyto' => 'change' . $change->fields["id"] . $rand,
-                     'display' => false]
+                    [
+                        'applyto' => 'change' . $change->fields["id"] . $rand,
+                        'display' => false
+                    ]
                 )
             );
             //echo $link;
@@ -501,7 +522,7 @@ class Change extends CommonGLPI
                                AND `glpi_changes_groups`.`type` = '" . CommonITILActor::REQUESTER . "')";
             }
         }
-        $dbu   = new DbUtils();
+        $dbu = new DbUtils();
         $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_changes");
 
         if ($foruser) {
@@ -511,18 +532,18 @@ class Change extends CommonGLPI
                 && count($_SESSION["glpigroups"])
             ) {
                 $groups = implode("','", $_SESSION['glpigroups']);
-                $query  .= " OR `glpi_changes_groups`.`groups_id` IN ('$groups') ";
+                $query .= " OR `glpi_changes_groups`.`groups_id` IN ('$groups') ";
             }
             $query .= ")";
         }
         $query_deleted = $query;
 
-        $query         .= " AND NOT `glpi_changes`.`is_deleted`
+        $query .= " AND NOT `glpi_changes`.`is_deleted`
                          GROUP BY `status`";
         $query_deleted .= " AND `glpi_changes`.`is_deleted`
                          GROUP BY `status`";
 
-        $result         = $DB->doQuery($query);
+        $result = $DB->doQuery($query);
         $result_deleted = $DB->doQuery($query_deleted);
 
         $status = [];
@@ -542,31 +563,31 @@ class Change extends CommonGLPI
                 $number_deleted += $data["COUNT"];
             }
         }
-        $options['field'][0]      = 12;
+        $options['field'][0] = 12;
         $options['searchtype'][0] = 'equals';
-        $options['contains'][0]   = 'process';
-        $options['link'][0]       = 'AND';
-        $options['reset']         = 'reset';
+        $options['contains'][0] = 'process';
+        $options['link'][0] = 'AND';
+        $options['reset'] = 'reset';
 
         $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                           Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
+            Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
 
         $output['header'][] = _n('Change', 'Changes', 2);
         $output['header'][] = _x('quantity', 'Number');
 
         $count = 0;
         foreach ($status as $key => $val) {
-            $options['contains'][0]    = $key;
+            $options['contains'][0] = $key;
             $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                         Toolbox::append_params($options, '&amp;') . "\">" . \Change::getStatus($key) . "</a>";
+                Toolbox::append_params($options, '&amp;') . "\">" . \Change::getStatus($key) . "</a>";
             $output['body'][$count][1] = $val;
             $count++;
         }
 
-        $options['contains'][0]    = 'all';
-        $options['is_deleted']     = 1;
+        $options['contains'][0] = 'all';
+        $options['is_deleted'] = 1;
         $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                                     Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
+            Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
         $output['body'][$count][1] = $number_deleted;
 
         $widget = new Datatable();

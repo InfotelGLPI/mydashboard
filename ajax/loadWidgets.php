@@ -29,10 +29,14 @@ use GlpiPlugin\Mydashboard\Widget;
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 ini_set("memory_limit", "-1");
-//if (!isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
-//    || count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) < 1) {
-    $widgets = Widget::getInitialWidgetList(true);
-    foreach ($widgets as $k => $val) {
-        $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::getWidget($k, $widgets, []);
-    }
-//}
+
+$widgets = Widget::getCompleteWidgetList(true);
+foreach ($widgets as $k => $val) {
+
+    $wid = new Widget();
+    $wid->getFromDB($k);
+    $class = preg_replace('/\d+$/', '', $wid->fields['name']);
+    $id_class = $wid->fields['name'];
+
+    $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
+}

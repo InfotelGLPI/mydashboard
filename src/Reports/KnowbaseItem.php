@@ -59,16 +59,22 @@ class KnowbaseItem extends CommonGLPI
     {
         $widgets = [
             Menu::$TOOLS => [
-              "knowbaseitempopular"    => ["title"   => __('FAQ') . " - " . __('Most popular questions'),
-                                           "type"    => Widget::$TABLE,
-                                           "comment" => ""],
-              "knowbaseitemrecent"     => ["title"   => __('FAQ') . " - " . __('Recent entries'),
-                                           "type"    => Widget::$TABLE,
-                                           "comment" => ""],
-              "knowbaseitemlastupdate" => ["title"   => __('FAQ') . " - " . __('Last updated entries'),
-                                           "type"    => Widget::$TABLE,
-                                           "comment" => ""],
-           ]
+                "knowbaseitempopular" => [
+                    "title" => __('FAQ') . " - " . __('Most popular questions'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                "knowbaseitemrecent" => [
+                    "title" => __('FAQ') . " - " . __('Recent entries'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+                "knowbaseitemlastupdate" => [
+                    "title" => __('FAQ') . " - " . __('Last updated entries'),
+                    "type" => Widget::$TABLE,
+                    "comment" => ""
+                ],
+            ]
         ];
 
         return $widgets;
@@ -88,13 +94,13 @@ class KnowbaseItem extends CommonGLPI
 
         if ($widgetId == "knowbaseitemrecent") {
             $orderby = "ORDER BY `date_creation` DESC";
-            $title   = __('FAQ') . " - " . __('Recent entries');
+            $title = __('FAQ') . " - " . __('Recent entries');
         } elseif ($widgetId == 'knowbaseitemlastupdate') {
             $orderby = "ORDER BY `date_mod` DESC";
-            $title   = __('FAQ') . " - " . __('Last updated entries');
+            $title = __('FAQ') . " - " . __('Last updated entries');
         } else {
             $orderby = "ORDER BY `view` DESC";
-            $title   = __('FAQ') . " - " . __('Most popular questions');
+            $title = __('FAQ') . " - " . __('Most popular questions');
         }
 
         $faq_limit = "";
@@ -135,8 +141,8 @@ class KnowbaseItem extends CommonGLPI
                 LIMIT 10";
 
         $result = $DB->doQuery($query);
-        $tab    = [];
-        $nb     = $DB->numrows($result);
+        $tab = [];
+        $nb = $DB->numrows($result);
         while ($row = $DB->fetchAssoc($result)) {
             if ($widgetId == "knowbaseitemrecent") {
                 $date = $row["date_creation"];
@@ -144,9 +150,10 @@ class KnowbaseItem extends CommonGLPI
                 $date = $row["date_mod"];
             }
             $tab[] = [
-               "<a " . ($row['is_faq'] ? " class='pubfaq' " : " class='knowbase' ") . " href=\"" .
-               $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
-               \Html::resume_text($row["name"], 80) . "</a>", \Html::convDateTime($date)
+                "<a " . ($row['is_faq'] ? " class='pubfaq' " : " class='knowbase' ") . " href=\"" .
+                $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
+                \Html::resume_text($row["name"], 80) . "</a>",
+                \Html::convDateTime($date)
             ];
         }
         if ($widgetId == "knowbaseitemrecent") {
@@ -210,11 +217,13 @@ class KnowbaseItem extends CommonGLPI
         $it = new \DBmysqlIterator(null);
         $it->buildQuery($criteria);
         $sql = $it->getSql();
-        $sql = trim(str_replace(
-            'SELECT * FROM ' . $DB->quoteName(\KnowbaseItem::getTable()),
-            '',
-            $sql
-        ));
+        $sql = trim(
+            str_replace(
+                'SELECT * FROM ' . $DB->quoteName(\KnowbaseItem::getTable()),
+                '',
+                $sql
+            )
+        );
         return $sql;
     }
 }

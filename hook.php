@@ -52,7 +52,7 @@ function plugin_mydashboard_install()
     $migration = new Migration(PLUGIN_MYDASHBOARD_VERSION);
 
     Widget::install($migration);
-    UserWidget::install($migration);
+//    UserWidget::install($migration);
     Config::install($migration);
     MydashboardPreference::install($migration);
     PreferenceUserBlacklist::install($migration);

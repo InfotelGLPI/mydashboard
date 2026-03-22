@@ -28,7 +28,10 @@ use GlpiPlugin\Mydashboard\Widget;
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
-$widgets = Widget::getInitialWidgetList();
+
+//charger uniquement les graph chargés plutot ?
+$widgets = Widget::getCompleteWidgetList();
+$wid = new Widget();
 
 if (isset($_POST['gsid']) && isset($_POST['id'])) {
     $gsid = $_POST['gsid'];
@@ -36,14 +39,22 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
     if (isset($_POST['params']) && is_array($_POST['params'])) {
         $opt = $_POST['params'];
     }
-    $widget = Widget::getWidget($gsid, $widgets, $opt);
+    $wid->getFromDB($gsid);
+    $class = preg_replace('/\d+$/', '', $wid->fields['name']);
+    $id_class = $wid->fields['name'];
+
+    $widget = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
     echo $widget;
 } else {
     $gsid    = $_POST['gsid'];
     $data = [];
     if (isset($widgets[$gsid])) {
         $opt    = [];
-        $widget = Widget::getWidget($gsid, $widgets, $opt);
+        $wid->getFromDB($gsid);
+        $class = preg_replace('/\d+$/', '', $wid->fields['name']);
+        $id_class = $wid->fields['name'];
+
+        $widget = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
         $data = ["id" => Widget::removeBackslashes($widgets[$gsid]["id"]), "widget" => $widget];
     }
     echo json_encode($data);
