@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 10:05+0000\n"
+"POT-Creation-Date: 2026-03-20 11:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -749,11 +749,11 @@ msgstr ""
 msgid "Custom Widgets"
 msgstr ""
 
-#: src/Customswidget.php:167 src/Customswidget.php:168
+#: src/Customswidget.php:172 src/Customswidget.php:173
 msgid "Incidents"
 msgstr ""
 
-#: src/Customswidget.php:176 src/Customswidget.php:177
+#: src/Customswidget.php:181 src/Customswidget.php:182
 msgid "Requests"
 msgstr ""
 
@@ -807,7 +807,7 @@ msgstr ""
 msgid "Display alerts for inventory stocks"
 msgstr ""
 
-#: src/Alert.php:183 src/Widget.php:911
+#: src/Alert.php:183 src/Widget.php:1000
 msgid "Your equipments"
 msgstr ""
 
@@ -936,15 +936,15 @@ msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: src/Alert.php:1977 src/Widget.php:810
+#: src/Alert.php:1977 src/Widget.php:899
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: src/Alert.php:2179 src/Widget.php:878
+#: src/Alert.php:2179 src/Widget.php:967
 msgid "No informations founded"
 msgstr ""
 
-#: src/Alert.php:2346 src/Alert.php:2559 src/Widget.php:741
+#: src/Alert.php:2346 src/Alert.php:2559 src/Widget.php:830
 msgid "No problem detected"
 msgstr ""
 
@@ -1272,7 +1272,7 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Menu.php:971 src/Widget.php:521
+#: src/Menu.php:971 src/Widget.php:610
 msgid "Show all"
 msgstr ""
 
@@ -1316,7 +1316,7 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
-#: src/Menu.php:1153 src/Chart.php:150 src/Widget.php:683
+#: src/Menu.php:1153 src/Chart.php:150 src/Widget.php:772
 msgid "No data available"
 msgstr ""
 
@@ -1368,55 +1368,59 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: src/Widget.php:66
-msgid "Widget management"
+#: src/Widget.php:68
+msgid "Widget"
 msgstr ""
 
-#: src/Widget.php:105
+#: src/Widget.php:112
+msgid "Filters"
+msgstr ""
+
+#: src/Widget.php:194
 msgid "Indicators"
 msgstr ""
 
-#: src/Widget.php:107
+#: src/Widget.php:196
 msgid "Tables"
 msgstr ""
 
-#: src/Widget.php:109
+#: src/Widget.php:198
 msgid "Pie charts"
 msgstr ""
 
-#: src/Widget.php:111
+#: src/Widget.php:200
 msgid "Bar charts"
 msgstr ""
 
-#: src/Widget.php:113
+#: src/Widget.php:202
 msgid "Line charts"
 msgstr ""
 
-#: src/Widget.php:115
+#: src/Widget.php:204
 msgid "Map"
 msgstr ""
 
-#: src/Widget.php:340
+#: src/Widget.php:429
 msgid "This widget doesn't exist anymore"
 msgstr ""
 
-#: src/Widget.php:517
+#: src/Widget.php:606
 msgid "5 rows"
 msgstr ""
 
-#: src/Widget.php:518
+#: src/Widget.php:607
 msgid "10 rows"
 msgstr ""
 
-#: src/Widget.php:519
+#: src/Widget.php:608
 msgid "25 rows"
 msgstr ""
 
-#: src/Widget.php:520
+#: src/Widget.php:609
 msgid "50 rows"
 msgstr ""
 
-#: src/Widget.php:1017
+#: src/Widget.php:1106
 msgid "No equipments founded"
 msgstr ""
 
