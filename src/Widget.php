@@ -31,6 +31,7 @@ use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
 use DbUtils;
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
 use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
@@ -146,13 +147,14 @@ class Widget extends CommonDBTM
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td><label for='textfield_title$rand'>" . __s('Title') . "</label></td>";
+        echo "<td><label for='textfield_class$rand'>" . __s('Class', 'mydashboard') . "</label></td>";
         echo "<td>";
         echo \Html::input(
-            'title',
+            'class',
             [
-                'value' => $this->fields["title"],
-                'id'    => "textfield_title$rand",
+                'value' => $this->fields["class"],
+                'id'    => "textfield_class$rand",
+                'readonly' => 'readonly',
             ],
         );
         echo "</td></tr>";
@@ -161,6 +163,43 @@ class Widget extends CommonDBTM
     }
 
 
+    public function rawSearchOptions()
+    {
+        $tab = [];
+
+        $tab[] = [
+            'id'   => 'common',
+            'name' => self::getTypeName(2),
+        ];
+
+        $tab[] = [
+            'id'         => '1',
+            'table'      => $this->getTable(),
+            'field'      => 'name',
+            'name'       => __s('Internal name', 'mydashboard'),
+            'datatype' => 'itemlink',
+            'itemlink_type' => $this->getType(),
+        ];
+
+        $tab[] = [
+            'id'         => '2',
+            'table'      => $this->getTable(),
+            'field'      => 'class',
+            'name'       => __s('Class', 'mydashboard'),
+            'searchtype' => 'equals',
+            'datatype'   => 'text',
+        ];
+
+        $tab[] = [
+            'id' => '30',
+            'table' => $this->getTable(),
+            'field' => 'id',
+            'name' => __('ID'),
+            'datatype' => 'number',
+        ];
+
+        return $tab;
+    }
 
     public function showFilters() {}
 
@@ -263,24 +302,15 @@ class Widget extends CommonDBTM
      * @global type  $DB
      *
      */
-    public function saveWidget($widgetName)
+    public function saveWidget($widgetName, $widgetClass)
     {
         if (isset($widgetName) && $widgetName !== "") {
-            //            $widgettmp = preg_replace( '/[^[:alnum:]_]+/', '', $widgetName );
-            //Not really good regex
-            //         $widgettmp = preg_match('#[^.0-9a-z]+#i', $widgetName, $matches);
-            //
-            //         if ($widgettmp == 1) {
-            //            Toolbox::logDebug("'$widgetName' can't be used as a widget Name, '$matches[0]' is not a valid character ");
-            //            return false;
-            //         }
-
             $this->fields["id"] = null;
             $id                 = $this->getWidgetIdByName($widgetName);
 
             if (!isset($id)) {
                 $this->fields = [];
-                $this->add(["name" => $widgetName]);
+                $this->add(["name" => $widgetName, "class" => $widgetClass]);
             }
             return true;
         } else {
@@ -1192,17 +1222,73 @@ class Widget extends CommonDBTM
 
             if (count($iterator) > 0) {
                 foreach ($iterator as $data) {
-                    $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'$old','$new') where id = '" . $data['id'] . "'";
-                    $DB->doQuery($query);
+                    $DB->update(
+                        $table,
+                        [
+                            'name' => new QueryExpression(
+                                'REPLACE(' . $DB->quoteName('name') . ', "'.$old.'", "'.$new.'")'
+                            ),
+                        ],
+                        [
+                            'id' => $data['id'],
+                        ]
+                    );
                 }
             }
         }
 
-        $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'PluginMydashboardReports','GlpiPlugin\\\Mydashboard\\\Reports\\\Reports')";
-        $DB->doQuery($query);
+        $DB->update(
+            $table,
+            [
+                'name' => new QueryExpression(
+                    'REPLACE(' . $DB->quoteName('name') . ', "PluginMydashboardReports", "GlpiPlugin\\\Mydashboard\\\Reports\\\Reports")'
+                ),
+            ],
+            [
+                1 => 1,
+            ]
+        );
 
-        $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'PluginMydashboardAlert','GlpiPlugin\\\Mydashboard\\\Alert')";
-        $DB->doQuery($query);
+        $DB->update(
+            $table,
+            [
+                'name' => new QueryExpression(
+                    'REPLACE(' . $DB->quoteName('name') . ', "PluginMydashboardAlert", "GlpiPlugin\\\Mydashboard\\\Reports\\\lert")'
+                ),
+            ],
+            [
+                1 => 1,
+            ]
+        );
+
+        $widgetlist = Widgetlist::getList(false);
+        foreach ($widgetlist as $widgetclasses) {
+            foreach ($widgetclasses as $widgetclass => $widgets) {
+                foreach ($widgets as $widgetview => $widgetlist) {
+                    if (is_array($widgetlist)) {
+                        foreach ($widgetlist as $widgetId => $widgetTitle) {
+                            if (is_numeric($widgetId)) {
+                                $widgetId = $widgetTitle;
+                            }
+                            $widget_origin = new Widget();
+                            $widget = new Widget();
+                            if ($widget_origin->getFromDBByCrit(['name' => $widgetId])) {
+                                $widget->update(['class' => $widgetclass, 'id' => $widget_origin->fields['id']]);
+                            }
+                        }
+                    } else {
+                        if (is_numeric($widgetview)) {
+                            $widgetview = $widgetlist;
+                        }
+                        $widget_origin = new Widget();
+                        $widget = new Widget();
+                        if ($widget_origin->getFromDBByCrit(['name' => $widgetview])) {
+                            $widget->update(['class' => $widgetclass, 'id' => $widget_origin->fields['id']]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static function uninstall()

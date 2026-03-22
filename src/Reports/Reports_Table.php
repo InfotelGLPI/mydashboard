@@ -415,11 +415,14 @@ class Reports_Table extends CommonGLPI
                 $entities_criteria = $crit['entities_id'];
                 $users_criteria = "";
                 $technician_group = $opt['technicians_groups_id'];
-                $technician_group = array_filter($technician_group);
+
                 // GROUP
-                if (isset($technician_group) && $technician_group != 0 && !empty($technician_group)) {
+                if (isset($technician_group)
+                    && $technician_group != 0
+                    && !empty($technician_group)) {
                     $groups_sql_criteria = " AND `glpi_groups_users`.`groups_id`";
                     if (is_array($technician_group)) {
+                        $technician_group = array_filter($technician_group);
                         $groups_sql_criteria .= " IN (" . implode(",", $technician_group) . ")";
                     } else {
                         $groups_sql_criteria .= " = " . $technician_group;
@@ -427,7 +430,9 @@ class Reports_Table extends CommonGLPI
                 }
 
                 // USER
-                if (isset($crit['users_id']) && $crit['users_id'] != 0 && !empty($crit['users_id'])) {
+                if (isset($crit['users_id'])
+                    && $crit['users_id'] != 0
+                    && !empty($crit['users_id'])) {
                     $users_criteria = " AND `glpi_groups_users`.`users_id` = " . $crit['users_id'];
                 }
 

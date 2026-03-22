@@ -86,12 +86,6 @@ class Widgetlist
             Reports_Map::class,
             Reports_Table::class,];
 
-        //        $autoloader = new PluginMydasboardAutoloader();
-        //        $classes = $autoloader->listReports();
-        //        foreach ($classes as $class) {
-        //            $widgets['mydashboard'][] = $class;
-        //        }
-
         //We add classes for GLPI core widgets
         $widgets['GLPI'] = [
             Reminder::class,

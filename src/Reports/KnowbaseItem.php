@@ -27,9 +27,14 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
+use Entity_KnowbaseItem;
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
+use Group_KnowbaseItem;
+use KnowbaseItem_Profile;
+use KnowbaseItem_User;
 use Session;
 
 /**
@@ -93,64 +98,66 @@ class KnowbaseItem extends CommonGLPI
         $faq = !Session::haveRight(self::$rightname, READ);
 
         if ($widgetId == "knowbaseitemrecent") {
-            $orderby = "ORDER BY `date_creation` DESC";
+            $orderby = "`date_creation` DESC";
             $title = __('FAQ') . " - " . __('Recent entries');
         } elseif ($widgetId == 'knowbaseitemlastupdate') {
-            $orderby = "ORDER BY `date_mod` DESC";
+            $orderby = "`date_mod` DESC";
             $title = __('FAQ') . " - " . __('Last updated entries');
         } else {
-            $orderby = "ORDER BY `view` DESC";
+            $orderby = "`view` DESC";
             $title = __('FAQ') . " - " . __('Most popular questions');
         }
 
-        $faq_limit = "";
         // Force all joins for not published to verify no visibility set
-        $join = KnowbaseItem::addVisibilityJoins(true);
+
+        $criteria = [
+            'SELECT' => ['glpi_knowbaseitems.id',
+                'glpi_knowbaseitems.name',
+                'glpi_knowbaseitems.is_faq',
+                'glpi_knowbaseitems.date_creation',
+                'glpi_knowbaseitems.date_mod'],
+            'FROM' => 'glpi_knowbaseitems',
+            'LEFT JOIN' => self::getVisibilityCriteriaCommonJoin(true),
+            'WHERE' => [
+                'OR' => [
+                    ['NOT'       => ['glpi_entities_knowbaseitems.entities_id' => null]],
+                    ['NOT'       => ['glpi_knowbaseitems_profiles.profiles_id' => null]],
+                    ['NOT'       => ['glpi_groups_knowbaseitems.groups_id' => null]],
+                    ['NOT'       => ['glpi_knowbaseitems_users.users_id' => null]],
+                ],
+                ],
+            'ORDERBY' => $orderby,
+            'LIMIT' => 10,
+        ];
 
         if (Session::getLoginUserID()) {
-            $faq_limit .= "WHERE " . KnowbaseItem::addVisibilityRestrict();
+            $criteria['WHERE'] = self::getVisibilityCriteriaKB();
         } else {
             // Anonymous access
             if (Session::isMultiEntitiesMode()) {
-                $faq_limit .= " WHERE (`glpi_entities_knowbaseitems`.`entities_id` = '0'
-                                   AND `glpi_entities_knowbaseitems`.`is_recursive` = '1')";
-            } else {
-                $faq_limit .= " WHERE 1";
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_entities_knowbaseitems'
+                    );
             }
         }
 
-        // Only published
-        $faq_limit .= " AND (`glpi_entities_knowbaseitems`.`entities_id` IS NOT NULL
-                           OR `glpi_knowbaseitems_profiles`.`profiles_id` IS NOT NULL
-                           OR `glpi_groups_knowbaseitems`.`groups_id` IS NOT NULL
-                           OR `glpi_knowbaseitems_users`.`users_id` IS NOT NULL)";
-
         if ($faq) { // FAQ
-            $faq_limit .= " AND (`glpi_knowbaseitems`.`is_faq` = '1')";
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_knowbaseitems.is_faq' => 1];
         }
 
-        $query = "SELECT DISTINCT `glpi_knowbaseitems`.`id`,
-                `glpi_knowbaseitems`.`name`,
-                `glpi_knowbaseitems`.`is_faq`,
-                `glpi_knowbaseitems`.`date_creation`,
-                `glpi_knowbaseitems`.`date_mod`
-                FROM `glpi_knowbaseitems`
-                $join
-                $faq_limit
-                $orderby
-                LIMIT 10";
 
-        $result = $DB->doQuery($query);
+        $iterator = $DB->request($criteria);
+
         $tab = [];
-        $nb = $DB->numrows($result);
-        while ($row = $DB->fetchAssoc($result)) {
+        $nb = count($iterator);
+        foreach ($iterator as $row) {
             if ($widgetId == "knowbaseitemrecent") {
                 $date = $row["date_creation"];
             } else {
                 $date = $row["date_mod"];
             }
             $tab[] = [
-                "<a " . ($row['is_faq'] ? " class='pubfaq' " : " class='knowbase' ") . " href=\"" .
+                "<a href=\"" .
                 $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
                 \Html::resume_text($row["name"], 80) . "</a>",
                 \Html::convDateTime($date)
@@ -174,56 +181,189 @@ class KnowbaseItem extends CommonGLPI
         return $widget;
     }
 
+
     /**
-     * Return visibility SQL restriction to add
+     * Get criteria used to filter knowledge base articles on users
      *
-     * @return string restrict to add
-     **/
-    public static function addVisibilityRestrict()
+     * @return array
+     */
+    private static function getVisibilityCriteriaKB_User(): array
     {
-        //not deprecated because used in Search
-
-        //get and clean criteria
-        $criteria = \KnowbaseItem::getVisibilityCriteria();
-        unset($criteria['LEFT JOIN']);
-        $criteria['FROM'] = \KnowbaseItem::getTable();
-
-        $it = new \DBmysqlIterator(null);
-        $it->buildQuery($criteria);
-        $sql = $it->getSql();
-        $sql = preg_replace('/.*WHERE /', '', $sql);
-
-        return $sql;
+        $user = Session::getLoginUserID();
+        return [
+            KnowbaseItem_User::getTableField('users_id') => $user,
+        ];
     }
 
     /**
-     * Return visibility joins to add to SQL
+     * Get criteria used to filter knowledge base articles on groups
      *
-     * @param $forceall force all joins (false by default)
-     *
-     * @return string joins to add
-     **/
-    public static function addVisibilityJoins($forceall = false)
+     * @return array
+     */
+    private static function getVisibilityCriteriaKB_Group(): array
     {
-        //not deprecated because used in Search
-        /** @var \DBmysql $DB */
-        global $DB;
-
-        //get and clean criteria
-        $criteria = \KnowbaseItem::getVisibilityCriteria();
-        unset($criteria['WHERE']);
-        $criteria['FROM'] = \KnowbaseItem::getTable();
-
-        $it = new \DBmysqlIterator(null);
-        $it->buildQuery($criteria);
-        $sql = $it->getSql();
-        $sql = trim(
-            str_replace(
-                'SELECT * FROM ' . $DB->quoteName(\KnowbaseItem::getTable()),
-                '',
-                $sql
-            )
+        $groups = $_SESSION["glpigroups"] ?? [-1];
+        $entity_restriction = getEntitiesRestrictCriteria(
+            Group_KnowbaseItem::getTable(),
+            '',
+            '',
+            true,
+            true
         );
-        return $sql;
+
+        return [
+            Group_KnowbaseItem::getTableField('groups_id') => $groups,
+            'OR' => [
+                    Group_KnowbaseItem::getTableField('no_entity_restriction') => 1,
+                ] + $entity_restriction,
+        ];
+    }
+
+    /**
+     * Get criteria used to filter knowledge base articles on profiles
+     *
+     * @return array
+     */
+    private static function getVisibilityCriteriaKB_Profile(): array
+    {
+        $profile = $_SESSION["glpiactiveprofile"]['id'] ?? -1;
+        $entity_restriction = getEntitiesRestrictCriteria(
+            KnowbaseItem_Profile::getTable(),
+            '',
+            '',
+            true,
+            true
+        );
+
+        return [
+            KnowbaseItem_Profile::getTableField('profiles_id') => $profile,
+            'OR' => [
+                    KnowbaseItem_Profile::getTableField('no_entity_restriction') => 1,
+                ] + $entity_restriction,
+        ];
+    }
+
+    /**
+     * Get criteria used to filter knowledge base articles on entity
+     *
+     * @return array
+     */
+    private static function getVisibilityCriteriaKB_Entity(): array
+    {
+        $entity_restriction = getEntitiesRestrictCriteria(
+            Entity_KnowbaseItem::getTable(),
+            '',
+            '',
+            true,
+            true
+        );
+
+        // All entities
+        if (!count($entity_restriction)) {
+            $entity_restriction = [
+                Entity_KnowbaseItem::getTableField('entities_id') => null,
+            ];
+        }
+
+        return $entity_restriction;
+    }
+
+    /**
+     * Get visibility criteria for articles displayed in the knowledge base
+     * (seen by central users)
+     * This mean any KB article with valid visibility criteria for the current
+     * user should be displayed
+     *
+     * @return array WHERE clause
+     */
+    private static function getVisibilityCriteriaKB(): array
+    {
+        // Special case for KB Admins
+        if (Session::haveRight(self::$rightname, \KnowbaseItem::KNOWBASEADMIN)) {
+            // See all articles
+            return [new QueryExpression('1')];
+        }
+
+        // Prepare criteria, which will use an OR statement (the user can read
+        // the article if any of the user/group/profile/entity criteria are
+        // validated)
+        $where = ['OR' => []];
+
+        // Special case: the user may be the article's author
+        $user = Session::getLoginUserID();
+        $author_check = [\KnowbaseItem::getTableField('users_id') => $user];
+        $where['OR'][] = $author_check;
+
+        // Filter on users
+        $where['OR'][] = self::getVisibilityCriteriaKB_User();
+
+        // Filter on groups (if the current user have any)
+        $groups = $_SESSION["glpigroups"] ?? [];
+        if (count($groups)) {
+            $where['OR'][] = self::getVisibilityCriteriaKB_Group();
+        }
+
+        // Filter on profiles
+        $where['OR'][] = self::getVisibilityCriteriaKB_Profile();
+
+        // Filter on entities
+        $where['OR'][] = self::getVisibilityCriteriaKB_Entity();
+
+        return $where;
+    }
+
+    private static function getVisibilityCriteriaCommonJoin(bool $forceall = false)
+    {
+        global $CFG_GLPI;
+
+        $join = [];
+
+        // Context checks - avoid doing unnecessary join if possible
+        $is_public_faq_context = !Session::getLoginUserID() && $CFG_GLPI["use_public_faq"];
+        $has_session_groups = count(($_SESSION["glpigroups"] ?? []));
+        $has_active_profile = isset($_SESSION["glpiactiveprofile"]['id']);
+        $has_active_entity = count(($_SESSION["glpiactiveentities"] ?? []));
+
+        // Add user restriction data
+        if ($forceall || Session::getLoginUserID()) {
+            $join['glpi_knowbaseitems_users'] = [
+                'ON' => [
+                    'glpi_knowbaseitems_users' => 'knowbaseitems_id',
+                    'glpi_knowbaseitems'       => 'id',
+                ],
+            ];
+        }
+
+        // Add group restriction data
+        if ($forceall || $has_session_groups) {
+            $join['glpi_groups_knowbaseitems'] = [
+                'ON' => [
+                    'glpi_groups_knowbaseitems' => 'knowbaseitems_id',
+                    'glpi_knowbaseitems'       => 'id',
+                ],
+            ];
+        }
+
+        // Add profile restriction data
+        if ($forceall || $has_active_profile) {
+            $join['glpi_knowbaseitems_profiles'] = [
+                'ON' => [
+                    'glpi_knowbaseitems_profiles' => 'knowbaseitems_id',
+                    'glpi_knowbaseitems'       => 'id',
+                ],
+            ];
+        }
+
+        // Add entity restriction data
+        if ($forceall || $has_active_entity || $is_public_faq_context) {
+            $join['glpi_entities_knowbaseitems'] = [
+                'ON' => [
+                    'glpi_entities_knowbaseitems' => 'knowbaseitems_id',
+                    'glpi_knowbaseitems'       => 'id',
+                ],
+            ];
+        }
+
+        return $join;
     }
 }

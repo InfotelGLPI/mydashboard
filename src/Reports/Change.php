@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -62,45 +63,45 @@ class Change extends CommonGLPI
 
         if ($showchange) {
             $widgets = [
-                Menu::$HELPDESK =>
-                    [
+                Menu::$HELPDESK
+                    => [
                         "changeprocesswidget" => [
                             "title" => __('Changes to be processed', 'mydashboard'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                         "changewaitingwidget" => [
                             "title" => __('Changes on pending status', 'mydashboard'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                         "changeappliedwidget" => [
                             "title" => __('Applied changes', 'mydashboard'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                     ],
-                Menu::$GROUP_VIEW =>
-                    [
+                Menu::$GROUP_VIEW
+                    => [
                         "changeprocesswidgetgroup" => [
                             "title" => __('Changes to be processed', 'mydashboard'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                         "changewaitingwidgetgroup" => [
                             "title" => __('Changes on pending status', 'mydashboard'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                     ],
-                Menu::$HELPDESK =>
-                    [
+                Menu::$HELPDESK
+                    => [
                         "changecountwidget" => [
                             "title" => __('Change followup', 'mydashboard'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
-                    ]
+                    ],
             ];
         }
         return $widgets;
@@ -155,9 +156,9 @@ class Change extends CommonGLPI
         //We declare our new widget
         $widget = new Datatable();
         if ($status == "waiting") {
-            $widget->setWidgetTitle(\Html::makeTitle(__('Changes on pending status', 'mydashboard'), 0, 0));
+            $widget->setWidgetTitle(Html::makeTitle(__('Changes on pending status', 'mydashboard'), 0, 0));
         } else {
-            $widget->setWidgetTitle(\Html::makeTitle(__('Changes to be processed', 'mydashboard'), 0, 0));
+            $widget->setWidgetTitle(Html::makeTitle(__('Changes to be processed', 'mydashboard'), 0, 0));
         }
         $group = ($showgroupchanges) ? "group" : "";
         $widget->setWidgetId("change" . $status . "widget" . $group);
@@ -203,47 +204,40 @@ class Change extends CommonGLPI
             case "waiting": // on affiche les changements en attente
                 $query .= "WHERE $is_deleted
                              AND ($search_assign)
-                             AND `status` = '" . \Change::WAITING . "' " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                             AND `status` = '" . \Change::WAITING . "' "
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
                 break;
 
             case "process": // on affiche les changements planifiés ou assignés au user
                 $query .= "WHERE $is_deleted
                              AND ($search_assign)
-                             AND (`status` IN ('" . implode("','", \Change::getProcessStatusArray()) . "')) " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                             AND (`status` IN ('" . implode("','", \Change::getProcessStatusArray()) . "')) "
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
                 break;
 
             case "applied": // on affiche les changements qui vont être mis en production
                 $query .= "WHERE $is_deleted
                              AND (`status` IN ('" . implode("','", \Change::getSolvedStatusArray()) . "'))
-                             AND solvedate > DATE_SUB(CURDATE(), interval 30 DAY) " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                             AND solvedate > DATE_SUB(CURDATE(), interval 30 DAY) "
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
                 break;
 
             default:
                 $query .= "WHERE $is_deleted
                              AND ($search_users_id)
                              AND (`status` IN ('" . implode("','", \Change::getNewStatusArray()) . "','" . implode(
-                        "','",
-                        \Change::getProcessStatusArray()
-                    ) . "',
+                    "','",
+                    \Change::getProcessStatusArray()
+                ) . "',
                                                '" . \Change::WAITING . "'))
-                             AND NOT ($search_assign) " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
+                             AND NOT ($search_assign) "
+                    . $dbu->getEntitiesRestrictRequest("AND", "glpi_changes");
         }
 
         $query .= " ORDER BY date_mod DESC";
         $result = $DB->doQuery($query);
         $numrows = $DB->numrows($result);
 
-        //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-        //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
-        //      } else {
-        //         $number = 0;
-        //      }
 
         if ($numrows > 0) {
             $output['title'] = "";
@@ -265,9 +259,9 @@ class Change extends CommonGLPI
                             $options['link'][$num] = 'AND';
                             $num++;
                         }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            Html::makeTitle(__('Changes on pending status', 'mydashboard'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(__('Changes on pending status', 'mydashboard'), $numrows, $numrows) . "</a>";
                         break;
 
                     case "process":
@@ -283,9 +277,9 @@ class Change extends CommonGLPI
                             $options['link'][$num] = 'AND';
                             $num++;
                         }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(__('Changes to be processed', 'mydashboard'), $numrows, $numrows) . "</a>";
                         break;
 
                     default:
@@ -301,9 +295,9 @@ class Change extends CommonGLPI
                             $options['link'][$num] = 'AND';
                             $num++;
                         }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(__('Your changes in progress'), $numrows, $numrows) . "</a>";
                 }
             } else {
                 switch ($status) {
@@ -318,11 +312,11 @@ class Change extends CommonGLPI
                         $options['contains'][1] = Session::getLoginUserID();
                         $options['link'][1] = 'AND';
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(
                                 __('Changes on pending status', 'mydashboard'),
-                                $number,
+                                $numrows,
                                 $numrows
                             ) . "</a>";
                         break;
@@ -338,9 +332,9 @@ class Change extends CommonGLPI
                         $options['contains'][1] = 'process';
                         $options['link'][1] = 'AND';
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Changes to be processed', 'mydashboard'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(__('Changes to be processed', 'mydashboard'), $numrows, $numrows) . "</a>";
                         break;
 
                     case "applied":
@@ -349,9 +343,9 @@ class Change extends CommonGLPI
                         $options['contains'][$num] = 'solved';
                         $options['link'][$num] = 'AND';
                         $num++;
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Applied changes', 'mydashboard'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(__('Applied changes', 'mydashboard'), $numrows, $numrows) . "</a>";
                         break;
 
                     default:
@@ -365,9 +359,9 @@ class Change extends CommonGLPI
                         $options['contains'][1] = 'notold';
                         $options['link'][1] = 'AND';
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Your changes in progress'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                            . Toolbox::append_params($options, '&amp;') . "\">"
+                            . Html::makeTitle(__('Your changes in progress'), $numrows, $numrows) . "</a>";
                 }
             }
 
@@ -425,10 +419,10 @@ class Change extends CommonGLPI
             $bgcolor = $_SESSION["glpipriority_" . $change->fields["priority"]];
             //      $rand    = mt_rand();
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                    __('%1$s: %2$s'),
-                    __('ID'),
-                    $change->fields["id"]
-                ) . "</div>";
+                __('%1$s: %2$s'),
+                __('ID'),
+                $change->fields["id"]
+            ) . "</div>";
             $colnum++;
 
             $output[$colnum] = '';
@@ -458,8 +452,8 @@ class Change extends CommonGLPI
 
             $colnum++;
             //$output[$colnum] = '';
-            $link = "<a id='change" . $change->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-                "/front/change.form.php?id=" . $change->fields["id"];
+            $link = "<a id='change" . $change->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
+                . "/front/change.form.php?id=" . $change->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
             }
@@ -470,18 +464,18 @@ class Change extends CommonGLPI
             $link = sprintf(
                 __('%1$s %2$s'),
                 $link,
-                \Html::showToolTip(
+                Html::showToolTip(
                     $change->fields['content'],
                     [
                         'applyto' => 'change' . $change->fields["id"] . $rand,
-                        'display' => false
+                        'display' => false,
                     ]
                 )
             );
             //echo $link;
             $output[$colnum] = $link;
             $colnum++;
-            $output[$colnum] = \Html::convDateTime($change->fields['solvedate']);
+            $output[$colnum] = Html::convDateTime($change->fields['solvedate']);
         }
         return $output;
     }
@@ -569,8 +563,8 @@ class Change extends CommonGLPI
         $options['link'][0] = 'AND';
         $options['reset'] = 'reset';
 
-        $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
+        $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+            . Toolbox::append_params($options, '&amp;') . "\">" . __('Change followup', 'mydashboard') . "</a>";
 
         $output['header'][] = _n('Change', 'Changes', 2);
         $output['header'][] = _x('quantity', 'Number');
@@ -578,16 +572,16 @@ class Change extends CommonGLPI
         $count = 0;
         foreach ($status as $key => $val) {
             $options['contains'][0] = $key;
-            $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-                Toolbox::append_params($options, '&amp;') . "\">" . \Change::getStatus($key) . "</a>";
+            $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+                . Toolbox::append_params($options, '&amp;') . "\">" . \Change::getStatus($key) . "</a>";
             $output['body'][$count][1] = $val;
             $count++;
         }
 
         $options['contains'][0] = 'all';
         $options['is_deleted'] = 1;
-        $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
+        $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
+            . Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
         $output['body'][$count][1] = $number_deleted;
 
         $widget = new Datatable();
@@ -598,9 +592,9 @@ class Change extends CommonGLPI
         $widget->setTabDatas($output['body']);
 
         //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
-//        if (count($output['body']) > 0) {
-//            $widget->setOption("bSort", false);
-//        }
+        //        if (count($output['body']) > 0) {
+        //            $widget->setOption("bSort", false);
+        //        }
         $widget->setOption("bPaginate", false);
         $widget->setOption("bFilter", false);
         $widget->setOption("bInfo", false);

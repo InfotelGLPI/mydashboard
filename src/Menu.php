@@ -814,13 +814,13 @@ class Menu extends CommonGLPI
                             if (is_numeric($widgetId)) {
                                 $widgetId = $widgetTitle;
                             }
-                            $widgetDB->saveWidget($widgetId);
+                            $widgetDB->saveWidget($widgetId, $widgetclass);
                         }
                     } else {
                         if (is_numeric($widgetview)) {
                             $widgetview = $widgetlist;
                         }
-                        $widgetDB->saveWidget($widgetview);
+                        $widgetDB->saveWidget($widgetview, $widgetclass);
                     }
                 }
             }
@@ -1099,7 +1099,7 @@ class Menu extends CommonGLPI
                     $wid = new Widget();
                     $wid->getFromDB($v["id"]);
 
-                    $class = preg_replace('/\d+$/', '', $wid->fields['name']);
+                    $class = $wid->fields['class'];
                     $id_class = $wid->fields['name'];
 
                     $datajson[$v["id"]] = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
@@ -1146,7 +1146,6 @@ class Menu extends CommonGLPI
 
 
         $datajson = json_encode($datajson);
-
 
         $allwidgetjson = json_encode($allwidgetjson);
         $msg_delete    = __('Delete widget', 'mydashboard');

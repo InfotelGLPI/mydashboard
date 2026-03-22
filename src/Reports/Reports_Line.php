@@ -65,66 +65,66 @@ class Reports_Line extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-            Menu::$HELPDESK => array(
-                $this->getType() . "6" => array(
+            Menu::$HELPDESK => [
+                $this->getType() . "6" => [
                     "title" => __("Tickets stock by month", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => __("Sum of not solved tickets by month", "mydashboard")
-                ),
-                $this->getType() . "22" => array(
+                    "comment" => __("Sum of not solved tickets by month", "mydashboard"),
+                ],
+                $this->getType() . "22" => [
                     "title" => __("Number of opened and closed tickets by month", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "34" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "34" => [
                     "title" => __("Number of opened and resolved / closed tickets by month", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "35" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "35" => [
                     "title" => __("Number of opened, closed, unplanned tickets by month", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "43" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "43" => [
                     "title" => __("Number of tickets created each months", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "44" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "44" => [
                     "title" => __("Number of tickets created each week", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "45" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "45" => [
                     "title" => __("Number of tickets with validation refusal", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "46" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "46" => [
                     "title" => __("Number of tickets linked with problems", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-                $this->getType() . "47" => array(
+                    "comment" => "",
+                ],
+                $this->getType() . "47" => [
                     "title" => __("Backlog tickets by week", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard")
-                ),
-                $this->getType() . "48" => array(
+                    "comment" => __("Number of in progress (not new and pending) tickets by week", "mydashboard"),
+                ],
+                $this->getType() . "48" => [
                     "title" => __("Monthly tickets in progress", "mydashboard"),
                     "type" => Widget::$LINE,
                     "comment" => __(
                         "Number of open tickets in the month still in progress for each month",
                         "mydashboard"
-                    )
-                ),
-                $this->getType() . "49" => array(
+                    ),
+                ],
+                $this->getType() . "49" => [
                     "title" => __("Number of tickets with more than one solution", "mydashboard"),
                     "type" => Widget::$LINE,
-                    "comment" => ""
-                ),
-            ),
+                    "comment" => "",
+                ],
+            ],
         ];
         return $widgets;
     }
@@ -195,7 +195,7 @@ class Reports_Line extends CommonGLPI
                         'technicians_groups_id',
                         'entities_id',
                         'is_recursive',
-                        'year'
+                        'year',
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -206,7 +206,7 @@ class Reports_Line extends CommonGLPI
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -301,11 +301,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
                 $graph_datas = [
@@ -314,7 +314,7 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => json_encode([]),
                     'data' => $dataLineset,
-                    'labels' => $labelsLine
+                    'labels' => $labelsLine,
                 ];
 
 
@@ -328,7 +328,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
@@ -355,7 +355,7 @@ class Reports_Line extends CommonGLPI
                         'display_data',
                         'technicians_id',
                         'type',
-                        'locations_id'
+                        'locations_id',
                     ];
                     $onclick = 1;
                 } else {
@@ -364,14 +364,14 @@ class Reports_Line extends CommonGLPI
                         'requesters_groups_id',
                         'display_data',
                         'type',
-                        'locations_id'
+                        'locations_id',
                     ];
                 }
 
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -444,14 +444,14 @@ class Reports_Line extends CommonGLPI
                 }
                 $currentmonth = date("m");
 
-                $query_stockTickets =
-                    "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month," .
-                    " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname," .
-                    " SUM(nbStockTickets) as nbStockTickets" .
-                    " FROM `glpi_plugin_mydashboard_stocktickets`" .
-                    " WHERE $date_crit " .
-                    " " . $mdentities . $tech_groups_crit .
-                    " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
+                $query_stockTickets
+                    = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month,"
+                    . " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname,"
+                    . " SUM(nbStockTickets) as nbStockTickets"
+                    . " FROM `glpi_plugin_mydashboard_stocktickets`"
+                    . " WHERE $date_crit "
+                    . " " . $mdentities . $tech_groups_crit
+                    . " GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
 
                 $resultsStockTickets = $DB->doQuery($query_stockTickets);
                 $nbStockTickets = $DB->numrows($resultsStockTickets);
@@ -478,20 +478,20 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
                 $q = "SET lc_time_names = '" . $_SESSION['glpilanguage'] . "';";
                 $r = $DB->doQuery($q);
-                $query_tickets =
-                    "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month," .
-                    " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname," .
-                    " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum,
-               count(MONTH(`glpi_tickets`.`date`))" .
-                    " FROM `glpi_tickets`" .
-                    " WHERE $is_deleted" .
-                    " AND $date_crit_ticket " .
-                    " $entities_criteria" .
-                    " $requester_groups_criteria" .
-                    " $technician_groups_criteria" .
-                    " $locations_criteria" .
-                    " $type_criteria" .
-                    " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $query_tickets
+                    = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,"
+                    . " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,"
+                    . " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum,
+               count(MONTH(`glpi_tickets`.`date`))"
+                    . " FROM `glpi_tickets`"
+                    . " WHERE $is_deleted"
+                    . " AND $date_crit_ticket "
+                    . " $entities_criteria"
+                    . " $requester_groups_criteria"
+                    . " $technician_groups_criteria"
+                    . " $locations_criteria"
+                    . " $type_criteria"
+                    . " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
                 $results = $DB->doQuery($query_tickets);
                 $nbResults = $DB->numrows($results);
@@ -598,25 +598,25 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabprogress,
-                    'name' => $titleprogress,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabprogress,
+                        'name' => $titleprogress,
+                        'smooth' => false,
+                    ];
 
                 $datasets[]
                     = [
-                    "type" => "bar",
-                    "data" => $tabopened,
-                    "name" => $titleopened,
-                ];
+                        "type" => "bar",
+                        "data" => $tabopened,
+                        "name" => $titleopened,
+                    ];
 
                 $datasets[]
                     = [
-                    'type' => 'bar',
-                    'data' => $tabclosed,
-                    'name' => $titlesolved,
-                ];
+                        'type' => 'bar',
+                        'data' => $tabclosed,
+                        'name' => $titlesolved,
+                    ];
 
 
                 $tabdatesset = json_encode($tabdates);
@@ -643,7 +643,7 @@ class Reports_Line extends CommonGLPI
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
                         'locations_id' => $location,
-                        'widget' => $widgetId
+                        'widget' => $widgetId,
                     ];
                 }
 
@@ -657,7 +657,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
@@ -681,7 +681,7 @@ class Reports_Line extends CommonGLPI
                         'technicians_id',
                         'year',
                         'type',
-                        'locations_id'
+                        'locations_id',
                     ];
                     $onclick = 1;
                 }
@@ -690,14 +690,14 @@ class Reports_Line extends CommonGLPI
                     $criterias = [
                         'requesters_groups_id',
                         'year',
-                        'locations_id'
+                        'locations_id',
                     ];
                 }
 
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -902,25 +902,25 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabprogress,
-                    'name' => $titleprogress,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabprogress,
+                        'name' => $titleprogress,
+                        'smooth' => false,
+                    ];
 
                 $datasets[]
                     = [
-                    "type" => "bar",
-                    "data" => $tabopened,
-                    "name" => $titleopened,
-                ];
+                        "type" => "bar",
+                        "data" => $tabopened,
+                        "name" => $titleopened,
+                    ];
 
                 $datasets[]
                     = [
-                    'type' => 'bar',
-                    'data' => $tabresolved,
-                    'name' => $titlesolved,
-                ];
+                        'type' => 'bar',
+                        'data' => $tabresolved,
+                        'name' => $titlesolved,
+                    ];
 
                 $tabdatesset = json_encode($tabdates);
 
@@ -946,7 +946,7 @@ class Reports_Line extends CommonGLPI
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
                         'locations_id' => $location,
-                        'widget' => $widgetId
+                        'widget' => $widgetId,
                     ];
                 }
 
@@ -960,7 +960,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
@@ -984,7 +984,7 @@ class Reports_Line extends CommonGLPI
                         'technicians_id',
                         'year',
                         'type',
-                        'locations_id'
+                        'locations_id',
                     ];
                     $onclick = 1;
                 }
@@ -993,14 +993,14 @@ class Reports_Line extends CommonGLPI
                     $criterias = [
                         'requesters_groups_id',
                         'year',
-                        'locations_id'
+                        'locations_id',
                     ];
                 }
 
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -1231,32 +1231,32 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabprogress,
-                    'name' => $titleprogress,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabprogress,
+                        'name' => $titleprogress,
+                        'smooth' => false,
+                    ];
 
                 $datasets[]
                     = [
-                    "type" => "bar",
-                    "data" => $tabopened,
-                    "name" => $titleopened,
-                ];
+                        "type" => "bar",
+                        "data" => $tabopened,
+                        "name" => $titleopened,
+                    ];
 
                 $datasets[]
                     = [
-                    'type' => 'bar',
-                    'data' => $tabclosed,
-                    'name' => $titlesolved,
-                ];
+                        'type' => 'bar',
+                        'data' => $tabclosed,
+                        'name' => $titlesolved,
+                    ];
 
                 $datasets[]
                     = [
-                    'type' => 'bar',
-                    'data' => $tabunplanned,
-                    'name' => $titleunplanned,
-                ];
+                        'type' => 'bar',
+                        'data' => $tabunplanned,
+                        'name' => $titleunplanned,
+                    ];
 
                 $tabdatesset = json_encode($tabdates);
 
@@ -1282,7 +1282,7 @@ class Reports_Line extends CommonGLPI
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
                         'locations_id' => $location,
-                        'widget' => $widgetId
+                        'widget' => $widgetId,
                     ];
                 }
 
@@ -1296,7 +1296,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
@@ -1313,12 +1313,12 @@ class Reports_Line extends CommonGLPI
                     'year',
                     'type',
                     'entities_id',
-                    'is_recursive'
+                    'is_recursive',
                 ];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
 
                 $options = Helper::manageCriterias($params);
@@ -1368,11 +1368,11 @@ class Reports_Line extends CommonGLPI
                 $nbtickets = __('Tickets number', 'mydashboard');
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
@@ -1390,7 +1390,7 @@ class Reports_Line extends CommonGLPI
                 $graph_criterias = [
                     'type' => $options['crit']["type"],
                     'year' => $options['crit']['year'],
-                    'widget' => $widgetId
+                    'widget' => $widgetId,
                 ];
 
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -1403,7 +1403,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
@@ -1419,12 +1419,12 @@ class Reports_Line extends CommonGLPI
                     'entities_id',
                     'is_recursive',
                     'year',
-                    'type'
+                    'type',
                 ];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -1452,11 +1452,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
@@ -1468,7 +1468,7 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine
+                    'labels' => $labelsLine,
                 ];
                 $onclick = 0;
                 $graph_criterias = [];
@@ -1476,7 +1476,7 @@ class Reports_Line extends CommonGLPI
                     $graph_criterias = [
                         'type' => $options['crit']["type"],
                         'year' => $options['crit']['year'],
-                        'widget' => $widgetId
+                        'widget' => $widgetId,
                     ];
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -1489,7 +1489,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
@@ -1503,12 +1503,12 @@ class Reports_Line extends CommonGLPI
                     'year',
                     'type',
                     'entities_id',
-                    'is_recursive'
+                    'is_recursive',
                 ];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -1558,11 +1558,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
@@ -1574,13 +1574,13 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine
+                    'labels' => $labelsLine,
                 ];
 
                 $graph_criterias = [
                     'type' => $options['crit']["type"],
                     'year' => $options['crit']['year'],
-                    'widget' => $widgetId
+                    'widget' => $widgetId,
                 ];
 
 
@@ -1594,7 +1594,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
@@ -1608,12 +1608,12 @@ class Reports_Line extends CommonGLPI
                     'year',
                     'type',
                     'entities_id',
-                    'is_recursive'
+                    'is_recursive',
                 ];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -1662,11 +1662,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
@@ -1678,13 +1678,13 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine
+                    'labels' => $labelsLine,
                 ];
 
                 $graph_criterias = [
                     'type' => $options['crit']["type"],
                     'year' => $options['crit']['year'],
-                    'widget' => $widgetId
+                    'widget' => $widgetId,
                 ];
 
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -1697,7 +1697,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
@@ -1715,7 +1715,7 @@ class Reports_Line extends CommonGLPI
                         'entities_id',
                         'is_recursive',
                         'year',
-                        'type'
+                        'type',
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -1726,7 +1726,7 @@ class Reports_Line extends CommonGLPI
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -1780,11 +1780,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
@@ -1796,7 +1796,7 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine
+                    'labels' => $labelsLine,
                 ];
                 $onclick = 0;
                 $graph_criterias = [];
@@ -1804,7 +1804,7 @@ class Reports_Line extends CommonGLPI
                     $graph_criterias = [
                         'type' => $options['crit']["type"],
                         'year' => $options['crit']['year'],
-                        'widget' => $widgetId
+                        'widget' => $widgetId,
                     ];
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -1817,7 +1817,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
@@ -1839,7 +1839,7 @@ class Reports_Line extends CommonGLPI
                         'group_is_recursive',
                         'requesters_groups_id',
                         'type',
-                        'locations_id'
+                        'locations_id',
                     ];
                     $onclick = 1;
                 }
@@ -1848,14 +1848,14 @@ class Reports_Line extends CommonGLPI
                     $criterias = [
                         'type',
                         'locations_id',
-                        'requesters_groups_id'
+                        'requesters_groups_id',
                     ];
                 }
 
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -1910,11 +1910,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $databacklogset = json_encode($datasets);
                 $labelsback = json_encode($tabnames);
@@ -1928,7 +1928,7 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $databacklogset,
-                    'labels' => $labelsback
+                    'labels' => $labelsback,
                 ];
                 if ($onclick == 1) {
                     $graph_criterias = [
@@ -1939,7 +1939,7 @@ class Reports_Line extends CommonGLPI
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
                         'locations_id' => $location,
-                        'widget' => $widgetId
+                        'widget' => $widgetId,
                     ];
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -1952,7 +1952,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
 
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
@@ -1967,12 +1967,12 @@ class Reports_Line extends CommonGLPI
                     'year',
                     'type',
                     'entities_id',
-                    'is_recursive'
+                    'is_recursive',
                 ];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $options = Helper::manageCriterias($params);
 
@@ -2007,7 +2007,7 @@ class Reports_Line extends CommonGLPI
                 $tabdata = [];
                 $tabnames = [];
                 $results = $DB->doQuery($queryOpenedTicket);
-//                Toolbox::logInfo($queryOpenedTicket);
+                //                Toolbox::logInfo($queryOpenedTicket);
                 while ($data = $DB->fetchArray($results)) {
                     $tabdata[] = $data['count'];
                     $tabnames[] = $data['monthname'];
@@ -2026,11 +2026,11 @@ class Reports_Line extends CommonGLPI
 
                 $datasets[]
                     = [
-                    'type' => 'line',
-                    'data' => $tabdata,
-                    'name' => $nbtickets,
-                    'smooth' => false,
-                ];
+                        'type' => 'line',
+                        'data' => $tabdata,
+                        'name' => $nbtickets,
+                        'smooth' => false,
+                    ];
 
                 $dataLineset = json_encode($datasets);
                 $labelsLine = json_encode($tabnames);
@@ -2042,13 +2042,13 @@ class Reports_Line extends CommonGLPI
                     'name' => $name,
                     'ids' => $tabdatesset,
                     'data' => $dataLineset,
-                    'labels' => $labelsLine
+                    'labels' => $labelsLine,
                 ];
 
                 $graph_criterias = [
                     'type' => $options['crit']["type"],
                     'year' => $options['crit']['year'],
-                    'widget' => $widgetId
+                    'widget' => $widgetId,
                 ];
 
 
@@ -2062,7 +2062,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 

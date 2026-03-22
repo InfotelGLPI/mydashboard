@@ -32,11 +32,5 @@ ini_set("memory_limit", "-1");
 
 $widgets = Widget::getCompleteWidgetList(true);
 foreach ($widgets as $k => $val) {
-
-    $wid = new Widget();
-    $wid->getFromDB($k);
-    $class = preg_replace('/\d+$/', '', $wid->fields['name']);
-    $id_class = $wid->fields['name'];
-
-    $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
+    $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::getWidget($k, $widgets, []);
 }

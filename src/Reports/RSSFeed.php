@@ -75,14 +75,13 @@ class RSSFeed extends CommonGLPI
 
     /**
      * @param $widgetId
-     * @return Nothing
+     * @return Datatable|false
      */
     public function getWidgetContentForItem($widgetId)
     {
         switch ($widgetId) {
             case "rssfeedpersonalwidget":
                 return RSSFeed::showListForCentral();
-                break;
             case "rssfeedpublicwidget":
                 if (Session::haveRight("rssfeed_public", READ)) {
                     return RSSFeed::showListForCentral(false);
