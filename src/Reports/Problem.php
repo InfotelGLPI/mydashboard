@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -28,9 +29,11 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use CommonITILActor;
-use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\DBAL\QueryFunction;
 use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Html;
@@ -62,40 +65,37 @@ class Problem extends CommonGLPI
 
         if ($showproblem) {
             $widgets = [
-                Menu::$HELPDESK =>
-                    [
+                Menu::$HELPDESK
+                    => [
                         "problemprocesswidget" => [
                             "title" => __('Problems to be processed'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                         "problemwaitingwidget" => [
                             "title" => __('Problems on pending status'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
+                        ],
+                        "problemcountwidget" => [
+                            "title" => __('Problem followup', 'mydashboard'),
+                            "type" => Widget::$TABLE,
+                            "comment" => "",
                         ],
                     ],
-                Menu::$GROUP_VIEW =>
-                    [
+                Menu::$GROUP_VIEW
+                    => [
                         "problemprocesswidgetgroup" => [
                             "title" => __('Problems to be processed'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                         "problemwaitingwidgetgroup" => [
                             "title" => __('Problems on pending status'),
                             "type" => Widget::$TABLE,
-                            "comment" => ""
+                            "comment" => "",
                         ],
                     ],
-                Menu::$HELPDESK =>
-                    [
-                        "problemcountwidget" => [
-                            "title" => __('Problem followup', 'mydashboard'),
-                            "type" => Widget::$TABLE,
-                            "comment" => ""
-                        ],
-                    ]
             ];
         }
         return $widgets;
@@ -162,73 +162,91 @@ class Problem extends CommonGLPI
             return false;
         }
 
-        $search_users_id = " (`glpi_problems_users`.`users_id` = '" . Session::getLoginUserID() . "'
-                            AND `glpi_problems_users`.`type` = '" . CommonITILActor::REQUESTER . "') ";
-        $search_assign = " (`glpi_problems_users`.`users_id` = '" . Session::getLoginUserID() . "'
-                            AND `glpi_problems_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
-        $is_deleted = " `glpi_problems`.`is_deleted` = 0 ";
+        $search_users_id = ['glpi_problems_users.users_id' =>  Session::getLoginUserID(),
+            'glpi_problems_users.type' => CommonITILActor::REQUESTER];
+
+        $search_assign = ['glpi_problems_users.users_id' =>  Session::getLoginUserID(),
+            'glpi_problems_users.type' => CommonITILActor::ASSIGN];
+
 
         if ($showgroupproblems) {
-            $search_users_id = " 0 = 1 ";
-            $search_assign = " 0 = 1 ";
+            $search_users_id = [];
+            $search_assign = [];
 
             if (count($_SESSION['glpigroups'])) {
-                $groups = implode("','", $_SESSION['glpigroups']);
-                $search_assign = " (`glpi_groups_problems`.`groups_id` IN ('$groups')
-                                  AND `glpi_groups_problems`.`type`
-                                        = '" . CommonITILActor::ASSIGN . "')";
 
-                $search_users_id = " (`glpi_groups_problems`.`groups_id` IN ('$groups')
-                                  AND `glpi_groups_problems`.`type`
-                                        = '" . CommonITILActor::REQUESTER . "') ";
+                $search_assign = ['glpi_groups_problems.groups_id' =>  $_SESSION['glpigroups'],
+                    'glpi_groups_problems.type' => CommonITILActor::ASSIGN];
+
+                $search_users_id = ['glpi_groups_problems.groups_id' =>  $_SESSION['glpigroups'],
+                    'glpi_groups_problems.type' => CommonITILActor::REQUESTER];
             }
         }
-        $dbu = new DbUtils();
-        $query = "SELECT DISTINCT `glpi_problems`.`id`
-                FROM `glpi_problems`
-                LEFT JOIN `glpi_problems_users`
-                     ON (`glpi_problems`.`id` = `glpi_problems_users`.`problems_id`)
-                LEFT JOIN `glpi_groups_problems`
-                     ON (`glpi_problems`.`id` = `glpi_groups_problems`.`problems_id`)";
+        $criteria = [
+            'SELECT' => 'glpi_problems.id',
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_problems',
+            'LEFT JOIN'       => [
+                'glpi_problems_users' => [
+                    'ON' => [
+                        'glpi_problems' => 'id',
+                        'glpi_problems_users'          => 'problems_id',
+                    ],
+                ],
+                'glpi_groups_problems' => [
+                    'ON' => [
+                        'glpi_problems' => 'id',
+                        'glpi_groups_problems'          => 'problems_id',
+                    ],
+                ],
+            ],
+            'WHERE' => ['glpi_problems.is_deleted' =>  0],
+            'ORDERBY' => 'glpi_problems.date_mod DESC',
+        ];
 
         switch ($status) {
             case "waiting": // on affiche les problemes en attente
-                $query .= "WHERE $is_deleted
-                             AND ($search_assign)
-                             AND `status` = '" . \Problem::WAITING . "' " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_problems");
+                $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
+
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems.status' =>  \Problem::WAITING];
+
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_problems'
+                );
                 break;
 
             case "process": // on affiche les problemes planifiés ou assignés au user
-                $query .= "WHERE $is_deleted
-                             AND ($search_assign)
-                             AND (`status` IN ('" . \Problem::PLANNED . "','" . \Problem::ASSIGNED . "')) " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_problems");
+
+                $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
+
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems.status' =>  [\Problem::PLANNED, \Problem::ASSIGNED]];
+
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_problems'
+                );
+
                 break;
 
             default:
-                $query .= "WHERE $is_deleted
-                             AND ($search_users_id)
-                             AND (`status` IN ('" . \Problem::INCOMING . "',
-                                               '" . \Problem::ACCEPTED . "',
-                                               '" . \Problem::PLANNED . "',
-                                               '" . \Problem::ASSIGNED . "',
-                                               '" . \Problem::WAITING . "'))
-                             AND NOT ($search_assign) " .
-                    $dbu->getEntitiesRestrictRequest("AND", "glpi_problems");
+
+                $criteria['WHERE'] = $criteria['WHERE'] + $search_users_id;
+
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems.status' =>  [\Problem::INCOMING, \Problem::ACCEPTED, \Problem::PLANNED,  \Problem::ASSIGNED,   \Problem::WAITING]];
+
+                $criteria['WHERE'] = $criteria['WHERE'] + ['solvedate' => ['>', QueryFunction::dateSub(
+                    date: QueryFunction::now(),
+                    interval: '30',
+                    interval_unit: 'DAY'
+                )]];
+
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_problems'
+                );
         }
 
-        $query .= " ORDER BY date_mod DESC";
-        $result = $DB->doQuery($query);
-        $numrows = $DB->numrows($result);
 
-        //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-        //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
-        //      } else {
-        //         $number = 0;
-        //      }
+        $iterator = $DB->request($criteria);
+        $numrows = count($iterator);
 
         if ($numrows > 0) {
             $output['title'] = "";
@@ -238,115 +256,161 @@ class Problem extends CommonGLPI
             if ($showgroupproblems) {
                 switch ($status) {
                     case "waiting":
-                        foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num] = 8; // groups_id_assign
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = $gID;
-                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
-                            $num++;
-                            $options['field'][$num] = 12; // status
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = \Problem::WAITING;
-                            $options['link'][$num] = 'AND';
-                            $num++;
-                        }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Problems on pending status'), $number, $numrows) . "</a>";
+                        $options = Toolbox::append_params([
+                            'reset'      => 'reset',
+                            'criteria'   => [
+                                0 => [
+                                    'value'      => $_SESSION['glpigroups'],
+                                    'searchtype' => 'equals',
+                                    'field'      => 8,
+                                    'link'       => 'AND',
+                                ],
+                                1 => [
+                                    'value'      => \Problem::WAITING,
+                                    'searchtype' => 'equals',
+                                    'field'      => 12,
+                                    'link'       => 'AND',
+                                ],
+                            ],
+                        ]);
+
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(__('Problems on pending status'), $numrows, $numrows) . "</a>";
                         break;
 
                     case "process":
-                        foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num] = 8; // groups_id_assign
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = $gID;
-                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
-                            $num++;
-                            $options['field'][$num] = 12; // status
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = 'process';
-                            $options['link'][$num] = 'AND';
-                            $num++;
-                        }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Problems to be processed'), $number, $numrows) . "</a>";
+
+                        $options = Toolbox::append_params([
+                            'reset'      => 'reset',
+                            'criteria'   => [
+                                0 => [
+                                    'value'      => $_SESSION['glpigroups'],
+                                    'searchtype' => 'equals',
+                                    'field'      => 8,
+                                    'link'       => 'AND',
+                                ],
+                                1 => [
+                                    'value'      => 'process',
+                                    'searchtype' => 'equals',
+                                    'field'      => 12,
+                                    'link'       => 'AND',
+                                ],
+                            ],
+                        ]);
+
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(__('Problems to be processed'), $numrows, $numrows) . "</a>";
                         break;
 
                     default:
-                        foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num] = 71; // groups_id
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = $gID;
-                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
-                            $num++;
-                            $options['field'][$num] = 12; // status
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = 'process';
-                            $options['link'][$num] = 'AND';
-                            $num++;
-                        }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Your problems in progress'), $number, $numrows) . "</a>";
+
+                        $options = Toolbox::append_params([
+                            'reset'      => 'reset',
+                            'criteria'   => [
+                                0 => [
+                                    'value'      => $_SESSION['glpigroups'],
+                                    'searchtype' => 'equals',
+                                    'field'      => 71,
+                                    'link'       => 'AND',
+                                ],
+                                1 => [
+                                    'value'      => 'process',
+                                    'searchtype' => 'equals',
+                                    'field'      => 12,
+                                    'link'       => 'AND',
+                                ],
+                            ],
+                        ]);
+
+
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(__('Your problems in progress'), $numrows, $numrows) . "</a>";
                 }
             } else {
                 switch ($status) {
                     case "waiting":
-                        $options['field'][0] = 12; // status
-                        $options['searchtype'][0] = 'equals';
-                        $options['contains'][0] = \Problem::WAITING;
-                        $options['link'][0] = 'AND';
 
-                        $options['field'][1] = 5; // users_id_assign
-                        $options['searchtype'][1] = 'equals';
-                        $options['contains'][1] = Session::getLoginUserID();
-                        $options['link'][1] = 'AND';
+                        $options = Toolbox::append_params([
+                            'reset'      => 'reset',
+                            'criteria'   => [
+                                0 => [
+                                    'value'      => Session::getLoginUserID(),
+                                    'searchtype' => 'equals',
+                                    'field'      => 5,
+                                    'link'       => 'AND',
+                                ],
+                                1 => [
+                                    'value'      => \Problem::WAITING,
+                                    'searchtype' => 'equals',
+                                    'field'      => 12,
+                                ],
+                            ],
+                        ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Problems on pending status'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(__('Problems on pending status'), $numrows, $numrows) . "</a>";
                         break;
 
                     case "process":
-                        $options['field'][0] = 5; // users_id_assign
-                        $options['searchtype'][0] = 'equals';
-                        $options['contains'][0] = Session::getLoginUserID();
-                        $options['link'][0] = 'AND';
 
-                        $options['field'][1] = 12; // status
-                        $options['searchtype'][1] = 'equals';
-                        $options['contains'][1] = 'process';
-                        $options['link'][1] = 'AND';
+                        $options = Toolbox::append_params([
+                            'reset'      => 'reset',
+                            'criteria'   => [
+                                0 => [
+                                    'value'      => Session::getLoginUserID(),
+                                    'searchtype' => 'equals',
+                                    'field'      => 5,
+                                    'link'       => 'AND',
+                                ],
+                                1 => [
+                                    'value'      => 'process',
+                                    'searchtype' => 'equals',
+                                    'field'      => 12,
+                                ],
+                            ],
+                        ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Problems to be processed'), $number, $numrows) . "</a>";
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(__('Problems to be processed'), $numrows, $numrows) . "</a>";
                         break;
 
                     default:
-                        $options['field'][0] = 4; // users_id
-                        $options['searchtype'][0] = 'equals';
-                        $options['contains'][0] = Session::getLoginUserID();
-                        $options['link'][0] = 'AND';
 
-                        $options['field'][1] = 12; // status
-                        $options['searchtype'][1] = 'equals';
-                        $options['contains'][1] = 'notold';
-                        $options['link'][1] = 'AND';
+                        $options = Toolbox::append_params([
+                            'reset'      => 'reset',
+                            'criteria'   => [
+                                0 => [
+                                    'value'      => Session::getLoginUserID(),
+                                    'searchtype' => 'equals',
+                                    'field'      => 4,
+                                    'link'       => 'AND',
+                                ],
+                                1 => [
+                                    'value'      => 'notold',
+                                    'searchtype' => 'equals',
+                                    'field'      => 12,
+                                ],
+                            ],
+                        ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(__('Your problems in progress'), $number, $numrows) . "</a>";
+
+                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(__('Your problems in progress'), $numrows, $numrows) . "</a>";
                 }
             }
 
-            if ($number) {
+            if ($numrows) {
                 $output['header'][] = __('');
                 $output['header'][] = __('Requester');
                 $output['header'][] = __('Description');
-                for ($i = 0; $i < $number; $i++) {
-                    $ID = $DB->result($result, $i, "id");
+                foreach ($iterator as $data) {
+                    $ID = $data["id"];
                     $output['body'][] = self::showVeryShort($ID, $forcetab);
                 }
             }
@@ -394,10 +458,10 @@ class Problem extends CommonGLPI
             $bgcolor = $_SESSION["glpipriority_" . $problem->fields["priority"]];
             //      $rand    = mt_rand();
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                    __('%1$s: %2$s'),
-                    __('ID'),
-                    $problem->fields["id"]
-                ) . "</div>";
+                __('%1$s: %2$s'),
+                __('ID'),
+                $problem->fields["id"]
+            ) . "</div>";
             $colnum++;
 
             $output[$colnum] = '';
@@ -427,8 +491,8 @@ class Problem extends CommonGLPI
 
             $colnum++;
             //$output[$colnum] = '';
-            $link = "<a id='problem" . $problem->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-                "/front/problem.form.php?id=" . $problem->fields["id"];
+            $link = "<a id='problem" . $problem->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
+                . "/front/problem.form.php?id=" . $problem->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
             }
@@ -443,7 +507,7 @@ class Problem extends CommonGLPI
                     $problem->fields['content'],
                     [
                         'applyto' => 'problem' . $problem->fields["id"] . $rand,
-                        'display' => false
+                        'display' => false,
                     ]
                 )
             );
@@ -457,7 +521,7 @@ class Problem extends CommonGLPI
     /**
      * @param bool $foruser
      *
-     * @return Datatable
+     * @return MydashboardHtml
      */
     public static function showCentralCount($foruser = false)
     {
@@ -471,107 +535,156 @@ class Problem extends CommonGLPI
             $foruser = true;
         }
 
-        $output = [];
-
-        $query = "SELECT `status`,
-                       COUNT(*) AS COUNT
-                FROM `glpi_problems` ";
+        $criteria = [
+            'SELECT' => [
+                'status',
+                'COUNT' => 'id AS COUNT',
+            ],
+            'FROM' => 'glpi_problems',
+            'LEFT JOIN' => [],
+            'WHERE' => [],
+            'GROUPBY' => 'glpi_problems.status',
+        ];
 
         if ($foruser) {
-            $query .= " LEFT JOIN `glpi_problems_users`
-                        ON (`glpi_problems`.`id` = `glpi_problems_users`.`problems_id`
-                            AND `glpi_problems_users`.`type` = '" . CommonITILActor::REQUESTER . "')";
+            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                'glpi_problems_users' => [
+                    'ON' => [
+                        'glpi_problems' => 'id',
+                        'glpi_problems_users'          => 'problems_id',
+                    ],
+                ],
+            ];
 
             if (isset($_SESSION["glpigroups"])
                 && count($_SESSION["glpigroups"])
             ) {
-                $query .= " LEFT JOIN `glpi_groups_problems`
-                           ON (`glpi_problems`.`id` = `glpi_groups_problems`.`problems_id`
-                               AND `glpi_groups_problems`.`type` = '" . CommonITILActor::REQUESTER . "')";
+                $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                    'glpi_groups_problems' => [
+                        'ON' => [
+                            'glpi_problems' => 'id',
+                            'glpi_groups_problems'          => 'problems_id',
+                        ],
+                    ],
+                ];
             }
         }
-        $query .= getEntitiesRestrictRequest("WHERE", "glpi_problems");
+
+        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_problems'
+        );
 
         if ($foruser) {
-            $query .= " AND (`glpi_problems_users`.`users_id` = '" . Session::getLoginUserID() . "' ";
+
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems_users.users_id' =>  Session::getLoginUserID(),
+                'glpi_problems_users.type' => CommonITILActor::REQUESTER];
 
             if (isset($_SESSION["glpigroups"])
                 && count($_SESSION["glpigroups"])
             ) {
-                $groups = implode("','", $_SESSION['glpigroups']);
-                $query .= " OR `glpi_groups_problems`.`groups_id` IN ('$groups') ";
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_problems.groups_id' =>  $_SESSION['glpigroups'],
+                    'glpi_groups_problems.type' => CommonITILActor::REQUESTER];
+
             }
-            $query .= ")";
         }
-        $query_deleted = $query;
+        $criteria_deleted = $criteria;
 
-        $query .= " AND NOT `glpi_problems`.`is_deleted`
-                         GROUP BY `status`";
-        $query_deleted .= " AND `glpi_problems`.`is_deleted`
-                         GROUP BY `status`";
+        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems.is_deleted' =>  0];
 
-        $result = $DB->doQuery($query);
-        $result_deleted = $DB->doQuery($query_deleted);
+        $criteria_deleted['WHERE'] = $criteria_deleted['WHERE'] + ['glpi_problems.is_deleted' =>  1];
+
+        $iterator = $DB->request($criteria);
+        $iterator_deleted = $DB->request($criteria_deleted);
 
         $status = [];
         foreach (\Problem::getAllStatusArray() as $key => $val) {
             $status[$key] = 0;
         }
 
-        if ($DB->numrows($result) > 0) {
-            while ($data = $DB->fetchAssoc($result)) {
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
                 $status[$data["status"]] = $data["COUNT"];
             }
         }
 
         $number_deleted = 0;
-        if ($DB->numrows($result_deleted) > 0) {
-            while ($data = $DB->fetchAssoc($result_deleted)) {
+        if (count($iterator_deleted) > 0) {
+            foreach ($iterator_deleted as $data) {
                 $number_deleted += $data["COUNT"];
             }
         }
-        $options['field'][0] = 12;
-        $options['searchtype'][0] = 'equals';
-        $options['contains'][0] = 'process';
-        $options['link'][0] = 'AND';
-        $options['reset'] = 'reset';
 
-        $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" . __('Problem followup') . "</a>";
+        $widget = new MydashboardHtml();
+        $widget->setWidgetId("problemcountwidget");
 
-        $output['header'][] = _n('Problem', 'Problems', 2);
-        $output['header'][] = _x('quantity', 'Number');
 
-        $count = 0;
+        $options = Toolbox::append_params([
+            'reset'      => 'reset',
+            'criteria'   => [
+                0 => [
+                    'value'      => 'process',
+                    'searchtype' => 'equals',
+                    'field'      => 12,
+                ],
+            ],
+        ]);
+
+        $icon = "<i class='".\Problem::getIcon()."'></i>";
+        $widget->setWidgetTitle(
+            $icon." <a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?reset=reset\">"
+            .  __('Problem followup', 'mydashboard') . "</a>"
+        );
+
+        $twig_params = [
+            'title'     => [
+                'link'   => $CFG_GLPI["root_doc"] . "/front/problem.php?reset=reset",
+                'text'   =>  __('Problem followup', 'mydashboard'),
+                'icon'   => \Problem::getIcon(),
+            ],
+            'items'     => [],
+        ];
+
         foreach ($status as $key => $val) {
-            $options['contains'][0] = $key;
-            $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-                Toolbox::append_params($options, '&amp;') . "\">" . \Problem::getStatus($key) . "</a>";
-            $output['body'][$count][1] = $val;
-            $count++;
+            $options = Toolbox::append_params([
+                'reset'      => 'reset',
+                'criteria'   => [
+                    0 => [
+                        'value'      => $key,
+                        'searchtype' => 'equals',
+                        'field'      => 12,
+                    ],
+                ],
+            ]);
+            $twig_params['items'][] = [
+                'link'   => $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options,
+                'text'   => \Problem::getStatus($key),
+                'count'  => $val,
+            ];
         }
 
-        $options['contains'][0] = 'all';
-        $options['is_deleted'] = 1;
-        $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
-        $output['body'][$count][1] = $number_deleted;
+        $options = Toolbox::append_params([
+            'reset'      => 'reset',
+            'is_deleted' => 1,
+            'criteria'   => [
+                0 => [
+                    'value'      => 'all',
+                    'searchtype' => 'equals',
+                    'field'      => 12,
+                ],
+            ],
+        ]);
+        $twig_params['items'][] = [
+            'link'   => $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options,
+            'text'   => __('Deleted'),
+            'count'  => $number_deleted,
+        ];
 
-        $widget = new Datatable();
-        $widget->setWidgetTitle($output['title']);
-        $widget->setWidgetId("problemcountwidget");
-        //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
-        $widget->setTabNames($output['header']);
-        $widget->setTabDatas($output['body']);
+        $output = TemplateRenderer::getInstance()->render('@mydashboard/itemtype_count.html.twig', $twig_params);
 
-        //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
-//        if (count($output['body']) > 0) {
-//            $widget->setOption("bSort", false);
-//        }
-        $widget->setOption("bPaginate", false);
-        $widget->setOption("bFilter", false);
-        $widget->setOption("bInfo", false);
+        $widget->toggleWidgetRefresh();
+        $widget->setWidgetHtmlContent($output);
 
         return $widget;
+
     }
 }

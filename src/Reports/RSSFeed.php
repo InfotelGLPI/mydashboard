@@ -27,11 +27,16 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
+use Entity_RSSFeed;
+use Glpi\DBAL\QueryExpression;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Html;
+use Group_RSSFeed;
+use Profile_RSSFeed;
+use RSSFeed_User;
 use Session;
 
 /**
@@ -111,11 +116,15 @@ class RSSFeed extends CommonGLPI
                 return false;
             }
 
-            $query = "SELECT `glpi_rssfeeds`.*
-                   FROM `glpi_rssfeeds`
-                   WHERE `glpi_rssfeeds`.`users_id` = '$users_id'
-                         AND `glpi_rssfeeds`.`is_active` = '1'
-                   ORDER BY `glpi_rssfeeds`.`name`";
+            $criteria = [
+                'SELECT' => '*',
+                'FROM' => 'glpi_rssfeeds',
+                'WHERE' => [
+                    'glpi_rssfeeds.users_id' => $users_id,
+                    'glpi_rssfeeds.is_active' => 1,
+                ],
+                'ORDERBY' => 'glpi_rssfeeds.name',
+            ];
 
             $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
                     'Personal RSS feed',
@@ -128,18 +137,33 @@ class RSSFeed extends CommonGLPI
                 return false;
             }
 
-            $restrict_user = '1';
-            // Only personal on central so do not keep it
-            if (Session::getCurrentInterface() == 'central') {
-                $restrict_user = "`glpi_rssfeeds`.`users_id` <> '$users_id'";
-            }
 
-            $query = "SELECT `glpi_rssfeeds`.*
-                   FROM `glpi_rssfeeds` " .
-                RSSFeed::addVisibilityJoins() . "
-                   WHERE $restrict_user
-                         AND " . RSSFeed::addVisibilityRestrict() . "
-                   ORDER BY `glpi_rssfeeds`.`name`";
+            $criteria = [
+                'SELECT' => 'glpi_rssfeeds.*',
+                'FROM' => 'glpi_rssfeeds',
+                'LEFT JOIN' => self::getVisibilityCriteriaCommonJoin(true),
+                'WHERE' => [
+                    'OR' => [
+                        ['NOT'       => ['glpi_entities_rssfeeds.entities_id' => null]],
+                        ['NOT'       => ['glpi_profiles_rssfeeds.profiles_id' => null]],
+                        ['NOT'       => ['glpi_groups_rssfeeds.groups_id' => null]],
+                        ['NOT'       => ['glpi_rssfeeds_users.users_id' => null]],
+                    ],
+                ],
+                'ORDERBY' => 'glpi_rssfeeds.name',
+            ];
+
+
+            if (Session::getLoginUserID()) {
+                $criteria['WHERE'] = self::getVisibilityCriteria();
+            } else {
+                // Anonymous access
+                if (Session::isMultiEntitiesMode()) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_rssfeeds'
+                        );
+                }
+            }
 
             if (Session::getCurrentInterface() != 'helpdesk') {
                 $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
@@ -152,11 +176,11 @@ class RSSFeed extends CommonGLPI
             }
         }
 
-        $result = $DB->doQuery($query);
+        $iterator = $DB->request($criteria);
         $items = [];
         $rssfeed = new \RSSFeed();
-        if ($nb = $DB->numrows($result)) {
-            while ($data = $DB->fetchAssoc($result)) {
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
                 if ($rssfeed->getFromDB($data['id'])) {
                     // Force fetching feeds
                     if ($feed = \RSSFeed::getRSSFeed($data['url'], $data['refresh_rate'])) {
@@ -184,7 +208,7 @@ class RSSFeed extends CommonGLPI
 
         $output['body'] = [];
 
-        if ($nb) {
+        if (count($iterator) > 0) {
             usort($items, ['SimplePie', 'sort_items']);
             foreach ($items as $item) {
                 $output['body'][$count][0] = \Html::convDateTime($item->get_date('Y-m-d H:i:s'));
@@ -239,179 +263,183 @@ class RSSFeed extends CommonGLPI
         return $widget;
     }
 
-    /**
-     * Return visibility joins to add to DBIterator parameters
-     *
-     * @param boolean $forceall force all joins (false by default)
-     *
-     * @return array
-     * @since 9.4
-     *
-     */
-    public static function getVisibilityCriteria(bool $forceall = false): array
+
+
+    private static function getVisibilityCriteriaCommonJoin(bool $forceall = false)
     {
-        $where = [\RSSFeed::getTable() . '.users_id' => Session::getLoginUserID()];
+
         $join = [];
 
-        if (!\RSSFeed::canView()) {
-            return [
-                'LEFT JOIN' => $join,
-                'WHERE' => $where
+        // Context checks - avoid doing unnecessary join if possible
+        $has_session_groups = count(($_SESSION["glpigroups"] ?? []));
+        $has_active_profile = isset($_SESSION["glpiactiveprofile"]['id']);
+        $has_active_entity = count(($_SESSION["glpiactiveentities"] ?? []));
+
+        // Add user restriction data
+        if ($forceall || Session::getLoginUserID()) {
+            $join['glpi_rssfeeds_users'] = [
+                'ON' => [
+                    'glpi_rssfeeds_users' => 'rssfeeds_id',
+                    'glpi_RssFeeds'       => 'id',
+                ],
             ];
         }
 
-        //JOINs
-        // Users
-        $join['glpi_rssfeeds_users'] = [
-            'ON' => [
-                'glpi_rssfeeds_users' => 'rssfeeds_id',
-                'glpi_rssfeeds' => 'id'
-            ]
-        ];
-
-        $where = [
-            'OR' => [
-                \RSSFeed::getTable() . '.users_id' => Session::getLoginUserID(),
-                'glpi_rssfeeds_users.users_id' => Session::getLoginUserID()
-            ]
-        ];
-        $orwhere = [];
-
-        // Groups
-        if (
-            $forceall
-            || (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"]))
-        ) {
+        // Add group restriction data
+        if ($forceall || $has_session_groups) {
             $join['glpi_groups_rssfeeds'] = [
                 'ON' => [
                     'glpi_groups_rssfeeds' => 'rssfeeds_id',
-                    'glpi_rssfeeds' => 'id'
-                ]
+                    'glpi_RssFeeds'       => 'id',
+                ],
             ];
         }
 
-        if (isset($_SESSION["glpigroups"]) && count($_SESSION["glpigroups"])) {
-            $restrict = getEntitiesRestrictCriteria('glpi_groups_rssfeeds', '', '', true);
-            $orwhere[] = [
-                'glpi_groups_rssfeeds.groups_id' => count($_SESSION["glpigroups"])
-                    ? $_SESSION["glpigroups"]
-                    : [-1],
-                'OR' => [
-                        'glpi_groups_rssfeeds.no_entity_restriction' => 1,
-                    ] + $restrict
-            ];
-        }
-
-        // Profiles
-        if (
-            $forceall
-            || (isset($_SESSION["glpiactiveprofile"])
-                && isset($_SESSION["glpiactiveprofile"]['id']))
-        ) {
+        // Add profile restriction data
+        if ($forceall || $has_active_profile) {
             $join['glpi_profiles_rssfeeds'] = [
                 'ON' => [
                     'glpi_profiles_rssfeeds' => 'rssfeeds_id',
-                    'glpi_rssfeeds' => 'id'
-                ]
+                    'glpi_RssFeeds'       => 'id',
+                ],
             ];
         }
 
-        if (isset($_SESSION["glpiactiveprofile"]) && isset($_SESSION["glpiactiveprofile"]['id'])) {
-            $restrict = getEntitiesRestrictCriteria('glpi_entities_rssfeeds', '', '', true);
-            if (!count($restrict)) {
-                $restrict = [true];
-            }
-            $ors = [
-                'glpi_profiles_rssfeeds.no_entity_restriction' => 1,
-                $restrict
-            ];
-
-            $orwhere[] = [
-                'glpi_profiles_rssfeeds.profiles_id' => $_SESSION["glpiactiveprofile"]['id'],
-                'OR' => $ors
-            ];
-        }
-
-        // Entities
-        if (
-            $forceall
-            || (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"]))
-        ) {
+        // Add entity restriction data
+        if ($forceall || $has_active_entity) {
             $join['glpi_entities_rssfeeds'] = [
                 'ON' => [
                     'glpi_entities_rssfeeds' => 'rssfeeds_id',
-                    'glpi_rssfeeds' => 'id'
-                ]
+                    'glpi_RssFeeds'       => 'id',
+                ],
             ];
         }
 
-        if (isset($_SESSION["glpiactiveentities"]) && count($_SESSION["glpiactiveentities"])) {
-            // Force complete SQL not summary when access to all entities
-            $restrict = getEntitiesRestrictCriteria('glpi_entities_rssfeeds', '', '', true, true);
-            if (count($restrict)) {
-                $orwhere[] = $restrict;
-            }
+        return $join;
+    }
+
+
+    /**
+     * Get visibility criteria for articles displayed in the knowledge base
+     * (seen by central users)
+     * This mean any KB article with valid visibility criteria for the current
+     * user should be displayed
+     *
+     * @return array WHERE clause
+     */
+    private static function getVisibilityCriteria(): array
+    {
+
+        // Prepare criteria, which will use an OR statement (the user can read
+        // the article if any of the user/group/profile/entity criteria are
+        // validated)
+        $where = ['OR' => []];
+
+        // Special case: the user may be the article's author
+        $user = Session::getLoginUserID();
+        $author_check = [\RSSFeed::getTableField('users_id') => $user];
+        $where['OR'][] = $author_check;
+
+        // Filter on users
+        $where['OR'][] = self::getVisibilityCriteria_User();
+
+        // Filter on groups (if the current user have any)
+        $groups = $_SESSION["glpigroups"] ?? [];
+        if (count($groups)) {
+            $where['OR'][] = self::getVisibilityCriteria_Group();
         }
 
-        $where['OR'] = array_merge($where['OR'], $orwhere);
-        $criteria = ['LEFT JOIN' => $join];
-        if (count($where)) {
-            $criteria['WHERE'] = $where;
-        }
+        // Filter on profiles
+        $where['OR'][] = self::getVisibilityCriteria_Profile();
 
-        return $criteria;
+        // Filter on entities
+        $where['OR'][] = self::getVisibilityCriteria_Entity();
+
+        return $where;
+    }
+    /**
+     * Get criteria used to filter knowledge base articles on users
+     *
+     * @return array
+     */
+    private static function getVisibilityCriteria_User(): array
+    {
+        $user = Session::getLoginUserID();
+        return [
+            RssFeed_User::getTableField('users_id') => $user,
+        ];
     }
 
     /**
-     * Return visibility SQL restriction to add
+     * Get criteria used to filter knowledge base articles on groups
      *
-     * @return string restrict to add
-     **/
-    public static function addVisibilityRestrict()
+     * @return array
+     */
+    private static function getVisibilityCriteria_Group(): array
     {
-        //not deprecated because used in Search
-
-        //get and clean criteria
-        $criteria = self::getVisibilityCriteria();
-        unset($criteria['LEFT JOIN']);
-        $criteria['FROM'] = \RSSFeed::getTable();
-
-        $it = new \DBmysqlIterator(null);
-        $it->buildQuery($criteria);
-        $sql = $it->getSql();
-        $sql = preg_replace('/.*WHERE /', '', $sql);
-
-        return $sql;
-    }
-
-    /**
-     * Return visibility joins to add to SQL
-     *
-     * @param $forceall force all joins (false by default)
-     *
-     * @return string joins to add
-     **/
-    public static function addVisibilityJoins($forceall = false)
-    {
-        //not deprecated because used in Search
-        /** @var \DBmysql $DB */
-        global $DB;
-
-        //get and clean criteria
-        $criteria = self::getVisibilityCriteria();
-        unset($criteria['WHERE']);
-        $criteria['FROM'] = \RSSFeed::getTable();
-
-        $it = new \DBmysqlIterator(null);
-        $it->buildQuery($criteria);
-        $sql = $it->getSql();
-        $sql = trim(
-            str_replace(
-                'SELECT * FROM ' . $DB->quoteName(\RSSFeed::getTable()),
-                '',
-                $sql
-            )
+        $groups = $_SESSION["glpigroups"] ?? [-1];
+        $entity_restriction = getEntitiesRestrictCriteria(
+            Group_RssFeed::getTable(),
+            '',
+            '',
+            true,
+            true
         );
-        return $sql;
+
+        return [
+            Group_RssFeed::getTableField('groups_id') => $groups,
+            'OR' => [
+                    Group_RssFeed::getTableField('no_entity_restriction') => 1,
+                ] + $entity_restriction,
+        ];
+    }
+
+    /**
+     * Get criteria used to filter knowledge base articles on profiles
+     *
+     * @return array
+     */
+    private static function getVisibilityCriteria_Profile(): array
+    {
+        $profile = $_SESSION["glpiactiveprofile"]['id'] ?? -1;
+        $entity_restriction = getEntitiesRestrictCriteria(
+            Profile_RssFeed::getTable(),
+            '',
+            '',
+            true,
+            true
+        );
+
+        return [
+            Profile_RssFeed::getTableField('profiles_id') => $profile,
+            'OR' => [
+                    Profile_RssFeed::getTableField('no_entity_restriction') => 1,
+                ] + $entity_restriction,
+        ];
+    }
+
+    /**
+     * Get criteria used to filter knowledge base articles on entity
+     *
+     * @return array
+     */
+    private static function getVisibilityCriteria_Entity(): array
+    {
+        $entity_restriction = getEntitiesRestrictCriteria(
+            Entity_RssFeed::getTable(),
+            '',
+            '',
+            true,
+            true
+        );
+
+        // All entities
+        if (!count($entity_restriction)) {
+            $entity_restriction = [
+                Entity_RssFeed::getTableField('entities_id') => null,
+            ];
+        }
+
+        return $entity_restriction;
     }
 }

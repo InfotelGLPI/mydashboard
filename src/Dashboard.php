@@ -290,10 +290,15 @@ class Dashboard extends CommonDBTM
             $migration->migrationOneTable($table);
         }
 
-        $query      = "SELECT `id`, `grid` FROM `glpi_plugin_mydashboard_dashboards`";
-        $result     = $DB->doQuery($query);
+        $iterator = $DB->request([
+            'SELECT'    => [
+                'id',
+                'grid'
+            ],
+            'FROM'      => 'glpi_plugin_mydashboard_dashboards',
+        ]);
 
-        while ($data = $DB->fetchArray($result)) {
+        foreach ($iterator as $data) {
             $id    = $data['id'];
             $grids = json_decode($data['grid'], true);
             $newwidgets = [];

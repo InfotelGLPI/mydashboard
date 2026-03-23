@@ -33,10 +33,11 @@ use CommonITILObject;
 use CommonITILValidation;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Datatable;
-use GlpiPlugin\Mydashboard\Html;
+use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use ITILCategory;
@@ -1090,162 +1091,247 @@ class Ticket extends CommonGLPI
             $foruser = true;
         }
 
-        $output = [];
-
-        $query = "SELECT `status`,
-                       COUNT(*) AS COUNT
-                FROM `glpi_tickets` ";
-
-        if ($foruser) {
-            $query .= " LEFT JOIN `glpi_tickets_users`
-                        ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id`
-                            AND `glpi_tickets_users`.`type` = '" . CommonITILActor::REQUESTER . "')";
-
-            if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)
-                && isset($_SESSION["glpigroups"])
-                && count($_SESSION["glpigroups"])
-            ) {
-                $query .= " LEFT JOIN `glpi_groups_tickets`
-                           ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`
-                               AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::REQUESTER . "')";
-            }
-        }
-        $dbu = new DbUtils();
-        $query .= $dbu->getEntitiesRestrictRequest("WHERE", "glpi_tickets");
+        $criteria = [
+            'SELECT' => [
+                'status',
+                'COUNT' => 'id AS COUNT',
+            ],
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN' => [],
+            'WHERE' => [],
+            'GROUPBY' => 'glpi_tickets.status',
+        ];
 
         if ($foruser) {
-            $query .= " AND (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "' ";
+            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                    'glpi_tickets_users' => [
+                        'ON' => [
+                            'glpi_tickets' => 'id',
+                            'glpi_tickets_users' => 'tickets_id',
+                        ],
+                    ],
+                ];
 
-            if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)
-                && isset($_SESSION["glpigroups"])
+            if (isset($_SESSION["glpigroups"])
                 && count($_SESSION["glpigroups"])
             ) {
-                $groups = implode("','", $_SESSION['glpigroups']);
-                $query .= " OR `glpi_groups_tickets`.`groups_id` IN ('$groups') ";
+                $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                        'glpi_groups_tickets' => [
+                            'ON' => [
+                                'glpi_tickets' => 'id',
+                                'glpi_groups_tickets' => 'tickets_id',
+                            ],
+                        ],
+                    ];
             }
-            $query .= ")";
         }
-        $query_deleted = $query;
 
-        $query .= " AND `glpi_tickets`.`is_deleted` = 0
-                         GROUP BY `status`";
-        $query_deleted .= " AND `glpi_tickets`.`is_deleted` = 1
-                         GROUP BY `status`";
+        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                'glpi_tickets'
+            );
 
-        $result = $DB->doQuery($query);
-        $result_deleted = $DB->doQuery($query_deleted);
+        if ($foruser) {
+            $criteria['WHERE'] = $criteria['WHERE'] + [
+                    'glpi_tickets_users.users_id' => Session::getLoginUserID(),
+                    'glpi_tickets_users.type' => CommonITILActor::REQUESTER
+                ];
+
+            if (isset($_SESSION["glpigroups"])
+                && count($_SESSION["glpigroups"])
+            ) {
+                $criteria['WHERE'] = $criteria['WHERE'] + [
+                        'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
+                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER
+                    ];
+            }
+        }
+        $criteria_deleted = $criteria;
+
+        $iterator = $DB->request($criteria);
+        $iterator_deleted = $DB->request($criteria_deleted);
 
         $status = [];
         foreach (\Ticket::getAllStatusArray() as $key => $val) {
             $status[$key] = 0;
         }
 
-        if ($DB->numrows($result) > 0) {
-            while ($data = $DB->fetchAssoc($result)) {
+
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
                 $status[$data["status"]] = $data["COUNT"];
             }
         }
 
         $number_deleted = 0;
-        if ($DB->numrows($result_deleted) > 0) {
-            while ($data = $DB->fetchAssoc($result_deleted)) {
+        if (count($iterator_deleted) > 0) {
+            foreach ($iterator_deleted as $data) {
                 $number_deleted += $data["COUNT"];
             }
         }
 
-        $options['criteria'][0]['field'] = 12;
-        $options['criteria'][0]['searchtype'] = 'equals';
-        $options['criteria'][0]['value'] = 'process';
-        $options['criteria'][0]['link'] = 'AND';
-        $options['reset'] = 'reset';
+        $options = Toolbox::append_params([
+            'reset' => 'reset',
+            'criteria' => [
+                0 => [
+                    'value' => 'process',
+                    'searchtype' => 'equals',
+                    'field' => 12,
+                ],
+            ],
+        ]);
 
-        if (Session::getCurrentInterface() != "central") {
-            $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1\" class='pointer'>"
-                . __('Create a ticket') . "&nbsp;<i class='ti ti-plus'></i><span class='sr-only'>" . __s(
-                    'Add'
-                ) . "</span></a>";
-        } else {
-            $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                . Toolbox::append_params($options, '&amp;') . "\">" . __('Ticket followup', 'mydashboard') . "</a>";
-        }
-
-        $output['header'][] = _n('Ticket', 'Tickets', 2);
-        $output['header'][] = _x('quantity', 'Number');
-
-        $count = 0;
-        foreach ($status as $key => $val) {
-            $options['criteria'][0]['value'] = $key;
-            $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                . Toolbox::append_params($options, '&amp;') . "\">" . \Ticket::getStatus($key) . "</a>";
-            $output['body'][$count][1] = $val;
-            $count++;
-        }
-
-        $options['criteria'][0]['value'] = 'all';
-        $options['is_deleted'] = 1;
-        $output['body'][$count][0] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-            . Toolbox::append_params($options, '&amp;') . "\">" . __('Deleted') . "</a>";
-        $output['body'][$count][1] = $number_deleted;
-
-        $widget = new Datatable();
-        $widget->setWidgetTitle($output['title']);
+        $widget = new MydashboardHtml();
         $widget->setWidgetId("ticketcountwidget");
-        //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
-        $widget->setTabNames($output['header']);
-        $widget->setTabDatas($output['body']);
 
-        //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
-        //        if (count($output['body']) > 0) {
-        //            $widget->setOption("bSort", false);
-        //        }
-        $widget->setOption("bPaginate", false);
-        $widget->setOption("bFilter", false);
-        $widget->setOption("bInfo", false);
+        $title = __('Ticket followup', 'mydashboard');
+        if (Session::getCurrentInterface() != "central") {
+            $icon = "<i class='" . \Ticket::getIcon() . "'></i>";
+            $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset\">"
+                . $title . "</a>";
+            if (\Ticket::canCreate()) {
+                $widgetTitle .= "&nbsp;<span>";
+                $widgetTitle .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1\">";
+                $widgetTitle .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
+            }
+        } else {
+            $icon = "<i class='" . \Ticket::getIcon() . "'></i>";
+            $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset\">"
+                . $title . "</a>";
+            if (\Ticket::canCreate()) {
+                $widgetTitle .= "&nbsp;<span>";
+                $widgetTitle .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.form.php\">";
+                $widgetTitle .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
+            }
+        }
+
+        $twig_params = [
+            'title' => [
+                'link' => $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset",
+                'text' => __('Ticket followup', 'mydashboard'),
+                'icon' => \Ticket::getIcon(),
+            ],
+            'items' => [],
+        ];
+
+        $widget->setWidgetTitle(
+            $icon . " " . $widgetTitle
+        );
+
+
+        foreach ($status as $key => $val) {
+            $options = Toolbox::append_params([
+                'reset' => 'reset',
+                'criteria' => [
+                    0 => [
+                        'value' => $key,
+                        'searchtype' => 'equals',
+                        'field' => 12,
+                    ],
+                ],
+            ]);
+            $twig_params['items'][] = [
+                'link' => $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options,
+                'text' => \Ticket::getStatus($key),
+                'count' => $val,
+            ];
+        }
+
+
+        $options = Toolbox::append_params([
+            'reset' => 'reset',
+            'is_deleted' => 1,
+            'criteria' => [
+                0 => [
+                    'value' => 'all',
+                    'searchtype' => 'equals',
+                    'field' => 12,
+                ],
+            ],
+        ]);
+        $twig_params['items'][] = [
+            'link' => $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options,
+            'text' => __('Deleted'),
+            'count' => $number_deleted,
+        ];
+
+        $output = TemplateRenderer::getInstance()->render('@mydashboard/itemtype_count.html.twig', $twig_params);
+
+        $widget->toggleWidgetRefresh();
+        $widget->setWidgetHtmlContent($output);
 
         return $widget;
     }
 
-    /**
-     * @deprecated 9.5.0
-     */
+
     public static function getCommonSelect()
     {
-        $SELECT = "";
+        $SELECT = [];
         if (count($_SESSION["glpiactiveentities"]) > 1) {
-            $SELECT .= ", `glpi_entities`.`completename` AS entityname,
-                       `glpi_tickets`.`entities_id` AS entityID ";
+            $SELECT = [
+                'glpi_entities.completename AS entityname',
+                'glpi_tickets.entities_id AS entityID'
+            ];
         }
 
-        return " DISTINCT `glpi_tickets`.*,
-                        `glpi_itilcategories`.`completename` AS catname
-                        $SELECT";
+        return [
+                'glpi_tickets.*',
+                'glpi_itilcategories.completename AS catname'
+            ] + $SELECT;
     }
 
 
-    /**
-     * @deprecated 9.5.0
-     */
     public static function getCommonLeftJoin()
     {
-        $FROM = "";
+        $FROM = [];
         if (count($_SESSION["glpiactiveentities"]) > 1) {
-            $FROM .= " LEFT JOIN `glpi_entities`
-                        ON (`glpi_entities`.`id` = `glpi_tickets`.`entities_id`) ";
+            $FROM = [
+                'glpi_entities' => [
+                    'ON' => [
+                        'glpi_tickets' => 'entities_id',
+                        'glpi_entities' => 'id'
+                    ]
+                ]
+            ];
         }
 
-        return " LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`)
-               LEFT JOIN `glpi_tickets_users`
-                  ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id`)
-               LEFT JOIN `glpi_suppliers_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_suppliers_tickets`.`tickets_id`)
-               LEFT JOIN `glpi_itilcategories`
-                  ON (`glpi_tickets`.`itilcategories_id` = `glpi_itilcategories`.`id`)
-               LEFT JOIN `glpi_tickettasks`
-                  ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
-               LEFT JOIN `glpi_items_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_items_tickets`.`tickets_id`)
-               $FROM";
+        return [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets' => 'id'
+                    ]
+                ],
+                'glpi_tickets_users' => [
+                    'ON' => [
+                        'glpi_tickets_users' => 'tickets_id',
+                        'glpi_tickets' => 'id'
+                    ]
+                ],
+                'glpi_suppliers_tickets' => [
+                    'ON' => [
+                        'glpi_suppliers_tickets' => 'tickets_id',
+                        'glpi_tickets' => 'id'
+                    ]
+                ],
+                'glpi_itilcategories' => [
+                    'ON' => [
+                        'glpi_tickets' => 'itilcategories_id',
+                        'glpi_itilcategories' => 'id'
+                    ]
+                ],
+                'glpi_tickettasks' => [
+                    'ON' => [
+                        'glpi_tickettasks' => 'tickets_id',
+                        'glpi_tickets' => 'id'
+                    ]
+                ],
+                'glpi_items_tickets' => [
+                    'ON' => [
+                        'glpi_items_tickets' => 'tickets_id',
+                        'glpi_tickets' => 'id'
+                    ]
+                ]
+            ] + $FROM;
     }
 
     /**
@@ -1260,37 +1346,49 @@ class Ticket extends CommonGLPI
         }
 
         $output = [];
-        $dbu = new DbUtils();
-        $query = "SELECT " . self::getCommonSelect() . "
-                FROM `glpi_tickets` " . self::getCommonLeftJoin() . "
-                WHERE `status` = '" . \Ticket::INCOMING . "' "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets") . "
-                      AND NOT `is_deleted`
-                ORDER BY `glpi_tickets`.`date_mod` DESC
-                LIMIT " . intval($_SESSION['glpilist_limit']);
-        $result = $DB->doQuery($query);
+        $criteria = [
+            'SELECT' => self::getCommonSelect(),
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN' => self::getCommonLeftJoin(),
+            'WHERE' => [
+                'is_deleted' => 0,
+                'status' =>\Ticket::INCOMING,
+            ],
+            'ORDERBY' => 'glpi_tickets.date_mod DESC',
+            'LIMIT' => intval($_SESSION['glpilist_limit'])
+        ];
 
-        $number = $DB->numrows($result);
+        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                'glpi_tickets'
+            );
+
+        $iterator = $DB->request($criteria);
+
+        $number = count($iterator);
 
         if ($number > 0) {
             Session::initNavigateListItems('Ticket');
 
-            $options['criteria'][0]['field'] = 12;
-            $options['criteria'][0]['searchtype'] = 'equals';
-            $options['criteria'][0]['value'] = \Ticket::INCOMING;
-            $options['criteria'][0]['link'] = 'AND';
-            $options['reset'] = 'reset';
+            $options = Toolbox::append_params([
+                'reset'      => 'reset',
+                'criteria'   => [
+                    0 => [
+                        'value'      => \Ticket::INCOMING,
+                        'searchtype' => 'equals',
+                        'field'      => 12,
+                        'link'       => 'AND',
+                    ],
+                ],
+            ]);
 
             //TRANS: %d is the number of new tickets
             $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
-            $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params(
-                    $options,
-                    '&amp;'
-                ) . "\">" . __('Show all') . "</a>)";
+            $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options . "\">" . __('Show all') . "</a>)";
 
             $output['header'] = self::commonListHeader();
 
-            while ($data = $DB->fetchAssoc($result)) {
+            foreach ($iterator as $data) {
                 Session::addToNavigateListItems('Ticket', $data["id"]);
                 $output['body'][] = self::showShort($data["id"], 0);
             }

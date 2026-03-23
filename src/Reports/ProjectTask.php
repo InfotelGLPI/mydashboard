@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -27,9 +28,10 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
-use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Html;
@@ -61,22 +63,22 @@ class ProjectTask extends CommonGLPI
 
         if ($showprojecttask) {
             $widgets = [
-                Menu::$TOOLS =>
-                    [
-                        "projecttaskprocesswidget" => [
-                            "title" => __('projects tasks to be processed', 'mydashboard'),
-                            "type" => Widget::$TABLE,
-                            "comment" => ""
-                        ],
+                Menu::$TOOLS
+                => [
+                    "projecttaskprocesswidget" => [
+                        "title" => __('Projects tasks to be processed', 'mydashboard'),
+                        "type" => Widget::$TABLE,
+                        "comment" => "",
                     ],
-                Menu::$GROUP_VIEW =>
-                    [
-                        "projectprocesswidgetgroup" => [
-                            "title" => __('projects tasks to be processed', 'mydashboard'),
-                            "type" => Widget::$TABLE,
-                            "comment" => ""
-                        ],
-                    ]
+                ],
+                Menu::$GROUP_VIEW
+                => [
+                    "projecttaskprocesswidgetgroup" => [
+                        "title" => __('Projects tasks to be processed', 'mydashboard'),
+                        "type" => Widget::$TABLE,
+                        "comment" => "",
+                    ],
+                ],
             ];
         }
         return $widgets;
@@ -95,10 +97,10 @@ class ProjectTask extends CommonGLPI
         if ($showprojecttask) {
             switch ($widgetId) {
                 case "projecttaskprocesswidget":
-                    return self::showCentralList(0, "process", false);
+                    return self::showCentralList($widgetId, 0, "process", false);
                     break;
                 case "projecttaskprocesswidgetgroup":
-                    return self::showCentralList(0, "process", true);
+                    return self::showCentralList($widgetId, 0, "process", true);
                     break;
             }
         }
@@ -109,69 +111,83 @@ class ProjectTask extends CommonGLPI
      * @param string $status
      * @param bool $showgroupprojecttasks
      *
-     * @return Datatable
+     * @return MydashboardHtml
      */
-    public static function showCentralList($start, $status = "process", $showgroupprojecttasks = true)
+    public static function showCentralList($widgetId, $start, $status = "process", $showgroupprojecttasks = true)
     {
         global $DB, $CFG_GLPI;
 
         $output = [];
-        //We declare our new widget
-        $widget = new Datatable();
-        if ($status == "process") {
-            $widget->setWidgetTitle(\Html::makeTitle(__('projects tasks to be processed', 'mydashboard'), 0, 0));
-        }
-        $group = ($showgroupprojecttasks) ? "group" : "";
-        $widget->setWidgetId("projecttask" . $status . "widget" . $group);
-        //Here we set few otions concerning the jquery library Datatable, bPaginate for paginating ...
-        $widget->setOption("bPaginate", false);
-        $widget->setOption("bFilter", false);
-        $widget->setOption("bInfo", false);
 
         if (!Session::haveRightsOr('projecttask', [\ProjectTask::READMY])) {
             return false;
         }
 
-        $search_assign = " (`glpi_projecttasks`.`users_id`= '" . Session::getLoginUserID() . "')";
-        $search_assign .= " OR (`glpi_projecttaskteams`.`items_id` = '" . Session::getLoginUserID() . "'
-                            AND `glpi_projecttaskteams`.`itemtype` = 'User')";
+
+        $search_assign = [
+            'OR' => [
+                ['glpi_projecttasks.users_id' => Session::getLoginUserID()],
+                [
+                    'glpi_projecttaskteams.items_id' => Session::getLoginUserID(),
+                    'glpi_projecttaskteams.itemtype' => 'User'
+                ],
+            ],
+        ];
 
         if ($showgroupprojecttasks) {
             if (count($_SESSION['glpigroups'])) {
-                $groups = implode("','", $_SESSION['glpigroups']);
-
-                $search_assign = " (`glpi_projecttaskteams`.`items_id` IN ('$groups')
-                                     AND `glpi_projecttaskteams`.`itemtype` = 'Group') ";
+                $search_assign = [
+                    'glpi_projecttaskteams.items_id' => $_SESSION['glpigroups'],
+                    'glpi_projecttaskteams.itemtype' => 'Group'
+                ];
             }
         }
-        $dbu = new DbUtils();
-        $query = "SELECT DISTINCT `glpi_projecttasks`.`id`
-                FROM `glpi_projecttasks`
-                LEFT JOIN `glpi_projecttaskteams`
-                     ON (`glpi_projecttasks`.`id` = `glpi_projecttaskteams`.`projecttasks_id`)
-                LEFT JOIN glpi_projectstates
-                     ON glpi_projecttasks.projectstates_id = glpi_projectstates.id";
+        $criteria = [
+            'SELECT' => 'glpi_projecttasks.id',
+            'DISTINCT' => true,
+            'FROM' => 'glpi_projecttasks',
+            'LEFT JOIN' => [
+                'glpi_projecttaskteams' => [
+                    'ON' => [
+                        'glpi_projecttasks' => 'id',
+                        'glpi_projecttaskteams' => 'projecttasks_id',
+                    ],
+                ],
+                'glpi_projectstates' => [
+                    'ON' => [
+                        'glpi_projecttasks' => 'projectstates_id',
+                        'glpi_projectstates' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [],
+            'ORDERBY' => 'glpi_projecttasks.date_mod DESC',
+        ];
 
         switch ($status) {
             case "process": // on affiche les projets assignés au user
-                $query .= " WHERE ($search_assign)
-                      AND (glpi_projectstates.is_finished = 0  OR glpi_projecttasks.projectstates_id = 0)";
-                $dbu->getEntitiesRestrictRequest("AND", "glpi_projects");
+
+                $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
+
+                $criteria['WHERE'] = $criteria['WHERE'] + [
+                        'OR' => [
+                            ['glpi_projectstates.is_finished' => 0],
+                            ['glpi_projecttasks.projectstates_id' => 0],
+                        ],
+                    ];
+
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_projecttasks'
+                    );
                 break;
         }
 
-        $query .= " ORDER BY glpi_projecttasks.date_mod DESC";
+        $iterator = $DB->request($criteria);
+        $numrows = count($iterator);
 
-        $result = $DB->doQuery($query);
-        $numrows = $DB->numrows($result);
+        $widget = new MydashboardHtml();
+        $widget->setWidgetId($widgetId);
 
-        //      if ($_SESSION['glpidisplay_count_on_home'] > 0) {
-        //         $query .= " LIMIT " . intval($start) . ',' . intval($_SESSION['glpidisplay_count_on_home']);
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
-        //      } else {
-        //         $number = 0;
-        //      }
 
         if ($numrows > 0) {
             $output['title'] = "";
@@ -181,74 +197,178 @@ class ProjectTask extends CommonGLPI
             if ($showgroupprojecttasks) {
                 switch ($status) {
                     case "process":
-                        foreach ($_SESSION['glpigroups'] as $gID) {
-                            $options['field'][$num] = 8; // groups_id_assign
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = $gID;
-                            $options['link'][$num] = (($num == 0) ? 'AND' : 'OR');
-                            $num++;
-                            $options['field'][$num] = 12; // status
-                            $options['searchtype'][$num] = 'equals';
-                            $options['contains'][$num] = 'process';
-                            $options['link'][$num] = 'AND';
-                            $num++;
-                        }
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(
-                                __('projects tasks to be processed', 'mydashboard'),
-                                $number,
+                        $options = Toolbox::append_params([
+                            'reset' => 'reset',
+                            'criteria' => [
+                                0 => [
+                                    'value' => $_SESSION['glpigroups'],
+                                    'searchtype' => 'equals',
+                                    'field' => 8,
+                                    'link' => 'AND',
+                                ],
+                                1 => [
+                                    'value' => 'process',
+                                    'searchtype' => 'equals',
+                                    'field' => 12,
+                                ],
+                            ],
+                        ]);
+//                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
+//                            . $options . "\">"
+//                            . Html::makeTitle(
+//                                __('Projects tasks to be processed', 'mydashboard'),
+//                                $numrows,
+//                                $numrows
+//                            ) . "</a>";
+
+                        $icon = "<i class='" . \ProjectTask::getIcon() . "'></i>";
+                        $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(
+                                __('Projects tasks to be processed', 'mydashboard'),
+                                $numrows,
                                 $numrows
                             ) . "</a>";
+
+
                         break;
                 }
             } else {
                 switch ($status) {
                     case "process":
-                        $options['field'][0] = 5; // users_id_assign
-                        $options['searchtype'][0] = 'equals';
-                        $options['contains'][0] = Session::getLoginUserID();
-                        $options['link'][0] = 'AND';
+                        $options = Toolbox::append_params([
+                            'reset' => 'reset',
+                            'criteria' => [
+                                0 => [
+                                    'value' => Session::getLoginUserID(),
+                                    'searchtype' => 'equals',
+                                    'field' => 5,
+                                    'link' => 'AND',
+                                ],
+                                1 => [
+                                    'value' => 'process',
+                                    'searchtype' => 'equals',
+                                    'field' => 12,
+                                ],
+                            ],
+                        ]);
 
-                        $options['field'][1] = 12; // status
-                        $options['searchtype'][1] = 'equals';
-                        $options['contains'][1] = 'process';
-                        $options['link'][1] = 'AND';
+//                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
+//                            . $options . "\">"
+//                            . Html::makeTitle(
+//                                __('Projects tasks to be processed', 'mydashboard'),
+//                                $numrows,
+//                                $numrows
+//                            ) . "</a>";
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?" .
-                            Toolbox::append_params($options, '&amp;') . "\">" .
-                            \Html::makeTitle(
-                                __('projects tasks to be processed', 'mydashboard'),
-                                $number,
+                        $icon = "<i class='" . \ProjectTask::getIcon() . "'></i>";
+                        $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
+                            . $options . "\">"
+                            . Html::makeTitle(
+                                __('Projects tasks to be processed', 'mydashboard'),
+                                $numrows,
                                 $numrows
                             ) . "</a>";
+
+
                         break;
                 }
             }
 
-            if ($number) {
-                $output['header'][] = __('ID');
-                $output['header'][] = __('Requester');
-                $output['header'][] = __('Description');
-                for ($i = 0; $i < $number; $i++) {
-                    $ID = $DB->result($result, $i, "id");
-                    $output['body'][] = self::showVeryShort($ID, $forcetab);
+            $widget->setWidgetTitle(
+                $icon . " " . $widgetTitle
+            );
+
+            if ($numrows) {
+                $entries = [];
+
+                foreach ($iterator as $data) {
+                    $ID = $data["id"];
+//                    $values = self::showVeryShort($ID, $forcetab);
+
+                    $projecttask = new \ProjectTask();
+
+                    if ($projecttask->getFromDB($ID)) {
+
+                        $status = $data['id'];
+                        if (!empty($projecttask->fields["projects_id"])) {
+                            $project = new \Project();
+                            $project->getFromDB($projecttask->fields["projects_id"]);
+                            $bgcolor = $_SESSION["glpipriority_" . $project->fields["priority"]];
+
+                            $status_badge_style = "background-color:{$bgcolor};;";
+                            $status = '<span class="badge" style="' . htmlescape($status_badge_style) . '">' . htmlescape($data['id']) . '</span>';
+                        }
+
+                        $name = $projecttask->fields[\ProjectTask::getNameField()];
+                        if (
+                            $_SESSION["glpiis_ids_visible"]
+                            || empty($projecttask->fields[\ProjectTask::getNameField()])
+                        ) {
+                            $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);
+                        }
+                        $link     = $projecttask::getFormURLWithID($data['id']);
+                        $namelink = "<a href=\"" . htmlescape($link) . "\">" . htmlescape($name) . "</a>";
+
+                        $requesters = "";
+                        if (isset($projecttask->fields["users_id"])) {
+                            if ($projecttask->fields["users_id"] > 0) {
+                                $requesters .= getUserName($projecttask->fields["users_id"]);
+                            }
+                        }
+
+                        if (isset($projecttask->fields["groups_id"])
+                            && $projecttask->fields["groups_id"] != 0
+                        ) {
+                            $requesters .= Dropdown::getDropdownName("glpi_groups", $projecttask->fields["groups_id"]);
+                        }
+
+                        $entries[] = [
+                            'itemtype' => \ProjectTask::class,
+                            'id' => $status,
+                            'requester' =>$requesters,
+                            'name' => $namelink,
+                        ];
+                    }
                 }
             }
         }
 
-        //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
-        if (isset($output['title'])) {
-            $widget->setWidgetTitle($output['title']);
-        }
-        if (isset($output['header'])) {
-            $widget->setTabNames($output['header']);
-        }
-        if (isset($output['body'])) {
-            $widget->setTabDatas($output['body']);
-        } else {
-            $widget->setTabDatas([]);
-        }
+
+        $add_link = '';
+
+        $columns = [
+            'id' => __('ID'),
+        ];
+        $columns += [
+            'requester' => __('Requester'),
+            'name' => __('Name'),
+        ];
+        $formatters = [
+            'id' => 'raw_html',
+            'name' => 'raw_html',
+        ];
+        $footers = [];
+
+        $output = TemplateRenderer::getInstance()->render('@mydashboard/table.html.twig', [
+            'title' => __('Description'),
+            'add_link' => $add_link,
+            'datatable_params' => [
+                'is_tab' => true,
+                'nofilter' => true,
+                'nosort' => true,
+                'columns' => $columns,
+                'formatters' => $formatters,
+                'entries' => $entries,
+                'footers' => $footers,
+                'total_number' => count($entries),
+                'filtered_number' => count($entries),
+                'showmassiveactions' => false,
+            ],
+        ]);
+
+        $widget->toggleWidgetRefresh();
+        $widget->setWidgetHtmlContent($output);
 
         return $widget;
     }
@@ -305,8 +425,8 @@ class ProjectTask extends CommonGLPI
 
             $colnum++;
 
-            $link = "<a id='projecttask" . $projecttask->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"] .
-                "/front/projecttask.form.php?id=" . $projecttask->fields["id"];
+            $link = "<a id='projecttask" . $projecttask->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
+                . "/front/projecttask.form.php?id=" . $projecttask->fields["id"];
             if ($forcetab != '') {
                 $link .= "&amp;forcetab=" . $forcetab;
             }
@@ -321,7 +441,7 @@ class ProjectTask extends CommonGLPI
                     $projecttask->fields['content'],
                     [
                         'applyto' => 'projecttask' . $projecttask->fields["id"] . $rand,
-                        'display' => false
+                        'display' => false,
                     ]
                 )
             );

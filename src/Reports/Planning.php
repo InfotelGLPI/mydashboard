@@ -27,9 +27,10 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
-use GlpiPlugin\Mydashboard\Datatable;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
+use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use Session;
 
 /**
@@ -71,7 +72,7 @@ class Planning extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [];
-        if (Session::haveRight(Planning::$rightname, \Planning::READMY)) {
+        if (Session::haveRight(\Planning::$rightname, \Planning::READMY)) {
             $widgets = [
                 Menu::$TICKET_TECHVIEW => [
                     "planningwidget" => [
@@ -116,7 +117,7 @@ class Planning extends CommonGLPI
      *
      * @param $who ID of the user
      *
-     * @return Datatable (display function)
+     * @return MydashboardHtml (display function)
      */
     public static function showCentral($who, $who_group = "")
     {
@@ -127,9 +128,9 @@ class Planning extends CommonGLPI
         }
         \Html::requireJs('fullcalendar');
         \Html::requireJs('planning');
-        echo \Html::css("/public/lib/fullcalendar.css");
+        echo \Html::css("/lib/fullcalendar.css");
 
-        $widget = new \Html();
+        $widget = new MydashboardHtml();
         $title = __("Your planning");
         $widget->setWidgetTitle($title);
 
@@ -142,22 +143,17 @@ class Planning extends CommonGLPI
             'rand' => $rand,
             'now' => date("Y-m-d H:i:s"),
         ];
-        $graph = "<div id='planning$rand' class='flex-fill'></div>";
-        $graph .= "</div>";
 
-        $js = \Html::scriptBlock(
-            "$(function() {
-         GLPIPlanning.display(" . json_encode($options) . ");
-         GLPIPlanning.planningFilters();
-      });"
-        );
-        $widget->appendWidgetScriptContent($js);
         $widget->toggleWidgetRefresh();
-        $widget->setWidgetHtmlContent(
-            $graph
+
+        $output =  TemplateRenderer::getInstance()->render(
+            'pages/assistance/planning/planning.html.twig',
+            [
+                'options' => $options,
+            ]
         );
 
-
+        $widget->setWidgetHtmlContent($output);
         return $widget;
     }
 }

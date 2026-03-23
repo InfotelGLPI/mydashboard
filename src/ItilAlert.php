@@ -206,8 +206,7 @@ class ItilAlert extends CommonDBTM {
         $table  = self::getTable();
 
         if ($DB->tableExists("glpi_plugin_mydashboard_problemalerts")) {
-            $query = "RENAME TABLE `glpi_plugin_mydashboard_problemalerts` TO `$table`;";
-            $DB->doQuery($query);
+            $migration->renameTable("glpi_plugin_mydashboard_problemalerts",$table);
         }
 
         if (!$DB->tableExists($table)) {
@@ -232,8 +231,15 @@ class ItilAlert extends CommonDBTM {
             $migration->changeField($table, "problems_id", "items_id", "int {$default_key_sign} NOT NULL DEFAULT '0'");
             $migration->migrationOneTable($table);
 
-            $query = "UPDATE `$table` SET `itemtype` = 'Problem';";
-            $DB->doQuery($query);
+             $DB->update(
+                        $table,
+                        [
+                            'itemtype' => 'Problem'
+                        ],
+                        [
+                            1 => 1,
+                        ]
+                    );
         }
     }
 

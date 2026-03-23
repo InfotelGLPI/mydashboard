@@ -91,9 +91,9 @@ class Event extends \Glpi\Event
     {
         if (Session::haveRight("logs", READ)) {
             switch ($widgetId) {
-                case "eventwidgetpersonnal":
-                    return Event::showForUser($_SESSION['glpiname']);
-                    break;
+//                case "eventwidgetpersonal":
+//                    return Event::showForUser($_SESSION['glpiname']);
+//                    break;
                 case "eventwidgetglobal":
                     return Event::showForUser();
                     break;
@@ -176,17 +176,18 @@ class Event extends \Glpi\Event
         }
 
         // Query Database
-        $query = "SELECT *
-                FROM `glpi_events`
-                WHERE `message` LIKE '" . $usersearch . "%'
-                ORDER BY `date` DESC
-                LIMIT 0," . intval($_SESSION['glpilist_limit']);
-
-        // Get results
-        $result = $DB->doQuery($query);
+        $iterator = $DB->request([
+            'SELECT'    => '*',
+            'FROM'      => 'glpi_events',
+            'WHERE'     => [
+                'message'   => ['LIKE', $usersearch.'%']
+            ],
+            'ORDERBY'   => 'date DESC',
+            'LIMIT'    => intval($_SESSION['glpilist_limit'])
+        ]);
 
         // Number of results
-        $number = $DB->numrows($result);
+        $number = count($iterator);
         // No Events in database
         if ($number < 1) {
             $output['title'] = "<br><div class='spaced'><table class='tab_cadre_fixe'>";
@@ -209,29 +210,23 @@ class Event extends \Glpi\Event
 
         $output['body'] = [];
 
-        while ($i < $number) {
-            $DB->result($result, $i, "id");
-            $items_id = $DB->result($result, $i, "items_id");
-            $type = $DB->result($result, $i, "type");
-            $date = $DB->result($result, $i, "date");
-            $service = $DB->result($result, $i, "service");
-            $message = $DB->result($result, $i, "message");
+        foreach ($iterator as $data) {
 
             $itemtype = "&nbsp;";
-            if (isset($logItemtype[$type])) {
-                $itemtype = $logItemtype[$type];
+            if (isset($logItemtype[$data['type']])) {
+                $itemtype = $logItemtype[$data['type']];
             } else {
-                $type = getSingular($type);
+                $type = getSingular($data['type']);
                 if ($item = getItemForItemtype($type)) {
                     $itemtype = $item->getTypeName(1);
                 }
             }
 
             $output['body'][$i][0] = $itemtype;
-            $output['body'][$i][1] = self::displayItemLogID($type, $items_id);
-            $output['body'][$i][2] = \Html::convDateTime($date);
-            $output['body'][$i][3] = $logService[$service];
-            $output['body'][$i][4] = $message;
+            $output['body'][$i][1] = self::displayItemLogID($data['type'],$data['items_id']);
+            $output['body'][$i][2] = \Html::convDateTime($data['date']);
+            $output['body'][$i][3] = $logService[$data['service']];
+            $output['body'][$i][4] = $data['message'];
 
             $i++;
         }

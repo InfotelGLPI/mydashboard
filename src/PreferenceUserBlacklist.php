@@ -115,7 +115,7 @@ class PreferenceUserBlacklist extends CommonDBTM {
          }
          //We remove no longer blacklisted
          foreach ($to_delete as $delete_blacklist_item) {
-            $this->deleteItem($user_id, $delete_blacklist_item);
+            $this->deleteByCriteria(['users_id' =>$user_id, 'plugin_name' => $delete_blacklist_item]);
          }
       }
    }
@@ -127,30 +127,24 @@ class PreferenceUserBlacklist extends CommonDBTM {
     */
    private function saveItem($user_id, $plugin_name) {
       global $DB;
-      $query = "SELECT * "
-         . "FROM `glpi_plugin_mydashboard_preferenceuserblacklists`"
-         . "WHERE `users_id` = " . $user_id . " "
-         . "AND `plugin_name` = '$plugin_name';";
 
-      $result = $DB->doQuery($query);
-      if ($result && $DB->numrows($result) == 0) {
-         $query = "INSERT IGNORE INTO `glpi_plugin_mydashboard_preferenceuserblacklists` "
-            . "VALUES (NULL,$user_id,'$plugin_name');";
-         $DB->doQuery($query);
-      }
+       $iterator = $DB->request([
+           'SELECT'    => [
+               '*'
+           ],
+           'FROM'      => 'glpi_plugin_mydashboard_preferenceuserblacklists',
+           'WHERE'     => [
+               'users_id'  => $user_id,
+               'plugin_name' => $plugin_name
+           ],
+       ]);
+
+       if (count($iterator) == 0) {
+           $this->add(['users_id' =>$user_id, 'plugin_name' => $plugin_name]);
+       }
    }
 
-   /**
-    * Delete $plugin_name from $user_id 's black list
-    * @param type $user_id
-    * @param type $plugin_name
-    */
-   private function deleteItem($user_id, $plugin_name) {
-      global $DB;
-      $query = "DELETE FROM `glpi_plugin_mydashboard_preferenceuserblacklists` "
-         . "WHERE (`users_id` = " . $user_id . " && `plugin_name` = '" . $plugin_name . "')";
-      $DB->doQuery($query);
-   }
+
 
    /**
     * Get an array of plugin names that are blacklisted by user
@@ -160,15 +154,22 @@ class PreferenceUserBlacklist extends CommonDBTM {
    function getBlacklistForUser($user_id) {
       global $DB;
 
-      $query = "SELECT `plugin_name` "
-         . "FROM `glpi_plugin_mydashboard_preferenceuserblacklists` "
-         . "WHERE `users_id` = $user_id;";
-      $result = $DB->doQuery($query);
+       $iterator = $DB->request([
+           'SELECT'    => [
+               'plugin_name'
+           ],
+           'FROM'      => 'glpi_plugin_mydashboard_preferenceuserblacklists',
+           'WHERE'     => [
+               'users_id'  => $user_id
+           ],
+       ]);
+       $tab = [];
+       if (count($iterator) > 0) {
+           foreach ($iterator as $row) {
+               $tab[$row['plugin_name']] = $row['plugin_name'];
+           }
+       }
 
-      $tab = [];
-      while ($row = $DB->fetchArray($result)) {
-         $tab[$row['plugin_name']] = $row['plugin_name'];
-      }
       return $tab;
    }
 

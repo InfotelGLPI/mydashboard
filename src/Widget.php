@@ -703,7 +703,7 @@ class Widget extends CommonDBTM
 
                     $widgetdisplay .= "<div id='$widgetindex'>";
                     $widgetdisplay .= "<div class=\"bt-row $delclass\">";
-                    $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 96%'>";
+                    $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 98%;margin-left:10px'>";
 
                     if ($widget->getTitleVisibility()) {
                         $titletype     = $widget->getWidgetHeaderType();

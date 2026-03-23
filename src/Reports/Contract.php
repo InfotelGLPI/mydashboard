@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -28,7 +29,11 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QueryFunction;
 use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Html;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Session;
@@ -61,9 +66,9 @@ class Contract extends CommonGLPI
                     "contractwidget" => [
                         "title" => __('Contracts status', 'mydashboard'),
                         "type" => Widget::$TABLE,
-                        "comment" => ""
+                        "comment" => "",
                     ],
-                ]
+                ],
             ];
         }
         return $widgets;
@@ -73,7 +78,7 @@ class Contract extends CommonGLPI
     /**
      * @param $widgetId
      *
-     * @return Nothing
+     * @return Datatable|false
      */
     public function getWidgetContentForItem($widgetId)
     {
@@ -88,7 +93,7 @@ class Contract extends CommonGLPI
      * Show central contract resume
      * HTML array
      *
-     * @return Datatable (display)
+     * @return Html (display)
      */
     public static function showCentral()
     {
@@ -99,143 +104,185 @@ class Contract extends CommonGLPI
             return false;
         }
 
-        // No recursive contract, not in local management
-        // contrats echus depuis moins de 30j
-        $query = "SELECT COUNT(*)
-                FROM `glpi_contracts`
-                WHERE `glpi_contracts`.`is_deleted`='0' " .
-            $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           `glpi_contracts`.`duration` MONTH),CURDATE() )>-30
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           `glpi_contracts`.`duration` MONTH),CURDATE() )<'0'";
-        $result = $DB->doQuery($query);
-        $contract0 = $DB->result($result, 0, 0);
-        $dbu = new DbUtils();
-        // contrats  echeance j-7
-        $query = "SELECT COUNT(*)
-                FROM `glpi_contracts`
-                WHERE `glpi_contracts`.`is_deleted`='0' " .
-            $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           `glpi_contracts`.`duration` MONTH),CURDATE() )>'0'
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           `glpi_contracts`.`duration` MONTH),CURDATE() )<='7'";
-        $result = $DB->doQuery($query);
-        $contract7 = $DB->result($result, 0, 0);
-
-        // contrats echeance j -30
-        $query = "SELECT COUNT(*)
-                FROM `glpi_contracts`
-                WHERE `glpi_contracts`.`is_deleted`='0' " .
-            $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           `glpi_contracts`.`duration` MONTH),CURDATE() )>'7'
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           `glpi_contracts`.`duration` MONTH),CURDATE() )<'30'";
-        $result = $DB->doQuery($query);
-        $contract30 = $DB->result($result, 0, 0);
-
-        // contrats avec préavis echeance j-7
-        $query = "SELECT COUNT(*)
-                FROM `glpi_contracts`
-                WHERE `glpi_contracts`.`is_deleted`='0' " .
-            $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
-                      AND `glpi_contracts`.`notice`<>'0'
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
-                                           MONTH),CURDATE() )>'0'
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
-                                           MONTH),CURDATE() )<='7'";
-        $result = $DB->doQuery($query);
-        $contractpre7 = $DB->result($result, 0, 0);
-
-        // contrats avec préavis echeance j -30
-        $query = "SELECT COUNT(*)
-                FROM `glpi_contracts`
-                WHERE `glpi_contracts`.`is_deleted`='0'" .
-            $dbu->getEntitiesRestrictRequest("AND", "glpi_contracts") . "
-                      AND `glpi_contracts`.`notice`<>'0'
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
-                                           MONTH),CURDATE() )>'7'
-                      AND DATEDIFF(ADDDATE(`glpi_contracts`.`begin_date`, INTERVAL
-                                           (`glpi_contracts`.`duration`-`glpi_contracts`.`notice`)
-                                           MONTH),CURDATE() )<'30'";
-        $result = $DB->doQuery($query);
-        $contractpre30 = $DB->result($result, 0, 0);
-
-        $widget = new Datatable();
-        $widget->setWidgetId("contractwidget");
-        $widget->setWidgetTitle(
-            "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset\">" .
-            \Contract::getTypeName(2) . "</a>"
+        $end_date = QueryFunction::dateAdd(
+            date: 'begin_date',
+            interval: new QueryExpression($DB::quoteName('duration')),
+            interval_unit: 'MONTH'
         );
 
-        $body = [];
+        $end_date_diff_now = QueryFunction::dateDiff(
+            expression1: $end_date,
+            expression2: QueryFunction::curDate()
+        );
 
-        $options['reset'] = 'reset';
-        $options['sort'] = 12;
-        $options['order'] = 'DESC';
-        $options['start'] = 0;
+        // No recursive contract, not in local management
+        // contrats echus depuis moins de 30j
+        $table = \Contract::getTable();
+        $result = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $table,
+            'WHERE'  => [
+                'is_deleted'   => 0,
+                new QueryExpression("$end_date_diff_now  > -30"),
+                new QueryExpression("$end_date_diff_now < 0"),
+            ] + getEntitiesRestrictCriteria($table),
+        ])->current();
+        $contract0 = $result['cpt'];
 
-        $options['criteria'][0] = [
-            'field' => 12,
-            'value' => '<0',
-            'searchtype' => 'contains'
-        ];
-        $options['criteria'][1] = [
-            'field' => 12,
-            'link' => 'AND',
-            'value' => '>-30',
-            'searchtype' => 'contains'
+        // contrats  echeance j-7
+        $result = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $table,
+            'WHERE'  => [
+                'is_deleted'   => 0,
+                new QueryExpression("$end_date_diff_now > 0"),
+                new QueryExpression("$end_date_diff_now  <= 7"),
+            ] + getEntitiesRestrictCriteria($table),
+        ])->current();
+        $contract7 = $result['cpt'];
+
+        // contrats echeance j -30
+        $result = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $table,
+            'WHERE'  => [
+                'is_deleted'   => 0,
+                new QueryExpression("$end_date_diff_now > 7"),
+                new QueryExpression("$end_date_diff_now < 30"),
+            ] + getEntitiesRestrictCriteria($table),
+        ])->current();
+        $contract30 = $result['cpt'];
+
+        $notice_date = QueryFunction::dateAdd(
+            date: 'begin_date',
+            interval: new QueryExpression($DB::quoteName('duration') . ' - ' . $DB::quoteName('notice')),
+            interval_unit: 'MONTH'
+        );
+
+        $end_date_diff_notice = QueryFunction::dateDiff(
+            expression1: $notice_date,
+            expression2: QueryFunction::curDate()
+        );
+
+        // contrats avec pr??avis echeance j-7
+        $result = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $table,
+            'WHERE'  => [
+                'is_deleted'   => 0,
+                'notice'       => ['<>', 0],
+                new QueryExpression("$end_date_diff_notice > 0"),
+                new QueryExpression("$end_date_diff_notice <= 7"),
+            ] + getEntitiesRestrictCriteria($table),
+        ])->current();
+        $contractpre7 = $result['cpt'];
+
+        // contrats avec pr??avis echeance j -30
+        $result = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $table,
+            'WHERE'  => [
+                'is_deleted'   => 0,
+                'notice'       => ['<>', 0],
+                new QueryExpression("$end_date_diff_notice > 7"),
+                new QueryExpression("$end_date_diff_notice < 30"),
+            ] + getEntitiesRestrictCriteria($table),
+        ])->current();
+        $contractpre30 = $result['cpt'];
+
+        $widget = new Html();
+        $widget->setWidgetId("contractwidget");
+
+        $icon = "<i class='".\Contract::getIcon()."'></i>";
+        $widget->setWidgetTitle(
+            $icon." <a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset\">"
+            .  __('Contract followup', 'mydashboard') . "</a>"
+        );
+
+        $twig_params = [
+            'title'     => [
+                'link'   => $CFG_GLPI["root_doc"] . "/front/contract.php?reset=reset",
+                'text'   =>  \Contract::getTypeName(2),
+                'icon'   => \Contract::getIcon(),
+            ],
+            'items'     => [],
         ];
 
-        $body[] = [
-            "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" .
-            __('Contracts expired in the last 30 days') . "</a>",
-            $contract0
-        ];
-        $options['criteria'][0]['value'] = '>0';
-        $options['criteria'][1]['value'] = '<7';
-        $body[] = [
-            "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" .
-            __('Contracts expiring in less than 7 days') . "</a>",
-            $contract7
+        $options = [
+            'reset' => 'reset',
+            'sort'  => 20,
+            'order' => 'DESC',
+            'start' => 0,
+            'criteria' => [
+                [
+                    'field'      => 20,
+                    'value'      => 'NOW',
+                    'searchtype' => 'lessthan',
+                ],
+                [
+                    'field'      => 20,
+                    'link'       => 'AND',
+                    'searchtype' => 'morethan',
+                    'value'      => '-1MONTH',
+                ],
+            ],
         ];
 
-        $options['criteria'][0]['value'] = '>6';
-        $options['criteria'][1]['value'] = '<30';
-        $body[] = [
-            "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" .
-            __('Contracts expiring in less than 30 days') . "</a>",
-            $contract30
+        $twig_params['items'][] = [
+            'link'   => $CFG_GLPI["root_doc"] . "/front/contract.php?" . Toolbox::append_params($options),
+            'text'   => __('Contracts expired in the last 30 days'),
+            'count'  => $contract0,
         ];
+
+        $options['criteria'][0]['searchtype'] = 'morethan';
+        $options['criteria'][0]['value']      = 'NOW';
+        $options['criteria'][1]['searchtype'] = 'lessthan';
+        $options['criteria'][1]['value']      = '7DAY';
+
+        $twig_params['items'][] = [
+            'link'   => $CFG_GLPI["root_doc"] . "/front/contract.php?" . Toolbox::append_params($options),
+            'text'   => __('Contracts expiring in less than 7 days'),
+            'count'  => $contract7,
+        ];
+
+        $options['criteria'][0]['searchtype'] = 'morethan';
+        $options['criteria'][0]['value']      = '6DAY';
+        $options['criteria'][1]['searchtype'] = 'lessthan';
+        $options['criteria'][1]['value']      = '1MONTH';
+
+        $twig_params['items'][] = [
+            'link'   => $CFG_GLPI["root_doc"] . "/front/contract.php?" . Toolbox::append_params($options),
+            'text'   => __('Contracts expiring in less than 30 days'),
+            'count'  => $contract30,
+        ];
+
         $options['criteria'][0]['field'] = 13;
-        $options['criteria'][0]['value'] = '>0';
+        $options['criteria'][0]['searchtype'] = 'morethan';
+        $options['criteria'][0]['value'] = 'NOW';
         $options['criteria'][1]['field'] = 13;
-        $options['criteria'][1]['value'] = '<7';
-        $body[] = [
-            "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" .
-            __('Contracts where notice begins in less than 7 days') . "</a>",
-            $contractpre7
+        $options['criteria'][1]['searchtype'] = 'lessthan';
+        $options['criteria'][1]['value'] = '7DAY';
+
+        $twig_params['items'][] = [
+            'link'   => $CFG_GLPI["root_doc"] . "/front/contract.php?" . Toolbox::append_params($options),
+            'text'   => __('Contracts where notice begins in less than 7 days'),
+            'count'  => $contractpre7,
         ];
 
-        $options['criteria'][0]['value'] = '>6';
-        $options['criteria'][1]['value'] = '<30';
-        $body[] = [
-            "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/contract.php?" .
-            Toolbox::append_params($options, '&amp;') . "\">" .
-            __('Contracts where notice begins in less than 30 days') . "</a>",
-            $contractpre30
+        $options['criteria'][0]['value'] = '6DAY';
+        $options['criteria'][1]['value'] = '1MONTH';
+
+
+        $twig_params['items'][] = [
+            'link'   => $CFG_GLPI["root_doc"] . "/front/contract.php?" . Toolbox::append_params($options),
+            'text'   => __('Contracts where notice begins in less than 30 days'),
+            'count'  => $contractpre30,
         ];
 
-        $widget->setTabDatas($body);
+        $output = TemplateRenderer::getInstance()->render('@mydashboard/itemtype_count.html.twig', $twig_params);
+
+        $widget->toggleWidgetRefresh();
+        $widget->setWidgetHtmlContent($output);
 
         return $widget;
     }

@@ -34,6 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\DBAL\QueryExpression;
 use Html;
 use GlpiPlugin\Mydashboard\Config;
 use Migration;
@@ -391,8 +392,17 @@ class ConfigTranslation extends CommonDBChild {
 
         }
 
-        $query = "UPDATE `glpi_plugin_mydashboard_widgets` set name = REPLACE(name,'PluginMydashboardConfig','GlpiPlugin\\\Mydashboard\\\Config')";
-        $DB->doQuery($query);
+        $DB->update(
+            "glpi_plugin_mydashboard_widgets",
+            [
+                'name' => new QueryExpression(
+                    'REPLACE(' . $DB->quoteName('name') . ', "PluginMydashboardConfig", "GlpiPlugin\\\Mydashboard\\\Config")'
+                ),
+            ],
+            [
+                1 => 1,
+            ]
+        );
     }
 
     public static function uninstall()

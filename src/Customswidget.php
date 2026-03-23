@@ -74,39 +74,22 @@ class Customswidget extends CommonDropdown
      */
     public static function listCustomsWidgets()
     {
-        $customsWidgets = [];
-
         global $DB;
 
-        $query = "SELECT * from " . Customswidget::getTable();
+        $customsWidgets = [];
 
-        $result = $DB->doQuery($query);
+        $iterator = $DB->request([
+            'SELECT'    => '*',
+            'FROM'      => Customswidget::getTable()
+        ]);
 
-        while ($data = $DB->fetchAssoc($result)) {
+        foreach ($iterator as $data) {
             $customsWidgets[] = $data;
         }
 
         return $customsWidgets;
     }
 
-    /**
-     * @param $id
-     *
-     * @return bool
-     * @throws \GlpitestSQLError
-     */
-    public static function checkCustomWidgetExist($id)
-    {
-        global $DB;
-
-        $query = "SELECT count(*) as count from " . Customswidget::getTable();
-        $query .= " WHERE id=" . $id;
-
-        $result = $DB->doQuery($query);
-
-        $data2 = $DB->fetchArray($result);
-        return $data2['count'] > 0;
-    }
 
     /**
      * @param $id
@@ -118,14 +101,18 @@ class Customswidget extends CommonDropdown
     {
         global $DB;
 
-        $query = "SELECT * from " . Customswidget::getTable();
-        $query .= " WHERE id=" . $id;
+        $iterator = $DB->request([
+            'SELECT'    => '*',
+            'FROM'      => Customswidget::getTable(),
+            'WHERE'     => [
+                'id'  => $id
+            ],
+        ]);
 
-        $result = $DB->doQuery($query);
-
-        while ($data = $DB->fetchAssoc($result)) {
+        foreach ($iterator as $data) {
             return $data;
         }
+
         return null;
     }
 

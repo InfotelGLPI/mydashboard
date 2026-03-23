@@ -336,10 +336,13 @@ class Config extends CommonDBTM
         global $DB;
 
         //We first check if there is no configuration
-        $query = "SELECT * FROM `" . $this->getTable() . "` LIMIT 1";
+        $iterator = $DB->request([
+            'SELECT'    => '*',
+            'FROM'      => $this->getTable(),
+            'LIMIT'    => 1
+        ]);
 
-        $result = $DB->doQuery($query);
-        if ($DB->numrows($result) == '0') {
+        if (count($iterator) == 0) {
             $input                              = [];
             $input['id']                        = "1";
             $input['enable_fullscreen']         = "1";
