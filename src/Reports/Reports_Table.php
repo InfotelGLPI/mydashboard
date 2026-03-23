@@ -72,12 +72,12 @@ class Reports_Table extends CommonGLPI
                 $this->getType() . "32" => [
                     "title" => __("Number of opened tickets by technician and by status", "mydashboard"),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 $this->getType() . "33" => [
                     "title" => __("Number of opened tickets by group and by status", "mydashboard"),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
             ],
             Menu::$INVENTORY => [
@@ -85,7 +85,7 @@ class Reports_Table extends CommonGLPI
                 $this->getType() . "5" => [
                     "title" => __("Fields unicity"),
                     "type" => Widget::$TABLE,
-                    "comment" => __("Display if you have duplicates into inventory", "mydashboard")
+                    "comment" => __("Display if you have duplicates into inventory", "mydashboard"),
                 ],
             ],
             Menu::$TOOLS => [
@@ -93,7 +93,7 @@ class Reports_Table extends CommonGLPI
                 $this->getType() . "14" => [
                     "title" => __("All unpublished articles", "mydashboard"),
                     "type" => Widget::$TABLE,
-                    "comment" => __("Display unpublished articles of Knowbase", "mydashboard")
+                    "comment" => __("Display unpublished articles of Knowbase", "mydashboard"),
                 ],
 
             ],
@@ -102,7 +102,7 @@ class Reports_Table extends CommonGLPI
                 $this->getType() . "3" => [
                     "title" => __("Internal annuary", "mydashboard"),
                     "type" => Widget::$TABLE,
-                    "comment" => __("Search users of your organisation", "mydashboard")
+                    "comment" => __("Search users of your organisation", "mydashboard"),
                 ],
             ],
         ];
@@ -151,7 +151,7 @@ class Reports_Table extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return \Html
+     * @return Datatable
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -169,79 +169,104 @@ class Reports_Table extends CommonGLPI
 
         switch ($widgetId) {
             case $this->getType() . "3":
-                $query = "SELECT `firstname`, `realname`, `name`, `phone`, `phone2`, `mobile`
-                        FROM `glpi_users`
-                        LEFT JOIN `glpi_profiles_users` ON (`glpi_users`.`id` = `glpi_profiles_users`.`users_id`)
-                        WHERE `glpi_users`.`is_deleted` = '0'
-                        AND `glpi_users`.`is_active` "
-                    . $dbu->getEntitiesRestrictRequest(
-                        "AND",
-                        'glpi_profiles_users',
-                        "entities_id",
-                        $_SESSION['glpiactiveentities'],
-                        true
-                    );
 
-                $query .= "AND NOT `glpi_users`.`firstname` = ''
-                        AND `glpi_users`.`firstname` IS NOT NULL
-                        AND NOT `glpi_users`.`realname` = ''
-                        AND `glpi_users`.`realname` IS NOT NULL
-                        AND ((NOT `glpi_users`.`phone` = ''
-                        AND `glpi_users`.`phone` IS NOT NULL)
-                        OR (NOT `glpi_users`.`phone2` = ''
-                        AND `glpi_users`.`phone2` IS NOT NULL)
-                        OR (NOT `glpi_users`.`mobile` = ''
-                        AND `glpi_users`.`mobile` IS NOT NULL))
-                        ORDER BY `realname`, `firstname` ASC";
+                $criteria = [
+                    'SELECT' => ['firstname',
+                        'realname',
+                        'name',
+                        'phone',
+                        'phone2',
+                        'mobile'],
+                    'FROM' => 'glpi_users',
+                    'LEFT JOIN'       => [
+                        'glpi_profiles_users' => [
+                            'ON' => [
+                                'glpi_users' => 'id',
+                                'glpi_profiles_users'          => 'users_id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        'glpi_users.is_deleted' => 0,
+                        'glpi_users.is_active' => 1,
+                    ],
+                    'GROUPBY' => 'name',
+                    'ORDERBY' => 'realname,firstname ASC',
+                ];
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_profiles_users'
+                );
 
+                $iterator = $DB->request($criteria);
 
-                $widget = Helper::getWidgetsFromDBQuery('table', $query);
                 $headers = [
                     __('First name'),
                     __('Name'),
                     __('Login'),
                     __('Phone'),
                     __('Phone 2'),
-                    __('Mobile phone')
+                    __('Mobile phone'),
                 ];
 
-                $widget->setTabNames($headers);
-                $hidden[] = ["targets" => 2, "visible" => false];
-                $widget->setOption("bDef", $hidden);
+                $rows = [];
+                if (count($iterator) > 0) {
+                    $i = 0;
+                    foreach ($iterator as $data) {
+                        if (!empty($data['firstname'])
+                            && !empty($data['realname'])
+                            && (!empty($data['phone'])
+                            || !empty($data['phone2'])
+                                || !empty($data['mobile']))) {
+                            $rows[$i]['firstname'] = $data['firstname'];
+                            $rows[$i]['realname'] = $data['realname'];
+                            $rows[$i]['name'] = $data['name'];
+                            $rows[$i]['phone'] = $data['phone'];
+                            $rows[$i]['phone2'] = $data['phone2'];
+                            $rows[$i]['mobile'] = $data['mobile'];
+                            $i++;
+                        }
+                    }
+                }
 
+                $widget = new Datatable();
                 $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "3 " : "") . $title);
                 $widget->setWidgetComment($comment);
+
+                $widget->setTabNames($headers);
+                $widget->setTabDatas($rows);
+
+                $widget->setOption("bPaginate", false);
+                $widget->setOption("bFilter", false);
+                $widget->setOption("bInfo", false);
+
                 $widget->toggleWidgetRefresh();
 
                 return $widget;
-                break;
 
             case $this->getType() . "5":
-                $query = "SELECT id
-                FROM `glpi_fieldunicities`
-                WHERE `is_active` = '1' "
-                    . $dbu->getEntitiesRestrictRequest(
-                        "AND",
-                        'glpi_fieldunicities',
-                        "",
-                        $_SESSION['glpiactive_entity'],
-                        true
-                    );
-                $query .= "ORDER BY `entities_id` DESC";
 
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                $criteria = [
+                    'SELECT' => 'id',
+                    'FROM' => 'glpi_fieldunicities',
+                    'WHERE' => [
+                        'is_active' => 1,
+                    ],
+                    'ORDERBY' => 'entities_id DESC',
+                ];
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_fieldunicities'
+                );
 
-                $widget = Helper::getWidgetsFromDBQuery('table', $query);
+                $iterator = $DB->request($criteria);
+
                 $headers = [__('Name'), __('Duplicates')];
-                $widget->setTabNames($headers);
 
                 $datas = [];
                 $i = 0;
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
                         $unicity = new FieldUnicity();
                         $unicity->getFromDB($data["id"]);
 
@@ -263,32 +288,9 @@ class Reports_Table extends CommonGLPI
                             if ($unicity->fields['is_recursive']) {
                                 $entities = getSonsOf('glpi_entities', $unicity->fields['entities_id']);
                             }
-                            $fields_string = implode(',', $fields);
-
-                            //                            $where_template = [];
-                            //                            if ($item->maybeTemplate()) {
-                            //                                $where_template = " AND `" . $item->getTable() . "`.`is_template` = '0'";
-                            //                            } else {
-                            //
-                            //                            }
 
                             $where_fields_string = [];
-                            //                            foreach ($where_fields as $where_field) {
-                            //                                if (getTableNameForForeignKeyField($where_field)) {
-                            //                                    $where_fields_string []= ['NOT' => [$where_field => null],
-                            //                                        $where_field => ['<>', 0]];
-                            //                                } else {
-                            //                                    $where_fields_string []= ['NOT' => [$where_field => null],
-                            //                                        $where_field => ['<>', '']];
-                            //                                }
-                            //                            }
-                            //                            $query_field             = "SELECT COUNT(*) AS cpt
-                            //                               FROM `" . $item->getTable() . "`
-                            //                               WHERE `" . $item->getTable() . "`.`entities_id` IN (" . implode(',', $entities) . ")
-                            //                                     $where_template
-                            //                                     $where_fields_string
-                            //                               GROUP BY $fields_string
-                            //                               ORDER BY cpt DESC";
+
 
                             $query_field = [
                                 'SELECT' => [
@@ -307,7 +309,6 @@ class Reports_Table extends CommonGLPI
                             }
                             $query_field['WHERE'] = $query_field['WHERE'] + $where_fields_string;
                             $count = 0;
-                            $datas[$i]["duplicates"] = 0;
                             foreach ($DB->request($query_field) as $uniq) {
                                 if ($uniq['cpt'] > 1) {
                                     $count++;
@@ -321,51 +322,92 @@ class Reports_Table extends CommonGLPI
                     }
                 }
 
-                $widget->setTabDatas($datas);
+                $widget = new Datatable();
                 $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "5 " : "") . $title);
                 $widget->setWidgetComment($comment);
 
+                $widget->setTabNames($headers);
+                $widget->setTabDatas($datas);
+
+                $widget->setOption("bPaginate", false);
+                $widget->setOption("bFilter", false);
+                $widget->setOption("bInfo", false);
+
+                $widget->toggleWidgetRefresh();
+
                 return $widget;
-                break;
+
 
             case $this->getType() . "14":
-                $query = "SELECT DISTINCT `glpi_knowbaseitems`.*, `glpi_knowbaseitemcategories`.`completename` AS category
-                     FROM `glpi_knowbaseitems`
-                     LEFT JOIN `glpi_knowbaseitems_users` ON (`glpi_knowbaseitems_users`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
-                     LEFT JOIN `glpi_groups_knowbaseitems` ON (`glpi_groups_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
-                     LEFT JOIN `glpi_knowbaseitems_profiles` ON (`glpi_knowbaseitems_profiles`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
-                     LEFT JOIN `glpi_entities_knowbaseitems` ON (`glpi_entities_knowbaseitems`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
-                     LEFT JOIN `glpi_knowbaseitems_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitems_id` = `glpi_knowbaseitems`.`id`)
-                     LEFT JOIN `glpi_knowbaseitemcategories` ON (`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitemcategories_id` = `glpi_knowbaseitemcategories`.`id`)
-                     WHERE (`glpi_entities_knowbaseitems`.`entities_id` IS NULL
-                     AND `glpi_knowbaseitems_profiles`.`profiles_id` IS NULL
-                     AND `glpi_groups_knowbaseitems`.`groups_id` IS NULL
-                     AND `glpi_knowbaseitems_users`.`users_id` IS NULL)";
 
-                $widget = Helper::getWidgetsFromDBQuery('table', $query);
-                $widget->getTabDatas();
+                $criteria = [
+                    'SELECT' => ['glpi_knowbaseitems.*',
+                        'glpi_knowbaseitemcategories.completename AS category'],
+                    'DISTINCT'        => true,
+                    'FROM' => 'glpi_knowbaseitems',
+                    'LEFT JOIN'       => [
+                        'glpi_knowbaseitems_users' => [
+                            'ON' => [
+                                'glpi_knowbaseitems_users' => 'knowbaseitems_id',
+                                'glpi_knowbaseitems'          => 'id',
+                            ],
+                        ],
+                        'glpi_groups_knowbaseitems' => [
+                            'ON' => [
+                                'glpi_groups_knowbaseitems' => 'knowbaseitems_id',
+                                'glpi_knowbaseitems'          => 'id',
+                            ],
+                        ],
+                        'glpi_knowbaseitems_profiles' => [
+                            'ON' => [
+                                'glpi_knowbaseitems_profiles' => 'knowbaseitems_id',
+                                'glpi_knowbaseitems'          => 'id',
+                            ],
+                        ],
+                        'glpi_entities_knowbaseitems' => [
+                            'ON' => [
+                                'glpi_entities_knowbaseitems' => 'knowbaseitems_id',
+                                'glpi_knowbaseitems'          => 'id',
+                            ],
+                        ],
+                        'glpi_knowbaseitems_knowbaseitemcategories' => [
+                            'ON' => [
+                                'glpi_knowbaseitems_knowbaseitemcategories' => 'knowbaseitems_id',
+                                'glpi_knowbaseitems'          => 'id',
+                            ],
+                        ],
+                        'glpi_knowbaseitemcategories' => [
+                            'ON' => [
+                                'glpi_knowbaseitems_knowbaseitemcategories' => 'knowbaseitemcategories_id',
+                                'glpi_knowbaseitemcategories'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        'glpi_entities_knowbaseitems.entities_id' => null,
+                        'glpi_knowbaseitems_profiles.profiles_id' => null,
+                        'glpi_groups_knowbaseitems.groups_id' => null,
+                        'glpi_knowbaseitems_users.users_id' => null,
+                    ],
+
+                ];
+
+
+                $iterator = $DB->request($criteria);
 
                 $headers = [__('Subject'), __('Writer'), __('Category')];
-                $widget->setTabNames($headers);
-
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
 
                 $datas = [];
                 $i = 0;
 
                 $knowbaseitem = new \KnowbaseItem();
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
                         $knowbaseitem->getFromDB($data['id']);
 
                         $datas[$i]["name"] = $knowbaseitem->getLink();
-                        $showuserlink = 0;
-                        if (Session::haveRight('user', READ)) {
-                            $showuserlink = 1;
-                        }
                         $datas[$i]["users"] = getUserName($data["users_id"]);
                         $datas[$i]["category"] = $data["category"];
 
@@ -373,16 +415,24 @@ class Reports_Table extends CommonGLPI
                     }
                 }
 
-                $widget->setTabDatas($datas);
 
+                $widget = new Datatable();
                 $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetTitle((($isDebug) ? "14 " : "") . $title);
                 $widget->setWidgetComment($comment);
+
+                $widget->setTabNames($headers);
+                $widget->setTabDatas($datas);
+
+                $widget->setOption("bPaginate", false);
+                $widget->setOption("bFilter", false);
+                $widget->setOption("bInfo", false);
+
                 $widget->toggleWidgetRefresh();
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "32":
                 $name = 'NumberOfTicketsByTechnicianAndStatus';
@@ -393,7 +443,7 @@ class Reports_Table extends CommonGLPI
                         'is_recursive',
                         'technicians_groups_id',
                         'group_is_recursive',
-                        'users_id'
+                        'users_id',
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -404,7 +454,7 @@ class Reports_Table extends CommonGLPI
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
 
                 $options = Helper::manageCriterias($params);
@@ -502,7 +552,7 @@ class Reports_Table extends CommonGLPI
                     _x('status', 'Processing (assigned)'),
                     _x('status', 'Processing (planned)'),
                     __('Pending'),
-                    _x('status', 'Solved')
+                    _x('status', 'Solved'),
                 ];
                 if ($nb) {
                     $i = 0;
@@ -524,8 +574,8 @@ class Reports_Table extends CommonGLPI
                                     $nbWaitingTickets = $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
                                         $value .= "<a href='#' onclick='" . Widget::removeBackslashes(
-                                                $widgetId
-                                            ) . "_search($userId, $status, $hasMoreTicket)'>";
+                                            $widgetId
+                                        ) . "_search($userId, $status, $hasMoreTicket)'>";
                                     }
                                     $value .= $data['nbtickets'];
                                     if ($data['nbtickets'] != "0") {
@@ -550,8 +600,8 @@ class Reports_Table extends CommonGLPI
                                     if (isset($array[$status][$userId])) {
                                         $value = '';
                                         $value .= "<a href='#' onclick='" . Widget::removeBackslashes(
-                                                $widgetId
-                                            ) . "_search($userId, $statusId , $hasMoreTicket)'>";
+                                            $widgetId
+                                        ) . "_search($userId, $statusId , $hasMoreTicket)'>";
                                         $value .= $array[$status][$userId];
                                         $value .= "</a>";
                                         $temp[$i][$j] = $value;
@@ -604,7 +654,7 @@ class Reports_Table extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => false,
                     "canvas" => false,
-                    "nb" => $nb
+                    "nb" => $nb,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params) . "<br>");
                 $linkURL = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
@@ -647,7 +697,7 @@ class Reports_Table extends CommonGLPI
                         'is_recursive',
                         'technicians_groups_id',
                         'group_is_recursive',
-                        'itilcategory'
+                        'itilcategory',
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -658,7 +708,7 @@ class Reports_Table extends CommonGLPI
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
 
                 $options = Helper::manageCriterias($params);
@@ -843,7 +893,7 @@ class Reports_Table extends CommonGLPI
                     _x('status', 'Processing (assigned)'),
                     _x('status', 'Processing (planned)'),
                     __('Pending'),
-                    _x('status', 'Solved')
+                    _x('status', 'Solved'),
                 ];
                 if (count($moreTicketType) > 0) {
                     $typesTicketStatus = array_merge($typesTicketStatus, $moreTicketTypeName);
@@ -862,7 +912,7 @@ class Reports_Table extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => false,
                     "canvas" => false,
-                    "nb" => $nb
+                    "nb" => $nb,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params) . "<br>");
 

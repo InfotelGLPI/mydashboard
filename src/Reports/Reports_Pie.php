@@ -1220,15 +1220,6 @@ class Reports_Pie extends CommonGLPI
                 $date_criteria = $crit['date'];
                 $closedate_criteria = $crit['closedate'];
 
-
-                //                $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
-                //                     FROM `glpi_tickets`
-                //                     WHERE $date_criteria
-                //                     $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria
-                //                     AND $is_deleted";
-                //
-                //                $result   = $DB->doQuery($query);
-                //                $nb       = $DB->numrows($result);
                 $dataspie = [];
                 $namespie = [];
 
@@ -1306,16 +1297,6 @@ class Reports_Pie extends CommonGLPI
                         ];
                     }
                 }
-                //                $is_deleted                 = "`glpi_tickets`.`is_deleted` = 0";
-                //                $query = "SELECT COUNT(`glpi_tickets`.`id`)  AS nb
-                //                     FROM `glpi_tickets`
-                //
-                //                     WHERE $closedate_criteria
-                //                     $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria
-                //                     AND $is_deleted";
-                //
-                //                $result = $DB->doQuery($query);
-                //                $nb     = $DB->numrows($result);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
