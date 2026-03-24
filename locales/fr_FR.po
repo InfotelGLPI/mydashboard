@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-22 17:36+0000\n"
+"POT-Creation-Date: 2026-03-23 15:03+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -133,17 +133,17 @@ msgstr "Date de publication"
 msgid "Modification date"
 msgstr "Date de modification"
 
-#: src/Reports/Project.php:50 src/Reports/Problem.php:52
-#: src/Reports/Change.php:53 src/Reports/ProjectTask.php:51
-#: src/Reports/Planning.php:48 src/Dashboard.php:67 src/Html.php:54
+#: src/Reports/Project.php:50 src/Reports/Problem.php:55
+#: src/Reports/Change.php:55 src/Reports/ProjectTask.php:53
+#: src/Reports/Planning.php:49 src/Dashboard.php:67 src/Html.php:54
 #: src/Datatable.php:56 src/Module.php:64 src/Menu.php:978 src/Chart.php:79
 msgid "Dashboard"
 msgstr "Dashboard"
 
 #: src/Reports/Project.php:66 src/Reports/Project.php:74
-#: src/Reports/Project.php:121 src/Reports/Project.php:202
-#: src/Reports/Project.php:220
-msgid "projects to be processed"
+#: src/Reports/Project.php:121 src/Reports/Project.php:223
+#: src/Reports/Project.php:248
+msgid "Projects to be processed"
 msgstr "Projets en cours"
 
 #: src/Reports/Reports_Map.php:66
@@ -178,31 +178,37 @@ msgstr "2-4 ans"
 msgid "< 2 years"
 msgstr "< 2 ans"
 
-#: src/Reports/Contract.php:62
+#: src/Reports/Contract.php:67
 msgid "Contracts status"
 msgstr "Statuts des contrats"
 
-#: src/Reports/Problem.php:94
+#: src/Reports/Contract.php:199
+msgid "Contract followup"
+msgstr "Suivi des contrats"
+
+#: src/Reports/Problem.php:81 src/Reports/Problem.php:635
+#: src/Reports/Problem.php:641
 msgid "Problem followup"
 msgstr "Suivi des problèmes"
 
-#: src/Reports/Change.php:69 src/Reports/Change.php:87
-#: src/Reports/Change.php:161 src/Reports/Change.php:282
-#: src/Reports/Change.php:337
+#: src/Reports/Change.php:71 src/Reports/Change.php:94
+#: src/Reports/Change.php:161 src/Reports/Change.php:325
+#: src/Reports/Change.php:399
 msgid "Changes to be processed"
 msgstr "Changements en cours"
 
-#: src/Reports/Change.php:74 src/Reports/Change.php:92
-#: src/Reports/Change.php:159 src/Reports/Change.php:264
-#: src/Reports/Change.php:318
+#: src/Reports/Change.php:76 src/Reports/Change.php:99
+#: src/Reports/Change.php:159 src/Reports/Change.php:302
+#: src/Reports/Change.php:373
 msgid "Changes on pending status"
 msgstr "Changements en attente"
 
-#: src/Reports/Change.php:79 src/Reports/Change.php:348
+#: src/Reports/Change.php:81 src/Reports/Change.php:416
 msgid "Applied changes"
 msgstr "Changements appliqués"
 
-#: src/Reports/Change.php:100 src/Reports/Change.php:567
+#: src/Reports/Change.php:86 src/Reports/Change.php:660
+#: src/Reports/Change.php:666
 msgid "Change followup"
 msgstr "Suivi des changements"
 
@@ -515,11 +521,10 @@ msgstr "Pourcentage de satisfaction"
 msgid "Not satisfy percent"
 msgstr "Pourcentage d'insatisfaction"
 
-#: src/Reports/ProjectTask.php:67 src/Reports/ProjectTask.php:75
-#: src/Reports/ProjectTask.php:122 src/Reports/ProjectTask.php:199
-#: src/Reports/ProjectTask.php:221
-msgid "projects tasks to be processed"
-msgstr "Tâches de projet en cours"
+#: src/Reports/ProjectTask.php:69 src/Reports/ProjectTask.php:77
+#: src/Reports/ProjectTask.php:228 src/Reports/ProjectTask.php:268
+msgid "Projects tasks to be processed"
+msgstr "Tâches de projets en cours"
 
 #: src/Reports/Reports_Line.php:70
 msgid "Tickets stock by month"
@@ -622,28 +627,29 @@ msgstr "Nombre de tickets ouverts par technicien et par statut"
 msgid "Technicians"
 msgstr "Techniciens"
 
-#: src/Reports/Ticket.php:86
+#: src/Reports/Ticket.php:87
 msgid "Your rejected tickets"
 msgstr "Vos tickets refusés"
 
-#: src/Reports/Ticket.php:96
+#: src/Reports/Ticket.php:97
 msgid "Your satisfaction surveys"
 msgstr "Vos enquêtes de satisfaction"
 
-#: src/Reports/Ticket.php:104 src/Reports/Ticket.php:560
+#: src/Reports/Ticket.php:105 src/Reports/Ticket.php:561
 msgid "Your tickets to validate"
 msgstr "Vos tickets à valider"
 
-#: src/Reports/Ticket.php:111 src/Reports/Ticket.php:1298 src/Alert.php:3344
+#: src/Reports/Ticket.php:112 src/Reports/Ticket.php:1396 src/Alert.php:3344
 #: src/Alert.php:3755
 msgid "New tickets"
 msgstr "Nouveaux Tickets"
 
-#: src/Reports/Ticket.php:167 src/Reports/Ticket.php:1169
+#: src/Reports/Ticket.php:168 src/Reports/Ticket.php:1186
+#: src/Reports/Ticket.php:1210
 msgid "Ticket followup"
 msgstr "Suivi des tickets"
 
-#: src/Reports/Ticket.php:409 src/Reports/Ticket.php:732 src/Alert.php:474
+#: src/Reports/Ticket.php:410 src/Reports/Ticket.php:733 src/Alert.php:474
 msgid "ID and priority"
 msgstr "ID et priorité"
 
@@ -713,7 +719,7 @@ msgstr "Reconstruire les indicateurs globaux par semaine"
 msgid "Can take many time if you have many tickets"
 msgstr "Peut prendre beaucoup de temps si vous avez beaucoup de tickets"
 
-#: src/Config.php:348 src/Config.php:532 src/Alert.php:162 src/Alert.php:2888
+#: src/Config.php:351 src/Config.php:535 src/Alert.php:162 src/Alert.php:2888
 #: src/ItilAlert.php:128
 msgid "Network alert"
 msgid_plural "Network alerts"
@@ -721,7 +727,7 @@ msgstr[0] "Alerte réseau"
 msgstr[1] "Alertes réseau"
 msgstr[2] "Alertes réseau"
 
-#: src/Config.php:349 src/Config.php:533 src/Alert.php:167 src/Alert.php:2747
+#: src/Config.php:352 src/Config.php:536 src/Alert.php:167 src/Alert.php:2747
 #: src/Alert.php:2889 src/ItilAlert.php:129
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
@@ -729,7 +735,7 @@ msgstr[0] "Maintenance planifiée prévue"
 msgstr[1] "Maintenances planifiées prévues"
 msgstr[2] "Maintenances planifiées prévues"
 
-#: src/Config.php:350 src/Config.php:534 src/Alert.php:172 src/Alert.php:2748
+#: src/Config.php:353 src/Config.php:537 src/Alert.php:172 src/Alert.php:2748
 #: src/Alert.php:2890 src/ItilAlert.php:130
 msgid "Information"
 msgid_plural "Informations"
@@ -765,11 +771,11 @@ msgstr "Groupes par défaut"
 msgid "Custom Widgets"
 msgstr "Widgets personnalisés"
 
-#: src/Customswidget.php:172 src/Customswidget.php:173
+#: src/Customswidget.php:159 src/Customswidget.php:160
 msgid "Incidents"
 msgstr "Incidents"
 
-#: src/Customswidget.php:181 src/Customswidget.php:182
+#: src/Customswidget.php:168 src/Customswidget.php:169
 msgid "Requests"
 msgstr "Demandes"
 
