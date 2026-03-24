@@ -28,11 +28,15 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonDBTM;
+use CommonITILActor;
 use CommonITILObject;
 use DateInterval;
 use DatePeriod;
 use DateTime;
 use DbUtils;
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QuerySubQuery;
+use Glpi\DBAL\QueryUnion;
 use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Charts\BarChart;
 use GlpiPlugin\Mydashboard\Helper;
@@ -211,7 +215,7 @@ class Reports_Bar extends CommonDBTM
      * @param       $widgetId
      * @param array $opt
      *
-     * @return \Html
+     * @return Html
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -265,36 +269,96 @@ class Reports_Bar extends CommonDBTM
                 $opt = $options['opt'];
                 $crit = $options['crit'];
                 $type = $opt['type'];
-                $type_criteria = $crit['type'];
-                $entities_criteria = $crit['entities_id'];
+
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
                 $requester_groups = $opt['requesters_groups_id'];
-                $requester_groups_criteria = $crit['requesters_groups_id'];
                 $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
                 $location = $opt['locations_id'];
-                $locations_criteria = $crit['locations_id'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
 
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-                $query = "SELECT DISTINCT
-                           DATE_FORMAT(`date`, '%b %Y') AS period_name,
-                           COUNT(`glpi_tickets`.`id`) AS nb,
-                           DATE_FORMAT(`date`, '%Y-%m') AS period
-                        FROM `glpi_tickets` ";
-                $query .= " WHERE $is_deleted $type_criteria $locations_criteria $technician_groups_criteria $requester_groups_criteria";
-                $query .= " $entities_criteria AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                        GROUP BY period_name ORDER BY period ASC";
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%b %Y') AS period_name"),
+                        'COUNT' => 'glpi_tickets.id AS nb',
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y-%m') AS period"),
+                    ],
+                    'DISTINCT' => true,
+                    'FROM' => 'glpi_tickets',
+                    'LEFT JOIN' => [],
+                    'WHERE' => [
+                        $is_deleted,
+                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                    ],
+                    'GROUPBY' => 'period_name',
+                    'ORDERBY' => 'period ASC',
+                ];
 
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                if (is_array($requester_groups)) {
+
+                    $requester_groups = array_filter($requester_groups);
+                    if (count($requester_groups) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
+                    }
+                }
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($location > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.locations_id' => $type];
+                }
+
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+
+                $iterator = $DB->request($criteria);
+
                 $tabdata = [];
                 $tabnames = [];
                 $tabdates = [];
                 $nbtickets = __('Tickets number', 'mydashboard');
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
                         $tabdata['data'][] = $data['nb'];
                         $tabdata['type'] = 'bar';
                         $tabdata['name'] = $nbtickets;
@@ -356,7 +420,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHtmlContent($graph);
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "8":
                 $name = 'TimeByTechChart';
@@ -488,42 +552,107 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
+
                 $options = Helper::manageCriterias($params);
 
                 $opt = $options['opt'];
                 $crit = $options['crit'];
 
-
-                $type_criteria = $crit['type'];
-                $entities_criteria = $crit['entities_id'];
-                $requester_groups_criteria = $crit['requesters_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
                 $date_criteria = $crit['date'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-                $limit_query = "";
+
+                $type = $opt['type'];
+                $requester_groups = $opt['requesters_groups_id'];
+                $technician_group = $opt['technicians_groups_id'];
+
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
                 $limit = $opt['limit'] ?? 10;
-                if ($limit > 0) {
-                    $limit_query = "LIMIT $limit";
+
+                $criteria = [
+                    'SELECT' => ['glpi_itilcategories.completename AS itilcategories_name',
+                        'COUNT' => 'glpi_tickets.id AS count',
+                        'glpi_itilcategories.id AS catID',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'LEFT JOIN'       => [
+                        'glpi_itilcategories' => [
+                            'ON' => [
+                                'glpi_tickets' => 'itilcategories_id',
+                                'glpi_itilcategories'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                    ],
+                    'GROUPBY' => 'glpi_itilcategories.id',
+                    'ORDERBY' => 'count DESC',
+                    'LIMIT' => $limit,
+                ];
+
+                if (is_array($requester_groups)) {
+
+                    $requester_groups = array_filter($requester_groups);
+                    if (count($requester_groups) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
+                    }
                 }
 
-                $query = "SELECT `glpi_itilcategories`.`completename` as itilcategories_name, COUNT(`glpi_tickets`.`id`) as count,`glpi_itilcategories`.`id` as catID
-                     FROM `glpi_tickets`
-                     LEFT JOIN `glpi_itilcategories`
-                        ON (`glpi_itilcategories`.`id` = `glpi_tickets`.`itilcategories_id`)
-                     WHERE $date_criteria
-                     $entities_criteria $type_criteria $requester_groups_criteria $technician_groups_criteria
-                     AND $is_deleted
-                     GROUP BY `glpi_itilcategories`.`id`
-                     ORDER BY count DESC
-                     $limit_query";
+                if (is_array($technician_group)) {
 
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if (!empty($date_criteria)) {
+                    $criteria['WHERE'] = array_merge($criteria['WHERE'], $date_criteria);
+                }
+
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+
+                $iterator = $DB->request($criteria);
+
                 $tabdata = [];
                 $tabnames = [];
                 $tabcat = [];
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
                         $tabdata[] = $data['count'];
                         $itilcategories_name = $data['itilcategories_name'];
                         if ($data['itilcategories_name'] == null) {
@@ -569,6 +698,8 @@ class Reports_Bar extends CommonDBTM
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
                 $year = $opt['year'] ?? '';
+                $begin = $opt['begin'] ?? '';
+                $end = $opt['end'] ?? '';
                 $graph_criterias = [
                     'entities_id' => $entities_id_criteria,
                     'sons' => $sons_criteria,
@@ -576,6 +707,8 @@ class Reports_Bar extends CommonDBTM
                     'technician_group' => $opt['technicians_groups_id'] ?? [],
                     'type' => $type,
                     'year' => $year ?? '',
+                    'begin' => $begin ?? '',
+                    'end' => $end ?? '',
                     'widget' => $widgetId,
                 ];
 
@@ -589,7 +722,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => $nb,
+                    "nb" => count($iterator),
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent($graph);
@@ -726,6 +859,7 @@ class Reports_Bar extends CommonDBTM
                 $crit = $options['crit'];
 
                 $type_criteria = $crit['type'];
+                $type = $opt['type'];
                 $entities_criteria = $crit['entities_id'];
 
                 $currentyear = $opt["year"];
@@ -738,49 +872,97 @@ class Reports_Bar extends CommonDBTM
                     $nextmonth = $currentmonth + 1;
                 }
 
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-                $query = "SELECT
-                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                              DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
-                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum
-                              FROM `glpi_tickets`
-                              WHERE $is_deleted AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
-                              AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
-                              " . $entities_criteria . $type_criteria . "
-                              GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        [
+                            ['glpi_tickets.date' => ['>=', $previousyear - $currentmonth . '-01 00:00:00']],
+                            ['glpi_tickets.date' => ['<=', $currentyear - $nextmonth . '-01 00:00:00']],
+                        ],
+                    ],
+                    'GROUPBY' => 'month',
+                ];
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
 
-                $results = $DB->doQuery($query);
+                //                $query = "SELECT
+                //                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                //                              DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,
+                //                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum
+                //                              FROM `glpi_tickets`
+                //                              WHERE $is_deleted
+                //                                AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00')
+                //                              AND (`glpi_tickets`.`date` <= '$currentyear-$nextmonth-01 00:00:00')
+                //                              " . $entities_criteria . $type_criteria . "
+                //                              GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
+
+                $iterator = $DB->request($criteria);
                 $i = 0;
 
                 $tabduration = [];
                 $tabdates = [];
                 $tabnames = [];
-                while ($data = $DB->fetchArray($results)) {
+                foreach ($iterator as $data) {
                     [$year, $month] = explode('-', $data['month']);
 
                     $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                    $query_1 = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nb_tickets,
-                                        SUM(`glpi_tickettasks`.`actiontime`) AS count
-                          FROM `glpi_tickettasks`
-                          LEFT JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)
-                          WHERE $is_deleted " . $entities_criteria . $type_criteria . "
-                           AND (`glpi_tickettasks`.`date` >= '$year-$month-01 00:00:01'
-                           AND `glpi_tickettasks`.`date` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )";
 
-                    $results_1 = $DB->doQuery($query_1);
-                    $data_1 = $DB->fetchArray($results_1);
-                    $average_by_ticket = 0;
-
-                    if ($data_1['nb_tickets'] > 0
-                        && $data_1['count'] > 0) {
-                        $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
+                    $criteria_1 = [
+                        'SELECT' => [
+                            'COUNT' => 'glpi_tickets.id AS nb_tickets',
+                            'SUM' => 'glpi_tickettasks.actiontime AS count',
+                        ],
+                        'DISTINCT'        => true,
+                        'FROM' => 'glpi_tickettasks',
+                        'LEFT JOIN'       => [
+                            'glpi_tickets' => [
+                                'ON' => [
+                                    'glpi_tickettasks' => 'tickets_id',
+                                    'glpi_tickets'          => 'id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $year - $month . '-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                            ],
+                        ],
+                    ];
+                    if ($type > 0) {
+                        $criteria_1['WHERE'] = $criteria_1['WHERE'] + ['glpi_tickets.type' => $type];
                     }
-                    $tabduration['data'][] = round($average_by_ticket ?? 0, 2, PHP_ROUND_HALF_UP);
-                    $tabduration['type'] = 'bar';
-                    $tabduration['name'] = __('Tasks duration (minutes)', 'mydashboard');
-                    $tabnames[] = $data['monthname'];
-                    $tabdates[] = $data['monthnum'];
+                    $criteria_1['WHERE'] = $criteria_1['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+
+                    $iterator_1 = $DB->request($criteria_1);
+
+                    $average_by_ticket = 0;
+                    foreach ($iterator_1 as $data_1) {
+                        if ($data_1['nb_tickets'] > 0
+                            && $data_1['count'] > 0) {
+                            $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
+                        }
+                        $tabduration['data'][] = round($average_by_ticket ?? 0, 2, PHP_ROUND_HALF_UP);
+                        $tabduration['type'] = 'bar';
+                        $tabduration['name'] = __('Tasks duration (minutes)', 'mydashboard');
+                        $tabnames[] = $data['monthname'];
+                        $tabdates[] = $data['monthnum'];
+                    }
                     $i++;
                 }
 
@@ -825,7 +1007,7 @@ class Reports_Bar extends CommonDBTM
                 );
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "24":
                 $name = 'TicketByTechsBarChart';
@@ -835,10 +1017,8 @@ class Reports_Bar extends CommonDBTM
                     $criterias = [
                         'entities_id',
                         'is_recursive',
-                        'year',
+                        'filter_date',
                         'type',
-                        'begin',
-                        'end',
                         'limit',
                     ];
                     $onclick = 1;
@@ -852,9 +1032,9 @@ class Reports_Bar extends CommonDBTM
                     ];
                 }
                 $opt['limit'] ??= 10;
-                $opt['begin'] ??= date('Y-m-d H:i:s', strtotime('-1 year'));
-                ;
-                $opt['end'] ??= date('Y-m-d H:i:s');
+                //                $opt['begin'] ??= date('Y-m-d H:i:s', strtotime('-1 year'));
+                //                ;
+                //                $opt['end'] ??= date('Y-m-d H:i:s');
 
                 $params = [
                     "preferences" => $preferences,
@@ -867,37 +1047,55 @@ class Reports_Bar extends CommonDBTM
                 $crit = $options['crit'];
 
                 $type = $opt['type'];
-                $type_criteria = $crit['type'];
-                $entities_criteria = $crit['entities_id'];
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
-                $date_criteria = " (`glpi_tickets`.`date` >= '" . $opt['begin'] . "'
-                                               AND `glpi_tickets`.`date` <= ADDDATE('" . $opt['end'] . "' , INTERVAL 1 DAY))";
-                //            $year_criteria        = $crit['year'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-                $limit_query = "";
+
+                $date_criteria = $crit['date'];
+
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
                 $limit = $opt['limit'] ?? 10;
-                if ($limit > 0) {
-                    $limit_query = "LIMIT $limit";
+                ;
+
+                $users_id_select = new QueryExpression('IFNULL(' . $DB::quoteName("glpi_tickets_users.users_id") . ',-1) AS users_id');
+                $criteria = [
+                    'SELECT' => [$users_id_select,
+                        'COUNT' => 'glpi_tickets.id AS count',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'LEFT JOIN'       => [
+                        'glpi_tickets_users' => [
+                            'ON' => [
+                                'glpi_tickets_users' => 'tickets_id',
+                                'glpi_tickets'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
+                    ],
+                    'GROUPBY' => 'glpi_tickets_users.users_id',
+                    'ORDERBY' => 'count DESC',
+                    'LIMIT' => $limit,
+                ];
+
+
+                if (!empty($date_criteria)) {
+                    $criteria['WHERE'] = array_merge($criteria['WHERE'], $date_criteria);
                 }
 
-                $query = "SELECT IFNULL(`glpi_tickets_users`.`users_id`,-1) as users_id, COUNT(`glpi_tickets`.`id`) as count
-                     FROM `glpi_tickets`
-                     LEFT JOIN `glpi_tickets_users`
-                        ON (`glpi_tickets_users`.`tickets_id` = `glpi_tickets`.`id` AND `glpi_tickets_users`.`type` = 2)
-                     WHERE $date_criteria
-                     $entities_criteria $type_criteria
-                     AND $is_deleted
-                     GROUP BY `glpi_tickets_users`.`users_id`
-                     ORDER BY count DESC
-                     $limit_query";
-                $results = $DB->doQuery($query);
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+
+                $iterator = $DB->request($criteria);
 
                 $tabtickets = [];
                 $tabtech = [];
                 $tabtechName = [];
                 $tabtechid = [];
-                while ($data = $DB->fetchArray($results)) {
+                foreach ($iterator as $data) {
                     //                    $tabtickets[] = $data['count'];
 
                     $tabtickets['data'][] = $data['count'];
@@ -936,15 +1134,19 @@ class Reports_Bar extends CommonDBTM
                     'labels' => $tabNamesset,
                     //                            'label'           => $ticketsnumber,
                 ];
+
+                $year = $opt['year'] ?? '';
+                $begin = $opt['begin'] ?? '';
+                $end = $opt['end'] ?? '';
                 $graph_criterias = [];
                 if ($onclick == 1) {
                     $graph_criterias = [
                         'entities_id' => $entities_id_criteria,
                         'sons' => $sons_criteria,
                         'type' => $type,
-                        //                                'year'        => $year_criteria,
-                        'begin' => $opt['begin'],
-                        'end' => $opt['end'],
+                        'year' => $year ?? '',
+                        'begin' => $begin ?? '',
+                        'end' => $end ?? '',
                         'widget' => $widgetId,
                     ];
                 }
@@ -1007,89 +1209,423 @@ class Reports_Bar extends CommonDBTM
                 $sons_criteria = $crit['sons'];
                 $js_ancestors = $crit['ancestors'];
                 $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria = $crit['itilcategory'];
+                $technician_groups_criteria = $opt['technicians_groups_id'];
+                $categories_criteria = $opt['itilcategory'];
 
 
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
+//                $criteria_init
+                $criteria_init = [
+                    'SELECT' => [
+                        'COUNT' => 'id AS Total',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                    ],
+                ];
+                if (is_array($technician_group)) {
 
-                $query = "SELECT  CONCAT ('< 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 /
-                (SELECT COUNT(*) FROM glpi_tickets
-                                 WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
-                                 AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
-                CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin,
-                CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_end
-                FROM glpi_tickets  WHERE glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 1 WEEK
-                AND $is_deleted
-                 $type_criteria
-                 $technician_groups_criteria
-                 $entities_criteria
-                 $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
-                UNION
-                SELECT CONCAT ('> 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 /
-                (SELECT COUNT(*) FROM glpi_tickets
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
-                CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin,
-                CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_end
-                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 1 WEEK
-                AND  glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 1 MONTH
-                AND $is_deleted
-                 $type_criteria
-                 $technician_groups_criteria
-                 $entities_criteria
-                 $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
-                UNION
-                SELECT CONCAT ('> 1 Mois') Age, COUNT(*) Total, COUNT(*) * 100 /
-                (SELECT COUNT(*) FROM glpi_tickets
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
-                CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_begin,
-                CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_end
-                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 1 MONTH
-                AND  glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 3 MONTH
-                AND $is_deleted
-                 $type_criteria
-                 $technician_groups_criteria
-                 $entities_criteria
-                 $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
-                UNION
-                SELECT CONCAT ('> 3 Mois') Age, COUNT(*) Total, COUNT(*) * 100 /
-                (SELECT COUNT(*) FROM glpi_tickets
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
-                CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_begin,
-                CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end
-                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 3 MONTH
-                AND  glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 6 MONTH
-                AND $is_deleted
-                 $type_criteria
-                 $technician_groups_criteria
-                 $entities_criteria
-                 $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
-                UNION
-                SELECT CONCAT ('> 6 Mois') Age, COUNT(*) Total, COUNT(*) * 100 /
-                (SELECT COUNT(*) FROM glpi_tickets
-                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
-                CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin,
-                CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end
-                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 6 MONTH
-                AND $is_deleted
-                 $type_criteria
-                 $technician_groups_criteria
-                 $entities_criteria
-                 $categories_criteria
-                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')";
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria_init['LEFT JOIN'] = $criteria_init['LEFT JOIN'] + [
+                                'glpi_groups_tickets' => [
+                                    'ON' => [
+                                        'glpi_tickets' => 'id',
+                                        'glpi_groups_tickets' => 'tickets_id',
+                                        [
+                                            'AND' => [
+                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ];
 
-                $results = $DB->doQuery($query);
+                        $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                }
+
+                //                $query = "SELECT  CONCAT ('< 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 /
+//                (SELECT COUNT(*) FROM glpi_tickets
+//                                 WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
+//                                 AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
+//                CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin,
+//                CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_end
+//                FROM glpi_tickets
+//                WHERE glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 1 WEEK
+//                AND $is_deleted
+//                 $type_criteria
+//                 $technician_groups_criteria
+//                 $entities_criteria
+//                 $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
+
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("CONCAT('< 1 Semaine') Age"),
+                        'COUNT' => 'id AS Total',
+                        new QueryExpression("COUNT(*) * 100 / ".new QuerySubQuery($criteria_init, 'Percent')),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin"),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_end"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                        'glpi_tickets.date' => ['>', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK")]
+                    ],
+                ];
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                                'glpi_groups_tickets' => [
+                                    'ON' => [
+                                        'glpi_tickets' => 'id',
+                                        'glpi_groups_tickets' => 'tickets_id',
+                                        [
+                                            'AND' => [
+                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                }
+
+                $queries[] = $criteria;
+
+//                SELECT CONCAT ('> 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 /
+//            (SELECT COUNT(*) FROM glpi_tickets
+//                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
+//            AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
+//                CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin,
+//                CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_end
+//                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 1 WEEK
+//            AND  glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 1 MONTH
+//            AND $is_deleted
+//                 $type_criteria
+//                 $technician_groups_criteria
+//                 $entities_criteria
+//                 $categories_criteria
+//                 AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
+//
+                $criteria1 = [
+                    'SELECT' => [
+                        new QueryExpression("CONCAT('> 1 Semaine') Age"),
+                        'COUNT' => 'id AS Total',
+                        new QueryExpression("COUNT(*) * 100 / ".new QuerySubQuery($criteria_init, 'Percent')),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin"),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_end"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                        [
+                            ['glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK")]],
+                            ['glpi_tickets.date' => ['>', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 MONTH")]],
+                        ]
+                    ],
+                ];
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria1['LEFT JOIN'] = $criteria1['LEFT JOIN'] + [
+                                'glpi_groups_tickets' => [
+                                    'ON' => [
+                                        'glpi_tickets' => 'id',
+                                        'glpi_groups_tickets' => 'tickets_id',
+                                        [
+                                            'AND' => [
+                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ];
+
+                        $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria1['WHERE'] = $criteria1['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                }
+
+                $queries[] = $criteria1;
+
+                //                SELECT CONCAT ('> 1 Mois') Age, COUNT(*) Total, COUNT(*) * 100 /
+//                (SELECT COUNT(*) FROM glpi_tickets
+//                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
+//                CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_begin,
+//                CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_end
+//                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 1 MONTH
+//                AND  glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 3 MONTH
+//                AND $is_deleted
+//                 $type_criteria
+//                 $technician_groups_criteria
+//                 $entities_criteria
+//                 $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
+
+
+                $criteria2 = [
+                    'SELECT' => [
+                        new QueryExpression("CONCAT('> 1 Mois') Age"),
+                        'COUNT' => 'id AS Total',
+                        new QueryExpression("COUNT(*) * 100 / ".new QuerySubQuery($criteria_init, 'Percent')),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_begin"),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_end"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                        [
+                            ['glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 MONTH")]],
+                            ['glpi_tickets.date' => ['>', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 3 MONTH")]],
+                        ]
+                    ],
+                ];
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria2['LEFT JOIN'] = $criteria2['LEFT JOIN'] + [
+                                'glpi_groups_tickets' => [
+                                    'ON' => [
+                                        'glpi_tickets' => 'id',
+                                        'glpi_groups_tickets' => 'tickets_id',
+                                        [
+                                            'AND' => [
+                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ];
+
+                        $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                }
+
+                $queries[] = $criteria2;
+
+//                SELECT CONCAT ('> 3 Mois') Age, COUNT(*) Total, COUNT(*) * 100 /
+//                (SELECT COUNT(*) FROM glpi_tickets
+//                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
+//                CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_begin,
+//                CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end
+//                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 3 MONTH
+//                AND  glpi_tickets.date > CURRENT_TIMESTAMP - INTERVAL 6 MONTH
+//                AND $is_deleted
+//                 $type_criteria
+//                 $technician_groups_criteria
+//                 $entities_criteria
+//                 $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')
+
+                $criteria3 = [
+                    'SELECT' => [
+                        new QueryExpression("CONCAT('> 3 Mois') Age"),
+                        'COUNT' => 'id AS Total',
+                        new QueryExpression("COUNT(*) * 100 / ".new QuerySubQuery($criteria_init, 'Percent')),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_begin"),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                        [
+                            ['glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 3 MONTH")]],
+                            ['glpi_tickets.date' => ['>', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH")]],
+                        ]
+                    ],
+                ];
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria3['LEFT JOIN'] = $criteria3['LEFT JOIN'] + [
+                                'glpi_groups_tickets' => [
+                                    'ON' => [
+                                        'glpi_tickets' => 'id',
+                                        'glpi_groups_tickets' => 'tickets_id',
+                                        [
+                                            'AND' => [
+                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ];
+
+                        $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                }
+
+                $queries[] = $criteria3;
+
+//                SELECT CONCAT ('> 6 Mois') Age, COUNT(*) Total, COUNT(*) * 100 /
+//                (SELECT COUNT(*) FROM glpi_tickets
+//                WHERE $is_deleted $type_criteria $technician_groups_criteria $entities_criteria $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')) Percent,
+//                CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin,
+//                CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end
+//                FROM glpi_tickets  WHERE glpi_tickets.date <= CURRENT_TIMESTAMP - INTERVAL 6 MONTH
+//                AND $is_deleted
+//                 $type_criteria
+//                 $technician_groups_criteria
+//                 $entities_criteria
+//                 $categories_criteria
+//                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')";
+
+                $criteria4 = [
+                    'SELECT' => [
+                        new QueryExpression("CONCAT('> 6 Mois') Age"),
+                        'COUNT' => 'id AS Total',
+                        new QueryExpression("COUNT(*) * 100 / ".new QuerySubQuery($criteria_init, 'Percent')),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin"),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                        'glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH")]
+                    ],
+                ];
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria4['LEFT JOIN'] = $criteria4['LEFT JOIN'] + [
+                                'glpi_groups_tickets' => [
+                                    'ON' => [
+                                        'glpi_tickets' => 'id',
+                                        'glpi_groups_tickets' => 'tickets_id',
+                                        [
+                                            'AND' => [
+                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ];
+
+                        $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                }
+
+                $queries[] = $criteria4;
+
+                $union = new QueryUnion($queries, true);
+                $criteria_final = [
+                    'SELECT' => [],
+                    'FROM'   => $union,
+                ];
+
+                $iterator = $DB->request($criteria_final);
+
                 $tabage = [];
                 $tabnames = [];
-                while ($data = $DB->fetchArray($results)) {
+                foreach ($iterator as $data) {
                     $tabnames[] = $data['Age'];
                     if (isset($data['period_end'])) {
                         $tabdate[] = $data['period_begin'] . "_" . $data['period_end'];
@@ -1188,27 +1724,77 @@ class Reports_Bar extends CommonDBTM
                 $entities_criteria = $crit['entities_id'];
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
                 $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria = $crit['itilcategory'];
+                $technician_groups_criteria = $opt['technicians_groups_id'];
+                $categories_criteria = $opt['itilcategory'];
 
-                $query = "SELECT DISTINCT
-                           `priority`,
-                           COUNT(`id`) AS nb
-                        FROM `glpi_tickets`
-                        WHERE $is_deleted $type_criteria $entities_criteria $technician_groups_criteria $categories_criteria";
-                $query .= " AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-                $query .= " GROUP BY `priority` ORDER BY `priority` ASC";
+                $criteria = [
+                    'SELECT' => ['glpi_tickets.priority',
+                        'COUNT' => 'glpi_tickets.id AS nb',
+                    ],
+                    'DISTINCT'        => true,
+                    'FROM' => 'glpi_tickets',
+                    'LEFT JOIN'       => [
+                        'glpi_itilcategories' => [
+                            'ON' => [
+                                'glpi_tickets' => 'itilcategories_id',
+                                'glpi_itilcategories'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                    ],
+                    'GROUPBY' => 'priority',
+                    'ORDERBY' => 'priority ASC',
+                ];
 
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+                }
+
+                $iterator = $DB->request($criteria);
+                $nb = count($iterator);
 
                 $name_priority = [];
                 $datas = [];
                 $tabpriority = [];
                 if ($nb) {
-                    while ($data = $DB->fetchArray($result)) {
+                    foreach ($iterator as $data) {
                         $name_priority[] = CommonITILObject::getPriorityName($data['priority']);
                         $datas['data'][] = $data['nb'];
                         $datas['type'] = 'bar';
@@ -1258,6 +1844,7 @@ class Reports_Bar extends CommonDBTM
                         'technician_group' => $technician_group,
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
+                        'itilcategory' => $categories_criteria,
                         'widget' => $widgetId,
                     ];
                 }
@@ -1301,23 +1888,81 @@ class Reports_Bar extends CommonDBTM
                 $entities_criteria = $crit['entities_id'];
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
                 $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
-                $categories_criteria = $crit['itilcategory'];
+                $technician_groups_criteria = $opt['technicians_groups_id'];
+                $categories_criteria = $opt['itilcategory'];
 
-                $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
-                FROM glpi_tickets
-                WHERE $is_deleted
-                $type_criteria
-                $technician_groups_criteria
-                $entities_criteria
-                $categories_criteria
-                AND `glpi_tickets`.`status` IN (" . implode(",", \Ticket::getNotSolvedStatusArray()) . ")
-                GROUP BY `glpi_tickets`.`status`";
+                //                $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
+                //                FROM glpi_tickets
+                //                WHERE $is_deleted
+                //                $type_criteria
+                //                $technician_groups_criteria
+                //                $entities_criteria
+                //                $categories_criteria
+                //                AND `glpi_tickets`.`status` IN (" . implode(",", \Ticket::getNotSolvedStatusArray()) . ")
+                //                GROUP BY `glpi_tickets`.`status`";
 
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                $criteria = [
+                    'SELECT' => ['glpi_tickets.status AS status',
+                        'COUNT' => 'glpi_tickets.id AS Total',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'LEFT JOIN'       => [
+                        'glpi_itilcategories' => [
+                            'ON' => [
+                                'glpi_tickets' => 'itilcategories_id',
+                                'glpi_itilcategories'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        'status' => \Ticket::getNotSolvedStatusArray(),
+                    ],
+                    'GROUPBY' => 'glpi_tickets.status',
+                ];
+
+
+                if (is_array($technician_group)) {
+
+                    $technician_group = array_filter($technician_group);
+                    if (count($technician_group) > 0) {
+                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+                    }
+                }
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                if ($categories_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
+                }
+
+                if ($entities_id_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+                }
+
+                $iterator = $DB->request($criteria);
+
+                $nb = count($iterator);
 
                 $name_status = [];
                 $datas = [];
@@ -1325,7 +1970,7 @@ class Reports_Bar extends CommonDBTM
 
                 //TODO Add waiting types
                 if ($nb) {
-                    while ($data = $DB->fetchArray($result)) {
+                    foreach ($iterator as $data) {
                         foreach (\Ticket::getAllStatusArray() as $value => $names) {
                             if ($data['status'] == $value) {
                                 //                        $datas[]       = $data['Total'];
@@ -1427,6 +2072,7 @@ class Reports_Bar extends CommonDBTM
                         'technician_group' => $technician_group,
                         'group_is_recursive' => $js_ancestors,
                         'type' => $type,
+                        'itilcategory' => $categories_criteria,
                         'widget' => $widgetId,
                     ];
                 }
@@ -1448,7 +2094,7 @@ class Reports_Bar extends CommonDBTM
 
                 $opt = $options['opt'];
                 $crit = $options['crit'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $opened_tickets_data = [];
                 $satisfaction_data = [];
@@ -1460,71 +2106,239 @@ class Reports_Bar extends CommonDBTM
                     // Checking T1
                     array_push($tabnames, __('Trimester 1', 'mydashboard') . ' ' . $starting_year);
                     // Number of tickets opened
-                    $query_openedTicketT1 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
-                                        WHERE $is_deleted
-                                        AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
-                    $result = $DB->doQuery($query_openedTicketT1);
-                    $dataT1 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT1[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+
+                    $query_openedTicketT1 = [
+                        'SELECT' => [
+                            new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . ")) AS opened_tickets"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-01-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-03-31 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorT1 = $DB->request($query_openedTicketT1);
+                    foreach ($iteratorT1 as $dataT1) {
+                        $opened_tickets_data['data'][] = round($dataT1['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+                    //                    $query_openedTicketT1 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
+                    //                                        WHERE $is_deleted
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
 
                     // Average Satisfaction
-                    $query_satisfactionT1 = "SELECT AVG(satisfaction)
-                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
-                                        WHERE `glpi_tickets`.`is_deleted` = 0
-                                        AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
-                    $result = $DB->doQuery($query_satisfactionT1);
-                    $data_satisfactionT1 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT1[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    $query_satisfactionT1 = [
+                        'SELECT' => [
+                            new QueryExpression("AVG(" . $DB->quoteName("satisfaction") . ") AS satisfaction"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'INNER JOIN'       => [
+                            'glpi_ticketsatisfactions' => [
+                                'ON' => [
+                                    'glpi_tickets'   => 'id',
+                                    'glpi_ticketsatisfactions'                  => 'tickets_id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-01-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-03-31 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorsatisfactionT1 = $DB->request($query_satisfactionT1);
+                    foreach ($iteratorsatisfactionT1 as $data_satisfactionT1) {
+
+                        $satisfaction_data['data'][] = round($data_satisfactionT1['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+                    //                    $query_satisfactionT1 = "SELECT AVG(satisfaction)
+                    //                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
+                    //                                        WHERE `glpi_tickets`.`is_deleted` = 0
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-01-01' AND '$starting_year-03-31'";
+
+
                     // Checking T2
 
                     array_push($tabnames, __('Trimester 2', 'mydashboard') . ' ' . $starting_year);
-                    $query_openedTicketT2 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
-                                        WHERE $is_deleted
-                                        AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
-                    $result = $DB->doQuery($query_openedTicketT2);
-                    $dataT2 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT2[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+
+                    $query_openedTicketT2 = [
+                        'SELECT' => [
+                            new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . ")) AS opened_tickets"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-04-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-06-30 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorT2 = $DB->request($query_openedTicketT2);
+                    foreach ($iteratorT2 as $dataT2) {
+                        $opened_tickets_data['data'][] = round($dataT2['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+                    //                    $query_openedTicketT2 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
+                    //                                        WHERE $is_deleted
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
+                    //
+                    //
 
                     // Average Satisfaction
-                    $query_satisfactionT2 = "SELECT AVG(satisfaction)
-                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
-                                        WHERE `glpi_tickets`.`is_deleted` = 0
-                                        AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
-                    $result = $DB->doQuery($query_satisfactionT2);
-                    $data_satisfactionT2 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT2[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    $query_satisfactionT2 = [
+                        'SELECT' => [
+                            new QueryExpression("AVG(" . $DB->quoteName("satisfaction") . ") AS satisfaction"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'INNER JOIN'       => [
+                            'glpi_ticketsatisfactions' => [
+                                'ON' => [
+                                    'glpi_tickets'   => 'id',
+                                    'glpi_ticketsatisfactions'                  => 'tickets_id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-04-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-06-30 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorsatisfactionT2 = $DB->request($query_satisfactionT2);
+                    foreach ($iteratorsatisfactionT2 as $data_satisfactionT2) {
+                        $satisfaction_data['data'][] = round($data_satisfactionT2['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+                    //                    $query_satisfactionT2 = "SELECT AVG(satisfaction)
+                    //                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
+                    //                                        WHERE `glpi_tickets`.`is_deleted` = 0
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-04-01' AND '$starting_year-06-30'";
+
+
                     // Checking T3
                     array_push($tabnames, __('Trimester 3', 'mydashboard') . ' ' . $starting_year);
-                    $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
-                                        WHERE $is_deleted
-                                        AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
-                    $result = $DB->doQuery($query_openedTicketT3);
-                    $dataT3 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT3[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+
+                    $query_openedTicketT3 = [
+                        'SELECT' => [
+                            new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . ")) AS opened_tickets"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-07-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-09-30 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorT3 = $DB->request($query_openedTicketT3);
+                    foreach ($iteratorT3 as $dataT3) {
+                        $opened_tickets_data['data'][] = round($dataT3['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+                    //                    $query_openedTicketT3 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
+                    //                                        WHERE $is_deleted
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
+
+
                     // Average Satisfaction
-                    $query_satisfactionT3 = "SELECT AVG(satisfaction)
-                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
-                                        WHERE `glpi_tickets`.`is_deleted` = 0
-                                        AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
-                    $result = $DB->doQuery($query_satisfactionT3);
-                    $data_satisfactionT3 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT3[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+
+                    // Average Satisfaction
+                    $query_satisfactionT3 = [
+                        'SELECT' => [
+                            new QueryExpression("AVG(" . $DB->quoteName("satisfaction") . ") AS satisfaction"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'INNER JOIN'       => [
+                            'glpi_ticketsatisfactions' => [
+                                'ON' => [
+                                    'glpi_tickets'   => 'id',
+                                    'glpi_ticketsatisfactions'                  => 'tickets_id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-07-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-09-30 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorsatisfactionT3 = $DB->request($query_satisfactionT3);
+                    foreach ($iteratorsatisfactionT3 as $data_satisfactionT3) {
+                        $satisfaction_data['data'][] = round($data_satisfactionT3['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+                    //                    $query_satisfactionT3 = "SELECT AVG(satisfaction)
+                    //                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
+                    //                                        WHERE `glpi_tickets`.`is_deleted` = 0
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-06-01' AND '$starting_year-09-30'";
+                    //
+
                     // Checking T4
                     array_push($tabnames, __('Trimester 4', 'mydashboard') . ' ' . $starting_year);
-                    $query_openedTicketT4 = "SELECT count(MONTH(`glpi_tickets`.`date`)) FROM `glpi_tickets`
-                                        WHERE $is_deleted
-                                        AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
-                    $result = $DB->doQuery($query_openedTicketT4);
-                    $dataT4 = $DB->fetchArray($result);
-                    $opened_tickets_data['data'][] = round($dataT4[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+
+                    $query_openedTicketT4 = [
+                        'SELECT' => [
+                            new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . ")) AS opened_tickets"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-10-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-12-31 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorT4 = $DB->request($query_openedTicketT4);
+                    foreach ($iteratorT4 as $dataT4) {
+                        $opened_tickets_data['data'][] = round($dataT4['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+
                     // Average Satisfaction
-                    $query_satisfactionT4 = "SELECT AVG(satisfaction)
-                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
-                                        WHERE `glpi_tickets`.`is_deleted` = 0
-                                        AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
-                    $result = $DB->doQuery($query_satisfactionT4);
-                    $data_satisfactionT4 = $DB->fetchArray($result);
-                    $satisfaction_data['data'][] = round($data_satisfactionT4[0] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    $query_satisfactionT4 = [
+                        'SELECT' => [
+                            new QueryExpression("AVG(" . $DB->quoteName("satisfaction") . ") AS satisfaction"),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'INNER JOIN'       => [
+                            'glpi_ticketsatisfactions' => [
+                                'ON' => [
+                                    'glpi_tickets'   => 'id',
+                                    'glpi_ticketsatisfactions'                  => 'tickets_id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['>=', $starting_year . '-10-01 00:00:00']],
+                                ['glpi_tickets.date' => ['<=', $starting_year . '-12-31 00:00:00']],
+                            ],
+                        ],
+                    ];
+                    $iteratorsatisfactionT4 = $DB->request($query_satisfactionT4);
+                    foreach ($iteratorsatisfactionT4 as $data_satisfactionT4) {
+                        $satisfaction_data['data'][] = round($data_satisfactionT4['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);
+                    }
+
+                    //                    $query_satisfactionT4 = "SELECT AVG(satisfaction)
+                    //                                        FROM `glpi_tickets` INNER JOIN `glpi_ticketsatisfactions` ON `glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`
+                    //                                        WHERE `glpi_tickets`.`is_deleted` = 0
+                    //                                        AND `glpi_tickets`.`date` between '$starting_year-09-01' AND '$starting_year-12-31'";
+
+
                 }
 
                 $widget = new Html();
@@ -1594,14 +2408,14 @@ class Reports_Bar extends CommonDBTM
 
                 $crit = $options['crit'];
                 $opt = $options['opt'];
-
+                $type = $opt['type'];
                 $type_criteria = $crit['type'];
-                $requester_groups_criteria = $crit['requesters_groups_id'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-                $status = " AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
+                $requester_groups_criteria = $opt['requesters_groups_id'];
+                $requester_groups = $opt['requesters_groups_id'];
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
 
                 $datasets = [];
-
 
                 $currentyear = date("Y");
                 $currentmonth = date("m");
@@ -1615,26 +2429,68 @@ class Reports_Bar extends CommonDBTM
 
                 $datesTab = self::getAllMonthAndYear($currentyear, $currentmonth, $previousyear);
 
+                $criteria_init = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"),
+                        'COUNT' => 'id AS Total',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets.solve_delay_stat' => ['<=', 86400],
+                        [
+                            ['glpi_tickets.date' => ['>=',  "$previousyear-$currentmonth-01 00:00:00"]],
+                            ['glpi_tickets.date' => ['<=', "$currentyear-$currentmonth-01 00:00:00"]],
+                        ],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                    ],
+                    'GROUPBY' => 'month',
+                ];
+                if (is_array($requester_groups)) {
 
-                $query_tickets = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM
-                                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,
-                                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
-                                                 {$requester_groups_criteria}  {$status}
-                                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
-                                                AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01'
-                                                AND `glpi_tickets`.`solve_delay_stat` <=  86400 GROUP BY month) t1";
+                    $requester_groups = array_filter($requester_groups);
+                    if (count($requester_groups) > 0) {
+                        $criteria_init['LEFT JOIN'] = $criteria_init['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
 
-                $results = $DB->doQuery($query_tickets);
-                $nbResults = $DB->numrows($results);
+                        $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
+                    }
+                }
+                if ($type > 0) {
+                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                $criteria = [
+                    'SELECT' => [
+                        't1.Total as Total',
+                        't1.monthname as Monthname',
+                        't1.month',
+                    ],
+                    'FROM' => new QuerySubQuery($criteria_init, 't1'),
+                ];
+
+                $iterator = $DB->request($criteria);
+
                 $tabTicketsLessThanOneDay = [];
                 $tabTicketsLessThanOneDay['month_name'] = [];
                 $tabTicketsLessThanOneDay['total'] = [];
 
                 $i = 0;
 
-                if ($nbResults) {
-                    while ($data = $DB->fetchArray($results)) {
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
                         $i++;
                         foreach ($datesTab as $datePeriod) {
                             if (!array_key_exists('month', $tabTicketsLessThanOneDay)) {
@@ -1650,7 +2506,7 @@ class Reports_Bar extends CommonDBTM
                                 }
                             }
                         }
-                        if ($i == $nbResults) {
+                        if ($i == count($iterator)) {
                             foreach ($datesTab as $datePeriod) {
                                 if (!in_array($datePeriod, $tabTicketsLessThanOneDay['month_name'])) {
                                     $tabTicketsLessThanOneDay['month_name'][] = $datePeriod;
@@ -1661,26 +2517,82 @@ class Reports_Bar extends CommonDBTM
                     }
                 }
 
-                $query_tickets2 = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM
-                                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,
-                                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
-                                                {$requester_groups_criteria}  {$status}
-                                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
-                                                AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01'
-                                                AND `glpi_tickets`.`solve_delay_stat` >=  86400
-                                                AND  `glpi_tickets`.`solve_delay_stat` <=  604800 GROUP BY month) t1
-                                                         ";
+                //                $query_tickets2 = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM
+                //                                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                //                                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,
+                //                                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
+                //                                                {$requester_groups_criteria}  {$status}
+                //                                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
+                //                                                AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01'
+                //                                                AND `glpi_tickets`.`solve_delay_stat` >=  86400
+                //                                                AND  `glpi_tickets`.`solve_delay_stat` <=  604800 GROUP BY month) t1
+                //                                                         ";
 
-                $results = $DB->doQuery($query_tickets2);
-                $nbResults = $DB->numrows($results);
+                $criteria_init_2 = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"),
+                        'COUNT' => 'id AS Total',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        [
+                            ['glpi_tickets.solve_delay_stat' => ['>=', 86400]],
+                            ['glpi_tickets.solve_delay_stat' => ['<=', 604800]],
+                        ],
+                        [
+                            ['glpi_tickets.date' => ['>=',  "$previousyear-$currentmonth-01 00:00:00"]],
+                            ['glpi_tickets.date' => ['<=', "$currentyear-$currentmonth-01 00:00:00"]],
+                        ],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                    ],
+                    'GROUPBY' => 'month',
+                ];
+                if (is_array($requester_groups)) {
+
+                    $requester_groups = array_filter($requester_groups);
+                    if (count($requester_groups) > 0) {
+                        $criteria_init_2['LEFT JOIN'] = $criteria_init_2['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria_init_2['WHERE'] = $criteria_init_2['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
+                    }
+                }
+                if ($type > 0) {
+                    $criteria_init_2['WHERE'] = $criteria_init_2['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                $criteria_2 = [
+                    'SELECT' => [
+                        't1.Total as Total',
+                        't1.monthname as Monthname',
+                        't1.month',
+                    ],
+                    'FROM' => new QuerySubQuery($criteria_init_2, 't1'),
+                ];
+
+                $iterator_2 = $DB->request($criteria_2);
+
+                $nbResults = count($iterator_2);
                 $tabTicketsBetweenOneDayAndOneWeek = [];
                 $tabTicketsBetweenOneDayAndOneWeek['month_name'] = [];
                 $tabTicketsBetweenOneDayAndOneWeek['total'] = [];
                 $i = 0;
 
                 if ($nbResults) {
-                    while ($data = $DB->fetchArray($results)) {
+                    foreach ($iterator_2 as $data) {
                         $i++;
                         foreach ($datesTab as $datePeriod) {
                             if (!array_key_exists('month', $tabTicketsBetweenOneDayAndOneWeek)) {
@@ -1707,25 +2619,79 @@ class Reports_Bar extends CommonDBTM
                     }
                 }
 
-                $query_tickets3 = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM
-                                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,
-                                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
-                                                 {$requester_groups_criteria}  {$status}
-                                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
-                                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01'
-                                                    AND `glpi_tickets`.`solve_delay_stat` >=  604800 GROUP BY month) t1
-                                                         ";
+                //                $query_tickets3 = "SELECT t1.Total as Total, t1.monthname as Monthname, t1.month FROM
+                //                                              (SELECT  DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+                //                                               DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname ,
+                //                                               COUNT(*) Total FROM `glpi_tickets`  WHERE {$is_deleted} {$type_criteria}
+                //                                                 {$requester_groups_criteria}  {$status}
+                //                                                AND `glpi_tickets`.`date` >=  '$previousyear-$currentmonth-01 00:00:01'
+                //                                                  AND `glpi_tickets`.`date` <= '$currentyear-$currentmonth-01'
+                //                                                    AND `glpi_tickets`.`solve_delay_stat` >=  604800 GROUP BY month) t1
+                //                                                         ";
 
-                $results = $DB->doQuery($query_tickets3);
-                $nbResults = $DB->numrows($results);
+
+                $criteria_init_3 = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"),
+                        'COUNT' => 'id AS Total',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets.solve_delay_stat' => ['>=', 604800],
+                        [
+                            ['glpi_tickets.date' => ['>=',  "$previousyear-$currentmonth-01 00:00:00"]],
+                            ['glpi_tickets.date' => ['<=', "$currentyear-$currentmonth-01 00:00:00"]],
+                        ],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                    ],
+                    'GROUPBY' => 'month',
+                ];
+                if (is_array($requester_groups)) {
+
+                    $requester_groups = array_filter($requester_groups);
+                    if (count($requester_groups) > 0) {
+                        $criteria_init_3['LEFT JOIN'] = $criteria_init_3['LEFT JOIN'] + [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'id',
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    [
+                                        'AND' => [
+                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ];
+
+                        $criteria_init_3['WHERE'] = $criteria_init_3['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
+                    }
+                }
+                if ($type > 0) {
+                    $criteria_init_3['WHERE'] = $criteria_init_3['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+
+                $criteria_3 = [
+                    'SELECT' => [
+                        't1.Total as Total',
+                        't1.monthname as Monthname',
+                        't1.month',
+                    ],
+                    'FROM' => new QuerySubQuery($criteria_init_3, 't1'),
+                ];
+
+                $iterator_3 = $DB->request($criteria_3);
+
+                $nbResults = count($iterator_3);
                 $tabTicketsMoreThanOneWeek = [];
                 $tabTicketsMoreThanOneWeek['month_name'] = [];
                 $tabTicketsMoreThanOneWeek['total'] = [];
                 $i = 0;
 
                 if ($nbResults) {
-                    while ($data = $DB->fetchArray($results)) {
+                    foreach ($iterator as $data) {
                         $i++;
                         foreach ($datesTab as $datePeriod) {
                             if (!array_key_exists('month', $tabTicketsMoreThanOneWeek)) {
@@ -1854,38 +2820,67 @@ class Reports_Bar extends CommonDBTM
                 $crit = $options['crit'];
 
                 $entities_criteria = $crit['entities_id'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $tabdata = [];
                 $tabnames = [];
                 $tabyears = [];
                 $i = 0;
 
-                $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y') AS year,
-                        DATE_FORMAT(`glpi_tickets`.`date`, '%Y') AS yearname
-                        FROM `glpi_tickets`
-                        WHERE $is_deleted ";
-                $query .= $entities_criteria . "
-                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y')";
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y') AS year"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y') AS yearname"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                    ],
+                    'GROUPBY' => new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y')"),
+                ];
+                if ($entities_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+                }
 
-                $results = $DB->doQuery($query);
+                $iterator = $DB->request($criteria);
 
-                while ($data = $DB->fetchArray($results)) {
+                foreach ($iterator as $data) {
                     $year = $data['year'];
 
-                    $query_1 = "SELECT COUNT(`requesttypes_id`) as count,
-                                 `glpi_requesttypes`.`name`as namerequest,
-                                 `glpi_tickets`.`requesttypes_id`
-                     FROM `glpi_tickets`
-                     LEFT JOIN `glpi_requesttypes` ON (`glpi_tickets`.`requesttypes_id` = `glpi_requesttypes`.`id`)
-                     WHERE $is_deleted " . $entities_criteria . "
-                     AND (`glpi_tickets`.`date` <= '$year-12-31 23:59:59')
-                     AND (`glpi_tickets`.`date` > ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY))
-                     GROUP BY `requesttypes_id`";
+                    $criteria_1 = [
+                        'SELECT' => [
+                            'COUNT' => 'glpi_tickets.requesttypes_id AS count',
+                            'glpi_requesttypes.name AS namerequest',
+                            'glpi_tickets.requesttypes_id',
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'LEFT JOIN'       => [
+                            'glpi_requesttypes' => [
+                                'ON' => [
+                                    'glpi_tickets' => 'requesttypes_id',
+                                    'glpi_requesttypes'          => 'id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['<=', $year . '-12-31 23:59:59']],
+                                ['glpi_tickets.date' => ['>', new QueryExpression("ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY)")]],
+                            ],
+                        ],
+                        'GROUPBY' => 'glpi_tickets.requesttypes_id',
+                    ];
+                    if ($entities_criteria > 0) {
+                        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                    }
+                    $iterator_1 = $DB->request($criteria_1);
 
-                    $results_1 = $DB->doQuery($query_1);
-
-                    while ($data_1 = $DB->fetchArray($results_1)) {
+                    foreach ($iterator_1 as $data_1) {
                         $tabdata[$data_1['requesttypes_id']][$year] = $data_1['count'];
                         $tabnames[$data_1['requesttypes_id']] = $data_1['namerequest'];
                         $i++;
@@ -1960,8 +2955,6 @@ class Reports_Bar extends CommonDBTM
                 );
 
                 return $widget;
-                break;
-
 
             case $this->getType() . "41":
                 $criterias = ['entities_id', 'is_recursive'];
@@ -1976,47 +2969,83 @@ class Reports_Bar extends CommonDBTM
                 $crit = $options['crit'];
 
                 $entities_criteria = $crit['entities_id'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $tabdata = [];
                 $tabnames = [];
                 $tabyears = [];
                 $i = 0;
 
-                $query = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y') AS year,
-                        DATE_FORMAT(`glpi_tickets`.`date`, '%Y') AS yearname
-                        FROM `glpi_tickets`
-                        WHERE $is_deleted ";
-                $query .= $entities_criteria . "
-                     GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y')";
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y') AS year"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y') AS yearname"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                    ],
+                    'GROUPBY' => new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y')"),
+                ];
+                if ($entities_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+                }
 
-                $results = $DB->doQuery($query);
+                $iterator = $DB->request($criteria);
 
-                while ($data = $DB->fetchArray($results)) {
+                foreach ($iterator as $data) {
                     $year = $data['year'];
 
-                    $query_1 = "SELECT COUNT(`solutiontypes_id`) as count,
-                                 `glpi_solutiontypes`.`name`as namesolution,
-                                 `glpi_itilsolutions`.`solutiontypes_id`
-                     FROM `glpi_itilsolutions`
-                     LEFT JOIN `glpi_tickets` ON (`glpi_itilsolutions`.`items_id` = `glpi_tickets`.`id`
-                         AND `glpi_itilsolutions`.`itemType` = 'Ticket')
-                     LEFT JOIN `glpi_solutiontypes` ON (`glpi_itilsolutions`.`solutiontypes_id` = `glpi_solutiontypes`.`id`)
-                     WHERE $is_deleted " . $entities_criteria . "
-                     AND (`glpi_tickets`.`date` <= '$year-12-31 23:59:59')
-                     AND (`glpi_tickets`.`date` > ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY))
-                     GROUP BY `solutiontypes_id`";
+                    $criteria_1 = [
+                        'SELECT' => [
+                            'COUNT' => 'glpi_itilsolutions.solutiontypes_id AS count',
+                            'glpi_solutiontypes.name AS namesolution',
+                            'glpi_itilsolutions.solutiontypes_id',
+                        ],
+                        'FROM' => 'glpi_itilsolutions',
+                        'LEFT JOIN'       => [
+                            'glpi_tickets' => [
+                                'ON' => [
+                                    'glpi_itilsolutions'   => 'items_id',
+                                    'glpi_tickets'                  => 'id', [
+                                        'AND' => [
+                                            'glpi_itilsolutions.itemtype' => 'Ticket',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'glpi_solutiontypes' => [
+                                'ON' => [
+                                    'glpi_itilsolutions' => 'solutiontypes_id',
+                                    'glpi_solutiontypes'          => 'id',
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            [
+                                ['glpi_tickets.date' => ['<=', $year . '-12-31 23:59:59']],
+                                ['glpi_tickets.date' => ['>', new QueryExpression("ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY)")]],
+                            ],
+                        ],
+                        'GROUPBY' => 'glpi_itilsolutions.solutiontypes_id',
+                    ];
+                    if ($entities_criteria > 0) {
+                        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+                    }
+                    $iterator_1 = $DB->request($criteria_1);
 
-                    $results_1 = $DB->doQuery($query_1);
-
-                    while ($data_1 = $DB->fetchArray($results_1)) {
+                    foreach ($iterator_1 as $data_1) {
                         $tabdata[$data_1['solutiontypes_id']][$year] = $data_1['count'];
                         $tabnames[$data_1['solutiontypes_id']] = $data_1['namesolution'];
                     }
 
                     $tabyears[] = $data['yearname'];
 
-                    $i++;
                 }
 
                 if (isset($tabdata)) {
@@ -2086,7 +3115,7 @@ class Reports_Bar extends CommonDBTM
                 );
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "42":
                 $name = 'reportLineLifeTimeAndTakenAccountAverageByMonthHelpdesk';
@@ -2115,7 +3144,7 @@ class Reports_Bar extends CommonDBTM
                 $crit = $options['crit'];
 
                 $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
+                $technician_groups_criteria = $opt['technicians_groups_id'];
 
                 $lifetime_avg_ticket = self::getLifetimeOrTakeIntoAccountTicketAverage(
                     $crit,
@@ -2202,8 +3231,6 @@ class Reports_Bar extends CommonDBTM
 
                 return $widget;
 
-                break;
-
             case $this->getType() . "43":
                 $name = 'SatisfactionByYear';
                 $onclick = 0;
@@ -2235,59 +3262,86 @@ class Reports_Bar extends CommonDBTM
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
                 $satisfactiondate_criteria = $crit['satisfactiondate'];
-                $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+
+                $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $tabnames = [];
                 $tabdates = [];
 
-                //                $currentmonth = date("m");
-                //                $currentyear  = date("Y");
-                //
-                //                if (isset($opt["year"]) && $opt["year"] > 0) {
-                //                    $currentyear = $opt["year"];
-                //                }
-                //                $previousyear = $currentyear - 2;
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_ticketsatisfactions.date_answered") . ", '%b %Y') AS period_name"),
+                        'COUNT' => 'glpi_ticketsatisfactions.satisfaction AS satisfy',
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_ticketsatisfactions.date_answered") . ", '%Y-%m') AS period"),
+                    ],
+                    'FROM' => 'glpi_ticketsatisfactions',
+                    'INNER JOIN'       => [
+                        'glpi_tickets' => [
+                            'ON' => [
+                                'glpi_ticketsatisfactions' => 'tickets_id',
+                                'glpi_tickets'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets.status' => CommonITILObject::CLOSED,
+                        'NOT'       => ['glpi_tickets.closedate' => null],
+                        'glpi_ticketsatisfactions.satisfaction' => ['>=', 3],
+                    ],
+                    'GROUPBY' => 'period_name',
+                ];
+                if (count($satisfactiondate_criteria) > 0) {
+                    $criteria['WHERE'] = array_merge($criteria['WHERE'], $satisfactiondate_criteria);
+                }
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
 
-                $query = "SELECT DISTINCT
-                           DATE_FORMAT(`glpi_ticketsatisfactions`.`date_answered`, '%b %Y') AS period_name,
-                           count(`glpi_ticketsatisfactions`.`satisfaction`) AS satisfy,
-                           DATE_FORMAT(`glpi_ticketsatisfactions`.`date_answered`, '%Y-%m') AS period
-                       FROM `glpi_ticketsatisfactions`
-                       INNER JOIN `glpi_tickets`
-                           ON (`glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`)";
-
-                $query .= " WHERE $satisfactiondate_criteria $entities_criteria
-                        AND $is_deleted
-                        AND `glpi_tickets`.`status` IN (" . CommonITILObject::CLOSED . ")
-                        AND `glpi_tickets`.`closedate` IS NOT NULL
-                         AND `glpi_ticketsatisfactions`.`satisfaction` >= 3
-                        GROUP BY period_name ORDER BY period ASC;";
-
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                $iterator = $DB->request($criteria);
+                $nb = count($iterator);
 
                 $satisfydatasset = [];
                 $notsatisfydatasset = [];
                 $datasets = [];
                 if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                    foreach ($iterator as $data) {
+
                         [$year, $month] = explode('-', $data['period']);
 
                         $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                         $count = 0;
-                        $querycount = "SELECT count(`glpi_ticketsatisfactions`.`id`) as nb
-                       FROM `glpi_ticketsatisfactions`
-                       INNER JOIN `glpi_tickets`
-                           ON (`glpi_tickets`.`id` = `glpi_ticketsatisfactions`.`tickets_id`)";
-                        $querycount .= " WHERE (`glpi_ticketsatisfactions`.`date_answered` >= '$year-$month-01 00:00:01'
-                           AND `glpi_ticketsatisfactions`.`date_answered` <= ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY) )
-                         $entities_criteria
-                        AND $is_deleted
-                        AND `glpi_tickets`.`status` IN (" . CommonITILObject::CLOSED . ")
-                        AND `glpi_tickets`.`closedate` IS NOT NULL";
 
-                        $resultcount = $DB->doQuery($querycount);
-                        while ($datacount = $DB->fetchAssoc($resultcount)) {
+                        $criteria_1 = [
+                            'SELECT' => [
+                                'COUNT' => 'glpi_ticketsatisfactions.id AS nb',
+                            ],
+                            'FROM' => 'glpi_ticketsatisfactions',
+                            'INNER JOIN'       => [
+                                'glpi_tickets' => [
+                                    'ON' => [
+                                        'glpi_ticketsatisfactions' => 'tickets_id',
+                                        'glpi_tickets'          => 'id',
+                                    ],
+                                ],
+                            ],
+                            'WHERE' => [
+                                $is_deleted,
+                                [
+                                    ['glpi_ticketsatisfactions.date_answered' => ['>=', $data['period'] . '-01 00:00:01']],
+                                    ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                                ],
+                                'glpi_tickets.status' => CommonITILObject::CLOSED,
+                                'NOT'       => ['glpi_tickets.closedate' => null],
+                            ],
+                        ];
+                        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                            'glpi_tickets'
+                        );
+
+                        $iterator_1 = $DB->request($criteria_1);
+
+                        foreach ($iterator_1 as $datacount) {
                             $count = $datacount['nb'];
                         }
 
@@ -2403,31 +3457,51 @@ class Reports_Bar extends CommonDBTM
                 $entities_id_criteria = $crit['entity'];
                 $sons_criteria = $crit['sons'];
 
-                $is_deleted = "`glpi_computers`.`is_deleted` = 0";
+                $is_deleted = ['glpi_computers.is_deleted' => 0];
                 $params['entities_id'] = $entities_id_criteria;
                 $params['sons'] = $sons_criteria;
                 $entities_criteria = Helper::getSpecificEntityRestrict("glpi_computers", $params);
 
-                $query = "SELECT DISTINCT
-                           DATE_FORMAT(`glpi_computers`.`last_inventory_update`, '%b %Y') AS periodsync_name,
-                           COUNT(`glpi_computers`.`id`) AS nb,
-                           DATE_FORMAT(`glpi_computers`.`last_inventory_update`, '%Y-%m') AS periodsync
-                        FROM `glpi_computers`
-                        WHERE $is_deleted
-                        AND `glpi_computers`.`is_template` = 0
-                        $entities_criteria
-                        GROUP BY periodsync_name ORDER BY periodsync ASC";
+                //                $query = "SELECT DISTINCT
+                //                           DATE_FORMAT(`glpi_computers`.`last_inventory_update`, '%b %Y') AS periodsync_name,
+                //                           COUNT(`glpi_computers`.`id`) AS nb,
+                //                           DATE_FORMAT(`glpi_computers`.`last_inventory_update`, '%Y-%m') AS periodsync
+                //                        FROM `glpi_computers`
+                //                        WHERE $is_deleted
+                //                        AND `glpi_computers`.`is_template` = 0
+                //                        $entities_criteria
+                //                        GROUP BY periodsync_name ORDER BY periodsync ASC";
 
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_computers.last_inventory_update") . ", '%b %Y') AS periodsync_name"),
+                        'COUNT' => 'glpi_computers.id AS nb',
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_computers.last_inventory_update") . ", '%Y-%m') AS periodsync"),
+                    ],
+                    'DISTINCT'        => true,
+                    'FROM' => 'glpi_computers',
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_computers.is_template' => 0,
+                    ],
+                    'GROUPBY' => 'periodsync_name',
+                    'ORDERBY' => 'periodsync ASC',
+                ];
+
+                if ($entities_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+                }
+                $iterator = $DB->request($criteria);
 
                 $nbcomputers = __('Computers number', 'mydashboard');
 
                 $tabdata = [];
                 $tabnames = [];
                 $tabsyncdates = [];
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator)) {
+                    foreach ($iterator as $data) {
                         $tabdata['data'][] = $data['nb'];
                         $tabdata['type'] = 'bar';
                         $tabdata['name'] = $nbcomputers;
@@ -2476,7 +3550,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
-                    "nb" => $nb,
+                    "nb" => count($iterator),
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
@@ -2726,6 +3800,7 @@ class Reports_Bar extends CommonDBTM
 
         $opt = $params['opt'];
         $crit = $params['crit'];
+        $type = $opt['type'];
         $type_criteria = $crit['type'];
         $entities_criteria = $crit['entities_id'];
         $year = $opt["year"];
@@ -2746,28 +3821,54 @@ class Reports_Bar extends CommonDBTM
             $limit_query = "LIMIT $limit";
         }
         if (count($selected_group) > 0) {
-            $groups = implode(",", $selected_group);
-            $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
-                . "FROM `glpi_groups_users` "
-                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
-                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
-                . " GROUP BY `glpi_groups_users`.`users_id`
-                               $limit_query";
 
-            $result_gu = $DB->doQuery($query_group_member);
+            $criteria = [
+                'SELECT' => 'glpi_groups_users.users_id',
+                'FROM' => 'glpi_groups_users',
+                'LEFT JOIN'       => [
+                    'glpi_groups' => [
+                        'ON' => [
+                            'glpi_groups_users' => 'groups_id',
+                            'glpi_groups'          => 'id',
+                        ],
+                    ],
+                ],
+                'WHERE' => [
+                    'glpi_groups_users.groups_id' => $selected_group,
+                    'glpi_groups.is_assign' => 1,
+                ],
+                'GROUPBY' => 'glpi_groups_users.users_id',
+                'LIMIT' => $limit,
+            ];
 
-            while ($data = $DB->fetchAssoc($result_gu)) {
+            //            $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
+            //                . "FROM `glpi_groups_users` "
+            //                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
+            //                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
+            //                . " GROUP BY `glpi_groups_users`.`users_id`
+            //                               $limit_query";
+
+            $iterator = $DB->request($criteria);
+
+            foreach ($iterator as $data) {
                 $techlist[] = $data['users_id'];
             }
         } else {
-            $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
-                . "FROM `glpi_tickettasks` "
-                . " GROUP BY `glpi_tickettasks`.`users_id_tech`
-                               $limit_query";
 
-            $result_gu = $DB->doQuery($query_group_member);
+            $criteria = [
+                'SELECT' => 'glpi_tickettasks.users_id_tech',
+                'FROM' => 'glpi_tickettasks',
+                'GROUPBY' => 'glpi_tickettasks.users_id_tech',
+                'LIMIT' => $limit,
+            ];
+            //            $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
+            //                . "FROM `glpi_tickettasks` "
+            //                . " GROUP BY `glpi_tickettasks`.`users_id_tech`
+            //                               $limit_query";
 
-            while ($data = $DB->fetchAssoc($result_gu)) {
+            $iterator = $DB->request($criteria);
+
+            foreach ($iterator as $data) {
                 $techlist[] = $data['users_id_tech'];
             }
         }
@@ -2800,34 +3901,57 @@ class Reports_Bar extends CommonDBTM
             $month_deb_datetime = $month_deb_date . " 00:00:00";
             $month_end_date = "$year-$month_tmp-$nb_jours";
             $month_end_datetime = $month_end_date . " 23:59:59";
-            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+            $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
             foreach ($techlist as $techid) {
                 $time_per_tech[$techid][$key] = 0;
 
-                $querym_ai = "SELECT  DATE(`glpi_tickettasks`.`date`), SUM(`glpi_tickettasks`.`actiontime`) AS actiontime_date
-                        FROM `glpi_tickettasks`
-                        INNER JOIN `glpi_tickets` ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id` AND $is_deleted)
-                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
-                $querym_ai .= "WHERE ";
-                $querym_ai .= "(
-                           `glpi_tickettasks`.`begin` >= '$month_deb_datetime'
-                           AND `glpi_tickettasks`.`end` <= '$month_end_datetime'
-                           AND `glpi_tickettasks`.`users_id_tech` = (" . $techid . ") "
-                    . $entities_criteria
-                    . ")
-                        OR (
-                           `glpi_tickettasks`.`date` >= '$month_deb_datetime'
-                           AND `glpi_tickettasks`.`date` <= '$month_end_datetime'
-                           AND `glpi_tickettasks`.`users_id`  = (" . $techid . ")
-                           AND `glpi_tickettasks`.`begin` IS NULL "
-                    . $entities_criteria
-                    . ")
-                           AND `glpi_tickettasks`.`actiontime` != 0 $type_criteria ";
-                $querym_ai .= "GROUP BY DATE(`glpi_tickettasks`.`date`);
-                        ";
-                $result_ai_q = $DB->doQuery($querym_ai);
-                while ($data = $DB->fetchAssoc($result_ai_q)) {
+                $criteria = [
+                    'SELECT' => [
+                        new QueryExpression("DATE(" . $DB->quoteName("glpi_tickettasks.date") . ")"),
+                        new QueryExpression("SUM(" . $DB->quoteName("glpi_tickettasks.actiontime") . ") AS actiontime_date"),
+                    ],
+                    'FROM' => 'glpi_tickettasks',
+                    'INNER JOIN'       => [
+                        'glpi_tickets' => [
+                            'ON' => [
+                                'glpi_tickettasks' => 'tickets_id',
+                                'glpi_tickets'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickettasks.actiontime' => ['<>', 0],
+                        'OR' => [
+                            [
+                                'glpi_tickettasks.users_id' => $techid,
+                                ['glpi_tickettasks.begin' => ['>=', $month_deb_datetime]],
+                                ['glpi_tickettasks.end' => ['<=', $month_end_datetime]],
+                            ],
+                            [
+                                'glpi_tickettasks.users_id' => $techid,
+                                'glpi_tickettasks.begin' => null,
+                                ['glpi_tickettasks.date' => ['>=', $month_deb_datetime]],
+                                ['glpi_tickettasks.date' => ['<=', $month_end_datetime]],
+                            ],
+                        ],
+                    ],
+                    'GROUPBY' => new QueryExpression("DATE(" . $DB->quoteName("glpi_tickettasks.date") . ")"),
+                ];
+
+                if ($entities_criteria > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+                }
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                $iterator = $DB->request($criteria);
+
+
+                foreach ($iterator as $data) {
                     //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
                     if ($data['actiontime_date'] > 0) {
                         if (isset($time_per_tech[$techid][$key])) {
@@ -2888,11 +4012,14 @@ class Reports_Bar extends CommonDBTM
             $year = $params["year"];
         }
 
-        $type_criteria = "";
-        if (isset($params["type"])
-            && $params["type"] > 0) {
-            $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
-        }
+        $type = 0;
+        //        $type_criteria = "";
+        //        if (isset($params["type"])
+        //            && $params["type"] > 0) {
+        //            $type = $params['type'];
+        //            $type_criteria = ['glpi_tickets.type' => $params["type"]];
+        //        }
+
 
         $selected_group = [];
         if (isset($params["technicians_groups_id"])
@@ -2913,44 +4040,66 @@ class Reports_Bar extends CommonDBTM
         $selected_group = array_filter($selected_group);
 
         if (count($selected_group) > 0) {
-            $groups = implode(",", $selected_group);
+            //            $groups = implode(",", $selected_group);
 
-            $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
-                . "FROM `glpi_groups_users` "
-                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
-                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
-                . " GROUP BY `glpi_groups_users`.`users_id`
-                               $limit_query";
+            $criteria = [
+                'SELECT' => 'glpi_groups_users.users_id',
+                'FROM' => 'glpi_groups_users',
+                'LEFT JOIN'       => [
+                    'glpi_groups' => [
+                        'ON' => [
+                            'glpi_groups_users' => 'groups_id',
+                            'glpi_groups'          => 'id',
+                        ],
+                    ],
+                ],
+                'WHERE' => [
+                    'glpi_groups_users.groups_id' => $selected_group,
+                    'glpi_groups.is_assign' => 1,
+                ],
+                'GROUPBY' => 'glpi_groups_users.users_id',
+                'LIMIT' => $limit,
+            ];
+            //            $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+            //                    'glpi_groups'
+            //                );
 
-            $result_gu = $DB->doQuery($query_group_member);
+            //            $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
+            //                . "FROM `glpi_groups_users` "
+            //                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
+            //                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
+            //                . " GROUP BY `glpi_groups_users`.`users_id`
+            //                               $limit_query";
 
-            while ($data = $DB->fetchAssoc($result_gu)) {
+            $iterator = $DB->request($criteria);
+
+            foreach ($iterator as $data) {
                 $techlist[] = $data['users_id'];
             }
         } else {
-            $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
-                . "FROM `glpi_tickettasks` "
-                . " GROUP BY `glpi_tickettasks`.`users_id_tech`
-                               $limit_query";
 
-            $result_gu = $DB->doQuery($query_group_member);
+            $criteria = [
+                'SELECT' => 'glpi_tickettasks.users_id_tech',
+                'FROM' => 'glpi_tickettasks',
+                'GROUPBY' => 'glpi_tickettasks.users_id_tech',
+                'LIMIT' => $limit,
+            ];
+            //            $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+            //                    'glpi_groups'
+            //                );
 
-            while ($data = $DB->fetchAssoc($result_gu)) {
+            //            $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
+            //                . "FROM `glpi_tickettasks` "
+            //                . " GROUP BY `glpi_tickettasks`.`users_id_tech`
+            //                               $limit_query";
+
+            $iterator = $DB->request($criteria);
+
+            foreach ($iterator as $data) {
                 $techlist[] = $data['users_id_tech'];
             }
         }
-        //      else {
-        //         $query = "SELECT `glpi_tickets_users`.`users_id`"
-        //                  . "FROM `glpi_tickets_users` "
-        //                  . "WHERE  `glpi_tickets_users`.`type` = ".CommonITILActor::ASSIGN."
-        //         GROUP BY `glpi_tickets_users`.`users_id`";
-        //
-        //         $result_gu = $DB->doQuery($query);
-        //
-        //         while ($data = $DB->fetchAssoc($result_gu)) {
-        //            $techlist[] = $data['users_id'];
-        //         }
-        //      }
+
         $current_month = date("m");
         foreach ($months as $key => $month) {
             if ($key > $current_month && $year == date("Y")) {
@@ -2979,28 +4128,73 @@ class Reports_Bar extends CommonDBTM
             $month_deb_datetime = $month_deb_date . " 00:00:00";
             $month_end_date = "$year-$month_tmp-$nb_jours";
             $month_end_datetime = $month_end_date . " 23:59:59";
-            $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
+            $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
             foreach ($techlist as $techid) {
+
                 $tickets_per_tech[$techid][$key] = 0;
 
-                $querym_ai = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets
-                        FROM `glpi_tickets`
-                        INNER JOIN `glpi_tickets_users`
-                        ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND $is_deleted)
-                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
-                $querym_ai .= "WHERE ";
-                $querym_ai .= "(
-                           `glpi_tickets`.`date` >= '$month_deb_datetime'
-                           AND `glpi_tickets`.`date` <= '$month_end_datetime'
-                           AND `glpi_tickets_users`.`users_id` = (" . $techid . ") "
-                    . Helper::getSpecificEntityRestrict("glpi_tickets", $params)
-                    . " $type_criteria ) ";
-                $querym_ai .= "GROUP BY DATE(`glpi_tickets`.`date`);
-                        ";
-                $result_ai_q = $DB->doQuery($querym_ai);
-                while ($data = $DB->fetchAssoc($result_ai_q)) {
-                    $tickets_per_tech[$techid][$key] += $data['nbtickets'];
+                $criteria_1 = [
+                    'SELECT' => [
+                        'COUNT' => 'glpi_tickets.id AS nb_tickets',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'INNER JOIN'       => [
+                        'glpi_tickets_users' => [
+                            'ON' => [
+                                'glpi_tickets_users'   => 'tickets_id',
+                                'glpi_tickets'                  => 'id', [
+                                    'AND' => [
+                                        'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'LEFT JOIN'       => [
+                        'glpi_entities' => [
+                            'ON' => [
+                                'glpi_tickets' => 'entities_id',
+                                'glpi_entities'          => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets_users.users_id' => $techid,
+                        [
+                            ['glpi_tickets.date' => ['>=', $month_deb_datetime]],
+                            ['glpi_tickets.date' => ['<=', $month_end_datetime]],
+                        ],
+                    ],
+                    'GROUPBY' => new QueryExpression("DATE(" . $DB->quoteName("glpi_tickets.date") . ")"),
+                ];
+
+                if ($type > 0) {
+                    $criteria_1['WHERE'] = $criteria_1['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                //                if ($type > 0) {
+                $criteria_1['WHERE'] = $criteria_1['WHERE'] + Helper::getSpecificEntityRestrict("glpi_tickets", $params);
+                //                }
+
+                $iterator_1 = $DB->request($criteria_1);
+
+                //                $querym_ai = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets
+                //                        FROM `glpi_tickets`
+                //                        INNER JOIN `glpi_tickets_users`
+                //                        ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND $is_deleted)
+                //                        LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
+                //                $querym_ai .= "WHERE ";
+                //                $querym_ai .= "(
+                //                           `glpi_tickets`.`date` >= '$month_deb_datetime'
+                //                           AND `glpi_tickets`.`date` <= '$month_end_datetime'
+                //                           AND `glpi_tickets_users`.`users_id` = (" . $techid . ") "
+                //                    . Helper::getSpecificEntityRestrict("glpi_tickets", $params)
+                //                    . " $type_criteria ) ";
+                //                $querym_ai .= "GROUP BY DATE(`glpi_tickets`.`date`);
+                //                        ";
+                foreach ($iterator_1 as $data1) {
+                    $tickets_per_tech[$techid][$key] += $data1['nb_tickets'];
                 }
             }
 
@@ -3026,10 +4220,17 @@ class Reports_Bar extends CommonDBTM
 
         $tabs = [];
         if (Plugin::isPluginActive('moreticket')) {
-            $query = "SELECT `glpi_plugin_moreticket_waitingtypes`.`completename` as name,
-                   `glpi_plugin_moreticket_waitingtypes`.`id` as id  FROM `glpi_plugin_moreticket_waitingtypes` ORDER BY id";
-            $result = $DB->doQuery($query);
-            while ($type = $DB->fetchAssoc($result)) {
+
+            $iterator = $DB->request([
+                'SELECT'    => [
+                    'completename AS name',
+                    'id',
+                ],
+                'FROM'      => 'glpi_plugin_moreticket_waitingtypes',
+                'ORDERBY'   => 'name',
+            ]);
+
+            foreach ($iterator as $type) {
                 $tabs[$type['id']] = $type['name'];
             }
         }
@@ -3139,23 +4340,22 @@ class Reports_Bar extends CommonDBTM
         $entities_criteria = $params['entities_id'];
         $type_criteria = "";
 
-        if (isset($params["type"]) && $params["type"] > 0) {
-            $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
-        }
+        $type = $params['type'];
 
         $tickets_helpdesk = [];
 
         $currentYear = date("Y");
         $currentMonth = date("m");
 
-        if (isset($opt["year"]) && $opt["year"] > 0) {
-            $currentYear = $opt["year"];
+        if (isset($params["year"]) && $params["year"] > 0) {
+            $currentYear = $params["year"];
         }
 
         $previousYear = $currentYear - 1;
 
         $begin = new DateTime($previousYear . '-' . $currentMonth . '-' . '01');
         $end = new DateTime($currentYear . '-' . $currentMonth . '-' . '01');
+
         $period = new DatePeriod($begin, new DateInterval('P1M'), $end);
         $datesTab = [];
         foreach ($period as $date) {
@@ -3163,6 +4363,7 @@ class Reports_Bar extends CommonDBTM
         }
 
         foreach ($datesTab as $key => $dateTab) {
+
             $tickets_helpdesk[$key]['nb'] = 0;
             $tickets_helpdesk[$key]['respected'] = 0;
             $tickets_helpdesk[$key]['notrespected'] = 0;
@@ -3174,59 +4375,196 @@ class Reports_Bar extends CommonDBTM
             $month_end_date = "$dateTab-$nbdays";
             $month_end_datetime = $month_end_date . " 23:59:59";
 
-            $is_deleted = " AND `glpi_tickets`.`is_deleted` = 0 ";
-
-            $date = "`glpi_tickets`.`closedate`";
+            $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
             if ($sla == "TTO") {
-                $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        WHERE {$date} >= '{$month_deb_datetime}'
-                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
-                        AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_own` IS NOT NULL ";
-                $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+
+                $criteria = [
+                    'SELECT' => [
+                        'COUNT' => 'glpi_tickets.id AS nb',
+                    ],
+                    'DISTINCT'        => true,
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets.takeintoaccount_delay_stat' => ['<>', 'NULL'],
+                        'glpi_tickets.time_to_own' => ['<>', 'NULL'],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                        [
+                            ['glpi_tickets.closedate' => ['>=', $month_deb_datetime]],
+                            ['glpi_tickets.closedate' => ['<=', $month_end_datetime]],
+                        ],
+                    ],
+                ];
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+                //
+                //                $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+                //                        FROM `glpi_tickets`
+                //                        WHERE {$date} >= '{$month_deb_datetime}'
+                //                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
+                //                        AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
+                //                        AND `glpi_tickets`.`time_to_own` IS NOT NULL ";
+                //                $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+                //
             } else {
-                $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        WHERE {$date} >= '{$month_deb_datetime}'
-                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
-                        AND `glpi_tickets`.`solvedate` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
-                $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+                //                $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+                //                        FROM `glpi_tickets`
+                //                        WHERE {$date} >= '{$month_deb_datetime}'
+                //                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
+                //                        AND `glpi_tickets`.`solvedate` IS NOT NULL
+                //                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL ";
+                //                $all .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+
+                $criteria = [
+                    'SELECT' => [
+                        'COUNT' => 'glpi_tickets.id AS nb',
+                    ],
+                    'DISTINCT'        => true,
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'NOT'       => [['glpi_tickets.solvedate' => 'NULL'],
+                         ['glpi_tickets.time_to_resolve' => 'NULL']],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                        [
+                            ['glpi_tickets.closedate' => ['>=', $month_deb_datetime]],
+                            ['glpi_tickets.closedate' => ['<=', $month_end_datetime]],
+                        ],
+                    ],
+                ];
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
             }
-            $result = $DB->doQuery($all);
-            $total = $DB->fetchAssoc($result);
+
+            $iterator = $DB->request($criteria);
+            foreach ($iterator as $data) {
+                $total['nb'] = $data['nb'];
+            }
+
 
             if ($sla == "TTO") {
-                $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        WHERE {$date} >= '{$month_deb_datetime}'
-                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
-                        AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_own` IS NOT NULL
-                        AND (`glpi_tickets`.`takeintoaccount_delay_stat`
-                                                        > TIME_TO_SEC(TIMEDIFF(`glpi_tickets`.`time_to_own`,
-                                                                               `glpi_tickets`.`date`))
-                                                 OR (`glpi_tickets`.`takeintoaccount_delay_stat` = 0
-                                                      AND `glpi_tickets`.`time_to_own` < NOW()))";
-                $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
-            } else {
-                $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        WHERE {$date} >= '{$month_deb_datetime}'
-                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
-                        AND `glpi_tickets`.`solvedate` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-                                            AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
-                                                 OR (`glpi_tickets`.`solvedate` IS NULL
-                                                      AND `glpi_tickets`.`time_to_resolve` < NOW()))";
-                $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
-            }
-            $result = $DB->doQuery($query);
-            $nb = $DB->numrows($result);
+                //                $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
+                //                        FROM `glpi_tickets`
+                //                        WHERE {$date} >= '{$month_deb_datetime}'
+                //                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
+                //                        AND `glpi_tickets`.`takeintoaccount_delay_stat` IS NOT NULL
+                //                        AND `glpi_tickets`.`time_to_own` IS NOT NULL
+                //                        AND (`glpi_tickets`.`takeintoaccount_delay_stat`  > TIME_TO_SEC(TIMEDIFF(`glpi_tickets`.`time_to_own`, `glpi_tickets`.`date`))
+                //                                                 OR (`glpi_tickets`.`takeintoaccount_delay_stat` = 0 AND `glpi_tickets`.`time_to_own` < NOW()))";
+                //                $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
 
-            while ($sum = $DB->fetchAssoc($result)) {
+                $criteria = [
+                    'SELECT' => [
+                        'COUNT' => 'glpi_tickets.id AS nb',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets.time_to_own' => ['<>', 'NULL'],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                        [
+                            ['glpi_tickets.closedate' => ['>=', $month_deb_datetime]],
+                            ['glpi_tickets.closedate' => ['<=', $month_end_datetime]],
+                        ],
+                        'OR' => [
+                            [
+                                'glpi_tickets.takeintoaccount_delay_stat' => [
+                                    '>',
+                                    new QueryExpression(
+                                        "TIME_TO_SEC(TIMEDIFF(" . $DB->quoteName(
+                                            "glpi_tickets.time_to_own"
+                                        ) . ", " . $DB->quoteName("glpi_tickets.date") . "))"
+                                    ),
+                                ],
+                            ],
+                            [
+                                'AND' => [
+                                    'glpi_tickets.takeintoaccount_delay_stat' => '0',
+                                    'glpi_tickets.time_to_own' => ['>', new QueryExpression("NOW()")],
+                                ],
+                            ],
+                        ],
+
+                    ],
+                ];
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+
+            } else {
+                //                $query = "SELECT COUNT(`glpi_tickets`.`id`) AS nb
+                //                        FROM `glpi_tickets`
+                //                        WHERE {$date} >= '{$month_deb_datetime}'
+                //                          AND {$date} <= '{$month_end_datetime}' $is_deleted $entities_criteria $type_criteria
+                //                        AND `glpi_tickets`.`solvedate` IS NOT NULL
+                //                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
+                //                                            AND (`glpi_tickets`.`solvedate` > `glpi_tickets`.`time_to_resolve`
+                //                                                 OR (`glpi_tickets`.`solvedate` IS NULL
+                //                                                      AND `glpi_tickets`.`time_to_resolve` < NOW()))";
+                //                $query .= " AND `status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")";
+
+                $criteria = [
+                    'SELECT' => [
+                        'COUNT' => 'glpi_tickets.id AS nb',
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'NOT'       => ['glpi_tickets.solvedate' => 'NULL'],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                        [
+                            ['glpi_tickets.closedate' => ['>=', $month_deb_datetime]],
+                            ['glpi_tickets.closedate' => ['<=', $month_end_datetime]],
+                        ],
+                        'OR' => [
+                            [
+                                'glpi_tickets.solvedate' => [
+                                    '>',
+                                    new QueryExpression(
+                                        $DB->quoteName(
+                                            "glpi_tickets.time_to_resolve"
+                                        )
+                                    ),
+                                ],
+                            ],
+                            [
+                                'AND' => [
+                                    'NOT'       => ['glpi_tickets.solvedate' => 'NULL'],
+                                    'glpi_tickets.time_to_resolve' => ['>', new QueryExpression("NOW()")],
+                                ],
+                            ],
+                        ],
+
+                    ],
+                ];
+
+                if ($type > 0) {
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                }
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+
+            }
+            $iterator = $DB->request($criteria);
+            $nb = count($iterator);
+
+            foreach ($iterator as $sum) {
                 if ($nb > 0 && $sum['nb'] > 0) {
                     $notrespected = $sum['nb'];
                     $respected = $total['nb'] - $sum['nb'];
@@ -3259,12 +4597,9 @@ class Reports_Bar extends CommonDBTM
         global $DB;
 
         $entities_criteria = $params['entities_id'];
-        $locations_criteria = $params['multiple_locations_id'];
-        $type_criteria = "";
-
-        if (isset($params["type"]) && $params["type"] > 0) {
-            $type_criteria = " AND `glpi_tickets`.`type` = '" . $params["type"] . "' ";
-        }
+        //        Toolbox::logInfo($params);
+        //        $locations_criteria = $params['multiple_locations_id'];
+        //        $type_criteria = "";
 
         $tickets_helpdesk = [];
         $months = Toolbox::getMonthsOfYearArray();
@@ -3280,10 +4615,6 @@ class Reports_Bar extends CommonDBTM
             $year = $params["year"];
         }
 
-        if (!empty($params['multiple_locations_id'])) {
-            $locations_criteria = " AND " . $params['multiple_locations_id'];
-        }
-
         $current_month = date("m");
         foreach ($months as $key => $month) {
             $tickets_helpdesk[$key]['nb'] = 0;
@@ -3294,7 +4625,7 @@ class Reports_Bar extends CommonDBTM
                 break;
             }
 
-            $next = $key + 1;
+            //            $next = $key + 1;
 
             $month_tmp = $key;
             $nb_jours = date("t", mktime(0, 0, 0, $key, 1, $year));
@@ -3302,9 +4633,9 @@ class Reports_Bar extends CommonDBTM
             if (strlen($key) == 1) {
                 $month_tmp = "0" . $month_tmp;
             }
-            if (strlen($next) == 1) {
-                $next = "0" . $next;
-            }
+            //            if (strlen($next) == 1) {
+            //                $next = "0" . $next;
+            //            }
 
             if ($key == 0) {
                 $year = $year - 1;
@@ -3316,38 +4647,98 @@ class Reports_Bar extends CommonDBTM
             $month_deb_datetime = $month_deb_date . " 00:00:00";
             $month_end_date = "$year-$month_tmp-$nb_jours";
             $month_end_datetime = $month_end_date . " 23:59:59";
-            $is_deleted = " AND `glpi_tickets`.`is_deleted` = 0 ";
-            $assign = Group_Ticket::ASSIGN;
-            $date = "`glpi_tickets`.`solvedate`";
 
-            $queryavg = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets,
-                             SUM(`glpi_tickets`.`solve_delay_stat` / 3600) as lifetime,
-                             SUM(`glpi_tickets`.`takeintoaccount_delay_stat` / 3600) as takeintoaccount
-                        FROM `glpi_tickets`
-                        LEFT JOIN `glpi_groups_tickets`
-                        ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`
-                          AND `glpi_groups_tickets`.`type` = {$assign}) ";
-            $queryavg .= "WHERE ";
+            $is_deleted = ['glpi_tickets.is_deleted' => 0];
+            //            $assign = Group_Ticket::ASSIGN;
+            //            $date = "`glpi_tickets`.`solvedate`";
 
-            $queryavg .= "{$date} >= '{$month_deb_datetime}'
-                          AND {$date} <= '{$month_end_datetime}'
-                          {$type_criteria}
-                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted}
-                          AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
 
-            $queryavg .= "GROUP BY DATE(`glpi_tickets`.`solvedate`);
-                        ";
-            $result_avg = $DB->doQuery($queryavg);
-            while ($data = $DB->fetchAssoc($result_avg)) {
+            //
+            //            $queryavg = "SELECT COUNT(`glpi_tickets`.`id`) AS nbtickets,
+            //                             SUM(`glpi_tickets`.`solve_delay_stat` / 3600) as lifetime,
+            //                             SUM(`glpi_tickets`.`takeintoaccount_delay_stat` / 3600) as takeintoaccount
+            //                        FROM `glpi_tickets`
+            //                        LEFT JOIN `glpi_groups_tickets`
+            //                        ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`
+            //                          AND `glpi_groups_tickets`.`type` = {$assign}) ";
+            //            $queryavg .= "WHERE ";
+            //
+            //            $queryavg .= "{$date} >= '{$month_deb_datetime}'
+            //                          AND {$date} <= '{$month_end_datetime}'
+            //                          {$type_criteria}
+            //                          {$entities_criteria} {$locations_criteria} {$groups_id} {$is_deleted}
+            //                          AND `glpi_tickets`.`status` IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+            //
+            //            $queryavg .= "GROUP BY DATE(`glpi_tickets`.`solvedate`);
+            //                        ";
+            //
+
+            $criteria = [
+                'SELECT' => [
+                    'COUNT' => 'glpi_tickets.id AS nbtickets',
+                    new QueryExpression("SUM(" . $DB->quoteName("glpi_tickets.solve_delay_stat") . " / 3600) AS lifetime"),
+                    new QueryExpression("SUM(" . $DB->quoteName("glpi_tickets.takeintoaccount_delay_stat") . " / 3600) AS takeintoaccount"),
+                ],
+                'FROM' => 'glpi_tickets',
+                'WHERE' => [
+                    $is_deleted,
+                    'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                    [
+                        ['glpi_tickets.solvedate' => ['>=', $month_deb_datetime]],
+                        ['glpi_tickets.solvedate' => ['<=', $month_end_datetime]],
+                    ],
+                ],
+                'GROUPBY' => new QueryExpression("DATE(" . $DB->quoteName("glpi_tickets.solvedate") . ")"),
+            ];
+
+            if (is_array($groups_id)) {
+
+                $groups_id = array_filter($groups_id);
+                if (count($groups_id) > 0) {
+                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
+                        'glpi_groups_tickets' => [
+                            'ON' => [
+                                'glpi_tickets' => 'id',
+                                'glpi_groups_tickets' => 'tickets_id',
+                                [
+                                    'AND' => [
+                                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+
+                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $groups_id];
+                }
+            }
+
+            if (isset($params["type"]) && $params["type"] > 0) {
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $params["type"]];
+            }
+
+            if (count($params['multiple_locations_id']) > 0) {
+                $multiple_locations_id = array_filter($params['multiple_locations_id']['locations_id']);
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.locations_id' => $multiple_locations_id];
+            }
+
+            if ($entities_criteria > 0) {
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                    'glpi_tickets'
+                );
+            }
+
+            $iterator = $DB->request($criteria);
+            foreach ($iterator as $data) {
                 $tickets_helpdesk[$key]['takeintoaccount'] += $data['takeintoaccount'];
                 $tickets_helpdesk[$key]['lifetime'] += $data['lifetime'];
                 $tickets_helpdesk[$key]['nb'] += $data['nbtickets'];
             }
         }
 
-        if ($key == 0) {
-            $year++;
-        }
+        //        if ($key == 0) {
+        //            $year++;
+        //        }
 
         return $tickets_helpdesk;
     }
@@ -3406,7 +4797,15 @@ class Reports_Bar extends CommonDBTM
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::OPEN_DATE, 'contains', $params["params"]["year"], 'AND');
+        if (isset($params["params"]["year"]) && !isset($params["params"]["begin"])) {
+            $params["params"]["begin"] = $params["params"]["year"] . "-01-01 00:00:01";
+            $params["params"]["end"] = $params["params"]["year"] . "-12-31 23:59:00";
+            $options = Chart::addCriteria(Chart::OPEN_DATE, 'contains', $params["params"]["year"], 'AND');
+        } else {
+            $options = Chart::addCriteria(Chart::OPEN_DATE, 'morethan', $params["params"]["begin"], 'AND');
+
+            $options = Chart::addCriteria(Chart::OPEN_DATE, 'lessthan', $params["params"]["end"], 'AND');
+        }
 
         $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
         $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, 'equals', $params["params"]["technician_group"]);
@@ -3456,6 +4855,11 @@ class Reports_Bar extends CommonDBTM
             $params["params"]["entities_id"],
             'AND'
         );
+
+        if (isset($params["params"]["year"]) && !isset($params["params"]["begin"])) {
+            $params["params"]["begin"] = $params["params"]["year"] . "-01-01 00:00:01";
+            $params["params"]["end"] = $params["params"]["year"] . "-12-31 23:59:00";
+        }
 
         $options = Chart::addCriteria(Chart::OPEN_DATE, 'morethan', $params["params"]["begin"], 'AND');
 
@@ -3543,6 +4947,10 @@ class Reports_Bar extends CommonDBTM
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
+        if ($params["params"]["itilcategory"] > 0) {
+            $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["params"]["itilcategory"], 'AND');
+        }
+
         $options = Chart::addCriteria(
             Chart::ENTITIES_ID,
             (isset($params["params"]["sons"])
@@ -3585,6 +4993,10 @@ class Reports_Bar extends CommonDBTM
 
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        }
+
+        if ($params["params"]["itilcategory"] > 0) {
+            $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["params"]["itilcategory"], 'AND');
         }
 
         // STATUS

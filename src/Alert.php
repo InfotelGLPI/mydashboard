@@ -37,6 +37,7 @@ use DBConnection;
 use DbUtils;
 use Document;
 use Dropdown;
+use Glpi\DBAL\QueryExpression;
 use Glpi\System\Status\StatusChecker;
 use GLPIKey;
 use GlpiPlugin\Eventsmanager\Event;
@@ -346,7 +347,7 @@ class Alert extends CommonDBTM
      *
      * @param array $opt
      *
-     * @return MydashboardHtml
+     * @return Datatable
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -449,27 +450,41 @@ class Alert extends CommonDBTM
 
                 $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
-                $mygroups = Group_User::getUserGroups(Session::getLoginUserID(), ['glpi_groups.is_assign' => 1]);
-                $groups = [];
-                foreach ($mygroups as $mygroup) {
-                    $groups[] = $mygroup["id"];
+                $criteria = [
+                    'SELECT' => ['glpi_tickets.id AS tickets_id',
+                        'glpi_tickets.status AS status',
+                        'glpi_tickets.date_mod AS date_mod'],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        'glpi_tickets.is_deleted' => 0,
+                        'NOT'       => ['glpi_tickets.status' => \Ticket::CLOSED],
+                        'glpi_tickets.date_mod' => ['>', new QueryExpression($DB::quoteName("glpi_tickets.date"))],
+                    ],
+                    'ORDERBY' => 'glpi_tickets.date_mod DESC',
+                ];
+                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                        'glpi_tickets'
+                    );
+
+                if (count($_SESSION['glpigroups'])) {
+                    $criteria['LEFT JOIN'] = [
+                        'glpi_groups_tickets' => [
+                            'ON' => [
+                                'glpi_tickets' => 'id',
+                                'glpi_groups_tickets' => 'tickets_id',
+                            ],
+                        ],
+                    ];
+                    $search_assign = [
+                        'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
+                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN
+                    ];
+
+                    $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
                 }
-                $entities = " AND `glpi_tickets`.`entities_id` IN  (" . implode(
-                        ",",
-                        $_SESSION['glpiactiveentities']
-                    ) . ") ";
-                $query = "SELECT  `glpi_tickets`.`id` as tickets_id,
-                                          `glpi_tickets`.`status` as status,
-                                          `glpi_tickets`.`date_mod` as date_mod
-                                 FROM `glpi_tickets`
-                                 LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                                 WHERE `glpi_tickets`.`is_deleted` = '0'
-                                 AND `glpi_tickets`.`status` != '" . CommonITILObject::CLOSED . "'
-                                 AND `glpi_tickets`.`date_mod` != `glpi_tickets`.`date` $entities";
 
-                $query .= "ORDER BY `glpi_tickets`.`date_mod` DESC";
+                $iterator = $DB->request($criteria);
 
-                $widget = Helper::getWidgetsFromDBQuery('table', $query);
                 $headers = [
                     __('ID and priority', 'mydashboard'),
                     _n('Requester', 'Requesters', 2),
@@ -481,16 +496,12 @@ class Alert extends CommonDBTM
                     __('Priority'),
                     __('Category')
                 ];
-                $widget->setTabNames($headers);
-
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
 
                 $datas = [];
 
-                if ($nb) {
+                if (count($iterator) > 0) {
                     $i = 0;
-                    while ($data = $DB->fetchAssoc($result)) {
+                    foreach ($iterator as $data) {
                         $ticket = new \Ticket();
                         $ticket->getFromDB($data['tickets_id']);
 
@@ -637,9 +648,9 @@ class Alert extends CommonDBTM
                         }
                     }
                 }
-
+                $widget = new Datatable();
                 $widget->setTabDatas($datas);
-                if ($nb) {
+                if (count($iterator) > 0) {
                     $widget->setOption("bSort", [3, 'desc']);
                 }
                 $widget->setOption("bDate", ["DH"]);
@@ -650,34 +661,38 @@ class Alert extends CommonDBTM
                 $comment = $this->getCommentForWidget($widgetId);
                 $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "7 " : "") . $title);
+
                 $widget->toggleWidgetRefresh();
 
                 return $widget;
-                break;
 
             case $this->getType() . "8":
 
-                $query = "SELECT *
-                FROM `glpi_crontasks`
-                WHERE `state` = '" . CronTask::STATE_RUNNING . "'
-                      AND ((unix_timestamp(`lastrun`) + 2 * `frequency` < unix_timestamp(now()))
-                           OR (unix_timestamp(`lastrun`) + 2*" . HOUR_TIMESTAMP . " < unix_timestamp(now())))";
+                $criteria = [
+                    'SELECT' => '*',
+                    'FROM' => 'glpi_crontasks',
+                    'WHERE' => [
+                        'state' => CronTask::STATE_RUNNING,
+                        'OR' => [
+                            [new QueryExpression("UNIX_TIMESTAMP(" . $DB->quoteName("lastrun") . ") + 2 * " . $DB->quoteName("frequency") . " < UNIX_TIMESTAMP(NOW())")],
+                            [new QueryExpression("UNIX_TIMESTAMP(" . $DB->quoteName("lastrun") . ") + 2 * ".HOUR_TIMESTAMP." < UNIX_TIMESTAMP(NOW())")],
+                        ]
+                    ],
 
-                $widget = Helper::getWidgetsFromDBQuery('table', $query);
+                ];
+
+                $iterator = $DB->request($criteria);
+
                 $headers = [
                     __('Last run'),
                     __('Name'),
                     __('Status')
                 ];
-                $widget->setTabNames($headers);
-
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
 
                 $datas = [];
                 $i = 0;
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator)) {
+                    foreach ($iterator as $data) {
                         $datas[$i]["lastrun"] = \Html::convDateTime($data['lastrun']);
 
                         $name = $data["name"];
@@ -692,44 +707,53 @@ class Alert extends CommonDBTM
                         $i++;
                     }
                 }
+                $widget = new Datatable();
                 $widget->setWidgetHeaderType('danger');
                 $widget->setTabDatas($datas);
                 $widget->setOption("bDate", ["DH"]);
-                if ($nb) {
+                if (count($iterator)) {
                     $widget->setOption("bSort", [1, 'desc']);
                 }
+
+                $widget = new Datatable();
                 $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
-                $widget->setWidgetComment($comment);
                 $widget->setWidgetTitle((($isDebug) ? "8 " : "") . $title);
+                $widget->setWidgetComment($comment);
+
+                $widget->setTabNames($headers);
+                $widget->setTabDatas($datas);
+
+                $widget->setOption("bPaginate", false);
+                $widget->setOption("bFilter", false);
+                $widget->setOption("bInfo", false);
+
                 $widget->toggleWidgetRefresh();
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "9":
 
-                $widget = new MydashboardHtml();
+                $criteria = [
+                    'SELECT' => ['date', 'from', 'reason','mailcollectors_id'],
+                    'FROM' => 'glpi_notimportedemails',
+                    'ORDERBY' => 'date ASC',
+                ];
 
-                $query = "SELECT `date`,`from`,`reason`,`mailcollectors_id`
-                        FROM `glpi_notimportedemails`
-                        ORDER BY `date` ASC";
-                $result = $DB->doQuery($query);
-                $nb = $DB->numrows($result);
+                $iterator = $DB->request($criteria);
 
-                //                $widget  = Helper::getWidgetsFromDBQuery('table', $query);
                 $headers = [
                     __('Date'),
                     __('From email header'),
                     __('Reason of rejection'),
                     __('Mails receiver')
                 ];
-                //                $widget->setTabNames($headers);
 
                 $datas = [];
                 $i = 0;
-                if ($nb) {
-                    while ($data = $DB->fetchAssoc($result)) {
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
                         $datas[$i]["date"] = \Html::convDateTime($data['date']);
 
                         $datas[$i]["from"] = $data['from'];
