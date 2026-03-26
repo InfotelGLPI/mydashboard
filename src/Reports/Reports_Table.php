@@ -1020,7 +1020,7 @@ class Reports_Table extends CommonGLPI
             Chart::TECHNICIAN_GROUP,
             ((isset($params["params"]["is_recursive_technicians"])
                 && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
+            $params["params"]["technicians_groups_id"]
         );
 
 

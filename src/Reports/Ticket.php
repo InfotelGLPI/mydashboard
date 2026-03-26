@@ -1305,7 +1305,7 @@ class Ticket extends CommonGLPI
         $criteria = [
             'SELECT' => [
                 'status',
-                'COUNT' => 'id AS COUNT',
+                'COUNT' => 'glpi_tickets.id AS COUNT',
             ],
             'FROM' => 'glpi_tickets',
             'LEFT JOIN' => [],

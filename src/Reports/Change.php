@@ -575,7 +575,7 @@ class Change extends CommonGLPI
         $criteria = [
             'SELECT' => [
                 'status',
-                'COUNT' => 'id AS COUNT',
+                'COUNT' => 'glpi_changes.id AS COUNT',
             ],
             'FROM' => 'glpi_changes',
             'LEFT JOIN' => [],

@@ -538,7 +538,7 @@ class Problem extends CommonGLPI
         $criteria = [
             'SELECT' => [
                 'status',
-                'COUNT' => 'id AS COUNT',
+                'COUNT' => 'glpi_problems.id AS COUNT',
             ],
             'FROM' => 'glpi_problems',
             'LEFT JOIN' => [],

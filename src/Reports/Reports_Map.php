@@ -112,13 +112,12 @@ class Reports_Map extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return \Html
+     * @return Html
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
-        global $DB, $CFG_GLPI;
+
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $dbu = new DbUtils();
 
         $preference = new MydashboardPreference();
         if (Session::getLoginUserID() !== false
@@ -151,15 +150,12 @@ class Reports_Map extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt
                 ];
-                $options = Helper::manageCriterias($paramsc);
+                $default = Helper::manageCriteriasNew($paramsc);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type = $opt['type'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $groups_criteria = $crit['technicians_groups_id'];
+                $type = $opt['type'] ?? $default['type'];
+                $entities_id_criteria = $opt['entities_id'] ?? $default['entities_id'];
+                $sons_criteria = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
+                $groups_criteria = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
                 $widget = new Html();
                 $title = $this->getTitleForWidget($widgetId);
@@ -250,6 +246,7 @@ class Reports_Map extends CommonGLPI
                     "name" => 'TicketsByLocationOpenStreetMap',
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => false,
                     "canvas" => false,

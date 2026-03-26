@@ -1795,11 +1795,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                Toolbox::logInfo($opt);
-
                 $default = Helper::manageCriteriasNew($params);
-
-                Toolbox::logInfo($opt);
 
                 $date_criteria = $default['date'];
 
@@ -2074,7 +2070,7 @@ class Reports_Pie extends CommonGLPI
             Chart::TECHNICIAN_GROUP,
             ((isset($params["params"]["is_recursive_technicians"])
                 && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
+            $params["params"]["technicians_groups_id"]
         );
 
 
@@ -2116,7 +2112,7 @@ class Reports_Pie extends CommonGLPI
             Chart::TECHNICIAN_GROUP,
             ((isset($params["params"]["is_recursive_technicians"])
                 && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
+            $params["params"]["technicians_groups_id"]
         );
 
         $options = Chart::addCriteria(
@@ -2196,7 +2192,7 @@ class Reports_Pie extends CommonGLPI
             Chart::TECHNICIAN_GROUP,
             ((isset($params["params"]["is_recursive_technicians"])
                 && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
+            $params["params"]["technicians_groups_id"]
         );
 
 

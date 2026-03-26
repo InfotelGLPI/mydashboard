@@ -40,16 +40,16 @@ if (isset($_POST['widget'])) {
     }
 }
 
-if (isset($_POST["params"]["technician_group"])) {
-    $_POST["params"]["technician_group"] = is_array($_POST["params"]["technician_group"]) ? $_POST["params"]["technician_group"] : [$_POST["params"]["technician_group"]];
+if (isset($_POST["params"]["technicians_groups_id"])) {
+    $_POST["params"]["technicians_groups_id"] = is_array($_POST["params"]["technicians_groups_id"]) ? $_POST["params"]["technicians_groups_id"] : [];
 } else {
-    $_POST["params"]["technician_group"] = [];
+    $_POST["params"]["technicians_groups_id"] = [];
 }
 
-if (isset($_POST["params"]["requester_groups"])) {
-    $_POST["params"]["requester_groups"] = is_array($_POST["params"]["requester_groups"]) ? $_POST["params"]["requester_groups"] : [$_POST["params"]["requester_groups"]];
+if (isset($_POST["params"]["requesters_groups_id"])) {
+    $_POST["params"]["requesters_groups_id"] = is_array($_POST["params"]["requesters_groups_id"]) ? $_POST["params"]["requesters_groups_id"] : [];
 } else {
-    $_POST["params"]["requester_groups"] = [];
+    $_POST["params"]["requesters_groups_id"] = [];
 }
 
 $link = '';

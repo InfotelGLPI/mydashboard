@@ -321,7 +321,7 @@ class Reports_Line extends CommonGLPI
 
                     $criteria_2 = [
                         'SELECT' => [
-                            'COUNT' => 'id AS count',
+                            'COUNT' => 'glpi_tickets.id AS count',
                         ],
                         'FROM' => 'glpi_tickets',
                         'WHERE' => [
@@ -530,9 +530,7 @@ class Reports_Line extends CommonGLPI
                         $is_deleted,
                         $date_crit_ticket,
                     ],
-                    'GROUPBY' => new QueryExpression(
-                        "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m')"
-                    ),
+                    'GROUPBY' => 'month',
                 ];
 
                 $query_tickets = Helper::addCriteriasForQuery($query_tickets, $params);
@@ -542,20 +540,21 @@ class Reports_Line extends CommonGLPI
                 if (count($iterator_tickets) > 0) {
 
                     foreach ($iterator_tickets as $data) {
+
                         $tabnames[] = $data['monthname'];
 
                         [$year, $month] = explode('-', $data['month']);
-
+                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                         $query_1 = [
                             'SELECT' => [
-                                'COUNT' => 'id AS count',
+                                'COUNT' => 'glpi_tickets.id AS count',
                             ],
                             'FROM' => 'glpi_tickets',
                             'WHERE' => [
                                 $is_deleted,
                                 [
                                     ['glpi_tickets.date' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 23:59:59' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.date' =>  ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
@@ -564,7 +563,6 @@ class Reports_Line extends CommonGLPI
                         $query_1 = Helper::addCriteriasForQuery($query_1, $params);
 
                         $iterator_1 = $DB->request($query_1);
-
 
                         if (count($iterator_1) > 0) {
                             foreach ($iterator_1 as $data_1) {
@@ -577,14 +575,14 @@ class Reports_Line extends CommonGLPI
 
                         $query_2 = [
                             'SELECT' => [
-                                'COUNT' => 'id AS count',
+                                'COUNT' => 'glpi_tickets.id AS count',
                             ],
                             'FROM' => 'glpi_tickets',
                             'WHERE' => [
                                 $is_deleted,
                                 [
                                     ['glpi_tickets.closedate' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 23:59:59' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.closedate' =>  ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
@@ -608,7 +606,7 @@ class Reports_Line extends CommonGLPI
 
                             $query_3 = [
                                 'SELECT' => [
-                                    'COUNT' => 'id AS count',
+                                    'COUNT' => 'glpi_tickets.id AS count',
                                 ],
                                 'FROM' => 'glpi_tickets',
                                 'WHERE' => [
@@ -707,7 +705,7 @@ class Reports_Line extends CommonGLPI
                 );
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "34":
                 $name = 'TicketStatusResolvedBarLineChart';
@@ -741,7 +739,8 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-               $default = Helper::manageCriteriasNew($params);
+
+                $default = Helper::manageCriteriasNew($params);
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
@@ -824,20 +823,6 @@ class Reports_Line extends CommonGLPI
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-//                $query_tickets
-//                    = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,"
-//                    . " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,"
-//                    . " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))"
-//                    . " FROM `glpi_tickets`"
-//                    . " WHERE $is_deleted"
-//                    . " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)"
-//                    . " $entities_criteria"
-//                    . " $requester_groups_criteria"
-//                    . " $technician_groups_criteria"
-//                    . " $locations_criteria"
-//                    . " $type_criteria"
-//                    . " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
-
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
@@ -872,46 +857,25 @@ class Reports_Line extends CommonGLPI
                 $iterator_1 = $DB->request($criteria_1);
 
                 $nbResults = count($iterator_1);
-                $i = 0;
+
                 if ($nbResults) {
                     foreach ($iterator_1 as $data_1) {
 
                         $tabnames[] = $data_1['monthname'];
 
                         [$year, $month] = explode('-', $data_1['month']);
-
-                        $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
-
-//                        $query_1
-//                            = "SELECT COUNT(*) as count FROM `glpi_tickets`"
-//                            . " $ticket_users_join"
-//                            . " WHERE $date_criteria"
-//                            . " $technician_criteria"
-//                            . " $entities_criteria"
-//                            . " $requester_groups_criteria"
-//                            . " $technician_groups_criteria"
-//                            . " $locations_criteria"
-//                            . " $type_criteria"
-//                            . " AND $is_deleted";
-//
-//                        $results_1 = $DB->doQuery($query_1);
+                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
 
                         $criteria_2 = [
                             'SELECT' => [
-                                'COUNT' => 'id AS count',
+                                'COUNT' => 'glpi_tickets.id AS count',
                             ],
                             'FROM' => 'glpi_tickets',
                             'WHERE' => [
                                 $is_deleted,
-                                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                                 [
-                                    [
-                                        'glpi_tickets.date' => [
-                                            '>=',
-                                            "$year-$month-01 00:00:00",
-                                        ],
-                                    ],
-                                    ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 00:00:00' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.date' => ['>', "$year-$month-01 00:00:01"]],
+                                    ['glpi_tickets.date' =>  ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
@@ -929,24 +893,9 @@ class Reports_Line extends CommonGLPI
                         }
                         $tabdates[1][] = $data_1['month'] . '_opened';
 
-//                        $solvedate_criteria = " (`glpi_tickets`.`solvedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)
-//                  OR `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH))";
-//
-//                        $query_2
-//                            = "SELECT COUNT(*) as count FROM `glpi_tickets`"
-//                            . " $ticket_users_join"
-//                            . " WHERE $solvedate_criteria"
-//                            . " $technician_criteria"
-//                            . " $entities_criteria"
-//                            . " $requester_groups_criteria"
-//                            . " $technician_groups_criteria"
-//                            . " $locations_criteria"
-//                            . " $type_criteria"
-//                            . " AND $is_deleted";
-
                         $criteria_3 = [
                             'SELECT' => [
-                                'COUNT' => 'id AS count',
+                                'COUNT' => 'glpi_tickets.id AS count',
                             ],
                             'FROM' => 'glpi_tickets',
                             'WHERE' => [
@@ -959,7 +908,7 @@ class Reports_Line extends CommonGLPI
                                             "$year-$month-01 00:00:00",
                                         ],
                                     ],
-                                    ['glpi_tickets.solvedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 00:00:00' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.solvedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
@@ -981,22 +930,9 @@ class Reports_Line extends CommonGLPI
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                             //nbstock : cannot use tech or group criteria
 
-//                            $query_3
-//                                = "SELECT COUNT(*) as count FROM `glpi_tickets`"
-//                                //                        " $ticket_users_join".
-//                                . " WHERE $is_deleted"
-//                                . " $technician_groups_criteria"
-//                                . " $entities_criteria"
-//                                . " $type_criteria"
-//                                //                        " $requester_groups_criteria".
-//                                //                        " $locations_criteria" .
-//                                // Tickets open in the month
-//                                . " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-//                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
-
                             $criteria_4 = [
                                 'SELECT' => [
-                                    'COUNT' => 'id AS count',
+                                    'COUNT' => 'glpi_tickets.id AS count',
                                 ],
                                 'FROM' => 'glpi_tickets',
                                 'WHERE' => [
@@ -1068,7 +1004,6 @@ class Reports_Line extends CommonGLPI
                     'ids' => $tabdatesset,
                     'data' => json_encode($datasets),
                     'labels' => $labels,
-                    //                            'label'  => $title
                 ];
 
                 $graph_criterias = [];
@@ -1212,20 +1147,6 @@ class Reports_Line extends CommonGLPI
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-//                $query_tickets
-//                    = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,"
-//                    . " DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname,"
-//                    . " DATE_FORMAT(`glpi_tickets`.`date`, '%Y%m') AS monthnum, count(MONTH(`glpi_tickets`.`date`))"
-//                    . " FROM `glpi_tickets`"
-//                    . " WHERE $is_deleted"
-//                    . " AND `glpi_tickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)"
-//                    . " $entities_criteria"
-//                    . " $requester_groups_criteria"
-//                    . " $technician_groups_criteria"
-//                    . " $locations_criteria"
-//                    . " $type_criteria"
-//                    . " GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
-
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
@@ -1267,36 +1188,21 @@ class Reports_Line extends CommonGLPI
 
                         [$year, $month] = explode('-', $data['month']);
 
-//                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-//
-//                        $date_criteria = " `glpi_tickets`.`date` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
-//
-//                        $query_1
-//                            = "SELECT COUNT(*) as count FROM `glpi_tickets`"
-//                            . " $ticket_users_join"
-//                            . " WHERE $date_criteria"
-//                            . " $technician_criteria"
-//                            . " $entities_criteria"
-//                            . " $requester_groups_criteria"
-//                            . " $technician_groups_criteria"
-//                            . " $locations_criteria"
-//                            . " $type_criteria"
-//                            . " AND $is_deleted";
+                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
 
                         $query_1 = [
                             'SELECT' => [
-                                'COUNT' => 'id AS count',
+                                'COUNT' => 'glpi_tickets.id AS count',
                             ],
                             'FROM' => 'glpi_tickets',
                             'WHERE' => [
                                 $is_deleted,
                                 [
                                     ['glpi_tickets.date' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 23:59:59' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
-
 
                         $query_1 = Helper::addCriteriasForQuery($query_1, $params);
 
@@ -1312,30 +1218,16 @@ class Reports_Line extends CommonGLPI
                         }
                         $tabdates[1][] = $data['month'] . '_opened';
 
-                        $closedate_criteria = " `glpi_tickets`.`closedate` between '$year-$month-01' AND ADDDATE('$year-$month-01', INTERVAL 1 MONTH)";
-
-//                        $query_2
-//                            = "SELECT COUNT(*) as count FROM `glpi_tickets`"
-//                            . " $ticket_users_join"
-//                            . " WHERE $closedate_criteria"
-//                            . " $technician_criteria"
-//                            . " $entities_criteria"
-//                            . " $requester_groups_criteria"
-//                            . " $technician_groups_criteria"
-//                            . " $locations_criteria"
-//                            . " $type_criteria"
-//                            . " AND $is_deleted";
-
                         $query_2 = [
                             'SELECT' => [
-                                'COUNT' => 'id AS count',
+                                'COUNT' => 'glpi_tickets.id AS count',
                             ],
                             'FROM' => 'glpi_tickets',
                             'WHERE' => [
                                 $is_deleted,
                                 [
                                     ['glpi_tickets.closedate' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 23:59:59' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
@@ -1354,7 +1246,7 @@ class Reports_Line extends CommonGLPI
                         $tabdates[2][] = $data['month'] . '_closed';
 
 //                        $whereUnplanned = " AND `glpi_tickettasks`.`actiontime` IS NULL ";
-                        $whereUnplanned = ['glpi_tickettasks.actiontime' => NULL];
+                        $whereUnplanned = ['glpi_tickettasks.actiontime' => 0];
 //                        $query_3
 //                            = "SELECT COUNT(*) as count FROM `glpi_tickets`"
 //                            . " $ticket_users_join"
@@ -1386,7 +1278,7 @@ class Reports_Line extends CommonGLPI
                                 $whereUnplanned,
                                 [
                                     ['glpi_tickets.closedate' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-01 23:59:59' , INTERVAL 1 MONTH)")]],
+                                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                                 ],
                             ],
                         ];
@@ -1407,24 +1299,10 @@ class Reports_Line extends CommonGLPI
 
                         if ($month == date("m") && $year == date("Y")) {
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                            //nbstock : cannot use tech or group criteria
-
-//                            $query_3
-//                                = "SELECT COUNT(*) as count FROM `glpi_tickets`"
-//                                //                        " $ticket_users_join".
-//                                . " WHERE $is_deleted"
-//                                . " $technician_groups_criteria"
-//                                . " $entities_criteria"
-//                                . " $type_criteria"
-//                                //                        " $requester_groups_criteria".
-//                                //                        " $locations_criteria" .
-//                                // Tickets open in the month
-//                                . " AND ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-//                           AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")) ";
 
                             $criteria_4 = [
                                 'SELECT' => [
-                                    'COUNT' => 'id AS count',
+                                    'COUNT' => 'glpi_tickets.id AS count',
                                 ],
                                 'FROM' => 'glpi_tickets',
                                 'WHERE' => [
@@ -1443,7 +1321,7 @@ class Reports_Line extends CommonGLPI
 
                             if (count($iterator_4) > 0) {
                                 foreach ($iterator_4 as $data_4) {
-                                    $tabprogress[] = $data_3['count'];
+                                    $tabprogress[] = $data_4['count'];
                                 }
                             } else {
                                 $tabprogress[] = 0;
@@ -1577,7 +1455,7 @@ class Reports_Line extends CommonGLPI
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
                         ),
-                        'COUNT' => 'id AS count',
+                        'COUNT' => 'glpi_tickets.id AS count',
                     ],
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
@@ -1897,12 +1775,13 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-               $default = Helper::manageCriteriasNew($params);
+
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = date("Y");
+                $currentyear = $default["year"];
                 $now = date("Y-m-d");
                 if (isset($opt["year"]) && $opt["year"] > 0) {
                     $currentyear = $opt["year"];
@@ -2346,7 +2225,7 @@ class Reports_Line extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'glpi_tickets.date' => new QuerySubQuery($criteria_init),
+                        'glpi_itilsolutions.items_id' => new QuerySubQuery($criteria_init),
                         [
                             ['glpi_tickets.date' => ['>=', "$previousyear-$currentmonth-01 00:00:00"]],
                             ['glpi_tickets.date' => ['<=', "$now 00:00:00"]],
@@ -2354,6 +2233,7 @@ class Reports_Line extends CommonGLPI
                     ],
                     'GROUPBY' => 'period',
                 ];
+
                 $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $tabdata = [];
@@ -2362,6 +2242,8 @@ class Reports_Line extends CommonGLPI
                 $iterator = $DB->request($criteria);
 
                 foreach ($iterator as $data) {
+
+
                     $tabdata[] = $data['count'];
                     $tabnames[] = $data['monthname'];
                     $tabdates[] = $data['period'];
@@ -2436,7 +2318,9 @@ class Reports_Line extends CommonGLPI
 
         $default = Helper::manageCriteriasNew($params);
 
-        $year = intval(date('Y', time()) - 1);
+//        $year = intval(date('Y', time()) - 1);
+
+        $year = $default["year"];
         $currentyear = date("Y");
 
         if (isset($params['opt']["year"]) && $params['opt']["year"] > 0) {
@@ -2552,8 +2436,8 @@ class Reports_Line extends CommonGLPI
         if ($params["params"]["locations_id"] > 0) {
             $options = Chart::addCriteria(Chart::LOCATIONS_ID, 'equals', $params["params"]["locations_id"], 'AND');
         }
-        if ($params["params"]["technician_id"] > 0) {
-            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technician_id"], 'AND');
+        if ($params["params"]["technicians_id"] > 0) {
+            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technicians_id"], 'AND');
         }
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
@@ -2566,16 +2450,22 @@ class Reports_Line extends CommonGLPI
             $params["params"]["entities_id"],
             'AND'
         );
+        if ($params["params"]["requesters_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::REQUESTER_GROUP,
+                'equals',
+                $params["params"]["requesters_groups_id"]
+            );
+        }
 
-        $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
-
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
-        );
-
+        if ($params["params"]["technicians_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::TECHNICIAN_GROUP,
+                ((isset($params["params"]["is_recursive_technicians"])
+                    && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
+                $params["params"]["technicians_groups_id"]
+            );
+        }
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }
@@ -2629,8 +2519,8 @@ class Reports_Line extends CommonGLPI
         if ($params["params"]["locations_id"] > 0) {
             $options = Chart::addCriteria(Chart::LOCATIONS_ID, 'equals', $params["params"]["locations_id"], 'AND');
         }
-        if ($params["params"]["technician_id"] > 0) {
-            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technician_id"], 'AND');
+        if ($params["params"]["technicians_id"] > 0) {
+            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technicians_id"], 'AND');
         }
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
@@ -2644,15 +2534,21 @@ class Reports_Line extends CommonGLPI
             'AND'
         );
 
-        $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
-
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
-        );
-
+        if ($params["params"]["requesters_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::REQUESTER_GROUP,
+                'equals',
+                $params["params"]["requesters_groups_id"]
+            );
+        }
+        if ($params["params"]["technicians_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::TECHNICIAN_GROUP,
+                ((isset($params["params"]["is_recursive_technicians"])
+                    && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
+                $params["params"]["technicians_groups_id"]
+            );
+        }
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2711,8 +2607,8 @@ class Reports_Line extends CommonGLPI
         if ($params["params"]["locations_id"] > 0) {
             $options = Chart::addCriteria(Chart::LOCATIONS_ID, 'equals', $params["params"]["locations_id"], 'AND');
         }
-        if ($params["params"]["technician_id"] > 0) {
-            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technician_id"], 'AND');
+        if ($params["params"]["technicians_id"] > 0) {
+            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technicians_id"], 'AND');
         }
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
@@ -2726,17 +2622,24 @@ class Reports_Line extends CommonGLPI
             'AND'
         );
 
-        $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
-
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
-        );
+        if ($params["params"]["requesters_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::REQUESTER_GROUP,
+                'equals',
+                $params["params"]["requesters_groups_id"]
+            );
+        }
+        if ($params["params"]["technicians_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::TECHNICIAN_GROUP,
+                ((isset($params["params"]["is_recursive_technicians"])
+                    && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
+                $params["params"]["technicians_groups_id"]
+            );
+        }
 
         if ($add_actiontime_crit == 1) {
-            $options = Chart::addCriteria(Chart::TASK_ACTIONTIME, 'contains', 'NULL', 'AND');
+            $options = Chart::addCriteria(Chart::TASK_ACTIONTIME, 'contains', '0', 'AND');
         }
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -2908,14 +2811,22 @@ class Reports_Line extends CommonGLPI
         }
         $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
 
-        $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+        if ($params["params"]["requesters_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::REQUESTER_GROUP,
+                'equals',
+                $params["params"]["requesters_groups_id"]
+            );
+        }
 
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technician_group"]
-        );
+        if ($params["params"]["technicians_groups_id"] > 0) {
+            $options = Chart::groupCriteria(
+                Chart::TECHNICIAN_GROUP,
+                ((isset($params["params"]["is_recursive_technicians"])
+                    && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
+                $params["params"]["technicians_groups_id"]
+            );
+        }
 
         if ($params["params"]["type"] > 0) {
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');

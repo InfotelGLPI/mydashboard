@@ -440,6 +440,7 @@ class Reports_Funnel extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -466,7 +467,7 @@ class Reports_Funnel extends CommonGLPI
     public static function pluginMydashboardReports_Funnel1link($params)
     {
         global $CFG_GLPI;
-        //        Toolbox::logInfo($params);
+
         $options['reset'][] = 'reset';
 
         if (isset($params['selected_id'])) {

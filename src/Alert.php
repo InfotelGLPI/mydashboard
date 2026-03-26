@@ -38,6 +38,7 @@ use DbUtils;
 use Document;
 use Dropdown;
 use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QueryFunction;
 use Glpi\System\Status\StatusChecker;
 use GLPIKey;
 use GlpiPlugin\Eventsmanager\Event;
@@ -347,7 +348,7 @@ class Alert extends CommonDBTM
      *
      * @param array $opt
      *
-     * @return Datatable
+     * @return Html
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -798,17 +799,17 @@ class Alert extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $location_criteria = $crit['locations_id'];
+                $default = Helper::manageCriteriasNew($params);
+
+                $location_criteria = $opt['locations_id'] ?? $default['locations_id'];
 
                 $params = [
                     "widgetId" => $widgetId,
                     "name" => 'GlpiPlugin\Mydashboard\Alert10',
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "setup" => $setuplink,
                     "export" => false,
@@ -944,7 +945,7 @@ class Alert extends CommonDBTM
                 $widget->toggleWidgetRefresh();
 
                 return $widget;
-                break;
+
 
             case $this->getType() . "11":
                 $widget = new MydashboardHtml();
@@ -958,7 +959,7 @@ class Alert extends CommonDBTM
                 $widget->setWidgetTitle((($isDebug) ? "11 " : "") . $title);
                 $widget->toggleWidgetRefresh();
                 return $widget;
-                break;
+
 
             case $this->getType() . "12":
                 $widget = $this->displaySLATicketsAlertsWidgets(
@@ -968,7 +969,7 @@ class Alert extends CommonDBTM
                     \Ticket::DEMAND_TYPE
                 );
                 return $widget;
-                break;
+
 
             case $this->getType() . "13":
 
@@ -979,7 +980,7 @@ class Alert extends CommonDBTM
                     \Ticket::DEMAND_TYPE
                 );
                 return $widget;
-                break;
+
 
             case $this->getType() . "SC32":
                 $widget = new MydashboardHtml();
@@ -1007,7 +1008,7 @@ class Alert extends CommonDBTM
                     $graph
                 );
                 return $widget;
-                break;
+
         }
     }
 
@@ -2831,7 +2832,6 @@ class Alert extends CommonDBTM
      */
     private function showForItem($item)
     {
-        global $CFG_GLPI;
 
         $items_id = $item->getID();
         $item->getFromDB($items_id);
@@ -3163,8 +3163,6 @@ class Alert extends CommonDBTM
 
         $seeown = false;
 
-        $week_start = null;
-        $week_end = null;
         if (isset($params['year']) && isset($params['week'])) {
             $dto = new DateTime();
             $dto->setISODate($params['year'], $params['week']);
@@ -3185,121 +3183,132 @@ class Alert extends CommonDBTM
             $week_end = $dto->format('Y-m-d H:i:s');
         }
 
-        $category_criteria = "";
+        $opt = [];
         if ($seeown == false) {
             if ($iswidget == true) {
                 if (Plugin::isPluginActive("Mydashboard")) {
+
                     $preference = new Preference();
                     if (!$preference->getFromDB(Session::getLoginUserID())) {
                         $preference->initPreferences(Session::getLoginUserID());
                     }
                     $preference->getFromDB(Session::getLoginUserID());
                     $preferences = $preference->fields;
+
                     if (isset($preferences['prefered_group'])) {
                         $technicians_groups_id = json_decode($preferences['prefered_group'], true);
                         if (is_array($technicians_groups_id)
                             && count($technicians_groups_id) > 0
                             && count($params) < 1) {
-                            $params['technicians_groups_id'] = $technicians_groups_id;
+                            $opt['technicians_groups_id'] = $technicians_groups_id;
                         }
                     }
+
+                    if (!isset($params['itilcategories_id'])) {
+                        $params['itilcategories_id'] = "";
+                        if (isset($preferences['prefered_category'])) {
+                            if ($preferences['prefered_category'] != 0) {
+                                $opt['itilcategories_id'] = $preferences['prefered_category'];
+                            }
+                        }
+                    } else {
+                        $opt['itilcategories_id'] = $params['itilcategories_id'];
+                    }
+
                     if (!isset($params['itilcategorielvl1'])) {
                         $params['itilcategorielvl1'] = "";
                         if (isset($preferences['prefered_category'])) {
                             if ($preferences['prefered_category'] != 0) {
-                                $params['itilcategorielvl1'] = $preferences['prefered_category'];
-                                $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $preferences['prefered_category'];
-                            } else {
-                                $category_criteria = " AND 1=1";
+                                $opt['itilcategories_id'] = $preferences['prefered_category'];
                             }
                         }
                     } else {
-                        if ($params['itilcategorielvl1'] == 0) {
-                            $category_criteria = " AND 1=1";
-                        } else {
-                            $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $params['itilcategorielvl1'];
-                        }
+                        $opt['itilcategories_id'] =  $params['itilcategorielvl1'];
                     }
-
-                    if (!isset($params['ititlcategory'])) {
-                        $params['ititlcategory'] = "";
-                        if (isset($preferences['prefered_category'])) {
-                            if ($preferences['prefered_category'] != 0) {
-                                $params['ititlcategory'] = $preferences['prefered_category'];
-                                $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $preferences['prefered_category'];
-                            } else {
-                                $category_criteria = " AND 1=1";
-                            }
-                        }
-                    } else {
-                        if ($params['ititlcategory'] == 0) {
-                            $category_criteria = " AND 1=1";
-                        } else {
-                            $category_criteria = " AND `glpi_tickets`.`itilcategories_id` = " . $params['ititlcategory'];
-                        }
-                    }
-                }
-                $params['entities_id'] = $_SESSION['glpiactive_entity'];
-                $params['sons'] = 0;
-
-                if (isset($params['technicians_groups_id'])) {
-                    $params['technicians_groups_id'] = (is_array(
-                        $params['technicians_groups_id']
-                    ) ? $params['technicians_groups_id'] : [$params['technicians_groups_id']]);
                 }
             }
         }
 
-        $search_assign = "1=1";
-        $left = "LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`) ";
-        $is_deleted = " `glpi_tickets`.`is_deleted` = 0 ";
-        //if (Session::haveRight("ticket", Ticket::READMY)) {
-        //   $left          .= "LEFT JOIN `glpi_tickets_users`
-        //            ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id`) ";
-        //   $search_assign .= " AND (`glpi_tickets_users`.`users_id` = '" . Session::getLoginUserID() . "'
-        //                            AND `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "')";
-        //}
-
         if ($seeown == false) {
+
             if (!isset($params['year']) && !isset($params['week'])) {
                 $params['year'] = date('Y');
                 $params['week'] = date('W');
             }
+
             if ($type == "all") {
-                if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
-                    $left .= "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-                    $technicians_groups_id = $params['technicians_groups_id'];
-                    $search_assign .= " AND (`glpi_groups_tickets`.`groups_id` IN (" . implode(
-                            ",",
-                            $technicians_groups_id
-                        ) . ")
-                                AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+
+                $crits = [
+                    "entities_id",
+                    "is_recursive_entities",
+                    "technicians_groups_id",
+                    "itilcategories_id",
+                ];
+                $params_query["criterias"] = [
+                    "entities_id",
+                    "is_recursive_entities",
+                    "technicians_groups_id",
+                    "itilcategories_id",
+                ];
+
+                $default = Helper::manageCriteriasNew($params_query);
+
+                $opt['entities_id'] = $params['entities_id'] ?? $default['entities_id'];
+                $opt['is_recursive_entities'] = $params['is_recursive_entities'] ?? $default['is_recursive_entities'];
+
+                if (isset($params['itilcategories_id'])
+                    && $params['itilcategories_id'] > 0) {
+                    $opt['itilcategories_id'] = $params['itilcategories_id'] ?? $default['itilcategories_id'];
                 }
 
+                if (isset($params['technicians_groups_id'])
+                    && is_array($params['technicians_groups_id'])
+                    && count($params['technicians_groups_id']) > 0) {
+                    $opt['technicians_groups_id'] = $params['technicians_groups_id'] ?? $default['technicians_groups_id'];
+                }
+
+                $params_query["opt"] = $opt;
+
                 //New tickets
-                $total_new = self::queryNewTickets($left, $is_deleted, $category_criteria);
+                $total_new = self::queryNewTickets($params_query);
                 //Late tickets
-                $total_due = self::queryDueTickets($left, $is_deleted, $search_assign, $category_criteria);
+                $total_due = self::queryDueTickets($params_query);
                 //Waiting tickets
-                $total_pend = self::queryPendingTickets($left, $is_deleted, $search_assign, $category_criteria);
+                $total_pend = self::queryPendingTickets($params_query);
                 //Processing incidents
-                $total_incpro = self::queryIncidentTickets($left, $is_deleted, $search_assign, $category_criteria);
+                $total_incpro = self::queryIncidentTickets($params_query);
                 //Processing requests
-                $total_dempro = self::queryRequestTickets($left, $is_deleted, $search_assign, $category_criteria);
-                //Validate tickets
-                //            $total_validate = self::queryValidateTickets($left, $is_deleted, $search_assign);
+                $total_dempro = self::queryRequestTickets($params_query);
                 //Resolved tickets
-                $total_resolved = self::queryResolvedTickets($left, $is_deleted, $search_assign, $category_criteria);
+                $total_resolved = self::queryResolvedTickets($params_query);
                 //Resolved tickets
                 $total_closed = 0;
             } elseif ($type == "week") {
-                if (isset($params['technicians_groups_id']) && count($params['technicians_groups_id']) > 0) {
-                    $technicians_groups_id = $params['technicians_groups_id'];
-                } else {
-                    $technicians_groups_id = [0];
-                }
+
+                $crits = [
+                    "entities_id",
+                    "is_recursive_entities",
+                    "technicians_groups_id",
+                    "itilcategories_id",
+                    "year",
+                    "week",
+                ];
+
+                $params_query["criterias"] = [
+                    "entities_id",
+                    "is_recursive_entities",
+                    "technicians_groups_id",
+                    "itilcategories_id",
+                    "year",
+                    "week",
+                ];
+
+                $default = Helper::manageCriteriasNew($params_query);
+
+                $opt['year'] = $params['year'] ?? $default['year'];
+
+                $opt['week'] = $params['week'] ?? $default['week'];
+
                 //                $params['week'] = '44';
                 $total_new = self::queryNewTicketsWeek($params['year'], $params['week']);
                 //Late tickets
@@ -3315,7 +3324,7 @@ class Alert extends CommonDBTM
                 //Processing requests
                 $total_dempro = self::queryRequestTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
                 //Validate tickets
-                //            $total_validate = self::queryValidateTickets($left, $is_deleted, $search_assign);
+                //            $total_validate = self::queryValidateTickets($left, $search_assign);
                 //Resolved tickets
                 $total_resolved = self::queryResolvedTicketsWeek(
                     $params['year'],
@@ -3382,6 +3391,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         ];
 
         if (isset($params['technicians_groups_id'])
+            && is_array($params['technicians_groups_id'])
             && count($params['technicians_groups_id']) > 0) {
             $groups = $params['technicians_groups_id'];
             $nb = 0;
@@ -3435,6 +3445,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         ];
 
         if (isset($params['technicians_groups_id'])
+            && is_array($params['technicians_groups_id'])
             && count($params['technicians_groups_id']) > 0) {
             $groups = $params['technicians_groups_id'];
             $nb = 0;
@@ -3498,6 +3509,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
         if ($seeown == false) {
             if (isset($params['technicians_groups_id'])
+                && is_array($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
                 $nb = 0;
@@ -3562,6 +3574,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
         if ($seeown == false) {
             if (isset($params['technicians_groups_id'])
+                && is_array($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
                 $nb = 0;
@@ -3610,6 +3623,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
         if ($seeown == false) {
             if (isset($params['technicians_groups_id'])
+                && is_array($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
                 $nb = 0;
@@ -3658,6 +3672,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
         if ($seeown == false) {
             if (isset($params['technicians_groups_id'])
+                && is_array($params['technicians_groups_id'])
                 && count($params['technicians_groups_id']) > 0) {
                 $groups = $params['technicians_groups_id'];
                 $nb = 0;
@@ -3726,17 +3741,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             $stats = "";
             if ($iswidget == true
                 && Session::haveRightsOr("ticket", [\Ticket::READALL, \Ticket::READGROUP])) {
-                if ($type == "week") {
-                    $criterias = [
-                        'technicians_groups_id',
-                        'week',
-                        'year',
-                    ];
-                } else {
-                    $criterias = ['technicians_groups_id', 'itilcategorielvl1'];
-                    $params["year"] = null;
-                    $params["week"] = null;
-                }
+
                 $params_header = [
                     "widgetId" => $id,
                     "name" => ($type == "all") ? __("Global indicators", "mydashboard") : __(
@@ -3744,12 +3749,14 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                         "mydashboard"
                     ),
                     "onsubmit" => true,
-                    "opt" => $params,
-                    "criterias" => $criterias,
+                    "opt" => $opt,
+                    "default" => $default,
+                    "criterias" => $crits,
                     "export" => false,
                     "canvas" => false,
                     "nb" => 1
                 ];
+
                 $stats .= Helper::getGraphHeader($params_header);
             }
 
@@ -3833,25 +3840,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     }
 
 
-    public static function queryAllTickets($left, $criteria)
-    {
-        global $DB;
-
-        //all tickets
-        $dbu = new DbUtils();
-        $sql_all = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ") ";
-        $sql_all .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
-
-        $result_all = $DB->doQuery($sql_all);
-        $total_all = $DB->result($result_all, 0, 'total');
-
-        return $total_all;
-    }
-
     /**
      * @param $left
      * @param $criteria
@@ -3859,30 +3847,37 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryNewTickets($left, $criteria, $category_criteria)
+    public static function queryNewTickets($params)
     {
         global $DB;
 
         //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        $category_criteria
-                        AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . " "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $result_new = $DB->doQuery($sql_new);
-        if ($result_new == false) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::INCOMING,
+            ],
+        ];
+
+        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
             return 0;
         }
 
-        $total_new = $DB->result($result_new, 0, 'total');
-
-        if ($total_new == null) {
-            $total_new = 0;
+        foreach ($iterator as $data) {
+            $total_new = $data['total'];
         }
+
         return $total_new;
     }
 
@@ -3919,24 +3914,36 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryDueTickets($left, $criteria, $search_assign, $category_criteria)
+    public static function queryDueTickets($params)
     {
         global $DB;
 
-        $dbu = new DbUtils();
-        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND ($search_assign)
-                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
-                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-                        $category_criteria
-                        AND `glpi_tickets`.`time_to_resolve` < NOW() ";
-        $sql_due .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $result_due = $DB->doQuery($sql_due);
-        $total_due = $DB->result($result_due, 0, 'due');
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS due',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'NOT'       => ['glpi_tickets.status' => [\Ticket::WAITING, \Ticket::SOLVED, \Ticket::CLOSED]],
+                'time_to_resolve' => ['<', QueryFunction::now()],
+            ],
+        ];
+
+        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
+            return 0;
+        }
+
+        foreach ($iterator as $data) {
+            $total_due = $data['due'];
+        }
 
         return $total_due;
     }
@@ -3976,22 +3983,45 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryPendingTickets($left, $criteria, $search_assign, $category_criteria)
+    public static function queryPendingTickets($params)
     {
         global $DB;
 
-        $dbu = new DbUtils();
-        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND ($search_assign)
-                        $category_criteria
-                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . " "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+//        $dbu = new DbUtils();
+//        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+//                  FROM glpi_tickets
+//                  $left
+//                  WHERE $criteria
+//                        AND ($search_assign)
+//                        $category_criteria
+//                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . " "
+//            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
-        $result_pend = $DB->doQuery($sql_pend);
-        $total_pend = $DB->result($result_pend, 0, 'total');
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::WAITING,
+            ],
+        ];
+
+        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
+            return 0;
+        }
+
+        foreach ($iterator as $data) {
+            $total_pend = $data['total'];
+        }
 
         return $total_pend;
     }
@@ -4032,7 +4062,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryIncidentTickets($left, $criteria, $search_assign, $category_criteria)
+    public static function queryIncidentTickets($params)
     {
         global $DB;
 
@@ -4042,17 +4072,43 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             $statuses = [\Ticket::SOLVED, \Ticket::CLOSED];
         }
 
-        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND ($search_assign)
-                        $category_criteria
-                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
-        $sql_incpro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
-        $result_incpro = $DB->doQuery($sql_incpro);
-        $total_incpro = $DB->result($result_incpro, 0, 'total');
+//        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+//                  FROM glpi_tickets
+//                  $left
+//                  WHERE $criteria
+//                        AND ($search_assign)
+//                        $category_criteria
+//                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
+//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
+//        $sql_incpro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
+                ['glpi_tickets.status' => ['NOT IN', $statuses]],
+            ],
+        ];
+
+        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
+            return 0;
+        }
+
+        foreach ($iterator as $data) {
+            $total_incpro = $data['total'];
+        }
+
         return $total_incpro;
     }
 
@@ -4101,28 +4157,53 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryRequestTickets($left, $criteria, $search_assign, $category_criteria)
+    public static function queryRequestTickets($params)
     {
         global $DB;
 
-        $dbu = new DbUtils();
+//        $dbu = new DbUtils();
 
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
         if (Session::getCurrentInterface() == 'helpdesk') {
             $statuses = [\Ticket::SOLVED, \Ticket::CLOSED];
         }
 
-        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND ($search_assign)
-                        $category_criteria
-                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
-        $sql_dempro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
-        $result_dempro = $DB->doQuery($sql_dempro);
-        $total_dempro = $DB->result($result_dempro, 0, 'total');
+//        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+//                  FROM glpi_tickets
+//                  $left
+//                  WHERE $criteria
+//                        AND ($search_assign)
+//                        $category_criteria
+//                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
+//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
+//        $sql_dempro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
+                ['glpi_tickets.status' => ['NOT IN', $statuses]],
+            ],
+        ];
+
+        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
+            return 0;
+        }
+
+        foreach ($iterator as $data) {
+            $total_dempro = $data['total'];
+        }
 
         return $total_dempro;
     }
@@ -4171,25 +4252,47 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
      * @return mixed|\Value
      * @throws \GlpitestSQLError
      */
-    public static function queryResolvedTickets($left, $criteria, $search_assign, $category_criteria)
+    public static function queryResolvedTickets($params)
     {
         global $DB;
 
-        $dbu = new DbUtils();
-        $week = date('W');
-        $year = date('Y');
-        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND ($search_assign)
-                        $category_criteria
-                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . " ";
-        $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+//        $dbu = new DbUtils();
+//        $week = date('W');
+//        $year = date('Y');
+//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+//                  FROM glpi_tickets
+//                  $left
+//                  WHERE $criteria
+//                        AND ($search_assign)
+//                        $category_criteria
+//                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . " ";
+//        $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $result_res = $DB->doQuery($sql_res);
-        $total_res = $DB->result($result_res, 0, 'total');
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::SOLVED,
+            ],
+        ];
+
+        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
+            return 0;
+        }
+
+        foreach ($iterator as $data) {
+            $total_res = $data['total'];
+        }
 
         return $total_res;
     }
@@ -4223,37 +4326,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         return $total_new;
     }
 
-    public static function queryClosedTickets($left, $criteria, $search_assign)
-    {
-        global $DB;
-
-        //closed tickets
-        $dbu = new DbUtils();
-        $week = date('W');
-        $year = date('Y');
-        $sql_close = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-                  FROM glpi_tickets
-                  $left
-                  WHERE $criteria
-                        AND ($search_assign)
-                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "  ";
-        $sql_close .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
-
-
-        $result_close = $DB->doQuery($sql_close);
-
-        if ($result_close == false) {
-            return 0;
-        }
-
-        $total_close = $DB->result($result_close, 0, 'total');
-
-        if ($total_close == null) {
-            $total_close = 0;
-        }
-
-        return $total_close;
-    }
 
     public static function queryClosedTicketsWeek($year, $week, $groups_id)
     {
