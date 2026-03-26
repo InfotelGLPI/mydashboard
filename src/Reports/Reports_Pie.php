@@ -31,7 +31,6 @@ use Appliance;
 use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
-use DbUtils;
 use Dropdown;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
@@ -197,7 +196,7 @@ class Reports_Pie extends CommonGLPI
         global $DB;
 
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
-        $dbu = new DbUtils();
+
         $preference = new MydashboardPreference();
         if (Session::getLoginUserID() !== false
             && !$preference->getFromDB(Session::getLoginUserID())) {
@@ -214,10 +213,10 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                     ];
                     $onclick = 1;
                 }
@@ -231,16 +230,8 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type = $opt['type'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $technician_group = $opt['technicians_groups_id'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $name_priority = [];
                 $datas = [];
@@ -255,55 +246,26 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'DISTINCT' => true,
                     'FROM' => 'glpi_tickets',
+                    'LEFT JOIN' => [],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'glpi_tickets.priority',
                     'ORDERBY' => 'glpi_tickets.priority ASC',
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
-                $nb = 0;
+
                 if (count($iterator) > 0) {
-                    $nb = count($iterator);
                     foreach ($iterator as $data) {
                         $name_priority[] = CommonITILObject::getPriorityName($data['priority']);
                         $datas[] = [
                             'value' => $data['nb'],
                             'name' => CommonITILObject::getPriorityName($data['priority']),
                         ];
-
                         $tabpriority[] = $data['priority'];
                     }
                 }
@@ -318,7 +280,6 @@ class Reports_Pie extends CommonGLPI
                 $dataPieset = json_encode($datas);
                 $labelsPie = json_encode($name_priority);
                 $tabpriorityset = json_encode($tabpriority);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -331,14 +292,8 @@ class Reports_Pie extends CommonGLPI
                 ];
 
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'type' => $type,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
 
                 $graph = PieChart::launchPieGraph($graph_datas, $graph_criterias);
@@ -348,6 +303,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -365,7 +321,7 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'year',
                         'month',
@@ -381,20 +337,18 @@ class Reports_Pie extends CommonGLPI
                         'limit',
                     ];
                 }
-                $opt['limit'] ??= 10;
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-                $date_criteria = $crit['date'];
+                $default = Helper::manageCriteriasNew($params);
 
-                $limit = $opt['limit'] ?? 10;
+                $date_criteria = $default['date'];
+
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $dataspie = [];
                 $namespie = [];
@@ -424,21 +378,15 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
-                        new QueryExpression($date_criteria),
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                        $date_criteria,
                     ],
                     'GROUPBY' => 'glpi_tickets_users.users_id',
                     'ORDERBY' => 'count DESC',
                     'LIMIT' => $limit,
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -486,6 +434,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -503,7 +452,7 @@ class Reports_Pie extends CommonGLPI
                 $name = 'TTRCompliance';
                 $criterias = [
                     'entities_id',
-                    'is_recursive',
+                    'is_recursive_entities',
                     'type',
                 ];
                 $params = [
@@ -511,12 +460,8 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type = $opt['type'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -536,16 +481,10 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
-                $nb = 0;
+
                 $total = 0;
                 if (count($iterator) > 0) {
                     $nb = count($iterator);
@@ -554,8 +493,6 @@ class Reports_Pie extends CommonGLPI
                     }
                 }
 
-                $notrespected = 0;
-                $respected = 0;
                 $datas = [];
 
                 $criteria = [
@@ -580,13 +517,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -642,6 +573,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -659,7 +591,7 @@ class Reports_Pie extends CommonGLPI
                 $name = 'TTOCompliance';
                 $criterias = [
                     'entities_id',
-                    'is_recursive',
+                    'is_recursive_entities',
                     'type',
                 ];
                 $params = [
@@ -667,12 +599,8 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type = $opt['type'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -692,16 +620,10 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
-                $nb = 0;
+
                 $total = 0;
                 if (count($iterator) > 0) {
                     $nb = count($iterator);
@@ -740,13 +662,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -758,8 +674,6 @@ class Reports_Pie extends CommonGLPI
                     }
                 }
 
-                $notrespected = 0;
-                $respected = 0;
                 if ($nb > 0 && $sum > 0) {
                     $notrespected = round(($sum) * 100 / ($total), 2, PHP_ROUND_HALF_UP);
                     $respected = round(($total - $sum) * 100 / ($total), 2, PHP_ROUND_HALF_UP);
@@ -799,6 +713,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -818,10 +733,11 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'requesters_groups_id',
+                        'limit',
                     ];
                     $onclick = 1;
                 }
@@ -835,15 +751,10 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
+                $default = Helper::manageCriteriasNew($params);
 
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $requester_groups = $opt['requesters_groups_id'];
-                $technician_group = $opt['technicians_groups_id'];
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $names_ipie = [];
                 $datas = [];
@@ -870,54 +781,13 @@ class Reports_Pie extends CommonGLPI
                     'WHERE' => [
                         $is_deleted,
                         'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'glpi_itilcategories.id',
+                    'LIMIT' => $limit,
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if (is_array($requester_groups) && count($requester_groups) > 0) {
-                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets as glpi_groups_requesters' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                                [
-                                    'AND' => [
-                                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ];
-
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_requesters.groups_id' => $requester_groups];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -931,7 +801,6 @@ class Reports_Pie extends CommonGLPI
                             $name_category = $data['name'];
                             $names_ipie[] = $data['name'];
                         }
-                        //                  $datas[]               = $data['nb'];
                         $tabincidentcategory[] = $data['itilcategories_id'];
 
                         $datas[] = [
@@ -951,7 +820,6 @@ class Reports_Pie extends CommonGLPI
                 $dataPieset = json_encode($datas);
                 $labelsPie = json_encode($names_ipie);
                 $tabincidentcategoryset = json_encode($tabincidentcategory);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -964,14 +832,8 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'requester_groups' => $requester_groups,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPieGraph($graph_datas, $graph_criterias);
 
@@ -980,6 +842,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1000,9 +863,9 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'requesters_groups_id',
                         'limit',
                     ];
@@ -1018,15 +881,10 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
+                $default = Helper::manageCriteriasNew($params);
 
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $requester_groups = $opt['requesters_groups_id'];
-                $technician_group = $opt['technicians_groups_id'];
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $names_pie = [];
                 $datas = [];
@@ -1053,54 +911,13 @@ class Reports_Pie extends CommonGLPI
                     'WHERE' => [
                         $is_deleted,
                         'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'glpi_itilcategories.id',
+                    'LIMIT' => $limit,
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if (is_array($requester_groups) && count($requester_groups) > 0) {
-                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets as glpi_groups_requesters' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                                [
-                                    'AND' => [
-                                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ];
-
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_requesters.groups_id' => $requester_groups];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1132,7 +949,6 @@ class Reports_Pie extends CommonGLPI
                 $dataPieset = json_encode($datas);
                 $labelsPie = json_encode($names_pie);
                 $tabcategoryset = json_encode($tabcategory);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -1145,14 +961,8 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'requester_groups' => $requester_groups,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPieGraph($graph_datas, $graph_criterias);
 
@@ -1161,6 +971,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1180,10 +991,10 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'requesters_groups_id',
-                        'is_recursive',
                         'type',
                         'year',
                         'month',
@@ -1204,21 +1015,11 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
+                $default = Helper::manageCriteriasNew($params);
 
-                $type = $opt['type'];
-                $requester_groups = $opt['requesters_groups_id'];
-                $technician_group = $opt['technicians_groups_id'];
-
-                $type_criteria = $crit['type'];
-                $entities_criteria = $crit['entities_id'];
-                $requester_groups_criteria = $crit['requesters_groups_id'];
-                $technician_groups_criteria = $crit['technicians_groups_id'];
-                $date_criteria = $crit['date'];
-                $closedate_criteria = $crit['closedate'];
+                $date_criteria = $default['date'];
+                $closedate_criteria = $default['closedate'];
 
                 $dataspie = [];
                 $namespie = [];
@@ -1233,62 +1034,16 @@ class Reports_Pie extends CommonGLPI
                     'LEFT JOIN' => [],
                     'WHERE' => [
                         $is_deleted,
-                        new QueryExpression($date_criteria),
+                        $date_criteria,
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if (is_array($requester_groups) && count($requester_groups) > 0) {
-                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets as glpi_groups_requesters' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                                [
-                                    'AND' => [
-                                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ];
-
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_requesters.groups_id' => $requester_groups];
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
-                $nb = 0;
+
                 if (count($iterator) > 0) {
-                    $nb = count($iterator);
+
                     foreach ($iterator as $data) {
                         $namespie[] = __("Opened tickets", "mydashboard");
                         $dataspie[] = [
@@ -1308,62 +1063,16 @@ class Reports_Pie extends CommonGLPI
                     'LEFT JOIN' => [],
                     'WHERE' => [
                         $is_deleted,
-                        new QueryExpression($closedate_criteria),
+                        $closedate_criteria,
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if (is_array($requester_groups) && count($requester_groups) > 0) {
-                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets as glpi_groups_requesters' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                                [
-                                    'AND' => [
-                                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ];
-
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_requesters.groups_id' => $requester_groups];
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
-                $nb = 0;
+
                 if (count($iterator) > 0) {
-                    $nb = count($iterator);
+
                     foreach ($iterator as $data) {
                         $namespie[] = __("Closed tickets", "mydashboard");
                         $dataspie[] = [
@@ -1390,57 +1099,12 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
+                        $date_criteria,
                         'glpi_tickettasks.actiontime' => null,
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if (is_array($requester_groups) && count($requester_groups) > 0) {
-                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets as glpi_groups_requesters' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                                [
-                                    'AND' => [
-                                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ];
-
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_requesters.groups_id' => $requester_groups];
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1482,6 +1146,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1500,7 +1165,7 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
                     ];
@@ -1515,13 +1180,9 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
+                $default = Helper::manageCriteriasNew($params);
 
-                $type = $opt['type'];
-                $technician_group = $opt['technicians_groups_id'];
                 $name_solution = [];
                 $datas = [];
                 $tabsolution = [];
@@ -1543,7 +1204,7 @@ class Reports_Pie extends CommonGLPI
                                 'glpi_tickets' => 'id',
                                 [
                                     'AND' => [
-                                        'glpi_itilsolutions.itemtype' => Ticket::class,
+                                        'glpi_itilsolutions.itemtype' => \Ticket::class,
                                     ],
                                 ],
                             ],
@@ -1557,42 +1218,15 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
                     ],
                     'GROUPBY' => 'glpi_solutiontypes.id',
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
+
                 $nb = 0;
                 if (count($iterator) > 0) {
                     $nb = count($iterator);
@@ -1639,6 +1273,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1656,23 +1291,20 @@ class Reports_Pie extends CommonGLPI
 
                 $criterias = [
                     'entities_id',
-                    'is_recursive',
+                    'is_recursive_entities',
                     'type',
                     'limit',
                 ];
 
-                $opt['limit'] ??= 10;
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $type = $opt['type'];
-                $limit = $opt['limit'] ?? 10;
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $name_groups = [];
                 $datas = [];
@@ -1702,19 +1334,13 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'groups_id',
                     'LIMIT' => $limit,
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1729,7 +1355,7 @@ class Reports_Pie extends CommonGLPI
                             $name_groups[] = __('None');
                             $name_grp = __('None');
                         }
-                        //                  $datas[] = $data['nb'];
+
                         $datas[] = [
                             'value' => $data['nb'],
                             'name' => $name_grp,
@@ -1770,6 +1396,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1788,7 +1415,7 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'year',
                     ];
                 }
@@ -1802,15 +1429,12 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
+                $default = Helper::manageCriteriasNew($params);
 
-                $closedate_criteria = $crit['closedate'];
+                $closedate_criteria = $default['closedate'];
 
-                $notsatisfy = 0;
-                $satisfy = 0;
+
                 $datas = [];
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
@@ -1834,7 +1458,7 @@ class Reports_Pie extends CommonGLPI
                         $is_deleted,
                         'status' => [CommonITILObject::CLOSED],
                         'NOT' => ['glpi_tickets.closedate' => null, 'glpi_ticketsatisfactions.date_answered' => null],
-                        new QueryExpression($closedate_criteria),
+                        $closedate_criteria,
                     ],
                 ];
 
@@ -1892,6 +1516,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1911,10 +1536,10 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'limit',
                     ];
                     $onclick = 1;
@@ -1923,23 +1548,16 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = ['type', 'limit'];
                 }
-                $opt['limit'] ??= 10;
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $technician_group = $opt['technicians_groups_id'];
-                $limit = $opt['limit'] ?? 10;
-
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $name_location = [];
                 $datas = [];
@@ -1963,41 +1581,14 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'glpi_locations.id',
                     'ORDERBY' => 'count DESC',
                     'LIMIT' => $limit,
                 ];
 
-                if (is_array($technician_group)) {
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -2034,7 +1625,6 @@ class Reports_Pie extends CommonGLPI
                 $dataPieset = json_encode($datas);
                 $labelsPie = json_encode($name_location);
                 $tablocationset = json_encode($tablocation);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -2047,14 +1637,8 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'type' => $type,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
 
@@ -2063,6 +1647,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2081,7 +1666,7 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                     ];
                 }
@@ -2095,13 +1680,8 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type = $opt['type'];
-                $technician_group = $opt['technicians_groups_id'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $name_requesttypes = [];
                 $datas = [];
@@ -2127,39 +1707,12 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'glpi_requesttypes.id',
                 ];
 
-                if (is_array($technician_group)) {
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -2207,6 +1760,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2227,7 +1781,7 @@ class Reports_Pie extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'year',
                         'month',
@@ -2240,16 +1794,14 @@ class Reports_Pie extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $technician_group = $opt['technicians_groups_id'];
+                Toolbox::logInfo($opt);
 
-                $date_criteria = $crit['date'];
+                $default = Helper::manageCriteriasNew($params);
+
+                Toolbox::logInfo($opt);
+
+                $date_criteria = $default['date'];
 
                 $name_location1 = [];
                 $datas = [];
@@ -2273,40 +1825,13 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
-                        new QueryExpression($date_criteria),
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                        $date_criteria,
                     ],
                     'GROUPBY' => 'locations_id',
                 ];
 
-                if (is_array($technician_group)) {
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -2356,13 +1881,8 @@ class Reports_Pie extends CommonGLPI
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'type' => $type,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
 
@@ -2371,6 +1891,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2385,37 +1906,33 @@ class Reports_Pie extends CommonGLPI
 
             case $this->getType() . "32":
                 $name = 'TicketsByAppliancePieChart';
-                $onclick = 0;
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'limit',
                     ];
-                    //                    $onclick   = 1;
+
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = ['type', 'limit'];
                 }
-                $opt['limit'] ??= 10;
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-                $technician_group = $opt['technicians_groups_id'];
-                $limit = $opt['limit'] ?? 10;
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $name_appliance = [];
                 $datas = [];
@@ -2450,34 +1967,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                if (is_array($technician_group)) {
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -2491,7 +1981,7 @@ class Reports_Pie extends CommonGLPI
                             $name_app = __('None');
                             $name_appliance[] = __('None');
                         }
-                        //                  $datas[] = $data['count'];
+
                         $datas[] = [
                             'value' => $data['count'],
                             'name' => $name_app,
@@ -2514,7 +2004,6 @@ class Reports_Pie extends CommonGLPI
                 $dataPieset = json_encode($datas);
                 $labelsPie = json_encode($name_appliance);
                 $tabappset = json_encode($tabapp);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -2536,6 +2025,7 @@ class Reports_Pie extends CommonGLPI
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2582,8 +2072,8 @@ class Reports_Pie extends CommonGLPI
 
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 
@@ -2624,8 +2114,8 @@ class Reports_Pie extends CommonGLPI
 
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 
@@ -2704,8 +2194,8 @@ class Reports_Pie extends CommonGLPI
 
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 

@@ -135,10 +135,10 @@ class Reports_Map extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive'
+                        'is_recursive_technicians'
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])

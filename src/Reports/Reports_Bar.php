@@ -241,9 +241,9 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'requesters_groups_id',
                         'type',
                         'locations_id',
@@ -264,17 +264,8 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $requester_groups = $opt['requesters_groups_id'];
-                $technician_group = $opt['technicians_groups_id'];
-                $location = $opt['locations_id'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -289,67 +280,13 @@ class Reports_Bar extends CommonDBTM
                     'LEFT JOIN' => [],
                     'WHERE' => [
                         $is_deleted,
-                        'NOT' => ['glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED]],
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                     'GROUPBY' => 'period_name',
                     'ORDERBY' => 'period ASC',
                 ];
 
-                if (is_array($requester_groups)) {
-
-                    $requester_groups = array_filter($requester_groups);
-                    if (count($requester_groups) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
-                    }
-                }
-
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($location > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.locations_id' => $type];
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -378,8 +315,6 @@ class Reports_Bar extends CommonDBTM
                 $labelsback = json_encode($tabnames);
                 $tabdatesset = json_encode($tabdates);
 
-                $js_ancestors = $crit['ancestors'];
-
                 $graph_datas = [
                     'title' => $title,
                     'comment' => $comment,
@@ -390,16 +325,8 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'requester_groups' => $requester_groups,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'type' => $type,
-                        'locations_id' => $location,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
 
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -409,6 +336,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -428,7 +356,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
                         'type',
                         'year',
@@ -443,16 +371,16 @@ class Reports_Bar extends CommonDBTM
                         'limit',
                     ];
                 }
-                $opt['limit'] ??= 10;
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
-                $opt = $options['opt'];
 
-                $time_per_tech = self::getTimePerTech($options);
+                $default = Helper::manageCriteriasNew($params);
+
+                $time_per_tech = self::getTimePerTech($params);
 
                 $months_t = Toolbox::getMonthsOfYearArray();
                 $months = [];
@@ -460,12 +388,6 @@ class Reports_Bar extends CommonDBTM
                     $months[] = $month;
                 }
 
-                $nb_bar = 0;
-                foreach ($time_per_tech as $tech_id => $tickets) {
-                    $nb_bar++;
-                }
-
-                $i = 0;
                 $dataset = [];
                 foreach ($time_per_tech as $tech_id => $times) {
                     unset($time_per_tech[$tech_id]);
@@ -480,7 +402,6 @@ class Reports_Bar extends CommonDBTM
                             'focus' => 'series',
                         ],
                     ];
-                    $i++;
                 }
 
                 $widget = new Html();
@@ -509,6 +430,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -525,6 +447,7 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "15":
                 $name = 'TopTenTicketCategoriesBarChart';
+                $onclick = 0;
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
@@ -532,10 +455,11 @@ class Reports_Bar extends CommonDBTM
                         'technicians_groups_id',
                         'filter_date',
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'limit',
                     ];
+                    $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
@@ -546,27 +470,18 @@ class Reports_Bar extends CommonDBTM
                         'limit',
                     ];
                 }
-                $opt['limit'] ??= 10;
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $date_criteria = $crit['date'];
-
-                $type = $opt['type'];
-                $requester_groups = $opt['requesters_groups_id'];
-                $technician_group = $opt['technicians_groups_id'];
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
-
-                $limit = $opt['limit'] ?? 10;
 
                 $criteria = [
                     'SELECT' => ['glpi_itilcategories.completename AS itilcategories_name',
@@ -590,61 +505,7 @@ class Reports_Bar extends CommonDBTM
                     'LIMIT' => $limit,
                 ];
 
-                if (is_array($requester_groups)) {
-
-                    $requester_groups = array_filter($requester_groups);
-                    if (count($requester_groups) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
-                    }
-                }
-
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if (!empty($date_criteria)) {
-                    $criteria['WHERE'] = array_merge($criteria['WHERE'], $date_criteria);
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -691,26 +552,11 @@ class Reports_Bar extends CommonDBTM
                     'labels' => $labelsback,
                 ];
 
-                $js_ancestors = $crit['ancestors'];
-
-
-                $type = $opt['type'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $year = $opt['year'] ?? '';
-                $begin = $opt['begin'] ?? '';
-                $end = $opt['end'] ?? '';
-                $graph_criterias = [
-                    'entities_id' => $entities_id_criteria,
-                    'sons' => $sons_criteria,
-                    'group_is_recursive' => $js_ancestors,
-                    'technician_group' => $opt['technicians_groups_id'] ?? [],
-                    'type' => $type,
-                    'year' => $year ?? '',
-                    'begin' => $begin ?? '',
-                    'end' => $end ?? '',
-                    'widget' => $widgetId,
-                ];
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
+                }
 
                 $graph = BarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
@@ -719,6 +565,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -736,9 +583,9 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'type',
                         'year',
                         'limit',
@@ -752,14 +599,14 @@ class Reports_Bar extends CommonDBTM
                         'limit',
                     ];
                 }
-                $opt['limit'] ??= 10;
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
-                $opt = $options['opt'];
+
+                $default = Helper::manageCriteriasNew($params);
 
                 $tickets_per_tech = self::getTicketsPerTech($opt);
 
@@ -816,6 +663,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -835,7 +683,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'year',
                         'type',
                     ];
@@ -853,16 +701,9 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type_criteria = $crit['type'];
-                $type = $opt['type'];
-                $entities_criteria = $crit['entities_id'];
-
-                $currentyear = $opt["year"];
+                $currentyear = $opt["year"] ?? $default["year"];
                 $currentmonth = date("m");
 
                 $previousyear = $currentyear - 1;
@@ -884,18 +725,14 @@ class Reports_Bar extends CommonDBTM
                     'WHERE' => [
                         $is_deleted,
                         [
-                            ['glpi_tickets.date' => ['>=', $previousyear - $currentmonth . '-01 00:00:00']],
-                            ['glpi_tickets.date' => ['<=', $currentyear - $nextmonth . '-01 00:00:00']],
+                            ['glpi_tickets.date' => ['>=', "$previousyear-$currentmonth-01 00:00:00"]],
+                            ['glpi_tickets.date' => ['<=', "$currentyear-$nextmonth-01 00:00:00"]],
                         ],
                     ],
                     'GROUPBY' => 'month',
                 ];
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 //                $query = "SELECT
                 //                              DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
@@ -909,7 +746,6 @@ class Reports_Bar extends CommonDBTM
                 //                              GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
                 $iterator = $DB->request($criteria);
-                $i = 0;
 
                 $tabduration = [];
                 $tabdates = [];
@@ -937,17 +773,13 @@ class Reports_Bar extends CommonDBTM
                         'WHERE' => [
                             $is_deleted,
                             [
-                                ['glpi_tickets.date' => ['>=', $year - $month . '-01 00:00:00']],
+                                ['glpi_tickets.date' => ['>=',  "$year-$month-01 00:00:00"]],
                                 ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
                             ],
                         ],
                     ];
-                    if ($type > 0) {
-                        $criteria_1['WHERE'] = $criteria_1['WHERE'] + ['glpi_tickets.type' => $type];
-                    }
-                    $criteria_1['WHERE'] = $criteria_1['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+
+                    $criteria_1 = Helper::addCriteriasForQuery($criteria_1, $params);
 
                     $iterator_1 = $DB->request($criteria_1);
 
@@ -963,7 +795,6 @@ class Reports_Bar extends CommonDBTM
                         $tabnames[] = $data['monthname'];
                         $tabdates[] = $data['monthnum'];
                     }
-                    $i++;
                 }
 
                 $widget = new Html();
@@ -996,6 +827,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1016,7 +848,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'filter_date',
                         'type',
                         'limit',
@@ -1031,7 +863,6 @@ class Reports_Bar extends CommonDBTM
                         'limit',
                     ];
                 }
-                $opt['limit'] ??= 10;
                 //                $opt['begin'] ??= date('Y-m-d H:i:s', strtotime('-1 year'));
                 //                ;
                 //                $opt['end'] ??= date('Y-m-d H:i:s');
@@ -1041,21 +872,12 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type = $opt['type'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-
-                $date_criteria = $crit['date'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-                $limit = $opt['limit'] ?? 10;
-                ;
+                $limit = $opt['limit'] ?? $default['limit'];
 
                 $users_id_select = new QueryExpression('IFNULL(' . $DB::quoteName("glpi_tickets_users.users_id") . ',-1) AS users_id');
                 $criteria = [
@@ -1081,13 +903,7 @@ class Reports_Bar extends CommonDBTM
                 ];
 
 
-                if (!empty($date_criteria)) {
-                    $criteria['WHERE'] = array_merge($criteria['WHERE'], $date_criteria);
-                }
-
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -1101,7 +917,7 @@ class Reports_Bar extends CommonDBTM
                     $tabtickets['data'][] = $data['count'];
                     $tabtickets['type'] = 'bar';
                     $tabtickets['name'] = __('Tickets number', 'mydashboard');
-                    $tabtech[] = $data['users_id'];
+
                     $users_id = getUserName($data['users_id']);
                     if ($data['users_id'] == -1) {
                         $users_id = __('None');
@@ -1132,23 +948,12 @@ class Reports_Bar extends CommonDBTM
                     'ids' => $tabIdTechset,
                     'data' => $dataticketset,
                     'labels' => $tabNamesset,
-                    //                            'label'           => $ticketsnumber,
                 ];
 
-                $year = $opt['year'] ?? '';
-                $begin = $opt['begin'] ?? '';
-                $end = $opt['end'] ?? '';
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'type' => $type,
-                        'year' => $year ?? '',
-                        'begin' => $begin ?? '',
-                        'end' => $end ?? '',
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = BarChart::launchHorizontalGraph($graph_datas, $graph_criterias);
 
@@ -1157,6 +962,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1178,12 +984,11 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive',
-                        'group_is_recursive',
-                        'itilcategory',
+                        'is_recursive_technicians',
+                        'itilcategories_id',
                     ];
                     $onclick = 1;
                 }
@@ -1197,20 +1002,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
-
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $type_criteria = $crit['type'];
-                $type = $opt['type'];
-                $entities_criteria = $crit['entities_id'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $js_ancestors = $crit['ancestors'];
-                $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $opt['technicians_groups_id'];
-                $categories_criteria = $opt['itilcategory'];
+                $default = Helper::manageCriteriasNew($params);
 
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
@@ -1225,41 +1017,9 @@ class Reports_Bar extends CommonDBTM
                         'status' => \Ticket::getNotSolvedStatusArray(),
                     ],
                 ];
-                if (is_array($technician_group)) {
 
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria_init['LEFT JOIN'] = $criteria_init['LEFT JOIN'] + [
-                                'glpi_groups_tickets' => [
-                                    'ON' => [
-                                        'glpi_tickets' => 'id',
-                                        'glpi_groups_tickets' => 'tickets_id',
-                                        [
-                                            'AND' => [
-                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ];
+                $criteria_init = Helper::addCriteriasForQuery($criteria_init, $params);
 
-                        $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                }
 
                 //                $query = "SELECT  CONCAT ('< 1 Semaine') Age, COUNT(*) Total, COUNT(*) * 100 /
 //                (SELECT COUNT(*) FROM glpi_tickets
@@ -1292,41 +1052,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                                'glpi_groups_tickets' => [
-                                    'ON' => [
-                                        'glpi_tickets' => 'id',
-                                        'glpi_groups_tickets' => 'tickets_id',
-                                        [
-                                            'AND' => [
-                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                }
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $queries[] = $criteria;
 
@@ -1364,41 +1090,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria1['LEFT JOIN'] = $criteria1['LEFT JOIN'] + [
-                                'glpi_groups_tickets' => [
-                                    'ON' => [
-                                        'glpi_tickets' => 'id',
-                                        'glpi_groups_tickets' => 'tickets_id',
-                                        [
-                                            'AND' => [
-                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ];
-
-                        $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria1['WHERE'] = $criteria1['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                }
+                $criteria1 = Helper::addCriteriasForQuery($criteria1, $params);
 
                 $queries[] = $criteria1;
 
@@ -1437,41 +1129,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria2['LEFT JOIN'] = $criteria2['LEFT JOIN'] + [
-                                'glpi_groups_tickets' => [
-                                    'ON' => [
-                                        'glpi_tickets' => 'id',
-                                        'glpi_groups_tickets' => 'tickets_id',
-                                        [
-                                            'AND' => [
-                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ];
-
-                        $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                }
+                $criteria2 = Helper::addCriteriasForQuery($criteria2, $params);
 
                 $queries[] = $criteria2;
 
@@ -1509,41 +1167,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria3['LEFT JOIN'] = $criteria3['LEFT JOIN'] + [
-                                'glpi_groups_tickets' => [
-                                    'ON' => [
-                                        'glpi_tickets' => 'id',
-                                        'glpi_groups_tickets' => 'tickets_id',
-                                        [
-                                            'AND' => [
-                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ];
-
-                        $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                }
+                $criteria3 = Helper::addCriteriasForQuery($criteria3, $params);
 
                 $queries[] = $criteria3;
 
@@ -1577,41 +1201,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria4['LEFT JOIN'] = $criteria4['LEFT JOIN'] + [
-                                'glpi_groups_tickets' => [
-                                    'ON' => [
-                                        'glpi_tickets' => 'id',
-                                        'glpi_groups_tickets' => 'tickets_id',
-                                        [
-                                            'AND' => [
-                                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ];
-
-                        $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                }
+                $criteria4 = Helper::addCriteriasForQuery($criteria4, $params);
 
                 $queries[] = $criteria4;
 
@@ -1660,14 +1250,8 @@ class Reports_Bar extends CommonDBTM
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'type' => $type,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
@@ -1677,6 +1261,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1697,11 +1282,11 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive',
-                        'itilcategory',
+                        'is_recursive_technicians',
+                        'itilcategories_id',
                     ];
                     $onclick = 1;
                 }
@@ -1715,19 +1300,9 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-                $type_criteria = $crit['type'];
-                $entities_criteria = $crit['entities_id'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
-                $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $opt['technicians_groups_id'];
-                $categories_criteria = $opt['itilcategory'];
 
                 $criteria = [
                     'SELECT' => ['glpi_tickets.priority',
@@ -1751,41 +1326,7 @@ class Reports_Bar extends CommonDBTM
                     'ORDERBY' => 'priority ASC',
                 ];
 
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
-                }
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = count($iterator);
@@ -1816,6 +1357,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -1826,7 +1368,6 @@ class Reports_Bar extends CommonDBTM
                 $dataset = json_encode($datas);
                 $labels = json_encode($name_priority);
                 $tabpriorityset = json_encode($tabpriority);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -1838,15 +1379,8 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'type' => $type,
-                        'itilcategory' => $categories_criteria,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
@@ -1861,11 +1395,11 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'group_is_recursive',
-                        'itilcategory',
+                        'is_recursive_technicians',
+                        'itilcategories_id',
                     ];
                     $onclick = 1;
                 }
@@ -1879,19 +1413,10 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-                $type = $opt['type'];
-                $type_criteria = $crit['type'];
-                $entities_criteria = $crit['entities_id'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
-                $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $opt['technicians_groups_id'];
-                $categories_criteria = $opt['itilcategory'];
+
 
                 //                $query = "SELECT `glpi_tickets`.`status` AS status, COUNT(`glpi_tickets`.`id`) AS Total
                 //                FROM glpi_tickets
@@ -1923,42 +1448,7 @@ class Reports_Bar extends CommonDBTM
                     'GROUPBY' => 'glpi_tickets.status',
                 ];
 
-
-                if (is_array($technician_group)) {
-
-                    $technician_group = array_filter($technician_group);
-                    if (count($technician_group) > 0) {
-                        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-                    }
-                }
-
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-
-                if ($categories_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.itilcategories_id' => $categories_criteria];
-                }
-
-                if ($entities_id_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
-                }
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -1984,54 +1474,6 @@ class Reports_Bar extends CommonDBTM
                     }
                 }
 
-                //            if (Plugin::isPluginActive('moreticket')) {
-                //               $moreTickets = [];
-                //               foreach (self::getAllMoreTicketStatus() as $id => $names) {
-                //                  $moreTickets[] = $id;
-                //               }
-                //               $moreTicketToShow = '';
-                //               if (count($moreTickets) > 0) {
-                //                  $moreTicketToShow = ' AND `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`  IN (' . implode(',', $moreTickets) . ')';
-                //               }
-                //               $query_moreticket = "SELECT COUNT(*) AS Total,
-                //                         `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS status,
-                //                         `glpi_plugin_moreticket_waitingtypes`.`completename` AS name
-                //                          FROM `glpi_plugin_moreticket_waitingtickets`
-                //                          LEFT JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`
-                //                          LEFT JOIN `glpi_plugin_moreticket_waitingtypes` ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`
-                //                          WHERE `glpi_tickets`.`status` = " . CommonITILObject::WAITING . "
-                //                          AND `glpi_plugin_moreticket_waitingtickets`.`date_end_suspension` IS NULL
-                //                          AND `glpi_plugin_moreticket_waitingtickets`.`id` = (SELECT MAX(`id`) FROM glpi_plugin_moreticket_waitingtickets WHERE `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`)
-                //                          AND $is_deleted
-                //                          $type_criteria
-                //                          $technician_groups_criteria
-                //                          $moreTicketToShow
-                //                          $entities_criteria
-                //                          GROUP BY status";
-                //
-                //               $result_more_ticket = $DB->doQuery($query_moreticket);
-                //               $rows               = $DB->numrows($result_more_ticket);
-                //               if ($rows) {
-                //                  while ($ticket = $DB->fetchAssoc($result_more_ticket)) {
-                //                     //foreach (self::getAllMoreTicketStatus() as $value => $names) {
-                //                     //   if ($ticket['status'] == $value) {
-                ////                     $datas[]       = $ticket['Total'];
-                //                      $datas[] =
-                //                          ['data'            => '1',
-                //                           'name'           => 'toto',
-                //                           "type" => "bar",
-                //                           "emphasis" => [
-                //                               'focus' => 'series',
-                //                           ],
-                //                          ];
-                //                     $name_status[] = $ticket['name'];
-                //                     $tabstatus[]   = 'moreticket_' . $ticket['status'];
-                //                     //}
-                //                     //}
-                //                  }
-                //               }
-                //            }
-
                 $widget = new Html();
                 $title = $this->getTitleForWidget($widgetId);
                 $comment = $this->getCommentForWidget($widgetId);
@@ -2044,6 +1486,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2054,7 +1497,6 @@ class Reports_Bar extends CommonDBTM
                 $dataset = json_encode($datas);
                 $labels = json_encode($name_status);
                 $tabstatusset = json_encode($tabstatus);
-                $js_ancestors = $crit['ancestors'];
 
                 $graph_datas = [
                     'title' => $title,
@@ -2066,15 +1508,8 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'technician_group' => $technician_group,
-                        'group_is_recursive' => $js_ancestors,
-                        'type' => $type,
-                        'itilcategory' => $categories_criteria,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
                 $widget->setWidgetHtmlContent($graph);
@@ -2090,10 +1525,8 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $opened_tickets_data = [];
@@ -2383,6 +1816,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2404,16 +1838,9 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $crit = $options['crit'];
-                $opt = $options['opt'];
-                $type = $opt['type'];
-                $type_criteria = $crit['type'];
-                $requester_groups_criteria = $opt['requesters_groups_id'];
-                $requester_groups = $opt['requesters_groups_id'];
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
-
 
                 $datasets = [];
 
@@ -2447,30 +1874,8 @@ class Reports_Bar extends CommonDBTM
                     ],
                     'GROUPBY' => 'month',
                 ];
-                if (is_array($requester_groups)) {
 
-                    $requester_groups = array_filter($requester_groups);
-                    if (count($requester_groups) > 0) {
-                        $criteria_init['LEFT JOIN'] = $criteria_init['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
-                    }
-                }
-                if ($type > 0) {
-                    $criteria_init['WHERE'] = $criteria_init['WHERE'] + ['glpi_tickets.type' => $type];
-                }
+                $criteria_init = Helper::addCriteriasForQuery($criteria_init, $params);
 
                 $criteria = [
                     'SELECT' => [
@@ -2549,30 +1954,8 @@ class Reports_Bar extends CommonDBTM
                     ],
                     'GROUPBY' => 'month',
                 ];
-                if (is_array($requester_groups)) {
 
-                    $requester_groups = array_filter($requester_groups);
-                    if (count($requester_groups) > 0) {
-                        $criteria_init_2['LEFT JOIN'] = $criteria_init_2['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria_init_2['WHERE'] = $criteria_init_2['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
-                    }
-                }
-                if ($type > 0) {
-                    $criteria_init_2['WHERE'] = $criteria_init_2['WHERE'] + ['glpi_tickets.type' => $type];
-                }
+                $criteria_init_2 = Helper::addCriteriasForQuery($criteria_init_2, $params);
 
                 $criteria_2 = [
                     'SELECT' => [
@@ -2648,30 +2031,8 @@ class Reports_Bar extends CommonDBTM
                     ],
                     'GROUPBY' => 'month',
                 ];
-                if (is_array($requester_groups)) {
 
-                    $requester_groups = array_filter($requester_groups);
-                    if (count($requester_groups) > 0) {
-                        $criteria_init_3['LEFT JOIN'] = $criteria_init_3['LEFT JOIN'] + [
-                            'glpi_groups_tickets' => [
-                                'ON' => [
-                                    'glpi_tickets' => 'id',
-                                    'glpi_groups_tickets' => 'tickets_id',
-                                    [
-                                        'AND' => [
-                                            'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ];
-
-                        $criteria_init_3['WHERE'] = $criteria_init_3['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
-                    }
-                }
-                if ($type > 0) {
-                    $criteria_init_3['WHERE'] = $criteria_init_3['WHERE'] + ['glpi_tickets.type' => $type];
-                }
+                $criteria_init_3 = Helper::addCriteriasForQuery($criteria_init_3, $params);
 
                 $criteria_3 = [
                     'SELECT' => [
@@ -2793,6 +2154,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2808,18 +2170,14 @@ class Reports_Bar extends CommonDBTM
                 break;
 
             case $this->getType() . "40":
-                $criterias = ['entities_id', 'is_recursive'];
+                $criterias = ['entities_id', 'is_recursive_entities'];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $entities_criteria = $crit['entities_id'];
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $tabdata = [];
@@ -2838,11 +2196,8 @@ class Reports_Bar extends CommonDBTM
                     ],
                     'GROUPBY' => new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y')"),
                 ];
-                if ($entities_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
-                }
+
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -2873,17 +2228,14 @@ class Reports_Bar extends CommonDBTM
                         ],
                         'GROUPBY' => 'glpi_tickets.requesttypes_id',
                     ];
-                    if ($entities_criteria > 0) {
-                        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                    }
+
+                    $criteria_1 = Helper::addCriteriasForQuery($criteria_1, $params);
+
                     $iterator_1 = $DB->request($criteria_1);
 
                     foreach ($iterator_1 as $data_1) {
                         $tabdata[$data_1['requesttypes_id']][$year] = $data_1['count'];
                         $tabnames[$data_1['requesttypes_id']] = $data_1['namerequest'];
-                        $i++;
                     }
 
                     $tabyears[] = $data['yearname'];
@@ -2943,6 +2295,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -2957,18 +2310,14 @@ class Reports_Bar extends CommonDBTM
                 return $widget;
 
             case $this->getType() . "41":
-                $criterias = ['entities_id', 'is_recursive'];
+                $criterias = ['entities_id', 'is_recursive_entities'];
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $entities_criteria = $crit['entities_id'];
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $tabdata = [];
@@ -2987,11 +2336,8 @@ class Reports_Bar extends CommonDBTM
                     ],
                     'GROUPBY' => new QueryExpression("DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y')"),
                 ];
-                if ($entities_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
-                }
+
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -3032,11 +2378,9 @@ class Reports_Bar extends CommonDBTM
                         ],
                         'GROUPBY' => 'glpi_itilsolutions.solutiontypes_id',
                     ];
-                    if ($entities_criteria > 0) {
-                        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
-                    }
+
+                    $criteria_1 = Helper::addCriteriasForQuery($criteria_1, $params);
+
                     $iterator_1 = $DB->request($criteria_1);
 
                     foreach ($iterator_1 as $data_1) {
@@ -3103,6 +2447,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -3125,7 +2470,7 @@ class Reports_Bar extends CommonDBTM
 
                 $criterias = [
                     'entities_id',
-                    'is_recursive',
+                    'is_recursive_entities',
                     'type',
                     'year',
                     'multiple_locations_id',
@@ -3138,17 +2483,11 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $technician_group = $opt['technicians_groups_id'];
-                $technician_groups_criteria = $opt['technicians_groups_id'];
 
                 $lifetime_avg_ticket = self::getLifetimeOrTakeIntoAccountTicketAverage(
-                    $crit,
-                    $technician_groups_criteria
+                    $params,
                 );
 
                 $months_t = Toolbox::getMonthsOfYearArray();
@@ -3221,6 +2560,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -3238,7 +2578,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'year',
                     ];
                     $onclick = 1;
@@ -3253,15 +2593,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
-
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $entities_criteria = $crit['entities_id'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
-                $satisfactiondate_criteria = $crit['satisfactiondate'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -3291,12 +2623,8 @@ class Reports_Bar extends CommonDBTM
                     ],
                     'GROUPBY' => 'period_name',
                 ];
-                if (count($satisfactiondate_criteria) > 0) {
-                    $criteria['WHERE'] = array_merge($criteria['WHERE'], $satisfactiondate_criteria);
-                }
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = count($iterator);
@@ -3396,11 +2724,8 @@ class Reports_Bar extends CommonDBTM
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
 
                 $graph = BarChart::launchMultipleGraph($graph_datas, $graph_criterias);
@@ -3410,6 +2735,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -3431,7 +2757,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         //                                  'type_computer'
                     ];
                     $onclick = 1;
@@ -3448,19 +2774,9 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $options = Helper::manageCriterias($params);
-
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $entities_criteria = $crit['entities_id'];
-                $entities_id_criteria = $crit['entity'];
-                $sons_criteria = $crit['sons'];
+                $default = Helper::manageCriteriasNew($params);
 
                 $is_deleted = ['glpi_computers.is_deleted' => 0];
-                $params['entities_id'] = $entities_id_criteria;
-                $params['sons'] = $sons_criteria;
-                $entities_criteria = Helper::getSpecificEntityRestrict("glpi_computers", $params);
 
                 //                $query = "SELECT DISTINCT
                 //                           DATE_FORMAT(`glpi_computers`.`last_inventory_update`, '%b %Y') AS periodsync_name,
@@ -3488,11 +2804,8 @@ class Reports_Bar extends CommonDBTM
                     'ORDERBY' => 'periodsync ASC',
                 ];
 
-                if ($entities_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
-                }
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
                 $iterator = $DB->request($criteria);
 
                 $nbcomputers = __('Computers number', 'mydashboard');
@@ -3532,12 +2845,8 @@ class Reports_Bar extends CommonDBTM
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $graph_criterias = [
-                        'entities_id' => $entities_id_criteria,
-                        'sons' => $sons_criteria,
-                        //                                        'type_computer'      => $type,
-                        'widget' => $widgetId,
-                    ];
+                    $criterias_values = Helper::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
 
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
@@ -3547,6 +2856,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => false,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -3564,7 +2874,7 @@ class Reports_Bar extends CommonDBTM
 
                 $criterias = [
                     'entities_id',
-                    'is_recursive',
+                    'is_recursive_entities',
                     'type',
                     'year',
                 ];
@@ -3575,12 +2885,10 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
 
-                $tto_tickets = self::getTicketsforTTOTTR($crit, "TTO");
+                $tto_tickets = self::getTicketsforTTOTTR($params, "TTO");
 
                 $currentYear = date("Y");
                 $currentMonth = date("m");
@@ -3659,6 +2967,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -3675,7 +2984,7 @@ class Reports_Bar extends CommonDBTM
 
                 $criterias = [
                     'entities_id',
-                    'is_recursive',
+                    'is_recursive_entities',
                     'type',
                     'year',
                 ];
@@ -3686,12 +2995,9 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $options = Helper::manageCriterias($params);
+                $default = Helper::manageCriteriasNew($params);
 
-                $opt = $options['opt'];
-                $crit = $options['crit'];
-
-                $ttr_tickets = self::getTicketsforTTOTTR($crit, "TTR");
+                $ttr_tickets = self::getTicketsforTTOTTR($params, "TTR");
 
                 $currentYear = date("Y");
                 $currentMonth = date("m");
@@ -3770,6 +3076,7 @@ class Reports_Bar extends CommonDBTM
                     "name" => $name,
                     "onsubmit" => true,
                     "opt" => $opt,
+                    "default" => $default,
                     "criterias" => $criterias,
                     "export" => true,
                     "canvas" => true,
@@ -3798,29 +3105,21 @@ class Reports_Bar extends CommonDBTM
         $time_per_tech = [];
         $months = Toolbox::getMonthsOfYearArray();
 
-        $opt = $params['opt'];
-        $crit = $params['crit'];
-        $type = $opt['type'];
-        $type_criteria = $crit['type'];
-        $entities_criteria = $crit['entities_id'];
-        $year = $opt["year"];
+        $default = Helper::manageCriteriasNew($params);
 
-        $selected_group = [];
-        if (isset($opt["technicians_groups_id"])
-            && is_array($opt["technicians_groups_id"])
-            && count($opt["technicians_groups_id"]) > 0) {
-            $selected_group = $opt['technicians_groups_id'];
-        } elseif (count($_SESSION['glpigroups']) > 0) {
-            $selected_group = $_SESSION['glpigroups'];
+        $limit = $params['opt']['limit'] ?? $default['limit'];
+
+        $year = $params['opt']['year'] ?? $default["year"];
+
+        $selected_group = $params['opt']['technicians_groups_id'] ?? $default["technicians_groups_id"];
+        if (is_array($selected_group)) {
+            $selected_group = array_filter($selected_group);
         }
 
         $techlist = [];
-        $limit_query = "";
-        $limit = $opt['limit'] ?? 10;
-        if ($limit > 0) {
-            $limit_query = "LIMIT $limit";
-        }
-        if (count($selected_group) > 0) {
+
+        if (is_array($selected_group)
+            && count($selected_group) > 0) {
 
             $criteria = [
                 'SELECT' => 'glpi_groups_users.users_id',
@@ -3841,13 +3140,6 @@ class Reports_Bar extends CommonDBTM
                 'LIMIT' => $limit,
             ];
 
-            //            $query_group_member = "SELECT `glpi_groups_users`.`users_id`"
-            //                . "FROM `glpi_groups_users` "
-            //                . "LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`) "
-            //                . "WHERE `glpi_groups_users`.`groups_id` IN (" . $groups . ") AND `glpi_groups`.`is_assign` = 1 "
-            //                . " GROUP BY `glpi_groups_users`.`users_id`
-            //                               $limit_query";
-
             $iterator = $DB->request($criteria);
 
             foreach ($iterator as $data) {
@@ -3861,10 +3153,6 @@ class Reports_Bar extends CommonDBTM
                 'GROUPBY' => 'glpi_tickettasks.users_id_tech',
                 'LIMIT' => $limit,
             ];
-            //            $query_group_member = "SELECT  `glpi_tickettasks`.`users_id_tech`"
-            //                . "FROM `glpi_tickettasks` "
-            //                . " GROUP BY `glpi_tickettasks`.`users_id_tech`
-            //                               $limit_query";
 
             $iterator = $DB->request($criteria);
 
@@ -3879,17 +3167,12 @@ class Reports_Bar extends CommonDBTM
                 break;
             }
 
-            //         $next = $key + 1;
-
             $month_tmp = $key;
             $nb_jours = date("t", mktime(0, 0, 0, $key, 1, $year));
 
             if (strlen($key) == 1) {
                 $month_tmp = "0" . $month_tmp;
             }
-            //         if (strlen($next) == 1) {
-            //            $next = "0" . $next;
-            //         }
 
             if ($key == 0) {
                 $year = $year - 1;
@@ -3940,19 +3223,12 @@ class Reports_Bar extends CommonDBTM
                     'GROUPBY' => new QueryExpression("DATE(" . $DB->quoteName("glpi_tickettasks.date") . ")"),
                 ];
 
-                if ($entities_criteria > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
-                }
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+
                 $iterator = $DB->request($criteria);
 
-
                 foreach ($iterator as $data) {
-                    //               $time_per_tech[$techid][$key] += (self::TotalTpsPassesArrondis($data['actiontime_date'] / 3600 / 8));
+
                     if ($data['actiontime_date'] > 0) {
                         if (isset($time_per_tech[$techid][$key])) {
                             $time_per_tech[$techid][$key] += round(
@@ -4170,12 +3446,7 @@ class Reports_Bar extends CommonDBTM
                     'GROUPBY' => new QueryExpression("DATE(" . $DB->quoteName("glpi_tickets.date") . ")"),
                 ];
 
-                if ($type > 0) {
-                    $criteria_1['WHERE'] = $criteria_1['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-                //                if ($type > 0) {
-                $criteria_1['WHERE'] = $criteria_1['WHERE'] + Helper::getSpecificEntityRestrict("glpi_tickets", $params);
-                //                }
+                $criteria_1 = Helper::addCriteriasForQuery($criteria_1, $params);
 
                 $iterator_1 = $DB->request($criteria_1);
 
@@ -4337,10 +3608,9 @@ class Reports_Bar extends CommonDBTM
     {
         global $DB;
 
-        $entities_criteria = $params['entities_id'];
-        $type_criteria = "";
+        $default = Helper::manageCriteriasNew($params);
 
-        $type = $params['type'];
+        $type = $params['type'] ?? $default['type'];
 
         $tickets_helpdesk = [];
 
@@ -4397,12 +3667,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
                 //
                 //                $all = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
                 //                        FROM `glpi_tickets`
@@ -4439,12 +3704,7 @@ class Reports_Bar extends CommonDBTM
                     ],
                 ];
 
-                if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
-                }
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Helper::addCriteriasForQuery($criteria, $params);
             }
 
             $iterator = $DB->request($criteria);
@@ -4500,8 +3760,12 @@ class Reports_Bar extends CommonDBTM
                 ];
 
                 if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                    $params_query['criteria'] = ["type"];
+                    $params_query['query'] = $criteria;
+                    $params_query['type'] = $type;
+                    $criteria = Helper::defineWhereByCriteria($params_query);
                 }
+
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
                     'glpi_tickets'
                 );
@@ -4554,8 +3818,12 @@ class Reports_Bar extends CommonDBTM
                 ];
 
                 if ($type > 0) {
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $type];
+                    $params_query['criteria'] = ["type"];
+                    $params_query['query'] = $criteria;
+                    $params_query['type'] = $type;
+                    $criteria = Helper::defineWhereByCriteria($params_query);
                 }
+
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
                     'glpi_tickets'
                 );
@@ -4592,14 +3860,15 @@ class Reports_Bar extends CommonDBTM
      * @return array
      * @throws \GlpitestSQLError
      */
-    private static function getLifetimeOrTakeIntoAccountTicketAverage($params, $groups_id)
+    private static function getLifetimeOrTakeIntoAccountTicketAverage($params)
     {
         global $DB;
 
-        $entities_criteria = $params['entities_id'];
-        //        Toolbox::logInfo($params);
-        //        $locations_criteria = $params['multiple_locations_id'];
-        //        $type_criteria = "";
+        $default = Helper::manageCriteriasNew($params);
+
+        $technician_groups_criteria = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
+
+        $entities_criteria = $params['entities_id'] ?? $default['entities_id'];
 
         $tickets_helpdesk = [];
         $months = Toolbox::getMonthsOfYearArray();
@@ -4691,42 +3960,7 @@ class Reports_Bar extends CommonDBTM
                 'GROUPBY' => new QueryExpression("DATE(" . $DB->quoteName("glpi_tickets.solvedate") . ")"),
             ];
 
-            if (is_array($groups_id)) {
-
-                $groups_id = array_filter($groups_id);
-                if (count($groups_id) > 0) {
-                    $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                                [
-                                    'AND' => [
-                                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ];
-
-                    $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_groups_tickets.groups_id' => $groups_id];
-                }
-            }
-
-            if (isset($params["type"]) && $params["type"] > 0) {
-                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.type' => $params["type"]];
-            }
-
-            if (count($params['multiple_locations_id']) > 0) {
-                $multiple_locations_id = array_filter($params['multiple_locations_id']['locations_id']);
-                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.locations_id' => $multiple_locations_id];
-            }
-
-            if ($entities_criteria > 0) {
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
-            }
+            $criteria = Helper::addCriteriasForQuery($criteria, $params);
 
             $iterator = $DB->request($criteria);
             foreach ($iterator as $data) {
@@ -4763,8 +3997,8 @@ class Reports_Bar extends CommonDBTM
 
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 
@@ -4905,8 +4139,8 @@ class Reports_Bar extends CommonDBTM
         }
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 
@@ -4947,8 +4181,8 @@ class Reports_Bar extends CommonDBTM
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
-        if ($params["params"]["itilcategory"] > 0) {
-            $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["params"]["itilcategory"], 'AND');
+        if ($params["params"]["itilcategories_id"] > 0) {
+            $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["params"]["itilcategories_id"], 'AND');
         }
 
         $options = Chart::addCriteria(
@@ -4961,8 +4195,8 @@ class Reports_Bar extends CommonDBTM
 
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 
@@ -4995,8 +4229,8 @@ class Reports_Bar extends CommonDBTM
             $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
         }
 
-        if ($params["params"]["itilcategory"] > 0) {
-            $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["params"]["itilcategory"], 'AND');
+        if ($params["params"]["itilcategories_id"] > 0) {
+            $options = Chart::addCriteria(Chart::CATEGORY, 'equals', $params["params"]["itilcategories_id"], 'AND');
         }
 
         // STATUS
@@ -5013,8 +4247,8 @@ class Reports_Bar extends CommonDBTM
         // Group
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 

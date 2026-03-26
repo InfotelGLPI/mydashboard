@@ -156,7 +156,7 @@ class Reports_Table extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu = new DbUtils();
         $preference = new MydashboardPreference();
@@ -440,9 +440,9 @@ class Reports_Table extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
+                        'is_recursive_technicians',
                         'users_id',
                     ];
                 }
@@ -694,10 +694,10 @@ class Reports_Table extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
                         'entities_id',
-                        'is_recursive',
+                        'is_recursive_entities',
                         'technicians_groups_id',
-                        'group_is_recursive',
-                        'itilcategory',
+                        'is_recursive_technicians',
+                        'itilcategories_id',
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -714,7 +714,7 @@ class Reports_Table extends CommonGLPI
                 $options = Helper::manageCriterias($params);
                 $crit = $options['crit'];
                 $opt = $options['opt'];
-                $category_criteria = $crit['itilcategory'];
+                $category_criteria = $crit['itilcategories_id'];
                 $groups_sql_criteria = "";
                 $entities_criteria = $crit['entities_id'];
                 $technician_group = $opt['technicians_groups_id'];
@@ -1018,8 +1018,8 @@ class Reports_Table extends CommonGLPI
         // Group
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["group_is_recursive"])
-                && !empty($params["params"]["group_is_recursive"])) ? 'under' : 'equals'),
+            ((isset($params["params"]["is_recursive_technicians"])
+                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
             $params["params"]["technician_group"]
         );
 

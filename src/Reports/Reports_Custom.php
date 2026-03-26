@@ -80,7 +80,7 @@ class Reports_Custom extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return \Html
+     * @return string
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
