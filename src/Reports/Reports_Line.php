@@ -38,6 +38,7 @@ use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Html;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
+use GlpiPlugin\Mydashboard\StockTicketIndicator;
 use GlpiPlugin\Mydashboard\Widget;
 use Session;
 use Toolbox;
@@ -1947,12 +1948,12 @@ class Reports_Line extends CommonGLPI
                     if (!isset($datas[$i])) {
                         $nbticket = 0;
                         if ($opt['type'] == \Ticket::DEMAND_TYPE) {
-                            $nbticket += Alert::queryRequestTicketsWeek($currentyear, $i, $technician_groups_ids);
+                            $nbticket += Alert::commonQueryWeek($currentyear, $i,StockTicketIndicator::REQUESTPROGRESST, $technician_groups_ids);
                         } elseif ($opt['type'] == \Ticket::INCIDENT_TYPE) {
-                            $nbticket += Alert::queryIncidentTicketsWeek($currentyear, $i, $technician_groups_ids);
+                            $nbticket += Alert::commonQueryWeek($currentyear, $i,StockTicketIndicator::INCIDENTPROGRESST, $technician_groups_ids);
                         } else {
-                            $nbticket += Alert::queryIncidentTicketsWeek($currentyear, $i, $technician_groups_ids);
-                            $nbticket += Alert::queryRequestTicketsWeek($currentyear, $i, $technician_groups_ids);
+                            $nbticket += Alert::commonQueryWeek($currentyear, $i, StockTicketIndicator::REQUESTPROGRESST, $technician_groups_ids);
+                            $nbticket += Alert::commonQueryWeek($currentyear, $i,StockTicketIndicator::INCIDENTPROGRESST, $technician_groups_ids);
                         }
                         $tabdata[] = $nbticket;
                         $tabnames[] = $i;

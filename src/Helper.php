@@ -1518,6 +1518,9 @@ class Helper
         //
         //        }
         // USER
+        if (in_array("users_id", $criterias)) {
+            $default['users_id'] = $_SESSION['glpiID'];
+        }
         //      $opt["users_id"] = $_SESSION['glpiID'];
         //        if (in_array("users_id", $criterias)) {
         //            if (isset($params['opt']['users_id'])) {
@@ -3684,6 +3687,9 @@ class Helper
         }
         if (in_array("type_computer", $params['criterias'])) {
             $criterias_values['type_computer'] = $opt['type_computer'] ?? $default['type_computer'];
+        }
+        if (in_array("users_id", $params['criterias'])) {
+            $criterias_values['users_id'] = $opt['users_id'] ?? $default['users_id'];
         }
 
         return $criterias_values;

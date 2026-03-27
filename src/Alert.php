@@ -39,13 +39,13 @@ use Document;
 use Dropdown;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
+use Glpi\DBAL\QuerySubQuery;
 use Glpi\System\Status\StatusChecker;
 use GLPIKey;
 use GlpiPlugin\Eventsmanager\Event;
 use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Reports\Reminder;
 use GlpiPlugin\Releases\Release;
-use Group_User;
 use ITILCategory;
 use ITILFollowup;
 use MailCollector;
@@ -66,7 +66,7 @@ class Alert extends CommonDBTM
         'Problem',
         'Change',
         Event::class,
-        Release::class
+        Release::class,
     ];
 
     /**
@@ -163,32 +163,32 @@ class Alert extends CommonDBTM
                 $this->getType() . "1" => [
                     "title" => _n('Network alert', 'Network alerts', 2, 'mydashboard'),
                     "type" => Widget::$KPI,
-                    "comment" => __("See network alert block", "mydashboard")
+                    "comment" => __("See network alert block", "mydashboard"),
                 ],
                 $this->getType() . "2" => [
                     "title" => _n('Scheduled maintenance', 'Scheduled maintenances', 2, 'mydashboard'),
                     "type" => Widget::$KPI,
-                    "comment" => __("See scheduled maintenances information block", "mydashboard")
+                    "comment" => __("See scheduled maintenances information block", "mydashboard"),
                 ],
                 $this->getType() . "3" => [
                     "title" => _n('Information', 'Informations', 2, 'mydashboard'),
                     "type" => Widget::$KPI,
-                    "comment" => __("See informations block", "mydashboard")
+                    "comment" => __("See informations block", "mydashboard"),
                 ],
                 $this->getType() . "6" => [
                     "title" => __("GLPI Status", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => __("Check if GLPI have no problem", "mydashboard")
+                    "comment" => __("Check if GLPI have no problem", "mydashboard"),
                 ],
                 $this->getType() . "8" => [
                     "title" => __('Automatic actions in error', 'mydashboard'),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display automatic actions in error", "mydashboard")
+                    "comment" => __("Display automatic actions in error", "mydashboard"),
                 ],
                 $this->getType() . "9" => [
                     "title" => __("Not imported mails in collectors", "mydashboard"),
                     "type" => Widget::$TABLE,
-                    "comment" => __("Display of mails which are not imported", "mydashboard")
+                    "comment" => __("Display of mails which are not imported", "mydashboard"),
                 ],
             ],
             Menu::$INVENTORY
@@ -196,12 +196,12 @@ class Alert extends CommonDBTM
                 $this->getType() . "10" => [
                     "title" => __("Inventory stock alerts", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display alerts for inventory stocks", "mydashboard")
+                    "comment" => __("Display alerts for inventory stocks", "mydashboard"),
                 ],
                 $this->getType() . "11" => [
                     "title" => __('Your equipments', 'mydashboard'),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display your equipments", "mydashboard")
+                    "comment" => __("Display your equipments", "mydashboard"),
                 ],
             ],
             Menu::$HELPDESK
@@ -209,42 +209,42 @@ class Alert extends CommonDBTM
                 $this->getType() . "4" => [
                     "title" => __("Incidents alerts", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display alerts for incidents and problems", "mydashboard")
+                    "comment" => __("Display alerts for incidents and problems", "mydashboard"),
                 ],
                 $this->getType() . "5" => [
                     "title" => __("SLA Incidents alerts", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard")
+                    "comment" => __("Display alerts for SLA of Incidents tickets", "mydashboard"),
                 ],
                 $this->getType() . "7" => [
                     "title" => __("User ticket alerts", "mydashboard"),
                     "type" => Widget::$TABLE,
-                    "comment" => __("Display tickets where last modification is a user action", "mydashboard")
+                    "comment" => __("Display tickets where last modification is a user action", "mydashboard"),
                 ],
                 $this->getType() . "12" => [
                     "title" => __("SLA Requests alerts", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard")
+                    "comment" => __("Display alerts for SLA of Requests tickets", "mydashboard"),
                 ],
                 $this->getType() . "13" => [
                     "title" => __("Requests alerts", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => __("Display alerts for requests", "mydashboard")
+                    "comment" => __("Display alerts for requests", "mydashboard"),
                 ],
-//                $this->getType() . "33" => [
-//                    "title" => __("Number of opened tickets by group and by status", "mydashboard"),
-//                    "type" => Widget::$TABLE,
-//                    "comment" => ""
-//                ],
+                //                $this->getType() . "33" => [
+                //                    "title" => __("Number of opened tickets by group and by status", "mydashboard"),
+                //                    "type" => Widget::$TABLE,
+                //                    "comment" => ""
+                //                ],
                 $this->getType() . "SC32" => [
                     "title" => __("Global indicators", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 $this->getType() . "SC33" => [
                     "title" => __("Global indicators by week", "mydashboard"),
                     "type" => Widget::$KPI,
-                    "comment" => ""
+                    "comment" => "",
                 ],
             ],
         ];
@@ -304,51 +304,88 @@ class Alert extends CommonDBTM
         global $DB;
 
         $now = date('Y-m-d H:i:s');
-        $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
-                                    OR `glpi_reminders`.`begin_view_date` < '$now')
-                              AND (`glpi_reminders`.`end_view_date` IS NULL
-                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
-        $addwhere = "";
+
+
+        //        $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
+        //                   FROM `glpi_reminders` "
+        //            . Reminder::addVisibilityJoins()
+        //            . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
+        //            . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
+        //            . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
+        //                         $addwhere
+        //                         $restrict_visibility ";
+        //
+        //        if ($public == 0) {
+        //            $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
+        //        } else {
+        //            $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
+        //        }
+
+        $visibility_criteria = [
+            [
+                'OR' => [
+                    ['glpi_reminders.begin_view_date' => null],
+                    ['glpi_reminders.begin_view_date' => ['<', $now]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_reminders.end_view_date' => null],
+                    ['glpi_reminders.end_view_date' => ['>', $now]],
+                ],
+            ],
+        ];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_reminders.id AS cpt',
+            ],
+            'FROM' => 'glpi_reminders',
+            'LEFT JOIN' => [
+                'glpi_plugin_mydashboard_alerts' => [
+                    'ON' => [
+                        'glpi_plugin_mydashboard_alerts' => 'reminders_id',
+                        'glpi_reminders' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'glpi_plugin_mydashboard_alerts.type' => $type,
+                $visibility_criteria,
+            ],
+        ];
+
         if ($public == 0) {
+            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+
             if (count($itilcategories_id) > 0) {
-                $cats = implode("','", $itilcategories_id);
-                $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
             } else {
-                $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` = 0";
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => 0];
+            }
+        } else {
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.is_public' => 1];
+        }
+
+        $nb = 0;
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) > 0) {
+            foreach ($iterator as $ligne) {
+                $nb = $ligne['cpt'];
             }
         }
 
-        $query = "SELECT COUNT(`glpi_reminders`.`id`) as cpt
-                   FROM `glpi_reminders` "
-            . Reminder::addVisibilityJoins()
-            . " LEFT JOIN `glpi_plugin_mydashboard_alerts`"
-            . " ON `glpi_reminders`.`id` = `glpi_plugin_mydashboard_alerts`.`reminders_id`"
-            . " WHERE `glpi_plugin_mydashboard_alerts`.`type` = $type
-                         $addwhere
-                         $restrict_visibility ";
-
-        if ($public == 0) {
-            $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
-        } else {
-            $query .= "AND `glpi_plugin_mydashboard_alerts`.`is_public`";
-        }
-        $nb = 0;
-        $result = $DB->doQuery($query);
-        if ($DB->numrows($result) > 0) {
-            $ligne = $DB->fetchAssoc($result);
-            $nb = $ligne['cpt'];
-        }
-
-
         return $nb;
     }
+
 
     /**
      * @param       $widgetId
      *
      * @param array $opt
      *
-     * @return Html
+     * @return MydashboardHtml
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -452,20 +489,22 @@ class Alert extends CommonDBTM
                 $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
                 $criteria = [
-                    'SELECT' => ['glpi_tickets.id AS tickets_id',
+                    'SELECT' => [
+                        'glpi_tickets.id AS tickets_id',
                         'glpi_tickets.status AS status',
-                        'glpi_tickets.date_mod AS date_mod'],
+                        'glpi_tickets.date_mod AS date_mod',
+                    ],
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         'glpi_tickets.is_deleted' => 0,
-                        'NOT'       => ['glpi_tickets.status' => \Ticket::CLOSED],
+                        'NOT' => ['glpi_tickets.status' => \Ticket::CLOSED],
                         'glpi_tickets.date_mod' => ['>', new QueryExpression($DB::quoteName("glpi_tickets.date"))],
                     ],
                     'ORDERBY' => 'glpi_tickets.date_mod DESC',
                 ];
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 if (count($_SESSION['glpigroups'])) {
                     $criteria['LEFT JOIN'] = [
@@ -478,7 +517,7 @@ class Alert extends CommonDBTM
                     ];
                     $search_assign = [
                         'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN
+                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
                     ];
 
                     $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
@@ -495,7 +534,7 @@ class Alert extends CommonDBTM
                     __('Action'),
                     __('ID'),
                     __('Priority'),
-                    __('Category')
+                    __('Category'),
                 ];
 
                 $datas = [];
@@ -526,17 +565,19 @@ class Alert extends CommonDBTM
                             $itilfollowup = new ITILFollowup();
                             $followups = $itilfollowup->find([
                                 'items_id' => $ticket->fields['id'],
-                                'itemtype' => 'Ticket'
+                                'itemtype' => 'Ticket',
                             ], 'date DESC');
 
                             $ticketdocument = new Document();
-                            $documents = $ticketdocument->find(['tickets_id' => $ticket->fields['id']],
-                                ['date_mod DESC']);
+                            $documents = $ticketdocument->find(
+                                ['tickets_id' => $ticket->fields['id']],
+                                ['date_mod DESC']
+                            );
 
                             if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
                                 || (count($documents) > 0 && current(
-                                        $documents
-                                    )['date_mod'] >= $ticket->fields['date_mod'])) {
+                                    $documents
+                                )['date_mod'] >= $ticket->fields['date_mod'])) {
                                 $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
                                 $textColor = "color:black!important;";
                                 if ($bgcolor == '#000000') {
@@ -609,8 +650,8 @@ class Alert extends CommonDBTM
                                 // Priorities
                                 $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
                                 $priority .= "<span class='b'>" . $ticket->fields["priority"] . " - " . \Ticket::getPriorityName(
-                                        $ticket->fields["priority"]
-                                    ) . "</span>";
+                                    $ticket->fields["priority"]
+                                ) . "</span>";
                                 $priority .= "</div>";
                                 $datas[$i]["priority"] = $priority;
 
@@ -635,10 +676,10 @@ class Alert extends CommonDBTM
                                         $pos = strlen($haystack);
                                     }
                                     $datas[$i]["category"] = "<span class='b'>" . substr(
-                                            $haystack,
-                                            0,
-                                            $pos
-                                        ) . "</span>";
+                                        $haystack,
+                                        0,
+                                        $pos
+                                    ) . "</span>";
                                 } else {
                                     $datas[$i]["category"] = "<span></span>";
                                 }
@@ -675,9 +716,21 @@ class Alert extends CommonDBTM
                     'WHERE' => [
                         'state' => CronTask::STATE_RUNNING,
                         'OR' => [
-                            [new QueryExpression("UNIX_TIMESTAMP(" . $DB->quoteName("lastrun") . ") + 2 * " . $DB->quoteName("frequency") . " < UNIX_TIMESTAMP(NOW())")],
-                            [new QueryExpression("UNIX_TIMESTAMP(" . $DB->quoteName("lastrun") . ") + 2 * ".HOUR_TIMESTAMP." < UNIX_TIMESTAMP(NOW())")],
-                        ]
+                            [
+                                new QueryExpression(
+                                    "UNIX_TIMESTAMP(" . $DB->quoteName("lastrun") . ") + 2 * " . $DB->quoteName(
+                                        "frequency"
+                                    ) . " < UNIX_TIMESTAMP(NOW())"
+                                ),
+                            ],
+                            [
+                                new QueryExpression(
+                                    "UNIX_TIMESTAMP(" . $DB->quoteName(
+                                        "lastrun"
+                                    ) . ") + 2 * " . HOUR_TIMESTAMP . " < UNIX_TIMESTAMP(NOW())"
+                                ),
+                            ],
+                        ],
                     ],
 
                 ];
@@ -687,7 +740,7 @@ class Alert extends CommonDBTM
                 $headers = [
                     __('Last run'),
                     __('Name'),
-                    __('Status')
+                    __('Status'),
                 ];
 
                 $datas = [];
@@ -737,7 +790,7 @@ class Alert extends CommonDBTM
             case $this->getType() . "9":
 
                 $criteria = [
-                    'SELECT' => ['date', 'from', 'reason','mailcollectors_id'],
+                    'SELECT' => ['date', 'from', 'reason', 'mailcollectors_id'],
                     'FROM' => 'glpi_notimportedemails',
                     'ORDERBY' => 'date ASC',
                 ];
@@ -748,7 +801,7 @@ class Alert extends CommonDBTM
                     __('Date'),
                     __('From email header'),
                     __('Reason of rejection'),
-                    __('Mails receiver')
+                    __('Mails receiver'),
                 ];
 
                 $datas = [];
@@ -797,7 +850,7 @@ class Alert extends CommonDBTM
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
 
                 $default = Helper::manageCriteriasNew($params);
@@ -814,7 +867,7 @@ class Alert extends CommonDBTM
                     "setup" => $setuplink,
                     "export" => false,
                     "canvas" => false,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $table = Helper::getGraphHeader($params);
 
@@ -838,26 +891,57 @@ class Alert extends CommonDBTM
 
                             $types = json_decode($data["types"], true);
                             $states = json_decode($data["states"], true);
-                            $q2 = "SELECT DISTINCT COUNT(`" . $itemtable . "`.`id`) AS nb
-                        FROM `" . $itemtable . "`
-                        WHERE `" . $itemtable . "`.`is_deleted` = '0' AND `" . $itemtable . "`.`is_template` = '0' ";
-                            $q2 .= $dbu->getEntitiesRestrictRequest("AND", $itemtype::getTable());
+
+
+                            //                            $q2 = "SELECT DISTINCT COUNT(`" . $itemtable . "`.`id`) AS nb
+                            //                        FROM `" . $itemtable . "`
+                            //                        WHERE `" . $itemtable . "`.`is_deleted` = '0' AND `" . $itemtable . "`.`is_template` = '0' ";
+                            //                            $q2 .= $dbu->getEntitiesRestrictRequest("AND", $itemtype::getTable());
+                            //                            if (is_array($states) && count($states) > 0) {
+                            //                                $q2 .= " AND `" . $itemtable . "`.`states_id` IN('" . implode("', '", $states) . "') ";
+                            //                            }
+                            //                            if (is_array($types) && count($types) > 0) {
+                            //                                $q2 .= "AND `" . $itemtable . "`.`" . $typefield . "` IN('" . implode(
+                            //                                        "', '",
+                            //                                        $types
+                            //                                    ) . "')";
+                            //                            }
+                            //                            if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
+                            //                                $q2 .= " AND `" . $itemtable . "`.`locations_id` = '" . $location_criteria . "' ";
+                            //                            }
+
+                            $criteria2 = [
+                                'SELECT' => [
+                                    'COUNT' => $itemtable . '.id AS nb',
+                                ],
+                                'DISTINCT' => true,
+                                'FROM' => $itemtable,
+                                'WHERE' => [
+                                    $itemtable . '.is_deleted' => 0,
+                                    $itemtable . '.is_template' => 0,
+                                ],
+                            ];
+
                             if (is_array($states) && count($states) > 0) {
-                                $q2 .= " AND `" . $itemtable . "`.`states_id` IN('" . implode("', '", $states) . "') ";
+                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable . '.states_id' => $states];
                             }
+
                             if (is_array($types) && count($types) > 0) {
-                                $q2 .= "AND `" . $itemtable . "`.`" . $typefield . "` IN('" . implode(
-                                        "', '",
-                                        $types
-                                    ) . "')";
+                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable . $typefield => $types];
                             }
+
                             if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
-                                $q2 .= " AND `" . $itemtable . "`.`locations_id` = '" . $location_criteria . "' ";
+                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable . '.locations_id' => $location_criteria];
                             }
-                            $r2 = $DB->doQuery($q2);
-                            $nb2 = $DB->numrows($r2);
+
+                            $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
+                                $itemtype::getTable()
+                            );
+
+                            $iterator2 = $DB->request($criteria2);
+                            $nb2 = count($iterator2);
                             if ($nb2) {
-                                while ($data2 = $DB->fetchArray($r2)) {
+                                foreach ($iterator2 as $data2) {
                                     $stock = $data2['nb'];
                                 }
                             }
@@ -1008,7 +1092,6 @@ class Alert extends CommonDBTM
                     $graph
                 );
                 return $widget;
-
         }
     }
 
@@ -1048,29 +1131,19 @@ class Alert extends CommonDBTM
         $params = [
             "preferences" => $preferences,
             "criterias" => $criterias,
-            "opt" => $opt
+            "opt" => $opt,
         ];
         $options = Helper::manageCriterias($params);
 
         $opt = $options['opt'];
 
         if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
-                    $opt['technicians_groups_id']
-                ) == 0)) {
+            $opt['technicians_groups_id']
+        ) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
         }
-
-
-        if (is_array($technicians_groups_id) > 0
-            && count($technicians_groups_id) > 0) {
-            $left = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-            $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
-                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-        }
-
 
         $params = [
             "widgetId" => $widgetId,
@@ -1080,23 +1153,61 @@ class Alert extends CommonDBTM
             "criterias" => $criterias,
             "export" => false,
             "canvas" => false,
-            "nb" => 1
+            "nb" => 1,
         ];
         $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
-        $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        $left
-                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
-        $q1 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-            AND `glpi_tickets`.`priority` > 4 AND `glpi_tickets`.`type` = '" . $type . "' AND $search_assign";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $r1 = $DB->doQuery($q1);
+        //        $q1 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                        FROM `glpi_tickets`
+        //                        $left
+        //                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
+        //        $q1 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+        //            AND `glpi_tickets`.`priority` > 4 AND `glpi_tickets`.`type` = '" . $type . "' AND $search_assign";
+        //
+        $criteria1 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'glpi_tickets.priority' => ['>', 4],
+                'glpi_tickets.type' => $type,
+            ],
+        ];
+
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
+
+            $criteria1['LEFT JOIN'] = $criteria1['LEFT JOIN'] + [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => [
+                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
+        }
+        $criteria1['WHERE'] = $criteria1['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
+
+        $iterator1 = $DB->request($criteria1);
         $stats_tickets1 = 0;
-        $nb1 = $DB->numrows($r1);
+        $nb1 = count($iterator1);
         if ($nb1) {
-            while ($data1 = $DB->fetchArray($r1)) {
+            foreach ($iterator1 as $data1) {
                 $stats_tickets1 = $data1['nb'];
             }
         }
@@ -1106,23 +1217,43 @@ class Alert extends CommonDBTM
 
         /*Stats2*/
         if ($type == \Ticket::INCIDENT_TYPE) {
-            $search_assign = "1=1";
-            $left = "";
+            $is_deleted = ['glpi_problems.is_deleted' => 0];
 
-            $q2 = "SELECT DISTINCT COUNT(`glpi_problems`.`id`) AS nb
-                        FROM `glpi_problems`
-                        $left
-                        WHERE `glpi_problems`.`is_deleted` = '0' ";
-            $q2 .= $dbu->getEntitiesRestrictRequest("AND", \Problem::getTable())
-                . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-            AND `glpi_problems`.`priority` > 4 AND $search_assign";
+            //            $search_assign = "1=1";
+            //            $left = "";
+            //
+            //            $q2 = "SELECT DISTINCT COUNT(`glpi_problems`.`id`) AS nb
+            //                        FROM `glpi_problems`
+            //                        $left
+            //                        WHERE `glpi_problems`.`is_deleted` = '0' ";
+            //            $q2 .= $dbu->getEntitiesRestrictRequest("AND", \Problem::getTable())
+            //                . " AND `glpi_problems`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+            //            AND `glpi_problems`.`priority` > 4 AND $search_assign";
 
-            $r2 = $DB->doQuery($q2);
+
+            $criteria2 = [
+                'SELECT' => [
+                    'COUNT' => 'glpi_problems.id AS nb',
+                ],
+                'DISTINCT' => true,
+                'FROM' => 'glpi_problems',
+                'WHERE' => [
+                    $is_deleted,
+                    'glpi_problems.status' => \Problem::getNotSolvedStatusArray(),
+                    'glpi_problems.priority' => ['>', 4],
+                ],
+            ];
+
+            $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
+                'glpi_problems'
+            );
+
+            $iterator2 = $DB->request($criteria2);
             $stats_tickets2 = 0;
-            $nb2 = $DB->numrows($r2);
+            $nb2 = count($iterator2);
             if ($nb2) {
-                while ($data6 = $DB->fetchArray($r2)) {
-                    $stats_tickets2 = $data6['nb'];
+                foreach ($iterator2 as $data2) {
+                    $stats_tickets2 = $data2['nb'];
                 }
             }
             if ($stats_tickets2 > 0) {
@@ -1130,21 +1261,39 @@ class Alert extends CommonDBTM
             }
         }
         /*Stats3*/
-        $left = "";
 
-        $q3 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        $left
-                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
-        $q3 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ")
-            AND `glpi_tickets`.`type` = '" . $type . "' ";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $r3 = $DB->doQuery($q3);
+        //        $q3 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                        FROM `glpi_tickets`
+        //                        $left
+        //                        WHERE `glpi_tickets`.`is_deleted` = '0' ";
+        //        $q3 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND `glpi_tickets`.`status` IN (" . CommonITILObject::INCOMING . ")
+        //            AND `glpi_tickets`.`type` = '" . $type . "' ";
+
+        $criteria3 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => CommonITILObject::INCOMING,
+                'glpi_tickets.type' => $type,
+            ],
+        ];
+
+        $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
+
+        $iterator3 = $DB->request($criteria3);
         $stats_tickets3 = 0;
-        $nb3 = $DB->numrows($r3);
+        $nb3 = count($iterator3);
         if ($nb3) {
-            while ($data3 = $DB->fetchArray($r3)) {
+            foreach ($iterator3 as $data3) {
                 $stats_tickets3 = $data3['nb'];
             }
         }
@@ -1153,31 +1302,76 @@ class Alert extends CommonDBTM
         }
 
         /*Stats4*/
-        $left = "";
-        $search_assign = "1=1";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        //        if (is_array($technicians_groups_id) > 0
+        //            && count($technicians_groups_id) > 0) {
+        //            $left = "LEFT JOIN `glpi_groups_tickets`
+        //                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
+        //            $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
+        //                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+        //        }
+        //
+        //        $search_assign .= " AND `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` FROM `glpi_tickets_users` WHERE `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "') ";
+        //
+        //        $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                        FROM `glpi_tickets`
+        //                        $left
+        //                        WHERE $search_assign  AND `glpi_tickets`.`type` = '" . $type . "' AND `glpi_tickets`.`is_deleted` = 0 ";
+        //        $q4 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
+
+        $criteria_init = [
+            'SELECT' => [
+                'tickets_id',
+            ],
+            'FROM' => 'glpi_tickets_users',
+            'WHERE' => [
+                'type' =>  CommonITILActor::ASSIGN,
+            ],
+        ];
+
+        $criteria4 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                ['glpi_tickets.id' => ['NOT IN', new QuerySubQuery($criteria_init)]],
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'glpi_tickets.type' => $type,
+            ],
+        ];
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-            $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $technicians_groups_id) . ")
-                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+
+            $criteria4['LEFT JOIN'] = $criteria4['LEFT JOIN'] + [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => [
+                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
+        $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
 
-        $search_assign .= " AND `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` FROM `glpi_tickets_users` WHERE `glpi_tickets_users`.`type` = '" . CommonITILActor::ASSIGN . "') ";
-
-        $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                        FROM `glpi_tickets`
-                        $left
-                        WHERE $search_assign  AND `glpi_tickets`.`type` = '" . $type . "' AND `glpi_tickets`.`is_deleted` = 0 ";
-        $q4 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ") ";
-
-        $r4 = $DB->doQuery($q4);
+        $iterator4 = $DB->request($criteria4);
         $stats_tickets4 = 0;
-        $nb4 = $DB->numrows($r4);
+        $nb4 = count($iterator4);
         if ($nb4) {
-            while ($data4 = $DB->fetchArray($r4)) {
+            foreach ($iterator4 as $data4) {
                 $stats_tickets4 = $data4['nb'];
             }
         }
@@ -1215,14 +1409,14 @@ class Alert extends CommonDBTM
         if ($stats_tickets3 > 0) {
             if ($type == \Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
-                        'New incidents',
-                        'mydashboard'
-                    ) . "'>";
+                    'New incidents',
+                    'mydashboard'
+                ) . "'>";
             } else {
                 $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
-                        'New requests',
-                        'mydashboard'
-                    ) . "'>";
+                    'New requests',
+                    'mydashboard'
+                ) . "'>";
             }
         }
         $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
@@ -1290,14 +1484,14 @@ class Alert extends CommonDBTM
         if ($stats_tickets4 > 0) {
             if ($type == \Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
-                        'Opened incidents without assigned technicians',
-                        'mydashboard'
-                    ) . "'>";
+                    'Opened incidents without assigned technicians',
+                    'mydashboard'
+                ) . "'>";
             } else {
                 $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
-                        'Opened requests without assigned technicians',
-                        'mydashboard'
-                    ) . "'>";
+                    'Opened requests without assigned technicians',
+                    'mydashboard'
+                ) . "'>";
             }
         }
 
@@ -1306,14 +1500,14 @@ class Alert extends CommonDBTM
 
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<p class=\"count-text \">" . __(
-                    'Opened incidents without assigned technicians',
-                    'mydashboard'
-                ) . "</p>";
+                'Opened incidents without assigned technicians',
+                'mydashboard'
+            ) . "</p>";
         } else {
             $table .= "<p class=\"count-text \">" . __(
-                    'Opened requests without assigned technicians',
-                    'mydashboard'
-                ) . "</p>";
+                'Opened requests without assigned technicians',
+                'mydashboard'
+            ) . "</p>";
         }
 
         if ($stats_tickets4 > 0) {
@@ -1372,28 +1566,28 @@ class Alert extends CommonDBTM
         if ($stats_tickets1 > 0) {
             if ($type == \Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
-                        'Incidents with very high or major priority',
-                        'mydashboard'
-                    ) . "'>";
+                    'Incidents with very high or major priority',
+                    'mydashboard'
+                ) . "'>";
             } else {
                 $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
-                        'Requests with very high or major priority',
-                        'mydashboard'
-                    ) . "'>";
+                    'Requests with very high or major priority',
+                    'mydashboard'
+                ) . "'>";
             }
         }
         $table .= "<i style='color:$colorstats1;font-size:3em;' class=\"ti ti-alert-triangle fa-border\"></i>
                <h3 style='font-size:34px;margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<p class=\"count-text \">" . __(
-                    'Incidents with very high or major priority',
-                    'mydashboard'
-                ) . "</p>";
+                'Incidents with very high or major priority',
+                'mydashboard'
+            ) . "</p>";
         } else {
             $table .= "<p class=\"count-text \">" . __(
-                    'Requests with very high or major priority',
-                    'mydashboard'
-                ) . "</p>";
+                'Requests with very high or major priority',
+                'mydashboard'
+            ) . "</p>";
         }
 
         if ($stats_tickets1 > 0) {
@@ -1429,16 +1623,16 @@ class Alert extends CommonDBTM
             $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
             if ($stats_tickets2 > 0) {
                 $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __(
-                        'Problems with very high or major priority',
-                        'mydashboard'
-                    ) . "'>";
+                    'Problems with very high or major priority',
+                    'mydashboard'
+                ) . "'>";
             }
             $table .= "<i style='color:$colorstats2;font-size:34px' class=\"ti ti-bug fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets2'></span></h3>";
             $table .= "<p class=\"count-text \">" . __(
-                    'Problems with very high or major priority',
-                    'mydashboard'
-                ) . "</p>";
+                'Problems with very high or major priority',
+                'mydashboard'
+            ) . "</p>";
             if ($stats_tickets2 > 0) {
                 $table .= "</a>";
             }
@@ -1502,8 +1696,7 @@ class Alert extends CommonDBTM
         $preferences = $preference->fields;
 
         /*Stats2*/
-        $search_assign = "1=1";
-        $left = "";
+
         $stats2 = 0;
 
         $criterias = ['technicians_groups_id'];
@@ -1511,28 +1704,19 @@ class Alert extends CommonDBTM
         $params = [
             "preferences" => $preferences,
             "criterias" => $criterias,
-            "opt" => $opt
+            "opt" => $opt,
         ];
         $options = Helper::manageCriterias($params);
 
         $opt = $options['opt'];
 
         if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
-                    $opt['technicians_groups_id']
-                ) == 0)) {
+            $opt['technicians_groups_id']
+        ) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
         }
-
-        if (is_array($technicians_groups_id) > 0
-            && count($technicians_groups_id) > 0) {
-            $left = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-            $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
-                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-        }
-
 
         $params = [
             "widgetId" => $widgetId,
@@ -1542,24 +1726,64 @@ class Alert extends CommonDBTM
             "criterias" => $criterias,
             "export" => false,
             "canvas" => false,
-            "nb" => 1
+            "nb" => 1,
         ];
         $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
-        $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                           FROM `glpi_tickets`
-                           $left
-                           WHERE `glpi_tickets`.`is_deleted` = '0' ";
-        $q2 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                         AND `glpi_tickets`.`type` = '" . $type . "'
-                         AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
-                         AND `glpi_tickets`.`time_to_own` > NOW())";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $r2 = $DB->doQuery($q2);
-        $nb2 = $DB->numrows($r2);
+        //        $q2 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                           FROM `glpi_tickets`
+        //                           $left
+        //                           WHERE `glpi_tickets`.`is_deleted` = '0' ";
+        //        $q2 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+        //                         AND `glpi_tickets`.`type` = '" . $type . "'
+        //                         AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
+        //                         AND `glpi_tickets`.`time_to_own` > NOW())";
+
+        $criteria2 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'glpi_tickets.takeintoaccount_delay_stat' => 0,
+                'glpi_tickets.time_to_own' => ['>', QueryFunction::now()],
+                'glpi_tickets.type' => $type,
+            ],
+        ];
+
+        if (is_array($technicians_groups_id) > 0
+            && count($technicians_groups_id) > 0) {
+
+            $criteria2['LEFT JOIN'] = $criteria2['LEFT JOIN'] + [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => [
+                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
+        }
+        $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
+
+        $iterator2 = $DB->request($criteria2);
+        $stats2 = 0;
+        $nb2 = count($iterator2);
         if ($nb2) {
-            while ($data2 = $DB->fetchArray($r2)) {
+            foreach ($iterator2 as $data2) {
                 $stats2 = $data2['nb'];
             }
         }
@@ -1567,31 +1791,66 @@ class Alert extends CommonDBTM
             $colorstats2 = "indianred";
         }
         /*Stats3*/
-        $search_assign = "1=1";
-        $left = "";
-        $stats3 = 0;
+
+        //        if (is_array($technicians_groups_id) > 0
+        //            && count($technicians_groups_id) > 0) {
+        //            $left = "LEFT JOIN `glpi_groups_tickets`
+        //                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
+        //            $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
+        //                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+        //        }
+        //        $q3 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                           FROM `glpi_tickets`
+        //                           $left
+        //                           WHERE `glpi_tickets`.`is_deleted` = '0' ";
+        //        $q3 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+        //                         AND `glpi_tickets`.`type` = '" . $type . "'
+        //                         AND (`glpi_tickets`.`solve_delay_stat` = '0'
+        //                         AND `glpi_tickets`.`time_to_resolve` > NOW())";
+
+        $criteria3 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'glpi_tickets.solve_delay_stat' => 0,
+                'glpi_tickets.time_to_resolve' => ['>', QueryFunction::now()],
+                'glpi_tickets.type' => $type,
+            ],
+        ];
+
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-            $search_assign = " (`glpi_groups_tickets`.`groups_id` IN (" . implode(",", $opt['technicians_groups_id']) . ")
-                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+
+            $criteria3['LEFT JOIN'] = $criteria3['LEFT JOIN'] + [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => [
+                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
-        $q3 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                           FROM `glpi_tickets`
-                           $left
-                           WHERE `glpi_tickets`.`is_deleted` = '0' ";
-        $q3 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                         AND `glpi_tickets`.`type` = '" . $type . "'
-                         AND (`glpi_tickets`.`solve_delay_stat` = '0'
-                         AND `glpi_tickets`.`time_to_resolve` > NOW())";
+        $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
 
-        $r3 = $DB->doQuery($q3);
-        $nb3 = $DB->numrows($r3);
-
+        $iterator3 = $DB->request($criteria3);
+        $stats3 = 0;
+        $nb3 = count($iterator3);
         if ($nb3) {
-            while ($data3 = $DB->fetchArray($r3)) {
+            foreach ($iterator3 as $data3) {
                 $stats3 = $data3['nb'];
             }
         }
@@ -1600,32 +1859,68 @@ class Alert extends CommonDBTM
         }
 
         /*Stats4*/
-        $search_assign = "1=1";
-        $left = "";
-        $stats4 = 0;
+
+
+        //        if (is_array($technicians_groups_id) > 0
+        //            && count($technicians_groups_id) > 0) {
+        //            $left = "LEFT JOIN `glpi_groups_tickets`
+        //                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
+        //            $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
+        //                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+        //        }
+
+        //        $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                                       FROM `glpi_tickets`
+        //                                       $left
+        //                                       WHERE `glpi_tickets`.`is_deleted` = '0' ";
+        //        $q4 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+        //                         AND `glpi_tickets`.`type` = '" . $type . "'
+        //                         AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
+        //                         AND `glpi_tickets`.`time_to_own` < NOW())";
+
+        $criteria4 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'glpi_tickets.takeintoaccount_delay_stat' => 0,
+                'glpi_tickets.time_to_own' => ['<', QueryFunction::now()],
+                'glpi_tickets.type' => $type,
+            ],
+        ];
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-            $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
-                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+
+            $criteria4['LEFT JOIN'] = $criteria4['LEFT JOIN'] + [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => [
+                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
+        $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
 
-        $q4 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                                       FROM `glpi_tickets`
-                                       $left
-                                       WHERE `glpi_tickets`.`is_deleted` = '0' ";
-        $q4 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                         AND `glpi_tickets`.`type` = '" . $type . "'
-                         AND (`glpi_tickets`.`takeintoaccount_delay_stat` = '0'
-                         AND `glpi_tickets`.`time_to_own` < NOW())";
-
-        $r4 = $DB->doQuery($q4);
-        $nb4 = $DB->numrows($r4);
+        $iterator4 = $DB->request($criteria4);
+        $stats4 = 0;
+        $nb4 = count($iterator4);
         if ($nb4) {
-            while ($data4 = $DB->fetchArray($r4)) {
+            foreach ($iterator4 as $data4) {
                 $stats4 = $data4['nb'];
             }
         }
@@ -1634,32 +1929,67 @@ class Alert extends CommonDBTM
         }
 
         /*Stats5*/
-        $search_assign = "1=1";
-        $left = "";
-        $stats5 = 0;
+
+        //        if (is_array($technicians_groups_id) > 0
+        //            && count($technicians_groups_id) > 0) {
+        //            $left = "LEFT JOIN `glpi_groups_tickets`
+        //                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
+        //            $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
+        //                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
+        //        }
+        //
+        //        $q5 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
+        //                                       FROM `glpi_tickets`
+        //                                       $left
+        //                                       WHERE `glpi_tickets`.`is_deleted` = '0' ";
+        //        $q5 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
+        //            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+        //                         AND `glpi_tickets`.`type` = '" . $type . "'
+        //                         AND (`glpi_tickets`.`solve_delay_stat` = '0'
+        //                         AND `glpi_tickets`.`time_to_resolve` < NOW())";
+
+        $criteria5 = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS nb',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'glpi_tickets.solve_delay_stat' => 0,
+                'glpi_tickets.time_to_resolve' => ['<', QueryFunction::now()],
+                'glpi_tickets.type' => $type,
+            ],
+        ];
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-            $left = "LEFT JOIN `glpi_groups_tickets`
-                  ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id`) ";
-            $search_assign = " (`glpi_groups_tickets`.`groups_id`IN (" . implode(",", $technicians_groups_id) . ")
-                                    AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "')";
-        }
 
-        $q5 = "SELECT DISTINCT COUNT(`glpi_tickets`.`id`) AS nb
-                                       FROM `glpi_tickets`
-                                       $left
-                                       WHERE `glpi_tickets`.`is_deleted` = '0' ";
-        $q5 .= $dbu->getEntitiesRestrictRequest("AND", \Ticket::getTable())
-            . " AND $search_assign AND `glpi_tickets`.`status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
-                         AND `glpi_tickets`.`type` = '" . $type . "'
-                         AND (`glpi_tickets`.`solve_delay_stat` = '0'
-                         AND `glpi_tickets`.`time_to_resolve` < NOW())";
-        //print_r($opt);
-        $r5 = $DB->doQuery($q5);
-        $nb5 = $DB->numrows($r5);
+            $criteria5['LEFT JOIN'] = $criteria5['LEFT JOIN'] + [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => [
+                                'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            $criteria5['WHERE'] = $criteria5['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
+        }
+        $criteria5['WHERE'] = $criteria5['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_tickets'
+        );
+
+        $iterator5 = $DB->request($criteria5);
+        $stats5 = 0;
+        $nb5 = count($iterator5);
         if ($nb5) {
-            while ($data5 = $DB->fetchArray($r5)) {
+            foreach ($iterator5 as $data5) {
                 $stats5 = $data5['nb'];
             }
         }
@@ -1798,16 +2128,16 @@ class Alert extends CommonDBTM
             $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __(
-                    'Incidents where time to resolve will be exceeded',
-                    'mydashboard'
-                ) . "</p>";
+                'Incidents where time to resolve will be exceeded',
+                'mydashboard'
+            ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __(
-                    'Requests where time to resolve will be exceeded',
-                    'mydashboard'
-                ) . "</p>";
+                'Requests where time to resolve will be exceeded',
+                'mydashboard'
+            ) . "</p>";
         }
         if ($stats3 > 0) {
             $table .= "</a>";
@@ -1874,16 +2204,16 @@ class Alert extends CommonDBTM
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __(
-                    'Incidents where time to own is exceeded',
-                    'mydashboard'
-                ) . "</p>";
+                'Incidents where time to own is exceeded',
+                'mydashboard'
+            ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __(
-                    'Requests where time to own is exceeded',
-                    'mydashboard'
-                ) . "</p>";
+                'Requests where time to own is exceeded',
+                'mydashboard'
+            ) . "</p>";
         }
 
         if ($stats4 > 0) {
@@ -1951,16 +2281,16 @@ class Alert extends CommonDBTM
             $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __(
-                    'Incidents where time to resolve is exceeded',
-                    'mydashboard'
-                ) . "</p>";
+                'Incidents where time to resolve is exceeded',
+                'mydashboard'
+            ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __(
-                    'Requests where time to resolve is exceeded',
-                    'mydashboard'
-                ) . "</p>";
+                'Requests where time to resolve is exceeded',
+                'mydashboard'
+            ) . "</p>";
         }
 
         if ($stats5 > 0) {
@@ -2013,51 +2343,98 @@ class Alert extends CommonDBTM
      */
     public function getMaintenanceList($itilcategories_id = [])
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
         $now = date('Y-m-d H:i:s');
         $wl = "";
 
-        $restrict_user = '1';
-        // Only personal on central so do not keep it
-        //      if (Session::getCurrentInterface() == 'central') {
-        //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
-        //      }
-        $addwhere = "";
+        //        $restrict_user = '1';
+        //        // Only personal on central so do not keep it
+        //        //      if (Session::getCurrentInterface() == 'central') {
+        //        //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
+        //        //      }
+        //        $addwhere = "";
+        //        if (count($itilcategories_id) > 0) {
+        //            $cats = implode("','", $itilcategories_id);
+        //            $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
+        //        }
+        //
+        //        $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
+        //                                    OR `glpi_reminders`.`begin_view_date` < '$now')
+        //                              AND (`glpi_reminders`.`end_view_date` IS NULL
+        //                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
+        //
+        //        $query = "SELECT `glpi_reminders`.`id`,
+        //                       `glpi_reminders`.`name`
+        //                   FROM `glpi_reminders` "
+        //            . Reminder::addVisibilityJoins()
+        //            . "LEFT JOIN `" . $this->getTable() . "`"
+        //            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+        //            . "WHERE $restrict_user
+        //                        $addwhere
+        //                         $restrict_visibility ";
+        //
+        //        $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
+        //
+        //        $query .= "AND `" . $this->getTable() . "`.`type` = 1
+        //                   ORDER BY `glpi_reminders`.`name`";
+
+
+        $visibility_criteria = [
+            [
+                'OR' => [
+                    ['glpi_reminders.begin_view_date' => null],
+                    ['glpi_reminders.begin_view_date' => ['<', $now]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_reminders.end_view_date' => null],
+                    ['glpi_reminders.end_view_date' => ['>', $now]],
+                ],
+            ],
+        ];
+
+        $criteria = [
+            'SELECT' => [
+                'glpi_reminders.id',
+                'glpi_reminders.name',
+            ],
+            'FROM' => 'glpi_reminders',
+            'LEFT JOIN' => [
+                $this->getTable() => [
+                    'ON' => [
+                        $this->getTable() => 'reminders_id',
+                        'glpi_reminders' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                $this->getTable() . '.type' => 1,
+                $visibility_criteria,
+            ],
+            'ORDERBY' => 'glpi_reminders.name',
+        ];
+
+        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+
         if (count($itilcategories_id) > 0) {
-            $cats = implode("','", $itilcategories_id);
-            $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
+        } else {
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => 0];
         }
 
-        $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
-                                    OR `glpi_reminders`.`begin_view_date` < '$now')
-                              AND (`glpi_reminders`.`end_view_date` IS NULL
-                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
+        $iterator = $DB->request($criteria);
 
-        $query = "SELECT `glpi_reminders`.`id`,
-                       `glpi_reminders`.`name`
-                   FROM `glpi_reminders` "
-            . Reminder::addVisibilityJoins()
-            . "LEFT JOIN `" . $this->getTable() . "`"
-            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-            . "WHERE $restrict_user
-                        $addwhere
-                         $restrict_visibility ";
+        $nb = count($iterator);
 
-        $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
-
-        $query .= "AND `" . $this->getTable() . "`.`type` = 1
-                   ORDER BY `glpi_reminders`.`name`";
-
-        $result = $DB->doQuery($query);
-        $nb = $DB->numrows($result);
         if ($nb) {
             $wl .= '<div id="nt_maint-container">';
             $wl .= '<ul id="nt_maint">';
             $i = 1;
             $firstdescription = "";
 
-            while ($row = $DB->fetchArray($result)) {
+            foreach ($iterator as $row) {
                 $note = new \Reminder();
                 $note->getFromDB($row["id"]);
 
@@ -2214,39 +2591,54 @@ class Alert extends CommonDBTM
 
         $now = date('Y-m-d H:i:s');
         $wl = "";
-        $restrict_user = '1';
-        // Only personal on central so do not keep it
-        //      if (Session::getCurrentInterface() == 'central') {
-        //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
-        //      }
-        $addwhere = "";
+
+        $visibility_criteria = [
+            [
+                'OR' => [
+                    ['glpi_reminders.begin_view_date' => null],
+                    ['glpi_reminders.begin_view_date' => ['<', $now]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_reminders.end_view_date' => null],
+                    ['glpi_reminders.end_view_date' => ['>', $now]],
+                ],
+            ],
+        ];
+
+        $criteria = [
+            'SELECT' => [
+                'glpi_reminders.id',
+                'glpi_reminders.name',
+            ],
+            'FROM' => 'glpi_reminders',
+            'LEFT JOIN' => [
+                $this->getTable() => [
+                    'ON' => [
+                        $this->getTable() => 'reminders_id',
+                        'glpi_reminders' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                $this->getTable() . '.type' => 2,
+                $visibility_criteria,
+            ],
+            'ORDERBY' => 'glpi_reminders.name',
+        ];
+
+        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+
         if (count($itilcategories_id) > 0) {
-            $cats = implode("','", $itilcategories_id);
-            $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
+        } else {
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => 0];
         }
 
-        $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
-                                    OR `glpi_reminders`.`begin_view_date` < '$now')
-                              AND (`glpi_reminders`.`end_view_date` IS NULL
-                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
+        $iterator = $DB->request($criteria);
 
-        $query = "SELECT `glpi_reminders`.`id`,
-                       `glpi_reminders`.`name`
-                   FROM `glpi_reminders` "
-            . Reminder::addVisibilityJoins()
-            . "LEFT JOIN `" . $this->getTable() . "`"
-            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-            . "WHERE $restrict_user
-                        $addwhere
-                         $restrict_visibility ";
-
-        $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
-
-        $query .= "AND `" . $this->getTable() . "`.`type` = 2
-                   ORDER BY `glpi_reminders`.`name`";
-
-        $result = $DB->doQuery($query);
-        $nb = $DB->numrows($result);
+        $nb = count($iterator);
 
         if ($nb) {
             $wl .= '<div id="nt_info-container">';
@@ -2254,7 +2646,7 @@ class Alert extends CommonDBTM
             $i = 1;
             $firstdescription = "";
 
-            while ($row = $DB->fetchArray($result)) {
+            foreach ($iterator as $row) {
                 $note = new \Reminder();
                 $note->getFromDB($row["id"]);
 
@@ -2376,50 +2768,92 @@ class Alert extends CommonDBTM
         $now = date('Y-m-d H:i:s');
 
         $wl = "";
-        $restrict_user = '1';
 
-        $addwhere = "";
-        if (count($itilcategories_id) > 0) {
-            $cats = implode("','", $itilcategories_id);
-            $addwhere = " AND `glpi_plugin_mydashboard_alerts`.`itilcategories_id` IN ('" . $cats . "')";
-        }
+        //        $query = "SELECT `glpi_reminders`.`id`,
+        //                       `glpi_reminders`.`name`,
+        //                       `glpi_reminders`.`begin_view_date`,
+        //                       `glpi_reminders`.`end_view_date`,
+        //                       `" . $this->getTable() . "`.`impact`
+        //                   FROM `glpi_reminders` "
+        //            . Reminder::addVisibilityJoins()
+        //            . "LEFT JOIN `" . $this->getTable() . "`"
+        //            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+        //            . "WHERE $restrict_user
+        //                        $addwhere
+        //                         $restrict_visibility ";
+        //
+        //        if ($public == 0) {
+        //            $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
+        //        } else {
+        //            $query .= "AND `" . $this->getTable() . "`.`is_public`";
+        //        }
+        //
+        //        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL
+        //                 AND `" . $this->getTable() . "`.`type` = 0
+        //                   ORDER BY `glpi_reminders`.`name`";
+        //
+        $visibility_criteria = [
+            [
+                'OR' => [
+                    ['glpi_reminders.begin_view_date' => null],
+                    ['glpi_reminders.begin_view_date' => ['<', $now]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_reminders.end_view_date' => null],
+                    ['glpi_reminders.end_view_date' => ['>', $now]],
+                ],
+            ],
+        ];
 
-        $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
-                                    OR `glpi_reminders`.`begin_view_date` < '$now')
-                              AND (`glpi_reminders`.`end_view_date` IS NULL
-                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
-
-        $query = "SELECT `glpi_reminders`.`id`,
-                       `glpi_reminders`.`name`,
-                       `glpi_reminders`.`begin_view_date`,
-                       `glpi_reminders`.`end_view_date`,
-                       `" . $this->getTable() . "`.`impact`
-                   FROM `glpi_reminders` "
-            . Reminder::addVisibilityJoins()
-            . "LEFT JOIN `" . $this->getTable() . "`"
-            . "ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-            . "WHERE $restrict_user
-                        $addwhere
-                         $restrict_visibility ";
+        $criteria = [
+            'SELECT' => [
+                'glpi_reminders.id',
+                'glpi_reminders.name',
+                'glpi_reminders.begin_view_date',
+                'glpi_reminders.end_view_date',
+                $this->getTable() . '.impact',
+            ],
+            'FROM' => 'glpi_reminders',
+            'LEFT JOIN' => [
+                $this->getTable() => [
+                    'ON' => [
+                        $this->getTable() => 'reminders_id',
+                        'glpi_reminders' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'NOT'       => [ $this->getTable() . '.impact' => null],
+                $this->getTable() . '.type' => 0,
+                $visibility_criteria,
+            ],
+            'ORDERBY' => 'glpi_reminders.name',
+        ];
 
         if ($public == 0) {
-            $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
-        } else {
-            $query .= "AND `" . $this->getTable() . "`.`is_public`";
-        }
-        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL
-                 AND `" . $this->getTable() . "`.`type` = 0
-                   ORDER BY `glpi_reminders`.`name`";
+            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
 
-        $result = $DB->doQuery($query);
-        $nb = $DB->numrows($result);
+            if (count($itilcategories_id) > 0) {
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
+            } else {
+                $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => 0];
+            }
+        } else {
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.is_public' => 1];
+        }
+
+        $iterator = $DB->request($criteria);
+
+        $nb = count($iterator);
 
         if ($nb) {
             $wl .= '<div id="nt_alert-container">';
             $wl .= '<ul id="nt_alert">';
             $i = 1;
             $firstdescription = "";
-            while ($row = $DB->fetchArray($result)) {
+            foreach ($iterator as $row) {
                 $note = new \Reminder();
                 $note->getFromDB($row["id"]);
 
@@ -2537,49 +2971,91 @@ class Alert extends CommonDBTM
      */
     public function getAlertSummary($public = 0, $force = 0)
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
         $now = date('Y-m-d H:i:s');
 
-        $restrict_user = '1';
-        // Only personal on central so do not keep it
-        //      if (Session::getCurrentInterface() == 'central') {
-        //         $restrict_user = "`glpi_reminders`.`users_id` <> '".Session::getLoginUserID()."'";
-        //      }
+        $wl = "";
 
-        $restrict_visibility = "AND (`glpi_reminders`.`begin_view_date` IS NULL
-                                    OR `glpi_reminders`.`begin_view_date` < '$now')
-                              AND (`glpi_reminders`.`end_view_date` IS NULL
-                                   OR `glpi_reminders`.`end_view_date` > '$now') ";
+        //        $query = "SELECT `glpi_reminders`.`id`,
+        //                       `glpi_reminders`.`name`,
+        //                       `glpi_reminders`.`text`,
+        //                       `glpi_reminders`.`date`,
+        //                       `glpi_reminders`.`begin_view_date`,
+        //                       `glpi_reminders`.`end_view_date`,
+        //                       `" . $this->getTable() . "`.`impact`,
+        //                       `" . $this->getTable() . "`.`is_public`
+        //                   FROM `glpi_reminders` "
+        //            . Reminder::addVisibilityJoins()
+        //            . " LEFT JOIN `" . $this->getTable() . "`"
+        //            . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
+        //            . " WHERE $restrict_user
+        //                         $restrict_visibility ";
+        //
+        //        if ($public == 0) {
+        //            $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
+        //        } else {
+        //            $query .= "AND `" . $this->getTable() . "`.`is_public`";
+        //        }
+        //        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL
+        //                 AND `" . $this->getTable() . "`.`type` = 0
+        //                   ORDER BY `glpi_reminders`.`name`";
+        //
+        //
 
-        $query = "SELECT `glpi_reminders`.`id`,
-                       `glpi_reminders`.`name`,
-                       `glpi_reminders`.`text`,
-                       `glpi_reminders`.`date`,
-                       `glpi_reminders`.`begin_view_date`,
-                       `glpi_reminders`.`end_view_date`,
-                       `" . $this->getTable() . "`.`impact`,
-                       `" . $this->getTable() . "`.`is_public`
-                   FROM `glpi_reminders` "
-            . Reminder::addVisibilityJoins()
-            . " LEFT JOIN `" . $this->getTable() . "`"
-            . " ON `glpi_reminders`.`id` = `" . $this->getTable() . "`.`reminders_id`"
-            . " WHERE $restrict_user
-                         $restrict_visibility ";
+        $visibility_criteria = [
+            [
+                'OR' => [
+                    ['glpi_reminders.begin_view_date' => null],
+                    ['glpi_reminders.begin_view_date' => ['<', $now]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_reminders.end_view_date' => null],
+                    ['glpi_reminders.end_view_date' => ['>', $now]],
+                ],
+            ],
+        ];
+
+        $criteria = [
+            'SELECT' => [
+                'glpi_reminders.id',
+                'glpi_reminders.name',
+                'glpi_reminders.text',
+                'glpi_reminders.date',
+                'glpi_reminders.begin_view_date',
+                'glpi_reminders.end_view_date',
+                $this->getTable() . '.impact',
+                $this->getTable() . '.is_public',
+            ],
+            'FROM' => 'glpi_reminders',
+            'LEFT JOIN' => [
+                $this->getTable() => [
+                    'ON' => [
+                        $this->getTable() => 'reminders_id',
+                        'glpi_reminders' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'NOT'       => [ $this->getTable() . '.impact' => null],
+                $this->getTable() . '.type' => 0,
+                $visibility_criteria,
+            ],
+            'ORDERBY' => 'glpi_reminders.name',
+        ];
 
         if ($public == 0) {
-            $query .= "AND " . \Reminder::addVisibilityRestrict() . "";
+            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
         } else {
-            $query .= "AND `" . $this->getTable() . "`.`is_public`";
+            $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.is_public' => 1];
         }
-        $query .= "AND `" . $this->getTable() . "`.`impact` IS NOT NULL
-                 AND `" . $this->getTable() . "`.`type` = 0
-                   ORDER BY `glpi_reminders`.`name`";
 
-        $wl = "";
-        $result = $DB->doQuery($query);
+        $iterator = $DB->request($criteria);
 
-        $nb = $DB->numrows($result);
+        $nb = count($iterator);
+
         $nb_maintenance = self::countForAlerts($public, 1);
         if ($nb || $nb_maintenance > 0) {
             $wl .= \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/mydashboard.css");
@@ -2611,7 +3087,7 @@ class Alert extends CommonDBTM
             //            });
             //            </script>";
             //            }
-            while ($row = $DB->fetchArray($result)) {
+            foreach ($iterator as $row) {
                 if ($row['impact'] == 1) {
                     $f1[] = $row;
                     $list[] = $row;
@@ -2805,7 +3281,7 @@ class Alert extends CommonDBTM
             'value' => $itilcategories_id,
             'entity' => $_SESSION['glpiactiveentities'],
             //              'entity_sons' => true,
-            'toadd' => [-1 => __('All categories', 'mydashboard')]
+            'toadd' => [-1 => __('All categories', 'mydashboard')],
         ];
         ITILCategory::dropdown($opt);
         echo "</td>";
@@ -2832,7 +3308,6 @@ class Alert extends CommonDBTM
      */
     private function showForItem($item)
     {
-
         $items_id = $item->getID();
         $item->getFromDB($items_id);
         $itemtype = $item->getType();
@@ -2843,9 +3318,9 @@ class Alert extends CommonDBTM
             echo "<th>" . Menu::getTypeName(2) . "</th>";
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo "<button type='submit' class='submit btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __(
-                    "Create a new alert",
-                    "mydashboard"
-                ) . "</button>";
+                "Create a new alert",
+                "mydashboard"
+            ) . "</button>";
             echo '<script>
             function createAlert(itemtype, items_id) {
               $conf = confirm("' . __('Create a new alert', 'mydashboard') . '");
@@ -2989,9 +3464,9 @@ class Alert extends CommonDBTM
             $display .= "</h3>";
             $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
             $display .= __(
-                    'A network alert can impact you and will avoid creating a ticket',
-                    'mydashboard'
-                ) . "</small></div>";
+                'A network alert can impact you and will avoid creating a ticket',
+                'mydashboard'
+            ) . "</small></div>";
             $display .= "<div id=\"display-sc\">";
             $alerts = new self();
             $display .= $alerts->getAlertList(0);
@@ -3013,7 +3488,7 @@ class Alert extends CommonDBTM
     public static function handleShellcommandResult(&$message, $url)
     {
         global $CFG_GLPI;
-//        Toolbox::logInfo($message);
+        //        Toolbox::logInfo($message);
         $alert = "";
         if ($message != null) {
             if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
@@ -3132,7 +3607,7 @@ class Alert extends CommonDBTM
         //}
 
         if (//!$options["download"] &&
-        !$data
+            !$data
         ) {
             curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch); // make sure we closeany current curl sessions
@@ -3145,7 +3620,7 @@ class Alert extends CommonDBTM
         //fclose($fp);
         //}
         if (//!$options["download"] &&
-        $data
+            $data
         ) {
             return $data;
         } else {
@@ -3187,7 +3662,6 @@ class Alert extends CommonDBTM
         if ($seeown == false) {
             if ($iswidget == true) {
                 if (Plugin::isPluginActive("Mydashboard")) {
-
                     $preference = new Preference();
                     if (!$preference->getFromDB(Session::getLoginUserID())) {
                         $preference->initPreferences(Session::getLoginUserID());
@@ -3223,21 +3697,19 @@ class Alert extends CommonDBTM
                             }
                         }
                     } else {
-                        $opt['itilcategories_id'] =  $params['itilcategorielvl1'];
+                        $opt['itilcategories_id'] = $params['itilcategorielvl1'];
                     }
                 }
             }
         }
 
         if ($seeown == false) {
-
             if (!isset($params['year']) && !isset($params['week'])) {
                 $params['year'] = date('Y');
                 $params['week'] = date('W');
             }
 
             if ($type == "all") {
-
                 $crits = [
                     "entities_id",
                     "is_recursive_entities",
@@ -3284,7 +3756,6 @@ class Alert extends CommonDBTM
                 //Resolved tickets
                 $total_closed = 0;
             } elseif ($type == "week") {
-
                 $crits = [
                     "entities_id",
                     "is_recursive_entities",
@@ -3310,29 +3781,51 @@ class Alert extends CommonDBTM
                 $opt['week'] = $params['week'] ?? $default['week'];
 
                 //                $params['week'] = '44';
-                $total_new = self::queryNewTicketsWeek($params['year'], $params['week']);
+                $total_new = self::commonQueryWeek($params['year'], $params['week'], StockTicketIndicator::NEWT, []);
                 //Late tickets
-                $total_due = self::queryDueTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
-                //Waiting tickets
-                $total_pend = self::queryPendingTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
-                //Processing incidents
-                $total_incpro = self::queryIncidentTicketsWeek(
+                $total_due = self::commonQueryWeek(
                     $params['year'],
                     $params['week'],
+                    StockTicketIndicator::LATET,
+                    $technicians_groups_id
+                );
+                //Waiting tickets
+                $total_pend = self::commonQueryWeek(
+                    $params['year'],
+                    $params['week'],
+                    StockTicketIndicator::PENDINGT,
+                    $technicians_groups_id
+                );
+                //Processing incidents
+                $total_incpro = self::commonQueryWeek(
+                    $params['year'],
+                    $params['week'],
+                    StockTicketIndicator::INCIDENTPROGRESST,
                     $technicians_groups_id
                 );
                 //Processing requests
-                $total_dempro = self::queryRequestTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
+                $total_dempro = self::commonQueryWeek(
+                    $params['year'],
+                    $params['week'],
+                    StockTicketIndicator::REQUESTPROGRESST,
+                    $technicians_groups_id
+                );
                 //Validate tickets
                 //            $total_validate = self::queryValidateTickets($left, $search_assign);
                 //Resolved tickets
-                $total_resolved = self::queryResolvedTicketsWeek(
+                $total_resolved = self::commonQueryWeek(
                     $params['year'],
                     $params['week'],
+                    StockTicketIndicator::SOLVEDT,
                     $technicians_groups_id
                 );
                 //Resolved tickets
-                $total_closed = self::queryClosedTicketsWeek($params['year'], $params['week'], $technicians_groups_id);
+                $total_closed = self::commonQueryWeek(
+                    $params['year'],
+                    $params['week'],
+                    StockTicketIndicator::CLOSEDT,
+                    $technicians_groups_id
+                );
             }
         }
 
@@ -3741,7 +4234,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             $stats = "";
             if ($iswidget == true
                 && Session::haveRightsOr("ticket", [\Ticket::READALL, \Ticket::READGROUP])) {
-
                 $params_header = [
                     "widgetId" => $id,
                     "name" => ($type == "all") ? __("Global indicators", "mydashboard") : __(
@@ -3754,7 +4246,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                     "criterias" => $crits,
                     "export" => false,
                     "canvas" => false,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
 
                 $stats .= Helper::getGraphHeader($params_header);
@@ -3858,7 +4350,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
             ],
-            'DISTINCT'        => true,
+            'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
@@ -3881,30 +4373,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         return $total_new;
     }
 
-    public static function queryNewTicketsWeek($year, $week)
-    {
-        global $DB;
-
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::NEWT . "
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
-
-        $result_new = $DB->doQuery($sql_new);
-        if ($result_new == false) {
-            return 0;
-        }
-        $total_new = $DB->result($result_new, 0, 'total');
-
-        if ($total_new == null) {
-            $total_new = 0;
-        }
-        return $total_new;
-    }
 
     /**
      * @param $left
@@ -3924,11 +4392,11 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS due',
             ],
-            'DISTINCT'        => true,
+            'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
-                'NOT'       => ['glpi_tickets.status' => [\Ticket::WAITING, \Ticket::SOLVED, \Ticket::CLOSED]],
+                'NOT' => ['glpi_tickets.status' => [\Ticket::WAITING, \Ticket::SOLVED, \Ticket::CLOSED]],
                 'time_to_resolve' => ['<', QueryFunction::now()],
             ],
         ];
@@ -3948,32 +4416,49 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         return $total_due;
     }
 
-    public static function queryDueTicketsWeek($year, $week, $groups_id)
+    public static function commonQueryWeek($year, $week, $indicator_id, $technicians_groups_id)
     {
         global $DB;
 
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::LATET . "
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
-                   AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
+        $criteria = [
+            'SELECT' => [
+                'SUM' => 'nbTickets AS total',
+            ],
+            'FROM' => 'glpi_plugin_mydashboard_stockticketindicators',
+            'WHERE' => [
+                'indicator_id' => $indicator_id,
+                [
+                    ['week' => $week],
+                    ['year' => $year],
+                ],
 
-        $result_new = $DB->doQuery($sql_new);
-        if ($result_new == false) {
+            ],
+        ];
+
+        if (is_array($technicians_groups_id)) {
+            $technicians_groups_id = array_filter($technicians_groups_id);
+            if (count($technicians_groups_id) > 0) {
+                $criteria['WHERE'] = $criteria['WHERE'] + ['groups_id' => $technicians_groups_id];
+            }
+        }
+
+        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+            'glpi_plugin_mydashboard_stockticketindicators'
+        );
+
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) == 0) {
             return 0;
         }
-        $total_new = $DB->result($result_new, 0, 'total');
 
-        if ($total_new == null) {
-            $total_new = 0;
+        foreach ($iterator as $data) {
+            $total = $data['total'];
         }
 
-        return $total_new;
+        return $total;
     }
+
 
     /**
      * @param $left
@@ -3987,15 +4472,15 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-//        $dbu = new DbUtils();
-//        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-//                  FROM glpi_tickets
-//                  $left
-//                  WHERE $criteria
-//                        AND ($search_assign)
-//                        $category_criteria
-//                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . " "
-//            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        //        $dbu = new DbUtils();
+        //        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+        //                  FROM glpi_tickets
+        //                  $left
+        //                  WHERE $criteria
+        //                        AND ($search_assign)
+        //                        $category_criteria
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . " "
+        //            . $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -4003,7 +4488,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
             ],
-            'DISTINCT'        => true,
+            'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
@@ -4026,33 +4511,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         return $total_pend;
     }
 
-    public static function queryPendingTicketsWeek($year, $week, $groups_id)
-    {
-        global $DB;
-
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::PENDINGT . "
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
-                   AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
-
-        $result_new = $DB->doQuery($sql_new);
-
-        if ($result_new == false) {
-            return 0;
-        }
-
-        $total_new = $DB->result($result_new, 0, 'total');
-        if ($total_new == null) {
-            $total_new = 0;
-        }
-        return $total_new;
-    }
-
 
     /**
      * @param $left
@@ -4072,15 +4530,15 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             $statuses = [\Ticket::SOLVED, \Ticket::CLOSED];
         }
 
-//        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-//                  FROM glpi_tickets
-//                  $left
-//                  WHERE $criteria
-//                        AND ($search_assign)
-//                        $category_criteria
-//                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
-//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
-//        $sql_incpro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        //        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+        //                  FROM glpi_tickets
+        //                  $left
+        //                  WHERE $criteria
+        //                        AND ($search_assign)
+        //                        $category_criteria
+        //                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
+        //        $sql_incpro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -4088,7 +4546,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
             ],
-            'DISTINCT'        => true,
+            'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
@@ -4112,42 +4570,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         return $total_incpro;
     }
 
-    public static function queryIncidentTicketsWeek($year, $week, $groups_id)
-    {
-        global $DB;
-
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = '" . StockTicketIndicator::INCIDENTPROGRESST . "' ";
-        if (is_array($groups_id) && count($groups_id) > 0) {
-            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(
-                    ",",
-                    $groups_id
-                ) . ")  ";
-        } else {
-            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  = 0 ";
-        }
-        $sql_new .= " AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
-
-        $result_new = $DB->doQuery($sql_new);
-
-        if ($result_new == false) {
-            return 0;
-        }
-
-        $total_new = $DB->result($result_new, 0, 'total');
-
-        if ($total_new == null) {
-            $total_new = 0;
-        }
-
-        return $total_new;
-    }
-
 
     /**
      * @param $left
@@ -4161,22 +4583,22 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-//        $dbu = new DbUtils();
+        //        $dbu = new DbUtils();
 
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
         if (Session::getCurrentInterface() == 'helpdesk') {
             $statuses = [\Ticket::SOLVED, \Ticket::CLOSED];
         }
 
-//        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-//                  FROM glpi_tickets
-//                  $left
-//                  WHERE $criteria
-//                        AND ($search_assign)
-//                        $category_criteria
-//                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
-//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
-//        $sql_dempro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        //        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+        //                  FROM glpi_tickets
+        //                  $left
+        //                  WHERE $criteria
+        //                        AND ($search_assign)
+        //                        $category_criteria
+        //                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ") ";
+        //        $sql_dempro .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -4184,7 +4606,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
             ],
-            'DISTINCT'        => true,
+            'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
@@ -4208,42 +4630,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         return $total_dempro;
     }
 
-    public static function queryRequestTicketsWeek($year, $week, $groups_id)
-    {
-        global $DB;
-
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = '" . StockTicketIndicator::REQUESTPROGRESST . "' ";
-        if (is_array($groups_id) && count($groups_id) > 0) {
-            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(
-                    ",",
-                    $groups_id
-                ) . ")  ";
-        } else {
-            $sql_new .= " AND glpi_plugin_mydashboard_stockticketindicators.groups_id  = 0 ";
-        }
-        $sql_new .= " AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
-
-        $result_new = $DB->doQuery($sql_new);
-        if ($result_new == false) {
-            return 0;
-        }
-        $total_new = $DB->result($result_new, 0, 'total');
-
-
-        if ($total_new == null) {
-            $total_new = 0;
-        }
-
-        return $total_new;
-    }
-
-
     /**
      * @param $left
      * @param $criteria
@@ -4256,17 +4642,17 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
     {
         global $DB;
 
-//        $dbu = new DbUtils();
-//        $week = date('W');
-//        $year = date('Y');
-//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
-//                  FROM glpi_tickets
-//                  $left
-//                  WHERE $criteria
-//                        AND ($search_assign)
-//                        $category_criteria
-//                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . " ";
-//        $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
+        //        $dbu = new DbUtils();
+        //        $week = date('W');
+        //        $year = date('Y');
+        //        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total
+        //                  FROM glpi_tickets
+        //                  $left
+        //                  WHERE $criteria
+        //                        AND ($search_assign)
+        //                        $category_criteria
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . " ";
+        //        $sql_res .= $dbu->getEntitiesRestrictRequest("AND", "glpi_tickets");
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -4274,7 +4660,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
             ],
-            'DISTINCT'        => true,
+            'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
@@ -4295,65 +4681,6 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         }
 
         return $total_res;
-    }
-
-    public static function queryResolvedTicketsWeek($year, $week, $groups_id)
-    {
-        global $DB;
-
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::SOLVEDT . "
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
-                   AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
-
-        $result_new = $DB->doQuery($sql_new);
-
-        if ($result_new == false) {
-            return 0;
-        }
-
-        $total_new = $DB->result($result_new, 0, 'total');
-
-        if ($total_new == null) {
-            $total_new = 0;
-        }
-
-        return $total_new;
-    }
-
-
-    public static function queryClosedTicketsWeek($year, $week, $groups_id)
-    {
-        global $DB;
-
-        //New tickets
-        $dbu = new DbUtils();
-        $sql_new = "SELECT  SUM(glpi_plugin_mydashboard_stockticketindicators.nbTickets) as total
-                  FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE  `glpi_plugin_mydashboard_stockticketindicators`.`indicator_id` = " . StockTicketIndicator::CLOSEDT . "
-                  AND glpi_plugin_mydashboard_stockticketindicators.groups_id  IN (" . implode(",", $groups_id) . ")
-                   AND `glpi_plugin_mydashboard_stockticketindicators`.`week` = $week
-                    AND `glpi_plugin_mydashboard_stockticketindicators`.`year` = $year "
-            . $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_mydashboard_stockticketindicators");
-
-        $result_new = $DB->doQuery($sql_new);
-
-        if ($result_new == false) {
-            return 0;
-        }
-
-        $total_new = $DB->result($result_new, 0, 'total');
-
-        if ($total_new == null) {
-            $total_new = 0;
-        }
-
-        return $total_new;
     }
 
     public static function install(Migration $migration)

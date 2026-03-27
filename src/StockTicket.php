@@ -30,6 +30,7 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use CommonITILObject;
 use DBConnection;
+use Glpi\DBAL\QueryExpression;
 use Migration;
 
 class StockTicket extends CommonDBTM
@@ -44,40 +45,107 @@ class StockTicket extends CommonDBTM
             $year  = $year - 1;
         }
         $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stocktickets
-                  WHERE glpi_plugin_mydashboard_stocktickets.date = '$year-$month-$nbdays'";
-        $results = $DB->doQuery($query);
-        $data    = $DB->fetchArray($results);
-        if ($data["count"] > 0) {
-            die("stock tickets of $year-$month is already filled");
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'id AS count',
+            ],
+            'FROM' => 'glpi_plugin_mydashboard_stocktickets',
+            'WHERE' => [
+                'date' => "$year-$month-$nbdays",
+            ],
+        ];
+        $iterator = $DB->request($criteria);
+        foreach ($iterator as $data) {
+            if ($data["count"] > 0) {
+                die("stock tickets of $year-$month is already filled");
+            }
         }
         echo "fill table <glpi_plugin_mydashboard_stocktickets> with datas of $year-$month";
         $nbdays     = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $is_deleted = "`glpi_tickets`.`is_deleted` = 0";
-        $query      = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id` FROM `glpi_tickets`
-                        WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                        AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_tickets`.`entities_id`";
-        $results    = $DB->doQuery($query);
-        while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`)
-                        VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+//        $query      = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id` FROM `glpi_tickets`
+//                        WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
+//                        AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")))
+//                        GROUP BY `glpi_tickets`.`entities_id`";
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS count',
+                'glpi_tickets.entities_id',
+            ],
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'date' => ['<=', "$year-$month-$nbdays 23:59:59"]
+            ],
+            'GROUPBY' => 'glpi_tickets.entities_id'
+        ];
+        $iterator = $DB->request($criteria);
+        foreach ($iterator as $data) {
+            $DB->insert(
+                'glpi_plugin_mydashboard_stocktickets',
+                ['id' => NULL,
+                    'date' => "$year-$month-$nbdays",
+                    'nbstocktickets' => $data['count'],
+                    'entities_id' => $data['entities_id']]
+            );
         }
-        $query   = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id`,`glpi_groups_tickets`.`groups_id` FROM `glpi_tickets`
-                 LEFT JOIN `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
-        $results = $DB->doQuery($query);
-        while ($data = $DB->fetchArray($results)) {
+
+//        $query   = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id`,`glpi_groups_tickets`.`groups_id` FROM `glpi_tickets`
+//                 LEFT JOIN `glpi_groups_tickets` ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE $is_deleted AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
+//                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))) GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS count',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                'date' => ['<=', "$year-$month-$nbdays 23:59:59"]
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id'
+        ];
+
+        $iterator = $DB->request($criteria);
+        foreach ($iterator as $data) {
             $groups_id = $data["groups_id"];
             if (!empty($groups_id)) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`,`groups_id`)
-                     VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . "," . $data['groups_id'] . ")";
-                $DB->doQuery($query);
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stocktickets',
+                    ['id' => NULL,
+                        'date' => "$year-$month-$nbdays",
+                        'nbstocktickets' => $data['count'],
+                        'entities_id' => $data['entities_id'],
+                        'groups_id' => $data['groups_id']
+                    ]
+                );
+
             } else {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`,`groups_id`)
-                     VALUES (NULL,'$year-$month-$nbdays'," . $data['count'] . "," . $data['entities_id'] . ",0)";
-                $DB->doQuery($query);
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stocktickets',
+                    ['id' => NULL,
+                        'date' => "$year-$month-$nbdays",
+                        'nbstocktickets' => $data['count'],
+                        'entities_id' => $data['entities_id'],
+                        'groups_id' => 0
+                    ]
+                );
             }
         }
     }
@@ -92,31 +160,90 @@ class StockTicket extends CommonDBTM
         $currentmonth = date("m");
         $currentyear  = date("Y");
         $previousyear = $currentyear - 1;
-        $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id` "
-            . "FROM `glpi_tickets` "
-            . "WHERE `glpi_tickets`.`is_deleted`= 0 "
-            . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
-            . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
-            . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
-        $results      = $DB->doQuery($query);
-        while ($data = $DB->fetchArray($results)) {
+//        $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
+//                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id` "
+//            . "FROM `glpi_tickets` "
+//            . "WHERE `glpi_tickets`.`is_deleted`= 0 "
+//            . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
+//            . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
+//            . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
+//        $results      = $DB->doQuery($query);
+
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+        $criteria = [
+            'SELECT' => [
+                new QueryExpression(
+                    "DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y-%m') AS month"
+                ),
+                new QueryExpression(
+                    "DATE_FORMAT(" . $DB->quoteName("date") . ", '%b %Y') AS monthname"
+                ),
+                'glpi_tickets.entities_id',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                [
+                    ['date' => ['>=', "$previousyear-$currentmonth-01 00:00:00"]],
+                    ['date' => ['<', "$currentyear-$currentmonth-01 00:00:00"]],
+                ]
+             ],
+            'GROUPBY' => 'month, entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
+
             [$year, $month] = explode('-', $data['month']);
             $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
             $entities_id = $data["entities_id"];
-            $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-            $results2    = $DB->doQuery($query);
-            $data2       = $DB->fetchArray($results2);
-            $countTicket = $data2['count'];
+
+//            $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
+//                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id
+//                  AND (
+//                      (
+//                      (`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
+//                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . ")
+//                  )
+//                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
+//                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
+
+            $criteria = [
+                'SELECT' => [
+                    'COUNT' => 'id AS count',
+                ],
+                'FROM' => 'glpi_tickets',
+                'WHERE' => [
+                    $is_deleted,
+                    'entities_id' => $entities_id,
+                    ['OR'         =>
+                        [
+                            ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                            ['status' => \Ticket::getNotSolvedStatusArray()],
+                        ],
+                        [
+                            ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                            ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                        ],
+                    ],
+                ],
+            ];
+            $iterator = $DB->request($criteria);
+            foreach ($iterator as $data2) {
+                $countTicket = $data2['count'];
+            }
             if ($countTicket > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`date`,`nbstocktickets`,`entities_id`)
-                              VALUES (NULL,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                $DB->doQuery($query);
+
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stocktickets',
+                    ['id' => NULL,
+                        'date' => "$year-$month-$nbdays",
+                        'nbstocktickets' => $countTicket,
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
             }
         }
     }
@@ -152,9 +279,16 @@ class StockTicket extends CommonDBTM
                 $data2       = $DB->fetchArray($results2);
                 $countTicket = $data2['count'];
                 if ($countTicket > 0) {
-                    $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`)
-                              VALUES (NULL,$groups_id,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                    $DB->doQuery($query);
+
+                    $DB->insert(
+                        'glpi_plugin_mydashboard_stocktickets',
+                        ['id' => NULL,
+                            'date' => "$year-$month-$nbdays",
+                            'nbstocktickets' => $countTicket,
+                            'entities_id' => $entities_id,
+                            'groups_id' => $groups_id,
+                        ]
+                    );
                 }
             } else {
                 $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
@@ -168,9 +302,17 @@ class StockTicket extends CommonDBTM
                 $data2       = $DB->fetchArray($results2);
                 $countTicket = $data2['count'];
                 if ($countTicket > 0) {
-                    $query = "INSERT INTO `glpi_plugin_mydashboard_stocktickets` (`id`,`groups_id`,`date`,`nbstocktickets`,`entities_id`)
-                              VALUES (NULL,0,'$year-$month-$nbdays'," . $countTicket . "," . $entities_id . ")";
-                    $DB->doQuery($query);
+
+                    $DB->insert(
+                        'glpi_plugin_mydashboard_stocktickets',
+                        ['id' => NULL,
+                            'date' => "$year-$month-$nbdays",
+                            'nbstocktickets' => $countTicket,
+                            'entities_id' => $entities_id,
+                            'groups_id' => 0,
+                        ]
+                    );
+
                 }
             }
         }

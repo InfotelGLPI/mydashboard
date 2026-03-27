@@ -404,9 +404,9 @@ class Ticket extends CommonGLPI
                     ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_tickets.users_id_validate' => Session::getLoginUserID(),
+                        'glpi_ticketvalidations.users_id_validate' => Session::getLoginUserID(),
                         'glpi_ticketvalidations.status' => CommonITILValidation::WAITING,
-                        'glpi_tickets.status' => ['<>', [\Ticket::SOLVED, \Ticket::CLOSED]]
+                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                     ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(

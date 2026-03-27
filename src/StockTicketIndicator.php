@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -29,18 +30,17 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DateTime;
 use DBConnection;
-use GlpiPlugin\Mydashboard\Reports\Ticket;
 use Migration;
 
 class StockTicketIndicator extends CommonDBTM
 {
-    const NEWT              = 1;
-    const LATET             = 2;
-    const PENDINGT          = 3;
-    const INCIDENTPROGRESST = 4;
-    const REQUESTPROGRESST  = 5;
-    const SOLVEDT           = 6;
-    const CLOSEDT           = 7;
+    public const NEWT              = 1;
+    public const LATET             = 2;
+    public const PENDINGT          = 3;
+    public const INCIDENTPROGRESST = 4;
+    public const REQUESTPROGRESST  = 5;
+    public const SOLVEDT           = 6;
+    public const CLOSEDT           = 7;
 
     public function cronMydashboardInfotelUpdateStockTicketIndicator($type = "week")
     {
@@ -55,14 +55,26 @@ class StockTicketIndicator extends CommonDBTM
                 $dt   = new DateTime('December 28th, ' . $year);
                 $week = $dt->format('W');
             }
-            //      $nbdays  = date("t", mktime(0, 0, 0, $month, 1, $year));
-            $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stockticketindicators
-                  WHERE glpi_plugin_mydashboard_stockticketindicators.year = '$year'
-                      AND glpi_plugin_mydashboard_stockticketindicators.week = '$week'";
-            $results = $DB->doQuery($query);
-            $data    = $DB->fetchArray($results);
-            if ($data["count"] > 0) {
-                die("stock tickets of $year week $week is already filled");
+
+//            $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stockticketindicators
+//                  WHERE glpi_plugin_mydashboard_stockticketindicators.year = '$year'
+//                      AND glpi_plugin_mydashboard_stockticketindicators.week = '$week'";
+
+            $criteria = [
+                'SELECT' => [
+                    'COUNT' => 'id AS count',
+                ],
+                'FROM' => 'glpi_plugin_mydashboard_stockticketindicators',
+                'WHERE' => [
+                    'year' => $year,
+                    'week' => $week,
+                ],
+            ];
+            $iterator = $DB->request($criteria);
+            foreach ($iterator as $data) {
+                if ($data["count"] > 0) {
+                    die("stock tickets of $year week $week is already filled");
+                }
             }
             echo "fill table with datas of $year week $week";
         }
@@ -112,9 +124,18 @@ class StockTicketIndicator extends CommonDBTM
                         GROUP BY `glpi_tickets`.`entities_id`";
         $results = $DB->doQuery($sql_new);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::NEWT . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['total'],
+                    'indicator_id' => self::NEWT,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
         }
 
 
@@ -147,9 +168,19 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_due);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['due'] . "," . self::LATET . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['due'],
+                    'indicator_id' => self::LATET,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
+
         }
 
         $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
@@ -171,10 +202,19 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_due);
         while ($data = $DB->fetchArray($results)) {
-            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['due'] . "," . self::LATET . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-                $DB->doQuery($query);
+            if (isset($data['groups_id']) && $data['groups_id'] > 0) {
+
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stockticketindicators',
+                    ['id' => NULL,
+                        'year' => $year,
+                        'week' => $week,
+                        'nbTickets' => $data['due'],
+                        'indicator_id' => self::LATET,
+                        'groups_id' => $data['groups_id'],
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
             }
         }
 
@@ -204,9 +244,19 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_pend);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::PENDINGT . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['total'],
+                    'indicator_id' => self::PENDINGT,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
+
         }
 
         $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
@@ -226,10 +276,20 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_pend);
         while ($data = $DB->fetchArray($results)) {
-            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::PENDINGT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-                $DB->doQuery($query);
+            if (isset($data['groups_id']) && $data['groups_id'] > 0) {
+
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stockticketindicators',
+                    ['id' => NULL,
+                        'year' => $year,
+                        'week' => $week,
+                        'nbTickets' => $data['total'],
+                        'indicator_id' => self::PENDINGT,
+                        'groups_id' => $data['groups_id'],
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
+
             }
         }
 
@@ -263,9 +323,18 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_incpro);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::INCIDENTPROGRESST . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['total'],
+                    'indicator_id' => self::INCIDENTPROGRESST,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
         }
 
         $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
@@ -286,9 +355,18 @@ class StockTicketIndicator extends CommonDBTM
         $results = $DB->doQuery($sql_incpro);
         while ($data = $DB->fetchArray($results)) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::INCIDENTPROGRESST . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-                $DB->doQuery($query);
+
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stockticketindicators',
+                    ['id' => NULL,
+                        'year' => $year,
+                        'week' => $week,
+                        'nbTickets' => $data['total'],
+                        'indicator_id' => self::INCIDENTPROGRESST,
+                        'groups_id' => $data['groups_id'],
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
             }
         }
 
@@ -321,9 +399,18 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_dempro);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::REQUESTPROGRESST . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['total'],
+                    'indicator_id' => self::REQUESTPROGRESST,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
         }
 
         $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
@@ -344,9 +431,17 @@ class StockTicketIndicator extends CommonDBTM
         $results = $DB->doQuery($sql_dempro);
         while ($data = $DB->fetchArray($results)) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::REQUESTPROGRESST . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-                $DB->doQuery($query);
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stockticketindicators',
+                    ['id' => NULL,
+                        'year' => $year,
+                        'week' => $week,
+                        'nbTickets' => $data['total'],
+                        'indicator_id' => self::REQUESTPROGRESST,
+                        'groups_id' => $data['groups_id'],
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
             }
 
         }
@@ -376,9 +471,18 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_res);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::SOLVEDT . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['total'],
+                    'indicator_id' => self::SOLVEDT,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
         }
 
         $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
@@ -397,10 +501,19 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_res);
         while ($data = $DB->fetchArray($results)) {
-            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::SOLVEDT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-                $DB->doQuery($query);
+            if (isset($data['groups_id']) && $data['groups_id'] > 0) {
+
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stockticketindicators',
+                    ['id' => NULL,
+                        'year' => $year,
+                        'week' => $week,
+                        'nbTickets' => $data['total'],
+                        'indicator_id' => self::SOLVEDT,
+                        'groups_id' => $data['groups_id'],
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
             }
         }
 
@@ -430,9 +543,19 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_res);
         while ($data = $DB->fetchArray($results)) {
-            $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::CLOSEDT . ",0," . $data['entities_id'] . ")";
-            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_plugin_mydashboard_stockticketindicators',
+                ['id' => NULL,
+                    'year' => $year,
+                    'week' => $week,
+                    'nbTickets' => $data['total'],
+                    'indicator_id' => self::CLOSEDT,
+                    'groups_id' => 0,
+                    'entities_id' => $data['entities_id'],
+                ]
+            );
+
         }
 
         $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
@@ -451,10 +574,19 @@ class StockTicketIndicator extends CommonDBTM
 
         $results = $DB->doQuery($sql_res);
         while ($data = $DB->fetchArray($results)) {
-            if (isset($data['groups_id'])&& $data['groups_id'] > 0) {
-                $query = "INSERT INTO `glpi_plugin_mydashboard_stockticketindicators` (`id`,`year`,`week`,`nbTickets`,`indicator_id`,`groups_id`,`entities_id`)
-                        VALUES (NULL,$year, $week," . $data['total'] . "," . self::CLOSEDT . "," . $data['groups_id'] . "," . $data['entities_id'] . ")";
-                $DB->doQuery($query);
+            if (isset($data['groups_id']) && $data['groups_id'] > 0) {
+
+                $DB->insert(
+                    'glpi_plugin_mydashboard_stockticketindicators',
+                    ['id' => NULL,
+                        'year' => $year,
+                        'week' => $week,
+                        'nbTickets' => $data['total'],
+                        'indicator_id' => self::CLOSEDT,
+                        'groups_id' => $data['groups_id'],
+                        'entities_id' => $data['entities_id'],
+                    ]
+                );
             }
         }
 
