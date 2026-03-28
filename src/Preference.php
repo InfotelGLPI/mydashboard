@@ -418,13 +418,19 @@ class Preference extends CommonDBTM
             $migration->migrationOneTable($table);
         }
 
-        $query  = "SELECT DATA_TYPE
-               FROM INFORMATION_SCHEMA.COLUMNS
-               WHERE TABLE_SCHEMA = '$DB->dbdefault' AND
-                    TABLE_NAME = 'glpi_plugin_mydashboard_preferences' AND
-                    COLUMN_NAME = 'prefered_group'";
-        $result = $DB->doQuery($query);
-        while ($data = $DB->fetchAssoc($result)) {
+        $criteria = [
+            'SELECT' => [
+                'DATA_TYPE',
+            ],
+            'FROM'   => 'information_schema.columns',
+            'WHERE'  => [
+                'table_schema' => $DB->dbdefault,
+                'table_name'   => 'glpi_plugin_mydashboard_preferences',
+                'column_name'  => ['prefered_group'],
+            ],
+        ];
+        $iterator = $DB->request($criteria);
+        foreach ($iterator as $data) {
             $type = $data["DATA_TYPE"];
         }
 

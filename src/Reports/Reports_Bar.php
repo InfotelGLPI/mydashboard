@@ -237,26 +237,25 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "1":
                 $name = 'BacklogBarChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'requesters_groups_id',
-                        'type',
                         'locations_id',
                     ];
-                    $onclick = 1;
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'type',
-                        'locations_id',
+                    $specific_criterias = [
                         'requesters_groups_id',
+                        'locations_id',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -265,7 +264,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -352,24 +351,25 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "8":
                 $name = 'TimeByTechChart';
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'type',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'year',
                         'limit',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'type',
+                    $specific_criterias = [
                         'year',
                         'limit',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -378,7 +378,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $time_per_tech = self::getTimePerTech($params);
 
@@ -447,28 +447,29 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "15":
                 $name = 'TopTenTicketCategoriesBarChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'requesters_groups_id',
-                        'technicians_groups_id',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'filter_date',
-                        'entities_id',
-                        'is_recursive_entities',
-                        'type',
+                        'requesters_groups_id',
                         'limit',
                     ];
-                    $onclick = 1;
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
+                    $specific_criterias = [
+                        'filter_date',
                         'requesters_groups_id',
-                        'type',
-                        'year',
                         'limit',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
+
 
                 $params = [
                     "preferences" => $preferences,
@@ -476,7 +477,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -578,25 +579,25 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "21":
                 $name = 'TicketsByTechChart';
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
-                        'type',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'year',
                         'limit',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'type',
+                    $specific_criterias = [
                         'year',
                         'limit',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -605,7 +606,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $tickets_per_tech = self::getTicketsPerTech($params);
 
@@ -671,21 +672,23 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "23":
                 $name = 'AverageBarChart';
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'year',
-                        'type',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
+                    $specific_criterias = [
                         'year',
-                        'type',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -693,7 +696,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $currentyear = $opt["year"] ?? $default["year"];
                 $currentmonth = date("m");
@@ -836,28 +839,26 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "24":
                 $name = 'TicketByTechsBarChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'filter_date',
-                        'type',
                         'limit',
                     ];
-                    $onclick = 1;
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'year',
-                        'type',
+                    $specific_criterias = [
+                        'filter_date',
                         'limit',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
-                //                $opt['begin'] ??= date('Y-m-d H:i:s', strtotime('-1 year'));
-                //                ;
-                //                $opt['end'] ??= date('Y-m-d H:i:s');
 
                 $params = [
                     "preferences" => $preferences,
@@ -865,7 +866,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -972,21 +973,16 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "35":
                 $name = 'AgeBarChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'type',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'itilcategories_id',
                     ];
-                    $onclick = 1;
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['type'];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -994,7 +990,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
@@ -1270,21 +1266,16 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "36":
                 $name = 'TicketsByPriorityBarChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'type',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'itilcategories_id',
                     ];
-                    $onclick = 1;
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['type'];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -1292,7 +1283,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -1383,21 +1374,16 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "37":
                 $name = 'TicketsByStatusBarChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'type',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'itilcategories_id',
                     ];
-                    $onclick = 1;
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['type'];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -1405,7 +1391,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -1517,7 +1503,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -1823,14 +1809,34 @@ class Reports_Bar extends CommonDBTM
 
             case $this->getType() . "39":
                 $name = 'ResponsivenessRollingPendingByYear';
-                $criterias = ['requesters_groups_id', 'year', 'type'];
+
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'requesters_groups_id',
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'requesters_groups_id',
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -2162,13 +2168,15 @@ class Reports_Bar extends CommonDBTM
                 break;
 
             case $this->getType() . "40":
-                $criterias = ['entities_id', 'is_recursive_entities'];
+
+                $criterias = Helper::getDefaultCriterias();
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -2302,13 +2310,15 @@ class Reports_Bar extends CommonDBTM
                 return $widget;
 
             case $this->getType() . "41":
-                $criterias = ['entities_id', 'is_recursive_entities'];
+
+                $criterias = Helper::getDefaultCriterias();
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -2455,19 +2465,31 @@ class Reports_Bar extends CommonDBTM
 
 
             case $this->getType() . "42":
+
                 $name = 'reportLineLifeTimeAndTakenAccountAverageByMonthHelpdesk';
 
                 $lifetime = __('Solve delay average (hour)', 'mydashboard');
                 $taken_into_account = __('Take into account average (hour)', 'mydashboard');
 
-                $criterias = [
-                    'entities_id',
-                    'is_recursive_entities',
-                    'type',
-                    'year',
-                    'multiple_locations_id',
-                    'technicians_groups_id',
-                ];
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                        'multiple_locations_id',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                        'multiple_locations_id',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
 
                 $params = [
                     "preferences" => $preferences,
@@ -2475,7 +2497,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
 
                 $lifetime_avg_ticket = self::getLifetimeOrTakeIntoAccountTicketAverage(
@@ -2566,18 +2588,23 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "43":
                 $name = 'SatisfactionByYear';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'year',
                     ];
-                    $onclick = 1;
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = ['year'];
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -2585,7 +2612,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -2745,17 +2772,12 @@ class Reports_Bar extends CommonDBTM
                 $name = 'LastSynchroInventoryChart';
 
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                    ];
                     $onclick = 1;
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $criterias = [];
                 }
 
                 $params = [
@@ -2763,7 +2785,7 @@ class Reports_Bar extends CommonDBTM
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_computers.is_deleted' => 0];
 
@@ -2851,12 +2873,23 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "45":
                 $name = 'reportBarTTORespectByMonth';
 
-                $criterias = [
-                    'entities_id',
-                    'is_recursive_entities',
-                    'type',
-                    'year',
-                ];
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
 
                 $params = [
                     "preferences" => $preferences,
@@ -2864,7 +2897,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
 
                 $tto_tickets = self::getTicketsforTTOTTR($params, "TTO");
@@ -2961,12 +2994,23 @@ class Reports_Bar extends CommonDBTM
             case $this->getType() . "46":
                 $name = 'reportBarTTRRespectByMonth';
 
-                $criterias = [
-                    'entities_id',
-                    'is_recursive_entities',
-                    'type',
-                    'year',
-                ];
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
 
                 $params = [
                     "preferences" => $preferences,
@@ -2974,7 +3018,7 @@ class Reports_Bar extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $ttr_tickets = self::getTicketsforTTOTTR($params, "TTR");
 
@@ -3070,6 +3114,7 @@ class Reports_Bar extends CommonDBTM
             default:
                 break;
         }
+        return false;
     }
 
     /**
@@ -3084,7 +3129,7 @@ class Reports_Bar extends CommonDBTM
         $time_per_tech = [];
         $months = Toolbox::getMonthsOfYearArray();
 
-        $default = Helper::manageCriteriasNew($params);
+        $default = Helper::manageCriterias($params);
 
         $limit = $params['opt']['limit'] ?? $default['limit'];
 
@@ -3255,7 +3300,7 @@ class Reports_Bar extends CommonDBTM
         $tickets_per_tech = [];
         $months = Toolbox::getMonthsOfYearArray();
 
-        $default = Helper::manageCriteriasNew($params);
+        $default = Helper::manageCriterias($params);
 
         $limit = $params['opt']['limit'] ?? $default['limit'];
 
@@ -3538,7 +3583,7 @@ class Reports_Bar extends CommonDBTM
     {
         global $DB;
 
-        $default = Helper::manageCriteriasNew($params);
+        $default = Helper::manageCriterias($params);
 
         $type = $params['type'] ?? $default['type'];
 
@@ -3794,7 +3839,7 @@ class Reports_Bar extends CommonDBTM
     {
         global $DB;
 
-        $default = Helper::manageCriteriasNew($params);
+        $default = Helper::manageCriterias($params);
 
         $technician_groups_criteria = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
@@ -3922,9 +3967,9 @@ class Reports_Bar extends CommonDBTM
         $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
         // open date
         $options = Chart::addCriteria(Chart::OPEN_DATE, 'contains', $params["selected_id"], 'AND');
-
-        $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
-
+        if (isset($params["params"]["requester_groups"])) {
+            $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+        }
         $options = Chart::groupCriteria(
             Chart::TECHNICIAN_GROUP,
             ((isset($params["params"]["is_recursive_technicians"])
@@ -3970,8 +4015,9 @@ class Reports_Bar extends CommonDBTM
 
             $options = Chart::addCriteria(Chart::OPEN_DATE, 'lessthan', $params["params"]["end"], 'AND');
         }
-
-        $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+        if (isset($params["params"]["requester_groups"])) {
+            $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+        }
         $options = Chart::groupCriteria(Chart::TECHNICIAN_GROUP, 'equals', $params["params"]["technicians_groups_id"]);
 
 

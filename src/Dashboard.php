@@ -53,7 +53,11 @@ class Dashboard extends CommonDBTM
     public static $INCIDENT_SUPERVISOR_VIEW = 4;
     public static $REQUEST_SUPERVISOR_VIEW  = 5;
     public static $HELPDESK_TECHNICIAN_VIEW = 6;
-
+    public static $ALL_PIE_CHARTS = 7;
+    public static $ALL_BAR_CHARTS = 8;
+    public static $ALL_LINE_CHARTS = 9;
+    public static $ALL_TABLE_CHARTS = 10;
+    public static $ALL_ALERT_CHARTS = 11;
     /**
      * Return the localized name of the current Type
      * Should be overloaded in each new class
@@ -141,7 +145,12 @@ class Dashboard extends CommonDBTM
             self::$HELPDESK_SUPERVISOR_VIEW => __('Helpdesk supervisor grid', 'mydashboard'),
             self::$INCIDENT_SUPERVISOR_VIEW => __('Incident supervisor grid', 'mydashboard'),
             self::$REQUEST_SUPERVISOR_VIEW  => __('Request supervisor grid', 'mydashboard'),
-            self::$HELPDESK_TECHNICIAN_VIEW => __('Helpdesk technician grid', 'mydashboard')];
+            self::$HELPDESK_TECHNICIAN_VIEW => __('Helpdesk technician grid', 'mydashboard'),
+            self::$ALL_PIE_CHARTS => __('All pie charts', 'mydashboard'),
+            self::$ALL_BAR_CHARTS => __('All bar charts', 'mydashboard'),
+            self::$ALL_LINE_CHARTS => __('All line charts', 'mydashboard'),
+            self::$ALL_TABLE_CHARTS => __('All table charts', 'mydashboard'),
+            self::$ALL_ALERT_CHARTS => __('All indicators', 'mydashboard')];
 
         return $elements;
     }
@@ -257,6 +266,146 @@ class Dashboard extends CommonDBTM
          {"id":"' . $gs7 . '","x":4,"y":8,"w":4,"h":9},
          {"id":"' . $gs8 . '","x":0,"y":17,"w":4,"h":9},
          {"id":"' . $gs9 . '","x":8,"y":19,"w":4,"h":8}]';
+        }
+
+        if ($id == self::$ALL_PIE_CHARTS) {
+            $gs1  = Widget::getGsID(Reports_Pie::class . "2");
+            $gs2  = Widget::getGsID(Reports_Pie::class . "7");
+            $gs3  = Widget::getGsID(Reports_Pie::class . "12");
+            $gs4  = Widget::getGsID(Reports_Pie::class . "13");
+            $gs5  = Widget::getGsID(Reports_Pie::class . "16");
+            $gs6  = Widget::getGsID(Reports_Pie::class . "17");
+            $gs7  = Widget::getGsID(Reports_Pie::class . "18");
+            $gs8  = Widget::getGsID(Reports_Pie::class . "20");
+            $gs9  = Widget::getGsID(Reports_Pie::class . "25");
+            $gs10 = Widget::getGsID(Reports_Pie::class . "26");
+            $gs11 = Widget::getGsID(Reports_Pie::class . "27");
+            $gs12 = Widget::getGsID(Reports_Pie::class . "30");
+            $gs13 = Widget::getGsID(Reports_Pie::class . "31");
+            $gs14 = Widget::getGsID(Reports_Pie::class . "32");
+
+            $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs3 . '","x":0,"y":19,"w":4,"h":12},
+         {"id":"' . $gs4 . '","x":0,"y":31,"w":5,"h":12},
+         {"id":"' . $gs5 . '","x":4,"y":0,"w":5,"h":8},
+         {"id":"' . $gs6 . '","x":4,"y":8,"w":4,"h":11},
+         {"id":"' . $gs7 . '","x":4,"y":19,"w":4,"h":12},
+         {"id":"' . $gs8 . '","x":5,"y":31,"w":3,"h":11},
+         {"id":"' . $gs9 . '","x":9,"y":0,"w":3,"h":8},
+         {"id":"' . $gs10 . '","x":8,"y":8,"w":4,"h":11},
+         {"id":"' . $gs11 . '","x":8,"y":19,"w":4,"h":12},
+         {"id":"' . $gs12 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs13 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs14 . '","x":8,"y":31,"w":4,"h":12}]';
+        }
+
+        if ($id == self::$ALL_BAR_CHARTS) {
+            $gs1  = Widget::getGsID(Reports_Bar::class . "1");
+            $gs2  = Widget::getGsID(Reports_Bar::class . "8");
+            $gs3  = Widget::getGsID(Reports_Bar::class . "15");
+            $gs4  = Widget::getGsID(Reports_Bar::class . "21");
+            $gs5  = Widget::getGsID(Reports_Bar::class . "23");
+            $gs6  = Widget::getGsID(Reports_Bar::class . "24");
+            $gs7  = Widget::getGsID(Reports_Bar::class . "35");
+            $gs8  = Widget::getGsID(Reports_Bar::class . "36");
+            $gs9  = Widget::getGsID(Reports_Bar::class . "37");
+            $gs10 = Widget::getGsID(Reports_Bar::class . "38");
+            $gs11 = Widget::getGsID(Reports_Bar::class . "39");
+            $gs12 = Widget::getGsID(Reports_Bar::class . "40");
+            $gs13 = Widget::getGsID(Reports_Bar::class . "41");
+            $gs14 = Widget::getGsID(Reports_Bar::class . "42");
+            $gs15 = Widget::getGsID(Reports_Bar::class . "43");
+            $gs16 = Widget::getGsID(Reports_Bar::class . "44");
+
+            $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs3 . '","x":0,"y":19,"w":4,"h":12},
+         {"id":"' . $gs4 . '","x":0,"y":31,"w":5,"h":12},
+         {"id":"' . $gs5 . '","x":4,"y":0,"w":5,"h":8},
+         {"id":"' . $gs6 . '","x":4,"y":8,"w":4,"h":11},
+         {"id":"' . $gs7 . '","x":4,"y":19,"w":4,"h":12},
+         {"id":"' . $gs8 . '","x":5,"y":31,"w":3,"h":11},
+         {"id":"' . $gs9 . '","x":9,"y":0,"w":3,"h":8},
+         {"id":"' . $gs10 . '","x":8,"y":8,"w":4,"h":11},
+         {"id":"' . $gs11 . '","x":8,"y":19,"w":4,"h":12},
+         {"id":"' . $gs12 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs13 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs14 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs15 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs16 . '","x":8,"y":31,"w":4,"h":12}]';
+        }
+
+        if ($id == self::$ALL_LINE_CHARTS) {
+            $gs1  = Widget::getGsID(Reports_Line::class . "6");
+            $gs2  = Widget::getGsID(Reports_Line::class . "22");
+            $gs3  = Widget::getGsID(Reports_Line::class . "34");
+            $gs4  = Widget::getGsID(Reports_Line::class . "35");
+            $gs5  = Widget::getGsID(Reports_Line::class . "43");
+            $gs6  = Widget::getGsID(Reports_Line::class . "44");
+            $gs7  = Widget::getGsID(Reports_Line::class . "45");
+            $gs8  = Widget::getGsID(Reports_Line::class . "46");
+            $gs9  = Widget::getGsID(Reports_Line::class . "47");
+            $gs10 = Widget::getGsID(Reports_Line::class . "48");
+            $gs11 = Widget::getGsID(Reports_Line::class . "49");
+
+            $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs3 . '","x":0,"y":19,"w":4,"h":12},
+         {"id":"' . $gs4 . '","x":0,"y":31,"w":5,"h":12},
+         {"id":"' . $gs5 . '","x":4,"y":0,"w":5,"h":8},
+         {"id":"' . $gs6 . '","x":4,"y":8,"w":4,"h":11},
+         {"id":"' . $gs7 . '","x":4,"y":19,"w":4,"h":12},
+         {"id":"' . $gs8 . '","x":5,"y":31,"w":3,"h":11},
+         {"id":"' . $gs9 . '","x":9,"y":0,"w":3,"h":8},
+         {"id":"' . $gs10 . '","x":8,"y":8,"w":4,"h":11},
+         {"id":"' . $gs11 . '","x":8,"y":19,"w":4,"h":12}]';
+        }
+
+        if ($id == self::$ALL_TABLE_CHARTS) {
+            $gs1  = Widget::getGsID(Reports_Table::class . "3");
+            $gs2  = Widget::getGsID(Reports_Table::class . "5");
+            $gs3  = Widget::getGsID(Reports_Table::class . "14");
+            $gs4  = Widget::getGsID(Reports_Table::class . "32");
+            $gs5  = Widget::getGsID(Reports_Table::class . "33");
+
+            $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs3 . '","x":0,"y":19,"w":4,"h":12},
+         {"id":"' . $gs4 . '","x":0,"y":31,"w":5,"h":12},
+         {"id":"' . $gs5 . '","x":4,"y":0,"w":5,"h":8}]';
+        }
+
+        if ($id == self::$ALL_ALERT_CHARTS) {
+            $gs1  = Widget::getGsID(Alert::class . "1");
+            $gs2  = Widget::getGsID(Alert::class . "2");
+            $gs3  = Widget::getGsID(Alert::class . "3");
+            $gs4  = Widget::getGsID(Alert::class . "6");
+            $gs5  = Widget::getGsID(Alert::class . "8");
+            $gs6  = Widget::getGsID(Alert::class . "9");
+            $gs7  = Widget::getGsID(Alert::class . "10");
+            $gs8  = Widget::getGsID(Alert::class . "4");
+            $gs9  = Widget::getGsID(Alert::class . "5");
+            $gs10 = Widget::getGsID(Alert::class . "7");
+            $gs11 = Widget::getGsID(Alert::class . "12");
+            $gs12 = Widget::getGsID(Alert::class . "13");
+            $gs13 = Widget::getGsID(Alert::class . "SC32");
+            $gs14 = Widget::getGsID(Alert::class . "SC33");
+
+            $data = '[{"id":"' . $gs1 . '","x":0,"y":0,"w":4,"h":8},
+         {"id":"' . $gs2 . '","x":0,"y":8,"w":4,"h":11},
+         {"id":"' . $gs3 . '","x":0,"y":19,"w":4,"h":12},
+         {"id":"' . $gs4 . '","x":0,"y":31,"w":5,"h":12},
+         {"id":"' . $gs5 . '","x":4,"y":0,"w":5,"h":8},
+         {"id":"' . $gs6 . '","x":4,"y":8,"w":4,"h":11},
+         {"id":"' . $gs7 . '","x":4,"y":19,"w":4,"h":12},
+         {"id":"' . $gs8 . '","x":5,"y":31,"w":3,"h":11},
+         {"id":"' . $gs9 . '","x":9,"y":0,"w":3,"h":8},
+         {"id":"' . $gs10 . '","x":8,"y":8,"w":4,"h":11},
+         {"id":"' . $gs11 . '","x":8,"y":19,"w":4,"h":12},
+         {"id":"' . $gs12 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs13 . '","x":8,"y":31,"w":4,"h":12},
+         {"id":"' . $gs14 . '","x":8,"y":31,"w":4,"h":12}]';
         }
 
         return $data;

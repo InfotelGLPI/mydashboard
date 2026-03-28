@@ -162,13 +162,13 @@ class Reports_Funnel extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_computers.is_deleted' => 0];
 
                 $params['entities_id'] = $opt['entities_id'] ?? $default['entities_id'];
                 $params['sons'] = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-                $entities_criteria = Helper::getSpecificEntityRestrict("glpi_computers", $params);
+
                 $type = $opt['type_computer'] ?? $default['type_computer'];
 
                 $criteria1 = [
@@ -196,9 +196,9 @@ class Reports_Funnel extends CommonGLPI
                         'glpi_infocoms.buy_date' => 'NULL',
                     ],
                 ];
-                if ($entities_criteria > 0) {
+                if ($params['entities_id'] > 0) {
                     $criteria1['WHERE'] = $criteria1['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_computers'
+                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
                     );
                 }
                 if ($type > 0) {
@@ -231,9 +231,9 @@ class Reports_Funnel extends CommonGLPI
                         'glpi_infocoms.buy_date' => ['<', new QueryExpression("CURRENT_DATE - INTERVAL 6 YEAR")],
                     ],
                 ];
-                if ($entities_criteria > 0) {
+                if ( $params['entities_id'] > 0) {
                     $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_computers'
+                        'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
                     );
                 }
                 if ($type > 0) {
@@ -269,9 +269,9 @@ class Reports_Funnel extends CommonGLPI
                         ],
                     ],
                 ];
-                if ($entities_criteria > 0) {
+                if ( $params['entities_id'] > 0) {
                     $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_computers'
+                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
                     );
                 }
                 if ($type > 0) {
@@ -307,9 +307,9 @@ class Reports_Funnel extends CommonGLPI
                         ],
                     ],
                 ];
-                if ($entities_criteria > 0) {
+                if ( $params['entities_id'] > 0) {
                     $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_computers'
+                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
                     );
                 }
                 if ($type > 0) {
@@ -342,9 +342,9 @@ class Reports_Funnel extends CommonGLPI
                         'glpi_infocoms.buy_date' => ['<', new QueryExpression("CURRENT_DATE - INTERVAL 2 YEAR")],
                     ],
                 ];
-                if ($entities_criteria > 0) {
+                if ( $params['entities_id'] > 0) {
                     $criteria5['WHERE'] = $criteria5['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_computers'
+                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
                     );
                 }
                 if ($type > 0) {

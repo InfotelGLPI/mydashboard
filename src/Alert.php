@@ -853,7 +853,7 @@ class Alert extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $location_criteria = $opt['locations_id'] ?? $default['locations_id'];
 
@@ -1122,9 +1122,7 @@ class Alert extends CommonDBTM
         $colorstats2 = "#CCC";
         $colorstats3 = "#CCC";
         $colorstats4 = "#CCC";
-        /*Stats1*/
-        $search_assign = "1=1";
-        $left = "";
+
 
         $criterias = ['technicians_groups_id'];
 
@@ -1133,9 +1131,7 @@ class Alert extends CommonDBTM
             "criterias" => $criterias,
             "opt" => $opt,
         ];
-        $options = Helper::manageCriterias($params);
-
-        $opt = $options['opt'];
+        $default = Helper::manageCriterias($params);
 
         if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
             $opt['technicians_groups_id']
@@ -1150,6 +1146,7 @@ class Alert extends CommonDBTM
             "name" => $name,
             "onsubmit" => true,
             "opt" => $opt,
+            "default" => $default,
             "criterias" => $criterias,
             "export" => false,
             "canvas" => false,
@@ -1184,6 +1181,9 @@ class Alert extends CommonDBTM
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
 
+            if (!isset($criteria1['LEFT JOIN'])) {
+                $criteria1['LEFT JOIN'] = [];
+            }
             $criteria1['LEFT JOIN'] = $criteria1['LEFT JOIN'] + [
                 'glpi_groups_tickets' => [
                     'ON' => [
@@ -1347,7 +1347,9 @@ class Alert extends CommonDBTM
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-
+            if (!isset($criteria4['LEFT JOIN'])) {
+                $criteria4['LEFT JOIN'] = [];
+            }
             $criteria4['LEFT JOIN'] = $criteria4['LEFT JOIN'] + [
                 'glpi_groups_tickets' => [
                     'ON' => [
@@ -1460,9 +1462,9 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($opt['technicians_groups_id'])
-                && count($opt['technicians_groups_id']) > 0) {
-                $groups = $opt['technicians_groups_id'];
+            if (is_array($technicians_groups_id) > 0
+                && count($technicians_groups_id) > 0) {
+                $groups = $technicians_groups_id;
                 $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
@@ -1542,9 +1544,9 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($opt['technicians_groups_id'])
-                && count($opt['technicians_groups_id']) > 0) {
-                $groups = $opt['technicians_groups_id'];
+            if (is_array($technicians_groups_id) > 0
+                && count($technicians_groups_id) > 0) {
+                $groups = $technicians_groups_id;
                 $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
@@ -1706,9 +1708,8 @@ class Alert extends CommonDBTM
             "criterias" => $criterias,
             "opt" => $opt,
         ];
-        $options = Helper::manageCriterias($params);
 
-        $opt = $options['opt'];
+        $default = Helper::manageCriterias($params);
 
         if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
             $opt['technicians_groups_id']
@@ -1723,6 +1724,7 @@ class Alert extends CommonDBTM
             "name" => $name,
             "onsubmit" => true,
             "opt" => $opt,
+            "default" => $default,
             "criterias" => $criterias,
             "export" => false,
             "canvas" => false,
@@ -1759,7 +1761,9 @@ class Alert extends CommonDBTM
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-
+            if (!isset($criteria2['LEFT JOIN'])) {
+                $criteria2['LEFT JOIN'] = [];
+            }
             $criteria2['LEFT JOIN'] = $criteria2['LEFT JOIN'] + [
                 'glpi_groups_tickets' => [
                     'ON' => [
@@ -1826,7 +1830,9 @@ class Alert extends CommonDBTM
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-
+            if (!isset($criteria3['LEFT JOIN'])) {
+                $criteria3['LEFT JOIN'] = [];
+            }
             $criteria3['LEFT JOIN'] = $criteria3['LEFT JOIN'] + [
                 'glpi_groups_tickets' => [
                     'ON' => [
@@ -1896,7 +1902,9 @@ class Alert extends CommonDBTM
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-
+            if (!isset($criteria4['LEFT JOIN'])) {
+                $criteria4['LEFT JOIN'] = [];
+            }
             $criteria4['LEFT JOIN'] = $criteria4['LEFT JOIN'] + [
                 'glpi_groups_tickets' => [
                     'ON' => [
@@ -1965,7 +1973,9 @@ class Alert extends CommonDBTM
 
         if (is_array($technicians_groups_id) > 0
             && count($technicians_groups_id) > 0) {
-
+            if (!isset($criteria5['LEFT JOIN'])) {
+                $criteria5['LEFT JOIN'] = [];
+            }
             $criteria5['LEFT JOIN'] = $criteria5['LEFT JOIN'] + [
                 'glpi_groups_tickets' => [
                     'ON' => [
@@ -2023,9 +2033,9 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($opt['technicians_groups_id'])
-                && count($opt['technicians_groups_id']) > 0) {
-                $groups = $opt['technicians_groups_id'];
+            if (is_array($technicians_groups_id) > 0
+                && count($technicians_groups_id) > 0) {
+                $groups = $technicians_groups_id;
                 $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
@@ -2093,9 +2103,9 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($opt['technicians_groups_id'])
-                && count($opt['technicians_groups_id']) > 0) {
-                $groups = $opt['technicians_groups_id'];
+            if (is_array($technicians_groups_id) > 0
+                && count($technicians_groups_id) > 0) {
+                $groups = $technicians_groups_id;
                 $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
@@ -2169,9 +2179,9 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($opt['technicians_groups_id'])
-                && count($opt['technicians_groups_id']) > 0) {
-                $groups = $opt['technicians_groups_id'];
+            if (is_array($technicians_groups_id) > 0
+                && count($technicians_groups_id) > 0) {
+                $groups = $technicians_groups_id;
                 $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
@@ -2246,9 +2256,9 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($opt['technicians_groups_id'])
-                && count($opt['technicians_groups_id']) > 0) {
-                $groups = $opt['technicians_groups_id'];
+            if (is_array($technicians_groups_id) > 0
+                && count($technicians_groups_id) > 0) {
+                $groups = $technicians_groups_id;
                 $nb = 0;
                 foreach ($groups as $group) {
                     $criterias['criteria'][$nb] = [
@@ -3723,7 +3733,7 @@ class Alert extends CommonDBTM
                     "itilcategories_id",
                 ];
 
-                $default = Helper::manageCriteriasNew($params_query);
+                $default = Helper::manageCriterias($params_query);
 
                 $opt['entities_id'] = $params['entities_id'] ?? $default['entities_id'];
                 $opt['is_recursive_entities'] = $params['is_recursive_entities'] ?? $default['is_recursive_entities'];
@@ -3755,6 +3765,7 @@ class Alert extends CommonDBTM
                 $total_resolved = self::queryResolvedTickets($params_query);
                 //Resolved tickets
                 $total_closed = 0;
+
             } elseif ($type == "week") {
                 $crits = [
                     "entities_id",
@@ -3774,7 +3785,7 @@ class Alert extends CommonDBTM
                     "week",
                 ];
 
-                $default = Helper::manageCriteriasNew($params_query);
+                $default = Helper::manageCriterias($params_query);
 
                 $opt['year'] = $params['year'] ?? $default['year'];
 
@@ -4451,9 +4462,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         if (count($iterator) == 0) {
             return 0;
         }
-
+        $total = 0;
         foreach ($iterator as $data) {
-            $total = $data['total'];
+            if ($data['total']) {
+                $total = $data['total'];
+            }
+
         }
 
         return $total;

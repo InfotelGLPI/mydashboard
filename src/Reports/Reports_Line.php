@@ -194,18 +194,22 @@ class Reports_Line extends CommonGLPI
         switch ($widgetId) {
             case $this->getType() . "6":
                 $name = 'TicketStockLineChart';
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'technicians_groups_id',
-                        'entities_id',
-                        'is_recursive_entities',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'year',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [];
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -214,7 +218,7 @@ class Reports_Line extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
@@ -395,29 +399,28 @@ class Reports_Line extends CommonGLPI
                 $name = 'TicketStatusBarLineChart';
                 $onclick = 0;
 
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central'
-                ) {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
-                        'requesters_groups_id',
-                        'display_data',
-                        'technicians_id',
-                        'type',
-                        'locations_id',
-                    ];
+                    && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
-                } else {
-                    $criterias = [
-                        'entities_id',
-                        'requesters_groups_id',
+                    $specific_criterias = [
                         'display_data',
-                        'type',
                         'locations_id',
+                        'technicians_id',
+                        'requesters_groups_id',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'display_data',
+                        'locations_id',
+                        'technicians_id',
+                        'requesters_groups_id',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -426,7 +429,7 @@ class Reports_Line extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
@@ -711,28 +714,28 @@ class Reports_Line extends CommonGLPI
             case $this->getType() . "34":
                 $name = 'TicketStatusResolvedBarLineChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
-                        'requesters_groups_id',
-                        'technicians_id',
-                        'year',
-                        'type',
-                        'locations_id',
-                    ];
                     $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                        'locations_id',
+                        'technicians_id',
+                        'requesters_groups_id',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'requesters_groups_id',
+                    $specific_criterias = [
                         'year',
                         'locations_id',
+                        'requesters_groups_id',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -741,7 +744,7 @@ class Reports_Line extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
@@ -1038,28 +1041,28 @@ class Reports_Line extends CommonGLPI
             case $this->getType() . "35":
                 $name = 'TicketStatusUnplannedBarLineChart';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
-                        'requesters_groups_id',
-                        'technicians_id',
-                        'year',
-                        'type',
-                        'locations_id',
-                    ];
                     $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                        'locations_id',
+                        'technicians_id',
+                        'requesters_groups_id',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'requesters_groups_id',
+                    $specific_criterias = [
                         'year',
                         'locations_id',
+                        'requesters_groups_id',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -1067,7 +1070,7 @@ class Reports_Line extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-               $default = Helper::manageCriteriasNew($params);
+               $default = Helper::manageCriterias($params);
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
@@ -1415,19 +1418,31 @@ class Reports_Line extends CommonGLPI
             case $this->getType() . "43":
                 $name = 'reportLineChartNbCreatedTicketByMonths';
 
-                $criterias = [
-                    'year',
-                    'type',
-                    'entities_id',
-                    'is_recursive_entities',
-                ];
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-               $default = Helper::manageCriteriasNew($params);
+               $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -1545,19 +1560,31 @@ class Reports_Line extends CommonGLPI
             case $this->getType() . "44":
                 $name = 'reportLineChartNbCreatedTicketByWeek';
 
-                $criterias = [
-                    'entities_id',
-                    'is_recursive_entities',
-                    'year',
-                    'type',
-                ];
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $result = self::getTicketsCreatedPerWeek($params);
 
@@ -1628,18 +1655,31 @@ class Reports_Line extends CommonGLPI
                 break;
             case $this->getType() . "45":
                 $name = 'reportLineChartRefusedTicketsByMonths';
-                $criterias = [
-                    'year',
-                    'type',
-                    'entities_id',
-                    'is_recursive_entities',
-                ];
+
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-               $default = Helper::manageCriteriasNew($params);
+               $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -1765,19 +1805,32 @@ class Reports_Line extends CommonGLPI
                 break;
             case $this->getType() . "46":
                 $name = 'reportLineTicketsProblemsByMonths';
-                $criterias = [
-                    'year',
-                    'type',
-                    'entities_id',
-                    'is_recursive_entities',
-                ];
+
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -1902,19 +1955,22 @@ class Reports_Line extends CommonGLPI
             case $this->getType() . "47":
                 $name = 'reportLineChartBacklogTicketByWeek';
 
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'technicians_groups_id',
-                        'entities_id',
-                        'is_recursive_entities',
+                    $onclick = 1;
+                    $specific_criterias = [
                         'year',
-                        'type',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [];
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -1923,7 +1979,7 @@ class Reports_Line extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $technician_groups_ids = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
                 $currentyear = date("Y");
@@ -2022,26 +2078,25 @@ class Reports_Line extends CommonGLPI
             case $this->getType() . "48":
                 $name = 'reportLineWeekBacklog';
                 $onclick = 0;
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
-                        'requesters_groups_id',
-                        'type',
-                        'locations_id',
-                    ];
                     $onclick = 1;
+                    $specific_criterias = [
+                        'locations_id',
+                        'requesters_groups_id',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $criterias = [
-                        'type',
+                    $specific_criterias = [
                         'locations_id',
                         'requesters_groups_id',
                     ];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -2050,7 +2105,7 @@ class Reports_Line extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -2155,18 +2210,31 @@ class Reports_Line extends CommonGLPI
 
             case $this->getType() . "49":
                 $name = 'reportLineChartRefusedSolutionTicketsByMonths';
-                $criterias = [
-                    'year',
-                    'type',
-                    'entities_id',
-                    'is_recursive_entities',
-                ];
+
+                $criterias = Helper::getDefaultCriterias();
+
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() == 'central') {
+                    $onclick = 1;
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $specific_criterias = [
+                        'year',
+                    ];
+                    $criterias = array_merge($criterias, $specific_criterias);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
                     "opt" => $opt,
                 ];
-               $default = Helper::manageCriteriasNew($params);
+               $default = Helper::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -2305,6 +2373,7 @@ class Reports_Line extends CommonGLPI
             default:
                 break;
         }
+        return false;
     }
 
     /**
@@ -2317,7 +2386,7 @@ class Reports_Line extends CommonGLPI
     {
         global $DB;
 
-        $default = Helper::manageCriteriasNew($params);
+        $default = Helper::manageCriterias($params);
 
 //        $year = intval(date('Y', time()) - 1);
 

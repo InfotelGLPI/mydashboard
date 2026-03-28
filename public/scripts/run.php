@@ -32,15 +32,17 @@ function usage() {
 }
 
 if (!isset($_SERVER["argv"][0])) {
-   header("HTTP/1.0 403 Forbidden");
-   die("403 Forbidden");
+    header("HTTP/1.0 403 Forbidden");
+    die("403 Forbidden");
 }
 ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 
 chdir(dirname($_SERVER["argv"][0]));
-define("GLPI_ROOT", realpath(dirname($_SERVER["argv"][0]) . "/../../.."));
-require GLPI_ROOT . "/inc/based_config.php";
+
+define("GLPI_DIR_ROOT", realpath(dirname($_SERVER["argv"][0]) . "/../../../.."));
+require_once GLPI_DIR_ROOT . '/vendor/autoload.php';
+$kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
 
 $logfilename = GLPI_LOG_DIR . "/insert_stock_tickets.log";
 
@@ -55,39 +57,39 @@ $log = fopen($logfilename, "at");
 fwrite($log, date("r") . " " . $_SERVER["argv"][0] . " started\n");
 
 if (function_exists("pcntl_fork")) {
-   // Unix/Linux
-   $pids = [];
+    # Unix/Linux
+    $pids = array();
+    $thread_nbr = 1;
+    for ($i = 0; $i < $thread_nbr;) {
+        $i++;
+        $pid = pcntl_fork();
+        if ($pid == -1) {
+            fwrite($log, "Could not fork\n");
+        } elseif ($pid) {
+            fwrite($log, "$pid Started\n");
+            $pids[$pid] = 1;
+        } else {
+            $cmd = "php -q -d -f insert_stock_tickets.php";
+            $out = array();
+            exec($cmd, $out, $ret);
+            foreach ($out as $line) {
+                fwrite($log, $line . "\n");
+            }
+            exit($ret);
+        }
+    }
+    $status = 0;
+    while (count($pids)) {
+        $pid = pcntl_wait($status);
+        if ($pid < 0) {
+            fwrite($log, "Cound not wait\n");
+            exit(1);
+        } else {
+            unset($pids[$pid]);
+            fwrite($log, "$pid ended, waiting for " . count($pids) . " running son process\n");
+        }
+    }
 
-   $i++;
-   $pid = pcntl_fork();
-   if ($pid == -1) {
-      fwrite($log, "Could not fork\n");
-   } else if ($pid) {
-      fwrite($log, "$pid Started\n");
-      file_put_contents($pidfile, ";" . $i . '$$$' . $pid, FILE_APPEND);
-      $pids[$pid] = 1;
-   } else {
-      $cmd = "php -q -d -f insert_stock_tickets.php";
-
-      $out = [];
-      exec($cmd, $out, $ret);
-      foreach ($out as $line) {
-         fwrite($log, $line . "\n");
-      }
-      exit($ret);
-   }
-
-   $status = 0;
-   while (count($pids)) {
-      $pid = pcntl_wait($status);
-      if ($pid < 0) {
-         fwrite($log, "Cound not wait\n");
-         exit(1);
-      } else {
-         unset($pids[$pid]);
-         fwrite($log, "$pid ended, waiting for " . count($pids) . " running son process\n");
-      }
-   }
 } else {
    // Windows - No fork, so Only one process :(
    $cmd = "php -q -d -f insert_stock_tickets.php";

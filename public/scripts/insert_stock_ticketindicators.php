@@ -35,6 +35,10 @@ $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
+define("GLPI_DIR_ROOT", realpath(dirname($_SERVER["SCRIPT_FILENAME"]) . "/../../../.."));
+require_once GLPI_DIR_ROOT . '/vendor/autoload.php';
+$kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
+
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
 
 

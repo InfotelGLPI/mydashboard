@@ -56,6 +56,40 @@ use User;
  */
 class Helper
 {
+
+    public static $criterias_list = [
+            'entities_id',
+            'is_recursive_entities',
+            'technicians_groups_id',
+            'is_recursive_technicians',
+            'multiple_technicians_id',
+            'requesters_groups_id',
+            'is_recursive_requesters',
+            'technicians_id',
+            'display_data',
+            'filter_date',
+            'type',
+            'locations_id',
+            'is_recursive_locations',
+            'multiple_locations_id',
+            'week',
+            'year',
+            'month',
+            'limit',
+            'end',
+            'begin',
+            'date',
+            'closedate',
+            'satisfactiondate',
+            'multiple_time',
+            'multiple_year_time',
+            'status',
+            'itilcategorielvl1',
+            'itilcategories_id',
+            'tag',
+            'type_computer',
+            'users_id',
+        ];
     /**
      * get the delay between two automatic refreshing
      * @return int
@@ -273,31 +307,304 @@ class Helper
         return $graph;
     }
 
+
     /**
-     * @param $table
      * @param $params
      *
-     * @return array
+     * @return mixed
      */
-    public static function getSpecificEntityRestrict($table, $params)
+    public static function getDefaultCriterias()
     {
-        if (isset($params['entities_id']) && $params['entities_id'] == "") {
-            $params['entities_id'] = $_SESSION['glpiactive_entity'];
+        $default_criterias_list = [
+            'entities_id',
+            'is_recursive_entities',
+            'technicians_groups_id',
+            'is_recursive_technicians',
+            'type',
+        ];
+
+        if (isset($_SESSION['glpiactiveprofile']['interface'])
+            && Session::getCurrentInterface() == 'central') {
+            $criterias = $default_criterias_list;
         }
-        if (isset($params['entities_id']) && ($params['entities_id'] != -1)) {
-            if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
-                $entities = [$table . '.entities_id' => getSonsOf("glpi_entities", $params['entities_id'])];
-            } else {
-                $entities = [$table . '.entities_id' => $params['entities_id']];
-            }
-        } else {
-            if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
-                $entities = [$table . '.entities_id' => getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])];
-            } else {
-                $entities = [$table . '.entities_id' => $_SESSION['glpiactive_entity']];
+        if (isset($_SESSION['glpiactiveprofile']['interface'])
+            && Session::getCurrentInterface() != 'central') {
+            $criterias = ['type'];
+        }
+
+        return $criterias;
+    }
+
+    public static function getGraphCriterias($params)
+    {
+
+        $default = self::manageCriterias($params);
+        $opt = $params['opt'];
+
+        $criterias_values = [];
+
+        $criterias_list = self::$criterias_list;
+        foreach ($criterias_list as $criteria) {
+            if (in_array($criteria, $params['criterias'])) {
+                $criterias_values[$criteria] = $opt[$criteria] ?? $default[$criteria];
             }
         }
-        return $entities;
+
+        return $criterias_values;
+    }
+
+    public static function addCriteriasForQuery($query, $params, $table = 'glpi_tickets')
+    {
+        $default = self::manageCriterias($params);
+        $opt = $params['opt'];
+
+        if (in_array("type", $params['criterias']) && $table == 'glpi_tickets') {
+            $type = $opt['type'] ?? $default['type'];
+        }
+        if (in_array("locations_id", $params['criterias'])) {
+            $locations_id = $opt['locations_id'] ?? $default['locations_id'];
+        }
+        if (in_array("itilcategories_id", $params['criterias'])) {
+            $itilcategories_id = $opt['itilcategories_id'] ?? $default['itilcategories_id'];
+        }
+        if (in_array("entities_id", $params['criterias'])) {
+            $entities_id = $opt['entities_id'] ?? $default['entities_id'];
+        }
+        if (in_array("is_recursive_entities", $params['criterias'])) {
+            $is_recursive_entities = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
+        }
+        if (in_array("technicians_groups_id", $params['criterias'])  && $table == 'glpi_tickets') {
+            $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
+        }
+        if (in_array("is_recursive_technicians", $params['criterias'])  && $table == 'glpi_tickets') {
+            $is_recursive_technicians = $opt['is_recursive_technicians'] ?? $default['is_recursive_technicians'];
+        }
+        if (in_array("technicians_id", $params['criterias'])) {
+            $technicians_id = $opt['technicians_id'] ?? $default['technicians_id'];
+        }
+        if (in_array("requesters_groups_id", $params['criterias'])) {
+            $requesters_groups_id = $opt['requesters_groups_id'] ?? $default['requesters_groups_id'];
+        }
+        if (in_array("is_recursive_requesters", $params['criterias'])) {
+            $is_recursive_requesters = $opt['is_recursive_requesters'] ?? $default['is_recursive_requesters'];
+        }
+
+        foreach ($params['criterias'] as $criterion) {
+
+            if ($table == 'glpi_tickets' && $criterion == 'technicians_groups_id' && is_array($technicians_groups_id)) {
+                $technicians_groups_id = array_filter($technicians_groups_id);
+
+                if (count($technicians_groups_id) > 0) {
+                    $params_query['criteria'] = $criterion;
+                    $params_query['query'] = $query;
+                    $params_query[$criterion] = $technicians_groups_id;
+                    $params_query['recursive'] = $is_recursive_technicians ?? 0;
+                    $query = Helper::defineLeftjoinByCriteria($params_query, $table);
+
+                    $params_query['query'] = $query;
+                    $query = Helper::defineWhereByCriteria($params_query, $table);
+                }
+            }
+
+            if ($criterion == 'requesters_groups_id' && is_array($requesters_groups_id)) {
+                $requesters_groups_id = array_filter($requesters_groups_id);
+
+                if (count($requesters_groups_id) > 0) {
+                    $params_query['criteria'] = $criterion;
+                    $params_query['query'] = $query;
+                    $params_query[$criterion] = $requesters_groups_id;
+                    $params_query['recursive'] = $is_recursive_requesters ?? 0;
+                    $query = Helper::defineLeftjoinByCriteria($params_query, $table);
+
+                    $params_query['query'] = $query;
+                    $query = Helper::defineWhereByCriteria($params_query, $table);
+                }
+            }
+
+            if ($criterion == 'technicians_id') {
+
+                if ($technicians_id > 0) {
+                    $params_query['criteria'] = $criterion;
+                    $params_query['query'] = $query;
+                    $params_query[$criterion] = $technicians_id;
+                    $query = Helper::defineLeftjoinByCriteria($params_query, $table);
+
+                    $params_query['query'] = $query;
+                    $query = Helper::defineWhereByCriteria($params_query, $table);
+                }
+            }
+
+            if ($table == 'glpi_tickets' && $criterion == 'type' && $type > 0) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $type;
+                $query = Helper::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($criterion == 'locations_id' && $locations_id > 0) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $locations_id;
+                $query = Helper::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($criterion == 'itilcategories_id' && $itilcategories_id > 0) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $itilcategories_id;
+                $query = Helper::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($criterion == 'entities_id' && !is_array($entities_id)) {
+                $entities_id = [$entities_id];
+            }
+            if ($criterion == 'entities_id' && is_array($entities_id)) {
+
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $entities_id;
+                $params_query['recursive'] = $is_recursive_entities;
+                $query = Helper::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($criterion == 'date' && !empty($date_criteria)) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $date_criteria;
+                $query = Helper::defineWhereByCriteria($params_query, $table);
+            }
+
+        }
+
+        return $query;
+    }
+
+    public static function defineLeftjoinByCriteria($params, $table = 'glpi_tickets')
+    {
+
+        $query = $params['query'];
+
+        if ($params['criteria']  == "technicians_groups_id") {
+            $technician_group = array_filter($params['technicians_groups_id']);
+            if (count($technician_group) > 0) {
+                if (!isset($params['query']['LEFT JOIN'])) {
+                    $params['query']['LEFT JOIN'] = [];
+                }
+                $query['LEFT JOIN'] = $params['query']['LEFT JOIN'] + [
+                        'glpi_groups_tickets' => [
+                            'ON' => [
+                                $table => 'id',
+                                'glpi_groups_tickets' => 'tickets_id',
+                                [
+                                    'AND' => [
+                                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+            }
+        } elseif ($params['criteria']  == "requesters_groups_id") {
+            $requester_groups = array_filter($params['requesters_groups_id']);
+            if (count($requester_groups) > 0) {
+                if (!isset($params['query']['LEFT JOIN'])) {
+                    $params['query']['LEFT JOIN'] = [];
+                }
+                $query['LEFT JOIN'] = $params['query']['LEFT JOIN'] + [
+                        'glpi_groups_tickets' => [
+                            'ON' => [
+                                $table => 'id',
+                                'glpi_groups_tickets' => 'tickets_id',
+                                [
+                                    'AND' => [
+                                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+            }
+        } elseif ($params['criteria']  == "technicians_id") {
+            if (!isset($params['query']['LEFT JOIN'])) {
+                $params['query']['LEFT JOIN'] = [];
+            }
+            $query['LEFT JOIN'] = $params['query']['LEFT JOIN'] + [
+                    'glpi_tickets_users' => [
+                        'ON' => [
+                            $table => 'id',
+                            'glpi_tickets_users' => 'tickets_id',
+                            [
+                                'AND' => [
+                                    'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+        }
+
+        return $query;
+    }
+
+    public static function defineWhereByCriteria($params, $table = 'glpi_tickets')
+    {
+
+        $query = $params['query'];
+
+        if ($params['criteria'] == "entities_id") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + getEntitiesRestrictCriteria(
+                    $table,
+                    'entities_id',
+                    $params['entities_id'],
+                    $params['recursive']
+                );
+
+        } elseif ($params['criteria'] == "technicians_groups_id") {
+
+            $technician_group = array_filter($params['technicians_groups_id']);
+            if (count($technician_group) > 0) {
+                $query['WHERE'] = $params['query']['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
+            }
+
+        } elseif ($params['criteria'] == "requesters_groups_id") {
+
+            $requester_groups = array_filter($params['requesters_groups_id']);
+            if (count($requester_groups) > 0) {
+                $query['WHERE'] = $params['query']['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
+            }
+
+        } elseif ($params['criteria'] == "technicians_id") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets_users.users_id' => $params['technicians_id']];
+
+        } elseif ($params['criteria'] == "type") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.type' => $params['type']];
+
+        } elseif ($params['criteria'] == "itilcategories_id") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.itilcategories_id' => $params['itilcategories_id']];
+
+        } elseif ($params['criteria'] == "locations_id") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.locations_id' => $params['locations_id']];
+
+        } elseif ($params['criteria'] == "multiple_locations_id") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.locations_id' => $params['multiple_locations_id']];
+
+        } elseif ($params['criteria'] == "date") {
+
+            $query['WHERE'] = array_merge($params['query']['WHERE'], $params['date']);
+
+        } elseif ($params['criteria'] == "itilcategories_id") {
+
+            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.itilcategories_id' => $params['itilcategories_id']];
+
+        }
+
+        return $query;
     }
 
     /**
@@ -310,702 +617,13 @@ class Helper
 
         $criterias = $params['criterias'];
 
-
-        // ENTITY | SONS
-        if (Session::isMultiEntitiesMode()) {
-
-            if (in_array("entities_id", $criterias)
-                && isset($params['opt']['entities_id'])
-                && $params['opt']['entities_id'] > 0) {
-                $opt['entities_id'] = $params['opt']['entities_id'];
-            } elseif (isset($params['preferences']['prefered_entity'])
-                && $params['preferences']['prefered_entity'] > 0) {
-                $opt['entities_id'] = $params['preferences']['prefered_entity'];
-            } else {
-                $opt['entities_id'] = $_SESSION['glpiactive_entity'];
-            }
-            $opt['sons'] = 0;
-            $crit['crit']['sons'] = 0;
-            if (in_array("is_recursive_entities", $criterias)) {
-                if (!isset($params['opt']['sons'])) {
-                    //TODO : Add conf for recursivity
-                    if (isset($_SESSION['glpiactive_entity_recursive']) && $_SESSION['glpiactive_entity_recursive'] != false) {
-                        $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
-                    } else {
-                        $opt['sons'] = 0;
-                    }
-                } else {
-                    $opt['sons'] = $params['opt']['sons'];
-                }
-                $crit['crit']['sons'] = $opt['sons'];
-            }
-
-            if (isset($opt)) {
-                $crit['crit']['entities_id'] = self::getSpecificEntityRestrict("glpi_tickets", $opt);
-                $crit['crit']['entity'] = $opt['entities_id'];
-            }
-        } else {
-            $crit['crit']['entities_id'] = '';
-            $crit['crit']['entity'] = 0;
-            $crit['crit']['sons'] = 0;
+        $preference = new Preference();
+        if (!$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
         }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
 
-        // REQUESTER GROUP
-        $opt['requesters_groups_id'] = [];
-        //        $crit['crit']['requesters_groups_id'] = "AND 1 = 1";
-        //      $opt['ancestors']                     = 0;
-        //      $crit['crit']['ancestors']            = 0;
-        if (in_array("requesters_groups_id", $criterias)) {
-            if (isset($params['opt']['requesters_groups_id'])) {
-                $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
-            } elseif ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php") {
-                $groups_id = self::getRequesterGroup(
-                    $params['preferences']['requester_prefered_group'],
-                    $params,
-                    $_SESSION['glpiactive_entity'],
-                    Session::getLoginUserID(),
-                    $opt
-                );
-                $opt['requesters_groups_id'] = $groups_id;
-            } else {
-                $opt['requesters_groups_id'] = [];
-            }
-
-            $params['opt']['requesters_groups_id'] = $opt['requesters_groups_id'];
-
-            $params['opt']['requesters_groups_id'] = is_array(
-                $params['opt']['requesters_groups_id']
-            ) ? $params['opt']['requesters_groups_id'] : [];
-
-            $params['opt']['requesters_groups_id'] = array_filter($params['opt']['requesters_groups_id']);
-
-            if (isset($params['opt']['requesters_groups_id'])
-                && is_array($params['opt']['requesters_groups_id'])
-                && count($params['opt']['requesters_groups_id']) > 0) {
-
-                $crit['crit']['requesters_groups_id'] = ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
-                WHERE type = " . CommonITILActor::REQUESTER . " AND groups_id IN (" . implode(
-                    ",",
-                    $params['opt']['requesters_groups_id']
-                ) . ")))")];
-            }
-        }
-
-        // TECH GROUP
-        $opt['technicians_groups_id'] = [];
-        //        $crit['crit']['technicians_groups_id'] = "AND 1 = 1";
-        $opt['ancestors'] = 0;
-        $crit['crit']['ancestors'] = 0;
-        if (in_array("technicians_groups_id", $criterias)) {
-            if (isset($params['opt']['technicians_groups_id'])) {
-
-                $opt['technicians_groups_id'] = is_array(
-                    $params['opt']['technicians_groups_id']
-                ) ? $params['opt']['technicians_groups_id'] : [];
-
-            } else { //if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php")
-                $groups_id = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
-                $opt['technicians_groups_id'] = $groups_id;
-                //            } else {
-                //                $opt['technicians_groups_id'] = [];
-            }
-            $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
-            if (is_array($params['opt']['technicians_groups_id'])) {
-                $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
-            }
-
-            if (isset($params['opt']['technicians_groups_id'])
-                && is_array($params['opt']['technicians_groups_id'])
-                && count($params['opt']['technicians_groups_id']) > 0) {
-                $none = false;
-                if (isset($params['opt']['technicians_groups_id'][0])
-                    && $params['opt']['technicians_groups_id'][0] == "0") {
-                    $none = true;
-                }
-                if (in_array(
-                    "is_recursive_technicians",
-                    $criterias
-                ) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
-                    $dbu = new DbUtils();
-                    $childs = [];
-                    foreach ($opt['technicians_groups_id'] as $k => $v) {
-                        $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
-                    }
-                    $childs = array_filter($childs);
-                    $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
-                    if ($none) {
-
-                        $crit['crit']['technicians_groups_id'] = [['NOT' => ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets")]],
-                            ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
-                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
-                                ",",
-                                $childs
-                            ) . ")))")]];
-                        //
-                        //
-                        //                        $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
-                        //                        $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
-                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . ")))";
-
-                    } else {
-
-                        $crit['crit']['technicians_groups_id'] = ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
-                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
-                            ",",
-                            $childs
-                        ) . ")))")];
-
-                        //                        $crit['crit']['technicians_groups_id'] .= " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
-                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . "))";
-
-                    }
-                    $opt['ancestors'] = $params['opt']['ancestors'];
-                    $crit['crit']['ancestors'] = $opt['ancestors'];
-                } else {
-                    $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
-                    if ($none) {
-
-                        //                        $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
-                        //                        $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
-                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(
-                        //                            ",",
-                        //                            $params['opt']['technicians_groups_id']
-                        //                        ) . ")))";
-
-                        $crit['crit']['technicians_groups_id'] = [['NOT' => ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets")]],
-                            ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
-                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
-                                ",",
-                                $params['opt']['technicians_groups_id']
-                            ) . ")))")]];
-
-                    } else {
-
-                        $crit['crit']['technicians_groups_id'] = ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
-                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
-                            ",",
-                            $params['opt']['technicians_groups_id']
-                        ) . ")))")];
-
-                        //                        $crit['crit']['technicians_groups_id'] .= " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
-                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(
-                        //                            ",",
-                        //                            $params['opt']['technicians_groups_id']
-                        //                        ) . "))";
-
-                    }
-                    $opt['ancestors'] = 0;
-                    $crit['crit']['ancestors'] = 0;
-                }
-            }
-        }
-
-        //LOCATION
-        $opt['locations_id'] = 0;
-        $crit['crit']['locations_id'] = "";
-        $user = new User();
-        if (in_array("locations_id", $criterias)) {
-            if (isset($params['opt']["locations_id"])
-                && $params['opt']["locations_id"] > 0) {
-                $opt['locations_id'] = $params['opt']['locations_id'];
-                $crit['crit']['locations_id'] = ['glpi_tickets.locations_id' => $params['opt']["locations_id"]];
-            } elseif (isset($_SESSION['glpiactiveprofile']['interface'])
-                && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
-                $opt['locations_id'] = $user->fields['locations_id'];
-                $crit['crit']['locations_id'] = ['glpi_tickets.locations_id' => $opt["locations_id"]];
-            }
-        }
-
-        // LOCATIONS
-        $opt['multiple_locations_id'] = [];
-        $crit['crit']['multiple_locations_id'] = "";
-        $opt['loc_ancestors'] = 0;
-        $crit['crit']['loc_ancestors'] = 0;
-
-        if (in_array("multiple_locations_id", $criterias)) {
-            if (isset($params['opt']['multiple_locations_id'])) {
-                $opt['multiple_locations_id'] = is_array(
-                    $params['opt']['multiple_locations_id']
-                ) ? $params['opt']['multiple_locations_id'] : [];
-            } else {
-                $crit['crit']['multiple_locations_id'] =  [];
-            }
-            $params['opt']['multiple_locations_id'] = $opt['multiple_locations_id'];
-
-            if (isset($params['opt']['multiple_locations_id'])
-                && is_array($params['opt']['multiple_locations_id'])
-                && count($params['opt']['multiple_locations_id']) > 0) {
-                if (isset($params['opt']['loc_ancestors']) && $params['opt']['loc_ancestors'] != 0) {
-                    $dbu = new DbUtils();
-                    $childs = [];
-                    foreach ($opt['multiple_locations_id'] as $k => $v) {
-                        $childs = $dbu->getSonsAndAncestorsOf('glpi_locations', $v);
-                    }
-                    $crit['crit']['multiple_locations_id'] = ['locations_id' => $childs];
-                    $opt['loc_ancestors'] = $params['opt']['loc_ancestors'];
-                    $crit['crit']['loc_ancestors'] = $opt['loc_ancestors'];
-                } else {
-                    $crit['crit']['multiple_locations_id'] = ['locations_id' => $params['opt']['multiple_locations_id']];
-                    $opt['loc_ancestors'] = 0;
-                    $crit['crit']['loc_ancestors'] = 0;
-                }
-            }
-        }
-
-        //TYPE
-        $opt['type'] = 0;
-        $crit['crit']['type'] = "";
-        if (in_array("type", $criterias)) {
-            if (isset($params['preferences']['prefered_type'])
-                && $params['preferences']['prefered_type'] > 0
-                && !isset($params['opt']['type'])) {
-                $opt['type'] = $params['preferences']['prefered_type'];
-                $crit['crit']['type'] = ['glpi_tickets.type' => $opt["type"]];
-            } elseif (isset($params['opt']['type'])
-                && $params['opt']['type'] > 0) {
-                $opt['type'] = $params['opt']['type'];
-                $crit['crit']['type'] = ['glpi_tickets.type' => $params['opt']["type"]];
-            }
-        }
-
-        //TYPE COMPUTER
-        $opt['type_computer'] = 0;
-        $crit['crit']['type_computer'] = "";
-        if (in_array("type_computer", $criterias)) {
-            if (isset($params['opt']['type_computer'])
-                && $params['opt']['type_computer'] > 0) {
-                $opt['type_computer'] = $params['opt']['type_computer'];
-                $crit['crit']['type_computer'] = ['glpi_computers.computertypes_id' => $params['opt']["type_computer"]];
-            }
-        }
-
-        // DATE
-        // MONTH
-        $year = intval(date('Y', time()));
-        $month = intval(date('m', time()) - 1);
-        $crit['crit']['year'] = $year;
-        if (in_array("month", $criterias)) {
-            if ($month > 0) {
-                $year = date('Y', time());
-                $opt["year"] = $year;
-            } else {
-                $month = 12;
-            }
-            if (isset($params['opt']["month"])
-                && $params['opt']["month"] > 0) {
-                $month = $params['opt']["month"];
-                $opt['month'] = $params['opt']['month'];
-            } else {
-                $opt["month"] = $month;
-            }
-        }
-
-        // YEAR
-        if (in_array("year", $criterias)) {
-            if (isset($params['opt']["year"])
-                && $params['opt']["year"] > 0) {
-                $year = $params['opt']["year"];
-                $opt['year'] = $params['opt']['year'];
-            } else {
-                $opt["year"] = $year;
-            }
-            $crit['crit']['year'] = $opt['year'];
-        }
-
-        // DISPLAY DATA
-
-        if (in_array("display_data", $criterias)) {
-            if (isset($params['opt']['display_data'])) {
-                $opt["display_data"] = $params['opt']['display_data'];
-                $crit['crit']['display_data'] = $params['opt']['display_data'];
-            } else {
-                $opt["display_data"] = "YEAR";
-                $crit['crit']['display_data'] = "YEAR";
-            }
-
-            if ($opt["display_data"] == "YEAR") {
-                $year = intval(date('Y', time()));
-                if (isset($params['opt']["year"])
-                    && $params['opt']["year"] > 0) {
-                    $year = $params['opt']["year"];
-                    $opt['year'] = $params['opt']['year'];
-                } else {
-                    $opt["year"] = $year;
-                }
-                $crit['crit']['year'] = $opt['year'];
-            } elseif ($opt["display_data"] == "START_END") {
-                if (isset($params['opt']["start_month"])
-                    && $params['opt']["start_month"] > 0) {
-                    $opt['start_month'] = $params['opt']['start_month'];
-                    $crit['crit']['start_month'] = $params['opt']['start_month'];
-                } else {
-                    $opt["start_month"] = date("m");
-                    $crit['crit']['start_month'] = date("m");
-                }
-
-                if (isset($params['opt']["start_year"])
-                    && $params['opt']["start_year"] > 0) {
-                    $opt['start_year'] = $params['opt']['start_year'];
-                    $crit['crit']['start_year'] = $params['opt']['start_year'];
-                } else {
-                    $opt["start_year"] = date("Y");
-                    $crit['crit']['start_year'] = date("Y");
-                }
-
-                if (isset($params['opt']["end_month"])
-                    && $params['opt']["end_month"] > 0) {
-                    $opt['end_month'] = $params['opt']['end_month'];
-                    $crit['crit']['end_month'] = $params['opt']['end_month'];
-                } else {
-                    $opt["end_month"] = date("m");
-                    $crit['crit']['end_month'] = date("m");
-                }
-
-                if (isset($params['opt']["end_year"])
-                    && $params['opt']["end_year"] > 0) {
-                    $opt['end_year'] = $params['opt']['end_year'];
-                    $crit['crit']['end_year'] = $params['opt']['end_year'];
-                } else {
-                    $opt["end_year"] = date("Y");
-                    $crit['crit']['end_year'] = date("Y");
-                }
-            }
-        }
-
-        if (in_array("filter_date", $criterias)) {
-            if (isset($params['opt']['filter_date'])) {
-                $opt["filter_date"] = $params['opt']['filter_date'];
-                $crit['crit']['filter_date'] = $params['opt']['filter_date'];
-            } else {
-                $opt["filter_date"] = "YEAR";
-                $crit['crit']['filter_date'] = "YEAR";
-            }
-
-            if ($opt["filter_date"] == "YEAR") {
-                $year = intval(date('Y', time()));
-                if (isset($params['opt']["year"])
-                    && $params['opt']["year"] > 0) {
-                    $year = $params['opt']["year"];
-                    $opt['year'] = $params['opt']['year'];
-                } else {
-                    $opt["year"] = $year;
-                }
-                $crit['crit']['year'] = $opt['year'];
-
-                $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $year . '-01-01 00:00:01']],
-                    ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('" . $year . "-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
-
-                $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $year . '-01-01 00:00:01']],
-                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('" . $year . "-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
-
-                $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $year . '-01-01 00:00:01']],
-                    ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('" . $year . "-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
-
-
-
-            } elseif ($opt["filter_date"] == "BEGIN_END") {
-                if (isset($params['opt']['begin'])
-                    && $params['opt']["begin"] > 0) {
-                    $opt["begin"] = $params['opt']['begin'];
-                    $crit['crit']['begin'] = $params['opt']['begin'];
-                } else {
-                    $opt["begin"] = date("Y-m-d H:i:s");
-                }
-
-                if (isset($params['opt']['end'])
-                    && $params['opt']["end"] > 0) {
-                    $opt["end"] = $params['opt']['end'];
-                    $crit['crit']['end'] = $params['opt']['end'];
-                } else {
-                    $opt["end"] = date("Y-m-d H:i:s");
-                }
-                $end = $opt["end"];
-                $start = $opt["begin"];
-
-                $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $start]],
-                    ['glpi_tickets.date' => ['<=', $end]]];
-
-                $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $start]],
-                    ['glpi_tickets.closedate' => ['<=', $end]]];
-
-                $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $start]],
-                    ['glpi_ticketsatisfactions.date_answered' => ['<=', $end]]];
-
-            }
-        }
-
-        // BEGIN DATE
-        if (in_array("begin", $criterias)) {
-            if (isset($params['opt']['begin'])
-                && $params['opt']["begin"] > 0) {
-                $opt["begin"] = $params['opt']['begin'];
-                $crit['crit']['begin'] = $params['opt']['begin'];
-            } else {
-                $opt["begin"] = date("Y-m-d H:i:s");
-            }
-        }
-
-        // END DATE
-        if (in_array("end", $criterias)) {
-            if (isset($params['opt']['end'])
-                && $params['opt']["end"] > 0) {
-                $opt["end"] = $params['opt']['end'];
-                $crit['crit']['end'] = $params['opt']['end'];
-            } else {
-                $opt["end"] = date("Y-m-d H:i:s");
-            }
-        }
-
-        if (!in_array('filter_date', $criterias)) {
-            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-
-            $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $year - $month . '-01 00:00:01']],
-                ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]]];
-
-            $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $year - $month . '-01 00:00:01']],
-                ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]]];
-
-            $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $year - $month . '-01 00:00:01']],
-                ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]]];
-
-        }
-
-        if (!in_array("month", $criterias) && !in_array('filter_date', $criterias)) {
-
-            $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $year . '-01-01 00:00:01']],
-                ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
-
-            $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $year . '-01-01 00:00:01']],
-                ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
-
-            $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $year . '-01-01 00:00:01']],
-                ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
-
-        }
-        // USER
-        //      $opt["users_id"] = $_SESSION['glpiID'];
-        if (in_array("users_id", $criterias)) {
-            if (isset($params['opt']['users_id'])) {
-                $opt["users_id"] = $params['opt']['users_id'];
-                $crit['crit']['users_id'] = $params['opt']['users_id'];
-            }
-        }
-
-        // TECHNICIAN
-        $opt["technicians_id"] = 0;
-        if (in_array("technicians_id", $criterias)) {
-            if (isset($params['opt']['technicians_id'])) {
-                $opt["technicians_id"] = $params['opt']['technicians_id'];
-                $crit['crit']['technicians_id'] = $params['opt']['technicians_id'];
-            }
-        }
-
-        // TECHNICIAN MULTIPLE
-        $opt['multiple_technicians_id'] = [];
-        //        $crit['crit']['multiple_technicians_id'] = " AND 1 = 1 ";
-        if (in_array("multiple_technicians_id", $criterias)) {
-            if (isset($params['opt']['multiple_technicians_id'])) {
-                $opt['multiple_technicians_id'] = is_array(
-                    $params['opt']['multiple_technicians_id']
-                ) ? $params['opt']['multiple_technicians_id'] : [];
-            } else {
-                $crit['crit']['multiple_technicians_id'] = [];
-            }
-            $params['opt']['multiple_technicians_id'] = $opt['multiple_technicians_id'];
-
-            if (isset($params['opt']['multiple_technicians_id'])
-                && is_array($params['opt']['multiple_technicians_id'])
-                && count($params['opt']['multiple_technicians_id']) > 0) {
-                $crit['crit']['multiple_technicians_id'] = $params['opt']['multiple_technicians_id'];
-            }
-        }
-
-        // LIMIT
-        if (in_array("limit", $criterias)) {
-            if (isset($params['opt']['limit'])) {
-                $opt["limit"] = $params['opt']['limit'];
-                $crit['crit']['limit'] = $params['opt']['limit'];
-            }
-        }
-
-        // MULTIPLE TIME
-        if (in_array("multiple_time", $criterias)) {
-            if (isset($params['opt']['multiple_time'])) {
-                $opt["multiple_time"] = $params['opt']['multiple_time'];
-                $crit['crit']['multiple_time'] = $params['opt']['multiple_time'];
-            } else {
-                $opt["multiple_time"] = "MONTH";
-                $crit['crit']['multiple_time'] = "MONTH";
-            }
-        }
-
-        // MULTIPLE YEAR TIME
-        if (in_array("multiple_year_time", $criterias)) {
-            if (isset($params['opt']['multiple_year_time'])) {
-                $opt["multiple_year_time"] = $params['opt']['multiple_year_time'];
-                $crit['crit']['multiple_year_time'] = $params['opt']['multiple_year_time'];
-            } else {
-                $opt["multiple_year_time"] = "LASTMONTH";
-                $crit['crit']['multiple_year_time'] = "LASTMONTH";
-            }
-            if (isset($params['opt']['month_year'])) {
-                $opt["month_year"] = $params['opt']['month_year'];
-                $crit['crit']['month_year'] = $params['opt']['month_year'];
-            }
-        }
-
-
-        // STATUS
-        $default = [
-            CommonITILObject::INCOMING,
-            CommonITILObject::ASSIGNED,
-            CommonITILObject::PLANNED,
-            CommonITILObject::WAITING,
-        ];
-        $crit['crit']['status'] = $default;
-        $opt['status'] = $default;
-        if (in_array("status", $criterias)) {
-            $status = [];
-
-            if (isset($params['opt']["status_1"])
-                && $params['opt']["status_1"] > 0) {
-                $status[] = CommonITILObject::INCOMING;
-            }
-            if (isset($params['opt']["status_2"])
-                && $params['opt']["status_2"] > 0) {
-                $status[] = CommonITILObject::ASSIGNED;
-            }
-            if (isset($params['opt']["status_3"])
-                && $params['opt']["status_3"] > 0) {
-                $status[] = CommonITILObject::PLANNED;
-            }
-            if (isset($params['opt']["status_4"])
-                && $params['opt']["status_4"] > 0) {
-                $status[] = CommonITILObject::WAITING;
-            }
-            if (isset($params['opt']["status_5"])
-                && $params['opt']["status_5"] > 0) {
-                $status[] = CommonITILObject::SOLVED;
-            }
-            if (isset($params['opt']["status_6"])
-                && $params['opt']["status_6"] > 0) {
-                $status[] = CommonITILObject::CLOSED;
-            }
-
-            if (count($status) > 0) {
-                $opt['status'] = $status;
-                $crit['crit']['status'] = $status;
-            }
-        }
-        //ITILCATEGORY_LVL1
-        $opt['itilcategorielvl1'] = 0;
-        //        $crit['crit']['itilcategorielvl1'] = " AND 1 = 1 ";
-        if (in_array("itilcategorielvl1", $criterias)) {
-            if (isset($params['preferences']['prefered_category'])
-                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategorielvl1'])) {
-                $opt['itilcategorielvl1'] = $params['preferences']['prefered_category'];
-            } elseif (isset($params['opt']["itilcategorielvl1"])
-                && $params['opt']["itilcategorielvl1"] > 0) {
-                $opt['itilcategorielvl1'] = $params['opt']['itilcategorielvl1'];
-            }
-            $category = new ITILCategory();
-            $catlvl2 = $category->find(
-                ['itilcategories_id' => $opt['itilcategorielvl1'], 'is_request' => 1, 'is_incident' => 1]
-            );
-            $listcat = [];
-            $listcat[] = $opt['itilcategorielvl1'];
-            foreach ($catlvl2 as $cat) {
-                $listcat[] = $cat['id'];
-            }
-            $categories = implode(",", $listcat);
-            if (empty($listcat)) {
-                $listcat = "0";
-            }
-            $crit['crit']['itilcategorielvl1'] = ['glpi_tickets.itilcategories_id' => $categories];
-        }
-
-        //ITILCATEGORY
-        $opt['itilcategories_id'] = 0;
-        //        $crit['crit']['itilcategories_id'] = " AND 1 = 1";
-        if (in_array("itilcategories_id", $criterias)) {
-            if (isset($params['preferences']['prefered_category'])
-                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategories_id'])) {
-                $opt['itilcategories_id'] = $params['preferences']['prefered_category'];
-            } elseif (isset($params['opt']["itilcategories_id"])
-                && $params['opt']["itilcategories_id"] > 0) {
-                $opt['itilcategories_id'] = $params['opt']['itilcategories_id'];
-            }
-            if ($opt['itilcategories_id'] > 0) {
-                $category = new ITILCategory();
-                if ($category->getFromDB($opt['itilcategories_id'])) {
-                    $crit['crit']['itilcategories_id'] = ['glpi_tickets.itilcategories_id' => $opt['itilcategories_id']];
-                }
-            } else {
-                //                $crit['crit']['itilcategories_id'] = " AND 1 = 1 ";
-            }
-        }
-
-        //TAG
-        $opt['tag'] = 0;
-        //        $crit['crit']['tag'] = "AND 1 = 1";
-        if (in_array("tag", $criterias)) {
-            if (isset($params['opt']["tag"])
-                && $params['opt']["tag"] > 0) {
-                $opt['tag'] = $params['opt']['tag'];
-
-                $crit['crit']['tag'] = ['glpi_plugin_tag_tagitems.plugin_tag_tags_id' => $opt['tag']];
-            }
-        }
-
-        $crit['opt'] = $opt;
-
-        return $crit;
-    }
-
-
-    /**
-     * @param $params
-     *
-     * @return mixed
-     */
-    public static function manageCriteriasNew($params)
-    {
-
-        $criterias_list = [
-            'entities_id',
-            'is_recursive_entities',
-            'technicians_groups_id',
-            'is_recursive_technicians',
-            'multiple_technicians_id',
-            'requesters_groups_id',
-            'is_recursive_requesters',
-            'technicians_id',
-            'display_data',
-            'filter_date',
-            'type',
-            'locations_id',
-            'is_recursive_locations',
-            'multiple_locations_id',
-            'week',
-            'year',
-            'month',
-            'limit',
-            'end',
-            'begin',
-            'date',
-            'closedate',
-            'satisfactiondate',
-            'multiple_time',
-            'multiple_year_time',
-            'status',
-            'itilcategorielvl1',
-            'itilcategories_id',
-            'tag',
-            'type_computer',
-            'users_id',
-        ];
-
-        $criterias = $params['criterias'];
 
         // ENTITY | SONS
         if (in_array("entities_id", $criterias)
@@ -1013,6 +631,11 @@ class Helper
 
             $default['entities_id'] = $_SESSION['glpiactive_entity'];
             $default['is_recursive_entities'] = false;
+
+            if (isset($preferences['prefered_entity'])
+                && $preferences['prefered_entity'] > 0) {
+                $default['entities_id'] = $preferences['prefered_entity'];
+            }
 
             //            if (in_array("entities_id", $criterias)
             //                && isset($params['opt']['entities_id'])
@@ -1054,6 +677,15 @@ class Helper
         if (in_array("requesters_groups_id", $criterias)) {
             $default['requesters_groups_id'] = [];
             $default['is_recursive_requesters'] = false;
+
+            if (isset($preferences['requester_prefered_group'])) {
+                $preferences['requester_prefered_group'] = \Safe\json_decode($preferences['requester_prefered_group'], true);
+                if (is_array($preferences['requester_prefered_group'])
+                && count($preferences['requester_prefered_group']) >0) {
+                    $default['requesters_groups_id'] = $preferences['requester_prefered_group'];
+                }
+
+            }
         }
 
         //        $opt['requesters_groups_id'] = [];
@@ -1100,6 +732,14 @@ class Helper
         if (in_array("technicians_groups_id", $criterias)) {
             $default['technicians_groups_id'] = [];
             $default['is_recursive_technicians'] = false;
+
+            if (isset($preferences['prefered_group'])) {
+                $preferences['prefered_group'] = \Safe\json_decode($preferences['prefered_group'], true);
+                if (is_array($preferences['prefered_group'])
+                    && count($preferences['prefered_group']) >0) {
+                    $default['technicians_groups_id'] = $preferences['prefered_group'];
+                }
+            }
         }
         //        $crit['crit']['technicians_groups_id'] = "AND 1 = 1";
         //        $opt['ancestors'] = 0;
@@ -1271,6 +911,11 @@ class Helper
         //TYPE
         if (in_array("type", $criterias)) {
             $default['type'] = 0;
+            if (isset($preferences['prefered_type'])) {
+                if ($preferences['prefered_type'] > 0) {
+                    $default['type'] = $preferences['prefered_type'];
+                }
+            }
         }
         //        $opt['type'] = 0;
         //        $crit['crit']['type'] = "";
@@ -1306,6 +951,8 @@ class Helper
         //        // YEAR
         if (in_array("year", $criterias)) {
             $default['year'] = intval(date('Y', time()));
+
+//            $default['year'] = '2025';
         }
         //        if (in_array("year", $criterias)) {
         //            if (isset($params['opt']["year"])
@@ -1348,7 +995,9 @@ class Helper
         }
 
         // DISPLAY DATA
-
+        if (in_array("display_data", $criterias)) {
+            $default['display_data'] = "YEAR";
+        }
         //        if (in_array("display_data", $criterias)) {
         //            if (isset($params['opt']['display_data'])) {
         //                $opt["display_data"] = $params['opt']['display_data'];
@@ -1406,7 +1055,11 @@ class Helper
         //                }
         //            }
         //        }
-        //
+
+        if (in_array("filter_date", $criterias)) {
+            $default['filter_date'] = "YEAR";
+        }
+
         //        if (in_array("filter_date", $criterias)) {
         //            if (isset($params['opt']['filter_date'])) {
         //                $opt["filter_date"] = $params['opt']['filter_date'];
@@ -1470,6 +1123,9 @@ class Helper
         //        }
 
         // BEGIN DATE
+        if (in_array("begin", $criterias)) {
+            $default['begin'] = date("Y-m-d H:i:s");
+        }
         //        if (in_array("begin", $criterias)) {
         //            if (isset($params['opt']['begin'])
         //                && $params['opt']["begin"] > 0) {
@@ -1481,6 +1137,9 @@ class Helper
         //        }
 
         // END DATE
+        if (in_array("end", $criterias)) {
+            $default['end'] = date("Y-m-d H:i:s");
+        }
         //        if (in_array("end", $criterias)) {
         //            if (isset($params['opt']['end'])
         //                && $params['opt']["end"] > 0) {
@@ -1671,6 +1330,11 @@ class Helper
         //ITILCATEGORY
         if (in_array("itilcategories_id", $criterias)) {
             $default['itilcategories_id'] = 0;
+            if (isset($preferences['prefered_category'])) {
+                if ($preferences['prefered_category'] > 0) {
+                    $default['itilcategories_id'] = $preferences['prefered_category'];
+                }
+            }
         }
         //        $opt['itilcategories_id'] = 0;
         //        //        $crit['crit']['itilcategories_id'] = " AND 1 = 1";
@@ -1960,6 +1624,9 @@ class Helper
 
         $gsid = Widget::getGsID($widgetId);
 
+        if (count($opt) == 0) {
+            $opt = $default;
+        }
         $form = self::getFormHeader($widgetId, $gsid, $onsubmit, $opt);
 
         $count = count($criterias);
@@ -2119,6 +1786,7 @@ class Helper
 
         // TECHNICIAN GROUPS
         if (in_array("technicians_groups_id", $criterias)) {
+
             $form .= "<span class='md-widgetcrit'>";
 
             $dbu = new DbUtils();
@@ -3393,305 +3061,695 @@ class Helper
     }
 
 
-    public static function addCriteriasForQuery($query, $params, $table = 'glpi_tickets')
-    {
-        $default = self::manageCriteriasNew($params);
-        $opt = $params['opt'];
 
-        if (in_array("type", $params['criterias'])) {
-            $type = $opt['type'] ?? $default['type'];
-        }
-        if (in_array("locations_id", $params['criterias'])) {
-            $locations_id = $opt['locations_id'] ?? $default['locations_id'];
-        }
-        if (in_array("itilcategories_id", $params['criterias'])) {
-            $itilcategories_id = $opt['itilcategories_id'] ?? $default['itilcategories_id'];
-        }
-        if (in_array("entities_id", $params['criterias'])) {
-            $entities_id = $opt['entities_id'] ?? $default['entities_id'];
-        }
-        if (in_array("is_recursive_entities", $params['criterias'])) {
-            $is_recursive_entities = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-        }
-        if (in_array("technicians_groups_id", $params['criterias'])) {
-            $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-        }
-        if (in_array("is_recursive_technicians", $params['criterias'])) {
-            $is_recursive_technicians = $opt['is_recursive_technicians'] ?? $default['is_recursive_technicians'];
-        }
-        if (in_array("technicians_id", $params['criterias'])) {
-            $technicians_id = $opt['technicians_id'] ?? $default['technicians_id'];
-        }
-        if (in_array("requesters_groups_id", $params['criterias'])) {
-            $requesters_groups_id = $opt['requesters_groups_id'] ?? $default['requesters_groups_id'];
-        }
-        if (in_array("is_recursive_requesters", $params['criterias'])) {
-            $is_recursive_requesters = $opt['is_recursive_requesters'] ?? $default['is_recursive_requesters'];
-        }
 
-        foreach ($params['criterias'] as $criterion) {
 
-            if ($criterion == 'technicians_groups_id' && is_array($technicians_groups_id)) {
-                $technicians_groups_id = array_filter($technicians_groups_id);
+    /**
+     * @param $table
+     * @param $params
+     *
+     * @return array
+     */
+//    public static function getSpecificEntityRestrict($table, $params)
+//    {
+//        if (isset($params['entities_id']) && $params['entities_id'] == "") {
+//            $params['entities_id'] = $_SESSION['glpiactive_entity'];
+//        }
+//        if (isset($params['entities_id']) && ($params['entities_id'] != -1)) {
+//            if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
+//                $entities = [$table . '.entities_id' => getSonsOf("glpi_entities", $params['entities_id'])];
+//            } else {
+//                $entities = [$table . '.entities_id' => $params['entities_id']];
+//            }
+//        } else {
+//            if (isset($params['sons']) && ($params['sons'] != "") && ($params['sons'] != 0)) {
+//                $entities = [$table . '.entities_id' => getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])];
+//            } else {
+//                $entities = [$table . '.entities_id' => $_SESSION['glpiactive_entity']];
+//            }
+//        }
+//        return $entities;
+//    }
+    /**
+     * @param $params
+     *
+     * @return mixed
+     */
+//    public static function manageCriteriasOld($params)
+//    {
+//
+//        $criterias = $params['criterias'];
+//
+//
+//        // ENTITY | SONS
+//        if (Session::isMultiEntitiesMode()) {
+//
+//            if (in_array("entities_id", $criterias)
+//                && isset($params['opt']['entities_id'])
+//                && $params['opt']['entities_id'] > 0) {
+//                $opt['entities_id'] = $params['opt']['entities_id'];
+//            } elseif (isset($params['preferences']['prefered_entity'])
+//                && $params['preferences']['prefered_entity'] > 0) {
+//                $opt['entities_id'] = $params['preferences']['prefered_entity'];
+//            } else {
+//                $opt['entities_id'] = $_SESSION['glpiactive_entity'];
+//            }
+//            $opt['sons'] = 0;
+//            $crit['crit']['sons'] = 0;
+//            if (in_array("is_recursive_entities", $criterias)) {
+//                if (!isset($params['opt']['sons'])) {
+//                    //TODO : Add conf for recursivity
+//                    if (isset($_SESSION['glpiactive_entity_recursive']) && $_SESSION['glpiactive_entity_recursive'] != false) {
+//                        $opt['sons'] = $_SESSION['glpiactive_entity_recursive'];
+//                    } else {
+//                        $opt['sons'] = 0;
+//                    }
+//                } else {
+//                    $opt['sons'] = $params['opt']['sons'];
+//                }
+//                $crit['crit']['sons'] = $opt['sons'];
+//            }
+//
+//            if (isset($opt)) {
+//                $crit['crit']['entities_id'] = self::getSpecificEntityRestrict("glpi_tickets", $opt);
+//                $crit['crit']['entity'] = $opt['entities_id'];
+//            }
+//        } else {
+//            $crit['crit']['entities_id'] = '';
+//            $crit['crit']['entity'] = 0;
+//            $crit['crit']['sons'] = 0;
+//        }
+//
+//        // REQUESTER GROUP
+//        $opt['requesters_groups_id'] = [];
+//        //        $crit['crit']['requesters_groups_id'] = "AND 1 = 1";
+//        //      $opt['ancestors']                     = 0;
+//        //      $crit['crit']['ancestors']            = 0;
+//        if (in_array("requesters_groups_id", $criterias)) {
+//            if (isset($params['opt']['requesters_groups_id'])) {
+//                $opt['requesters_groups_id'] = $params['opt']['requesters_groups_id'];
+//            } elseif ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php") {
+//                $groups_id = self::getRequesterGroup(
+//                    $params['preferences']['requester_prefered_group'],
+//                    $params,
+//                    $_SESSION['glpiactive_entity'],
+//                    Session::getLoginUserID(),
+//                    $opt
+//                );
+//                $opt['requesters_groups_id'] = $groups_id;
+//            } else {
+//                $opt['requesters_groups_id'] = [];
+//            }
+//
+//            $params['opt']['requesters_groups_id'] = $opt['requesters_groups_id'];
+//
+//            $params['opt']['requesters_groups_id'] = is_array(
+//                $params['opt']['requesters_groups_id']
+//            ) ? $params['opt']['requesters_groups_id'] : [];
+//
+//            $params['opt']['requesters_groups_id'] = array_filter($params['opt']['requesters_groups_id']);
+//
+//            if (isset($params['opt']['requesters_groups_id'])
+//                && is_array($params['opt']['requesters_groups_id'])
+//                && count($params['opt']['requesters_groups_id']) > 0) {
+//
+//                $crit['crit']['requesters_groups_id'] = ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
+//                WHERE type = " . CommonITILActor::REQUESTER . " AND groups_id IN (" . implode(
+//                    ",",
+//                    $params['opt']['requesters_groups_id']
+//                ) . ")))")];
+//            }
+//        }
+//
+//        // TECH GROUP
+//        $opt['technicians_groups_id'] = [];
+//        //        $crit['crit']['technicians_groups_id'] = "AND 1 = 1";
+//        $opt['ancestors'] = 0;
+//        $crit['crit']['ancestors'] = 0;
+//        if (in_array("technicians_groups_id", $criterias)) {
+//            if (isset($params['opt']['technicians_groups_id'])) {
+//
+//                $opt['technicians_groups_id'] = is_array(
+//                    $params['opt']['technicians_groups_id']
+//                ) ? $params['opt']['technicians_groups_id'] : [];
+//
+//            } else { //if ($_SERVER["REQUEST_URI"] == PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php")
+//                $groups_id = self::getGroup($params['preferences']['prefered_group'], $opt, $params);
+//                $opt['technicians_groups_id'] = $groups_id;
+//                //            } else {
+//                //                $opt['technicians_groups_id'] = [];
+//            }
+//            $params['opt']['technicians_groups_id'] = $opt['technicians_groups_id'];
+//            if (is_array($params['opt']['technicians_groups_id'])) {
+//                $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
+//            }
+//
+//            if (isset($params['opt']['technicians_groups_id'])
+//                && is_array($params['opt']['technicians_groups_id'])
+//                && count($params['opt']['technicians_groups_id']) > 0) {
+//                $none = false;
+//                if (isset($params['opt']['technicians_groups_id'][0])
+//                    && $params['opt']['technicians_groups_id'][0] == "0") {
+//                    $none = true;
+//                }
+//                if (in_array(
+//                    "is_recursive_technicians",
+//                    $criterias
+//                ) && isset($params['opt']['ancestors']) && $params['opt']['ancestors'] != 0) {
+//                    $dbu = new DbUtils();
+//                    $childs = [];
+//                    foreach ($opt['technicians_groups_id'] as $k => $v) {
+//                        $childs = $dbu->getSonsAndAncestorsOf('glpi_groups', $v);
+//                    }
+//                    $childs = array_filter($childs);
+//                    $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
+//                    if ($none) {
+//
+//                        $crit['crit']['technicians_groups_id'] = [['NOT' => ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets")]],
+//                            ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
+//                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
+//                                ",",
+//                                $childs
+//                            ) . ")))")]];
+//                        //
+//                        //
+//                        //                        $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
+//                        //                        $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+//                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . ")))";
+//
+//                    } else {
+//
+//                        $crit['crit']['technicians_groups_id'] = ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
+//                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
+//                            ",",
+//                            $childs
+//                        ) . ")))")];
+//
+//                        //                        $crit['crit']['technicians_groups_id'] .= " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+//                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(",", $childs) . "))";
+//
+//                    }
+//                    $opt['ancestors'] = $params['opt']['ancestors'];
+//                    $crit['crit']['ancestors'] = $opt['ancestors'];
+//                } else {
+//                    $params['opt']['technicians_groups_id'] = array_filter($params['opt']['technicians_groups_id']);
+//                    if ($none) {
+//
+//                        //                        $crit['crit']['technicians_groups_id'] = " AND ( `glpi_tickets`.`id` NOT IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`) ";
+//                        //                        $crit['crit']['technicians_groups_id'] .= " OR `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+//                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(
+//                        //                            ",",
+//                        //                            $params['opt']['technicians_groups_id']
+//                        //                        ) . ")))";
+//
+//                        $crit['crit']['technicians_groups_id'] = [['NOT' => ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets")]],
+//                            ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
+//                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
+//                                ",",
+//                                $params['opt']['technicians_groups_id']
+//                            ) . ")))")]];
+//
+//                    } else {
+//
+//                        $crit['crit']['technicians_groups_id'] = ['glpi_tickets.id' => new QueryExpression("(SELECT tickets_id AS id FROM glpi_groups_tickets
+//                WHERE type = " . CommonITILActor::ASSIGN . " AND groups_id IN (" . implode(
+//                            ",",
+//                            $params['opt']['technicians_groups_id']
+//                        ) . ")))")];
+//
+//                        //                        $crit['crit']['technicians_groups_id'] .= " AND `glpi_tickets`.`id` IN (SELECT `tickets_id` AS id FROM `glpi_groups_tickets`
+//                        //            WHERE `type` = " . CommonITILActor::ASSIGN . " AND `groups_id` IN (" . implode(
+//                        //                            ",",
+//                        //                            $params['opt']['technicians_groups_id']
+//                        //                        ) . "))";
+//
+//                    }
+//                    $opt['ancestors'] = 0;
+//                    $crit['crit']['ancestors'] = 0;
+//                }
+//            }
+//        }
+//
+//        //LOCATION
+//        $opt['locations_id'] = 0;
+//        $crit['crit']['locations_id'] = "";
+//        $user = new User();
+//        if (in_array("locations_id", $criterias)) {
+//            if (isset($params['opt']["locations_id"])
+//                && $params['opt']["locations_id"] > 0) {
+//                $opt['locations_id'] = $params['opt']['locations_id'];
+//                $crit['crit']['locations_id'] = ['glpi_tickets.locations_id' => $params['opt']["locations_id"]];
+//            } elseif (isset($_SESSION['glpiactiveprofile']['interface'])
+//                && Session::getCurrentInterface() != 'central' && $user->getFromDB(Session::getLoginUserID())) {
+//                $opt['locations_id'] = $user->fields['locations_id'];
+//                $crit['crit']['locations_id'] = ['glpi_tickets.locations_id' => $opt["locations_id"]];
+//            }
+//        }
+//
+//        // LOCATIONS
+//        $opt['multiple_locations_id'] = [];
+//        $crit['crit']['multiple_locations_id'] = "";
+//        $opt['loc_ancestors'] = 0;
+//        $crit['crit']['loc_ancestors'] = 0;
+//
+//        if (in_array("multiple_locations_id", $criterias)) {
+//            if (isset($params['opt']['multiple_locations_id'])) {
+//                $opt['multiple_locations_id'] = is_array(
+//                    $params['opt']['multiple_locations_id']
+//                ) ? $params['opt']['multiple_locations_id'] : [];
+//            } else {
+//                $crit['crit']['multiple_locations_id'] =  [];
+//            }
+//            $params['opt']['multiple_locations_id'] = $opt['multiple_locations_id'];
+//
+//            if (isset($params['opt']['multiple_locations_id'])
+//                && is_array($params['opt']['multiple_locations_id'])
+//                && count($params['opt']['multiple_locations_id']) > 0) {
+//                if (isset($params['opt']['loc_ancestors']) && $params['opt']['loc_ancestors'] != 0) {
+//                    $dbu = new DbUtils();
+//                    $childs = [];
+//                    foreach ($opt['multiple_locations_id'] as $k => $v) {
+//                        $childs = $dbu->getSonsAndAncestorsOf('glpi_locations', $v);
+//                    }
+//                    $crit['crit']['multiple_locations_id'] = ['locations_id' => $childs];
+//                    $opt['loc_ancestors'] = $params['opt']['loc_ancestors'];
+//                    $crit['crit']['loc_ancestors'] = $opt['loc_ancestors'];
+//                } else {
+//                    $crit['crit']['multiple_locations_id'] = ['locations_id' => $params['opt']['multiple_locations_id']];
+//                    $opt['loc_ancestors'] = 0;
+//                    $crit['crit']['loc_ancestors'] = 0;
+//                }
+//            }
+//        }
+//
+//        //TYPE
+//        $opt['type'] = 0;
+//        $crit['crit']['type'] = "";
+//        if (in_array("type", $criterias)) {
+//            if (isset($params['preferences']['prefered_type'])
+//                && $params['preferences']['prefered_type'] > 0
+//                && !isset($params['opt']['type'])) {
+//                $opt['type'] = $params['preferences']['prefered_type'];
+//                $crit['crit']['type'] = ['glpi_tickets.type' => $opt["type"]];
+//            } elseif (isset($params['opt']['type'])
+//                && $params['opt']['type'] > 0) {
+//                $opt['type'] = $params['opt']['type'];
+//                $crit['crit']['type'] = ['glpi_tickets.type' => $params['opt']["type"]];
+//            }
+//        }
+//
+//        //TYPE COMPUTER
+//        $opt['type_computer'] = 0;
+//        $crit['crit']['type_computer'] = "";
+//        if (in_array("type_computer", $criterias)) {
+//            if (isset($params['opt']['type_computer'])
+//                && $params['opt']['type_computer'] > 0) {
+//                $opt['type_computer'] = $params['opt']['type_computer'];
+//                $crit['crit']['type_computer'] = ['glpi_computers.computertypes_id' => $params['opt']["type_computer"]];
+//            }
+//        }
+//
+//        // DATE
+//        // MONTH
+//        $year = intval(date('Y', time()));
+//        $month = intval(date('m', time()) - 1);
+//        $crit['crit']['year'] = $year;
+//        if (in_array("month", $criterias)) {
+//            if ($month > 0) {
+//                $year = date('Y', time());
+//                $opt["year"] = $year;
+//            } else {
+//                $month = 12;
+//            }
+//            if (isset($params['opt']["month"])
+//                && $params['opt']["month"] > 0) {
+//                $month = $params['opt']["month"];
+//                $opt['month'] = $params['opt']['month'];
+//            } else {
+//                $opt["month"] = $month;
+//            }
+//        }
+//
+//        // YEAR
+//        if (in_array("year", $criterias)) {
+//            if (isset($params['opt']["year"])
+//                && $params['opt']["year"] > 0) {
+//                $year = $params['opt']["year"];
+//                $opt['year'] = $params['opt']['year'];
+//            } else {
+//                $opt["year"] = $year;
+//            }
+//            $crit['crit']['year'] = $opt['year'];
+//        }
+//
+//        // DISPLAY DATA
+//
+//        if (in_array("display_data", $criterias)) {
+//            if (isset($params['opt']['display_data'])) {
+//                $opt["display_data"] = $params['opt']['display_data'];
+//                $crit['crit']['display_data'] = $params['opt']['display_data'];
+//            } else {
+//                $opt["display_data"] = "YEAR";
+//                $crit['crit']['display_data'] = "YEAR";
+//            }
+//
+//            if ($opt["display_data"] == "YEAR") {
+//                $year = intval(date('Y', time()));
+//                if (isset($params['opt']["year"])
+//                    && $params['opt']["year"] > 0) {
+//                    $year = $params['opt']["year"];
+//                    $opt['year'] = $params['opt']['year'];
+//                } else {
+//                    $opt["year"] = $year;
+//                }
+//                $crit['crit']['year'] = $opt['year'];
+//            } elseif ($opt["display_data"] == "START_END") {
+//                if (isset($params['opt']["start_month"])
+//                    && $params['opt']["start_month"] > 0) {
+//                    $opt['start_month'] = $params['opt']['start_month'];
+//                    $crit['crit']['start_month'] = $params['opt']['start_month'];
+//                } else {
+//                    $opt["start_month"] = date("m");
+//                    $crit['crit']['start_month'] = date("m");
+//                }
+//
+//                if (isset($params['opt']["start_year"])
+//                    && $params['opt']["start_year"] > 0) {
+//                    $opt['start_year'] = $params['opt']['start_year'];
+//                    $crit['crit']['start_year'] = $params['opt']['start_year'];
+//                } else {
+//                    $opt["start_year"] = date("Y");
+//                    $crit['crit']['start_year'] = date("Y");
+//                }
+//
+//                if (isset($params['opt']["end_month"])
+//                    && $params['opt']["end_month"] > 0) {
+//                    $opt['end_month'] = $params['opt']['end_month'];
+//                    $crit['crit']['end_month'] = $params['opt']['end_month'];
+//                } else {
+//                    $opt["end_month"] = date("m");
+//                    $crit['crit']['end_month'] = date("m");
+//                }
+//
+//                if (isset($params['opt']["end_year"])
+//                    && $params['opt']["end_year"] > 0) {
+//                    $opt['end_year'] = $params['opt']['end_year'];
+//                    $crit['crit']['end_year'] = $params['opt']['end_year'];
+//                } else {
+//                    $opt["end_year"] = date("Y");
+//                    $crit['crit']['end_year'] = date("Y");
+//                }
+//            }
+//        }
+//
+//        if (in_array("filter_date", $criterias)) {
+//            if (isset($params['opt']['filter_date'])) {
+//                $opt["filter_date"] = $params['opt']['filter_date'];
+//                $crit['crit']['filter_date'] = $params['opt']['filter_date'];
+//            } else {
+//                $opt["filter_date"] = "YEAR";
+//                $crit['crit']['filter_date'] = "YEAR";
+//            }
+//
+//            if ($opt["filter_date"] == "YEAR") {
+//                $year = intval(date('Y', time()));
+//                if (isset($params['opt']["year"])
+//                    && $params['opt']["year"] > 0) {
+//                    $year = $params['opt']["year"];
+//                    $opt['year'] = $params['opt']['year'];
+//                } else {
+//                    $opt["year"] = $year;
+//                }
+//                $crit['crit']['year'] = $opt['year'];
+//
+//                $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $year . '-01-01 00:00:01']],
+//                    ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('" . $year . "-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//                $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $year . '-01-01 00:00:01']],
+//                    ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('" . $year . "-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//                $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $year . '-01-01 00:00:01']],
+//                    ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('" . $year . "-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//
+//
+//            } elseif ($opt["filter_date"] == "BEGIN_END") {
+//                if (isset($params['opt']['begin'])
+//                    && $params['opt']["begin"] > 0) {
+//                    $opt["begin"] = $params['opt']['begin'];
+//                    $crit['crit']['begin'] = $params['opt']['begin'];
+//                } else {
+//                    $opt["begin"] = date("Y-m-d H:i:s");
+//                }
+//
+//                if (isset($params['opt']['end'])
+//                    && $params['opt']["end"] > 0) {
+//                    $opt["end"] = $params['opt']['end'];
+//                    $crit['crit']['end'] = $params['opt']['end'];
+//                } else {
+//                    $opt["end"] = date("Y-m-d H:i:s");
+//                }
+//                $end = $opt["end"];
+//                $start = $opt["begin"];
+//
+//                $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $start]],
+//                    ['glpi_tickets.date' => ['<=', $end]]];
+//
+//                $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $start]],
+//                    ['glpi_tickets.closedate' => ['<=', $end]]];
+//
+//                $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $start]],
+//                    ['glpi_ticketsatisfactions.date_answered' => ['<=', $end]]];
+//
+//            }
+//        }
+//
+//        // BEGIN DATE
+//        if (in_array("begin", $criterias)) {
+//            if (isset($params['opt']['begin'])
+//                && $params['opt']["begin"] > 0) {
+//                $opt["begin"] = $params['opt']['begin'];
+//                $crit['crit']['begin'] = $params['opt']['begin'];
+//            } else {
+//                $opt["begin"] = date("Y-m-d H:i:s");
+//            }
+//        }
+//
+//        // END DATE
+//        if (in_array("end", $criterias)) {
+//            if (isset($params['opt']['end'])
+//                && $params['opt']["end"] > 0) {
+//                $opt["end"] = $params['opt']['end'];
+//                $crit['crit']['end'] = $params['opt']['end'];
+//            } else {
+//                $opt["end"] = date("Y-m-d H:i:s");
+//            }
+//        }
+//
+//        if (!in_array('filter_date', $criterias)) {
+//            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+//
+//            $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $year - $month . '-01 00:00:01']],
+//                ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//            $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $year - $month . '-01 00:00:01']],
+//                ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//            $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $year - $month . '-01 00:00:01']],
+//                ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//        }
+//
+//        if (!in_array("month", $criterias) && !in_array('filter_date', $criterias)) {
+//
+//            $crit['crit']['date'] = [['glpi_tickets.date' => ['>=', $year . '-01-01 00:00:01']],
+//                ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//            $crit['crit']['closedate'] = [['glpi_tickets.closedate' => ['>=', $year . '-01-01 00:00:01']],
+//                ['glpi_tickets.closedate' => ['<=', new QueryExpression("ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//            $crit['crit']['satisfactiondate'] = [['glpi_ticketsatisfactions.date_answered' => ['>=', $year . '-01-01 00:00:01']],
+//                ['glpi_ticketsatisfactions.date_answered' => ['<=', new QueryExpression("ADDDATE('$year-12-31 00:00:00' , INTERVAL 1 DAY)")]]];
+//
+//        }
+//        // USER
+//        //      $opt["users_id"] = $_SESSION['glpiID'];
+//        if (in_array("users_id", $criterias)) {
+//            if (isset($params['opt']['users_id'])) {
+//                $opt["users_id"] = $params['opt']['users_id'];
+//                $crit['crit']['users_id'] = $params['opt']['users_id'];
+//            }
+//        }
+//
+//        // TECHNICIAN
+//        $opt["technicians_id"] = 0;
+//        if (in_array("technicians_id", $criterias)) {
+//            if (isset($params['opt']['technicians_id'])) {
+//                $opt["technicians_id"] = $params['opt']['technicians_id'];
+//                $crit['crit']['technicians_id'] = $params['opt']['technicians_id'];
+//            }
+//        }
+//
+//        // TECHNICIAN MULTIPLE
+//        $opt['multiple_technicians_id'] = [];
+//        //        $crit['crit']['multiple_technicians_id'] = " AND 1 = 1 ";
+//        if (in_array("multiple_technicians_id", $criterias)) {
+//            if (isset($params['opt']['multiple_technicians_id'])) {
+//                $opt['multiple_technicians_id'] = is_array(
+//                    $params['opt']['multiple_technicians_id']
+//                ) ? $params['opt']['multiple_technicians_id'] : [];
+//            } else {
+//                $crit['crit']['multiple_technicians_id'] = [];
+//            }
+//            $params['opt']['multiple_technicians_id'] = $opt['multiple_technicians_id'];
+//
+//            if (isset($params['opt']['multiple_technicians_id'])
+//                && is_array($params['opt']['multiple_technicians_id'])
+//                && count($params['opt']['multiple_technicians_id']) > 0) {
+//                $crit['crit']['multiple_technicians_id'] = $params['opt']['multiple_technicians_id'];
+//            }
+//        }
+//
+//        // LIMIT
+//        if (in_array("limit", $criterias)) {
+//            if (isset($params['opt']['limit'])) {
+//                $opt["limit"] = $params['opt']['limit'];
+//                $crit['crit']['limit'] = $params['opt']['limit'];
+//            }
+//        }
+//
+//        // MULTIPLE TIME
+//        if (in_array("multiple_time", $criterias)) {
+//            if (isset($params['opt']['multiple_time'])) {
+//                $opt["multiple_time"] = $params['opt']['multiple_time'];
+//                $crit['crit']['multiple_time'] = $params['opt']['multiple_time'];
+//            } else {
+//                $opt["multiple_time"] = "MONTH";
+//                $crit['crit']['multiple_time'] = "MONTH";
+//            }
+//        }
+//
+//        // MULTIPLE YEAR TIME
+//        if (in_array("multiple_year_time", $criterias)) {
+//            if (isset($params['opt']['multiple_year_time'])) {
+//                $opt["multiple_year_time"] = $params['opt']['multiple_year_time'];
+//                $crit['crit']['multiple_year_time'] = $params['opt']['multiple_year_time'];
+//            } else {
+//                $opt["multiple_year_time"] = "LASTMONTH";
+//                $crit['crit']['multiple_year_time'] = "LASTMONTH";
+//            }
+//            if (isset($params['opt']['month_year'])) {
+//                $opt["month_year"] = $params['opt']['month_year'];
+//                $crit['crit']['month_year'] = $params['opt']['month_year'];
+//            }
+//        }
+//
+//
+//        // STATUS
+//        $default = [
+//            CommonITILObject::INCOMING,
+//            CommonITILObject::ASSIGNED,
+//            CommonITILObject::PLANNED,
+//            CommonITILObject::WAITING,
+//        ];
+//        $crit['crit']['status'] = $default;
+//        $opt['status'] = $default;
+//        if (in_array("status", $criterias)) {
+//            $status = [];
+//
+//            if (isset($params['opt']["status_1"])
+//                && $params['opt']["status_1"] > 0) {
+//                $status[] = CommonITILObject::INCOMING;
+//            }
+//            if (isset($params['opt']["status_2"])
+//                && $params['opt']["status_2"] > 0) {
+//                $status[] = CommonITILObject::ASSIGNED;
+//            }
+//            if (isset($params['opt']["status_3"])
+//                && $params['opt']["status_3"] > 0) {
+//                $status[] = CommonITILObject::PLANNED;
+//            }
+//            if (isset($params['opt']["status_4"])
+//                && $params['opt']["status_4"] > 0) {
+//                $status[] = CommonITILObject::WAITING;
+//            }
+//            if (isset($params['opt']["status_5"])
+//                && $params['opt']["status_5"] > 0) {
+//                $status[] = CommonITILObject::SOLVED;
+//            }
+//            if (isset($params['opt']["status_6"])
+//                && $params['opt']["status_6"] > 0) {
+//                $status[] = CommonITILObject::CLOSED;
+//            }
+//
+//            if (count($status) > 0) {
+//                $opt['status'] = $status;
+//                $crit['crit']['status'] = $status;
+//            }
+//        }
+//        //ITILCATEGORY_LVL1
+//        $opt['itilcategorielvl1'] = 0;
+//        //        $crit['crit']['itilcategorielvl1'] = " AND 1 = 1 ";
+//        if (in_array("itilcategorielvl1", $criterias)) {
+//            if (isset($params['preferences']['prefered_category'])
+//                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategorielvl1'])) {
+//                $opt['itilcategorielvl1'] = $params['preferences']['prefered_category'];
+//            } elseif (isset($params['opt']["itilcategorielvl1"])
+//                && $params['opt']["itilcategorielvl1"] > 0) {
+//                $opt['itilcategorielvl1'] = $params['opt']['itilcategorielvl1'];
+//            }
+//            $category = new ITILCategory();
+//            $catlvl2 = $category->find(
+//                ['itilcategories_id' => $opt['itilcategorielvl1'], 'is_request' => 1, 'is_incident' => 1]
+//            );
+//            $listcat = [];
+//            $listcat[] = $opt['itilcategorielvl1'];
+//            foreach ($catlvl2 as $cat) {
+//                $listcat[] = $cat['id'];
+//            }
+//            $categories = implode(",", $listcat);
+//            if (empty($listcat)) {
+//                $listcat = "0";
+//            }
+//            $crit['crit']['itilcategorielvl1'] = ['glpi_tickets.itilcategories_id' => $categories];
+//        }
+//
+//        //ITILCATEGORY
+//        $opt['itilcategories_id'] = 0;
+//        //        $crit['crit']['itilcategories_id'] = " AND 1 = 1";
+//        if (in_array("itilcategories_id", $criterias)) {
+//            if (isset($params['preferences']['prefered_category'])
+//                && $params['preferences']['prefered_category'] > 0 && !isset($params['opt']['itilcategories_id'])) {
+//                $opt['itilcategories_id'] = $params['preferences']['prefered_category'];
+//            } elseif (isset($params['opt']["itilcategories_id"])
+//                && $params['opt']["itilcategories_id"] > 0) {
+//                $opt['itilcategories_id'] = $params['opt']['itilcategories_id'];
+//            }
+//            if ($opt['itilcategories_id'] > 0) {
+//                $category = new ITILCategory();
+//                if ($category->getFromDB($opt['itilcategories_id'])) {
+//                    $crit['crit']['itilcategories_id'] = ['glpi_tickets.itilcategories_id' => $opt['itilcategories_id']];
+//                }
+//            } else {
+//                //                $crit['crit']['itilcategories_id'] = " AND 1 = 1 ";
+//            }
+//        }
+//
+//        //TAG
+//        $opt['tag'] = 0;
+//        //        $crit['crit']['tag'] = "AND 1 = 1";
+//        if (in_array("tag", $criterias)) {
+//            if (isset($params['opt']["tag"])
+//                && $params['opt']["tag"] > 0) {
+//                $opt['tag'] = $params['opt']['tag'];
+//
+//                $crit['crit']['tag'] = ['glpi_plugin_tag_tagitems.plugin_tag_tags_id' => $opt['tag']];
+//            }
+//        }
+//
+//        $crit['opt'] = $opt;
+//
+//        return $crit;
+//    }
 
-                if (count($technicians_groups_id) > 0) {
-                    $params_query['criteria'] = $criterion;
-                    $params_query['query'] = $query;
-                    $params_query[$criterion] = $technicians_groups_id;
-                    $params_query['recursive'] = $is_recursive_technicians ?? 0;
-                    $query = Helper::defineLeftjoinByCriteria($params_query, $table);
-
-                    $params_query['query'] = $query;
-                    $query = Helper::defineWhereByCriteria($params_query, $table);
-                }
-            }
-
-            if ($criterion == 'requesters_groups_id' && is_array($requesters_groups_id)) {
-                $requesters_groups_id = array_filter($requesters_groups_id);
-
-                if (count($requesters_groups_id) > 0) {
-                    $params_query['criteria'] = $criterion;
-                    $params_query['query'] = $query;
-                    $params_query[$criterion] = $requesters_groups_id;
-                    $params_query['recursive'] = $is_recursive_requesters ?? 0;
-                    $query = Helper::defineLeftjoinByCriteria($params_query, $table);
-
-                    $params_query['query'] = $query;
-                    $query = Helper::defineWhereByCriteria($params_query, $table);
-                }
-            }
-
-            if ($criterion == 'technicians_id') {
-
-                if ($technicians_id > 0) {
-                    $params_query['criteria'] = $criterion;
-                    $params_query['query'] = $query;
-                    $params_query[$criterion] = $technicians_id;
-                    $query = Helper::defineLeftjoinByCriteria($params_query, $table);
-
-                    $params_query['query'] = $query;
-                    $query = Helper::defineWhereByCriteria($params_query, $table);
-                }
-            }
-
-            if ($criterion == 'type' && $type > 0) {
-                $params_query['criteria'] = $criterion;
-                $params_query['query'] = $query;
-                $params_query[$criterion] = $type;
-                $query = Helper::defineWhereByCriteria($params_query, $table);
-            }
-
-            if ($criterion == 'locations_id' && $locations_id > 0) {
-                $params_query['criteria'] = $criterion;
-                $params_query['query'] = $query;
-                $params_query[$criterion] = $locations_id;
-                $query = Helper::defineWhereByCriteria($params_query, $table);
-            }
-
-            if ($criterion == 'itilcategories_id' && $itilcategories_id > 0) {
-                $params_query['criteria'] = $criterion;
-                $params_query['query'] = $query;
-                $params_query[$criterion] = $itilcategories_id;
-                $query = Helper::defineWhereByCriteria($params_query, $table);
-            }
-
-            if ($criterion == 'entities_id' && !is_array($entities_id)) {
-                $entities_id = [$entities_id];
-            }
-            if ($criterion == 'entities_id' && is_array($entities_id)) {
-
-                $params_query['criteria'] = $criterion;
-                $params_query['query'] = $query;
-                $params_query[$criterion] = $entities_id;
-                $params_query['recursive'] = $is_recursive_entities;
-                $query = Helper::defineWhereByCriteria($params_query, $table);
-            }
-
-            if ($criterion == 'date' && !empty($date_criteria)) {
-                $params_query['criteria'] = $criterion;
-                $params_query['query'] = $query;
-                $params_query[$criterion] = $date_criteria;
-                $query = Helper::defineWhereByCriteria($params_query, $table);
-            }
-
-        }
-
-        return $query;
-    }
-
-    public static function defineLeftjoinByCriteria($params, $table = 'glpi_tickets')
-    {
-
-        $query = $params['query'];
-
-        if ($params['criteria']  == "technicians_groups_id") {
-            $technician_group = array_filter($params['technicians_groups_id']);
-            if (count($technician_group) > 0) {
-                if (!isset($params['query']['LEFT JOIN'])) {
-                    $params['query']['LEFT JOIN'] = [];
-                }
-                $query['LEFT JOIN'] = $params['query']['LEFT JOIN'] + [
-                    'glpi_groups_tickets' => [
-                        'ON' => [
-                            $table => 'id',
-                            'glpi_groups_tickets' => 'tickets_id',
-                            [
-                                'AND' => [
-                                    'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                ],
-                            ],
-                        ],
-                    ],
-                ];
-            }
-        } elseif ($params['criteria']  == "requesters_groups_id") {
-            $requester_groups = array_filter($params['requesters_groups_id']);
-            if (count($requester_groups) > 0) {
-                if (!isset($params['query']['LEFT JOIN'])) {
-                    $params['query']['LEFT JOIN'] = [];
-                }
-                $query['LEFT JOIN'] = $params['query']['LEFT JOIN'] + [
-                    'glpi_groups_tickets' => [
-                        'ON' => [
-                            $table => 'id',
-                            'glpi_groups_tickets' => 'tickets_id',
-                            [
-                                'AND' => [
-                                    'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                                ],
-                            ],
-                        ],
-                    ],
-                ];
-            }
-        } elseif ($params['criteria']  == "technicians_id") {
-            if (!isset($params['query']['LEFT JOIN'])) {
-                $params['query']['LEFT JOIN'] = [];
-            }
-            $query['LEFT JOIN'] = $params['query']['LEFT JOIN'] + [
-                'glpi_tickets_users' => [
-                    'ON' => [
-                        $table => 'id',
-                        'glpi_tickets_users' => 'tickets_id',
-                        [
-                            'AND' => [
-                                'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        return $query;
-    }
-
-    public static function defineWhereByCriteria($params, $table = 'glpi_tickets')
-    {
-
-        $query = $params['query'];
-
-        if ($params['criteria'] == "entities_id") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + getEntitiesRestrictCriteria(
-                    $table,
-                'entities_id',
-                $params['entities_id'],
-                $params['recursive']
-            );
-
-        } elseif ($params['criteria'] == "technicians_groups_id") {
-
-            $technician_group = array_filter($params['technicians_groups_id']);
-            if (count($technician_group) > 0) {
-                $query['WHERE'] = $params['query']['WHERE'] + ['glpi_groups_tickets.groups_id' => $technician_group];
-            }
-
-        } elseif ($params['criteria'] == "requesters_groups_id") {
-
-            $requester_groups = array_filter($params['requesters_groups_id']);
-            if (count($requester_groups) > 0) {
-                $query['WHERE'] = $params['query']['WHERE'] + ['glpi_groups_tickets.groups_id' => $requester_groups];
-            }
-
-        } elseif ($params['criteria'] == "technicians_id") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets_users.users_id' => $params['technicians_id']];
-
-        } elseif ($params['criteria'] == "type") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.type' => $params['type']];
-
-        } elseif ($params['criteria'] == "itilcategories_id") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.itilcategories_id' => $params['itilcategories_id']];
-
-        } elseif ($params['criteria'] == "locations_id") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.locations_id' => $params['locations_id']];
-
-        } elseif ($params['criteria'] == "multiple_locations_id") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.locations_id' => $params['multiple_locations_id']];
-
-        } elseif ($params['criteria'] == "date") {
-
-            $query['WHERE'] = array_merge($params['query']['WHERE'], $params['date']);
-
-        } elseif ($params['criteria'] == "itilcategories_id") {
-
-            $query['WHERE'] = $params['query']['WHERE'] + ['glpi_tickets.itilcategories_id' => $params['itilcategories_id']];
-
-        }
-
-        return $query;
-    }
-
-    public static function getGraphCriterias($params)
-    {
-
-        $default = self::manageCriteriasNew($params);
-        $opt = $params['opt'];
-
-        $criterias_values = [];
-
-        if (in_array("type", $params['criterias'])) {
-            $criterias_values['type'] = $opt['type'] ?? $default['type'];
-        }
-        if (in_array("locations_id", $params['criterias'])) {
-            $criterias_values['locations_id'] = $opt['locations_id'] ?? $default['locations_id'];
-        }
-        if (in_array("itilcategories_id", $params['criterias'])) {
-            $criterias_values['itilcategories_id'] = $opt['itilcategories_id'] ?? $default['itilcategories_id'];
-        }
-        if (in_array("entities_id", $params['criterias'])) {
-            $criterias_values['entities_id'] = $opt['entities_id'] ?? $default['entities_id'];
-        }
-        if (in_array("is_recursive_entities", $params['criterias'])) {
-            $criterias_values['is_recursive_entities'] = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-        }
-        if (in_array("technicians_groups_id", $params['criterias'])) {
-            $criterias_values['technicians_groups_id'] = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-        }
-        if (in_array("is_recursive_technicians", $params['criterias'])) {
-            $criterias_values['is_recursive_technicians'] = $opt['is_recursive_technicians'] ?? $default['is_recursive_technicians'];
-        }
-        if (in_array("technicians_id", $params['criterias'])) {
-            $criterias_values['technicians_id'] = $opt['technicians_id'] ?? $default['technicians_id'];
-        }
-        if (in_array("requesters_groups_id", $params['criterias'])) {
-            $criterias_values['requesters_groups_id'] = $opt['requesters_groups_id'] ?? $default['requesters_groups_id'];
-        }
-        if (in_array("is_recursive_requesters", $params['criterias'])) {
-            $criterias_values['is_recursive_requesters'] = $opt['is_recursive_requesters'] ?? $default['is_recursive_requesters'];
-        }
-        if (in_array("type_computer", $params['criterias'])) {
-            $criterias_values['type_computer'] = $opt['type_computer'] ?? $default['type_computer'];
-        }
-        if (in_array("users_id", $params['criterias'])) {
-            $criterias_values['users_id'] = $opt['users_id'] ?? $default['users_id'];
-        }
-
-        return $criterias_values;
-    }
 }

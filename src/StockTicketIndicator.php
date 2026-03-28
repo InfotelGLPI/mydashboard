@@ -30,6 +30,7 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DateTime;
 use DBConnection;
+use Glpi\DBAL\QueryExpression;
 use Migration;
 
 class StockTicketIndicator extends CommonDBTM
@@ -112,18 +113,37 @@ class StockTicketIndicator extends CommonDBTM
         global $DB;
 
         //New tickets
-        $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                  LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . "
-                        GROUP BY `glpi_tickets`.`entities_id`";
-        $results = $DB->doQuery($sql_new);
-        while ($data = $DB->fetchArray($results)) {
+//        $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . "
+//                        GROUP BY `glpi_tickets`.`entities_id`";
+//
+
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'id AS total',
+                'entities_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("date") . ") = $year") ,
+                'status' => \Ticket::INCOMING,
+            ],
+            'GROUPBY' => 'entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -153,21 +173,46 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                  LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::INCOMING . "," . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
-                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_resolve` < NOW()
-                  GROUP BY `glpi_tickets`.`entities_id`";
+//        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                  LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::INCOMING . "," . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
+//                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
+//                        AND `glpi_tickets`.`time_to_resolve` < NOW()
+//                  GROUP BY `glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_due);
-        while ($data = $DB->fetchArray($results)) {
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'NOT'       => ['glpi_tickets.status' => [\Ticket::INCOMING, \Ticket::WAITING, \Ticket::SOLVED, \Ticket::CLOSED]],
+                [
+                    'AND' => [
+                        'NOT'       => ['glpi_tickets.time_to_resolve' => 'NULL'],
+                        'glpi_tickets.time_to_resolve' => ['<', new QueryExpression("NOW()")],
+                    ],
+                ],
+            ],
+            'GROUPBY' => 'glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -182,26 +227,60 @@ class StockTicketIndicator extends CommonDBTM
             );
 
         }
+//
+//        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
+//                    `glpi_tickets`.`entities_id`,
+//                    `glpi_groups_tickets`.`groups_id`
+//                  FROM glpi_tickets
+//                  LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  LEFT JOIN `glpi_groups_tickets`
+//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
+//                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
+//                        AND `glpi_tickets`.`time_to_resolve` < NOW()
+//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+//
 
-        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
-                    `glpi_tickets`.`entities_id`,
-                    `glpi_groups_tickets`.`groups_id`
-                  FROM glpi_tickets
-                  LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  LEFT JOIN `glpi_groups_tickets`
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
-                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-                        AND `glpi_tickets`.`time_to_resolve` < NOW()
-                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'NOT'       => ['glpi_tickets.status' => [\Ticket::INCOMING, \Ticket::WAITING, \Ticket::SOLVED, \Ticket::CLOSED]],
+                [
+                    'AND' => [
+                        'NOT'       => ['glpi_tickets.time_to_resolve' => 'NULL'],
+                        'glpi_tickets.time_to_resolve' => ['<', new QueryExpression("NOW()")],
+                    ],
+                ],
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+        ];
 
-        $results = $DB->doQuery($sql_due);
-        while ($data = $DB->fetchArray($results)) {
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
 
                 $DB->insert(
@@ -231,19 +310,38 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                    LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
-                  GROUP BY `glpi_tickets`.`entities_id`";
+//        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                    LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
+//                  GROUP BY `glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_pend);
-        while ($data = $DB->fetchArray($results)) {
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'id AS total',
+                'entities_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("date") . ") = $year") ,
+                'status' => \Ticket::WAITING,
+            ],
+            'GROUPBY' => 'entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -259,23 +357,51 @@ class StockTicketIndicator extends CommonDBTM
 
         }
 
-        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`,
-                    `glpi_groups_tickets`.`groups_id`
-                  FROM glpi_tickets
-                   LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets`
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
-                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+//        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`,
+//                    `glpi_groups_tickets`.`groups_id`
+//                  FROM glpi_tickets
+//                   LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                   LEFT JOIN `glpi_groups_tickets`
+//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
+//                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+//
 
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $results = $DB->doQuery($sql_pend);
-        while ($data = $DB->fetchArray($results)) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'glpi_tickets.status' => \Ticket::WAITING,
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
 
                 $DB->insert(
@@ -308,21 +434,41 @@ class StockTicketIndicator extends CommonDBTM
 
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
 
+//
+//        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                  LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
+//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+//                  GROUP BY `glpi_tickets`.`entities_id`";
 
-        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                  LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-                  GROUP BY `glpi_tickets`.`entities_id`";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
-        $results = $DB->doQuery($sql_incpro);
-        while ($data = $DB->fetchArray($results)) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
+                'NOT'       => ['glpi_tickets.status' => $statuses]
+            ],
+            'GROUPBY' => 'glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -337,23 +483,50 @@ class StockTicketIndicator extends CommonDBTM
             );
         }
 
-        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`,
-                    `glpi_groups_tickets`.`groups_id`
-                  FROM glpi_tickets
-                  LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets`
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+//        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`,
+//                    `glpi_groups_tickets`.`groups_id`
+//                  FROM glpi_tickets
+//                  LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                   LEFT JOIN `glpi_groups_tickets`
+//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
+//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_incpro);
-        while ($data = $DB->fetchArray($results)) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
+                'NOT'       => ['glpi_tickets.status' => $statuses]
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
 
                 $DB->insert(
@@ -385,20 +558,39 @@ class StockTicketIndicator extends CommonDBTM
 
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
 
-        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                   LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-                  GROUP BY `glpi_tickets`.`entities_id`";
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+//        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                   LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
+//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+//                  GROUP BY `glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_dempro);
-        while ($data = $DB->fetchArray($results)) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
+                'NOT'       => ['glpi_tickets.status' => $statuses]
+            ],
+            'GROUPBY' => 'glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -412,24 +604,51 @@ class StockTicketIndicator extends CommonDBTM
                 ]
             );
         }
+//
+//        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`,
+//                    `glpi_groups_tickets`.`groups_id`
+//                  FROM glpi_tickets
+//                   LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                    LEFT JOIN `glpi_groups_tickets`
+//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+//                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
+//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
-        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`,
-                    `glpi_groups_tickets`.`groups_id`
-                  FROM glpi_tickets
-                   LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                    LEFT JOIN `glpi_groups_tickets`
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
-                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
+                'NOT'       => ['glpi_tickets.status' => $statuses]
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+        ];
 
-        $results = $DB->doQuery($sql_dempro);
-        while ($data = $DB->fetchArray($results)) {
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
@@ -458,19 +677,38 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                    LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
-                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
-                  GROUP BY `glpi_tickets`.`entities_id`";
+//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                    LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
+//                  GROUP BY `glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_res);
-        while ($data = $DB->fetchArray($results)) {
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'id AS total',
+                'entities_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("date") . ") = $year") ,
+                'status' => \Ticket::SOLVED,
+            ],
+            'GROUPBY' => 'entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -485,22 +723,48 @@ class StockTicketIndicator extends CommonDBTM
             );
         }
 
-        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`,
-                    `glpi_groups_tickets`.`groups_id`
-                  FROM glpi_tickets
-                    LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets`
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
-                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
-                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`,
+//                    `glpi_groups_tickets`.`groups_id`
+//                  FROM glpi_tickets
+//                    LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                   LEFT JOIN `glpi_groups_tickets`
+//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
+//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_res);
-        while ($data = $DB->fetchArray($results)) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'status' => \Ticket::SOLVED,
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
 
                 $DB->insert(
@@ -530,19 +794,38 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`
-                  FROM glpi_tickets
-                    LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
-                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
-                  GROUP BY `glpi_tickets`.`entities_id`";
+//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`
+//                  FROM glpi_tickets
+//                    LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
+//                  GROUP BY `glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_res);
-        while ($data = $DB->fetchArray($results)) {
+        $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'id AS total',
+                'entities_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("date") . ") = $year") ,
+                'status' => \Ticket::CLOSED,
+            ],
+            'GROUPBY' => 'entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
@@ -558,22 +841,48 @@ class StockTicketIndicator extends CommonDBTM
 
         }
 
-        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-                    `glpi_tickets`.`entities_id`,
-                    `glpi_groups_tickets`.`groups_id`
-                  FROM glpi_tickets
-                    LEFT JOIN glpi_entities
-                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-                   LEFT JOIN `glpi_groups_tickets`
-                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-                  WHERE `glpi_tickets`.`is_deleted` = 0
-                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
-                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
-                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
-                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+//                    `glpi_tickets`.`entities_id`,
+//                    `glpi_groups_tickets`.`groups_id`
+//                  FROM glpi_tickets
+//                    LEFT JOIN glpi_entities
+//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+//                   LEFT JOIN `glpi_groups_tickets`
+//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+//                  WHERE `glpi_tickets`.`is_deleted` = 0
+//                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
+//                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
+//                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
+//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
-        $results = $DB->doQuery($sql_res);
-        while ($data = $DB->fetchArray($results)) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'glpi_tickets.id AS total',
+                'glpi_tickets.entities_id',
+                'glpi_groups_tickets.groups_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_tickets',
+            'LEFT JOIN'       => [
+                'glpi_groups_tickets' => [
+                    'ON' => [
+                        'glpi_groups_tickets' => 'tickets_id',
+                        'glpi_tickets'          => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                $is_deleted,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                'status' => \Ticket::CLOSED,
+            ],
+            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+        ];
+
+        $iterator = $DB->request($criteria);
+
+        foreach ($iterator as $data) {
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
 
                 $DB->insert(

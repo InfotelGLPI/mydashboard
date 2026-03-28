@@ -436,19 +436,15 @@ class Reports_Table extends CommonGLPI
 
             case $this->getType() . "32":
                 $name = 'NumberOfTicketsByTechnicianAndStatus';
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
+                    $specific_criterias = [
                         'users_id',
                     ];
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $criterias = [];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -457,7 +453,7 @@ class Reports_Table extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 $technician_group = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
                 $users_criteria = $opt['users_id'] ?? $default['users_id'];
@@ -805,19 +801,15 @@ class Reports_Table extends CommonGLPI
 
             case $this->getType() . "33":
                 $name = 'NumberOfTicketsByGroupAndStatus';
+
+                $criterias = Helper::getDefaultCriterias();
+
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $criterias = [
-                        'entities_id',
-                        'is_recursive_entities',
-                        'technicians_groups_id',
-                        'is_recursive_technicians',
+                    $specific_criterias = [
                         'itilcategories_id',
                     ];
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $criterias = [];
+                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -826,7 +818,7 @@ class Reports_Table extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriteriasNew($params);
+                $default = Helper::manageCriterias($params);
 
                 // Allowed status
                 $statusList = [
@@ -1142,6 +1134,7 @@ class Reports_Table extends CommonGLPI
             default:
                 break;
         }
+        return false;
     }
 
     /**

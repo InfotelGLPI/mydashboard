@@ -24,6 +24,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QueryExpression;
+
 ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 
@@ -33,7 +35,9 @@ $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
-include('../../../../inc/includes.php');
+define("GLPI_DIR_ROOT", realpath(dirname($_SERVER["SCRIPT_FILENAME"]) . "/../../../.."));
+require_once GLPI_DIR_ROOT . '/vendor/autoload.php';
+$kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
 
 global $DB;
 
@@ -60,24 +64,63 @@ if (Plugin::isPluginActive("mydashboard")) {
                    . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
                    . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
 
-   $results      = $DB->doQuery($query);
-   while ($data = $DB->fetchArray($results)) {
+
+    $is_deleted = ['glpi_tickets.is_deleted' => 0];
+    $criteria = [
+        'SELECT' => [
+            new QueryExpression(
+                "DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y-%m') AS month"
+            ),
+            new QueryExpression(
+                "DATE_FORMAT(" . $DB->quoteName("date") . ", '%b %Y') AS monthname"
+            ),
+            'glpi_tickets.entities_id',
+        ],
+        'DISTINCT'        => true,
+        'FROM' => 'glpi_tickets',
+        'WHERE' => [
+            $is_deleted,
+            [
+                ['date' => ['>=', "$previousyear-$currentmonth-01 00:00:00"]],
+                ['date' => ['<', "$currentyear-$currentmonth-01 00:00:00"]],
+            ]
+        ],
+        'GROUPBY' => 'month, entities_id',
+    ];
+
+    $iterator = $DB->request($criteria);
+
+    foreach ($iterator as $data) {
 
       list($year, $month) = explode('-', $data['month']);
       $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
       $entities_id = $data["entities_id"];
 
-      $query       = "SELECT COUNT(*) as count FROM `glpi_tickets`
-                  WHERE `glpi_tickets`.`is_deleted` = '0' AND `glpi_tickets`.`entities_id` = $entities_id
-                  AND (((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND `status` NOT IN (" . CommonITILObject::SOLVED . "," . CommonITILObject::CLOSED . "))
-                  OR ((`glpi_tickets`.`date` <= '$year-$month-$nbdays 23:59:59')
-                  AND (`glpi_tickets`.`solvedate` > ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY))))";
-      $results2    = $DB->doQuery($query);
-      $data2       = $DB->fetchArray($results2);
-      $countTicket = $data2['count'];
-
-      if ($countTicket > 0) {
+        $criteria = [
+            'SELECT' => [
+                'COUNT' => 'id AS count',
+            ],
+            'FROM' => 'glpi_tickets',
+            'WHERE' => [
+                $is_deleted,
+                'entities_id' => $entities_id,
+                ['OR'         =>
+                    [
+                        ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                        ['status' => \Ticket::getNotSolvedStatusArray()],
+                    ],
+                    [
+                        ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                        ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                    ],
+                ],
+            ],
+        ];
+        $iterator = $DB->request($criteria);
+        foreach ($iterator as $data2) {
+            $countTicket = $data2['count'];
+        }
+        if ($countTicket > 0) {
 
           $DB->insert(
               'glpi_plugin_mydashboard_stocktickets',
