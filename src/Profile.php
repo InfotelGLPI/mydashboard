@@ -258,7 +258,7 @@ class Profile extends \Profile
         }
 
         // When user connects or change profile he goes (when Mydashboard is configured) to the menu
-        $pref = Helper::getReplaceCentral();
+        $pref = Preference::getReplaceCentral();
         if ($pref
             && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])
             && !isset($_SESSION["glpi_plugin_mydashboard_activating"])) {

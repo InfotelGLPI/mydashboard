@@ -73,7 +73,7 @@ class Alert extends CommonDBTM
      * @param CommonGLPI $item
      * @param int $withtemplate
      *
-     * @return string|translated
+     * @return string
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
@@ -853,7 +853,7 @@ class Alert extends CommonDBTM
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $location_criteria = $opt['locations_id'] ?? $default['locations_id'];
 
@@ -1131,11 +1131,10 @@ class Alert extends CommonDBTM
             "criterias" => $criterias,
             "opt" => $opt,
         ];
-        $default = Helper::manageCriterias($params);
+        $default = Criteria::manageCriterias($params);
 
-        if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
-            $opt['technicians_groups_id']
-        ) == 0)) {
+        if (!isset($opt['technicians_groups_id'])
+            || (is_array($opt['technicians_groups_id']) && count($opt['technicians_groups_id']) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
             $technicians_groups_id = $opt['technicians_groups_id'];
@@ -1709,7 +1708,7 @@ class Alert extends CommonDBTM
             "opt" => $opt,
         ];
 
-        $default = Helper::manageCriterias($params);
+        $default = Criteria::manageCriterias($params);
 
         if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
             $opt['technicians_groups_id']
@@ -3733,7 +3732,7 @@ class Alert extends CommonDBTM
                     "itilcategories_id",
                 ];
 
-                $default = Helper::manageCriterias($params_query);
+                $default = Criteria::manageCriterias($params_query);
 
                 $opt['entities_id'] = $params['entities_id'] ?? $default['entities_id'];
                 $opt['is_recursive_entities'] = $params['is_recursive_entities'] ?? $default['is_recursive_entities'];
@@ -3785,7 +3784,7 @@ class Alert extends CommonDBTM
                     "week",
                 ];
 
-                $default = Helper::manageCriterias($params_query);
+                $default = Criteria::manageCriterias($params_query);
 
                 $opt['year'] = $params['year'] ?? $default['year'];
 
@@ -4369,7 +4368,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ],
         ];
 
-        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+        $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
         $iterator = $DB->request($criteria);
 
@@ -4412,7 +4411,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ],
         ];
 
-        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+        $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
         $iterator = $DB->request($criteria);
 
@@ -4510,7 +4509,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ],
         ];
 
-        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+        $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
         $iterator = $DB->request($criteria);
 
@@ -4569,7 +4568,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ],
         ];
 
-        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+        $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
         $iterator = $DB->request($criteria);
 
@@ -4629,7 +4628,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ],
         ];
 
-        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+        $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
         $iterator = $DB->request($criteria);
 
@@ -4682,7 +4681,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ],
         ];
 
-        $criteria = Helper::addCriteriasForQuery($criteria, $params);
+        $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
         $iterator = $DB->request($criteria);
 

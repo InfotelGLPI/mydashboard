@@ -48,7 +48,7 @@ class Change extends CommonGLPI
     /**
      * @param int $nb
      *
-     * @return translated
+     * @return string
      */
     public static function getTypeName($nb = 0)
     {
@@ -558,7 +558,7 @@ class Change extends CommonGLPI
     /**
      * @param bool $foruser
      *
-     * @return Datatable
+     * @return MydashboardHtml
      */
     public static function showCentralCount($foruser = false)
     {

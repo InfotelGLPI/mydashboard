@@ -108,6 +108,33 @@ class Preference extends CommonDBTM
     }
 
     /**
+     * Get a specific field of the config
+     *
+     * @param string $fieldname
+     *
+     * @return mixed
+     */
+    public static function getPreferenceField($fieldname)
+    {
+        $preference = new Preference();
+        if (!$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+
+        return (isset($preference->fields[$fieldname])) ? $preference->fields[$fieldname] : 0;
+    }
+
+    /**
+     * Check if user wants dashboard to replace central interface
+     * @return boolean, TRUE if dashboard must replace, FALSE otherwise
+     */
+    public static function getReplaceCentral()
+    {
+        return Preference::getPreferenceField("replace_central");
+    }
+
+    /**
      * @param $user_id
      */
     public function showPreferencesForm($user_id)

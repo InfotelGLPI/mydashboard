@@ -34,8 +34,17 @@ use CommonITILObject;
 use Dropdown;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
-use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Charts\PieChart;
+use GlpiPlugin\Mydashboard\Criteria;
+use GlpiPlugin\Mydashboard\Criterias\Entity;
+use GlpiPlugin\Mydashboard\Criterias\ITILCategory;
+use GlpiPlugin\Mydashboard\Criterias\Limit;
+use GlpiPlugin\Mydashboard\Criterias\Location;
+use GlpiPlugin\Mydashboard\Criterias\Month;
+use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
+use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
+use GlpiPlugin\Mydashboard\Criterias\Type;
+use GlpiPlugin\Mydashboard\Criterias\Year;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Menu;
@@ -210,7 +219,7 @@ class Reports_Pie extends CommonGLPI
                 $onclick = 0;
                 $name = 'TicketsByPriorityPieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
@@ -223,7 +232,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $name_priority = [];
                 $datas = [];
@@ -247,7 +256,7 @@ class Reports_Pie extends CommonGLPI
                     'ORDERBY' => 'glpi_tickets.priority ASC',
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -284,7 +293,7 @@ class Reports_Pie extends CommonGLPI
                 ];
 
                 if ($onclick == 1) {
-                    $criterias_values = Helper::getGraphCriterias($params);
+                    $criterias_values = Criteria::getGraphCriterias($params);
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
 
@@ -310,23 +319,23 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "7":
                 $name = 'TopTenTicketAuthorsPieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $specific_criterias = [
-                        'year',
-                        'month',
-                        'limit',
+                        Year::$criteria_name,
+                        Month::$criteria_name,
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'year',
-                        'month',
-                        'limit',
+                        Year::$criteria_name,
+                        Month::$criteria_name,
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -337,9 +346,16 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
-                $date_criteria = $default['date'];
+                $year = $opt['year'] ?? $default['year'];
+                $month = $opt['month'] ?? $default['month'];
+                $month = sprintf('%02d', $month);
+
+                $date_criteria = [
+                    ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
+                    ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+                ];
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -371,7 +387,6 @@ class Reports_Pie extends CommonGLPI
                     ],
                     'WHERE' => [
                         $is_deleted,
-                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                         $date_criteria,
                     ],
                     'GROUPBY' => 'glpi_tickets_users.users_id',
@@ -379,7 +394,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -444,7 +459,7 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "12":
                 $name = 'TTRCompliance';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 $params = [
                     "preferences" => $preferences,
@@ -452,7 +467,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -472,7 +487,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -508,7 +523,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -581,7 +596,7 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "13":
                 $name = 'TTOCompliance';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 $params = [
                     "preferences" => $preferences,
@@ -589,7 +604,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -609,7 +624,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -651,7 +666,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -719,22 +734,23 @@ class Reports_Pie extends CommonGLPI
                 $name = 'IncidentsByCategoryPieChart';
                 $onclick = 0;
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'requesters_groups_id',
-                        'limit',
+                        RequesterGroup::$criteria_name,
+                        ITILCategory::$criteria_name,
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'requesters_groups_id',
-                        'limit',
+                        RequesterGroup::$criteria_name,
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -745,7 +761,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -780,7 +796,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -825,7 +841,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $criterias_values = Helper::getGraphCriterias($params);
+                    $criterias_values = Criteria::getGraphCriterias($params);
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPieGraph($graph_datas, $graph_criterias);
@@ -853,22 +869,23 @@ class Reports_Pie extends CommonGLPI
                 $name = 'RequestsByCategoryPieChart';
                 $onclick = 0;
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'requesters_groups_id',
-                        'limit',
+                        RequesterGroup::$criteria_name,
+                        ITILCategory::$criteria_name,
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'requesters_groups_id',
-                        'limit',
+                        RequesterGroup::$criteria_name,
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -879,7 +896,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -914,7 +931,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -958,7 +975,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $criterias_values = Helper::getGraphCriterias($params);
+                    $criterias_values = Criteria::getGraphCriterias($params);
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPieGraph($graph_datas, $graph_criterias);
@@ -985,24 +1002,24 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "18":
                 $name = 'TicketTypePieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
 
                     $specific_criterias = [
-                        'requesters_groups_id',
-                        'year',
-                        'month',
+                        RequesterGroup::$criteria_name,
+                        Year::$criteria_name,
+                        Month::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'requesters_groups_id',
-                        'year',
-                        'month',
+                        RequesterGroup::$criteria_name,
+                        Year::$criteria_name,
+                        Month::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -1013,10 +1030,21 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
-                $date_criteria = $default['date'];
-                $closedate_criteria = $default['closedate'];
+                $year = $opt['year'] ?? $default['year'];
+                $month = $opt['month'] ?? $default['month'];
+                $month = sprintf('%02d', $month);
+
+                $date_criteria = [
+                    ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
+                    ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+                ];
+
+                $closedate_criteria = [
+                    ['glpi_tickets.closedate' => ['>=', "$year-$month-01 00:00:00"]],
+                    ['glpi_tickets.closedate' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+                ];
 
                 $dataspie = [];
                 $namespie = [];
@@ -1035,7 +1063,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -1064,7 +1092,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -1101,7 +1129,7 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1159,7 +1187,7 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "20":
                 $name = 'SolutionTypePieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 $params = [
                     "preferences" => $preferences,
@@ -1167,7 +1195,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $name_solution = [];
                 $datas = [];
@@ -1209,7 +1237,7 @@ class Reports_Pie extends CommonGLPI
                     'GROUPBY' => 'glpi_solutiontypes.id',
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
 
@@ -1275,20 +1303,20 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "25":
                 $name = 'TicketsByRequesterGroupPieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
 
                     $specific_criterias = [
-                        'limit',
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'limit',
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -1299,7 +1327,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -1337,7 +1365,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1409,20 +1437,20 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "26":
                 $name = 'SatisfactionPercent';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
 
                     $specific_criterias = [
-                        'year',
+                        Year::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'year',
+                        Year::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -1433,7 +1461,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $closedate_criteria = $default['closedate'];
 
@@ -1536,20 +1564,20 @@ class Reports_Pie extends CommonGLPI
                 $name = 'TicketsByLocationPieChart';
                 $onclick = 0;
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'limit',
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'limit',
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -1560,7 +1588,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -1593,7 +1621,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1642,7 +1670,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $criterias_values = Helper::getGraphCriterias($params);
+                    $criterias_values = Criteria::getGraphCriterias($params);
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
@@ -1668,7 +1696,7 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "30":
                 $name = 'RequestTypePieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 $params = [
                     "preferences" => $preferences,
@@ -1676,7 +1704,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $name_requesttypes = [];
                 $datas = [];
@@ -1707,7 +1735,7 @@ class Reports_Pie extends CommonGLPI
                     'GROUPBY' => 'glpi_requesttypes.id',
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1773,22 +1801,22 @@ class Reports_Pie extends CommonGLPI
                 $name = 'TicketsByLocationPolarChart';
                 $onclick = 0;
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'year',
-                        'month',
+                        Year::$criteria_name,
+                        Month::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'year',
-                        'month',
+                        Year::$criteria_name,
+                        Month::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -1800,9 +1828,16 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
-                $date_criteria = $default['date'];
+                $year = $opt['year'] ?? $default['year'];
+                $month = $opt['month'] ?? $default['month'];
+                $month = sprintf('%02d', $month);
+
+                $date_criteria = [
+                    ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
+                    ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+                ];
 
                 $name_location1 = [];
                 $datas = [];
@@ -1832,7 +1867,7 @@ class Reports_Pie extends CommonGLPI
                     'GROUPBY' => 'locations_id',
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -1882,7 +1917,7 @@ class Reports_Pie extends CommonGLPI
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $criterias_values = Helper::getGraphCriterias($params);
+                    $criterias_values = Criteria::getGraphCriterias($params);
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = PieChart::launchPolarAreaGraph($graph_datas, $graph_criterias);
@@ -1908,20 +1943,20 @@ class Reports_Pie extends CommonGLPI
             case $this->getType() . "32":
                 $name = 'TicketsByAppliancePieChart';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'limit',
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'limit',
+                        Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -1932,7 +1967,7 @@ class Reports_Pie extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $limit = $opt['limit'] ?? $default['limit'];
 
@@ -1969,7 +2004,7 @@ class Reports_Pie extends CommonGLPI
                     'LIMIT' => $limit,
                 ];
 
-                $criteria = Helper::addCriteriasForQuery($criteria, $params);
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
@@ -2056,28 +2091,21 @@ class Reports_Pie extends CommonGLPI
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
+        $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
 
-        $options = Chart::addCriteria(Chart::PRIORITY, 'equals', $params["selected_id"], 'AND');
+        $options = Criteria::addUrlCriteria(Criteria::PRIORITY, 'equals', $params["selected_id"], 'AND');
 
-        if ($params["params"]["type"] > 0) {
-            $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        if ($params["params"][Type::$criteria_name] > 0) {
+            if ($params["params"][Type::$criteria_name] > 0) {
+                $options = Type::getSearchCriteria($params);
+            }
         }
 
-        $options = Chart::addCriteria(
-            Chart::ENTITIES_ID,
-            (isset($params["params"]["sons"])
-                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
-            $params["params"]["entities_id"],
-            'AND'
-        );
+        $options = Entity::getSearchCriteria($params);
 
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technicians_groups_id"]
-        );
+        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
+            $options = TechnicianGroup::getSearchCriteria($params);
+        }
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -2096,48 +2124,36 @@ class Reports_Pie extends CommonGLPI
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
+        $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
+
+        if ($params["params"][Type::$criteria_name] > 0) {
+            $options = Type::getSearchCriteria($params);
+        }
 
         if ($params["params"]["widget"] == self::class . "16") {
-            $options = Chart::addCriteria(
-                Chart::TYPE,
-                'equals',
-                \Ticket::INCIDENT_TYPE,
-                'AND'
-            );
+            if ($params["params"][Type::$criteria_name] > 0) {
+                $options = Type::getSearchCriteria($params, \Ticket::INCIDENT_TYPE);
+            }
         } else {
-            $options = Chart::addCriteria(
-                Chart::TYPE,
-                'equals',
-                \Ticket::DEMAND_TYPE,
-                'AND'
-            );
+            if ($params["params"][Type::$criteria_name] > 0) {
+                $options = Type::getSearchCriteria($params, \Ticket::DEMAND_TYPE);
+            }
         }
 
-        $options = Chart::addCriteria(
-            Chart::CATEGORY,
-            ((empty($params["selected_id"])) ? 'contains' : 'equals'),
-            ((empty($params["selected_id"])) ? '^$' : $params["selected_id"]),
-            'AND'
-        );
-
-        if (isset($params["params"]["requester_groups"])) {
-            $options = Chart::groupCriteria(Chart::REQUESTER_GROUP, 'equals', $params["params"]["requester_groups"]);
+        $params["params"][ITILCategory::$criteria_name] = $params["selected_id"];
+        if ($params["params"][ITILCategory::$criteria_name] > 0) {
+            $options = ITILCategory::getSearchCriteria($params);
         }
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technicians_groups_id"]
-        );
 
-        $options = Chart::addCriteria(
-            Chart::ENTITIES_ID,
-            (isset($params["params"]["sons"])
-                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
-            $params["params"]["entities_id"],
-            'AND'
-        );
+        if ($params["params"][RequesterGroup::$criteria_name] > 0) {
+            $options = RequesterGroup::getSearchCriteria($params);
+        }
+
+        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
+            $options = TechnicianGroup::getSearchCriteria($params);
+        }
+
+        $options = Entity::getSearchCriteria($params);
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2155,17 +2171,17 @@ class Reports_Pie extends CommonGLPI
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
+        $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         // requester_group
-        $options = Chart::addCriteria(
+        $options = Criteria::addUrlCriteria(
             71,
             ((empty($params["selected_id"])) ? 'contains' : 'equals'),
             ((empty($params["selected_id"])) ? '^$' : $params["selected_id"]),
             'AND'
         );
 
-        if ($params["params"]["type"] > 0) {
-            $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        if ($params["params"][Type::$criteria_name] > 0) {
+            $options = Type::getSearchCriteria($params);
         }
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2183,33 +2199,22 @@ class Reports_Pie extends CommonGLPI
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(Chart::STATUS, 'equals', 'notold', 'AND');
+        $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
 
-        $options = Chart::addCriteria(
-            Chart::LOCATIONS_ID,
-            ((empty($params["selected_id"])) ? 'contains' : 'equals'),
-            ((empty($params["selected_id"])) ? '^$' : $params["selected_id"]),
-            'AND'
-        );
-
-        if ($params["params"]["type"] > 0) {
-            $options = Chart::addCriteria(Chart::TYPE, 'equals', $params["params"]["type"], 'AND');
+        $params["params"][Location::$criteria_name] = $params["selected_id"];
+        if ($params["params"][Location::$criteria_name] > 0) {
+            $options = Location::getSearchCriteria($params);
         }
 
-        $options = Chart::addCriteria(
-            Chart::ENTITIES_ID,
-            (isset($params["params"]["sons"])
-                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
-            $params["params"]["entities_id"],
-            'AND'
-        );
+        if ($params["params"][Type::$criteria_name] > 0) {
+            $options = Type::getSearchCriteria($params);
+        }
 
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technicians_groups_id"]
-        );
+        $options = Entity::getSearchCriteria($params);
+
+        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
+            $options = TechnicianGroup::getSearchCriteria($params);
+        }
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'

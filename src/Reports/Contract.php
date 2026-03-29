@@ -47,7 +47,7 @@ class Contract extends CommonGLPI
     /**
      * @param int $nb
      *
-     * @return string|\translated
+     * @return string
      */
     public static function getTypeName($nb = 0)
     {

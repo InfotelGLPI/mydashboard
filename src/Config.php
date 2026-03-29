@@ -168,6 +168,40 @@ class Config extends CommonDBTM
     }
 
     /**
+     * Get a specific field of the config
+     *
+     * @param string $fieldname
+     *
+     * @return mixed
+     */
+    public static function getConfigField($fieldname)
+    {
+        $config = new Config();
+        if (!$config->getFromDB(Session::getLoginUserID())) {
+            $config->initConfig();
+        }
+        $config->getFromDB("1");
+
+        return (isset($config->fields[$fieldname])) ? $config->fields[$fieldname] : 0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getDisplayMenu()
+    {
+        return Config::getConfigField("display_menu");
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getReplaceCentralConf()
+    {
+        return Config::getConfigField("replace_central");
+    }
+
+    /**
      * Get the Search options for the given Type
      *
      * This should be overloaded in Class

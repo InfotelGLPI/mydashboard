@@ -88,7 +88,7 @@ class ProjectTask extends CommonGLPI
     /**
      * @param $widgetId
      *
-     * @return Datatable
+     * @return false|MydashboardHtml
      */
     public function getWidgetContentForItem($widgetId)
     {

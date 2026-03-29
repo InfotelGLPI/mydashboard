@@ -150,7 +150,7 @@ class Reports_Map extends CommonGLPI
                     "criterias" => $criterias,
                     "opt" => $opt
                 ];
-                $default = Helper::manageCriterias($paramsc);
+                $default = Criteria::manageCriterias($paramsc);
 
                 $type = $opt['type'] ?? $default['type'];
                 $entities_id_criteria = $opt['entities_id'] ?? $default['entities_id'];

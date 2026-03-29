@@ -78,7 +78,7 @@ class Reminder extends CommonGLPI
     /**
      * @param $widgetId
      *
-     * @return Nothing
+     * @return MydashboardHtml
      */
     public function getWidgetContentForItem($widgetId)
     {

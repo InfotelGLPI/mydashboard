@@ -37,27 +37,6 @@ class Chart extends Module
     private $tabDatasSet;
     private $options = [];
 
-    public const PRIORITY           = 3;
-    public const TYPE               = 14;
-    public const ENTITIES_ID        = 80;
-    public const STATUS             = 12;
-    public const CATEGORY           = 7;
-    public const OPEN_DATE          = 15;
-    public const TECHNICIAN         = 5;
-    public const REQUESTER_GROUP    = 71;
-    public const TECHNICIAN_GROUP   = 8;
-    public const LOCATIONS_ID       = 83;
-    public const CLOSE_DATE         = 16;
-    public const SOLVE_DATE         = 17;
-    public const TASK_ACTIONTIME    = 96;
-    public const VALIDATION_STATS   = 55;
-    public const VALIDATION_REFUSED = 4;
-    public const NUMBER_OF_PROBLEMS = 200;
-    public const SATISFACTION_DATE  = 61;
-    public const SATISFACTION_VALUE = 62;
-    public const BUY_DATE           = 37;
-    public const TYPE_COMPUTER      = 4;
-
     public static $rightname = "plugin_mydashboard";
     /**
      * Chart constructor.
@@ -155,53 +134,5 @@ class Chart extends Module
         } else {
             $this->debugError(__("Not an array", 'mydashboard'));
         }
-    }
-
-
-    /**
-     * @param $field
-     * @param $searchType
-     * @param $value
-     * @param $link
-     */
-    public static function addCriteria($field, $searchType, $value, $link)
-    {
-        global $options;
-
-        $options['criteria'][] = [
-            'field'      => $field,
-            'searchtype' => $searchType,
-            'value'      => $value,
-            'link'       => $link,
-        ];
-        return $options;
-    }
-
-    /**
-     * @param $field
-     * @param $searchType
-     * @param $value
-     */
-    public static function groupCriteria($field, $searchType, $value)
-    {
-        global $options;
-
-        if (isset($value)
-            && count($value) > 0) {
-            $groups = $value;
-            $nb     = 0;
-            foreach ($groups as $group) {
-                $criterias['criteria'][$nb] = [
-                    'field'      => $field,
-                    'searchtype' => $searchType,
-                    'value'      => $group,
-                    'link'       => (($nb == 0) ? 'AND' : 'OR'),
-                ];
-                $nb++;
-            }
-            $options['criteria'][] = $criterias;
-        }
-
-        return $options;
     }
 }

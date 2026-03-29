@@ -31,7 +31,6 @@ use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
 use CommonITILValidation;
-use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
@@ -56,7 +55,7 @@ class Ticket extends CommonGLPI
     /**
      * @param int $nb
      *
-     * @return string|\translated
+     * @return string
      */
     public static function getTypeName($nb = 0)
     {
@@ -76,27 +75,27 @@ class Ticket extends CommonGLPI
                 "ticketlistrequestbyselfwidget" => [
                     "title" => __('Your tickets in progress'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 "ticketlistobservedwidget" => [
                     "title" => __('Your observed tickets'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 "ticketlistrejectedwidget" => [
                     "title" => __('Your rejected tickets', 'mydashboard'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 "ticketlisttoapprovewidget" => [
                     "title" => __('Your tickets to close'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 "ticketlistsurveywidget" => [
                     "title" => __('Your satisfaction surveys', 'mydashboard'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
             ],
         ];
@@ -104,70 +103,70 @@ class Ticket extends CommonGLPI
             $widgets[Menu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = [
                 "title" => __('Your tickets to validate', "mydashboard"),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
         if ($showticket) {
             $widgets[Menu::$TICKET_TECHVIEW]["ticketcountwidget2"] = [
                 "title" => __('New tickets', 'mydashboard'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistprocesswidget"] = [
                 "title" => __('Tickets to be processed'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidget"] = [
                 "title" => __('Tickets on pending status'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$TICKET_TECHVIEW]["tickettaskstodowidget"] = [
                 "title" => __("Ticket tasks to do"),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
         if (Session::haveRight('ticket', \Ticket::READGROUP)) {
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"] = [
                 "title" => __('Tickets on pending status'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlisttoapprovewidgetgroup"] = [
                 "title" => __('Your tickets to close'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistrequestbyselfwidgetgroup"] = [
                 "title" => __('Your tickets in progress'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistobservedwidgetgroup"] = [
                 "title" => __('Your observed tickets'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
         if ($showticket) {
             $widgets[Menu::$GROUP_VIEW]["ticketlistprocesswidgetgroup"] = [
                 "title" => __('Tickets to be processed'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
             $widgets[Menu::$GROUP_VIEW]["tickettaskstodowidgetgroup"] = [
                 "title" => __("Ticket tasks to do"),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
         if ($showticket || $createticket) {
             $widgets[Menu::$HELPDESK]["ticketcountwidget"] = [
                 "title" => __('Ticket followup', 'mydashboard'),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
 
@@ -216,7 +215,7 @@ class Ticket extends CommonGLPI
                     return self::showCentralList(0, "waiting", false);
                 };
                 break;
-            //Group
+                //Group
             case "ticketlistwaitingwidgetgroup":
                 if (Session::haveRight('ticket', \Ticket::READGROUP)) {
                     return self::showCentralList(0, "waiting", true);
@@ -242,7 +241,7 @@ class Ticket extends CommonGLPI
                     return self::showCentralList(0, "process", true);
                 }
                 break;
-            //Global
+                //Global
             case "ticketcountwidget":
                 if ($showticket || $createticket) {
                     return self::showCentralCount($createticket && (Session::getCurrentInterface() == 'helpdesk'));
@@ -286,17 +285,17 @@ class Ticket extends CommonGLPI
 
         $search_users_id = [
             'glpi_tickets_users.users_id' => Session::getLoginUserID(),
-            'glpi_tickets_users.type' => CommonITILActor::REQUESTER
+            'glpi_tickets_users.type' => CommonITILActor::REQUESTER,
         ];
 
         $search_assign = [
             'glpi_tickets_users.users_id' => Session::getLoginUserID(),
-            'glpi_tickets_users.type' => CommonITILActor::ASSIGN
+            'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
         ];
 
         $search_observer = [
             'glpi_tickets_users.users_id' => Session::getLoginUserID(),
-            'glpi_tickets_users.type' => CommonITILActor::OBSERVER
+            'glpi_tickets_users.type' => CommonITILActor::OBSERVER,
         ];
 
 
@@ -308,19 +307,19 @@ class Ticket extends CommonGLPI
             if (count($_SESSION['glpigroups'])) {
                 $search_assign = [
                     'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                    'glpi_groups_tickets.type' => CommonITILActor::ASSIGN
+                    'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
                 ];
 
                 if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
                     $search_users_id = [
                         'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER
+                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
                     ];
                 }
                 if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
                     $search_observer = [
                         'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                        'glpi_groups_tickets.type' => CommonITILActor::OBSERVER
+                        'glpi_groups_tickets.type' => CommonITILActor::OBSERVER,
                     ];
                 }
             }
@@ -355,8 +354,8 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.status' => \Ticket::WAITING];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 break;
 
@@ -367,8 +366,8 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.status' => \Ticket::getProcessStatusArray()];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 break;
 
@@ -380,38 +379,38 @@ class Ticket extends CommonGLPI
 
                 if (!$showgrouptickets) {
                     $criteria['WHERE'] = $criteria['WHERE'] + [
-                            'OR' => [
-                                'glpi_tickets.users_id_recipient' => Session::getLoginUserID(),
-                            ]
-                        ];
+                        'OR' => [
+                            'glpi_tickets.users_id_recipient' => Session::getLoginUserID(),
+                        ],
+                    ];
                 }
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 break;
 
             case "tovalidate": // on affiche les tickets à valider
 
                 $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_ticketvalidations' => [
-                            'ON' => [
-                                'glpi_ticketvalidations' => 'tickets_id',
-                                'glpi_tickets' => 'id'
-                            ]
-                        ]
-                    ];
+                    'glpi_ticketvalidations' => [
+                        'ON' => [
+                            'glpi_ticketvalidations' => 'tickets_id',
+                            'glpi_tickets' => 'id',
+                        ],
+                    ],
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_ticketvalidations.users_id_validate' => Session::getLoginUserID(),
-                        'glpi_ticketvalidations.status' => CommonITILValidation::WAITING,
-                        'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
-                    ];
+                    'glpi_ticketvalidations.users_id_validate' => Session::getLoginUserID(),
+                    'glpi_ticketvalidations.status' => CommonITILValidation::WAITING,
+                    'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 break;
 
@@ -420,13 +419,13 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_tickets.status' => ['<>', \Ticket::CLOSED],
-                        'glpi_tickets.global_validation' => CommonITILValidation::REFUSED
-                    ];
+                    'glpi_tickets.status' => ['<>', \Ticket::CLOSED],
+                    'glpi_tickets.global_validation' => CommonITILValidation::REFUSED,
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
                 break;
 
             case "observed":
@@ -434,17 +433,17 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + $search_observer;
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_tickets.status' => [
-                            \Ticket::INCOMING,
-                            \Ticket::PLANNED,
-                            \Ticket::ASSIGNED,
-                            \Ticket::WAITING
-                        ]
-                    ];
+                    'glpi_tickets.status' => [
+                        \Ticket::INCOMING,
+                        \Ticket::PLANNED,
+                        \Ticket::ASSIGNED,
+                        \Ticket::WAITING,
+                    ],
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 break;
 
@@ -454,25 +453,25 @@ class Ticket extends CommonGLPI
                     'glpi_ticketsatisfactions' => [
                         'ON' => [
                             'glpi_ticketsatisfactions' => 'tickets_id',
-                            'glpi_tickets' => 'id'
-                        ]
-                    ]
+                            'glpi_tickets' => 'id',
+                        ],
+                    ],
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + $search_users_id + [
-                        'OR' => [
-                            'glpi_tickets.users_id_recipient' => Session::getLoginUserID(),
-                        ]
-                    ];
+                    'OR' => [
+                        'glpi_tickets.users_id_recipient' => Session::getLoginUserID(),
+                    ],
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_ticketsatisfactions.date_answered' => null,
-                        'glpi_tickets.status' => \Ticket::CLOSED
-                    ];
+                    'glpi_ticketsatisfactions.date_answered' => null,
+                    'glpi_tickets.status' => \Ticket::CLOSED,
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
 
                 break;
 
@@ -484,17 +483,17 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + $search_users_id;
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_tickets.status' => [
-                            \Ticket::INCOMING,
-                            \Ticket::PLANNED,
-                            \Ticket::ASSIGNED,
-                            \Ticket::WAITING
-                        ]
-                    ];
+                    'glpi_tickets.status' => [
+                        \Ticket::INCOMING,
+                        \Ticket::PLANNED,
+                        \Ticket::ASSIGNED,
+                        \Ticket::WAITING,
+                    ],
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_tickets'
-                    );
+                    'glpi_tickets'
+                );
         }
 
 
@@ -926,7 +925,7 @@ class Ticket extends CommonGLPI
         $number = 0;
         //      $_SESSION['glpidisplay_count_on_home'] > 0 &&
         if ($req !== false) {
-            $start = (int)$start;
+            $start = (int) $start;
             $limit = "";
             //         $limit  = (int)$_SESSION['glpidisplay_count_on_home'];
             $req = TicketTask::getTaskList($status, $showgrouptickets, $start, $limit);
@@ -1126,7 +1125,7 @@ class Ticket extends CommonGLPI
                     nl2br(RichText::getSafeHtml($job->fields['content'])),
                     [
                         'applyto' => 'ticket' . $job->fields["id"] . $rand,
-                        'display' => false
+                        'display' => false,
                     ]
                 )
             );
@@ -1148,8 +1147,8 @@ class Ticket extends CommonGLPI
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>
                                 <span class='b'>" . $job->fields["priority"] . " - " . \Ticket::getPriorityName(
-                    $job->fields["priority"]
-                ) . "</span>
+                $job->fields["priority"]
+            ) . "</span>
                              </div>";
             //Categories
             $colnum++;
@@ -1190,7 +1189,7 @@ class Ticket extends CommonGLPI
     /**
      * Very short table to display the task
      *
-     * @param integer $ID The ID of the task
+     * @param int $ID The ID of the task
      * @param string $itemtype The itemtype (TicketTask, ProblemTask)
      *
      * @return array
@@ -1227,8 +1226,8 @@ class Ticket extends CommonGLPI
             $colnum++;
             //echo "<td>";
             $link = "<a id='" . strtolower(
-                    $item_link->getType()
-                ) . "ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
+                $item_link->getType()
+            ) . "ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
                 . "/front/" . strtolower($item_link->getType()) . ".form.php?id=" . $item_link->fields["id"];
             $link .= "&amp;forcetab=" . $tab_name . "$1";
             $link .= "'>";
@@ -1315,45 +1314,45 @@ class Ticket extends CommonGLPI
 
         if ($foruser) {
             $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                    'glpi_tickets_users' => [
-                        'ON' => [
-                            'glpi_tickets' => 'id',
-                            'glpi_tickets_users' => 'tickets_id',
-                        ],
+                'glpi_tickets_users' => [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_tickets_users' => 'tickets_id',
                     ],
-                ];
+                ],
+            ];
 
             if (isset($_SESSION["glpigroups"])
                 && count($_SESSION["glpigroups"])
             ) {
                 $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                        'glpi_groups_tickets' => [
-                            'ON' => [
-                                'glpi_tickets' => 'id',
-                                'glpi_groups_tickets' => 'tickets_id',
-                            ],
+                    'glpi_groups_tickets' => [
+                        'ON' => [
+                            'glpi_tickets' => 'id',
+                            'glpi_groups_tickets' => 'tickets_id',
                         ],
-                    ];
+                    ],
+                ];
             }
         }
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                'glpi_tickets'
-            );
+            'glpi_tickets'
+        );
 
         if ($foruser) {
             $criteria['WHERE'] = $criteria['WHERE'] + [
-                    'glpi_tickets_users.users_id' => Session::getLoginUserID(),
-                    'glpi_tickets_users.type' => CommonITILActor::REQUESTER
-                ];
+                'glpi_tickets_users.users_id' => Session::getLoginUserID(),
+                'glpi_tickets_users.type' => CommonITILActor::REQUESTER,
+            ];
 
             if (isset($_SESSION["glpigroups"])
                 && count($_SESSION["glpigroups"])
             ) {
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                        'glpi_groups_tickets.type' => CommonITILActor::REQUESTER
-                    ];
+                    'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
+                    'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
+                ];
             }
         }
         $criteria_deleted = $criteria;
@@ -1480,14 +1479,14 @@ class Ticket extends CommonGLPI
         if (count($_SESSION["glpiactiveentities"]) > 1) {
             $SELECT = [
                 'glpi_entities.completename AS entityname',
-                'glpi_tickets.entities_id AS entityID'
+                'glpi_tickets.entities_id AS entityID',
             ];
         }
 
         return [
-                'glpi_tickets.*',
-                'glpi_itilcategories.completename AS catname'
-            ] + $SELECT;
+            'glpi_tickets.*',
+            'glpi_itilcategories.completename AS catname',
+        ] + $SELECT;
     }
 
 
@@ -1499,50 +1498,50 @@ class Ticket extends CommonGLPI
                 'glpi_entities' => [
                     'ON' => [
                         'glpi_tickets' => 'entities_id',
-                        'glpi_entities' => 'id'
-                    ]
-                ]
+                        'glpi_entities' => 'id',
+                    ],
+                ],
             ];
         }
 
         return [
-                'glpi_groups_tickets' => [
-                    'ON' => [
-                        'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets' => 'id'
-                    ]
+            'glpi_groups_tickets' => [
+                'ON' => [
+                    'glpi_groups_tickets' => 'tickets_id',
+                    'glpi_tickets' => 'id',
                 ],
-                'glpi_tickets_users' => [
-                    'ON' => [
-                        'glpi_tickets_users' => 'tickets_id',
-                        'glpi_tickets' => 'id'
-                    ]
+            ],
+            'glpi_tickets_users' => [
+                'ON' => [
+                    'glpi_tickets_users' => 'tickets_id',
+                    'glpi_tickets' => 'id',
                 ],
-                'glpi_suppliers_tickets' => [
-                    'ON' => [
-                        'glpi_suppliers_tickets' => 'tickets_id',
-                        'glpi_tickets' => 'id'
-                    ]
+            ],
+            'glpi_suppliers_tickets' => [
+                'ON' => [
+                    'glpi_suppliers_tickets' => 'tickets_id',
+                    'glpi_tickets' => 'id',
                 ],
-                'glpi_itilcategories' => [
-                    'ON' => [
-                        'glpi_tickets' => 'itilcategories_id',
-                        'glpi_itilcategories' => 'id'
-                    ]
+            ],
+            'glpi_itilcategories' => [
+                'ON' => [
+                    'glpi_tickets' => 'itilcategories_id',
+                    'glpi_itilcategories' => 'id',
                 ],
-                'glpi_tickettasks' => [
-                    'ON' => [
-                        'glpi_tickettasks' => 'tickets_id',
-                        'glpi_tickets' => 'id'
-                    ]
+            ],
+            'glpi_tickettasks' => [
+                'ON' => [
+                    'glpi_tickettasks' => 'tickets_id',
+                    'glpi_tickets' => 'id',
                 ],
-                'glpi_items_tickets' => [
-                    'ON' => [
-                        'glpi_items_tickets' => 'tickets_id',
-                        'glpi_tickets' => 'id'
-                    ]
-                ]
-            ] + $FROM;
+            ],
+            'glpi_items_tickets' => [
+                'ON' => [
+                    'glpi_items_tickets' => 'tickets_id',
+                    'glpi_tickets' => 'id',
+                ],
+            ],
+        ] + $FROM;
     }
 
     /**
@@ -1567,12 +1566,12 @@ class Ticket extends CommonGLPI
                 'status' => \Ticket::INCOMING,
             ],
             'ORDERBY' => 'glpi_tickets.date_mod DESC',
-            'LIMIT' => intval($_SESSION['glpilist_limit'])
+            'LIMIT' => intval($_SESSION['glpilist_limit']),
         ];
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                'glpi_tickets'
-            );
+            'glpi_tickets'
+        );
 
         $iterator = $DB->request($criteria);
 
@@ -1596,8 +1595,8 @@ class Ticket extends CommonGLPI
             //TRANS: %d is the number of new tickets
             $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
             $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options . "\">" . __(
-                    'Show all'
-                ) . "</a>)";
+                'Show all'
+            ) . "</a>)";
 
             $output['header'] = self::commonListHeader();
 
@@ -1836,7 +1835,7 @@ class Ticket extends CommonGLPI
                         [
                             'display' => false,
                             'applyto' => "ticket" . $job->fields["id"]
-                                . $rand
+                                . $rand,
                         ]
                     )
                 );

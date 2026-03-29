@@ -90,7 +90,7 @@ class Planning extends CommonGLPI
     /**
      * @param $widgetId
      *
-     * @return Nothing
+     * @return false|MydashboardHtml
      */
     public function getWidgetContentForItem($widgetId)
     {
@@ -115,7 +115,7 @@ class Planning extends CommonGLPI
     /**
      * Show the planning for the central page of a user
      *
-     * @param $who ID of the user
+     * @param $who
      *
      * @return MydashboardHtml (display function)
      */

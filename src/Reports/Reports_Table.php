@@ -32,7 +32,11 @@ use CommonITILActor;
 use CommonITILObject;
 use DbUtils;
 use FieldUnicity;
-use GlpiPlugin\Mydashboard\Chart;
+use GlpiPlugin\Mydashboard\Criteria;
+use GlpiPlugin\Mydashboard\Criterias\Entity;
+use GlpiPlugin\Mydashboard\Criterias\ITILCategory;
+use GlpiPlugin\Mydashboard\Criterias\Technician;
+use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
@@ -437,15 +441,7 @@ class Reports_Table extends CommonGLPI
             case $this->getType() . "32":
                 $name = 'NumberOfTicketsByTechnicianAndStatus';
 
-                $criterias = Helper::getDefaultCriterias();
-
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $specific_criterias = [
-                        'users_id',
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
+                $criterias = Criteria::getDefaultCriterias();
 
                 $params = [
                     "preferences" => $preferences,
@@ -453,11 +449,9 @@ class Reports_Table extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $technician_group = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-                $users_criteria = $opt['users_id'] ?? $default['users_id'];
-
                 // Allowed status
                 $statusList = [
                     CommonITILObject::ASSIGNED,
@@ -467,38 +461,38 @@ class Reports_Table extends CommonGLPI
                 ];
 
                 // List of technicians active and not deleted
-//                $query_technicians = "SELECT `glpi_groups_users`.`users_id`"
-//                    . " FROM `glpi_groups_users`"
-//                    . " LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`)"
-//                    . " INNER JOIN `glpi_users` ON (`glpi_users`.`id` = `glpi_groups_users`.`users_id`)"
-//                    . " WHERE `glpi_groups`.`is_assign` = 1"
-//                    . " AND `glpi_users`.`is_active` = 1"
-//                    . " AND `glpi_users`.`is_deleted` = 0"
-//                    . $groups_sql_criteria
-//                    . $users_criteria
-//                    . " GROUP BY `glpi_groups_users`.`users_id`";
+                //                $query_technicians = "SELECT `glpi_groups_users`.`users_id`"
+                //                    . " FROM `glpi_groups_users`"
+                //                    . " LEFT JOIN `glpi_groups` ON (`glpi_groups_users`.`groups_id` = `glpi_groups`.`id`)"
+                //                    . " INNER JOIN `glpi_users` ON (`glpi_users`.`id` = `glpi_groups_users`.`users_id`)"
+                //                    . " WHERE `glpi_groups`.`is_assign` = 1"
+                //                    . " AND `glpi_users`.`is_active` = 1"
+                //                    . " AND `glpi_users`.`is_deleted` = 0"
+                //                    . $groups_sql_criteria
+                //                    . $users_criteria
+                //                    . " GROUP BY `glpi_groups_users`.`users_id`";
 
                 $is_deleted = ['glpi_users.is_deleted' => 0];
                 $query_technicians = [
                     'SELECT' => [
-                        'glpi_groups_users.users_id'
+                        'glpi_groups_users.users_id',
                     ],
                     'FROM' => 'glpi_groups_users',
                     'LEFT JOIN'       => [
                         'glpi_groups' => [
                             'ON' => [
                                 'glpi_groups_users' => 'groups_id',
-                                'glpi_groups'          => 'id'
-                            ]
-                        ]
+                                'glpi_groups'          => 'id',
+                            ],
+                        ],
                     ],
                     'INNER JOIN'       => [
                         'glpi_users' => [
                             'ON' => [
                                 'glpi_groups_users' => 'users_id',
-                                'glpi_users'          => 'id'
-                            ]
-                        ]
+                                'glpi_users'          => 'id',
+                            ],
+                        ],
                     ],
                     'WHERE' => [
                         $is_deleted,
@@ -508,7 +502,7 @@ class Reports_Table extends CommonGLPI
                     'GROUPBY' => ['glpi_groups_users.users_id'],
                 ];
 
-//                $query_technicians = Helper::addCriteriasForQuery($query_technicians, $params);
+                //                $query_technicians = Criteria::addCriteriasForQuery($query_technicians, $params);
                 // GROUP
                 if (isset($technician_group)
                     && $technician_group != 0
@@ -516,29 +510,21 @@ class Reports_Table extends CommonGLPI
                     $query_technicians['WHERE'] = $query_technicians['WHERE'] + ['glpi_groups_users.groups_id' => $technician_group];
                 }
 
-                // USER
-                if (isset($crit['users_id'])
-                    && $crit['users_id'] != 0
-                    && !empty($crit['users_id'])) {
-                    $query_technicians['WHERE'] = $query_technicians['WHERE'] + ['glpi_groups_users.users_id' => $users_criteria];
-                }
-
-
                 // Number of tickets by technician and by status more ticket
                 $moreTicketType = [];
                 if (Plugin::isPluginActive('moreticket')) {
-//                    $query_moretickets_by_technician_by_status = "SELECT count(*) as nb,
-//                    `glpi_tickets_users`.`users_id` as userid,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
-//                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
-//                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
-//                        . " FROM `glpi_plugin_moreticket_waitingtickets`"
-//                        . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
-//                        . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
-//                        . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
-//                        . " INNER JOIN `glpi_tickets_users` ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
-//                        . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-//                        . " GROUP BY userid,statusname"
-//                        . " ORDER BY statusname";
+                    //                    $query_moretickets_by_technician_by_status = "SELECT count(*) as nb,
+                    //                    `glpi_tickets_users`.`users_id` as userid,  `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
+                    //                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
+                    //                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
+                    //                        . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                    //                        . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                    //                        . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                    //                        . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                    //                        . " INNER JOIN `glpi_tickets_users` ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                    //                        . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                    //                        . " GROUP BY userid,statusname"
+                    //                        . " ORDER BY statusname";
 
                     $is_deleted = ['glpi_tickets.is_deleted' => 0];
                     $query_moretickets_by_technician_by_status = [
@@ -555,14 +541,14 @@ class Reports_Table extends CommonGLPI
                             'glpi_tickets' => [
                                 'ON' => [
                                     'glpi_plugin_moreticket_waitingtickets'   => 'tickets_id',
-                                    'glpi_tickets'         => 'id'
-                                ]
+                                    'glpi_tickets'         => 'id',
+                                ],
                             ],
                             'glpi_plugin_moreticket_waitingtypes' => [
                                 'ON' => [
                                     'glpi_plugin_moreticket_waitingtickets'   => 'plugin_moreticket_waitingtypes_id',
-                                    'glpi_plugin_moreticket_waitingtypes'         => 'id'
-                                ]
+                                    'glpi_plugin_moreticket_waitingtypes'         => 'id',
+                                ],
                             ],
                             'glpi_tickets_users' => [
                                 'ON' => [
@@ -572,7 +558,7 @@ class Reports_Table extends CommonGLPI
                                             'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                         ],
                         'WHERE' => [
@@ -606,14 +592,14 @@ class Reports_Table extends CommonGLPI
                 // Number of tickets by technician and by status
                 // Tickets are not deleted
                 // User Type is 2
-//                $query_tickets_by_technician_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
-//                    . " FROM `glpi_tickets`"
-//                    . " INNER JOIN `glpi_tickets_users`"
-//                    . " ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
-//                    . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-//                    . " WHERE `glpi_tickets`.`status` = %s"
-//                    . " AND `glpi_tickets_users`.`users_id` = '%s'"
-//                    . $entities_criteria;
+                //                $query_tickets_by_technician_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
+                //                    . " FROM `glpi_tickets`"
+                //                    . " INNER JOIN `glpi_tickets_users`"
+                //                    . " ON (`glpi_tickets`.`id` = `glpi_tickets_users`.`tickets_id` AND `glpi_tickets_users`.`type` = 2 AND `glpi_tickets`.`is_deleted` = 0)"
+                //                    . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                //                    . " WHERE `glpi_tickets`.`status` = %s"
+                //                    . " AND `glpi_tickets_users`.`users_id` = '%s'"
+                //                    . $entities_criteria;
 
                 $iterator_technicians = $DB->request($query_technicians);
                 $nb = count($iterator_technicians);
@@ -654,7 +640,7 @@ class Reports_Table extends CommonGLPI
                                                     'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
                                                 ],
                                             ],
-                                        ]
+                                        ],
                                     ],
                                 ],
                                 'WHERE' => [
@@ -665,8 +651,8 @@ class Reports_Table extends CommonGLPI
                             ];
 
                             $query['WHERE'] = $query['WHERE'] + getEntitiesRestrictCriteria(
-                                    'glpi_tickets'
-                                );
+                                'glpi_tickets'
+                            );
 
                             $temp[$i][$j] = 0;
                             $iterator = $DB->request($query);
@@ -802,12 +788,12 @@ class Reports_Table extends CommonGLPI
             case $this->getType() . "33":
                 $name = 'NumberOfTicketsByGroupAndStatus';
 
-                $criterias = Helper::getDefaultCriterias();
+                $criterias = Criteria::getDefaultCriterias();
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $specific_criterias = [
-                        'itilcategories_id',
+                        ITILCategory::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -818,7 +804,7 @@ class Reports_Table extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 // Allowed status
                 $statusList = [
@@ -858,19 +844,19 @@ class Reports_Table extends CommonGLPI
 
                 $moreTicketType = [];
                 if (Plugin::isPluginActive('moreticket')) {
-//                    $query_moretickets_by_group_by_status = "SELECT count(*) as nb, `glpi_groups_tickets`.`groups_id` as groups_id,
-//                     `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
-//                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
-//                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
-//                        . " FROM `glpi_plugin_moreticket_waitingtickets`"
-//                        . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
-//                        . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
-//                        . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
-//                        . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2
-//                                                            AND `glpi_tickets`.`is_deleted` = 0)"
-//                        . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-//                        . " GROUP BY groups_id,statusname"
-//                        . " ORDER BY statusname";
+                    //                    $query_moretickets_by_group_by_status = "SELECT count(*) as nb, `glpi_groups_tickets`.`groups_id` as groups_id,
+                    //                     `glpi_plugin_moreticket_waitingtickets`.`tickets_id` AS ticketid,"
+                    //                        . " `glpi_plugin_moreticket_waitingtypes`.`completename` AS statusname,"
+                    //                        . " `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id` AS type"
+                    //                        . " FROM `glpi_plugin_moreticket_waitingtickets`"
+                    //                        . " INNER JOIN `glpi_tickets` ON `glpi_tickets`.`id` = `glpi_plugin_moreticket_waitingtickets`.`tickets_id`"
+                    //                        . " INNER JOIN `glpi_plugin_moreticket_waitingtypes`"
+                    //                        . " ON `glpi_plugin_moreticket_waitingtickets`.`plugin_moreticket_waitingtypes_id`=`glpi_plugin_moreticket_waitingtypes`.`id`"
+                    //                        . " INNER JOIN `glpi_groups_tickets` ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = 2
+                    //                                                            AND `glpi_tickets`.`is_deleted` = 0)"
+                    //                        . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                    //                        . " GROUP BY groups_id,statusname"
+                    //                        . " ORDER BY statusname";
 
                     $is_deleted = ['glpi_tickets.is_deleted' => 0];
                     $query_moretickets_by_group_by_status = [
@@ -887,14 +873,14 @@ class Reports_Table extends CommonGLPI
                             'glpi_tickets' => [
                                 'ON' => [
                                     'glpi_plugin_moreticket_waitingtickets'   => 'tickets_id',
-                                    'glpi_tickets'         => 'id'
-                                ]
+                                    'glpi_tickets'         => 'id',
+                                ],
                             ],
                             'glpi_plugin_moreticket_waitingtypes' => [
                                 'ON' => [
                                     'glpi_plugin_moreticket_waitingtickets'   => 'plugin_moreticket_waitingtypes_id',
-                                    'glpi_plugin_moreticket_waitingtypes'         => 'id'
-                                ]
+                                    'glpi_plugin_moreticket_waitingtypes'         => 'id',
+                                ],
                             ],
                             'glpi_groups_tickets' => [
                                 'ON' => [
@@ -904,7 +890,7 @@ class Reports_Table extends CommonGLPI
                                             'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                         ],
                         'WHERE' => [
@@ -939,16 +925,16 @@ class Reports_Table extends CommonGLPI
                 // Number of tickets by group and by status
                 // Tickets are not deleted
                 // group Type is 2
-//                $query_tickets_by_groups_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
-//                    . " FROM `glpi_tickets`"
-//                    . " LEFT JOIN `glpi_groups_tickets`"
-//                    . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "'
-//                                                  AND `glpi_tickets`.`is_deleted` = 0)"
-//                    . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
-//                    . " WHERE `glpi_tickets`.`status` = %s"
-//                    . " AND `glpi_groups_tickets`.`groups_id` = '%s'"
-//                    . $entities_criteria
-//                    . $category_criteria;
+                //                $query_tickets_by_groups_by_status = "SELECT COUNT(DISTINCT `glpi_tickets`.`id`) AS nbtickets"
+                //                    . " FROM `glpi_tickets`"
+                //                    . " LEFT JOIN `glpi_groups_tickets`"
+                //                    . " ON (`glpi_tickets`.`id` = `glpi_groups_tickets`.`tickets_id` AND `glpi_groups_tickets`.`type` = '" . CommonITILActor::ASSIGN . "'
+                //                                                  AND `glpi_tickets`.`is_deleted` = 0)"
+                //                    . " LEFT JOIN `glpi_entities` ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)"
+                //                    . " WHERE `glpi_tickets`.`status` = %s"
+                //                    . " AND `glpi_groups_tickets`.`groups_id` = '%s'"
+                //                    . $entities_criteria
+                //                    . $category_criteria;
 
 
                 // Lists of tickets by group by status
@@ -986,7 +972,7 @@ class Reports_Table extends CommonGLPI
                                                     'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
                                                 ],
                                             ],
-                                        ]
+                                        ],
                                     ],
                                 ],
                                 'WHERE' => [
@@ -996,7 +982,7 @@ class Reports_Table extends CommonGLPI
                                 ],
                             ];
 
-                            $query = Helper::addCriteriasForQuery($query, $params);
+                            $query = Criteria::addCriteriasForQuery($query, $params);
 
                             $temp[$i][$j] = 0;
 
@@ -1149,24 +1135,18 @@ class Reports_Table extends CommonGLPI
         $options['reset'][] = 'reset';
 
         // ENTITY | SONS
-        $options = Chart::addCriteria(
-            Chart::ENTITIES_ID,
-            (isset($params["params"]["sons"])
-                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
-            $params["params"]["entities_id"],
-            'AND'
-        );
+        $options = Entity::getSearchCriteria($params);
 
         // USER
-        if (isset($params["params"]["technician"])) {
-            $options = Chart::addCriteria(Chart::TECHNICIAN, 'equals', $params["params"]["technician"], 'AND');
+        if ($params["params"][Technician::$criteria_name] > 0) {
+            $options = Technician::getSearchCriteria($params);
         }
 
         // STATUS
         if ($params["params"]['moreticket'] == 1) {
-            $options = Chart::addCriteria(3452, 'equals', $params["params"]["status"], 'AND');
+            $options = Criteria::addUrlCriteria(3452, 'equals', $params["params"]["status"], 'AND');
         } else {
-            $options = Chart::addCriteria(Chart::STATUS, 'equals', $params["params"]["status"], 'AND');
+            $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', $params["params"]["status"], 'AND');
         }
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -1185,28 +1165,19 @@ class Reports_Table extends CommonGLPI
 
         $options['reset'][] = 'reset';
 
-        $options = Chart::addCriteria(
-            Chart::ENTITIES_ID,
-            (isset($params["params"]["sons"])
-                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
-            $params["params"]["entities_id"],
-            'AND'
-        );
+        $options = Entity::getSearchCriteria($params);
 
         // STATUS
         if ($params["params"]['moreticket'] == 1) {
-            $options = Chart::addCriteria(3452, 'equals', $params["params"]["status"], 'AND');
+            $options = Criteria::addUrlCriteria(3452, 'equals', $params["params"]["status"], 'AND');
         } else {
-            $options = Chart::addCriteria(Chart::STATUS, 'equals', $params["params"]["status"], 'AND');
+            $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', $params["params"]["status"], 'AND');
         }
 
         // Group
-        $options = Chart::groupCriteria(
-            Chart::TECHNICIAN_GROUP,
-            ((isset($params["params"]["is_recursive_technicians"])
-                && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"]["technicians_groups_id"]
-        );
+        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
+            $options = TechnicianGroup::getSearchCriteria($params);
+        }
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'

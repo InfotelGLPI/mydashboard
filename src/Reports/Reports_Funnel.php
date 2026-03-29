@@ -32,6 +32,9 @@ use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryUnion;
 use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Charts\FunnelChart;
+use GlpiPlugin\Mydashboard\Criteria;
+use GlpiPlugin\Mydashboard\Criterias\ComputerType;
+use GlpiPlugin\Mydashboard\Criterias\Entity;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Html;
 use GlpiPlugin\Mydashboard\Menu;
@@ -143,16 +146,16 @@ class Reports_Funnel extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $criterias = [
-                        'entities_id',
+                        Entity::$criteria_name,
                         'is_recursive_entities',
-                        'type_computer',
+                        ComputerType::$criteria_name,
                     ];
                     $onclick = 1;
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $criterias = [
-                        'type_computer',
+                        ComputerType::$criteria_name,
                     ];
                 }
 
@@ -162,14 +165,14 @@ class Reports_Funnel extends CommonGLPI
                     "opt" => $opt,
                 ];
 
-                $default = Helper::manageCriterias($params);
+                $default = Criteria::manageCriterias($params);
 
                 $is_deleted = ['glpi_computers.is_deleted' => 0];
 
                 $params['entities_id'] = $opt['entities_id'] ?? $default['entities_id'];
                 $params['sons'] = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
 
-                $type = $opt['type_computer'] ?? $default['type_computer'];
+                $type = $opt['computertypes_id'] ?? $default['computertypes_id'];
 
                 $criteria1 = [
                     'SELECT' => [
@@ -196,14 +199,8 @@ class Reports_Funnel extends CommonGLPI
                         'glpi_infocoms.buy_date' => 'NULL',
                     ],
                 ];
-                if ($params['entities_id'] > 0) {
-                    $criteria1['WHERE'] = $criteria1['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
-                    );
-                }
-                if ($type > 0) {
-                    $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_computers.type' => $type];
-                }
+                $criteria1 = Criteria::addCriteriasForQuery($criteria1, $params, \Computer::getTable());
+
                 $queries[] = $criteria1;
 
                 $criteria2 = [
@@ -231,14 +228,8 @@ class Reports_Funnel extends CommonGLPI
                         'glpi_infocoms.buy_date' => ['<', new QueryExpression("CURRENT_DATE - INTERVAL 6 YEAR")],
                     ],
                 ];
-                if ( $params['entities_id'] > 0) {
-                    $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
-                    );
-                }
-                if ($type > 0) {
-                    $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_computers.type' => $type];
-                }
+                $criteria2 = Criteria::addCriteriasForQuery($criteria2, $params, \Computer::getTable());
+
                 $queries[] = $criteria2;
 
                 $criteria3 = [
@@ -269,14 +260,9 @@ class Reports_Funnel extends CommonGLPI
                         ],
                     ],
                 ];
-                if ( $params['entities_id'] > 0) {
-                    $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
-                    );
-                }
-                if ($type > 0) {
-                    $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_computers.type' => $type];
-                }
+
+                $criteria3 = Criteria::addCriteriasForQuery($criteria3, $params, \Computer::getTable());
+
                 $queries[] = $criteria3;
 
                 $criteria4 = [
@@ -307,14 +293,9 @@ class Reports_Funnel extends CommonGLPI
                         ],
                     ],
                 ];
-                if ( $params['entities_id'] > 0) {
-                    $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
-                    );
-                }
-                if ($type > 0) {
-                    $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_computers.type' => $type];
-                }
+
+                $criteria4 = Criteria::addCriteriasForQuery($criteria4, $params, \Computer::getTable());
+
                 $queries[] = $criteria4;
 
                 $criteria5 = [
@@ -342,14 +323,9 @@ class Reports_Funnel extends CommonGLPI
                         'glpi_infocoms.buy_date' => ['<', new QueryExpression("CURRENT_DATE - INTERVAL 2 YEAR")],
                     ],
                 ];
-                if ( $params['entities_id'] > 0) {
-                    $criteria5['WHERE'] = $criteria5['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_computers', 'entities_id', $params['entities_id'], $params['sons']
-                    );
-                }
-                if ($type > 0) {
-                    $criteria5['WHERE'] = $criteria5['WHERE'] + ['glpi_computers.type' => $type];
-                }
+
+                $criteria5 = Criteria::addCriteriasForQuery($criteria5, $params, \Computer::getTable());
+
                 $queries[] = $criteria5;
 
                 $union = new QueryUnion($queries, true);
@@ -429,7 +405,7 @@ class Reports_Funnel extends CommonGLPI
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $criterias_values = Helper::getGraphCriterias($params);
+                    $criterias_values = Criteria::getGraphCriterias($params);
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = FunnelChart::launchFunnelGraph($graph_datas, $graph_criterias);
@@ -472,22 +448,21 @@ class Reports_Funnel extends CommonGLPI
 
         if (isset($params['selected_id'])) {
             if ($params['selected_id'] == "2-2") {
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'lessthan', '-2YEAR', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'lessthan', '-2YEAR', 'AND');
             } elseif ($params['selected_id'] == "2-4") {
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'lessthan', '-2YEAR', 'AND');
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'morethan', '-4YEAR', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'lessthan', '-2YEAR', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'morethan', '-4YEAR', 'AND');
             } elseif ($params['selected_id'] == "4-6") {
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'lessthan', '-4YEAR', 'AND');
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'morethan', '-6YEAR', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'lessthan', '-4YEAR', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'morethan', '-6YEAR', 'AND');
             } elseif ($params['selected_id'] == "6-6") {
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'lessthan', '-6YEAR', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'lessthan', '-6YEAR', 'AND');
             } elseif ($params['selected_id'] == "other") {
-                $options = Chart::addCriteria(Chart::BUY_DATE, 'contains', 'NULL', 'AND');
+                $options = Criteria::addUrlCriteria(Criteria::BUY_DATE, 'contains', 'NULL', 'AND');
             }
         }
-
-        if ($params["params"]["type_computer"] > 0) {
-            $options = Chart::addCriteria(Chart::TYPE_COMPUTER, 'equals', $params["params"]["type_computer"], 'AND');
+        if ($params["params"][ComputerType::$criteria_name] > 0) {
+            $options = ComputerType::getSearchCriteria($params);
         }
 
         return $CFG_GLPI["root_doc"] . '/front/computer.php?is_deleted=0&'

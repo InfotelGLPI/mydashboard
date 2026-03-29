@@ -31,8 +31,8 @@ global $CFG_GLPI;
 
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Mydashboard\Alert;
+use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Customswidget;
-use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\HTMLEditor;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference;
@@ -179,11 +179,11 @@ function plugin_init_mydashboard()
                 }
 
                 if (Session::getCurrentInterface() == 'central') {
-                    if (Helper::getReplaceCentral()
+                    if (Preference::getReplaceCentral()
                         && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
                         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js.php';
-                    } elseif (Helper::getReplaceCentralConf()
-                               && Helper::getReplaceCentral()
+                    } elseif (Config::getReplaceCentralConf()
+                               && Preference::getReplaceCentral()
                                && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
                         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js.php';
                     }

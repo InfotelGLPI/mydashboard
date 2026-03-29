@@ -156,7 +156,7 @@ abstract class Module extends CommonGLPI
                     "\""], $script);
         }
         //If the lateral menu is not displayed, we hide the remove button
-        if (!Helper::getDisplayMenu()) {
+        if (!Config::getDisplayMenu()) {
             $this->appendWidgetScripts(["$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-remove-icon').remove();"]);
         }
         if (!$this->widgetEnableMaximize) {
