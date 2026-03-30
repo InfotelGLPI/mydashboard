@@ -1018,7 +1018,7 @@ class Menu extends CommonGLPI
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/css/gridstack-extra.css");
         //       echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuze.js");
+        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuse.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/md-fuzzysearch.js.php");
 
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");

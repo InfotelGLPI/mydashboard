@@ -1,9 +1,11 @@
 <?php
-
+use Glpi\Event;
+include('../../../../inc/includes.php');
 header('Content-Type: text/javascript');
 
+include ('diacritics.js');
 ?>
-var root_md_doc = "<?php echo PLUGIN_MYDASHBOARD_WEBDIR; ?>";
+var root_my_doc = "<?php echo PLUGIN_MYDASHBOARD_WEBDIR; ?>";
 
 $(function() {
    var list = [];
@@ -30,19 +32,19 @@ $(function() {
    var fuzzy_started = false;
     var md_trigger_homesearch_fuzzy = function() {
         // remove old fuzzy modal
-        removeFuzzy();
+        //removeFuzzy();
 
         // retrieve html of fuzzy input
-        $.get(root_md_doc+'/ajax/fuzzysearch.php', {
-            'action': 'getHtml',
-        }, function(html) {
+        //$.get(root_my_doc+'/ajax/fuzzysearch.php', {
+        //    'action': 'getHtml',
+        //}, function(html) {
             // add modal to body and show it
 
-            $('#searchwidgets').append(html);
+            //$('#searchwidgets').append(html);
             //$('#md-fuzzysearch').modal('show');
 
             // retrieve current menu data
-            $.getJSON(root_md_doc+'/ajax/fuzzysearch.php', {
+            $.getJSON(root_my_doc+'/ajax/fuzzysearch.php', {
                 'action': 'getList',
             }, function(data) {
                 list = data;
@@ -101,7 +103,7 @@ $(function() {
                     startFuzzy();
                 }
             });
-        });
+        //});
     };
 
    var startFuzzy = function() {
@@ -115,43 +117,37 @@ $(function() {
 
       // launch fuzzy search on this list
       //var results = fuzzy.filter(input_text, list, fuzzy_options);
-      const options = {
-         // isCaseSensitive: false,
-         // includeScore: false,
-         // shouldSort: true,
-         // includeMatches: false,
-         // findAllMatches: false,
-          minMatchCharLength: 3,
-         // location: 0,
-         // threshold: 0.6,
-         // distance: 100,
-         includeScore: false,
-         ignoreLocation: true,
-         useExtendedSearch: true,
-         // ignoreFieldNorm: false,
-         // fieldNormWeight: 1,
-         keys: [
-            "title",
-         ]
-      };
-      //console.log(list);
-      const fuse = new Fuse(list, options);
+       const options = {
+           // isCaseSensitive: false,
+           // includeScore: false,
+           // shouldSort: true,
+           // includeMatches: false,
+           // findAllMatches: false,
+           minMatchCharLength: 3,
+           // location: 0,
+           // threshold: 0.6,
+           // distance: 100,
+           includeScore: false,
+           ignoreLocation: true,
+           useExtendedSearch: true,
+           // ignoreFieldNorm: false,
+           // fieldNormWeight: 1,
+           getFn: (obj, path) => {
+               var value = Fuse.config.getFn(obj, path);
+               return removeDiacritics(value);
+           },
+           keys: [
+               "title",
+           ]
+       };
 
-      var results = fuse.search(input_text);
+      const myfuse = new Fuse(list, options);
+
+      var results = myfuse.search(removeDiacritics(input_text));
        var target = '_blank';
-//
-//      const searchWrapper = query => {
-//         if (!query) return fuse.getIndex().records.map(({ $: item, i: idx }) => ({ idx, item }));
-//         results =  fuse.search(query);
-//      };
-//// Change the pattern
-//      console.log(results);
-
-
 
       // append new results
       results.map(function(el) {
-         //console.log(el);
           var finaltitle = el.item.title;
          $("#md-fuzzysearch .results")
             .append("<span class='plugin_mydashboard_menuDashboardListItem' data-widgetid='"+el.item.widgetid+"'><i class='"+el.item.icon+"'></i> "+finaltitle+"</span>");

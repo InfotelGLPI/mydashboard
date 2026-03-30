@@ -302,7 +302,7 @@ class Widgetlist
      *
      * @param array $used
      *
-     * @return string|bool
+     * @return array
      * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
      *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
      */
@@ -333,13 +333,10 @@ class Widgetlist
                     if (isset($gslist[$widgetId])) {
                         $gsid   = $gslist[$widgetId];
                         $list[] = [
-                            'type' => '',
+                            'icon' => Widget::getIconByType($widgetTitle['type']) ?? "ti ti-dashboard",
                             'title'    => $widgetTitle['title'],
                             'widgetid' => $gsid,
                         ];
-                        if (isset($widgetTitle['type'])) {
-                            $list['icon'] = Widget::getIconByType($widgetTitle['type']);
-                        }
                     }
                 }
             }
@@ -546,13 +543,7 @@ class Widgetlist
 
         switch ($action) {
             case 'getHtml':
-                $modal_header = __('Search');
-                $placeholder        = $title;
-                $alert              = "";
-                //            $alert        = sprintf(
-                //               __("Tip: You can call this modal with %s keys combination"),
-                //               "<kbd><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>G</kbd></kbd>"
-                //            );
+                $placeholder = $title;
                 $html = <<<HTML
                <div class="" tabindex="-1" id="md-fuzzysearch">
                   <div class="">
@@ -567,7 +558,6 @@ class Widgetlist
 
 HTML;
                 return $html;
-                break;
 
             default:
 
