@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-30 10:02+0000\n"
+"POT-Creation-Date: 2026-03-30 10:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,33 +39,33 @@ msgstr ""
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
-#: ajax/dropdownMonth.php:41 src/Criterias/Other.php:273
-#: src/Criterias/Other.php:456 src/Criterias/Other.php:490
-#: src/Criterias/Other.php:515 src/Criterias/Month.php:50
+#: ajax/dropdownMonth.php:41 src/Criterias/Other.php:270
+#: src/Criterias/Other.php:453 src/Criterias/Other.php:487
+#: src/Criterias/Other.php:512 src/Criterias/Month.php:50
 #: src/Criterias/Month.php:64
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:95
+#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:98
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:109
+#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:112
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:127
+#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:130
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:141
+#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:144
 msgid "End year"
 msgstr ""
 
 #: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:48
 #: src/Criterias/Year.php:63 src/Criterias/FilterDate.php:50
-#: src/Criterias/FilterDate.php:121 src/Criterias/DisplayData.php:51
-#: src/Criterias/DisplayData.php:166
+#: src/Criterias/FilterDate.php:119 src/Criterias/DisplayData.php:51
+#: src/Criterias/DisplayData.php:169
 msgid "Year"
 msgstr ""
 
@@ -1408,69 +1408,69 @@ msgstr ""
 msgid "Child locations"
 msgstr ""
 
-#: src/Criterias/Other.php:217 src/Criterias/Other.php:307
-#: src/Criterias/Other.php:455
+#: src/Criterias/Other.php:214 src/Criterias/Other.php:304
+#: src/Criterias/Other.php:452
 msgid "Week"
 msgstr ""
 
-#: src/Criterias/Other.php:231 src/Criterias/Other.php:393
+#: src/Criterias/Other.php:228 src/Criterias/Other.php:390
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Criterias/Other.php:254 src/Criterias/Other.php:260
-#: src/Criterias/Other.php:266 src/Criterias/Other.php:272
-#: src/Criterias/Other.php:467 src/Criterias/Other.php:503
+#: src/Criterias/Other.php:251 src/Criterias/Other.php:257
+#: src/Criterias/Other.php:263 src/Criterias/Other.php:269
+#: src/Criterias/Other.php:464 src/Criterias/Other.php:500
 msgid "Time display"
 msgstr ""
 
-#: src/Criterias/Other.php:255 src/Criterias/Other.php:489
+#: src/Criterias/Other.php:252 src/Criterias/Other.php:486
 msgid "Last month"
 msgstr ""
 
-#: src/Criterias/Other.php:261
+#: src/Criterias/Other.php:258
 msgid "Last year"
 msgstr ""
 
-#: src/Criterias/Other.php:267 src/Criterias/Other.php:487
+#: src/Criterias/Other.php:264 src/Criterias/Other.php:484
 msgid "Year to date"
 msgstr ""
 
-#: src/Criterias/Other.php:282 src/Criterias/Other.php:548
+#: src/Criterias/Other.php:279 src/Criterias/Other.php:545
 #: src/Criterias/ITILCategory.php:67 src/Criterias/ITILCategory.php:79
 msgid "Category"
 msgstr ""
 
-#: src/Criterias/Other.php:454
+#: src/Criterias/Other.php:451
 msgid "Day"
 msgstr ""
 
-#: src/Criterias/Other.php:488 src/Criterias/FilterDate.php:68
-#: src/Criterias/DisplayData.php:68
+#: src/Criterias/Other.php:485 src/Criterias/FilterDate.php:66
+#: src/Criterias/DisplayData.php:71
 msgid "year"
 msgstr ""
 
-#: src/Criterias/Other.php:585
+#: src/Criterias/Other.php:582
 msgid "Tag"
 msgstr ""
 
-#: src/Criterias/FilterDate.php:55 src/Criterias/DisplayData.php:56
+#: src/Criterias/FilterDate.php:53 src/Criterias/DisplayData.php:59
 msgid "Period"
 msgstr ""
 
-#: src/Criterias/FilterDate.php:69
+#: src/Criterias/FilterDate.php:67
 msgid "begin and end date"
 msgstr ""
 
-#: src/Criterias/FilterDate.php:83
+#: src/Criterias/FilterDate.php:81
 msgid "Filter date"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:69
+#: src/Criterias/DisplayData.php:72
 msgid "Start end"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:83
+#: src/Criterias/DisplayData.php:86
 msgid "Display"
 msgstr ""
