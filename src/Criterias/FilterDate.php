@@ -43,12 +43,18 @@ class FilterDate
         return intval(date('Y', time()));
     }
 
-    public static function getDisplayValue($filter_date) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-//        if (isset($filter_date)) {
-//            $form .= "&nbsp;/&nbsp;" . sprintf(__('sliding %s-month period', 'mydashboard'), $opt['period_time']);
-//        }
+        if ($opt[self::$criteria_name] && preg_match('/^\d{4}$/', $opt[self::$criteria_name])) {
+            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+        }
+        if ($opt['begin'] && $opt['end']) {
+//            $start_month = sprintf('%02d', $opt['start_month']);
+//            $end_month = sprintf('%02d', $opt['end_month']);
+            $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard') .
+                "&nbsp;:&nbsp;" .Html::convDateTime($opt['begin'])." / ".Html::convDateTime($opt['end']);
+        }
         return $form;
     }
 

@@ -60,13 +60,13 @@ class ITILCategory
         return $itilcategories_id;
     }
 
-    public static function getDisplayValue($itilcategories_id) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($itilcategories_id != 0) {
+        if ($opt[self::$criteria_name] != 0) {
             $form = "&nbsp;/&nbsp;" . __("Category", 'mydashboard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
                     'glpi_itilcategories',
-                    $itilcategories_id
+                    $opt[self::$criteria_name]
                 );
         }
         return $form;

@@ -502,7 +502,7 @@ class Criteria
         foreach ($used_criterias as $criteria => $class) {
             if (isset($opt[$criteria])) {
                 $critClass= new $class();
-                $form .= $critClass::getDisplayValue($opt[$criteria]);
+                $form .= $critClass::getDisplayValue($opt);
             }
         }
 

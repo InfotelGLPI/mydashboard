@@ -45,11 +45,11 @@ class Technician
         return $technicians_id;
     }
 
-    public static function getDisplayValue($technicians_id) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($technicians_id != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Technician') . "&nbsp;:&nbsp;" . getUserName($technicians_id);
+        if ($opt[self::$criteria_name] != 0) {
+            $form = "&nbsp;/&nbsp;" . __('Technician') . "&nbsp;:&nbsp;" . getUserName($opt[self::$criteria_name]);
         }
 
         return $form;

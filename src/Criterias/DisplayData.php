@@ -43,12 +43,19 @@ class DisplayData
 
     }
 
-    public static function getDisplayValue($display_data) {
+    public static function getDisplayValue($opt) {
+
 
         $form = "";
-//        if (isset($display_data) && $opt['display_data'] == "SLIDING") {
-//            $form .= "&nbsp;/&nbsp;" . sprintf(__('sliding %s-month period', 'mydashboard'), $opt['period_time']);
-//        }
+        if ($opt[self::$criteria_name] && preg_match('/^\d{4}$/', $opt[self::$criteria_name])) {
+            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+        }
+        if ($opt['start_year'] && $opt['start_month'] && $opt['end_year'] && $opt['end_month']) {
+            $start_month = sprintf('%02d', $opt['start_month']);
+            $end_month = sprintf('%02d', $opt['end_month']);
+            $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard') .
+                "&nbsp;:&nbsp;" .$opt['start_year']."-".$start_month." / ".$opt['end_year']."-".$end_month;
+        }
         return $form;
     }
 

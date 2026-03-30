@@ -56,12 +56,12 @@ class Entity
         return $entities_id;
     }
 
-    public static function getDisplayValue($entities_id)
+    public static function getDisplayValue($opt)
     {
         $form = "";
         $entity = new \Entity();
-        if (isset($entities_id) && $entities_id > -1) {
-            if ($entity->getFromDB($entities_id)) {
+        if (isset($opt[self::$criteria_name]) && $opt[self::$criteria_name] > -1) {
+            if ($entity->getFromDB($opt[self::$criteria_name])) {
                 $form = "&nbsp;" . __('Entity') . "&nbsp;:&nbsp;" . $entity->getField('name');
             }
         }

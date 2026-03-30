@@ -44,11 +44,11 @@ class Limit
         return $limit;
     }
 
-    public static function getDisplayValue($limit) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($limit != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Number of results') . "&nbsp;:&nbsp;" . $limit;
+        if ($opt[self::$criteria_name] != 0) {
+            $form = "&nbsp;/&nbsp;" . __('Number of results') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
         }
         return $form;
     }

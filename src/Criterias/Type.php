@@ -59,11 +59,11 @@ class Type
         return $type;
     }
 
-    public static function getDisplayValue($type) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($type != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . Ticket::getTicketTypeName($type);
+        if ($opt[self::$criteria_name] != 0) {
+            $form = "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . Ticket::getTicketTypeName($opt[self::$criteria_name]);
         }
         return $form;
     }

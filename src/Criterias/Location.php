@@ -46,13 +46,13 @@ class Location
         return $locations_id;
     }
 
-    public static function getDisplayValue($locations_id) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($locations_id != 0) {
+        if ($opt[self::$criteria_name] != 0) {
             $form = "&nbsp;/&nbsp;" . __('Location') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
                     'glpi_locations',
-                    $locations_id
+                    $opt[self::$criteria_name]
                 );
         }
         return $form;

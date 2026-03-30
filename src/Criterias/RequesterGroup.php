@@ -62,12 +62,12 @@ class RequesterGroup
 
     }
 
-    public static function getDisplayValue($requesters_groups_id)
+    public static function getDisplayValue($opt)
     {
 
         $requesters_groups_id = is_array(
-            $requesters_groups_id
-        ) ? $requesters_groups_id : [];
+            $opt[self::$criteria_name]
+        ) ? $opt[self::$criteria_name] : [];
 
         $requesters_groups_id = array_filter($requesters_groups_id);
 

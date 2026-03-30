@@ -41,11 +41,11 @@ class Year
         return intval(date('Y', time()));
     }
 
-    public static function getDisplayValue($year) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($year) {
-            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $year;
+        if ($opt[self::$criteria_name]) {
+            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
         }
 
         return $form;

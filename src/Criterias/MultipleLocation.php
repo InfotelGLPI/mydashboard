@@ -46,13 +46,13 @@ class MultipleLocation
         return $multiple_locations_id;
     }
 
-    public static function getDisplayValue($multiple_locations_id) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if (isset($multiple_locations_id)) {
+        if (isset($opt[self::$criteria_name])) {
             $multiple_locations_id = is_array(
-                $multiple_locations_id
-            ) ? $multiple_locations_id : [];
+                $opt[self::$criteria_name]
+            ) ? $opt[self::$criteria_name] : [];
 
             $multiple_locations_id = array_filter($multiple_locations_id);
 

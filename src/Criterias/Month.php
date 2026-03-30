@@ -42,22 +42,13 @@ class Month
         return intval(date('m', time()) - 1);
     }
 
-    public static function getDisplayValue($month) {
+    public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($month) {
+        if ($opt[self::$criteria_name]) {
             $monthsarray = Toolbox::getMonthsOfYearArray();
-            $form .= "&nbsp;/&nbsp;" . __('Month', 'mydashboard') . "&nbsp;:&nbsp;" . $monthsarray[$month];
+            $form .= "&nbsp;/&nbsp;" . __('Month', 'mydashboard') . "&nbsp;:&nbsp;" . $monthsarray[$opt[self::$criteria_name]];
         }
-
-//        if (isset($opt['year']) && isset($month)) {
-//
-//            $form .= "&nbsp;/&nbsp;" . __('Date') . "&nbsp;:&nbsp;" . sprintf(
-//                    __('%1$s %2$s'),
-//                    $monthsarray[$opt[self::$criteria_name]],
-//                    $opt['year']
-//                );
-//        }
 
         return $form;
     }

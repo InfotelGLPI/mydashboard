@@ -62,12 +62,12 @@ class TechnicianGroup
 
     }
 
-    public static function getDisplayValue($technicians_groups_id)
+    public static function getDisplayValue($opt)
     {
 
         $technicians_groups_id = is_array(
-            $technicians_groups_id
-        ) ? $technicians_groups_id : [];
+            $opt[self::$criteria_name]
+        ) ? $opt[self::$criteria_name] : [];
 
         $technicians_groups_id = array_filter($technicians_groups_id);
 
