@@ -40,9 +40,11 @@ use Glpi\DBAL\QueryUnion;
 use GlpiPlugin\Mydashboard\Charts\BarChart;
 use GlpiPlugin\Mydashboard\Criteria;
 use GlpiPlugin\Mydashboard\Criterias\Entity;
+use GlpiPlugin\Mydashboard\Criterias\FilterDate;
 use GlpiPlugin\Mydashboard\Criterias\ITILCategory;
 use GlpiPlugin\Mydashboard\Criterias\Limit;
 use GlpiPlugin\Mydashboard\Criterias\Location;
+use GlpiPlugin\Mydashboard\Criterias\MultipleLocation;
 use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
 use GlpiPlugin\Mydashboard\Criterias\Technician;
 use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
@@ -462,7 +464,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'filter_date',
+                        FilterDate::$criteria_name,
                         RequesterGroup::$criteria_name,
                         Limit::$criteria_name,
                     ];
@@ -471,7 +473,7 @@ class Reports_Bar extends CommonDBTM
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'filter_date',
+                        FilterDate::$criteria_name,
                         RequesterGroup::$criteria_name,
                         Limit::$criteria_name,
                     ];
@@ -490,6 +492,27 @@ class Reports_Bar extends CommonDBTM
                 $limit = $opt['limit'] ?? $default['limit'];
 
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
+
+                $date_criteria = [];
+                $year = $opt['year'] ?? $default['filter_date'];
+
+                if ($year) {
+                    $date_criteria = [
+                        ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
+                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
+                    ];
+                }
+                if (isset($opt['filter_date'])
+                    && $opt['filter_date'] == 'BEGIN_END'
+                    && isset($opt['begin'])
+                    && isset($opt['end'])) {
+                    $begin = $opt['begin'];
+                    $end = $opt['end'];
+                    $date_criteria = [
+                        ['glpi_tickets.date' => ['>=', "$begin"]],
+                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$end', INTERVAL 1 DAY)")]]
+                    ];
+                }
 
                 $criteria = [
                     'SELECT' => ['glpi_itilcategories.completename AS itilcategories_name',
@@ -514,7 +537,11 @@ class Reports_Bar extends CommonDBTM
                 ];
 
                 $criteria = Criteria::addCriteriasForQuery($criteria, $params);
+                if ($year
+                    || isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END') {
+                    $criteria['WHERE'] = array_merge($criteria['WHERE'],$date_criteria);
 
+                }
                 $iterator = $DB->request($criteria);
 
                 $tabdata = [];
@@ -854,7 +881,7 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'filter_date',
+                        FilterDate::$criteria_name,
                         Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
@@ -862,7 +889,7 @@ class Reports_Bar extends CommonDBTM
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'filter_date',
+                        FilterDate::$criteria_name,
                         Limit::$criteria_name,
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
@@ -879,6 +906,27 @@ class Reports_Bar extends CommonDBTM
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $limit = $opt['limit'] ?? $default['limit'];
+
+                $date_criteria = [];
+                $year = $opt['year'] ?? $default['filter_date'];
+
+                if ($year) {
+                    $date_criteria = [
+                        ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
+                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
+                    ];
+                }
+                if (isset($opt['filter_date'])
+                    && $opt['filter_date'] == 'BEGIN_END'
+                    && isset($opt['begin'])
+                    && isset($opt['end'])) {
+                    $begin = $opt['begin'];
+                    $end = $opt['end'];
+                    $date_criteria = [
+                        ['glpi_tickets.date' => ['>=', "$begin"]],
+                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$end', INTERVAL 1 DAY)")]]
+                    ];
+                }
 
                 $users_id_select = new QueryExpression('IFNULL(' . $DB::quoteName("glpi_tickets_users.users_id") . ',-1) AS users_id');
                 $criteria = [
@@ -903,8 +951,13 @@ class Reports_Bar extends CommonDBTM
                     'LIMIT' => $limit,
                 ];
 
-
                 $criteria = Criteria::addCriteriasForQuery($criteria, $params);
+
+                if ($year
+                    || isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END') {
+                    $criteria['WHERE'] = array_merge($criteria['WHERE'],$date_criteria);
+
+                }
 
                 $iterator = $DB->request($criteria);
 
@@ -2486,7 +2539,8 @@ class Reports_Bar extends CommonDBTM
                     $onclick = 1;
                     $specific_criterias = [
                         Year::$criteria_name,
-                        'multiple_locations_id',
+                        MultipleLocation::$criteria_name,
+                        'is_recursive_locations',
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -2494,7 +2548,8 @@ class Reports_Bar extends CommonDBTM
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
                         Year::$criteria_name,
-                        'multiple_locations_id',
+                        MultipleLocation::$criteria_name,
+                        'is_recursive_locations',
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
@@ -2599,21 +2654,21 @@ class Reports_Bar extends CommonDBTM
 
                 $criterias = Criteria::getDefaultCriterias();
 
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
+//                if (isset($_SESSION['glpiactiveprofile']['interface'])
+//                    && Session::getCurrentInterface() == 'central') {
+//                    $onclick = 1;
+//                    $specific_criterias = [
+//                        Year::$criteria_name,
+//                    ];
+//                    $criterias = array_merge($criterias, $specific_criterias);
+//                }
+//                if (isset($_SESSION['glpiactiveprofile']['interface'])
+//                    && Session::getCurrentInterface() != 'central') {
+//                    $specific_criterias = [
+//                        Year::$criteria_name,
+//                    ];
+//                    $criterias = array_merge($criterias, $specific_criterias);
+//                }
 
                 $params = [
                     "preferences" => $preferences,
@@ -3831,23 +3886,10 @@ class Reports_Bar extends CommonDBTM
 
         $default = Criteria::manageCriterias($params);
 
-        $technician_groups_criteria = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-
-        $entities_criteria = $params['entities_id'] ?? $default['entities_id'];
-
         $tickets_helpdesk = [];
         $months = Toolbox::getMonthsOfYearArray();
 
-        $mois = intval(date('m', time()) - 1);
-        $year = intval(date('Y', time()) - 1);
-
-        if ($mois > 0) {
-            $year = date("Y");
-        }
-
-        if (isset($params["year"]) && $params["year"] > 0) {
-            $year = $params["year"];
-        }
+        $year = $params['opt']['year'] ?? $default['year'];
 
         $current_month = date("m");
         foreach ($months as $key => $month) {
@@ -3988,18 +4030,23 @@ class Reports_Bar extends CommonDBTM
         global $CFG_GLPI;
 
         $options['reset'][] = 'reset';
-
+        Toolbox::logInfo($params);
         if (isset($params["params"]["year"]) && !isset($params["params"]["begin"])) {
             $params["params"]["begin"] = $params["params"]["year"] . "-01-01 00:00:01";
             $params["params"]["end"] = $params["params"]["year"] . "-12-31 23:59:00";
             $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'contains', $params["params"]["year"], 'AND');
-        } else {
+        } else if (isset($params["params"]["begin"]) && isset($params["params"]["end"])) {
             $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $params["params"]["begin"], 'AND');
 
             $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $params["params"]["end"], 'AND');
+        } else if (isset($params["params"]["filter_date"])) {
+            $params["params"]["begin"] = $params["params"]["filter_date"] . "-01-01 00:00:01";
+            $params["params"]["end"] = $params["params"]["filter_date"] . "-12-31 23:59:00";
+            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'contains', $params["params"]["filter_date"], 'AND');
+
         }
 
-        if ($params["params"][RequesterGroup::$criteria_name] > 0) {
+            if ($params["params"][RequesterGroup::$criteria_name] > 0) {
             $options = RequesterGroup::getSearchCriteria($params);
         }
 
@@ -4033,7 +4080,7 @@ class Reports_Bar extends CommonDBTM
 
         $options['reset'][] = 'reset';
 
-        if ($params["params"]["selected_id"] > 0) {
+        if (isset($params["selected_id"]) && $params["selected_id"] > 0) {
             $params["params"][Technician::$criteria_name] = $params["selected_id"];
             $options = Technician::getSearchCriteria($params);
         }

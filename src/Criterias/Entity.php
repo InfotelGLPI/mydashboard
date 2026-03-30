@@ -40,8 +40,8 @@ class Entity
     public static $criteria_name = 'entities_id';
     public static $criteria_number = 80;
 
-    public static function getDefaultValue() {
-
+    public static function getDefaultValue()
+    {
         $entities_id = $_SESSION['glpiactive_entity'];
 
         $preference = new Preference();
@@ -56,8 +56,8 @@ class Entity
         return $entities_id;
     }
 
-    public static function getDisplayValue($entities_id) {
-
+    public static function getDisplayValue($entities_id)
+    {
         $form = "";
         $entity = new \Entity();
         if (isset($entities_id) && $entities_id > -1) {
@@ -69,27 +69,26 @@ class Entity
         return $form;
     }
 
-    public static function getDisplayForm($default, $opt, $count) {
-
+    public static function getDisplayForm($default, $opt, $count)
+    {
         $form = '';
         if (Session::isMultiEntitiesMode()) {
+            $form = "<span class='md-widgetcrit'>";
+            $params = [
+                'name' => self::$criteria_name,
+                'display' => false,
+                'width' => '100px',
+                'value' => $opt[self::$criteria_name] ?? $default[self::$criteria_name],
+                'display_emptychoice' => true,
 
-                $form = "<span class='md-widgetcrit'>";
-                $params = [
-                    'name' => self::$criteria_name,
-                    'display' => false,
-                    'width' => '100px',
-                    'value' => $opt[self::$criteria_name] ?? $default[self::$criteria_name],
-                    'display_emptychoice' => true,
-
-                ];
-                $form .= __('Entity');
-                $form .= "&nbsp;";
-                $form .= \Entity::dropdown($params);
-                $form .= "</span>";
-                if ($count > 1) {
-                    $form .= "</br></br>";
-                }
+            ];
+            $form .= __('Entity');
+            $form .= "&nbsp;";
+            $form .= \Entity::dropdown($params);
+            $form .= "</span>";
+            if ($count > 1) {
+                $form .= "</br></br>";
+            }
 
             //            if (in_array("is_recursive_entities", $criterias)) {
             $form .= "<span class='md-widgetcrit'>";
@@ -104,13 +103,13 @@ class Entity
                 $form .= "</br></br>";
             }
 //            }
-            }
+        }
 
         return $form;
     }
 
-    public static function getQueryCriteria($params, $table = 'glpi_tickets') {
-
+    public static function getQueryCriteria($params, $table = 'glpi_tickets')
+    {
         return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
                 $table,
                 self::$criteria_name,
@@ -119,8 +118,8 @@ class Entity
             );;
     }
 
-    public static function getSearchCriteria($params, $value = 0) {
-
+    public static function getSearchCriteria($params, $value = 0)
+    {
         return Criteria::addUrlCriteria(
             self::$criteria_number,
             (isset($params["params"]["sons"])

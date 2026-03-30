@@ -102,7 +102,6 @@ class ITILCategory
 
         $form .= "</span>";
 
-
         if ($count > 1) {
             $form .= "</br></br>";
         }

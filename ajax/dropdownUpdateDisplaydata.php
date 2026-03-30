@@ -41,7 +41,6 @@ if (isset($_POST["value"])) {
 
       $form .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
       $form .= "<span class='md-widgetcrit'>";
-      $form .= "</br></br>";
       $form .= __('Start month', 'mydashboard');
       $form .= "&nbsp;";
       $options = [];

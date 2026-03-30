@@ -34,6 +34,7 @@ use Glpi\DBAL\QuerySubQuery;
 use GlpiPlugin\Mydashboard\Alert;
 use GlpiPlugin\Mydashboard\Charts\BarChart;
 use GlpiPlugin\Mydashboard\Criteria;
+use GlpiPlugin\Mydashboard\Criterias\DisplayData;
 use GlpiPlugin\Mydashboard\Criterias\Entity;
 use GlpiPlugin\Mydashboard\Criterias\Location;
 use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
@@ -412,7 +413,7 @@ class Reports_Line extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        'display_data',
+                        DisplayData::$criteria_name,
                         Location::$criteria_name,
                         Technician::$criteria_name,
                         RequesterGroup::$criteria_name,
@@ -422,7 +423,7 @@ class Reports_Line extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        'display_data',
+                        DisplayData::$criteria_name,
                         Location::$criteria_name,
                         RequesterGroup::$criteria_name,
                     ];

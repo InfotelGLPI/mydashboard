@@ -1463,7 +1463,14 @@ class Reports_Pie extends CommonGLPI
 
                 $default = Criteria::manageCriterias($params);
 
-                $closedate_criteria = $default['closedate'];
+                $year = $opt['year'] ?? $default['year'];
+//                $month = $opt['month'] ?? $default['month'];
+//                $month = sprintf('%02d', $month);
+
+                $closedate_criteria = [
+                    ['glpi_tickets.closedate' => ['>=', "$year-01-01 00:00:00"]],
+                    ['glpi_tickets.closedate' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
+                ];
 
 
                 $datas = [];
