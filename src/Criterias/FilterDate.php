@@ -49,9 +49,7 @@ class FilterDate
         if ($opt[self::$criteria_name] && preg_match('/^\d{4}$/', $opt[self::$criteria_name])) {
             $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
         }
-        if ($opt['begin'] && $opt['end']) {
-//            $start_month = sprintf('%02d', $opt['start_month']);
-//            $end_month = sprintf('%02d', $opt['end_month']);
+        if (isset($opt['begin']) && isset($opt['end'])) {
             $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard') .
                 "&nbsp;:&nbsp;" .Html::convDateTime($opt['begin'])." / ".Html::convDateTime($opt['end']);
         }

@@ -1,0 +1,11 @@
+
+Pie
+add link $this->getType() . "32"
+Line
+add link $this->getType() . "49":
+
+fix search
+
+filter_date or displaydata ? and drop month & year filters ?
+
+other criterias..

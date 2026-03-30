@@ -25,12 +25,11 @@
 
 .slidepanel {
     z-index: 9999;
-    position: absolute;
+    position: fixed;
+    top: 0;
+    bottom: 0;
     width: 30em;
     max-width: 40%;
-    top: 0;
-    min-height: 100vh;
-    height: calc(100% - 28px); /* Without footer */
     border: none;
 }
 

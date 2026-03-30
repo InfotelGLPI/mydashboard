@@ -1812,7 +1812,7 @@ class Reports_Pie extends CommonGLPI
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
+//                    $onclick = 1;
                     $specific_criterias = [
                         Year::$criteria_name,
                         Month::$criteria_name,
@@ -1954,7 +1954,7 @@ class Reports_Pie extends CommonGLPI
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
+//                    $onclick = 1;
                     $specific_criterias = [
                         Limit::$criteria_name,
                     ];

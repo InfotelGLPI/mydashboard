@@ -38,11 +38,11 @@ use Ticket;
 use User;
 
 /**
- * Class Year
+ * Class Other
  */
 class Other
 {
-//    public static $criteria_name = 'year';
+//    public static $criteria_name = '...';
 
     public static $criterias_list = [
         'status',
@@ -50,9 +50,6 @@ class Other
         'multiple_technicians_id',
         'end',
         'begin',
-        'date',
-        'closedate',
-        'satisfactiondate',
         'multiple_time',
         'multiple_year_time',
         'itilcategorielvl1',
