@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-30 09:40+0000\n"
+"POT-Creation-Date: 2026-03-30 10:02+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -49,29 +49,30 @@ msgstr ""
 #: ajax/dropdownMonth.php:41 src/Criterias/Other.php:273
 #: src/Criterias/Other.php:456 src/Criterias/Other.php:490
 #: src/Criterias/Other.php:515 src/Criterias/Month.php:50
-#: src/Criterias/Month.php:73
+#: src/Criterias/Month.php:64
 msgid "Month"
 msgstr "Mois"
 
-#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:88
+#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:95
 msgid "Start month"
 msgstr "Mois de début"
 
-#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:102
+#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:109
 msgid "Start year"
 msgstr "Année de début"
 
-#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:120
+#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:127
 msgid "End month"
 msgstr "Mois de fin"
 
-#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:134
+#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:141
 msgid "End year"
 msgstr "Année de fin"
 
 #: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:48
-#: src/Criterias/Year.php:63 src/Criterias/FilterDate.php:115
-#: src/Criterias/DisplayData.php:159
+#: src/Criterias/Year.php:63 src/Criterias/FilterDate.php:50
+#: src/Criterias/FilterDate.php:121 src/Criterias/DisplayData.php:51
+#: src/Criterias/DisplayData.php:166
 msgid "Year"
 msgstr "Année"
 
@@ -1471,8 +1472,8 @@ msgstr "Catégorie"
 msgid "Day"
 msgstr "Jour"
 
-#: src/Criterias/Other.php:488 src/Criterias/FilterDate.php:62
-#: src/Criterias/DisplayData.php:61
+#: src/Criterias/Other.php:488 src/Criterias/FilterDate.php:68
+#: src/Criterias/DisplayData.php:68
 msgid "year"
 msgstr "année"
 
@@ -1480,18 +1481,22 @@ msgstr "année"
 msgid "Tag"
 msgstr "Tag"
 
-#: src/Criterias/FilterDate.php:63
+#: src/Criterias/FilterDate.php:55 src/Criterias/DisplayData.php:56
+msgid "Period"
+msgstr "Période"
+
+#: src/Criterias/FilterDate.php:69
 msgid "begin and end date"
 msgstr "Date de début et fin"
 
-#: src/Criterias/FilterDate.php:77
+#: src/Criterias/FilterDate.php:83
 msgid "Filter date"
 msgstr "Filtre sur la date"
 
-#: src/Criterias/DisplayData.php:62
+#: src/Criterias/DisplayData.php:69
 msgid "Start end"
 msgstr "Début - fin"
 
-#: src/Criterias/DisplayData.php:76
+#: src/Criterias/DisplayData.php:83
 msgid "Display"
 msgstr "Affichage"
