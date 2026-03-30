@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 14:36+0000\n"
+"POT-Creation-Date: 2026-03-30 09:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,30 +39,32 @@ msgstr ""
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
-#: ajax/dropdownMonth.php:41 src/Helper.php:327 src/Helper.php:606
-#: src/Helper.php:640 src/Helper.php:665 src/Criterias/Month.php:50
+#: ajax/dropdownMonth.php:41 src/Criterias/Other.php:273
+#: src/Criterias/Other.php:456 src/Criterias/Other.php:490
+#: src/Criterias/Other.php:515 src/Criterias/Month.php:50
 #: src/Criterias/Month.php:73
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:45 src/Helper.php:727
+#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:88
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:59 src/Helper.php:741
+#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:102
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:77 src/Helper.php:759
+#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:120
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:91 src/Helper.php:773
+#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:134
 msgid "End year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:117 src/Helper.php:798 src/Helper.php:880
-#: src/Criterias/Year.php:48 src/Criterias/Year.php:63
+#: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:48
+#: src/Criterias/Year.php:63 src/Criterias/FilterDate.php:115
+#: src/Criterias/DisplayData.php:159
 msgid "Year"
 msgstr ""
 
@@ -125,76 +127,7 @@ msgstr ""
 msgid "Dashboard access"
 msgstr ""
 
-#: src/Helper.php:250 src/Helper.php:460 src/Helper.php:605
-msgid "Week"
-msgstr ""
-
-#: src/Helper.php:285 src/Helper.php:547
-msgid "Technician"
-msgid_plural "Technicians"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Helper.php:308 src/Helper.php:314 src/Helper.php:320 src/Helper.php:326
-#: src/Helper.php:617 src/Helper.php:653
-msgid "Time display"
-msgstr ""
-
-#: src/Helper.php:309 src/Helper.php:639
-msgid "Last month"
-msgstr ""
-
-#: src/Helper.php:315
-msgid "Last year"
-msgstr ""
-
-#: src/Helper.php:321 src/Helper.php:637
-msgid "Year to date"
-msgstr ""
-
-#: src/Helper.php:335
-#, php-format
-msgid "sliding %s-month period"
-msgstr ""
-
-#: src/Helper.php:338 src/Helper.php:908 src/Criterias/ITILCategory.php:67
-#: src/Criterias/ITILCategory.php:79
-msgid "Category"
-msgstr ""
-
-#: src/Helper.php:439
-msgid "Child locations"
-msgstr ""
-
-#: src/Helper.php:604
-msgid "Day"
-msgstr ""
-
-#: src/Helper.php:638 src/Helper.php:699 src/Helper.php:827
-msgid "year"
-msgstr ""
-
-#: src/Helper.php:700
-msgid "Start end"
-msgstr ""
-
-#: src/Helper.php:714
-msgid "Display"
-msgstr ""
-
-#: src/Helper.php:828
-msgid "begin and end date"
-msgstr ""
-
-#: src/Helper.php:842
-msgid "Filter date"
-msgstr ""
-
-#: src/Helper.php:945
-msgid "Tag"
-msgstr ""
-
-#: src/Helper.php:1189
+#: src/Helper.php:385
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
@@ -964,217 +897,217 @@ msgstr ""
 msgid "error"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:123 src/Reports/Reports_Line.php:654
-#: src/Reports/Reports_Line.php:983 src/Reports/Reports_Line.php:1353
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:655
+#: src/Reports/Reports_Line.php:984 src/Reports/Reports_Line.php:1354
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:125
+#: src/Reports/Reports_Bar.php:127
 msgid "Display of opened tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:128
+#: src/Reports/Reports_Bar.php:130
 msgid "Process time by technicians by month"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:130
+#: src/Reports/Reports_Bar.php:132
 msgid "Sum of ticket tasks duration by technicians"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:133
+#: src/Reports/Reports_Bar.php:135
 msgid "Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:135
+#: src/Reports/Reports_Bar.php:137
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:138
+#: src/Reports/Reports_Bar.php:140
 msgid "Number of tickets affected by technicians by month"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:140
+#: src/Reports/Reports_Bar.php:142
 msgid "Sum of ticket affected by technicians"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:143
+#: src/Reports/Reports_Bar.php:145
 msgid "Average real duration of treatment of the ticket"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:146
+#: src/Reports/Reports_Bar.php:148
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:151
+#: src/Reports/Reports_Bar.php:153
 msgid "Top ten technicians (by tickets number)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:153
+#: src/Reports/Reports_Bar.php:155
 msgid "Display of number of tickets by technicians"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:156
+#: src/Reports/Reports_Bar.php:158
 msgid "Age of tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:161 src/Reports/Reports_Pie.php:120
+#: src/Reports/Reports_Bar.php:163 src/Reports/Reports_Pie.php:120
 msgid "Number of opened tickets by priority"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:166
+#: src/Reports/Reports_Bar.php:168
 msgid "Stock of tickets by status"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:171
+#: src/Reports/Reports_Bar.php:173
 msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:176
+#: src/Reports/Reports_Bar.php:178
 msgid "Responsiveness over 12 rolling months"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:181
+#: src/Reports/Reports_Bar.php:183
 msgid "Tickets request sources evolution"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:183
+#: src/Reports/Reports_Bar.php:185
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:186
+#: src/Reports/Reports_Bar.php:188
 msgid "Tickets solution types evolution"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:188
+#: src/Reports/Reports_Bar.php:190
 msgid "Evolution of solution types by year"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:191
+#: src/Reports/Reports_Bar.php:193
 msgid "Solve delay and take into account of tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:196
+#: src/Reports/Reports_Bar.php:198
 msgid "Evolution of ticket satisfaction by year"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:201
+#: src/Reports/Reports_Bar.php:203
 msgid "Evolution of TTO respect"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:206
+#: src/Reports/Reports_Bar.php:208
 msgid "Evolution of TTR respect"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:213
+#: src/Reports/Reports_Bar.php:215
 msgid "Last synchronization of computers by month"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:303 src/Reports/Reports_Bar.php:535
-#: src/Reports/Reports_Bar.php:920 src/Reports/Reports_Bar.php:1333
-#: src/Reports/Reports_Line.php:328 src/Reports/Reports_Line.php:1521
-#: src/Reports/Reports_Line.php:1615 src/Reports/Reports_Line.php:1767
-#: src/Reports/Reports_Line.php:1916 src/Reports/Reports_Line.php:2035
-#: src/Reports/Reports_Line.php:2171 src/Reports/Reports_Line.php:2335
+#: src/Reports/Reports_Bar.php:305 src/Reports/Reports_Bar.php:562
+#: src/Reports/Reports_Bar.php:973 src/Reports/Reports_Bar.php:1386
+#: src/Reports/Reports_Line.php:329 src/Reports/Reports_Line.php:1522
+#: src/Reports/Reports_Line.php:1616 src/Reports/Reports_Line.php:1768
+#: src/Reports/Reports_Line.php:1917 src/Reports/Reports_Line.php:2036
+#: src/Reports/Reports_Line.php:2172 src/Reports/Reports_Line.php:2336
 msgid "Tickets number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:797
+#: src/Reports/Reports_Bar.php:824
 msgid "Tasks duration (minutes)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1224
+#: src/Reports/Reports_Bar.php:1277
 msgid "Not resolved tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1526
+#: src/Reports/Reports_Bar.php:1579
 msgid "Trimester 1"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1586
+#: src/Reports/Reports_Bar.php:1639
 msgid "Trimester 2"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1646
+#: src/Reports/Reports_Bar.php:1699
 msgid "Trimester 3"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1707
+#: src/Reports/Reports_Bar.php:1760
 msgid "Trimester 4"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1770 src/Reports/Reports_Pie.php:1073
-#: src/Reports/Reports_Pie.php:1076 src/Reports/Reports_Line.php:652
-#: src/Reports/Reports_Line.php:981 src/Reports/Reports_Line.php:1350
+#: src/Reports/Reports_Bar.php:1823 src/Reports/Reports_Pie.php:1073
+#: src/Reports/Reports_Pie.php:1076 src/Reports/Reports_Line.php:653
+#: src/Reports/Reports_Line.php:982 src/Reports/Reports_Line.php:1351
 msgid "Opened tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1771
+#: src/Reports/Reports_Bar.php:1824
 msgid "Average Satisfaction"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2122
+#: src/Reports/Reports_Bar.php:2175
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2131
+#: src/Reports/Reports_Bar.php:2184
 msgid "Sum of tickets solved in less than a week"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2140
+#: src/Reports/Reports_Bar.php:2193
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2479
+#: src/Reports/Reports_Bar.php:2532
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2480
+#: src/Reports/Reports_Bar.php:2533
 msgid "Take into account average (hour)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2715
+#: src/Reports/Reports_Bar.php:2770
 msgid "Number of surveys answered"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2723
+#: src/Reports/Reports_Bar.php:2778
 msgid "Satisfy number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2729
+#: src/Reports/Reports_Bar.php:2784
 msgid "Not satisfy number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2820
+#: src/Reports/Reports_Bar.php:2875
 msgid "Computers number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2944 src/Reports/Reports_Pie.php:686
+#: src/Reports/Reports_Bar.php:2999 src/Reports/Reports_Pie.php:686
 #: src/Reports/Reports_Pie.php:702
 msgid "Not respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2950 src/Reports/Reports_Pie.php:691
+#: src/Reports/Reports_Bar.php:3005 src/Reports/Reports_Pie.php:691
 #: src/Reports/Reports_Pie.php:702
 msgid "Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2956
+#: src/Reports/Reports_Bar.php:3011
 msgid "Percent - Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3064 src/Reports/Reports_Pie.php:545
+#: src/Reports/Reports_Bar.php:3119 src/Reports/Reports_Pie.php:545
 #: src/Reports/Reports_Pie.php:563
 msgid "Not respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3070 src/Reports/Reports_Pie.php:550
+#: src/Reports/Reports_Bar.php:3125 src/Reports/Reports_Pie.php:550
 #: src/Reports/Reports_Pie.php:562
 msgid "Respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3076
+#: src/Reports/Reports_Bar.php:3131
 msgid "Percent - Respected TTR"
 msgstr ""
 
@@ -1389,83 +1322,150 @@ msgid "Top ten of opened tickets by appliance"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:1102 src/Reports/Reports_Pie.php:1105
-#: src/Reports/Reports_Line.php:653 src/Reports/Reports_Line.php:1351
+#: src/Reports/Reports_Line.php:654 src/Reports/Reports_Line.php:1352
 msgid "Closed tickets"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:1139 src/Reports/Reports_Pie.php:1142
-#: src/Reports/Reports_Line.php:1352
+#: src/Reports/Reports_Line.php:1353
 msgid "Not planned"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1511 src/Reports/Reports_Pie.php:1530
+#: src/Reports/Reports_Pie.php:1518 src/Reports/Reports_Pie.php:1537
 msgid "Satisfy percent"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1516 src/Reports/Reports_Pie.php:1530
+#: src/Reports/Reports_Pie.php:1523 src/Reports/Reports_Pie.php:1537
 msgid "Not satisfy percent"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:80
+#: src/Reports/Reports_Line.php:81
 msgid "Tickets stock by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:82
+#: src/Reports/Reports_Line.php:83
 msgid "Sum of not solved tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:85 src/Reports/Reports_Line.php:647
+#: src/Reports/Reports_Line.php:86 src/Reports/Reports_Line.php:648
 msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:90 src/Reports/Reports_Line.php:976
+#: src/Reports/Reports_Line.php:91 src/Reports/Reports_Line.php:977
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:95
+#: src/Reports/Reports_Line.php:96
 msgid "Number of opened, closed, unplanned tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:100
+#: src/Reports/Reports_Line.php:101
 msgid "Number of tickets created each months"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:105
+#: src/Reports/Reports_Line.php:106
 msgid "Number of tickets created each week"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:110
+#: src/Reports/Reports_Line.php:111
 msgid "Number of tickets with validation refusal"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:115
+#: src/Reports/Reports_Line.php:116
 msgid "Number of tickets linked with problems"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:120
+#: src/Reports/Reports_Line.php:121
 msgid "Backlog tickets by week"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:122
+#: src/Reports/Reports_Line.php:123
 msgid "Number of in progress (not new and pending) tickets by week"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:125
+#: src/Reports/Reports_Line.php:126
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:128
+#: src/Reports/Reports_Line.php:129
 msgid "Number of open tickets in the month still in progress for each month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:133
+#: src/Reports/Reports_Line.php:134
 msgid "Number of tickets with more than one solution"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:982
+#: src/Reports/Reports_Line.php:983
 msgid "Resolved / closed tickets"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:1345
+#: src/Reports/Reports_Line.php:1346
 msgid "Number of opened, closed  and unplanned tickets by month"
+msgstr ""
+
+#: src/Criterias/MultipleLocation.php:115
+msgid "Child locations"
+msgstr ""
+
+#: src/Criterias/Other.php:217 src/Criterias/Other.php:307
+#: src/Criterias/Other.php:455
+msgid "Week"
+msgstr ""
+
+#: src/Criterias/Other.php:231 src/Criterias/Other.php:393
+msgid "Technician"
+msgid_plural "Technicians"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Criterias/Other.php:254 src/Criterias/Other.php:260
+#: src/Criterias/Other.php:266 src/Criterias/Other.php:272
+#: src/Criterias/Other.php:467 src/Criterias/Other.php:503
+msgid "Time display"
+msgstr ""
+
+#: src/Criterias/Other.php:255 src/Criterias/Other.php:489
+msgid "Last month"
+msgstr ""
+
+#: src/Criterias/Other.php:261
+msgid "Last year"
+msgstr ""
+
+#: src/Criterias/Other.php:267 src/Criterias/Other.php:487
+msgid "Year to date"
+msgstr ""
+
+#: src/Criterias/Other.php:282 src/Criterias/Other.php:548
+#: src/Criterias/ITILCategory.php:67 src/Criterias/ITILCategory.php:79
+msgid "Category"
+msgstr ""
+
+#: src/Criterias/Other.php:454
+msgid "Day"
+msgstr ""
+
+#: src/Criterias/Other.php:488 src/Criterias/FilterDate.php:62
+#: src/Criterias/DisplayData.php:61
+msgid "year"
+msgstr ""
+
+#: src/Criterias/Other.php:585
+msgid "Tag"
+msgstr ""
+
+#: src/Criterias/FilterDate.php:63
+msgid "begin and end date"
+msgstr ""
+
+#: src/Criterias/FilterDate.php:77
+msgid "Filter date"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:62
+msgid "Start end"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:76
+msgid "Display"
 msgstr ""
