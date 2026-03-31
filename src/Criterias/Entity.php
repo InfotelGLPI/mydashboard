@@ -37,7 +37,7 @@ use Session;
  */
 class Entity
 {
-    public static $criteria_name = 'entities_id';
+    public static $criteria_name = "entities_id";
     public static $criteria_number = 80;
 
     public static function getDefaultValue()
@@ -102,23 +102,53 @@ class Entity
             if ($count > 1) {
                 $form .= "</br></br>";
             }
-//            }
+            //            }
         }
 
         return $form;
     }
 
+    public static function getQueryLeftJoin($params, $table)
+    {
+
+        return $params['query']['LEFT JOIN'] + [
+            'glpi_entities' => [
+                'ON' => [
+                    $table => self::$criteria_name,
+                    'glpi_entities' => 'id',
+                ],
+            ],
+        ];
+
+    }
+
     public static function getQueryCriteria($params, $table = 'glpi_tickets')
     {
-        if ($table == 'glpi_tickets') {
-            $params['recursive'] = false;
+//        return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
+//            'glpi_entities',
+//            'id',
+//            $params[self::$criteria_name],
+//            $params['is_recursive_entities']
+//        );
+
+        if (isset($params[self::$criteria_name]) && $params[self::$criteria_name] == "") {
+            $params[self::$criteria_name] = $_SESSION['glpiactive_entity'];
         }
-        return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
-                $table,
-                self::$criteria_name,
-                $params[self::$criteria_name],
-                $params['recursive']
-            );;
+        if (isset($params[self::$criteria_name]) && ($params[self::$criteria_name] != -1)) {
+            if ($params['is_recursive_entities'] == 1) {
+                $entities = [$table.".".self::$criteria_name => getSonsOf("glpi_entities", $params[self::$criteria_name][0])];
+            } else {
+                $entities = [$table.".".self::$criteria_name => $params[self::$criteria_name][0]];
+            }
+        } else {
+            if (isset($params['is_recursive_entities'])
+                && $params['is_recursive_entities'] == 1) {
+                $entities = [$table.".".self::$criteria_name => getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])];
+            } else {
+                $entities = [$table.".".self::$criteria_name => $_SESSION['glpiactive_entity']];
+            }
+        }
+        return $params['query']['WHERE'] + $entities;
     }
 
     public static function getSearchCriteria($params, $value = 0)

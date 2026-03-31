@@ -66,24 +66,25 @@ class Criteria
         'is_recursive_locations',
     ];
 
-    public const PRIORITY           = 3;
-    public const STATUS             = 12;
-    public const OPEN_DATE          = 15;
-    public const CLOSE_DATE         = 16;
-    public const SOLVE_DATE         = 17;
-    public const TASK_ACTIONTIME    = 96;
-    public const VALIDATION_STATS   = 55;
+    public const PRIORITY = 3;
+    public const STATUS = 12;
+    public const OPEN_DATE = 15;
+    public const CLOSE_DATE = 16;
+    public const SOLVE_DATE = 17;
+    public const TASK_ACTIONTIME = 96;
+    public const VALIDATION_STATS = 55;
     public const VALIDATION_REFUSED = 4;
     public const NUMBER_OF_PROBLEMS = 200;
-    public const SATISFACTION_DATE  = 61;
+    public const SATISFACTION_DATE = 61;
     public const SATISFACTION_VALUE = 62;
-    public const BUY_DATE           = 37;
+    public const BUY_DATE = 37;
 
-    public const INVENTORY_DATE          = 9;
+    public const INVENTORY_DATE = 9;
 
-    public const MORETICKET_WAITINGTYPE          = 3452;
+    public const MORETICKET_WAITINGTYPE = 3452;
 
-    public const OCSINVENTORYNG_IMPORTDATE         = 10002;
+    public const OCSINVENTORYNG_IMPORTDATE = 10002;
+
     /**
      * @param $params
      *
@@ -114,7 +115,6 @@ class Criteria
 
     public static function getGraphCriterias($params, $table = 'glpi_tickets')
     {
-
         $default = self::manageCriterias($params);
         $opt = $params['opt'];
 
@@ -183,10 +183,10 @@ class Criteria
         if (in_array(Type::$criteria_name, $params['criterias']) && $table == 'glpi_tickets') {
             $type = $opt[Type::$criteria_name] ?? $default[Type::$criteria_name];
         }
-        if (in_array(TechnicianGroup::$criteria_name, $params['criterias'])  && $table == 'glpi_tickets') {
+        if (in_array(TechnicianGroup::$criteria_name, $params['criterias']) && $table == 'glpi_tickets') {
             $technicians_groups_id = $opt[TechnicianGroup::$criteria_name] ?? $default[TechnicianGroup::$criteria_name];
         }
-        if (in_array("is_recursive_technicians", $params['criterias'])  && $table == 'glpi_tickets') {
+        if (in_array("is_recursive_technicians", $params['criterias']) && $table == 'glpi_tickets') {
             $is_recursive_technicians = $opt['is_recursive_technicians'] ?? $default['is_recursive_technicians'];
         }
         if (in_array(RequesterGroup::$criteria_name, $params['criterias'])) {
@@ -207,26 +207,44 @@ class Criteria
         if (in_array(ComputerType::$criteria_name, $params['criterias'])) {
             $computertypes_id = $opt[ComputerType::$criteria_name] ?? $default[ComputerType::$criteria_name];
         }
-        if (in_array(MultipleLocation::$criteria_name, $params['criterias'])  && $table == 'glpi_tickets') {
+        if (in_array(MultipleLocation::$criteria_name, $params['criterias']) && $table == 'glpi_tickets') {
             $multiple_locations_id = $opt[MultipleLocation::$criteria_name] ?? $default[MultipleLocation::$criteria_name];
         }
-        if (in_array("is_recursive_locations", $params['criterias'])  && $table == 'glpi_tickets') {
+        if (in_array("is_recursive_locations", $params['criterias']) && $table == 'glpi_tickets') {
             $is_recursive_locations = $opt['is_recursive_locations'] ?? $default['is_recursive_locations'];
         }
-        if (in_array(Year::$criteria_name, $params['criterias'])  && $table == 'glpi_tickets') {
+        if (in_array(Year::$criteria_name, $params['criterias']) && $table == 'glpi_tickets') {
             $year = $opt[Year::$criteria_name] ?? $default[Year::$criteria_name];
+        }
+        if (in_array(Month::$criteria_name, $params['criterias']) && $table == 'glpi_tickets') {
+            $month = $opt[Month::$criteria_name] ?? $default[Month::$criteria_name];
         }
 
         foreach ($params['criterias'] as $criterion) {
+            if ($criterion == Entity::$criteria_name && !is_array($entities_id)) {
+                $entities_id = [$entities_id];
+            }
+            if ($criterion == Entity::$criteria_name && is_array($entities_id)) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $entities_id;
+                $params_query['is_recursive_entities'] = $is_recursive_entities;
+                $query = self::defineLeftjoinByCriteria($params_query, $table);
 
-            if ($table == 'glpi_tickets' && $criterion == TechnicianGroup::$criteria_name && is_array($technicians_groups_id)) {
+                $params_query['query'] = $query;
+                $query = self::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($table == 'glpi_tickets' && $criterion == TechnicianGroup::$criteria_name && is_array(
+                    $technicians_groups_id
+                )) {
                 $technicians_groups_id = array_filter($technicians_groups_id);
 
                 if (count($technicians_groups_id) > 0) {
                     $params_query['criteria'] = $criterion;
                     $params_query['query'] = $query;
                     $params_query[$criterion] = $technicians_groups_id;
-                    $params_query['recursive'] = $is_recursive_technicians ?? 0;
+                    $params_query['is_recursive_technicians'] = $is_recursive_technicians ?? 0;
                     $query = self::defineLeftjoinByCriteria($params_query, $table);
 
                     $params_query['query'] = $query;
@@ -234,14 +252,16 @@ class Criteria
                 }
             }
 
-            if ($table == 'glpi_tickets' && $criterion == RequesterGroup::$criteria_name && is_array($requesters_groups_id)) {
+            if ($table == 'glpi_tickets' && $criterion == RequesterGroup::$criteria_name && is_array(
+                    $requesters_groups_id
+                )) {
                 $requesters_groups_id = array_filter($requesters_groups_id);
 
                 if (count($requesters_groups_id) > 0) {
                     $params_query['criteria'] = $criterion;
                     $params_query['query'] = $query;
                     $params_query[$criterion] = $requesters_groups_id;
-                    $params_query['recursive'] = $is_recursive_requesters ?? 0;
+                    $params_query['is_recursive_requesters'] = $is_recursive_requesters ?? 0;
                     $query = self::defineLeftjoinByCriteria($params_query, $table);
 
                     $params_query['query'] = $query;
@@ -250,7 +270,6 @@ class Criteria
             }
 
             if ($table == 'glpi_tickets' && $criterion == Technician::$criteria_name) {
-
                 if ($technicians_id > 0) {
                     $params_query['criteria'] = $criterion;
                     $params_query['query'] = $query;
@@ -283,22 +302,18 @@ class Criteria
                 $query = self::defineWhereByCriteria($params_query, $table);
             }
 
-            if ($table == 'glpi_tickets' && $criterion == Year::$criteria_name && $year > 0) {
+            if ($table == 'glpi_tickets' && $criterion == Year::$criteria_name && $year > 0 && (!isset($month) || $month == 0)) {
                 $params_query['criteria'] = $criterion;
                 $params_query['query'] = $query;
                 $params_query[$criterion] = $year;
                 $query = self::defineWhereByCriteria($params_query, $table);
             }
 
-            if ($criterion == Entity::$criteria_name && !is_array($entities_id)) {
-                $entities_id = [$entities_id];
-            }
-            if ($criterion ==  Entity::$criteria_name && is_array($entities_id)) {
-
+            if ($table == 'glpi_tickets' && $criterion == Month::$criteria_name && $month > 0 && $year > 0) {
                 $params_query['criteria'] = $criterion;
                 $params_query['query'] = $query;
-                $params_query[$criterion] = $entities_id;
-                $params_query['recursive'] = $is_recursive_entities;
+                $params_query[$criterion] = $month;
+                $params_query[Year::$criteria_name] = $year;
                 $query = self::defineWhereByCriteria($params_query, $table);
             }
 
@@ -316,7 +331,7 @@ class Criteria
                     $params_query['criteria'] = $criterion;
                     $params_query['query'] = $query;
                     $params_query[$criterion] = $multiple_locations_id;
-                    $params_query['recursive'] = $is_recursive_locations;
+                    $params_query['is_recursive_locations'] = $is_recursive_locations;
                     $query = self::defineWhereByCriteria($params_query, $table);
                 }
             }
@@ -327,10 +342,14 @@ class Criteria
 
     public static function defineLeftjoinByCriteria($params, $table = 'glpi_tickets')
     {
-
         $query = $params['query'];
 
-        if ($params['criteria']  == TechnicianGroup::$criteria_name) {
+        if ($params['criteria'] == Entity::$criteria_name) {
+            if (!isset($params['query']['LEFT JOIN'])) {
+                $params['query']['LEFT JOIN'] = [];
+            }
+            $query['LEFT JOIN'] = Entity::getQueryLeftJoin($params, $table);
+        } elseif ($params['criteria'] == TechnicianGroup::$criteria_name) {
             $technician_group = array_filter($params[TechnicianGroup::$criteria_name]);
             if (count($technician_group) > 0) {
                 if (!isset($params['query']['LEFT JOIN'])) {
@@ -338,16 +357,15 @@ class Criteria
                 }
                 $query['LEFT JOIN'] = TechnicianGroup::getQueryLeftJoin($params, $table);
             }
-        } elseif ($params['criteria']  == RequesterGroup::$criteria_name) {
+        } elseif ($params['criteria'] == RequesterGroup::$criteria_name) {
             $requester_groups = array_filter($params[RequesterGroup::$criteria_name]);
             if (count($requester_groups) > 0) {
                 if (!isset($params['query']['LEFT JOIN'])) {
                     $params['query']['LEFT JOIN'] = [];
                 }
                 $query['LEFT JOIN'] = RequesterGroup::getQueryLeftJoin($params, $table);
-
             }
-        } elseif ($params['criteria']  == Technician::$criteria_name) {
+        } elseif ($params['criteria'] == Technician::$criteria_name) {
             if (!isset($params['query']['LEFT JOIN'])) {
                 $params['query']['LEFT JOIN'] = [];
             }
@@ -359,57 +377,37 @@ class Criteria
 
     public static function defineWhereByCriteria($params, $table = 'glpi_tickets')
     {
-
         $query = $params['query'];
 
         if ($params['criteria'] == "entities_id") {
-
             $query['WHERE'] = Entity::getQueryCriteria($params, $table);
-
         } elseif ($params['criteria'] == TechnicianGroup::$criteria_name) {
-
             $technician_group = array_filter($params[TechnicianGroup::$criteria_name]);
             if (count($technician_group) > 0) {
                 $query['WHERE'] = TechnicianGroup::getQueryCriteria($params);
             }
-
         } elseif ($params['criteria'] == Type::$criteria_name) {
-
             $query['WHERE'] = Type::getQueryCriteria($params);
-
         } elseif ($params['criteria'] == ComputerType::$criteria_name) {
-
             $query['WHERE'] = ComputerType::getQueryCriteria($params, $table);
-
         } elseif ($params['criteria'] == RequesterGroup::$criteria_name) {
-
             $requester_groups = array_filter($params[RequesterGroup::$criteria_name]);
             if (count($requester_groups) > 0) {
                 $query['WHERE'] = RequesterGroup::getQueryCriteria($params);
             }
-
         } elseif ($params['criteria'] == Technician::$criteria_name) {
-
             $query['WHERE'] = Technician::getQueryCriteria($params);
-
         } elseif ($params['criteria'] == ITILCategory::$criteria_name) {
-
             $query['WHERE'] = ITILCategory::getQueryCriteria($params);
-
         } elseif ($params['criteria'] == Location::$criteria_name) {
-
             $query['WHERE'] = Location::getQueryCriteria($params);
-
         } elseif ($params['criteria'] == MultipleLocation::$criteria_name) {
-
             $query['WHERE'] = MultipleLocation::getQueryCriteria($params);
-
         } elseif ($params['criteria'] == Year::$criteria_name) {
-
             $query['WHERE'] = Year::getQueryCriteria($params);
-
+        } elseif ($params['criteria'] == Month::$criteria_name) {
+            $query['WHERE'] = Month::getQueryCriteria($params);
         }
-
 
 
         return $query;
@@ -426,10 +424,10 @@ class Criteria
         global $options;
 
         $options['criteria'][] = [
-            'field'      => $field,
+            'field' => $field,
             'searchtype' => $searchType,
-            'value'      => $value,
-            'link'       => $link,
+            'value' => $value,
+            'link' => $link,
         ];
         return $options;
     }
@@ -446,13 +444,13 @@ class Criteria
         if (isset($value)
             && count($value) > 0) {
             $groups = $value;
-            $nb     = 0;
+            $nb = 0;
             foreach ($groups as $group) {
                 $criterias['criteria'][$nb] = [
-                    'field'      => $field,
+                    'field' => $field,
                     'searchtype' => $searchType,
-                    'value'      => $group,
-                    'link'       => (($nb == 0) ? 'AND' : 'OR'),
+                    'value' => $group,
+                    'link' => (($nb == 0) ? 'AND' : 'OR'),
                 ];
                 $nb++;
             }
@@ -469,7 +467,6 @@ class Criteria
      */
     public static function manageCriterias($params)
     {
-
         $criterias = $params['criterias'];
 
         $used_criterias = [
@@ -493,11 +490,11 @@ class Criteria
             if (in_array($criteria, $criterias)) {
                 $critClass = new $class();
                 $default[$criteria] = $critClass::getDefaultValue();
-
             }
         }
-        $default['is_recursive_entities'] = false;
+        $default['is_recursive_entities'] = true;
         $default['is_recursive_technicians'] = false;
+        $default['is_recursive_requesters'] = false;
         $default['is_recursive_locations'] = false;
 
         return $default;
@@ -517,7 +514,6 @@ class Criteria
      */
     public static function getFormHeader($rand, $opt = [])
     {
-
         $form = "<script type='text/javascript'>
                $(document).ready(function () {
                    $('#plugin_mydashboard_add_criteria$rand').on('click', function (e) {
@@ -571,7 +567,6 @@ class Criteria
      */
     public static function getForm($widgetId, $default, $opt, $criterias, $onsubmit = false)
     {
-
         $gsid = Widget::getGsID($widgetId);
         $rand = mt_rand();
         if (count($opt) == 0) {
@@ -584,10 +579,14 @@ class Criteria
         $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
         if ($onsubmit) {
             $form .= "<form id='" . $formId . "' action='' "
-                . "onsubmit=\"refreshWidgetByForm('" . Widget::removeBackslashes($widgetId) . "','" . $gsid . "','" . $formId . "'); return false;\">";
+                . "onsubmit=\"refreshWidgetByForm('" . Widget::removeBackslashes(
+                    $widgetId
+                ) . "','" . $gsid . "','" . $formId . "'); return false;\">";
         } else {
             $form .= "<form id='" . $formId . "' action='' onsubmit='return false;' ";
-            $form .= "onchange=\"refreshWidgetByForm('" . Widget::removeBackslashes($widgetId) . "','" . $gsid . "','" . $formId . "');\">";
+            $form .= "onchange=\"refreshWidgetByForm('" . Widget::removeBackslashes(
+                    $widgetId
+                ) . "','" . $gsid . "','" . $formId . "');\">";
         }
 
         $count = count($criterias);

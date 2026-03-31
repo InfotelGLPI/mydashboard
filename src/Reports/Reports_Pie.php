@@ -1466,18 +1466,20 @@ class Reports_Pie extends CommonGLPI
                     ],
                 ];
 
-                $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
-                );
+                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
                 $iterator = $DB->request($criteria);
                 $nb = 0;
                 if (count($iterator) > 0) {
                     $nb = count($iterator);
                     foreach ($iterator as $data) {
-                        //                if ($nb > 0 && $sum['satisfaction'] > 0) {
-                        $satisfy = round(($data['satisfaction']) * 100 / (5), 2, PHP_ROUND_HALF_UP);
-                        $notsatisfy = round(100 - $satisfy, 2, PHP_ROUND_HALF_UP);
+                        if ($data['satisfaction'] > 0) {
+                            $satisfy = round(($data['satisfaction']) * 100 / (5), 2, PHP_ROUND_HALF_UP);
+                            $notsatisfy = round(100 - $satisfy, 2, PHP_ROUND_HALF_UP);
+                        } else {
+                            $satisfy = 0;
+                            $notsatisfy = 0;
+                        }
 
                         $datas[] = [
                             'value' => $satisfy,
@@ -1791,7 +1793,6 @@ class Reports_Pie extends CommonGLPI
                     ];
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
-
 
                 $params = [
                     "preferences" => $preferences,

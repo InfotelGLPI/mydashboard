@@ -277,10 +277,20 @@ class Preference extends CommonDBTM
         echo $dropdownCategory;
         echo "</td>";
         echo "</tr>";
+
         echo "<tr class='tab_bg_1'><td>" . __("My prefered type for widget", "mydashboard") . "</td>";
         echo "<td>";
         $params = ['value'  => $this->fields['prefered_type'],'toadd' => [0 => Dropdown::EMPTY_VALUE]];
         Ticket::dropdownType('prefered_type', $params);
+        echo "</td>";
+        echo "</tr>";
+
+        echo "<tr class='tab_bg_1'><td>" . __("My prefered year for widget", "mydashboard") . "</td>";
+        echo "<td>";
+        $params = ['value'  => $this->fields['prefered_year']];
+        $temp = [0 => __('Current year', 'mydashboard'),
+        1 => __('Previous year', 'mydashboard')];
+        Dropdown::showFromArray("prefered_year", $temp, $params);
         echo "</td>";
         echo "</tr>";
 
@@ -391,6 +401,7 @@ class Preference extends CommonDBTM
                         `color_palette`            varchar(50)  NOT NULL DEFAULT '',
                         `prefered_type`            int {$default_key_sign} NOT NULL DEFAULT '0',
                         `prefered_category`        int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `prefered_year`            tinyint      NOT NULL DEFAULT '0',
                         PRIMARY KEY (`id`)
                ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
@@ -528,6 +539,11 @@ class Preference extends CommonDBTM
 
         $migration->changeField($table, "automatic_refresh_delay", "automatic_refresh_delay", "int {$default_key_sign} NOT NULL DEFAULT '10'");
         $migration->migrationOneTable($table);
+
+        if (!$DB->fieldExists($table, "prefered_year")) {
+            $migration->addField($table, "prefered_year", "tinyint NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
 
     }
 

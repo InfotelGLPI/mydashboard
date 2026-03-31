@@ -10,8 +10,6 @@ other criterias..
 
 Buttons in top menu ?
 
-Add preference : Year : current year, previous year
-
 Add top search module ?
 
-fix recursivity
+fix recursivity for groups / locations

@@ -2707,9 +2707,7 @@ class Reports_Bar extends CommonDBTM
                                 'NOT'       => ['glpi_tickets.closedate' => null],
                             ],
                         ];
-                        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_tickets'
-                        );
+                        $criteria1 = Criteria::addCriteriasForQuery($criteria1, $params);
 
                         $iterator_1 = $DB->request($criteria_1);
 

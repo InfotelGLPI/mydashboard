@@ -39,13 +39,15 @@ class Technician
     public static $criteria_name = 'technicians_id';
     public static $criteria_number = 5;
 
-    public static function getDefaultValue() {
+    public static function getDefaultValue()
+    {
 
         $technicians_id = 0;
         return $technicians_id;
     }
 
-    public static function getDisplayValue($opt) {
+    public static function getDisplayValue($opt)
+    {
 
         $form = "";
         if ($opt[self::$criteria_name] != 0) {
@@ -55,7 +57,8 @@ class Technician
         return $form;
     }
 
-    public static function getDisplayForm($default, $opt, $count) {
+    public static function getDisplayForm($default, $opt, $count)
+    {
 
         $params = [
             'name' => "technicians_id",
@@ -78,30 +81,33 @@ class Technician
         return $form;
     }
 
-    public static function getQueryLeftJoin($params, $table) {
+    public static function getQueryLeftJoin($params, $table)
+    {
 
         return $params['query']['LEFT JOIN'] + [
-                'glpi_tickets_users' => [
-                    'ON' => [
-                        $table => 'id',
-                        'glpi_tickets_users' => 'tickets_id',
-                        [
-                            'AND' => [
-                                'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
-                            ],
+            'glpi_tickets_users' => [
+                'ON' => [
+                    $table => 'id',
+                    'glpi_tickets_users' => 'tickets_id',
+                    [
+                        'AND' => [
+                            'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
     }
 
-    public static function getQueryCriteria($params) {
+    public static function getQueryCriteria($params)
+    {
 
         return $params['query']['WHERE'] + ['glpi_tickets_users.users_id' => $params[self::$criteria_name]];
     }
 
-    public static function getSearchCriteria($params, $value = 0) {
+    public static function getSearchCriteria($params, $value = 0)
+    {
 
         return Criteria::addUrlCriteria(self::$criteria_number, 'equals', $params["params"][self::$criteria_name], 'AND');
     }

@@ -30,6 +30,8 @@ namespace GlpiPlugin\Mydashboard\Criterias;
 use Dropdown;
 use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Mydashboard\Criteria;
+use GlpiPlugin\Mydashboard\Preference;
+use Session;
 
 /**
  * Class Year
@@ -40,7 +42,21 @@ class Year
 
 
     public static function getDefaultValue() {
-        return intval(date('Y', time()) - 1);
+
+        $year = intval(date('Y', time()));
+
+        $preference = new Preference();
+        if (!$preference->getFromDB(Session::getLoginUserID())) {
+            $preference->initPreferences(Session::getLoginUserID());
+        }
+        $preference->getFromDB(Session::getLoginUserID());
+        $preferences = $preference->fields;
+        if (isset($preferences['prefered_year'])) {
+            if ($preferences['prefered_year'] > 0) {
+                $year = intval(date('Y', time()) -1);
+            }
+        }
+        return $year;
     }
 
     public static function getDisplayValue($opt) {

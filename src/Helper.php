@@ -27,39 +27,14 @@
 
 namespace GlpiPlugin\Mydashboard;
 
-use Ajax;
-use CommonITILActor;
-use CommonITILObject;
 use DbUtils;
-use Dropdown;
-use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Mydashboard\Charts\HBarChart;
 use GlpiPlugin\Mydashboard\Charts\LineChart;
 use GlpiPlugin\Mydashboard\Charts\PieChart;
 use GlpiPlugin\Mydashboard\Charts\VBarChart;
-use GlpiPlugin\Mydashboard\Criterias\ComputerType;
-use GlpiPlugin\Mydashboard\Criterias\DisplayData;
-use GlpiPlugin\Mydashboard\Criterias\Entity;
-use GlpiPlugin\Mydashboard\Criterias\FilterDate;
-use GlpiPlugin\Mydashboard\Criterias\ITILCategory;
-use GlpiPlugin\Mydashboard\Criterias\Limit;
-use GlpiPlugin\Mydashboard\Criterias\Location;
-use GlpiPlugin\Mydashboard\Criterias\Month;
-use GlpiPlugin\Mydashboard\Criterias\MultipleLocation;
-use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
-use GlpiPlugin\Mydashboard\Criterias\Technician;
-use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
-use GlpiPlugin\Mydashboard\Criterias\Type;
-use GlpiPlugin\Mydashboard\Criterias\Year;
 use GlpiPlugin\Mydashboard\Html as MyDashboardHtml;
-use Group;
-use Group_User;
 use Html;
-use PluginTagTag;
 use Session;
-use Ticket;
-use Toolbox;
-use User;
 
 /**
  * This helper class provides some static functions that are useful for widget class
