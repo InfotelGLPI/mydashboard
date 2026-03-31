@@ -927,7 +927,7 @@ class Alert extends CommonDBTM
                             }
 
                             if (is_array($types) && count($types) > 0) {
-                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable . $typefield => $types];
+                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable .'.'. $typefield => $types];
                             }
 
                             if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
@@ -993,7 +993,7 @@ class Alert extends CommonDBTM
                             $icon = $data['icon'];
                             $table .= "<div class=\"nbstock\" style=\"color:$color\">";
                             $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $data['name'] . "'>";
-                            $table .= "<i style='color:$color;font-size:34px' class=\"fas $icon fa-3x fa-border\"></i>";
+                            $table .= "<i style='color:$color;font-size:3em;' class=\"ti $icon fa-border\"></i>";
                             $table .= "<h3 style='margin-top: 10px;'>";
                             $table .= "<span class=\"counter count-number\" id=\"stock_$nb\"></span>";
                             //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";

@@ -31,17 +31,40 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownStatus.php")) {
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
+Global $DB;
 // Make a select box
 if (isset($_POST["itemtype"])) {
-   $dbu       = new DbUtils();
-   $state     = new State();
+
+    $criteria = [
+        'SELECT' => [\State::getTable().'.id', \State::getTable().'.name'],
+        'FROM' => \State::getTable(),
+        'LEFT JOIN' => [
+            DropdownVisibility::getTable() => [
+                'ON' => [
+                    DropdownVisibility::getTable() => 'items_id',
+                    \State::getTable() => 'id', [
+                        'AND' => [
+                            DropdownVisibility::getTable() . '.itemtype' => \State::getType(),
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'WHERE' => [
+            DropdownVisibility::getTable() . '.itemtype' => \State::getType(),
+            DropdownVisibility::getTable() . '.visible_itemtype' => strtolower($_POST["itemtype"]),
+            DropdownVisibility::getTable() . '.is_visible' => 1,
+        ],
+    ];
+    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+            \State::getTable()
+        );
+
+
    $states     = [];
-   $field = 'is_visible_'.strtolower($_POST["itemtype"]);
-   $condition = [$field => 1]
-                + $dbu->getEntitiesRestrictCriteria('glpi_states', 'entities_id', $_SESSION['glpiactive_entity'], true);
-   $allstates = $state->find($condition);
-   foreach ($allstates as $k => $v) {
-      $states[$v['id']] = $v['name'];
+    $iterator = $DB->request($criteria);
+    foreach ($iterator as $data) {
+      $states[$data['id']] = $data['name'];
    }
    Dropdown::showFromArray('states', $states, ['multiple' => true]);
 }
