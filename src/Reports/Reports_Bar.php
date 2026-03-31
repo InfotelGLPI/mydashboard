@@ -3306,6 +3306,10 @@ class Reports_Bar extends CommonDBTM
         $techlist = [];
 
         if (is_array($selected_group)
+            && count($selected_group) == 0) {
+            $selected_group = $_SESSION['glpigroups'];
+        }
+        if (is_array($selected_group)
             && count($selected_group) > 0) {
 
             $criteria = [
@@ -3324,7 +3328,6 @@ class Reports_Bar extends CommonDBTM
                     'glpi_groups.is_assign' => 1,
                 ],
                 'GROUPBY' => 'glpi_groups_users.users_id',
-                'LIMIT' => $limit,
             ];
 
             $iterator = $DB->request($criteria);
@@ -3332,21 +3335,9 @@ class Reports_Bar extends CommonDBTM
             foreach ($iterator as $data) {
                 $techlist[] = $data['users_id'];
             }
-        } else {
-
-            $criteria = [
-                'SELECT' => 'glpi_tickettasks.users_id_tech',
-                'FROM' => 'glpi_tickettasks',
-                'GROUPBY' => 'glpi_tickettasks.users_id_tech',
-                'LIMIT' => $limit,
-            ];
-
-            $iterator = $DB->request($criteria);
-
-            foreach ($iterator as $data) {
-                $techlist[] = $data['users_id_tech'];
-            }
         }
+
+        $techlist = array_filter($techlist);
 
         $current_month = date("m");
         foreach ($months as $key => $month) {
