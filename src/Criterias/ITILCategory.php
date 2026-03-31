@@ -115,6 +115,11 @@ class ITILCategory
 
     public static function getSearchCriteria($params, $value = 0) {
 
-        return Criteria::addUrlCriteria(self::$criteria_number, 'equals', $params["params"][self::$criteria_name], 'AND');
+        $searchtype = 'equals';
+        if (empty($params["params"][self::$criteria_name])) {
+            $params["params"][self::$criteria_name] = '^$';
+            $searchtype = 'contains';
+        }
+        return Criteria::addUrlCriteria(self::$criteria_number, $searchtype, $params["params"][self::$criteria_name], 'AND');
     }
 }

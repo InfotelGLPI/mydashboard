@@ -28,6 +28,8 @@
 namespace GlpiPlugin\Mydashboard\Criterias;
 
 use Dropdown;
+use Glpi\DBAL\QueryExpression;
+use GlpiPlugin\Mydashboard\Criteria;
 
 /**
  * Class Year
@@ -38,7 +40,7 @@ class Year
 
 
     public static function getDefaultValue() {
-        return intval(date('Y', time()));
+        return intval(date('Y', time()) - 1);
     }
 
     public static function getDisplayValue($opt) {
@@ -78,8 +80,8 @@ class Year
      */
     public static function YearDropdown($selected = null)
     {
-        $year = date("Y") - 3;
-        for ($i = 0; $i <= 3; $i++) {
+        $year = date("Y") - 10;
+        for ($i = 0; $i <= 10; $i++) {
             $elements[$year] = $year;
 
             $year++;
@@ -90,5 +92,43 @@ class Year
         ];
 
         return Dropdown::showFromArray(self::$criteria_name, $elements, $opt);
+    }
+
+    public static function getQueryCriteria($params) {
+
+        $year = $params['year'];
+
+        if (isset($params['month'])) {
+            $month = $params['month'];
+            $month = sprintf('%02d', $month);
+            $date_criteria = [
+                ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
+                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+            ];
+        } else {
+            $date_criteria = [
+                ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
+                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
+            ];
+        }
+
+        return array_merge($params['query']['WHERE'],$date_criteria);
+    }
+
+    public static function getSearchCriteria($params) {
+
+        if (isset($params["params"]["year"])) {
+            $params["params"]["begin"] = $params["params"]["year"] . "-01-01 00:00:01";
+            $params["params"]["end"] = $params["params"]["year"] . "-12-31 23:59:00";
+        }
+
+        if (isset($params["params"]["begin"])) {
+            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $params["params"]["begin"], 'AND');
+        }
+        if (isset($params["params"]["end"])) {
+            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $params["params"]["end"], 'AND');
+        }
+
+        return $options;
     }
 }

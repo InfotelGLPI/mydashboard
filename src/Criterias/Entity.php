@@ -110,6 +110,9 @@ class Entity
 
     public static function getQueryCriteria($params, $table = 'glpi_tickets')
     {
+        if ($table == 'glpi_tickets') {
+            $params['recursive'] = false;
+        }
         return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
                 $table,
                 self::$criteria_name,

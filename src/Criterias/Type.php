@@ -97,16 +97,8 @@ class Type
         return $params['query']['WHERE'] + ['glpi_tickets.'.self::$criteria_name => $params[self::$criteria_name]];
     }
 
-    public static function getSearchCriteria($params, $value = 0) {
+    public static function getSearchCriteria($params) {
 
-        if ($value > 0) {
-            return Criteria::addUrlCriteria(
-                self::$criteria_number,
-                'equals',
-                $value,
-                'AND'
-            );
-        }
         return Criteria::addUrlCriteria(self::$criteria_number, 'equals', $params["params"][self::$criteria_name], 'AND');
     }
 }

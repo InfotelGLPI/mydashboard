@@ -47,8 +47,26 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-        $year = date("Y");
-        if ($type == "week") {
+
+        if ($type == "all") {
+
+            $DB->doQuery("TRUNCATE TABLE `glpi_plugin_mydashboard_stockticketindicators`");
+
+            for ($y = 0; $y < 5; $y++) {
+                $year = date('Y') - $y;
+                for ($i = 1; $i <= 52; $i++) {
+                    self::queryNewTickets($year, $i);
+                    self::queryDueTickets($year, $i);
+                    self::queryPendingTickets($year, $i);
+                    self::queryIncidentTickets($year, $i);
+                    self::queryRequestTickets($year, $i);
+                    self::queryResolvedTickets($year, $i);
+                    self::queryClosedTickets($year, $i);
+                }
+            }
+        } else {
+
+            $year = date("Y");
             $week = date("W") - 1;
 
             if ($week == 0) {
@@ -56,10 +74,6 @@ class StockTicketIndicator extends CommonDBTM
                 $dt   = new DateTime('December 28th, ' . $year);
                 $week = $dt->format('W');
             }
-
-//            $query   = "SELECT COUNT(*) as count FROM glpi_plugin_mydashboard_stockticketindicators
-//                  WHERE glpi_plugin_mydashboard_stockticketindicators.year = '$year'
-//                      AND glpi_plugin_mydashboard_stockticketindicators.week = '$week'";
 
             $criteria = [
                 'SELECT' => [
@@ -78,19 +92,7 @@ class StockTicketIndicator extends CommonDBTM
                 }
             }
             echo "fill table with datas of $year week $week";
-        }
-        if ($type == "all") {
-            for ($i = 1; $i <= 52; $i++) {
-                self::queryNewTickets($year, $i);
-                self::queryDueTickets($year, $i);
-                self::queryPendingTickets($year, $i);
-                self::queryIncidentTickets($year, $i);
-                self::queryRequestTickets($year, $i);
-                self::queryResolvedTickets($year, $i);
-                self::queryClosedTickets($year, $i);
 
-            }
-        } else {
             self::queryNewTickets($year, $week);
             self::queryDueTickets($year, $week);
             self::queryPendingTickets($year, $week);
@@ -219,7 +221,7 @@ class StockTicketIndicator extends CommonDBTM
                 ['id' => NULL,
                     'year' => $year,
                     'week' => $week,
-                    'nbTickets' => $data['due'],
+                    'nbTickets' => $data['total'],
                     'indicator_id' => self::LATET,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
@@ -275,7 +277,7 @@ class StockTicketIndicator extends CommonDBTM
                     ],
                 ],
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
 
         $iterator = $DB->request($criteria);
@@ -288,7 +290,7 @@ class StockTicketIndicator extends CommonDBTM
                     ['id' => NULL,
                         'year' => $year,
                         'week' => $week,
-                        'nbTickets' => $data['due'],
+                        'nbTickets' => $data['total'],
                         'indicator_id' => self::LATET,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
@@ -396,7 +398,7 @@ class StockTicketIndicator extends CommonDBTM
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'glpi_tickets.status' => \Ticket::WAITING,
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
 
         $iterator = $DB->request($criteria);
@@ -521,7 +523,7 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
                 'NOT'       => ['glpi_tickets.status' => $statuses]
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
 
         $iterator = $DB->request($criteria);
@@ -643,7 +645,7 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
                 'NOT'       => ['glpi_tickets.status' => $statuses]
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
 
         $iterator = $DB->request($criteria);
@@ -759,7 +761,7 @@ class StockTicketIndicator extends CommonDBTM
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'status' => \Ticket::SOLVED,
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
 
         $iterator = $DB->request($criteria);
@@ -877,7 +879,7 @@ class StockTicketIndicator extends CommonDBTM
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'status' => \Ticket::CLOSED,
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id',
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
 
         $iterator = $DB->request($criteria);

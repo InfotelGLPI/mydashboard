@@ -27,7 +27,6 @@
 
 namespace GlpiPlugin\Mydashboard;
 
-use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Mydashboard\Criterias\ComputerType;
 use GlpiPlugin\Mydashboard\Criterias\DisplayData;
 use GlpiPlugin\Mydashboard\Criterias\Entity;
@@ -80,7 +79,11 @@ class Criteria
     public const SATISFACTION_VALUE = 62;
     public const BUY_DATE           = 37;
 
+    public const INVENTORY_DATE          = 9;
 
+    public const MORETICKET_WAITINGTYPE          = 3452;
+
+    public const OCSINVENTORYNG_IMPORTDATE         = 10002;
     /**
      * @param $params
      *
@@ -94,6 +97,7 @@ class Criteria
             TechnicianGroup::$criteria_name,
             'is_recursive_technicians',
             Type::$criteria_name,
+            Year::$criteria_name,
         ];
 
         if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -108,7 +112,7 @@ class Criteria
         return $criterias;
     }
 
-    public static function getGraphCriterias($params)
+    public static function getGraphCriterias($params, $table = 'glpi_tickets')
     {
 
         $default = self::manageCriterias($params);
@@ -133,7 +137,36 @@ class Criteria
             $criterias_values['end'] = $opt['end'];
         }
 
-        return $criterias_values;
+        $options['reset'][] = 'reset';
+
+        if ($table == 'glpi_tickets' && isset($criterias_values[Type::$criteria_name])
+            && $criterias_values[Type::$criteria_name] > 0) {
+            $values['params'][Type::$criteria_name] = $criterias_values[Type::$criteria_name];
+            $options = Type::getSearchCriteria($values);
+        }
+        if (isset($criterias_values[Year::$criteria_name])
+            && isset($criterias_values[Year::$criteria_name])) {
+            $values['params'][Year::$criteria_name] = $criterias_values[Year::$criteria_name];
+            $options = Year::getSearchCriteria($values);
+        }
+
+        if (isset($criterias_values[RequesterGroup::$criteria_name])
+            && is_array($criterias_values[RequesterGroup::$criteria_name])
+            && count($criterias_values[RequesterGroup::$criteria_name]) > 0) {
+            $values['params'][RequesterGroup::$criteria_name] = $criterias_values[RequesterGroup::$criteria_name];
+            $options = RequesterGroup::getSearchCriteria($values);
+        }
+        if (isset($criterias_values[RequesterGroup::$criteria_name])
+            && is_array($criterias_values[RequesterGroup::$criteria_name])
+            && count($criterias_values[TechnicianGroup::$criteria_name]) > 0) {
+            $values['params'][TechnicianGroup::$criteria_name] = $criterias_values[TechnicianGroup::$criteria_name];
+            $options = TechnicianGroup::getSearchCriteria($values);
+        }
+
+        $values['params'][Entity::$criteria_name] = $criterias_values[Entity::$criteria_name];
+        $options = Entity::getSearchCriteria($values);
+
+        return $options;
     }
 
     public static function addCriteriasForQuery($query, $params, $table = 'glpi_tickets')
@@ -180,6 +213,9 @@ class Criteria
         if (in_array("is_recursive_locations", $params['criterias'])  && $table == 'glpi_tickets') {
             $is_recursive_locations = $opt['is_recursive_locations'] ?? $default['is_recursive_locations'];
         }
+        if (in_array(Year::$criteria_name, $params['criterias'])  && $table == 'glpi_tickets') {
+            $year = $opt[Year::$criteria_name] ?? $default[Year::$criteria_name];
+        }
 
         foreach ($params['criterias'] as $criterion) {
 
@@ -198,7 +234,7 @@ class Criteria
                 }
             }
 
-            if ($criterion == RequesterGroup::$criteria_name && is_array($requesters_groups_id)) {
+            if ($table == 'glpi_tickets' && $criterion == RequesterGroup::$criteria_name && is_array($requesters_groups_id)) {
                 $requesters_groups_id = array_filter($requesters_groups_id);
 
                 if (count($requesters_groups_id) > 0) {
@@ -213,7 +249,7 @@ class Criteria
                 }
             }
 
-            if ($criterion == Technician::$criteria_name) {
+            if ($table == 'glpi_tickets' && $criterion == Technician::$criteria_name) {
 
                 if ($technicians_id > 0) {
                     $params_query['criteria'] = $criterion;
@@ -240,10 +276,17 @@ class Criteria
                 $query = self::defineWhereByCriteria($params_query, $table);
             }
 
-            if ($criterion == ITILCategory::$criteria_name && $itilcategories_id > 0) {
+            if ($table == 'glpi_tickets' && $criterion == ITILCategory::$criteria_name && $itilcategories_id > 0) {
                 $params_query['criteria'] = $criterion;
                 $params_query['query'] = $query;
                 $params_query[$criterion] = $itilcategories_id;
+                $query = self::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($table == 'glpi_tickets' && $criterion == Year::$criteria_name && $year > 0) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $year;
                 $query = self::defineWhereByCriteria($params_query, $table);
             }
 
@@ -361,7 +404,13 @@ class Criteria
 
             $query['WHERE'] = MultipleLocation::getQueryCriteria($params);
 
+        } elseif ($params['criteria'] == Year::$criteria_name) {
+
+            $query['WHERE'] = Year::getQueryCriteria($params);
+
         }
+
+
 
         return $query;
     }
@@ -483,25 +532,25 @@ class Criteria
         $form .= "<span style='font-size: 12px;font-family: verdana,serif;color: #CCC;font-weight: bold;'>";
 
         $used_criterias = [
-            Entity::$criteria_name => Entity::Class,
-            Type::$criteria_name => Type::Class,
-            TechnicianGroup::$criteria_name => TechnicianGroup::Class,
-            RequesterGroup::$criteria_name => RequesterGroup::Class,
-            Limit::$criteria_name => Limit::Class,
-            Location::$criteria_name => Location::Class,
-            Technician::$criteria_name => Technician::Class,
-            ITILCategory::$criteria_name => ITILCategory::Class,
-            Year::$criteria_name => Year::Class,
-            Month::$criteria_name => Month::Class,
-            ComputerType::$criteria_name => ComputerType::Class,
-            MultipleLocation::$criteria_name => MultipleLocation::Class,
-            DisplayData::$criteria_name => DisplayData::Class,
-            FilterDate::$criteria_name => FilterDate::Class,
+            Entity::$criteria_name => Entity::class,
+            Type::$criteria_name => Type::class,
+            TechnicianGroup::$criteria_name => TechnicianGroup::class,
+            RequesterGroup::$criteria_name => RequesterGroup::class,
+            Limit::$criteria_name => Limit::class,
+            Location::$criteria_name => Location::class,
+            Technician::$criteria_name => Technician::class,
+            ITILCategory::$criteria_name => ITILCategory::class,
+            Year::$criteria_name => Year::class,
+            Month::$criteria_name => Month::class,
+            ComputerType::$criteria_name => ComputerType::class,
+            MultipleLocation::$criteria_name => MultipleLocation::class,
+            DisplayData::$criteria_name => DisplayData::class,
+            FilterDate::$criteria_name => FilterDate::class,
         ];
 
         foreach ($used_criterias as $criteria => $class) {
             if (isset($opt[$criteria])) {
-                $critClass= new $class();
+                $critClass = new $class();
                 $form .= $critClass::getDisplayValue($opt);
             }
         }
@@ -544,25 +593,25 @@ class Criteria
         $count = count($criterias);
 
         $used_criterias = [
-            Entity::$criteria_name => Entity::Class,
-            Type::$criteria_name => Type::Class,
-            TechnicianGroup::$criteria_name => TechnicianGroup::Class,
-            RequesterGroup::$criteria_name => RequesterGroup::Class,
-            Limit::$criteria_name => Limit::Class,
-            Location::$criteria_name => Location::Class,
-            Technician::$criteria_name => Technician::Class,
-            ITILCategory::$criteria_name => ITILCategory::Class,
-            Year::$criteria_name => Year::Class,
-            Month::$criteria_name => Month::Class,
-            ComputerType::$criteria_name => ComputerType::Class,
-            MultipleLocation::$criteria_name => MultipleLocation::Class,
-            DisplayData::$criteria_name => DisplayData::Class,
-            FilterDate::$criteria_name => FilterDate::Class,
+            Entity::$criteria_name => Entity::class,
+            Type::$criteria_name => Type::class,
+            TechnicianGroup::$criteria_name => TechnicianGroup::class,
+            RequesterGroup::$criteria_name => RequesterGroup::class,
+            Limit::$criteria_name => Limit::class,
+            Location::$criteria_name => Location::class,
+            Technician::$criteria_name => Technician::class,
+            ITILCategory::$criteria_name => ITILCategory::class,
+            Year::$criteria_name => Year::class,
+            Month::$criteria_name => Month::class,
+            ComputerType::$criteria_name => ComputerType::class,
+            MultipleLocation::$criteria_name => MultipleLocation::class,
+            DisplayData::$criteria_name => DisplayData::class,
+            FilterDate::$criteria_name => FilterDate::class,
         ];
 
         foreach ($used_criterias as $criteria => $class) {
             if (in_array($criteria, $criterias)) {
-                $critClass= new $class();
+                $critClass = new $class();
                 $form .= $critClass::getDisplayForm($default, $opt, $count);
             }
         }

@@ -35,12 +35,9 @@ use GlpiPlugin\Mydashboard\Alert;
 use GlpiPlugin\Mydashboard\Charts\BarChart;
 use GlpiPlugin\Mydashboard\Criteria;
 use GlpiPlugin\Mydashboard\Criterias\DisplayData;
-use GlpiPlugin\Mydashboard\Criterias\Entity;
 use GlpiPlugin\Mydashboard\Criterias\Location;
 use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
 use GlpiPlugin\Mydashboard\Criterias\Technician;
-use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
-use GlpiPlugin\Mydashboard\Criterias\Type;
 use GlpiPlugin\Mydashboard\Criterias\Year;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Html;
@@ -207,17 +204,6 @@ class Reports_Line extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
                 }
 
                 $params = [
@@ -233,12 +219,9 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = date("Y");
-
-                if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
-                }
+                $currentyear = $opt["year"] ?? $default["year"];
                 $previousyear = $currentyear - 1;
+
                 $criteria = [
                     'SELECT' => [
                         new QueryExpression(
@@ -408,6 +391,7 @@ class Reports_Line extends CommonGLPI
                 $onclick = 0;
 
                 $criterias = Criteria::getDefaultCriterias();
+                $criterias = array_filter($criterias, fn($v) => $v !== Year::$criteria_name);
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
@@ -728,7 +712,6 @@ class Reports_Line extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        Year::$criteria_name,
                         Location::$criteria_name,
                         Technician::$criteria_name,
                         RequesterGroup::$criteria_name,
@@ -738,7 +721,6 @@ class Reports_Line extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        Year::$criteria_name,
                         Location::$criteria_name,
                         RequesterGroup::$criteria_name,
                     ];
@@ -755,22 +737,7 @@ class Reports_Line extends CommonGLPI
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
-                $currentyear = date("Y");
-
-                if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
-                }
-                $currentmonth = date("m");
-
-                //                $query_stockTickets
-                //                    = "SELECT DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m') as month,"
-                //                    . " DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%b %Y') as monthname,"
-                //                    . " SUM(nbStockTickets) as nbStockTickets"
-                //                    . " FROM `glpi_plugin_mydashboard_stocktickets`"
-                //                    . " WHERE `glpi_plugin_mydashboard_stocktickets`.`date` between '$currentyear-01-01' AND ADDDATE('$currentyear-01-01', INTERVAL 1 YEAR)"
-                //                    . " " . $mdentities . $tech_groups_crit
-                //                    . "  GROUP BY DATE_FORMAT(`glpi_plugin_mydashboard_stocktickets`.`date`, '%Y-%m')";
-                //
+                $currentyear = $opt["year"] ?? $default["year"];
 
                 $criteria = [
                     'SELECT' => [
@@ -1055,7 +1022,6 @@ class Reports_Line extends CommonGLPI
                     && Session::getCurrentInterface() == 'central') {
                     $onclick = 1;
                     $specific_criterias = [
-                        Year::$criteria_name,
                         Location::$criteria_name,
                         Technician::$criteria_name,
                         RequesterGroup::$criteria_name,
@@ -1065,7 +1031,6 @@ class Reports_Line extends CommonGLPI
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
                     $specific_criterias = [
-                        Year::$criteria_name,
                         Location::$criteria_name,
                         RequesterGroup::$criteria_name,
                     ];
@@ -1081,7 +1046,7 @@ class Reports_Line extends CommonGLPI
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
-                $currentyear = date("Y");
+                $currentyear = $opt["year"] ?? $default["year"];
 
                 if (isset($opt["year"]) && $opt["year"] > 0) {
                     $currentyear = $opt["year"];
@@ -1427,22 +1392,6 @@ class Reports_Line extends CommonGLPI
 
                 $criterias = Criteria::getDefaultCriterias();
 
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
@@ -1454,11 +1403,9 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = date("Y");
+                $currentyear = $opt["year"] ?? $default["year"];
                 $now = date("Y-m-d");
-                if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
-                }
+
                 $previousyear = $currentyear - 1;
                 $tabdates = [];
                 //                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
@@ -1569,22 +1516,6 @@ class Reports_Line extends CommonGLPI
 
                 $criterias = Criteria::getDefaultCriterias();
 
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
@@ -1665,22 +1596,6 @@ class Reports_Line extends CommonGLPI
 
                 $criterias = Criteria::getDefaultCriterias();
 
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
@@ -1691,11 +1606,9 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = date("Y");
+                $currentyear = $opt["year"] ?? $default["year"];
                 $now = date("Y-m-d");
-                if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
-                }
+
                 $previousyear = $currentyear - 1;
                 $tabdates = [];
                 //                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
@@ -1814,22 +1727,6 @@ class Reports_Line extends CommonGLPI
                 $name = 'reportLineTicketsProblemsByMonths';
 
                 $criterias = Criteria::getDefaultCriterias();
-
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
 
                 $params = [
                     "preferences" => $preferences,
@@ -1964,22 +1861,6 @@ class Reports_Line extends CommonGLPI
 
                 $criterias = Criteria::getDefaultCriterias();
 
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
@@ -1989,19 +1870,19 @@ class Reports_Line extends CommonGLPI
                 $default = Criteria::manageCriterias($params);
 
                 $technician_groups_ids = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-                $currentyear = date("Y");
+                $type = $opt['type'] ?? $default['type'];
+                $currentyear = $opt["year"] ?? $default["year"];
+
                 $year = intval(date('Y', time()) - 1);
 
                 if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $year = $opt["year"];
-                    $currentyear = $opt["year"];
+                    $year = $currentyear;
                 }
                 if ($year < intval($currentyear)) {
                     $week = date("W", strtotime("$currentyear-12-31"));
                 } else {
                     $week = intval(date('W'));
                 }
-                $opt['type'] ??= $default['type'];
 
                 $tabdata = [];
                 $tabnames = [];
@@ -2010,9 +1891,9 @@ class Reports_Line extends CommonGLPI
                 for ($i = 1; $i <= intval($week); $i++) {
                     if (!isset($datas[$i])) {
                         $nbticket = 0;
-                        if ($opt['type'] == \Ticket::DEMAND_TYPE) {
+                        if ($type == \Ticket::DEMAND_TYPE) {
                             $nbticket += Alert::commonQueryWeek($currentyear, $i, StockTicketIndicator::REQUESTPROGRESST, $technician_groups_ids);
-                        } elseif ($opt['type'] == \Ticket::INCIDENT_TYPE) {
+                        } elseif ($type == \Ticket::INCIDENT_TYPE) {
                             $nbticket += Alert::commonQueryWeek($currentyear, $i, StockTicketIndicator::INCIDENTPROGRESST, $technician_groups_ids);
                         } else {
                             $nbticket += Alert::commonQueryWeek($currentyear, $i, StockTicketIndicator::REQUESTPROGRESST, $technician_groups_ids);
@@ -2220,22 +2101,6 @@ class Reports_Line extends CommonGLPI
 
                 $criterias = Criteria::getDefaultCriterias();
 
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() == 'central') {
-                    $onclick = 1;
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-                if (isset($_SESSION['glpiactiveprofile']['interface'])
-                    && Session::getCurrentInterface() != 'central') {
-                    $specific_criterias = [
-                        Year::$criteria_name,
-                    ];
-                    $criterias = array_merge($criterias, $specific_criterias);
-                }
-
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
@@ -2246,11 +2111,9 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = date("Y");
+                $currentyear = $opt["year"] ?? $default["year"];
                 $now = date("Y-m-d");
-                if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
-                }
+
                 $previousyear = $currentyear - 1;
                 $tabdates = [];
                 //                $queryOpenedTicket = "SELECT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as period,
@@ -2355,10 +2218,12 @@ class Reports_Line extends CommonGLPI
                     'data' => $dataLineset,
                     'labels' => $labelsLine,
                 ];
-
-                $criterias_values = Criteria::getGraphCriterias($params);
-                $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
-
+                $onclick = 0;
+                $graph_criterias = [];
+                if ($onclick == 1) {
+                    $criterias_values = Criteria::getGraphCriterias($params);
+                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
+                }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
 
                 $params = [
@@ -2397,12 +2262,9 @@ class Reports_Line extends CommonGLPI
 
         //        $year = intval(date('Y', time()) - 1);
 
-        $year = $default["year"];
+        $year = $opt["year"] ?? $default["year"];
         $currentyear = date("Y");
 
-        if (isset($params['opt']["year"]) && $params['opt']["year"] > 0) {
-            $year = $params['opt']["year"];
-        }
         if ($year < intval($currentyear)) {
             $week = date("W", strtotime("$currentyear-12-31"));
         } else {
@@ -2470,14 +2332,12 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line22link($params)
+    public static function pluginMydashboardReports_Line22link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
-            $eventParts = explode('_', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
+            $eventParts = explode('_', $options['selected_id']);
             $date = $eventParts[0];
             $ticket_state = $eventParts[1];
             if (isset($date) && strpos($date, '-') !== false) {
@@ -2485,9 +2345,8 @@ class Reports_Line extends CommonGLPI
                 $year = $dateParts[0];
                 $month = $dateParts[1];
             }
-
-            $params['id'] = $eventParts[1];
         }
+
         if (isset($year) && isset($month) && isset($ticket_state)) {
             if ($ticket_state == "opened") {
                 $crit = Criteria::OPEN_DATE;
@@ -2499,36 +2358,18 @@ class Reports_Line extends CommonGLPI
             if ($ticket_state == "progress") {
                 $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                 $date = "$year-$month-$nbdays 23:59";
-                $options = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
-                $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
             } else {
                 $date = "$year-$month-01 00:00";
                 $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                $options = Criteria::addUrlCriteria($crit, 'morethan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'morethan', $date, 'AND');
                 $date = "$year-$month-$nbdays 23:59";
-                $options = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
             }
         }
 
-        if ($params["params"][Location::$criteria_name] > 0) {
-            $options = Location::getSearchCriteria($params);
-        }
-        if ($params["params"][Technician::$criteria_name] > 0) {
-            $options = Technician::getSearchCriteria($params);
-        }
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
-
-        $options = Entity::getSearchCriteria($params);
-
-        if ($params["params"][RequesterGroup::$criteria_name] > 0) {
-            $options = RequesterGroup::getSearchCriteria($params);
-        }
-
-        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
-            $options = TechnicianGroup::getSearchCriteria($params);
-        }
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2540,14 +2381,12 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line34link($params)
+    public static function pluginMydashboardReports_Line34link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
-            $eventParts = explode('_', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
+            $eventParts = explode('_', $options['selected_id']);
             $date = $eventParts[0];
             $ticket_state = $eventParts[1];
             if (isset($date) && strpos($date, '-') !== false) {
@@ -2555,8 +2394,6 @@ class Reports_Line extends CommonGLPI
                 $year = $dateParts[0];
                 $month = $dateParts[1];
             }
-
-            $params['id'] = $eventParts[1];
         }
         if (isset($year) && isset($month) && isset($ticket_state)) {
             if ($ticket_state == "opened") {
@@ -2569,36 +2406,18 @@ class Reports_Line extends CommonGLPI
             if ($ticket_state == "progress") {
                 $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                 $date = "$year-$month-$nbdays 23:59";
-                $options = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
-                $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
             } else {
                 $date = "$year-$month-01 00:00";
                 $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                $options = Criteria::addUrlCriteria($crit, 'morethan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'morethan', $date, 'AND');
                 $date = "$year-$month-$nbdays 23:59";
-                $options = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
             }
         }
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
 
-        if ($params["params"][Location::$criteria_name] > 0) {
-            $options = Location::getSearchCriteria($params);
-        }
-        if ($params["params"][Technician::$criteria_name] > 0) {
-            $options = Technician::getSearchCriteria($params);
-        }
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
-
-        $options = Entity::getSearchCriteria($params);
-
-        if ($params["params"][RequesterGroup::$criteria_name] > 0) {
-            $options = RequesterGroup::getSearchCriteria($params);
-        }
-
-        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
-            $options = TechnicianGroup::getSearchCriteria($params);
-        }
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2610,14 +2429,12 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line35link($params)
+    public static function pluginMydashboardReports_Line35link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
-            $eventParts = explode('_', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
+            $eventParts = explode('_', $options['selected_id']);
             $date = $eventParts[0];
             $ticket_state = $eventParts[1];
             if (isset($date) && strpos($date, '-') !== false) {
@@ -2625,9 +2442,8 @@ class Reports_Line extends CommonGLPI
                 $year = $dateParts[0];
                 $month = $dateParts[1];
             }
-
-            $params['id'] = $eventParts[1];
         }
+
         $add_actiontime_crit = 0;
         if (isset($year) && isset($month) && isset($ticket_state)) {
             if ($ticket_state == "opened") {
@@ -2643,44 +2459,22 @@ class Reports_Line extends CommonGLPI
             if ($ticket_state == "progress") {
                 $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
                 $date = "$year-$month-$nbdays 23:59";
-                $options = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
-                $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
             } else {
                 $date = "$year-$month-01 00:00";
                 $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                $options = Criteria::addUrlCriteria($crit, 'morethan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'morethan', $date, 'AND');
                 $date = "$year-$month-$nbdays 23:59";
-                $options = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
+                $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
             }
         }
 
-        if ($params["params"][Location::$criteria_name] > 0) {
-            $options = Location::getSearchCriteria($params);
-        }
-
-        if ($params["params"][Technician::$criteria_name] > 0) {
-            $options = Technician::getSearchCriteria($params);
-        }
-
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
-
-        $options = Type::getSearchCriteria($params);
-
-        $options = Entity::getSearchCriteria($params);
-
-        if ($params["params"][RequesterGroup::$criteria_name] > 0) {
-            $options = RequesterGroup::getSearchCriteria($params);
-        }
-
-        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
-            $options = TechnicianGroup::getSearchCriteria($params);
-        }
-
         if ($add_actiontime_crit == 1) {
-            $options = Criteria::addUrlCriteria(Criteria::TASK_ACTIONTIME, 'contains', '0', 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::TASK_ACTIONTIME, 'contains', '0', 'AND');
         }
+
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2691,27 +2485,25 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line43link($params)
+    public static function pluginMydashboardReports_Line43link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
-            $dateParts = explode('-', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $options['selected_id']);
             $year = $dateParts[0];
             $month = $dateParts[1];
         }
         if (isset($month)) {
             $date = "$year-$month-01 00:00";
             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
             $date = "$year-$month-$nbdays 23:59";
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
         }
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
+
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }
@@ -2721,14 +2513,12 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line44link($params)
+    public static function pluginMydashboardReports_Line44link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '_') !== false) {
-            $eventParts = explode('_', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
+            $eventParts = explode('_', $options['selected_id']);
             $date = $eventParts[0];
             $ticket_state = $eventParts[1];
             if (isset($date) && strpos($date, '-') !== false) {
@@ -2736,10 +2526,9 @@ class Reports_Line extends CommonGLPI
                 $year = $dateParts[0];
                 $month = $dateParts[1];
             }
-
-            $params['id'] = $eventParts[1];
         }
-        $week_number = $params["selected_id"];
+
+        $week_number = $options["selected_id"];
 
         $firstMonday = date("d", strtotime("first monday of january $year"));
         $start = date(
@@ -2749,12 +2538,42 @@ class Reports_Line extends CommonGLPI
         $end = date("Y-m-d 23:59:59", strtotime($start . " + 1 week"));
         $end = date("Y-m-d 23:59:59", strtotime($end . " - 1 day"));
 
-        $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $start, 'AND');
-        $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $end, 'AND');
+        $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $start, 'AND');
+        $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $end, 'AND');
 
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+
+        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
+            . Toolbox::append_params($options, "&");
+
+    }
+
+
+    /**
+     * @param $selected_id
+     *
+     * @return string
+     */
+    public static function pluginMydashboardReports_Line45link($options)
+    {
+        global $CFG_GLPI;
+
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $options['selected_id']);
+            $year = $dateParts[0];
+            $month = $dateParts[1];
         }
+        if (isset($month)) {
+            $date = "$year-$month-01 00:00";
+            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
+            $date = "$year-$month-$nbdays 23:59";
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
+        }
+        $options_selected = Criteria::addUrlCriteria(Criteria::VALIDATION_STATS, 'equals', Criteria::VALIDATION_REFUSED, 'AND');
+
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }
@@ -2765,29 +2584,26 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line45link($params)
+    public static function pluginMydashboardReports_Line46link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
-            $dateParts = explode('-', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $options['selected_id']);
             $year = $dateParts[0];
             $month = $dateParts[1];
         }
         if (isset($month)) {
             $date = "$year-$month-01 00:00";
             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
             $date = "$year-$month-$nbdays 23:59";
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
         }
-        $options = Criteria::addUrlCriteria(Criteria::VALIDATION_STATS, 'equals', Criteria::VALIDATION_REFUSED, 'AND');
+        $options_selected = Criteria::addUrlCriteria(Criteria::NUMBER_OF_PROBLEMS, 'equals', '>0', 'AND');
 
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }
@@ -2798,70 +2614,26 @@ class Reports_Line extends CommonGLPI
      *
      * @return string
      */
-    public static function pluginMydashboardReports_Line46link($params)
+    public static function pluginMydashboardReports_Line48link($options)
     {
         global $CFG_GLPI;
 
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
-            $dateParts = explode('-', $params['selected_id']);
+        if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
+            $dateParts = explode('-', $options['selected_id']);
             $year = $dateParts[0];
             $month = $dateParts[1];
         }
         if (isset($month)) {
             $date = "$year-$month-01 00:00";
             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
             $date = "$year-$month-$nbdays 23:59";
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
+            $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
         }
-        $options = Criteria::addUrlCriteria(Criteria::NUMBER_OF_PROBLEMS, 'equals', '>0', 'AND');
+        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
 
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
-    }
+        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
 
-
-    /**
-     * @param $selected_id
-     *
-     * @return string
-     */
-    public static function pluginMydashboardReports_Line48link($params)
-    {
-        global $CFG_GLPI;
-
-        $options['reset'][] = 'reset';
-
-        if (isset($params['selected_id']) && strpos($params['selected_id'], '-') !== false) {
-            $dateParts = explode('-', $params['selected_id']);
-            $year = $dateParts[0];
-            $month = $dateParts[1];
-        }
-        if (isset($month)) {
-            $date = "$year-$month-01 00:00";
-            $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $date, 'AND');
-            $date = "$year-$month-$nbdays 23:59";
-            $options = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
-        }
-        $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
-        if ($params["params"][RequesterGroup::$criteria_name] > 0) {
-            $options = RequesterGroup::getSearchCriteria($params);
-        }
-
-        if ($params["params"][TechnicianGroup::$criteria_name] > 0) {
-            $options = TechnicianGroup::getSearchCriteria($params);
-        }
-
-        if ($params["params"][Type::$criteria_name] > 0) {
-            $options = Type::getSearchCriteria($params);
-        }
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
     }

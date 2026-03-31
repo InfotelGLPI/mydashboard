@@ -37,13 +37,15 @@ class DisplayData
 {
     public static $criteria_name = 'display_data';
 
-    public static function getDefaultValue() {
+    public static function getDefaultValue()
+    {
 
         return intval(date('Y', time()));
 
     }
 
-    public static function getDisplayValue($opt) {
+    public static function getDisplayValue($opt)
+    {
 
 
         $form = "";
@@ -52,17 +54,18 @@ class DisplayData
         }
         if (isset($opt['start_year'])
             && isset($opt['start_month'])
-            && isset($opt['end_year']) &&
-                    isset($opt['end_month'])) {
+            && isset($opt['end_year'])
+                    && isset($opt['end_month'])) {
             $start_month = sprintf('%02d', $opt['start_month']);
             $end_month = sprintf('%02d', $opt['end_month']);
-            $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard') .
-                "&nbsp;:&nbsp;" .$opt['start_year']."-".$start_month." / ".$opt['end_year']."-".$end_month;
+            $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard')
+                . "&nbsp;:&nbsp;" . $opt['start_year'] . "-" . $start_month . " / " . $opt['end_year'] . "-" . $end_month;
         }
         return $form;
     }
 
-    public static function getDisplayForm($default, $opt, $count) {
+    public static function getDisplayForm($default, $opt, $count)
+    {
         global $CFG_GLPI;
 
         $form = "<span class='md-widgetcrit'>";

@@ -4,8 +4,14 @@ add link $this->getType() . "32"
 Line
 add link $this->getType() . "49":
 
-fix search
-
 filter_date or displaydata ? and drop month & year filters ?
 
 other criterias..
+
+Buttons in top menu ?
+
+Add preference : Year : current year, previous year
+
+Add top search module ?
+
+fix recursivity

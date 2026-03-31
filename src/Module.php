@@ -291,7 +291,7 @@ abstract class Module extends CommonGLPI
      */
     public function appendWidgetScriptContent($_js)
     {
-        //        $this->widgetScripts = array_merge($_js, $this->widgetScripts);
+//                $this->widgetScripts = array_merge($_js, $this->widgetScripts);
 
         $this->widgetHtmlContent = $this->widgetHtmlContent . $_js;
     }

@@ -1115,7 +1115,6 @@ class Reports_Table extends CommonGLPI
                 $widget->appendWidgetScriptContent(\Html::scriptBlock($js));
 
                 return $widget;
-                break;
 
             default:
                 break;
@@ -1144,7 +1143,7 @@ class Reports_Table extends CommonGLPI
 
         // STATUS
         if ($params["params"]['moreticket'] == 1) {
-            $options = Criteria::addUrlCriteria(3452, 'equals', $params["params"]["status"], 'AND');
+            $options = Criteria::addUrlCriteria(Criteria::MORETICKET_WAITINGTYPE, 'equals', $params["params"]["status"], 'AND');
         } else {
             $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', $params["params"]["status"], 'AND');
         }
@@ -1169,7 +1168,7 @@ class Reports_Table extends CommonGLPI
 
         // STATUS
         if ($params["params"]['moreticket'] == 1) {
-            $options = Criteria::addUrlCriteria(3452, 'equals', $params["params"]["status"], 'AND');
+            $options = Criteria::addUrlCriteria(Criteria::MORETICKET_WAITINGTYPE, 'equals', $params["params"]["status"], 'AND');
         } else {
             $options = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', $params["params"]["status"], 'AND');
         }

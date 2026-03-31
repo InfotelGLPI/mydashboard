@@ -120,7 +120,7 @@ class StockTicket extends CommonDBTM
                 'glpi_tickets.status' => \Ticket::getNotSolvedStatusArray(),
                 'date' => ['<=', "$year-$month-$nbdays 23:59:59"]
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id'
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id']
         ];
 
         $iterator = $DB->request($criteria);
@@ -190,7 +190,7 @@ class StockTicket extends CommonDBTM
                     ['date' => ['<', "$currentyear-$currentmonth-01 00:00:00"]],
                 ]
              ],
-            'GROUPBY' => 'month, entities_id',
+            'GROUPBY' => ['month', 'entities_id'],
         ];
 
         $iterator = $DB->request($criteria);
@@ -281,7 +281,7 @@ class StockTicket extends CommonDBTM
             'WHERE' => [
                 $is_deleted,
             ],
-            'GROUPBY' => 'glpi_groups_tickets.groups_id, glpi_tickets.entities_id'
+            'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id']
         ];
 
         $iterator = $DB->request($criteria);
@@ -308,7 +308,7 @@ class StockTicket extends CommonDBTM
                     'SELECT' => [
                         'COUNT' => 'glpi_tickets.id AS count',
                     ],
-                    'FROM' => 'glpi_groups_tickets',
+                    'FROM' => 'glpi_tickets',
                     'LEFT JOIN'       => [
                         'glpi_groups_tickets' => [
                             'ON' => [
@@ -373,7 +373,7 @@ class StockTicket extends CommonDBTM
                     'SELECT' => [
                         'COUNT' => 'glpi_tickets.id AS count',
                     ],
-                    'FROM' => 'glpi_groups_tickets',
+                    'FROM' => 'glpi_tickets',
                     'LEFT JOIN'       => [
                         'glpi_groups_tickets' => [
                             'ON' => [

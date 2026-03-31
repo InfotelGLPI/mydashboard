@@ -85,7 +85,7 @@ if (Plugin::isPluginActive("mydashboard")) {
                 ['date' => ['<', "$currentyear-$currentmonth-01 00:00:00"]],
             ]
         ],
-        'GROUPBY' => 'month, entities_id',
+        'GROUPBY' => ['month', 'entities_id'],
     ];
 
     $iterator = $DB->request($criteria);
