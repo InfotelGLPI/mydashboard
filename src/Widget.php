@@ -1189,6 +1189,7 @@ class Widget extends CommonDBTM
             $query = "CREATE TABLE `$table` (
                         `id` int {$default_key_sign} NOT NULL auto_increment,
                         `name` varchar(255) NOT NULL,
+                        `class` varchar(255) NOT NULL,
                         PRIMARY KEY (`id`),
                         UNIQUE (`name`)
                ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
@@ -1261,29 +1262,34 @@ class Widget extends CommonDBTM
             ]
         );
 
-        $widgetlist = Widgetlist::getList(false);
-        foreach ($widgetlist as $widgetclasses) {
-            foreach ($widgetclasses as $widgetclass => $widgets) {
-                foreach ($widgets as $widgetview => $widgetlist) {
-                    if (is_array($widgetlist)) {
-                        foreach ($widgetlist as $widgetId => $widgetTitle) {
-                            if (is_numeric($widgetId)) {
-                                $widgetId = $widgetTitle;
+        if (!$DB->fieldExists($table, "class")) {
+            $migration->addField($table, "class", "varchar(255) NOT NULL");
+            $migration->migrationOneTable($table);
+
+            $widgetlist = Widgetlist::getList(false);
+            foreach ($widgetlist as $widgetclasses) {
+                foreach ($widgetclasses as $widgetclass => $widgets) {
+                    foreach ($widgets as $widgetview => $widgetlist) {
+                        if (is_array($widgetlist)) {
+                            foreach ($widgetlist as $widgetId => $widgetTitle) {
+                                if (is_numeric($widgetId)) {
+                                    $widgetId = $widgetTitle;
+                                }
+                                $widget_origin = new Widget();
+                                $widget = new Widget();
+                                if ($widget_origin->getFromDBByCrit(['name' => $widgetId])) {
+                                    $widget->update(['class' => $widgetclass, 'id' => $widget_origin->fields['id']]);
+                                }
+                            }
+                        } else {
+                            if (is_numeric($widgetview)) {
+                                $widgetview = $widgetlist;
                             }
                             $widget_origin = new Widget();
                             $widget = new Widget();
-                            if ($widget_origin->getFromDBByCrit(['name' => $widgetId])) {
+                            if ($widget_origin->getFromDBByCrit(['name' => $widgetview])) {
                                 $widget->update(['class' => $widgetclass, 'id' => $widget_origin->fields['id']]);
                             }
-                        }
-                    } else {
-                        if (is_numeric($widgetview)) {
-                            $widgetview = $widgetlist;
-                        }
-                        $widget_origin = new Widget();
-                        $widget = new Widget();
-                        if ($widget_origin->getFromDBByCrit(['name' => $widgetview])) {
-                            $widget->update(['class' => $widgetclass, 'id' => $widget_origin->fields['id']]);
                         }
                     }
                 }
