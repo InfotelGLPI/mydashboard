@@ -492,10 +492,18 @@ class Criteria
                 $default[$criteria] = $critClass::getDefaultValue();
             }
         }
-        $default['is_recursive_entities'] = true;
+        $default['is_recursive_entities'] = false;
         $default['is_recursive_technicians'] = false;
         $default['is_recursive_requesters'] = false;
         $default['is_recursive_locations'] = false;
+        if (count($_SESSION['glpiactiveentities']) > 1) {
+            $default['is_recursive_entities'] = true;
+            $default['is_recursive_technicians'] = true;
+            $default['is_recursive_requesters'] = true;
+            $default['is_recursive_locations'] = true;
+        }
+
+
 
         return $default;
     }

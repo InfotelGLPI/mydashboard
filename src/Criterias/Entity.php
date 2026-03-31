@@ -90,19 +90,20 @@ class Entity
                 $form .= "</br></br>";
             }
 
-            //            if (in_array("is_recursive_entities", $criterias)) {
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= __('Recursive') . "&nbsp;";
-            $paramsy = [
-                'display' => false,
-            ];
             $sons = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-            $form .= Dropdown::showYesNo('is_recursive_entities', $sons, -1, $paramsy);
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
+                if ($sons > 0) {
+                $form .= "<span class='md-widgetcrit'>";
+                $form .= __('Recursive') . "&nbsp;";
+                $paramsy = [
+                    'display' => false,
+                ];
+                $sons = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
+                $form .= Dropdown::showYesNo('is_recursive_entities', $sons, -1, $paramsy);
+                $form .= "</span>";
+                if ($count > 1) {
+                    $form .= "</br></br>";
+                }
             }
-            //            }
         }
 
         return $form;
