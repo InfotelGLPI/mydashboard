@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-31 10:13+0000\n"
+"POT-Creation-Date: 2026-03-31 11:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,31 +41,31 @@ msgstr ""
 
 #: ajax/dropdownMonth.php:41 src/Criterias/Other.php:270
 #: src/Criterias/Other.php:453 src/Criterias/Other.php:487
-#: src/Criterias/Other.php:512 src/Criterias/Month.php:50
-#: src/Criterias/Month.php:64
+#: src/Criterias/Other.php:512 src/Criterias/Month.php:51
+#: src/Criterias/Month.php:65
 msgid "Month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:101
+#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:116
 msgid "Start month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:115
+#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:130
 msgid "Start year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:133
+#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:148
 msgid "End month"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:147
+#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:162
 msgid "End year"
 msgstr ""
 
-#: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:50
-#: src/Criterias/Year.php:65 src/Criterias/FilterDate.php:50
-#: src/Criterias/FilterDate.php:119 src/Criterias/DisplayData.php:53
-#: src/Criterias/DisplayData.php:172
+#: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:66
+#: src/Criterias/Year.php:81 src/Criterias/FilterDate.php:65
+#: src/Criterias/FilterDate.php:134 src/Criterias/DisplayData.php:68
+#: src/Criterias/DisplayData.php:187
 msgid "Year"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgstr ""
 msgid "Dashboard access"
 msgstr ""
 
-#: src/Helper.php:385
+#: src/Helper.php:360
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
@@ -538,11 +538,23 @@ msgstr ""
 msgid "My favorite category for widgets"
 msgstr ""
 
-#: src/Preference.php:280
+#: src/Preference.php:281
 msgid "My prefered type for widget"
 msgstr ""
 
-#: src/Preference.php:287
+#: src/Preference.php:288
+msgid "My prefered year for widget"
+msgstr ""
+
+#: src/Preference.php:291
+msgid "Current year"
+msgstr ""
+
+#: src/Preference.php:292
+msgid "Previous year"
+msgstr ""
+
+#: src/Preference.php:297
 msgid "Palette color"
 msgstr ""
 
@@ -1068,47 +1080,47 @@ msgstr ""
 msgid "Take into account average (hour)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2732
+#: src/Reports/Reports_Bar.php:2730
 msgid "Number of surveys answered"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2740
+#: src/Reports/Reports_Bar.php:2738
 msgid "Satisfy number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2746
+#: src/Reports/Reports_Bar.php:2744
 msgid "Not satisfy number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2838
+#: src/Reports/Reports_Bar.php:2836
 msgid "Computers number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2946 src/Reports/Reports_Pie.php:671
+#: src/Reports/Reports_Bar.php:2944 src/Reports/Reports_Pie.php:671
 #: src/Reports/Reports_Pie.php:687
 msgid "Not respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2952 src/Reports/Reports_Pie.php:676
+#: src/Reports/Reports_Bar.php:2950 src/Reports/Reports_Pie.php:676
 #: src/Reports/Reports_Pie.php:687
 msgid "Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2958
+#: src/Reports/Reports_Bar.php:2956
 msgid "Percent - Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3050 src/Reports/Reports_Pie.php:530
+#: src/Reports/Reports_Bar.php:3048 src/Reports/Reports_Pie.php:530
 #: src/Reports/Reports_Pie.php:548
 msgid "Not respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3056 src/Reports/Reports_Pie.php:535
+#: src/Reports/Reports_Bar.php:3054 src/Reports/Reports_Pie.php:535
 #: src/Reports/Reports_Pie.php:547
 msgid "Respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3062
+#: src/Reports/Reports_Bar.php:3060
 msgid "Percent - Respected TTR"
 msgstr ""
 
@@ -1332,11 +1344,11 @@ msgstr ""
 msgid "Not planned"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1484 src/Reports/Reports_Pie.php:1503
+#: src/Reports/Reports_Pie.php:1486 src/Reports/Reports_Pie.php:1505
 msgid "Satisfy percent"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1489 src/Reports/Reports_Pie.php:1503
+#: src/Reports/Reports_Pie.php:1491 src/Reports/Reports_Pie.php:1505
 msgid "Not satisfy percent"
 msgstr ""
 
@@ -1446,8 +1458,8 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: src/Criterias/Other.php:485 src/Criterias/FilterDate.php:66
-#: src/Criterias/DisplayData.php:74
+#: src/Criterias/Other.php:485 src/Criterias/FilterDate.php:81
+#: src/Criterias/DisplayData.php:89
 msgid "year"
 msgstr ""
 
@@ -1455,22 +1467,22 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#: src/Criterias/FilterDate.php:53 src/Criterias/DisplayData.php:61
+#: src/Criterias/FilterDate.php:68 src/Criterias/DisplayData.php:76
 msgid "Period"
 msgstr ""
 
-#: src/Criterias/FilterDate.php:67
+#: src/Criterias/FilterDate.php:82
 msgid "begin and end date"
 msgstr ""
 
-#: src/Criterias/FilterDate.php:81
+#: src/Criterias/FilterDate.php:96
 msgid "Filter date"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:75
+#: src/Criterias/DisplayData.php:90
 msgid "Start end"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:89
+#: src/Criterias/DisplayData.php:104
 msgid "Display"
 msgstr ""
