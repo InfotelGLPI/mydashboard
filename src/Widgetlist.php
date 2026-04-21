@@ -333,7 +333,7 @@ class Widgetlist
                     if (isset($gslist[$widgetId])) {
                         $gsid   = $gslist[$widgetId];
                         $list[] = [
-                            'icon' => Widget::getIconByType($widgetTitle['type']) ?? "ti ti-dashboard",
+                            'icon' => $widgetTitle['type'] ?  Widget::getIconByType($widgetTitle['type']) : "ti ti-dashboard",
                             'title'    => $widgetTitle['title'],
                             'widgetid' => $gsid,
                         ];

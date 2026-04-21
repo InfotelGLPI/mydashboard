@@ -437,6 +437,10 @@ class Reports_Line extends CommonGLPI
                         ['glpi_plugin_mydashboard_stocktickets.date' => ['<=', $currentyear . '-12-31 23:59:59']],
                         ['glpi_plugin_mydashboard_stocktickets.date' => ['>', new QueryExpression("ADDDATE('$currentyear-01-01 00:00:00' , INTERVAL 1 DAY)")]],
                     ];
+                    $date_crit_closedate = [
+                        ['glpi_tickets.closedate' => ['>=', "$currentyear-01-01 00:00:00"]],
+                        ['glpi_tickets.closedate' => ['<=', "$currentyear-12-31 23:59:59"]],
+                    ];
 
                 } else {
                     $end_year = $opt['end_year'] ?? date("Y");
@@ -456,6 +460,10 @@ class Reports_Line extends CommonGLPI
                     $date_crit_stockticket = [
                         ['glpi_plugin_mydashboard_stocktickets.date' => ['>=', "$start_year-$start_month-01 00:00:00"]],
                         ['glpi_plugin_mydashboard_stocktickets.date' => ['<=',  "$end_year-$end_month-$nbdays 00:00:00"]],
+                    ];
+                    $date_crit_closedate = [
+                        ['glpi_tickets.closedate' => ['>=', "$start_year-$start_month-01 00:00:00"]],
+                        ['glpi_tickets.closedate' => ['<=', "$end_year-$end_month-$nbdays 00:00:00"]],
                     ];
                 }
 
@@ -518,7 +526,7 @@ class Reports_Line extends CommonGLPI
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"
                         ),
-                        new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . "))"),
+                        new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_opened"),
                     ],
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
@@ -530,6 +538,21 @@ class Reports_Line extends CommonGLPI
 
                 $query_tickets = Criteria::addCriteriasForQuery($query_tickets, $params);
 
+                $query_closed_agg = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.closedate") . ", '%Y-%m') AS close_month"),
+                        new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_closed"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [$is_deleted, $date_crit_closedate],
+                    'GROUPBY' => 'close_month',
+                ];
+                $query_closed_agg = Criteria::addCriteriasForQuery($query_closed_agg, $params);
+                $closed_by_month = [];
+                foreach ($DB->request($query_closed_agg) as $row) {
+                    $closed_by_month[$row['close_month']] = (int) $row['nb_closed'];
+                }
+
                 $iterator_tickets = $DB->request($query_tickets);
 
                 if (count($iterator_tickets) > 0) {
@@ -540,61 +563,12 @@ class Reports_Line extends CommonGLPI
 
                         [$year, $month] = explode('-', $data['month']);
                         $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-                        $query_1 = [
-                            'SELECT' => [
-                                'COUNT' => 'glpi_tickets.id AS count',
-                            ],
-                            'FROM' => 'glpi_tickets',
-                            'WHERE' => [
-                                $is_deleted,
-                                [
-                                    ['glpi_tickets.date' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.date' =>  ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                                ],
-                            ],
-                        ];
 
-
-                        $query_1 = Criteria::addCriteriasForQuery($query_1, $params);
-
-                        $iterator_1 = $DB->request($query_1);
-
-                        if (count($iterator_1) > 0) {
-                            foreach ($iterator_1 as $data_1) {
-                                $tabopened[] = $data_1['count'];
-                            }
-                        } else {
-                            $tabopened[] = 0;
-                        }
+                        $tabopened[] = (int) $data['nb_opened'];
                         $tabdates[1][] = $data['month'] . '_opened';
 
-                        $query_2 = [
-                            'SELECT' => [
-                                'COUNT' => 'glpi_tickets.id AS count',
-                            ],
-                            'FROM' => 'glpi_tickets',
-                            'WHERE' => [
-                                $is_deleted,
-                                [
-                                    ['glpi_tickets.closedate' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.closedate' =>  ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                                ],
-                            ],
-                        ];
-
-                        $query_2 = Criteria::addCriteriasForQuery($query_2, $params);
-
-                        $iterator_2 = $DB->request($query_2);
-
-                        if (count($iterator_2) > 0) {
-                            foreach ($iterator_2 as $data_2) {
-                                $tabclosed[] = $data_2['count'];
-                            }
-                        } else {
-                            $tabclosed[] = 0;
-                        }
+                        $tabclosed[] = $closed_by_month[$data['month']] ?? 0;
                         $tabdates[2][] = $data['month'] . '_closed';
-
 
                         if ($month == date("m") && $year == date("Y")) {
                             $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -812,7 +786,7 @@ class Reports_Line extends CommonGLPI
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"
                         ),
-                        new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . "))"),
+                        new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_opened"),
                     ],
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
@@ -832,6 +806,26 @@ class Reports_Line extends CommonGLPI
 
                 $criteria_1 = Criteria::addCriteriasForQuery($criteria_1, $params);
 
+                $criteria_resolved_agg = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.solvedate") . ", '%Y-%m') AS solve_month"),
+                        new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_resolved"),
+                    ],
+                    'FROM' => 'glpi_tickets',
+                    'WHERE' => [
+                        $is_deleted,
+                        'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
+                        ['glpi_tickets.solvedate' => ['>=', "$currentyear-01-01 00:00:00"]],
+                        ['glpi_tickets.solvedate' => ['<=', "$currentyear-12-31 23:59:59"]],
+                    ],
+                    'GROUPBY' => 'solve_month',
+                ];
+                $criteria_resolved_agg = Criteria::addCriteriasForQuery($criteria_resolved_agg, $params);
+                $resolved_by_month = [];
+                foreach ($DB->request($criteria_resolved_agg) as $row) {
+                    $resolved_by_month[$row['solve_month']] = (int) $row['nb_resolved'];
+                }
+
                 $iterator_1 = $DB->request($criteria_1);
 
                 $nbResults = count($iterator_1);
@@ -842,66 +836,11 @@ class Reports_Line extends CommonGLPI
                         $tabnames[] = $data_1['monthname'];
 
                         [$year, $month] = explode('-', $data_1['month']);
-                        $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
 
-                        $criteria_2 = [
-                            'SELECT' => [
-                                'COUNT' => 'glpi_tickets.id AS count',
-                            ],
-                            'FROM' => 'glpi_tickets',
-                            'WHERE' => [
-                                $is_deleted,
-                                [
-                                    ['glpi_tickets.date' => ['>', "$year-$month-01 00:00:01"]],
-                                    ['glpi_tickets.date' =>  ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                                ],
-                            ],
-                        ];
-
-                        $criteria_2 = Criteria::addCriteriasForQuery($criteria_2, $params);
-
-                        $iterator_2 = $DB->request($criteria_2);
-
-                        if (count($iterator_2) > 0) {
-                            foreach ($iterator_2 as $data_2) {
-                                $tabopened[] = $data_2['count'];
-                            }
-                        } else {
-                            $tabopened[] = 0;
-                        }
+                        $tabopened[] = (int) $data_1['nb_opened'];
                         $tabdates[1][] = $data_1['month'] . '_opened';
 
-                        $criteria_3 = [
-                            'SELECT' => [
-                                'COUNT' => 'glpi_tickets.id AS count',
-                            ],
-                            'FROM' => 'glpi_tickets',
-                            'WHERE' => [
-                                $is_deleted,
-                                'glpi_tickets.status' => [CommonITILObject::SOLVED, CommonITILObject::CLOSED],
-                                [
-                                    [
-                                        'glpi_tickets.solvedate' => [
-                                            '>=',
-                                            "$year-$month-01 00:00:00",
-                                        ],
-                                    ],
-                                    ['glpi_tickets.solvedate' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                                ],
-                            ],
-                        ];
-
-                        $criteria_3 = Criteria::addCriteriasForQuery($criteria_3, $params);
-
-                        $iterator_3 = $DB->request($criteria_3);
-
-                        if (count($iterator_3) > 0) {
-                            foreach ($iterator_3 as $data_3) {
-                                $tabresolved[] = $data_3['count'];
-                            }
-                        } else {
-                            $tabresolved[] = 0;
-                        }
+                        $tabresolved[] = $resolved_by_month[$data_1['month']] ?? 0;
                         $tabdates[2][] = $data_1['month'] . '_resolved';
 
                         if ($month == date("m") && $year == date("Y")) {

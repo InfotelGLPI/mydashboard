@@ -1351,8 +1351,7 @@ class Reports_Pie extends CommonGLPI
                     foreach ($iterator as $data) {
                         if (!empty($data['requesters_groups_id'])) {
                             $name_grp = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
-                            $name_grp = html_entity_decode($name_grp);
-                            $name_groups[] = Dropdown::getDropdownName("glpi_groups", $data['requesters_groups_id']);
+                            $name_groups[] = $name_grp;
                         } else {
                             $name_groups[] = __('None');
                             $name_grp = __('None');
@@ -1604,9 +1603,8 @@ class Reports_Pie extends CommonGLPI
                     $nb = count($iterator);
                     foreach ($iterator as $data) {
                         if (!empty($data['locations_id'])) {
-                            $name_location[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
                             $name_loc = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
-                            $name_loc = html_entity_decode($name_loc);
+                            $name_location[] = $name_loc;
                         } else {
                             $name_loc = __('None');
                             $name_location[] = __('None');
@@ -1838,9 +1836,8 @@ class Reports_Pie extends CommonGLPI
                     $nb = count($iterator);
                     foreach ($iterator as $data) {
                         if (!empty($data['locations_id'])) {
-                            $name_location1[] = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
                             $name_loc1 = Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
-                            $name_loc1 = html_entity_decode($name_loc1);
+                            $name_location1[] = $name_loc1;
                         } else {
                             $name_location1[] = __('None');
                             $name_loc1 = __('None');

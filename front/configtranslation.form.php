@@ -27,6 +27,8 @@
 
 use GlpiPlugin\Mydashboard\ConfigTranslation;
 
+Session::checkRight("plugin_mydashboard_config", UPDATE);
+
 $translation = new ConfigTranslation();
 if (isset($_POST['add'])) {
    $translation->add($_POST);

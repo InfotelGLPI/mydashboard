@@ -36,11 +36,12 @@ Html::header_nocache();
 Session::checkRight("plugin_mydashboard_config", UPDATE);
 
 if (isset($_POST['itemtype']) && isset($_POST['language'])) {
+   $allowed_types = [Config::class, ConfigTranslation::class];
+   if (!in_array($_POST['itemtype'], $allowed_types, true)) {
+      http_response_code(400);
+      exit;
+   }
    $item = new $_POST['itemtype'];
    $item->getFromDB($_POST['items_id']);
-   if ($item->getType() == Config::class) {
-      ConfigTranslation::dropdownFields($item, $_POST['language']);
-   } else {
-       ConfigTranslation::dropdownFields($item, $_POST['language']);
-   }
+   ConfigTranslation::dropdownFields($item, $_POST['language']);
 }

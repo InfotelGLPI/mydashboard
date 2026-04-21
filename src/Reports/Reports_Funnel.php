@@ -30,7 +30,6 @@ namespace GlpiPlugin\Mydashboard\Reports;
 use CommonGLPI;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryUnion;
-use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Charts\FunnelChart;
 use GlpiPlugin\Mydashboard\Criteria;
 use GlpiPlugin\Mydashboard\Criterias\ComputerType;

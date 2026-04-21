@@ -42,6 +42,7 @@ use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 use GlpiPlugin\Mydashboard\Widget;
+use Glpi\DBAL\QueryExpression;
 use Plugin;
 use Session;
 use Toolbox;
@@ -613,6 +614,45 @@ class Reports_Table extends CommonGLPI
                     _x('status', 'Solved'),
                 ];
                 if (count($iterator_technicians) > 0) {
+                    // Single query returning all (tech, status) counts at once
+                    $is_deleted = ['glpi_tickets.is_deleted' => 0];
+                    $query_counts = [
+                        'SELECT' => [
+                            'glpi_tickets_users.users_id',
+                            'glpi_tickets.status',
+                            new QueryExpression('COUNT(DISTINCT ' . $DB->quoteName('glpi_tickets.id') . ') AS nbtickets'),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'INNER JOIN' => [
+                            'glpi_tickets_users' => [
+                                'ON' => [
+                                    'glpi_tickets_users' => 'tickets_id',
+                                    'glpi_tickets' => 'id',
+                                    ['AND' => ['glpi_tickets_users.type' => CommonITILActor::ASSIGN]],
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted,
+                            'glpi_tickets.status' => $statusList,
+                        ],
+                        'GROUPBY' => ['glpi_tickets_users.users_id', 'glpi_tickets.status'],
+                    ];
+                    $query_counts['WHERE'] += getEntitiesRestrictCriteria('glpi_tickets');
+
+                    $counts_cache = [];
+                    foreach ($DB->request($query_counts) as $row) {
+                        $counts_cache[$row['users_id']][$row['status']] = (int) $row['nbtickets'];
+                    }
+
+                    // Pre-fetch moreticket data once outside the tech loop
+                    $array = [];
+                    if (Plugin::isPluginActive('moreticket')) {
+                        foreach ($DB->request($query_moretickets_by_technician_by_status) as $dataMoreTicket) {
+                            $array[$dataMoreTicket['statusname']][$dataMoreTicket['userid']] = $dataMoreTicket['nb'];
+                        }
+                    }
+
                     $i = 0;
                     foreach ($iterator_technicians as $data) {
                         $nbWaitingTickets = "";
@@ -622,90 +662,36 @@ class Reports_Table extends CommonGLPI
                         $temp[$i] = [0 => $username];
                         $j = 1;
                         foreach ($statusList as $status) {
-
-                            // Lists of tickets by technician by status
-                            $is_deleted = ['glpi_tickets.is_deleted' => 0];
-                            $query = [
-                                'SELECT' => [
-                                    'COUNT' => 'glpi_tickets.id AS nbtickets',
-                                ],
-                                'DISTINCT' => true,
-                                'FROM' => 'glpi_tickets',
-                                'INNER JOIN'       => [
-                                    'glpi_tickets_users' => [
-                                        'ON' => [
-                                            'glpi_tickets_users'   => 'tickets_id',
-                                            'glpi_tickets'         => 'id', [
-                                                'AND' => [
-                                                    'glpi_tickets_users.type' => CommonITILActor::ASSIGN,
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                                'WHERE' => [
-                                    $is_deleted,
-                                    'glpi_tickets.status' => $status,
-                                    'glpi_tickets_users.users_id' => $userId,
-                                ],
-                            ];
-
-                            $query['WHERE'] = $query['WHERE'] + getEntitiesRestrictCriteria(
-                                'glpi_tickets'
-                            );
-
-                            $temp[$i][$j] = 0;
-                            $iterator = $DB->request($query);
-                            $nb2 = count($iterator);
-                            if ($nb2) {
-                                foreach ($iterator as $data) {
-                                    $value = "";
-                                    $nbWaitingTickets = $data['nbtickets'];
-                                    if ($data['nbtickets'] != "0") {
-                                        $value .= "<a href='#' onclick='" . Widget::removeBackslashes(
-                                            $widgetId
-                                        ) . "_search($userId, $status, $hasMoreTicket)'>";
-                                    }
-                                    $value .= $data['nbtickets'];
-                                    if ($data['nbtickets'] != "0") {
-                                        $value .= "</a>";
-                                    }
-                                    $temp[$i][$j] = $value;
-                                }
+                            $nbtickets = $counts_cache[$userId][$status] ?? 0;
+                            $value = "";
+                            if ($nbtickets != "0") {
+                                $nbWaitingTickets = $nbtickets;
+                                $value .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $status, $hasMoreTicket)'>";
                             }
+                            $value .= $nbtickets;
+                            if ($nbtickets != "0") {
+                                $value .= "</a>";
+                            }
+                            $temp[$i][$j] = ($nbtickets > 0) ? $value : 0;
                             $j++;
                         }
-                        if (Plugin::isPluginActive('moreticket')) {
-
-                            $iterator3 = $DB->request($query_moretickets_by_technician_by_status);
+                        if (Plugin::isPluginActive('moreticket') && count($array) > 0) {
                             $hasMoreTicket = 1;
-                            if (count($iterator3) > 0) {
-                                foreach ($iterator3 as $dataMoreTicket) {
-                                    $array[$dataMoreTicket['statusname']][$dataMoreTicket['userid']] = $dataMoreTicket['nb'];
+                            foreach ($moreTicketType as $key => $value) {
+                                $status = $value['name'];
+                                $statusId = $value['id'];
+                                if (isset($array[$status][$userId])) {
+                                    $val = '';
+                                    $val .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $statusId , $hasMoreTicket)'>";
+                                    $val .= $array[$status][$userId];
+                                    $val .= "</a>";
+                                    $temp[$i][$j] = $val;
+                                    $newNbTickets = $nbWaitingTickets - $array[$status][$userId];
+                                    $temp[$i][3] = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
+                                } else {
+                                    $temp[$i][$j] = 0;
                                 }
-
-                                foreach ($moreTicketType as $key => $value) {
-                                    $status = $value['name'];
-                                    $statusId = $value['id'];
-                                    if (isset($array[$status][$userId])) {
-                                        $value = '';
-                                        $value .= "<a href='#' onclick='" . Widget::removeBackslashes(
-                                            $widgetId
-                                        ) . "_search($userId, $statusId , $hasMoreTicket)'>";
-                                        $value .= $array[$status][$userId];
-                                        $value .= "</a>";
-                                        $temp[$i][$j] = $value;
-                                        $newNbTickets = $nbWaitingTickets - $array[$status][$userId];
-                                        $temp[$i][3] = str_replace(
-                                            '>' . $nbWaitingTickets . '<',
-                                            '>' . $newNbTickets . '<',
-                                            $temp[$i][3]
-                                        );
-                                    } else {
-                                        $temp[$i][$j] = 0;
-                                    }
-                                    $j++;
-                                }
+                                $j++;
                             }
                         }
                         $i++;
@@ -943,95 +929,84 @@ class Reports_Table extends CommonGLPI
                 $temp = [];
 
                 if ($nb) {
-                    $i = 0;
+                    // Single query returning all (group, status) counts at once
+                    $is_deleted_g = ['glpi_tickets.is_deleted' => 0];
+                    $query_group_counts = [
+                        'SELECT' => [
+                            'glpi_groups_tickets.groups_id',
+                            'glpi_tickets.status',
+                            new QueryExpression('COUNT(DISTINCT ' . $DB->quoteName('glpi_tickets.id') . ') AS nbtickets'),
+                        ],
+                        'FROM' => 'glpi_tickets',
+                        'LEFT JOIN' => [
+                            'glpi_groups_tickets' => [
+                                'ON' => [
+                                    'glpi_groups_tickets' => 'tickets_id',
+                                    'glpi_tickets' => 'id',
+                                    ['AND' => ['glpi_groups_tickets.type' => CommonITILActor::ASSIGN]],
+                                ],
+                            ],
+                        ],
+                        'WHERE' => [
+                            $is_deleted_g,
+                            'glpi_tickets.status' => $statusList,
+                        ],
+                        'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.status'],
+                    ];
+                    $query_group_counts = Criteria::addCriteriasForQuery($query_group_counts, $params);
 
+                    $group_counts_cache = [];
+                    foreach ($DB->request($query_group_counts) as $row) {
+                        $group_counts_cache[$row['groups_id']][$row['status']] = (int) $row['nbtickets'];
+                    }
+
+                    // Pre-fetch moreticket data once outside the group loop
+                    $array = [];
+                    if (Plugin::isPluginActive('moreticket')) {
+                        foreach ($DB->request($query_moretickets_by_group_by_status) as $dataMoreTicket) {
+                            $array[$dataMoreTicket['statusname']][$dataMoreTicket['groups_id']] = $dataMoreTicket['nb'];
+                        }
+                    }
+
+                    $i = 0;
                     foreach ($iterator_group as $data) {
                         $nbWaitingTickets = "";
                         $hasMoreTicket = 0;
                         $groupId = $data['id'];
                         $groupname = $data['name'];
-
                         $temp[$i] = [0 => $groupname];
-
                         $j = 1;
                         foreach ($statusList as $status) {
-
-                            $is_deleted = ['glpi_tickets.is_deleted' => 0];
-                            $query = [
-                                'SELECT' => [
-                                    'COUNT' => 'glpi_tickets.id AS nbtickets',
-                                ],
-                                'DISTINCT' => true,
-                                'FROM' => 'glpi_tickets',
-                                'LEFT JOIN'       => [
-                                    'glpi_groups_tickets' => [
-                                        'ON' => [
-                                            'glpi_groups_tickets'   => 'tickets_id',
-                                            'glpi_tickets'         => 'id', [
-                                                'AND' => [
-                                                    'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                                'WHERE' => [
-                                    $is_deleted,
-                                    'glpi_tickets.status' => $status,
-                                    'glpi_groups_tickets.groups_id' => $groupId,
-                                ],
-                            ];
-
-                            $query = Criteria::addCriteriasForQuery($query, $params);
-
-                            $temp[$i][$j] = 0;
-
-                            $iterator2 = $DB->request($query);
-
-                            if (count($iterator2) > 0) {
-                                foreach ($iterator2 as $data) {
-                                    $value = "";
-                                    $nbWaitingTickets = $data['nbtickets'];
-                                    if ($data['nbtickets'] != "0") {
-                                        $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $status, $hasMoreTicket)'>";
-                                    }
-                                    $value .= $data['nbtickets'];
-                                    if ($data['nbtickets'] != "0") {
-                                        $value .= "</a>";
-                                    }
-                                    $temp[$i][$j] = $value;
-                                }
+                            $nbtickets = $group_counts_cache[$groupId][$status] ?? 0;
+                            $value = "";
+                            if ($nbtickets != "0") {
+                                $nbWaitingTickets = $nbtickets;
+                                $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $status, $hasMoreTicket)'>";
                             }
+                            $value .= $nbtickets;
+                            if ($nbtickets != "0") {
+                                $value .= "</a>";
+                            }
+                            $temp[$i][$j] = ($nbtickets > 0) ? $value : 0;
                             $j++;
                         }
-                        if (Plugin::isPluginActive('moreticket')) {
-
-                            $iterator3 = $DB->request($query_moretickets_by_group_by_status);
+                        if (Plugin::isPluginActive('moreticket') && count($array) > 0) {
                             $hasMoreTicket = 1;
-                            if (count($iterator3) > 0) {
-                                foreach ($iterator3 as $dataMoreTicket) {
-                                    $array[$dataMoreTicket['statusname']][$dataMoreTicket['groups_id']] = $dataMoreTicket['nb'];
+                            foreach ($moreTicketType as $key => $value) {
+                                $status = $value['name'];
+                                $statusId = $value['id'];
+                                if (isset($array[$status][$groupId])) {
+                                    $val = '';
+                                    $val .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $statusId , $hasMoreTicket)'>";
+                                    $val .= $array[$status][$groupId];
+                                    $val .= "</a>";
+                                    $temp[$i][$j] = $val;
+                                    $newNbTickets = $nbWaitingTickets - $array[$status][$groupId];
+                                    $temp[$i][3] = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
+                                } else {
+                                    $temp[$i][$j] = 0;
                                 }
-                                foreach ($moreTicketType as $key => $value) {
-                                    $status = $value['name'];
-                                    $statusId = $value['id'];
-                                    if (isset($array[$status][$groupId])) {
-                                        $value = '';
-                                        $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $statusId , $hasMoreTicket)'>";
-                                        $value .= $array[$status][$groupId];
-                                        $value .= "</a>";
-                                        $temp[$i][$j] = $value;
-                                        $newNbTickets = $nbWaitingTickets - $array[$status][$groupId];
-                                        $temp[$i][3] = str_replace(
-                                            '>' . $nbWaitingTickets . '<',
-                                            '>' . $newNbTickets . '<',
-                                            $temp[$i][3]
-                                        );
-                                    } else {
-                                        $temp[$i][$j] = 0;
-                                    }
-                                    $j++;
-                                }
+                                $j++;
                             }
                         }
                         $i++;

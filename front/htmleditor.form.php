@@ -26,6 +26,8 @@
 
 use GlpiPlugin\Mydashboard\Customswidget;
 
+Session::checkRight("plugin_mydashboard_config", UPDATE);
+
 $customsWidget = new Customswidget();
 
 if(isset($_POST['update'])){

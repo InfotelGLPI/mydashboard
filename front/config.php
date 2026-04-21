@@ -28,6 +28,8 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 
 global $CFG_GLPI;
 
+Session::checkLoginUser();
+
 if (Plugin::isPluginActive("mydashboard")) {
    if (Session::haveRight("plugin_mydashboard_config", UPDATE)) {
 

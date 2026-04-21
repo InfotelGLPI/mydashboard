@@ -68,5 +68,3 @@ if (Plugin::isPluginActive("mydashboard")) {
 } else {
     throw new AccessDeniedHttpException();
 }
-
-Html::footer();

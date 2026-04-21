@@ -47,7 +47,6 @@ use GlpiPlugin\Mydashboard\Criterias\Location;
 use GlpiPlugin\Mydashboard\Criterias\MultipleLocation;
 use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
 use GlpiPlugin\Mydashboard\Criterias\Technician;
-use GlpiPlugin\Mydashboard\Criterias\Type;
 use GlpiPlugin\Mydashboard\Criterias\Year;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Html;
@@ -755,56 +754,49 @@ class Reports_Bar extends CommonDBTM
                 //                              " . $entities_criteria . $type_criteria . "
                 //                              GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m')";
 
-                $iterator = $DB->request($criteria);
+                // Single aggregated query replacing the outer loop + N inner queries
+                $criteria_tasks_agg = [
+                    'SELECT' => [
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"),
+                        new QueryExpression("DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"),
+                        new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_tickets"),
+                        new QueryExpression("SUM(" . $DB->quoteName("glpi_tickettasks.actiontime") . ") AS total_actiontime"),
+                    ],
+                    'FROM' => 'glpi_tickettasks',
+                    'LEFT JOIN' => [
+                        'glpi_tickets' => [
+                            'ON' => [
+                                'glpi_tickettasks' => 'tickets_id',
+                                'glpi_tickets' => 'id',
+                            ],
+                        ],
+                    ],
+                    'WHERE' => [
+                        $is_deleted,
+                        [
+                            ['glpi_tickets.date' => ['>=', "$previousyear-$currentmonth-01 00:00:00"]],
+                            ['glpi_tickets.date' => ['<=', "$currentyear-$nextmonth-01 00:00:00"]],
+                        ],
+                    ],
+                    'GROUPBY' => 'month',
+                    'ORDERBY' => 'monthnum ASC',
+                ];
+                $criteria_tasks_agg = Criteria::addCriteriasForQuery($criteria_tasks_agg, $params);
 
                 $tabduration = [];
                 $tabdates = [];
                 $tabnames = [];
-                foreach ($iterator as $data) {
-                    [$year, $month] = explode('-', $data['month']);
-
-                    $nbdays = date("t", mktime(0, 0, 0, $month, 1, $year));
-
-                    $criteria_1 = [
-                        'SELECT' => [
-                            'COUNT' => 'glpi_tickets.id AS nb_tickets',
-                            'SUM' => 'glpi_tickettasks.actiontime AS count',
-                        ],
-                        'DISTINCT'        => true,
-                        'FROM' => 'glpi_tickettasks',
-                        'LEFT JOIN'       => [
-                            'glpi_tickets' => [
-                                'ON' => [
-                                    'glpi_tickettasks' => 'tickets_id',
-                                    'glpi_tickets'          => 'id',
-                                ],
-                            ],
-                        ],
-                        'WHERE' => [
-                            $is_deleted,
-                            [
-                                ['glpi_tickets.date' => ['>=',  "$year-$month-01 00:00:00"]],
-                                ['glpi_tickets.date' => ['<=', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                            ],
-                        ],
-                    ];
-
-                    $criteria_1 = Criteria::addCriteriasForQuery($criteria_1, $params);
-
-                    $iterator_1 = $DB->request($criteria_1);
-
+                foreach ($DB->request($criteria_tasks_agg) as $data) {
                     $average_by_ticket = 0;
-                    foreach ($iterator_1 as $data_1) {
-                        if ($data_1['nb_tickets'] > 0
-                            && $data_1['count'] > 0) {
-                            $average_by_ticket = ($data_1['count'] / $data_1['nb_tickets']) / 60;
-                        }
-                        $tabduration['data'][] = round($average_by_ticket ?? 0, 2, PHP_ROUND_HALF_UP);
-                        $tabduration['type'] = 'bar';
-                        $tabduration['name'] = __('Tasks duration (minutes)', 'mydashboard');
-                        $tabnames[] = $data['monthname'];
-                        $tabdates[] = $data['monthnum'];
+                    if ($data['nb_tickets'] > 0 && $data['total_actiontime'] > 0) {
+                        $average_by_ticket = ($data['total_actiontime'] / $data['nb_tickets']) / 60;
                     }
+                    $tabduration['data'][] = round($average_by_ticket ?? 0, 2, PHP_ROUND_HALF_UP);
+                    $tabduration['type'] = 'bar';
+                    $tabduration['name'] = __('Tasks duration (minutes)', 'mydashboard');
+                    $tabnames[] = $data['monthname'];
+                    $tabdates[] = $data['monthnum'];
                 }
 
                 $widget = new Html();
@@ -2707,7 +2699,7 @@ class Reports_Bar extends CommonDBTM
                                 'NOT'       => ['glpi_tickets.closedate' => null],
                             ],
                         ];
-                        $criteria1 = Criteria::addCriteriasForQuery($criteria1, $params);
+                        $criteria_1 = Criteria::addCriteriasForQuery($criteria_1, $params);
 
                         $iterator_1 = $DB->request($criteria_1);
 

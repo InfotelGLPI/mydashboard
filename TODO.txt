@@ -1,15 +1,18 @@
 
+******FEATURES******
 Pie
 add link $this->getType() . "32"
 Line
 add link $this->getType() . "49":
 
 filter_date or displaydata ? and drop month & year filters ?
-
-other criterias..
-
 Buttons in top menu ?
-
 Add top search module ?
 
+******TASKS******
+other criterias..
+
+******FIXES******
 fix recursivity for groups / locations
+Check others plugins dashboard classes
+

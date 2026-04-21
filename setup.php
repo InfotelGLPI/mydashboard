@@ -51,7 +51,7 @@ function plugin_init_mydashboard()
     global $PLUGIN_HOOKS;
 
 
-    $PLUGIN_HOOKS['display_login']['mydashboard'] = "plugin_mydashboard_display_login";
+    $PLUGIN_HOOKS[Hooks::DISPLAY_LOGIN]['mydashboard'] = "plugin_mydashboard_display_login";
 
     $PLUGIN_HOOKS[Hooks::ADD_CSS]['mydashboard'] = [
         "css/mydashboard.css",
@@ -100,8 +100,8 @@ function plugin_init_mydashboard()
     //        }
     //    }
 
-    $PLUGIN_HOOKS['csrf_compliant']['mydashboard'] = true;
-    $PLUGIN_HOOKS['change_profile']['mydashboard'] = [Profile::class, 'initProfile'];
+    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['mydashboard'] = true;
+    $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['mydashboard'] = [Profile::class, 'initProfile'];
 
     if (Session::getLoginUserID()) {
         Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
@@ -109,7 +109,7 @@ function plugin_init_mydashboard()
         if (Plugin::isPluginActive("mydashboard")) {
             //If user has right to see configuration
             if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
-                $PLUGIN_HOOKS['config_page']['mydashboard'] = 'front/config.form.php';
+                $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['mydashboard'] = 'front/config.form.php';
                 //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
             }
 
@@ -118,9 +118,9 @@ function plugin_init_mydashboard()
             }
 
             if (Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                $PLUGIN_HOOKS['menu_toadd']['mydashboard']          = ['tools' => Menu::class];
-                $PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard'] = PLUGIN_MYDASHBOARD_WEBDIR . '/front/menu.php';
-                $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['mydashboard'] = Menu::getIcon();
+                $PLUGIN_HOOKS[Hooks::MENU_TOADD]['mydashboard']               = ['tools' => Menu::class];
+                $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['mydashboard']      = PLUGIN_MYDASHBOARD_WEBDIR . '/front/menu.php';
+                $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['mydashboard'] = Menu::getIcon();
 
                 //            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu'][Config::class] = ['colorpicker'];
 
@@ -198,10 +198,10 @@ function plugin_init_mydashboard()
 
                 Plugin::registerClass(HTMLEditor::class, ['addtabon' => Customswidget::class]);
             }
-            $PLUGIN_HOOKS['pre_item_purge']['mydashboard'] = ['Reminder' => [Alert::class,
+            $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['mydashboard'] = ['Reminder' => [Alert::class,
                 'purgeAlerts']];
         }
-        $PLUGIN_HOOKS['post_init']['mydashboard'] = 'plugin_mydashboard_postinit';
+        $PLUGIN_HOOKS[Hooks::POST_INIT]['mydashboard'] = 'plugin_mydashboard_postinit';
     }
 }
 

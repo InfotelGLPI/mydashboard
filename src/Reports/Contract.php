@@ -115,43 +115,8 @@ class Contract extends CommonGLPI
             expression2: QueryFunction::curDate()
         );
 
-        // No recursive contract, not in local management
-        // contrats echus depuis moins de 30j
+        // All contract counts in a single query using conditional aggregation
         $table = \Contract::getTable();
-        $result = $DB->request([
-            'COUNT'  => 'cpt',
-            'FROM'   => $table,
-            'WHERE'  => [
-                'is_deleted'   => 0,
-                new QueryExpression("$end_date_diff_now  > -30"),
-                new QueryExpression("$end_date_diff_now < 0"),
-            ] + getEntitiesRestrictCriteria($table),
-        ])->current();
-        $contract0 = $result['cpt'];
-
-        // contrats  echeance j-7
-        $result = $DB->request([
-            'COUNT'  => 'cpt',
-            'FROM'   => $table,
-            'WHERE'  => [
-                'is_deleted'   => 0,
-                new QueryExpression("$end_date_diff_now > 0"),
-                new QueryExpression("$end_date_diff_now  <= 7"),
-            ] + getEntitiesRestrictCriteria($table),
-        ])->current();
-        $contract7 = $result['cpt'];
-
-        // contrats echeance j -30
-        $result = $DB->request([
-            'COUNT'  => 'cpt',
-            'FROM'   => $table,
-            'WHERE'  => [
-                'is_deleted'   => 0,
-                new QueryExpression("$end_date_diff_now > 7"),
-                new QueryExpression("$end_date_diff_now < 30"),
-            ] + getEntitiesRestrictCriteria($table),
-        ])->current();
-        $contract30 = $result['cpt'];
 
         $notice_date = QueryFunction::dateAdd(
             date: 'begin_date',
@@ -164,31 +129,24 @@ class Contract extends CommonGLPI
             expression2: QueryFunction::curDate()
         );
 
-        // contrats avec pr??avis echeance j-7
+        $notice_col = $DB::quoteName('notice');
         $result = $DB->request([
-            'COUNT'  => 'cpt',
-            'FROM'   => $table,
-            'WHERE'  => [
-                'is_deleted'   => 0,
-                'notice'       => ['<>', 0],
-                new QueryExpression("$end_date_diff_notice > 0"),
-                new QueryExpression("$end_date_diff_notice <= 7"),
-            ] + getEntitiesRestrictCriteria($table),
+            'SELECT' => [
+                new QueryExpression("SUM(CASE WHEN $end_date_diff_now > -30 AND $end_date_diff_now < 0 THEN 1 ELSE 0 END) AS contract0"),
+                new QueryExpression("SUM(CASE WHEN $end_date_diff_now > 0 AND $end_date_diff_now <= 7 THEN 1 ELSE 0 END) AS contract7"),
+                new QueryExpression("SUM(CASE WHEN $end_date_diff_now > 7 AND $end_date_diff_now < 30 THEN 1 ELSE 0 END) AS contract30"),
+                new QueryExpression("SUM(CASE WHEN $notice_col <> 0 AND $end_date_diff_notice > 0 AND $end_date_diff_notice <= 7 THEN 1 ELSE 0 END) AS contractpre7"),
+                new QueryExpression("SUM(CASE WHEN $notice_col <> 0 AND $end_date_diff_notice > 7 AND $end_date_diff_notice < 30 THEN 1 ELSE 0 END) AS contractpre30"),
+            ],
+            'FROM'  => $table,
+            'WHERE' => ['is_deleted' => 0] + getEntitiesRestrictCriteria($table),
         ])->current();
-        $contractpre7 = $result['cpt'];
 
-        // contrats avec pr??avis echeance j -30
-        $result = $DB->request([
-            'COUNT'  => 'cpt',
-            'FROM'   => $table,
-            'WHERE'  => [
-                'is_deleted'   => 0,
-                'notice'       => ['<>', 0],
-                new QueryExpression("$end_date_diff_notice > 7"),
-                new QueryExpression("$end_date_diff_notice < 30"),
-            ] + getEntitiesRestrictCriteria($table),
-        ])->current();
-        $contractpre30 = $result['cpt'];
+        $contract0    = (int) ($result['contract0']    ?? 0);
+        $contract7    = (int) ($result['contract7']    ?? 0);
+        $contract30   = (int) ($result['contract30']   ?? 0);
+        $contractpre7 = (int) ($result['contractpre7'] ?? 0);
+        $contractpre30 = (int) ($result['contractpre30'] ?? 0);
 
         $widget = new Html();
         $widget->setWidgetId("contractwidget");

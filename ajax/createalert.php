@@ -37,7 +37,12 @@ if (strpos($_SERVER['PHP_SELF'], "createalert.php")) {
 
 if (isset($_POST['itemtype'])) {
    $class = $_POST['itemtype'];
-   $item  = new $class();
+   $allowed_types = array_merge(['PluginEventsmanagerEvent', 'Problem', 'Change'], Alert::getTypes());
+   if (!in_array($class, $allowed_types, true)) {
+      http_response_code(400);
+      exit;
+   }
+   $item = new $class();
    if ($class == 'PluginEventsmanagerEvent') {
       if (isset($_POST['items_id'])) {
          if ($item->getFromDB($_POST['items_id'])) {

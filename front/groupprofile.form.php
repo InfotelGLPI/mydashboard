@@ -26,6 +26,8 @@
 
 use GlpiPlugin\Mydashboard\Groupprofile;
 
+Session::checkLoginUser();
+
 $group = new Groupprofile();
 if (isset($_POST["addGroup"])) {
    if (empty($_POST['groups_id'])) {

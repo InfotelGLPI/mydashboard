@@ -26,6 +26,8 @@
 
 use GlpiPlugin\Mydashboard\Alert;
 
+Session::checkRight("plugin_mydashboard", UPDATE);
+
 $alert = new Alert();
 
 if (isset($_POST['update'])) {

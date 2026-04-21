@@ -169,7 +169,7 @@ class Reports_Map extends CommonGLPI
                 $params['order'] = 'DESC';
                 $params['sort'] = 19;
                 $params['start'] = 0;
-                $params['list_limit'] = 999999;
+                $params['list_limit'] = 5000;
                 $itemtype = 'Ticket';
 
                 if (isset($sons_criteria) && $sons_criteria > 0) {
