@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-31 11:44+0000\n"
+"POT-Creation-Date: 2026-03-31 14:37+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -200,7 +200,7 @@ msgstr "Accès au mode édition"
 
 #: src/Profile.php:206 src/Profile.php:286
 msgid "Setup stock widget"
-msgstr "Configuration de la widget de stock"
+msgstr "Configuration du widget de stock"
 
 #: src/Profile.php:290
 msgid "See the dashboard"
