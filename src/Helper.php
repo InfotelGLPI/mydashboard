@@ -234,11 +234,9 @@ class Helper
      */
     public static function removeScriptsFromString($stringToEval)
     {
-        //      $stringWOScripts = "";
-        //      if (gettype($stringToEval) == "string") {
-        //         $stringWOScripts = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $stringToEval);
-        //      }
-        //      return $stringWOScripts;
+        if (gettype($stringToEval) === "string") {
+            return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $stringToEval);
+        }
         return $stringToEval;
     }
 

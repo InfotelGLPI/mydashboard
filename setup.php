@@ -100,7 +100,6 @@ function plugin_init_mydashboard()
     //        }
     //    }
 
-    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['mydashboard'] = true;
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['mydashboard'] = [Profile::class, 'initProfile'];
 
     if (Session::getLoginUserID()) {

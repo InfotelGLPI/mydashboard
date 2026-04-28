@@ -356,7 +356,12 @@ class Alert extends CommonDBTM
         ];
 
         if ($public == 0) {
-            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+
+            $left_reminder = Reminder::getVisibilityCriteriaCommonJoin(true);
+            if (is_array($left_reminder)) {
+                $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + $left_reminder;
+            }
+
 
             if (count($itilcategories_id) > 0) {
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
@@ -2562,7 +2567,7 @@ class Alert extends CommonDBTM
                 $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
                 echo "<span style='$style_description'>";
             }
-            echo html_entity_decode(ReminderTranslation::getTranslatedValue($note, 'text'));
+            echo htmlspecialchars(ReminderTranslation::getTranslatedValue($note, 'text'), ENT_QUOTES, 'UTF-8');
             if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
                 echo "</span>";
             }
@@ -3568,9 +3573,9 @@ class Alert extends CommonDBTM
         //      curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, "cookiefile");
-        curl_setopt($ch, CURLOPT_COOKIEJAR, "cookiefile"); // SAME cookiefile
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, GLPI_TMP_DIR . "/mydashboard_cookiefile");
+        curl_setopt($ch, CURLOPT_COOKIEJAR, GLPI_TMP_DIR . "/mydashboard_cookiefile");
 
         //Do we have post field to send?
         if (!empty($options["post"])) {

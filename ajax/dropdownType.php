@@ -32,7 +32,8 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownType.php")) {
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 // Make a select box
-if (isset($_POST["itemtype"])) {
+$allowed_itemtypes = ['Ticket', 'Change', 'Problem'];
+if (isset($_POST["itemtype"]) && in_array($_POST["itemtype"], $allowed_itemtypes, true)) {
 
    $itemtypeclass = $_POST["itemtype"]."Type";
    if ($item = getItemForItemtype($itemtypeclass)) {
