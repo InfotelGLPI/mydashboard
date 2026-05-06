@@ -1029,7 +1029,9 @@ class Menu extends CommonGLPI
         //TODO v11
 //        echo \Html::script($CFG_GLPI['root_doc']."/lib/echarts.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/echarts.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/theme/$theme.js");
+        if (!empty($theme)) {
+            echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/theme/$theme.js");
+        }
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/html2canvas.min.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jspdf.umd.js");
 
@@ -1088,30 +1090,26 @@ class Menu extends CommonGLPI
         $displayed_widgets    = [];
         $displayed_widgets_id = [];
 
+        //FOR ADD NEW WIDGET
+        $allwidgetjson = [];
+
         if (!empty($grid)
             && ($datagrid = json_decode($grid, true)) == !null) {
 
             $widgets = Widget::getCompleteWidgetList();
 
             foreach ($datagrid as $k => $v) {
-                if (isset($v["id"])) {
-
-                    $wid = new Widget();
-                    $wid->getFromDB($v["id"]);
-
-                    $class = $wid->fields['class'];
-                    $id_class = $wid->fields['name'];
+                if (isset($v["id"]) && isset($widgets[$v["id"]])) {
+                    $class    = $widgets[$v["id"]]["class"];
+                    $id_class = $widgets[$v["id"]]["id"];
 
                     $datajson[$v["id"]] = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
 
-                    $widget_name = Widget::removeBackslashes($wid->fields['name']);
+                    $widget_name = Widget::removeBackslashes($id_class);
                     $displayed_widgets[]    = $widget_name;
                     $displayed_widgets_id[] = $v["id"];
                 }
             }
-
-            //FOR ADD NEW WIDGET
-            $allwidgetjson = [];
 
             if ($edit > 0) {
                 if (isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])

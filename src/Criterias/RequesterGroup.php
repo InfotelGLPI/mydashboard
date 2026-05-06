@@ -50,7 +50,9 @@ class RequesterGroup
         $preference = new Preference();
         if (!$preference->getFromDB(Session::getLoginUserID())) {
             $preference->initPreferences(Session::getLoginUserID());
+            $preference->getFromDB(Session::getLoginUserID());
         }
+        $preferences = $preference->fields;
         if (isset($preferences['requester_prefered_group'])) {
             $preferences['requester_prefered_group'] = \Safe\json_decode($preferences['requester_prefered_group'], true);
             if (is_array($preferences['requester_prefered_group'])

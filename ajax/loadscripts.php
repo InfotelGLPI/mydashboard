@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  MyDashboard plugin for GLPI
@@ -33,40 +34,40 @@ header("Content-Type: text/html; charset=UTF-8");
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 if (isset($_POST['action'])) {
-   switch ($_POST['action']) {
-      case "load" :
+    switch ($_POST['action']) {
+        case "load":
 
-         $name              = "showMyDashboardLateralMenu";
-         $param['title']    = __('My Dashboard', 'mydashboard');
-         $param['position'] = 'right';
-         $param['url']      = PLUGIN_MYDASHBOARD_WEBDIR. '/ajax/lateralmenu.php';
+            $name              = "showMyDashboardLateralMenu";
+            $param['title']    = __('My Dashboard', 'mydashboard');
+            $param['position'] = 'right';
+            $param['url']      = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/lateralmenu.php';
 
-         $style = "#000";
-         $title = __("Go to mydashboard actions", "mydashboard");
+            $style = "#000";
+            $title = __("Go to mydashboard actions", "mydashboard");
 
-         $edit = Preference::checkEditMode(Session::getLoginUserID());
-         if ($edit > 0) {
-            $style = "red";
-            $title = __("Edit mode is enabled, please close it for better performance", "mydashboard");
-         }
-         $out = "<script type='text/javascript'>\n";
-         $out .= "if ($('#showMyDashboardLateralMenu').length === 0) {
-            $('.ms-lg-auto').after(\"<a class='ti ti-dashboard slidelink' title='$title' href='#' id='showMyDashboardLateralMenuLink'></a>\");
+            $edit = Preference::checkEditMode(Session::getLoginUserID());
+            if ($edit > 0) {
+                $style = "red";
+                $title = __("Edit mode is enabled, please close it for better performance", "mydashboard");
+            }
+            $out = "<script type='text/javascript'>\n";
+            $out .= "if ($('#showMyDashboardLateralMenu').length === 0) {
+            $('.ms-md-4.d-none.d-lg-block').before(\"<a class='ti ti-dashboard slidelink' title='$title' href='#' id='showMyDashboardLateralMenuLink'></a>\");
          };";
 
-         $out .= "</script>";
-         echo $out;
+            $out .= "</script>";
+            echo $out;
 
-         Menu::createSlidePanel(
-            'showMyDashboardLateralMenu',
-            [
-               'title'     => __('My Dashboard', 'mydashboard'),
-               'url'       => PLUGIN_MYDASHBOARD_WEBDIR. '/ajax/lateralmenu.php'
-            ]
-         );
+            Menu::createSlidePanel(
+                'showMyDashboardLateralMenu',
+                [
+                    'title'     => __('My Dashboard', 'mydashboard'),
+                    'url'       => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/lateralmenu.php',
+                ]
+            );
 
-         break;
-   }
+            break;
+    }
 } else {
-   exit;
+    exit;
 }

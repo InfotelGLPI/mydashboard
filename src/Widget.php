@@ -772,6 +772,10 @@ class Widget extends CommonDBTM
                     $widgetdisplay .= "</div>";
                     $widgetdisplay .= "</div>";
 
+                    foreach ($scripts as $script) {
+                        $widgetdisplay .= "<script type='text/javascript'>" . $script . "</script>";
+                    }
+
                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
                         $displayloadwidget = "Load widget " . $widgetindex . " : " . $loadwidget . "<br>";
                         $widgetdisplay     .= $displayloadwidget;

@@ -1136,8 +1136,10 @@ a#showMyDashboardLateralMenuLink {
     /*display: inline-block;*/
     /*margin-top: 5px;*/
     /*font-size: 1.6em;*/
-    /*color: white;*/
+}
 
+.horizontal-layout a#showMyDashboardLateralMenuLink {
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .btn-mydashboard {

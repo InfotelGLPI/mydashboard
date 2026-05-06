@@ -210,13 +210,8 @@ class Helper
     {
         $scripts = [];
         if (gettype($stringToEval) == "string") {
-            $stringToEval = str_replace(["'", "//<![CDATA[", "//]]>"], ['"', "", ""], $stringToEval);
-            //             $stringToEval = preg_replace('/\s+/', ' ', $stringToEval);
-
             if (preg_match_all("/<script[^>]*>([\s\S]+?)<\/script>/i", $stringToEval, $matches)) {
                 foreach ($matches[1] as $match) {
-                    //                     $match = preg_replace('/(\/\/[[:alnum:]_ ]+)/', '', $match);
-                    //                     $match = preg_replace('#^\s*//.+$#m', "", $match);
                     $scripts[] = $match;
                 }
             }

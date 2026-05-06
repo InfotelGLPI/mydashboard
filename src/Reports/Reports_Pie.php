@@ -386,9 +386,7 @@ class Reports_Pie extends CommonGLPI
                 if (count($iterator) > 0) {
                     $nb = count($iterator);
                     foreach ($iterator as $data) {
-                        if ($data['users_id'] == 0) {
-                            $name_user = __('Email');
-                        } elseif ($data['users_id'] == -1) {
+                        if ($data['users_id'] == 0 || $data['users_id'] == -1) {
                             $name_user = __('None');
                         } elseif ($data['users_id'] > 0) {
                             $name_user = getUserName($data['users_id']);
@@ -419,6 +417,7 @@ class Reports_Pie extends CommonGLPI
                     'labels' => $labelsPie,
                     'label' => $title,
                 ];
+
                 $graph = PieChart::launchPolarAreaGraph($graph_datas, []);
                 $params = [
                     'title' => $title,

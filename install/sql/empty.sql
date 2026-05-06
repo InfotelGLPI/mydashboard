@@ -8,6 +8,7 @@ CREATE TABLE `glpi_plugin_mydashboard_widgets`
 (
     `id`   int unsigned NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
+    `class` varchar(255) NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE (`name`)
 ) ENGINE = InnoDB
@@ -15,24 +16,6 @@ CREATE TABLE `glpi_plugin_mydashboard_widgets`
   COLLATE = utf8mb4_unicode_ci
   ROW_FORMAT = DYNAMIC;
 
---
--- Structure de la table 'glpi_plugin_mydashboard_userwidgets'
---
---
-
-DROP TABLE IF EXISTS `glpi_plugin_mydashboard_userwidgets`;
-CREATE TABLE `glpi_plugin_mydashboard_userwidgets`
-(
-    `id`          int unsigned NOT NULL AUTO_INCREMENT,
-    `users_id`    int unsigned NOT NULL COMMENT 'RELATION to glpi_users(id)',
-    `profiles_id` int unsigned NOT NULL DEFAULT '0',
-    `widgets_id`  int unsigned NOT NULL,
-    PRIMARY KEY (`id`),
-    KEY `users_id` (`users_id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci
-  ROW_FORMAT = DYNAMIC;
 
 --
 -- Structure de la table 'glpi_plugin_mydashboard_configs'
@@ -82,6 +65,7 @@ CREATE TABLE `glpi_plugin_mydashboard_preferences`
     `color_palette`            varchar(50)  NOT NULL DEFAULT '',
     `prefered_type`            int unsigned NOT NULL DEFAULT '0',
     `prefered_category`        int unsigned NOT NULL DEFAULT '0',
+    `prefered_year`            tinyint      NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

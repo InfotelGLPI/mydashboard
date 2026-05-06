@@ -150,11 +150,6 @@ abstract class Module extends CommonGLPI
      */
     public function getWidgetScripts()
     {
-        foreach ($this->widgetScripts as &$script) {
-            $script = str_replace([/*"\r\n","\n","\r",*/
-                "'"], [/*"","","",*/
-                    "\""], $script);
-        }
         //If the lateral menu is not displayed, we hide the remove button
         if (!Config::getDisplayMenu()) {
             $this->appendWidgetScripts(["$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-remove-icon').remove();"]);

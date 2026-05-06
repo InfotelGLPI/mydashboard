@@ -39,23 +39,21 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
     if (isset($_POST['params']) && is_array($_POST['params'])) {
         $opt = $_POST['params'];
     }
-    $wid->getFromDB($gsid);
-    $class = $wid->fields['class'];
-    $id_class = $wid->fields['name'];
-
-    $widget = Widget::loadWidget($class, $id_class, "bt-col-md-11", $opt);
-    echo $widget;
+    if (isset($widgets[$gsid])) {
+        $class    = $widgets[$gsid]["class"];
+        $id_class = $widgets[$gsid]["id"];
+        $widget   = Widget::loadWidget($class, $id_class, "bt-col-md-11", $opt);
+        echo $widget;
+    }
 } else {
-    $gsid    = $_POST['gsid'];
+    $gsid = $_POST['gsid'];
     $data = [];
     if (isset($widgets[$gsid])) {
-        $opt    = [];
-        $wid->getFromDB($gsid);
-        $class = $wid->fields['class'];
-        $id_class = $wid->fields['name'];
-
-        $widget = Widget::loadWidget($class, $id_class, "bt-col-md-11", $opt);
-        $data = ["id" => Widget::removeBackslashes($widgets[$gsid]["id"]), "widget" => $widget];
+        $opt      = [];
+        $class    = $widgets[$gsid]["class"];
+        $id_class = $widgets[$gsid]["id"];
+        $widget   = Widget::loadWidget($class, $id_class, "bt-col-md-11", $opt);
+        $data     = ["id" => Widget::removeBackslashes($id_class), "widget" => $widget];
     }
     echo json_encode($data);
 }
