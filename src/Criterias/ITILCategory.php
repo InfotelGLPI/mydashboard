@@ -83,7 +83,7 @@ class ITILCategory
                 'glpi_entities',
                 '',
                 $opt['entities_id'],
-                $opt['is_recursive_entities']
+                $opt['is_recursive_entities'] ?? false
             );
         } else {
             $restrict = [];

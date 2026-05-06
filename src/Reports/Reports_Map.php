@@ -27,7 +27,7 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
-use DbUtils;
+use GlpiPlugin\Mydashboard\Criteria;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;

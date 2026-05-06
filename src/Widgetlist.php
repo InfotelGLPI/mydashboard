@@ -308,7 +308,10 @@ class Widgetlist
      */
     public static function loadWidgetsListForFuzzy($widgetlist)
     {
-        $widgetslist = Widget::getCompleteWidgetList();
+        if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
+            $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
+        }
+        $widgetslist = $_SESSION['glpi_plugin_mydashboard_widget_list'];
         $gslist      = [];
         foreach ($widgetslist as $gs => $widgetclasses) {
             $gslist[$widgetclasses['id']] = $gs;

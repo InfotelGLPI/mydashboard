@@ -29,8 +29,10 @@ use GlpiPlugin\Mydashboard\Widget;
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 
-//charger uniquement les graph chargés plutot ?
-$widgets = Widget::getCompleteWidgetList();
+if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
+    $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
+}
+$widgets = $_SESSION['glpi_plugin_mydashboard_widget_list'];
 $wid = new Widget();
 
 if (isset($_POST['gsid']) && isset($_POST['id'])) {

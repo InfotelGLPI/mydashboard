@@ -225,7 +225,7 @@ class Event extends \Glpi\Event
             $output['body'][$i][0] = $itemtype;
             $output['body'][$i][1] = self::displayItemLogID($data['type'],$data['items_id']);
             $output['body'][$i][2] = \Html::convDateTime($data['date']);
-            $output['body'][$i][3] = $logService[$data['service']];
+            $output['body'][$i][3] = $logService[$data['service']] ?? "";
             $output['body'][$i][4] = $data['message'];
 
             $i++;

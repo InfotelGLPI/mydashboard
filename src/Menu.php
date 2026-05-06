@@ -409,7 +409,10 @@ class Menu extends CommonGLPI
             echo "</tr>";
 
             /**** Loading widgets****/
-            $widgetslist = Widget::getCompleteWidgetList();
+            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
+                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
+            }
+            $widgetslist = $_SESSION['glpi_plugin_mydashboard_widget_list'];
 
             $gslist      = [];
             foreach ($widgetslist as $gs => $widgetclasses) {
@@ -1096,14 +1099,17 @@ class Menu extends CommonGLPI
         if (!empty($grid)
             && ($datagrid = json_decode($grid, true)) == !null) {
 
-            $widgets = Widget::getCompleteWidgetList();
+            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
+                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
+            }
+            $widgets = $_SESSION['glpi_plugin_mydashboard_widget_list'];
 
             foreach ($datagrid as $k => $v) {
                 if (isset($v["id"]) && isset($widgets[$v["id"]])) {
-                    $class    = $widgets[$v["id"]]["class"];
                     $id_class = $widgets[$v["id"]]["id"];
 
-                    $datajson[$v["id"]] = Widget::loadWidget($class, $id_class, "bt-col-md-11", []);
+                    $widget_id = Widget::removeBackslashes($id_class);
+                    $datajson[$v["id"]] = "<div id='{$widget_id}' class='md-widget-loading text-center p-3'></div>";
 
                     $widget_name = Widget::removeBackslashes($id_class);
                     $displayed_widgets[]    = $widget_name;

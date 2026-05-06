@@ -187,7 +187,7 @@ class ProjectTask extends CommonGLPI
 
         $widget = new MydashboardHtml();
         $widget->setWidgetId($widgetId);
-
+        $entries = [];
 
         if ($numrows > 0) {
             $output['title'] = "";
@@ -280,7 +280,6 @@ class ProjectTask extends CommonGLPI
             );
 
             if ($numrows) {
-                $entries = [];
 
                 foreach ($iterator as $data) {
                     $ID = $data["id"];

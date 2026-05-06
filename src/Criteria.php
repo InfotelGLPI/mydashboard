@@ -442,6 +442,7 @@ class Criteria
         global $options;
 
         if (isset($value)
+            && is_array($value)
             && count($value) > 0) {
             $groups = $value;
             $nb = 0;
