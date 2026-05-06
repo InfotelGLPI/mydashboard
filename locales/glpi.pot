@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-02 15:30+0000\n"
+"POT-Creation-Date: 2026-05-06 11:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,16 +41,16 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: ajax/loadscripts.php:40 ajax/loadscripts.php:63 src/Config.php:64
+#: ajax/loadscripts.php:41 ajax/loadscripts.php:64 src/Config.php:64
 #: src/Preference.php:82 src/Menu.php:105 setup.php:214
 msgid "My Dashboard"
 msgstr ""
 
-#: ajax/loadscripts.php:45
+#: ajax/loadscripts.php:46
 msgid "Go to mydashboard actions"
 msgstr ""
 
-#: ajax/loadscripts.php:50
+#: ajax/loadscripts.php:51
 msgid "Edit mode is enabled, please close it for better performance"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Display alerts for inventory stocks"
 msgstr ""
 
-#: src/Alert.php:202 src/Widget.php:1009
+#: src/Alert.php:202 src/Widget.php:1013
 msgid "Your equipments"
 msgstr ""
 
@@ -269,15 +269,15 @@ msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: src/Alert.php:2541 src/Widget.php:908
+#: src/Alert.php:2541 src/Widget.php:912
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: src/Alert.php:2758 src/Widget.php:976
+#: src/Alert.php:2758 src/Widget.php:980
 msgid "No informations founded"
 msgstr ""
 
-#: src/Alert.php:2967 src/Alert.php:3226 src/Widget.php:839
+#: src/Alert.php:2967 src/Alert.php:3226 src/Widget.php:843
 msgid "No problem detected"
 msgstr ""
 
@@ -439,7 +439,7 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#: src/Helper.php:358
+#: src/Helper.php:353
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
@@ -519,11 +519,11 @@ msgstr ""
 msgid "Show all"
 msgstr ""
 
-#: src/Widget.php:781 src/Menu.php:1152 src/Chart.php:129
+#: src/Widget.php:785 src/Menu.php:1150 src/Chart.php:129
 msgid "No data available"
 msgstr ""
 
-#: src/Widget.php:1115
+#: src/Widget.php:1119
 msgid "No equipments founded"
 msgstr ""
 
@@ -686,15 +686,15 @@ msgstr[1] ""
 msgid "Cannot create alert without a type"
 msgstr ""
 
-#: src/Module.php:176 src/Module.php:373
+#: src/Module.php:171 src/Module.php:368
 msgid "notice"
 msgstr ""
 
-#: src/Module.php:177 src/Module.php:381
+#: src/Module.php:172 src/Module.php:376
 msgid "warning"
 msgstr ""
 
-#: src/Module.php:178 src/Module.php:389
+#: src/Module.php:173 src/Module.php:384
 msgid "error"
 msgstr ""
 
@@ -826,47 +826,47 @@ msgstr ""
 msgid "Top ten of opened tickets by appliance"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:530 src/Reports/Reports_Pie.php:548
+#: src/Reports/Reports_Pie.php:529 src/Reports/Reports_Pie.php:547
 #: src/Reports/Reports_Bar.php:3040
 msgid "Not respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:535 src/Reports/Reports_Pie.php:547
+#: src/Reports/Reports_Pie.php:534 src/Reports/Reports_Pie.php:546
 #: src/Reports/Reports_Bar.php:3046
 msgid "Respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:671 src/Reports/Reports_Pie.php:687
+#: src/Reports/Reports_Pie.php:670 src/Reports/Reports_Pie.php:686
 #: src/Reports/Reports_Bar.php:2936
 msgid "Not respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:676 src/Reports/Reports_Pie.php:687
+#: src/Reports/Reports_Pie.php:675 src/Reports/Reports_Pie.php:686
 #: src/Reports/Reports_Bar.php:2942
 msgid "Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1051 src/Reports/Reports_Pie.php:1054
+#: src/Reports/Reports_Pie.php:1050 src/Reports/Reports_Pie.php:1053
 #: src/Reports/Reports_Bar.php:1797 src/Reports/Reports_Line.php:611
 #: src/Reports/Reports_Line.php:888 src/Reports/Reports_Line.php:1255
 msgid "Opened tickets"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1080 src/Reports/Reports_Pie.php:1083
+#: src/Reports/Reports_Pie.php:1079 src/Reports/Reports_Pie.php:1082
 #: src/Reports/Reports_Line.php:612 src/Reports/Reports_Line.php:1256
 msgid "Closed tickets"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1116 src/Reports/Reports_Pie.php:1119
+#: src/Reports/Reports_Pie.php:1115 src/Reports/Reports_Pie.php:1118
 #: src/Reports/Reports_Line.php:1257
 msgid "Not planned"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1485 src/Reports/Reports_Pie.php:1504
+#: src/Reports/Reports_Pie.php:1484 src/Reports/Reports_Pie.php:1503
 msgid "Satisfy percent"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1490 src/Reports/Reports_Pie.php:1504
+#: src/Reports/Reports_Pie.php:1489 src/Reports/Reports_Pie.php:1503
 msgid "Not satisfy percent"
 msgstr ""
 
@@ -1336,7 +1336,7 @@ msgstr ""
 msgid "Close edit mode"
 msgstr ""
 
-#: src/Menu.php:579 src/Menu.php:1125
+#: src/Menu.php:579 src/Menu.php:1123
 msgid "Success"
 msgstr ""
 
@@ -1441,27 +1441,27 @@ msgstr ""
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: src/Menu.php:1126
+#: src/Menu.php:1124
 msgid "Save grid to see widget"
 msgstr ""
 
-#: src/Menu.php:1137
+#: src/Menu.php:1135
 msgid "Warning"
 msgstr ""
 
-#: src/Menu.php:1138
+#: src/Menu.php:1136
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: src/Menu.php:1151
+#: src/Menu.php:1149
 msgid "Delete widget"
 msgstr ""
 
-#: src/Menu.php:1153
+#: src/Menu.php:1151
 msgid "Refresh widget"
 msgstr ""
 
-#: src/Menu.php:1509
+#: src/Menu.php:1507
 msgid "Export to PDF"
 msgstr ""
 
