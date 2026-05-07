@@ -96,7 +96,7 @@ jobs:
       - name: Checkout plugin
         uses: actions/checkout@v6
         with:
-          path: glpi/marketplace/mydashboard
+          path: glpi/plugins/mydashboard
 
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
@@ -148,6 +148,6 @@ jobs:
       - name: Run integration tests
         run: >
           php vendor/bin/phpunit
-          --configuration marketplace/mydashboard/phpunit.integration.xml
+          --configuration plugins/mydashboard/phpunit.integration.xml
           --testsuite Integration
         working-directory: glpi
