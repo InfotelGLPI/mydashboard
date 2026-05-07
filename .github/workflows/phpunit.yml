@@ -1,0 +1,58 @@
+name: PHPUnit
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+
+  # ── Tests unitaires (sans base de données) ────────────────────────────────
+  unit-tests:
+    name: "Unit tests (PHP ${{ matrix.php-version }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["8.3", "8.4"]
+
+    steps:
+      - name: Checkout GLPI core (shallow)
+        uses: actions/checkout@v6
+        with:
+          repository: glpi-project/glpi
+          ref: 11.0/bugfixes
+          path: glpi
+
+      - name: Checkout plugin
+        uses: actions/checkout@v6
+        with:
+          path: glpi/marketplace/mydashboard
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, openssl
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ matrix.php-version }}-${{ hashFiles('glpi/composer.lock') }}
+          restore-keys: composer-${{ matrix.php-version }}-
+
+      - name: Install GLPI Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+        working-directory: glpi
+
+      - name: Run unit tests
+        run: >
+          php vendor/bin/phpunit
+          --configuration marketplace/mydashboard/phpunit.xml
+          --testsuite Unit
+        working-directory: glpi

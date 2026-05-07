@@ -1,0 +1,7 @@
+<phpunit bootstrap="tests/bootstrap.php" colors="true" testdox="true">
+   <testsuites>
+      <testsuite name="Unit">
+         <file>tests/WidgetlistTest.php</file>
+      </testsuite>
+   </testsuites>
+</phpunit>
