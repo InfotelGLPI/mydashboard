@@ -56,3 +56,98 @@ jobs:
           --configuration marketplace/mydashboard/phpunit.xml
           --testsuite Unit
         working-directory: glpi
+
+  # ── Tests d'intégration (avec base de données) ────────────────────────────
+  integration-tests:
+    name: "Integration tests (PHP ${{ matrix.php-version }} / ${{ matrix.db-image }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "8.3"
+            db-image: "mysql:8.0"
+          - php-version: "8.3"
+            db-image: "mariadb:10.11"
+
+    services:
+      db:
+        image: ${{ matrix.db-image }}
+        env:
+          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_DATABASE: glpi_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -uroot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout GLPI core
+        uses: actions/checkout@v6
+        with:
+          repository: glpi-project/glpi
+          ref: 11.0/bugfixes
+          path: glpi
+
+      - name: Checkout plugin
+        uses: actions/checkout@v6
+        with:
+          path: glpi/marketplace/mydashboard
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, openssl, mysqli, pdo_mysql
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ matrix.php-version }}-${{ hashFiles('glpi/composer.lock') }}
+          restore-keys: composer-${{ matrix.php-version }}-
+
+      - name: Install GLPI Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+        working-directory: glpi
+
+      - name: Build GLPI frontend dependencies
+        run: |
+          npm install --no-save
+          npm run-script build
+        working-directory: glpi
+
+      - name: Compile GLPI locales
+        run: |
+          sudo apt-get install -y gettext
+          php bin/console tools:locales:compile --allow-superuser
+        working-directory: glpi
+
+      - name: Install GLPI test database
+        run: >
+          php bin/console database:install
+          --no-interaction --force
+          --env=testing
+          --db-host=127.0.0.1
+          --db-name=glpi_test
+          --db-user=root
+          --db-password=""
+        working-directory: glpi
+
+      - name: Install mydashboard plugin
+        run: |
+          php bin/console glpi:plugin:install  --no-interaction --env=testing mydashboard
+          php bin/console glpi:plugin:activate --no-interaction --env=testing mydashboard
+        working-directory: glpi
+
+      - name: Run integration tests
+        run: >
+          php vendor/bin/phpunit
+          --configuration marketplace/mydashboard/phpunit.integration.xml
+          --testsuite Integration
+        working-directory: glpi
