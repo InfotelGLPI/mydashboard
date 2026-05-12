@@ -9,6 +9,8 @@ This plugin is on Transifex - Help us to translate : https://www.transifex.com/i
 
 WIKI : https://github.com/InfotelGLPI/mydashboard/wiki
 
+[Documentation (FR)](public/docs/guide_utilisateur_mydashboard_fr.md) | [Documentation (EN)](public/docs/guide_utilisateur_mydashboard_en.md)
+
 Vous pouvez proposer de nouveaux widgets :
 http://blogglpi.infotel.com/liste-des-widgets-proposes/
 
