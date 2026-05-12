@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 09:32+0000\n"
+"POT-Creation-Date: 2026-05-12 11:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgid "Year"
 msgstr ""
 
 #: ajax/loadscripts.php:41 ajax/loadscripts.php:64 src/Config.php:64
-#: src/Preference.php:83 src/Menu.php:105 setup.php:214
+#: src/Preference.php:83 src/Menu.php:105 setup.php:230
 msgid "My Dashboard"
 msgstr ""
 
