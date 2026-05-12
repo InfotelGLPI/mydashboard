@@ -522,15 +522,31 @@ div#tabcontent{
 
 
 .plugin_mydashboard_menuDashboardListItem {
-    display: table;
-    margin: 5px;
-    padding-top: 2px;
-    padding-bottom: 2px;
+    cursor: pointer;
 }
 
-.plugin_mydashboard_menuDashboardListItem:hover {
-    /*background-color: #E7E7E7;*/
-    cursor: pointer;
+
+/* Barre d'actions mode édition */
+.md-edit-toolbar {
+    background-color: var(--bs-tertiary-bg, #f8f9fa);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Offcanvas widget catalogue */
+#md-widget-offcanvas {
+    --bs-offcanvas-width: 360px;
+}
+
+#md-widget-offcanvas .accordion-button {
+    font-size: 0.875rem;
+}
+
+#md-widget-offcanvas .list-group-item {
+    font-size: 0.85rem;
+    border-left: none;
+    border-right: none;
 }
 
 .plugin_mydashboard_html_content {

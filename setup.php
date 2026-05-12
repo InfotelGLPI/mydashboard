@@ -83,38 +83,9 @@ function plugin_init_mydashboard()
     if (Session::getCurrentInterface() == 'central'
         && isset($_SERVER['REQUEST_URI'])
         && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
+//        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
     }
     $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
-    //    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = [
-    //       "lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js",
-    //       "lib/fileSaver.min.js",
-    //       "lib/fuze.js",
-    //       "lib/fuzzysearch.js.php",
-    //       "scripts/mydashboard.js",
-    //       "lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js"
-    //    ];
-    //
-
-    //        if (Session::getCurrentInterface() == 'central') {
-    //            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = [
-    //               "scripts/mydashboard_load_scripts.js.php",
-    //            ];
-    //        }
-    //        $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-    //           PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fileSaver.min.js",
-    //           PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js",
-    //           PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/mydashboard.js",
-    //           PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/mydashboard_load_scripts.js.php",
-    //        ];
-    //        if (Session::getCurrentInterface() == 'central') {
-    //            $PLUGIN_HOOKS["javascript"]['mydashboard'] = [
-    //               PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/mydashboard_load_scripts.js.php",
-    //                PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuze.js",
-    //                 PLUGIN_MYDASHBOARD_WEBDIR . "lib/fuzzysearch.js.php"
-    //            ];
-    //        }
-    //    }
 
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['mydashboard'] = [Profile::class, 'initProfile'];
 
@@ -136,8 +107,6 @@ function plugin_init_mydashboard()
                 $PLUGIN_HOOKS[Hooks::MENU_TOADD]['mydashboard']               = ['tools' => Menu::class];
                 $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['mydashboard']      = PLUGIN_MYDASHBOARD_WEBDIR . '/front/menu.php';
                 $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['mydashboard'] = Menu::getIcon();
-
-                //            $CFG_GLPI['javascript']['tools']['pluginmydashboardmenu'][Config::class] = ['colorpicker'];
 
                 if (Plugin::isPluginActive('servicecatalog')
                     && Session::haveRight("plugin_servicecatalog", READ)) {

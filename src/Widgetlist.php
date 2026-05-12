@@ -336,8 +336,8 @@ class Widgetlist
                     if (isset($gslist[$widgetId])) {
                         $gsid   = $gslist[$widgetId];
                         $list[] = [
-                            'icon' => $widgetTitle['type'] ?  Widget::getIconByType($widgetTitle['type']) : "ti ti-dashboard",
-                            'title'    => $widgetTitle['title'],
+                            'icon'     => isset($widgetTitle['type']) ? Widget::getIconByType($widgetTitle['type']) : 'ti ti-dashboard',
+                            'title'    => $widgetTitle['title'] ?? '',
                             'widgetid' => $gsid,
                         ];
                     }
@@ -361,27 +361,33 @@ class Widgetlist
     public static function loadWidgetsListForMenu($widgetlist, $used = [], &$html = "", $gslist = [])
     {
         $list_is_empty = true;
-
         $is_empty      = true;
-        $tmp           = "<div class='plugin_mydashboard_menuDashboard'>";
 
         $graphs = self::getAllWidgetsList($widgetlist);
         if (count($graphs) > 0) {
-            $is_empty        = false;
+            $is_empty = false;
         }
         ksort($graphs);
 
+        $accordion_id = 'md-wd-accordion';
+        $tmp          = "<div class='accordion' id='{$accordion_id}'>";
+        $cat_idx      = 0;
+
         foreach ($graphs as $globaltype => $widgetsplugin) {
-            $tmp .= "<div class='plugin_mydashboard_menuDashboardList'>";
-            $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle1'>";
-            $tmp .= "<span class='media-left'>";
-            $icon = self::getIconByType($globaltype);
-            $tmp .= "<i class='" . $icon . "'></i>";
-            $tmp .= "</span>&nbsp;";
-            $tmp .= self::getFolderByType($globaltype);
-            $tmp .= "</h5>";
-            //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
-            $tmp .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList1'>";
+            $cat_id  = 'md-wd-cat-' . $cat_idx++;
+            $icon    = self::getIconByType($globaltype);
+            $label   = self::getFolderByType($globaltype);
+
+            $tmp .= "<div class='accordion-item'>";
+            $tmp .= "<h2 class='accordion-header' id='hd-{$cat_id}'>";
+            $tmp .= "<button class='accordion-button collapsed' type='button'"
+                  . " data-bs-toggle='collapse' data-bs-target='#body-{$cat_id}'"
+                  . " aria-expanded='false' aria-controls='body-{$cat_id}'>";
+            $tmp .= "<i class='{$icon} me-2'></i>{$label}";
+            $tmp .= "</button></h2>";
+            $tmp .= "<div id='body-{$cat_id}' class='accordion-collapse collapse'"
+                  . " aria-labelledby='hd-{$cat_id}' data-bs-parent='#{$accordion_id}'>";
+            $tmp .= "<div class='accordion-body p-0'>";
 
             $graphbytype = [];
             foreach ($widgetsplugin as $widgets) {
@@ -391,35 +397,33 @@ class Widgetlist
                 }
             }
 
+            $sub_idx = 0;
             foreach ($graphbytype as $typegraph => $widgetdetail) {
-                $res = "<div class='plugin_mydashboard_menuDashboardList'>";
-                $res .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle2'>";
-                $res .= "<span class='media-left'>";
-                $icon = Widget::getIconByType($typegraph);
-                $res .= "<i class='$icon'></i>";
-                $res .= "</span>&nbsp;";
-                $res .= "&nbsp;";
-                $res .= Widget::getNameByType($typegraph);
-                $res .= "</h5>";
-                //Every widgets of a plugin are in an accordion (handled by dashboard not the jquery one)
-                $res .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList2'>";
-                $res .= self::getWidgetsListFromWidgetsArray($widgetdetail, $typegraph, 2, $used, $gslist);
-                $res .= "</div>";
-                $res .= "</div>";
-                if ($res != '') {
-                    $tmp .= $res;
+                $sub_id = $cat_id . '-sub-' . $sub_idx++;
+                $items  = self::getWidgetsListFromWidgetsArray($widgetdetail, $typegraph, 2, $used, $gslist);
+                if ($items === '') {
+                    continue;
                 }
+                $icon_sub = Widget::getIconByType($typegraph);
+                $res  = "<div class='accordion' id='{$sub_id}-acc'>";
+                $res .= "<div class='accordion-item border-0 border-top'>";
+                $res .= "<h2 class='accordion-header'>";
+                $res .= "<button class='accordion-button collapsed ps-4 py-2' type='button'"
+                      . " data-bs-toggle='collapse' data-bs-target='#{$sub_id}'"
+                      . " aria-expanded='false'>";
+                $res .= "<i class='{$icon_sub} me-2'></i>" . Widget::getNameByType($typegraph);
+                $res .= "</button></h2>";
+                $res .= "<div id='{$sub_id}' class='accordion-collapse collapse'>";
+                $res .= "<div class='accordion-body p-0'>";
+                $res .= "<div class='list-group list-group-flush'>{$items}</div>";
+                $res .= "</div></div></div></div>";
+                $tmp .= $res;
             }
-            $tmp .= "<div style='padding-bottom: 10px;'>";
-            $tmp .= "</div>";
 
-            $tmp .= "</div>";
-            $tmp .= "</div>";
+            $tmp .= "</div></div></div>"; // accordion-body + accordion-collapse + accordion-item
         }
-        $tmp .= "</div>";
-        $tmp .= "<div style='padding-bottom: 10px;'>";
-        $tmp .= "</div>";
-        //If there is now widgets available from this plugins we don't display menu entry
+        $tmp .= "</div>"; // accordion
+
         if (!$is_empty) {
             $html .= $tmp;
             if ($list_is_empty) {
@@ -457,16 +461,13 @@ class Widgetlist
                     if (isset($gslist[$widgetId])) {
                         $gsid = $gslist[$widgetId];
                         if (!in_array($gsid, $used)) {
-                            $wl .= "<span id='btnAddWidgete" . $widgetId . "'"
-                                   . " class='plugin_mydashboard_menuDashboardListItem' "
-                                   . " data-widgetid='" . $gsid . "'"
-                                   . " data-classname='" . $classname . "'>";
-                            $wl .= $widgetTitle;
-
-                            if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                                $wl .= " (" . $gsid . ")";
-                            }/*->getWidgetListTitle()*/
-                            $wl .= "</span>";
+                            $debug = ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) ? " ({$gsid})" : "";
+                            $wl .= "<button type='button' id='btnAddWidgete" . $widgetId . "'"
+                                 . " class='list-group-item list-group-item-action plugin_mydashboard_menuDashboardListItem'"
+                                 . " data-widgetid='" . $gsid . "'"
+                                 . " data-classname='" . $classname . "'>";
+                            $wl .= $widgetTitle . $debug;
+                            $wl .= "</button>";
                         }
                     }
                 } else { //If it's not a real widget
@@ -477,51 +478,39 @@ class Widgetlist
                         if (is_numeric($widgetId)) {
                             $widgetId = $widgetTitle['title'];
                         }
-                        //                        $this->widgets[$classname][$widgetId] = -1;
                         $classname = $widgetTitle['title'];
                         if (isset($gslist[$widgetId])) {
                             $gsid = $gslist[$widgetId];
                             if (!in_array($gsid, $used)) {
-                                $wl .= "<span id='btnAddWidgete" . $widgetId . "'"
-                                       . " class='media plugin_mydashboard_menuDashboardListItem' "
-                                       . " data-widgetid='" . $gsid . "'"
-                                       . " data-classname='" . $classname . "'>";
-
                                 $icon = $widgetTitle['icon'] ?? "";
                                 if (isset($widgetTitle['type'])) {
                                     $icon = Widget::getIconByType($widgetTitle['type']);
                                 }
-                                if (!empty($icon)) {
-                                    $wl .= "<div class='media-left'><i class='$icon'></i>&nbsp;";
-                                }
-                                //                        $wl .= "<div class='media-body' style='margin: 10px;'>";
-                                $wl .= $widgetTitle['title'];
-                                if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                                    $wl .= " (" . $gsid . ")";
-                                }
+                                $debug   = ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) ? " ({$gsid})" : "";
                                 $comment = $widgetTitle['comment'] ?? "";
-                                if (!empty($comment)) {
-                                    $wl .= "<br><span class='widget-comment'>$comment</span>";
+                                $wl .= "<button type='button' id='btnAddWidgete" . $widgetId . "'"
+                                     . " class='list-group-item list-group-item-action plugin_mydashboard_menuDashboardListItem'"
+                                     . " data-widgetid='" . $gsid . "'"
+                                     . " data-classname='" . $classname . "'>";
+                                if (!empty($icon)) {
+                                    $wl .= "<i class='{$icon} me-1'></i>";
                                 }
-                                $wl .= "</div></span>";
+                                $wl .= $widgetTitle['title'] . $debug;
+                                if (!empty($comment)) {
+                                    $wl .= "<br><small class='text-muted'>{$comment}</small>";
+                                }
+                                $wl .= "</button>";
                             }
                         }
                     } else {
-                        $tmp = "<div class='plugin_mydashboard_menuDashboardList'>";
-                        $tmp .= "<h5 class='media-body plugin_mydashboard_menuDashboardListTitle$depth'>";
-                        $tmp .= "<span class='media-left'>";
-                        $tmp .= "<i class='ti ti-folder'></i>";
-                        $tmp .= "</span>&nbsp;";
-                        $tmp .= self::getFolderByType($widgetId);
-                        $tmp .= "</h5>";
-                        $tmp .= "<div style='width: 100%;' class='plugin_mydashboard_menuDashboardList$depth'>";
+                        $sub_label = self::getFolderByType($widgetId);
                         $res = self::getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
-                        if ($res != '') {
-                            $tmp .= $res;
-                        }
-                        $tmp .= "</div></div>";
-                        if ($res != '') {
-                            $wl .= $tmp;
+                        if ($res !== '') {
+                            $wl .= "<div class='ps-3 border-start ms-2 mt-1'>";
+                            $wl .= "<div class='small text-muted py-1'>"
+                                 . "<i class='ti ti-folder me-1'></i>{$sub_label}</div>";
+                            $wl .= "<div class='list-group list-group-flush'>{$res}</div>";
+                            $wl .= "</div>";
                         }
                     }
                 }
@@ -548,15 +537,9 @@ class Widgetlist
             case 'getHtml':
                 $placeholder = $title;
                 $html = <<<HTML
-               <div class="" tabindex="-1" id="md-fuzzysearch">
-                  <div class="">
-                     <div class="modal-content">
-                        <div class="modal-body" style="padding: 10px;">
-                           <input type="text" class="md-home-trigger-fuzzy form-control" placeholder="{$placeholder}">
-                           <ul class="results list-group mt-2" style="background: #FFF;"></ul>
-                        </div>
-                     </div>
-                  </div>
+               <div id="md-fuzzysearch">
+                  <input type="text" class="md-home-trigger-fuzzy form-control" placeholder="{$placeholder}">
+                  <ul class="results list-group mt-2"></ul>
                </div>
 
 HTML;

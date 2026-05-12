@@ -395,19 +395,6 @@ class Menu extends CommonGLPI
         }
 
         if ($edit > 0) {
-            echo "<div class='left'>";
-
-            echo "<form method='post'
-                     action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
-
-            echo "<table class='tab_cadre_fixe' width='100%'>";
-
-
-            echo "<tr><th style='background-color: #e3e3e3;padding: 10px;'>";
-            echo "&nbsp;" . __('Availables widgets', 'mydashboard');
-            echo "</th>";
-            echo "</tr>";
-
             /**** Loading widgets****/
             if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
                 $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
@@ -447,18 +434,25 @@ class Menu extends CommonGLPI
             }
 
             $widgetlist = Widgetlist::getList(true, $selected_profile);
-
             /**** End Loading widgets****/
 
-            echo "<div id='searchwidgets'>";
-            echo "</div>";
-            echo Widgetlist::fuzzySearch('getHtml');
-
-            echo "<tr>";
-            echo "<td class='left' style='padding: 0px;'>";
+            // Offcanvas catalogue de widgets (hors sidebar, pour que Bootstrap le positionne correctement)
             echo $this->getWidgetsList($widgetlist, $gslist, $used);
-            echo "</th>";
-            echo "</tr>";
+
+            echo "<div class='left'>";
+
+            echo "<form method='post'
+                     action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
+
+            echo "<table class='tab_cadre_fixe' width='100%'>";
+
+            echo "<tr><td class='center' style='padding: 8px;'>";
+            echo "<button type='button' class='btn btn-primary w-100 plugin_mydashboard_add_button'"
+                . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
+                . " aria-controls='md-widget-offcanvas'>";
+            echo "<i class='ti ti-plus me-1'></i>&nbsp;" . __('Add widgets', 'mydashboard');
+            echo "</button>";
+            echo "</td></tr>";
 
             echo "<tr><th style='background-color: #e3e3e3;padding: 10px;'>";
             echo __('Edit mode', 'mydashboard');
@@ -656,103 +650,151 @@ class Menu extends CommonGLPI
     }
 
     /**
-     * Get the HTML view of the widget list, the lateral menu
-     *
-     * @param     $profile
-     * @param int $edit
-     *
-     * @return string, HTML
+     * Génère l'offcanvas Bootstrap contenant la liste des widgets disponibles.
      */
-    public function getWidgetsList($widgetlist, $gslist, $used)
+    public function getWidgetsList($widgetlist, $gslist, $used): string
     {
-        $wl = "<script>
+        $close_label = __s('Close');
+        $title_label = __('Availables widgets', 'mydashboard');
 
+        $wl  = \Html::scriptBlock("
             $(document).ready(function () {
-
-                //===================Start:Showing Menu=====================================
-                //Showing the menu on click
-                $('.plugin_mydashboard_add_button').on('click', function (e) {
-//                    $('.plugin_mydashboard_menuDashboard').width(400);
-                    $('.plugin_mydashboard_menuDashboard').show();
-                });
-                //Hiding the menu when clicking outside the menu
-                var menu = false;
-                $(\"#success-alert\").hide();
-                $('.plugin_mydashboard_add_button,.plugin_mydashboard_menuDashboard').click(function (e) {
-                    menu = true;
-                });
-                $(document).click(function () {
-                  if (!menu) {
-//                      $('.plugin_mydashboard_menuDashboard').hide();
-                  } else {
-                      menu = false;
-                  }
-                });
-
-                //===================Stop:Showing Menu=====================================
-                //===================Start:AccordionEffect=================================
-                //Now the accordion effect w/o jQuery Accordion (wasn't really customizable, and css from other plugin can override dashboard one)
-                //at the beginning every lists of widgets are folded
-//                $('.plugin_mydashboard_menuDashboardListContainer,.plugin_mydashboard_menuDashboardListWidget').slideUp('fast');
-                $('.plugin_mydashboard_menuDashboardListContainer,.plugin_mydashboard_menuDashboardList2').slideUp('fast');
-                $('.plugin_mydashboard_menuDashboardListContainer,.plugin_mydashboard_menuDashboardList1').slideUp('fast');
-                //binding when user wants to unfold/fold a list of widget
-                $('.plugin_mydashboard_menuDashboardListTitle1').click(function () {
-                    var isOpened = $(this).hasClass('plugin_mydashboard_menuDashboardListTitle1Opened');
-                    $('.plugin_mydashboard_menuDashboardListTitle1').removeClass(\"plugin_mydashboard_menuDashboardListTitle1Opened\");
-                  if (!isOpened) {
-                     $(this).addClass(\"plugin_mydashboard_menuDashboardListTitle1Opened\");
-                  }
-                    $('.plugin_mydashboard_menuDashboardListTitle1').not(this).next(\"div\").slideUp('fast');
-                    $(this).next(\"div\").slideToggle('fast');
-                });
-                //This part is about lists of lists of widgets (when there are much widgets)
-                //Every list of list are closed at the beginning
-               //   $('.plugin_mydashboard_menuDashboardList2').slideUp('fast');
-                //Binding when user want to unfold/fold a list of widget
-                $('.plugin_mydashboard_menuDashboardListTitle2').click(function () {
-                    var isOpened = $(this).hasClass('plugin_mydashboard_menuDashboardListTitle1Opened');
-                    $('.plugin_mydashboard_menuDashboardListTitle2').removeClass(\"plugin_mydashboard_menuDashboardListTitle1Opened\");
-                  if (!isOpened) {
-                     $(this).addClass(\"plugin_mydashboard_menuDashboardListTitle1Opened\");
-                  }
-                    $('.plugin_mydashboard_menuDashboardListTitle2').not(this).next(\"div\").slideUp('fast');
-                    $(this).next(\"div\").slideToggle('fast');
-                });
-                //===================Stop:AccordionEffect=================================
-                //===================Start:ListItem click=================================
-                //handling click on all listitem (button to add a specific widget), -> getWidget with data stored in a custom attribute (html5 prefixed as data-*)
-                //XACA
-                $('.plugin_mydashboard_menuDashboardListItem').click(function () {
-                    var dashboardId = $(this).parents('.plugin_mydashboard_menuDashboard').attr('data-dashboardid');
-                    var widgetId = $(this).attr('data-widgetid');
-                    var classname = $(this).attr('data-classname');
-                    var attrview = $(this).attr('data-view');
-                    var view = \"\";
-                  if (typeof attrview != \"undefined\") {
-                     view = \"<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;\" + attrview + \"</span>\";
-                  }
-                  if (addNewWidget(widgetId) === true) {
-//                      $(\"#success-alert\").fadeTo(2000, 500).slideUp(500, function () {
-//                          $(\"#success-alert\").slideUp(500);
-//                      });
-                      $('.plugin_mydashboard_menuDashboard').hide();
-                  } else {
-                      //error
-//                      $(\"#error-alert\").fadeTo(2000, 500).slideUp(500, function () {
-//                          $(\"#error-alert\").slideUp(500);
-//                      });
-                  }
+                $(document).on('click', '.plugin_mydashboard_menuDashboardListItem', function () {
+                    const widgetId = $(this).attr('data-widgetid');
+                    if (addNewWidget(widgetId) === true) {
+                        const ocEl = document.getElementById('md-widget-offcanvas');
+                        if (ocEl) {
+                            bootstrap.Offcanvas.getOrCreateInstance(ocEl).hide();
+                        }
+                    }
                 });
             });
+        ");
 
-        </script>";
+        $wl .= "<div class='offcanvas offcanvas-end' tabindex='-1' id='md-widget-offcanvas'"
+             . " aria-labelledby='md-wd-oc-label'>";
+        $wl .= "<div class='offcanvas-header border-bottom'>";
+        $wl .= "<h5 class='offcanvas-title' id='md-wd-oc-label'>" . $title_label . "</h5>";
+        $wl .= "<button type='button' class='btn-close' data-bs-dismiss='offcanvas'"
+             . " aria-label='" . $close_label . "'></button>";
+        $wl .= "</div>";
+        $wl .= "<div class='offcanvas-body p-2'>";
+        $wl .= Widgetlist::fuzzySearch('getHtml');
+        $wl .= "<div class='mt-2'>";
 
         Widgetlist::loadWidgetsListForMenu($widgetlist, $used, $wl, $gslist);
+
+        $wl .= "</div></div></div>";
 
         return $wl;
     }
 
+
+    /**
+     * Barre d'actions horizontale en mode édition, affichée au-dessus de la grille.
+     */
+    private function getEditToolbar(int $edit, int $selected_profile, int $drag): string
+    {
+        $out  = "<div class='md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2'>";
+
+        // Badge mode édition
+        $badge = __('Edit mode', 'mydashboard');
+        if ($edit == 2) {
+            $badge .= ' ' . __('Global', 'mydashboard');
+        }
+        $out .= "<span class='badge bg-warning text-dark'><i class='ti ti-pencil me-1'></i>{$badge}</span>";
+
+        $out .= "<div class='vr mx-1'></div>";
+
+        // Bouton d'ajout de widget (déclenche l'offcanvas)
+        $out .= "<button type='button' class='btn btn-primary btn-sm plugin_mydashboard_add_button'"
+              . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
+              . " aria-controls='md-widget-offcanvas'>"
+              . "<i class='ti ti-plus me-1'></i>" . __('Add widgets', 'mydashboard')
+              . "</button>";
+
+        // Charger les widgets
+        $out .= "<a id='load-widgets' role='button' class='btn btn-info btn-sm'>"
+              . "<i class='ti ti-loader me-1'></i>" . __('Load widgets', 'mydashboard') . "</a>";
+
+        // Sauvegarder
+        if ($edit == 1) {
+            $out .= "<a id='save-grid' role='button' class='btn btn-success btn-sm'>"
+                  . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
+        }
+        if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+            $out .= "<a id='save-default-grid' role='button' class='btn btn-success btn-sm'>"
+                  . "<i class='ti ti-layout-grid me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
+        }
+
+        // Vider la grille
+        $out .= "<a id='clear-grid' role='button' class='btn btn-danger btn-sm'>"
+              . "<i class='ti ti-trash me-1'></i>" . __('Clear grid', 'mydashboard') . "</a>";
+
+        // Glisser-déposer
+        if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            $out .= "<a id='drag-grid' role='button' class='btn btn-outline-warning btn-sm'>"
+                  . "<i class='ti ti-lock me-1'></i>" . __('Permit drag / resize widgets', 'mydashboard') . "</a>";
+        }
+        if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            $out .= "<a id='undrag-grid' role='button' class='btn btn-outline-success btn-sm'>"
+                  . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
+        }
+
+        // Fermer le mode édition (poussé à droite)
+        $out .= "<a id='close-edit' role='button' class='btn btn-outline-danger btn-sm ms-auto'>"
+              . "<i class='ti ti-x me-1'></i>" . __('Close edit mode', 'mydashboard') . "</a>";
+
+        $out .= "</div>";
+        return $out;
+    }
+
+    /**
+     * Barre d'actions horizontale pour le mode visualisation (hors édition).
+     */
+    private function getActionModal(int $drag): string
+    {
+        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+
+        $out = "<div class='md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2'>";
+
+        // Badge mode visualisation
+        $out .= "<span class='badge bg-outline-secondary'>"
+              . "<i class='ti ti-layout-dashboard me-1'></i>" . __('My Dashboard', 'mydashboard')
+              . "</span>";
+        $out .= "<div class='vr mx-1'></div>";
+
+        if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            $out .= "<a id='save-grid' role='button' class='btn btn-success btn-sm'>"
+                  . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
+            $out .= "<a id='undrag-grid' role='button' class='btn btn-outline-success btn-sm'>"
+                  . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
+            $out .= "<div class='vr mx-1'></div>";
+        }
+
+        if (Session::haveRight("plugin_mydashboard_edit", 6)) {
+            $out .= "<a id='edit-grid' role='button' class='btn btn-primary btn-sm'>"
+                  . "<i class='ti ti-edit me-1'></i>" . __('Switch to edit mode', 'mydashboard') . "</a>";
+        }
+
+        if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+            $out .= "<a id='drag-grid' role='button' class='btn btn-outline-warning btn-sm'>"
+                  . "<i class='ti ti-lock me-1'></i>" . __('Permit drag / resize widgets', 'mydashboard') . "</a>";
+        }
+
+        if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
+            $out .= "<a id='edit-default-grid' role='button' class='btn btn-outline-secondary btn-sm'>"
+                  . "<i class='ti ti-adjustments me-1'></i>" . __('Custom and save default grid', 'mydashboard') . "</a>";
+        }
+
+        if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen'] && $interface === 1) {
+            $out .= "<a id='header_fullscreen' role='button' class='btn btn-info btn-sm ms-auto'>"
+                  . "<i class='ti ti-maximize me-1'></i>" . __("Fullscreen", "mydashboard") . "</a>";
+        }
+
+        $out .= "</div>";
+        return $out;
+    }
 
     /**
      * @return string
@@ -1169,6 +1211,25 @@ class Menu extends CommonGLPI
 
         $all_displayed_widgets    = json_encode($displayed_widgets);
         $all_displayed_widgets_id = json_encode($displayed_widgets_id);
+
+        // Toolbar d'édition ou popup d'actions selon le mode
+        if ($edit > 0) {
+            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
+                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
+            }
+            $oc_widgets = $_SESSION['glpi_plugin_mydashboard_widget_list'];
+            $oc_gslist  = [];
+            foreach ($oc_widgets as $gs => $widgetclasses) {
+                $oc_gslist[$widgetclasses['id']] = $gs;
+            }
+            $oc_widgetlist = Widgetlist::getList(true, $active_profile);
+
+            echo $this->getWidgetsList($oc_widgetlist, $oc_gslist, $displayed_widgets_id);
+            echo $this->getEditToolbar($edit, $active_profile, $drag);
+        } else {
+            echo $this->getActionModal($drag);
+        }
+        echo $this->getscripts();
 
         echo "<div id='mygrid$rand' class='mygrid'>";
 //        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
