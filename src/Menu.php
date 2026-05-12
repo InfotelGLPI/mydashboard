@@ -695,7 +695,12 @@ class Menu extends CommonGLPI
      */
     private function getEditToolbar(int $edit, int $selected_profile, int $drag): string
     {
-        $out  = "<div class='md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2'>";
+        global $DB;
+
+        $csrf = \Session::getNewCSRFToken();
+        $out  = "<form method='post' action='" . $this->getSearchURL() . "'>";
+        $out .= "<input type='hidden' name='_glpi_csrf_token' value='" . htmlspecialchars($csrf) . "'>";
+        $out .= "<div class='md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2'>";
 
         // Badge mode édition
         $badge = __('Edit mode', 'mydashboard');
@@ -741,11 +746,60 @@ class Menu extends CommonGLPI
                   . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
         }
 
+        $out .= "<div class='vr mx-1'></div>";
+
+        // Sélecteur de grille prédéfinie
+        $elements = Dashboard::getPredefinedDashboardName();
+        if (!empty($elements)) {
+            $out .= "<select name='predefined_grid' class='form-select form-select-sm' style='width:auto'"
+                  . " onChange='this.form.submit()' title='" . __s('Load a predefined grid', 'mydashboard') . "'>";
+            $out .= "<option value=''>" . __('Load a predefined grid', 'mydashboard') . "</option>";
+            foreach ($elements as $id => $name) {
+                $out .= "<option value='" . (int)$id . "'>" . htmlspecialchars($name) . "</option>";
+            }
+            $out .= "</select>";
+        }
+
+        // Sélecteur de profil (mode global admin uniquement)
+        if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+            $iterator = $DB->request([
+                'SELECT'    => ['glpi_profiles.name', 'glpi_profiles.id'],
+                'FROM'      => Profile::getTable(),
+                'LEFT JOIN' => [
+                    'glpi_profilerights' => [
+                        'FKEY' => [
+                            'glpi_profilerights' => 'profiles_id',
+                            'glpi_profiles'      => 'id',
+                        ],
+                    ],
+                ],
+                'WHERE'     => [
+                    Profile::getUnderActiveProfileRestrictCriteria(),
+                    'glpi_profilerights.name'   => 'plugin_mydashboard',
+                    'glpi_profilerights.rights' => ['>', 0],
+                ],
+                'ORDER'     => 'glpi_profiles.name',
+            ]);
+            $out .= "<select name='profiles_id' class='form-select form-select-sm' style='width:auto'"
+                  . " onChange='this.form.submit()' title='" . __s('Profile') . "'>";
+            $out .= "<option value=''>" . Dropdown::EMPTY_VALUE . "</option>";
+            foreach ($iterator as $data) {
+                $sel  = ((int)$data['id'] === (int)$selected_profile) ? ' selected' : '';
+                $out .= "<option value='" . (int)$data['id'] . "'{$sel}>"
+                      . htmlspecialchars($data['name']) . "</option>";
+            }
+            $out .= "</select>";
+        } else {
+            $out .= "<input type='hidden' name='profiles_id'"
+                  . " value='" . (int)$_SESSION['glpiactiveprofile']['id'] . "'>";
+        }
+
         // Fermer le mode édition (poussé à droite)
         $out .= "<a id='close-edit' role='button' class='btn btn-outline-danger btn-sm ms-auto'>"
               . "<i class='ti ti-x me-1'></i>" . __('Close edit mode', 'mydashboard') . "</a>";
 
         $out .= "</div>";
+        $out .= "</form>";
         return $out;
     }
 
@@ -1134,6 +1188,7 @@ class Menu extends CommonGLPI
         $widgets              = [];
         $displayed_widgets    = [];
         $displayed_widgets_id = [];
+        $warning_no_widgets   = '';
 
         //FOR ADD NEW WIDGET
         $allwidgetjson = [];
@@ -1179,13 +1234,10 @@ class Menu extends CommonGLPI
             }
 
         } else {
-            echo "<div class='alert alert-warning ' id='warning-alert'>
-                <strong>" . __('Warning', 'mydashboard') . "!</strong>
-                " . __('No widgets founded, please add widgets', 'mydashboard') . "
-            </div>";
-            //         echo \Html::scriptBlock('$("#warning-alert").fadeTo(2000, 500).slideUp(500, function(){
-            //            $("#success-alert").slideUp(500);
-            //         });');
+            $warning_no_widgets = "<div class='alert alert-warning' id='warning-alert'>"
+                . "<strong>" . __('Warning', 'mydashboard') . "!</strong> "
+                . __('No widgets founded, please add widgets', 'mydashboard')
+                . "</div>";
 
             $grid = json_encode($grid);
         }
@@ -1230,6 +1282,10 @@ class Menu extends CommonGLPI
             echo $this->getActionModal($drag);
         }
         echo $this->getscripts();
+
+        if (!empty($warning_no_widgets)) {
+            echo $warning_no_widgets;
+        }
 
         echo "<div id='mygrid$rand' class='mygrid'>";
 //        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
@@ -1570,7 +1626,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
         echo "</div>";
 
         if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-            echo "<button class='btn btn-info' id='exportByHTML' style='float: right;margin-bottom: 25px;'>";
+            echo "<button class='btn btn-info btn-sm' id='exportByHTML' style='float: right;margin-bottom: 25px;'>";
             echo __("Export to PDF", "mydashboard") . "</button>";
 
             echo "<script type='text/javascript'>
