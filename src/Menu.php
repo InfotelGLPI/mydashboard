@@ -823,7 +823,6 @@ class Menu extends CommonGLPI
                   . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
             $out .= "<a id='undrag-grid' role='button' class='btn btn-outline-success btn-sm'>"
                   . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
-            $out .= "<div class='vr mx-1'></div>";
         }
 
         if (Session::haveRight("plugin_mydashboard_edit", 6)) {
@@ -841,8 +840,11 @@ class Menu extends CommonGLPI
                   . "<i class='ti ti-adjustments me-1'></i>" . __('Custom and save default grid', 'mydashboard') . "</a>";
         }
 
+        $out .= "<a id='exportByHTML' role='button' class='btn btn-outline-secondary btn-sm ms-auto'>"
+              . "<i class='ti ti-file-type-pdf me-1'></i>" . __("Export to PDF", "mydashboard") . "</a>";
+
         if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen'] && $interface === 1) {
-            $out .= "<a id='header_fullscreen' role='button' class='btn btn-info btn-sm ms-auto'>"
+            $out .= "<a id='header_fullscreen' role='button' class='btn btn-info btn-sm'>"
                   . "<i class='ti ti-maximize me-1'></i>" . __("Fullscreen", "mydashboard") . "</a>";
         }
 
@@ -1625,75 +1627,81 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
 
         echo "</div>";
 
-        if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-            echo "<button class='btn btn-info btn-sm' id='exportByHTML' style='float: right;margin-bottom: 25px;'>";
-            echo __("Export to PDF", "mydashboard") . "</button>";
+        $js_label_generating = json_encode(__('Generating PDF...', 'mydashboard'));
+        $js_label_title      = json_encode(__('My Dashboard', 'mydashboard'));
+        $js_label_error      = json_encode(__('PDF export failed. Please try again.', 'mydashboard'));
 
-            echo "<script type='text/javascript'>
+        echo "<script type='text/javascript'>
+        (function () {
+            const btnExport = document.getElementById('exportByHTML');
+            if (!btnExport) return;
 
-            function loadImage(src) {
-              return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = reject;
-                img.src = src;
-              });
-            }
+            btnExport.addEventListener('click', async () => {
+                const grid = document.getElementById('mygrid$rand');
+                if (!grid) return;
 
-            function getChartImage(chart) {
-              return loadImage(chart.getDataURL());
-            }
+                // Overlay de chargement
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px;';
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner-border text-light';
+                spinner.style.cssText = 'width:3rem;height:3rem;';
+                spinner.setAttribute('role', 'status');
+                const lbl = document.createElement('div');
+                lbl.className = 'text-white fw-semibold';
+                lbl.textContent = $js_label_generating;
+                overlay.appendChild(spinner);
+                overlay.appendChild(lbl);
+                document.body.appendChild(overlay);
 
-            const btnExportHTML = document.getElementById('exportByHTML');
-            widgets = $all_displayed_widgets;
-            widgetsid = $all_displayed_widgets_id;
-            btnExportHTML.addEventListener('click', async () => {
-//            console.log('exporting...');
-            try {
-                const doc = new jspdf.jsPDF({
-                      unit: 'px',
-                      orientation: 'l',
-                      hotfixes: ['px_scaling']
+                try {
+                    const dpr    = window.devicePixelRatio || 1;
+                    const canvas = await html2canvas(grid, {
+                        scale          : dpr,
+                        useCORS        : true,
+                        logging        : false,
+                        backgroundColor: '#ffffff',
+                        scrollX        : 0,
+                        scrollY        : 0,
                     });
-                    // another way:
 
-                    for (var i = 0; i < widgets.length; i++) {
-                        var widgetname ='#'+widgets[i];
+                    const headerH = 28;
+                    const imgW    = canvas.width  / dpr;
+                    const imgH    = canvas.height / dpr;
 
-                        const canvas = await html2canvas(document.querySelector(widgetname));
-                        const img = await loadImage(canvas.toDataURL());
-                        chart1 = echarts.init(document.getElementById(widgets[i]));
-                        dpr = chart1.getDevicePixelRatio();
+                    const pdf = new jspdf.jsPDF({
+                        orientation: imgW >= imgH ? 'l' : 'p',
+                        unit       : 'px',
+                        format     : [imgW, imgH + headerH],
+                        hotfixes   : ['px_scaling'],
+                    });
 
-                        const pageWidth = doc.internal.pageSize.getWidth();
-                        const pageHeight = doc.internal.pageSize.getHeight();
+                    // En-tête : titre centré + date à droite
+                    pdf.setFontSize(11);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor(40, 40, 40);
+                    pdf.text($js_label_title, imgW / 2, 18, { align: 'center' });
+                    pdf.setFontSize(8);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(130, 130, 130);
+                    pdf.text(new Date().toLocaleDateString(), imgW - 6, 18, { align: 'right' });
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.setLineWidth(0.5);
+                    pdf.line(6, headerH - 4, imgW - 6, headerH - 4);
 
-                        const widthRatio = pageWidth / canvas.width;
-                        const heightRatio = pageHeight / canvas.height;
+                    // Image du dashboard
+                    pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, headerH, imgW, imgH);
 
-                        const canvasWidth = img.width / dpr;
-                        const canvasHeight = img.height / dpr;
-
-                        const marginX = (pageWidth - canvasWidth) / 2;
-                        const marginY = (pageHeight - canvasHeight) / 2;
-
-                        doc.addImage(img.src, 'PNG', marginX, marginY, canvasWidth, canvasHeight);
-                        if (i < widgets.length-1) {
-                            doc.addPage();
-                        }
-                     }
-                    for (var i = 0; i < widgetsid.length; i++) {
-                       refreshWidget(widgetsid[i]);
-                     }
-                     await doc.save('dashboard_report.pdf');
-                  } catch (e) {
-                console.error('failed to export', e);
-            }
-//            console.log('exported');
-        });
-
-          </script>";
-        }
+                    pdf.save('dashboard_' + new Date().toISOString().slice(0, 10) + '.pdf');
+                } catch (err) {
+                    console.error('PDF export failed:', err);
+                    alert($js_label_error);
+                } finally {
+                    overlay.remove();
+                }
+            });
+        }());
+        </script>";
     }
 
     /**
