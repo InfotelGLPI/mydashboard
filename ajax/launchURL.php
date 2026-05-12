@@ -55,7 +55,7 @@ if (isset($_POST['widget'])) {
 
 $link = '';
 
-if ($_POST["selected_id"] == "") {
+if (isset($_POST["selected_id"]) && $_POST["selected_id"] == "") {
     $link = '';
 }
 

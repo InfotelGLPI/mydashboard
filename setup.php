@@ -37,6 +37,7 @@ use GlpiPlugin\Mydashboard\HTMLEditor;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Preference;
 use GlpiPlugin\Mydashboard\Profile;
+use GlpiPlugin\Mydashboard\Reports\MyCustomGraph;
 use GlpiPlugin\Mydashboard\Servicecatalog;
 
 if (!defined("PLUGIN_MYDASHBOARD_DIR")) {
@@ -50,6 +51,21 @@ function plugin_init_mydashboard()
 {
     global $PLUGIN_HOOKS;
 
+    // Classes de widgets custom — chargées via le hook natif de Widgetlist::getList()
+    $PLUGIN_HOOKS['mydashboard']['custom'] = [
+        MyCustomGraph::class,
+    ];
+
+    // Lorsque cette liste change, incrémenter $custom_version pour forcer
+    // le réenregistrement en DB et l'invalidation du cache session de widgets.
+    $custom_version = 'v1';
+    if (Plugin::isPluginActive('mydashboard')
+        && Session::getLoginUserID()
+        && ($_SESSION['glpi_plugin_mydashboard_custom_v'] ?? '') !== $custom_version) {
+        Menu::installWidgets();
+        unset($_SESSION['glpi_plugin_mydashboard_widget_list']);
+        $_SESSION['glpi_plugin_mydashboard_custom_v'] = $custom_version;
+    }
 
     $PLUGIN_HOOKS[Hooks::DISPLAY_LOGIN]['mydashboard'] = "plugin_mydashboard_display_login";
 

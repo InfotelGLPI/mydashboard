@@ -114,21 +114,24 @@ class Year
 
         $year = $params['year'];
 
-        if (isset($params['month'])) {
-            $month = $params['month'];
-            $month = sprintf('%02d', $month);
-            $date_criteria = [
-                ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
-                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
-            ];
-        } else {
-            $date_criteria = [
-                ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
-                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
-            ];
-        }
+        if (!is_array($year)) {
+            if (isset($params['month'])) {
+                $month = $params['month'];
+                $month = sprintf('%02d', $month);
+                $date_criteria = [
+                    ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
+                    ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+                ];
+            } else {
+                $date_criteria = [
+                    ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
+                    ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
+                ];
+            }
 
-        return array_merge($params['query']['WHERE'],$date_criteria);
+            return array_merge($params['query']['WHERE'],$date_criteria);
+        }
+        return $params['query']['WHERE'];
     }
 
     public static function getSearchCriteria($params) {
