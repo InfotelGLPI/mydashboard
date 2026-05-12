@@ -33,6 +33,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Entity;
+use Glpi\Application\View\TemplateRenderer;
 use Group;
 use ITILCategory;
 use Migration;
@@ -139,174 +140,126 @@ class Preference extends CommonDBTM
      */
     public function showPreferencesForm($user_id)
     {
-        //If user has no preferences yet, we set default values
         if (!$this->getFromDB($user_id)) {
             $this->initPreferences($user_id);
             $this->getFromDB($user_id);
         }
 
-        //Preferences are not deletable
-        $options['candel']  = false;
-        $options['colspan'] = 1;
+        $options            = ['candel' => false, 'colspan' => 1];
+        $is_central         = Session::getCurrentInterface() === 'central';
 
-        $this->showFormHeader($options);
-
-        echo "<tr class='tab_bg_1'><td>" . __("Automatic refreshing of the widgets that can be refreshed", "mydashboard") . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo("automatic_refresh", $this->fields['automatic_refresh']);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __("Refresh every ", "mydashboard") . "</td>";
-        echo "<td>";
-        Dropdown::showFromArray(
-            "automatic_refresh_delay",
-            [1 => 1, 2 => 2, 5 => 5, 10 => 10, 30 => 30, 60 => 60],
-            ["value" => $this->fields['automatic_refresh_delay']]
+        $automatic_refresh_dd = Dropdown::showYesNo(
+            'automatic_refresh',
+            $this->fields['automatic_refresh'],
+            -1,
+            ['display' => false]
         );
-        echo " " . __('minute(s)', "mydashboard");
-        echo "</td>";
-        echo "</tr>";
-        //Since 1.0.3 replace_central is now a preference
-        echo "<tr class='tab_bg_1'><td>" . __("Replace central interface", "mydashboard") . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo("replace_central", $this->fields['replace_central']);
-        echo "</td>";
-        echo "</tr>";
 
-        if (Session::getCurrentInterface()
-            && Session::getCurrentInterface() == 'central') {
-            echo "<tr class='tab_bg_1'><td>" . __("My prefered groups for widget", "mydashboard") . "</td>";
-            echo "<td>";
-            $params = ['name'      => 'prefered_group',
-                'value'     => $this->fields['prefered_group'],
-                'entity'    => $_SESSION['glpiactiveentities'],
-                'condition' => '`is_assign`'];
+        $automatic_refresh_delay_dd = Dropdown::showFromArray(
+            'automatic_refresh_delay',
+            [1 => 1, 2 => 2, 5 => 5, 10 => 10, 30 => 30, 60 => 60],
+            ['value' => $this->fields['automatic_refresh_delay'], 'display' => false]
+        );
 
+        $replace_central_dd = Dropdown::showYesNo(
+            'replace_central',
+            $this->fields['replace_central'],
+            -1,
+            ['display' => false]
+        );
+
+        $prefered_group_dd = '';
+        if ($is_central) {
             $dbu    = new DbUtils();
             $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
             $pref   = json_decode($this->fields['prefered_group'], true);
-
             if (!is_array($pref)) {
                 $pref = [];
             }
-            //      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
             $temp = [];
             foreach ($result as $item) {
                 $temp[$item['id']] = $item['name'];
             }
-
-            $params = [
-                "name"                => 'prefered_group',
+            $prefered_group_dd = Dropdown::showFromArray('prefered_group', $temp, [
                 'entity'              => $_SESSION['glpiactiveentities'],
-                "display"             => false,
-                "multiple"            => true,
-                "width"               => '200px',
-                'values'              => $pref ?? [],
+                'display'             => false,
+                'multiple'            => true,
+                'width'               => '200px',
+                'values'              => $pref,
                 'display_emptychoice' => true,
-            ];
-
-            $dropdown = Dropdown::showFromArray("prefered_group", $temp, $params);
-
-            echo $dropdown;
-            //      Group::dropdown($params);
-            echo "</td>";
-            echo "</tr>";
+            ]);
         }
-        echo "<tr class='tab_bg_1'><td>" . __("My requester prefered groups for widget", "mydashboard") . "</td>";
-        echo "<td>";
-        $params = ['name'      => 'requester_prefered_group',
-            'value'     => $this->fields['requester_prefered_group'],
-            'entity'    => $_SESSION['glpiactiveentities'],
-            'condition' => '`is_requester`'];
 
         $dbu    = new DbUtils();
         $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
         $pref   = json_decode($this->fields['requester_prefered_group'], true);
-
         if (!is_array($pref)) {
             $pref = [];
         }
-        //      $opt['technicians_groups_id'] = is_array($opt['technicians_groups_id']) ? $opt['technicians_groups_id'] : [$opt['technicians_groups_id']];
         $temp = [];
         foreach ($result as $item) {
             $temp[$item['id']] = $item['name'];
         }
-
-        $params = [
-            "name"                => 'requester_prefered_group',
+        $requester_prefered_group_dd = Dropdown::showFromArray('requester_prefered_group', $temp, [
             'entity'              => $_SESSION['glpiactiveentities'],
-            "display"             => false,
-            "multiple"            => true,
-            "width"               => '200px',
-            'values'              => $pref ?? [],
+            'display'             => false,
+            'multiple'            => true,
+            'width'               => '200px',
+            'values'              => $pref,
             'display_emptychoice' => true,
-        ];
+        ]);
 
-        echo Dropdown::showFromArray("requester_prefered_group", $temp, $params);
-
-        //      Group::dropdown($params);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __("My prefered entity for widget", "mydashboard") . "</td>";
-        echo "<td>";
-        $params = ['name'   => 'prefered_entity',
-            'value'  => $this->fields['prefered_entity'],
-            'entity' => $_SESSION['glpiactiveentities']];
-        Entity::dropdown($params);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr>";
-        echo "<td>" . __('My favorite category for widgets', 'mydashboard') . "</td>";
-        echo "<td>";
-
-        $params = [
-            'name' => 'prefered_category',
-            'value' => $this->fields['prefered_category'],
-            'multiple' => false,
+        $prefered_entity_dd = Entity::dropdown([
+            'name'    => 'prefered_entity',
+            'value'   => $this->fields['prefered_entity'],
+            'entity'  => $_SESSION['glpiactiveentities'],
             'display' => false,
-            'width' => '200px',
-            'entity' => $_SESSION['glpiactiveentities'],
+        ]);
+
+        $prefered_category_dd = ITILCategory::dropdown([
+            'name'                => 'prefered_category',
+            'value'               => $this->fields['prefered_category'],
+            'multiple'            => false,
+            'display'             => false,
+            'width'               => '200px',
+            'entity'              => $_SESSION['glpiactiveentities'],
             'display_emptychoice' => true,
-            'condition' => [['OR' => ['is_request' => 1, 'is_incident' => 1]]],
-        ];
+            'condition'           => [['OR' => ['is_request' => 1, 'is_incident' => 1]]],
+        ]);
 
-        $dropdownCategory = ITILCategory::dropdown($params);
-        echo $dropdownCategory;
-        echo "</td>";
-        echo "</tr>";
+        $prefered_type_dd = Ticket::dropdownType('prefered_type', [
+            'value'   => $this->fields['prefered_type'],
+            'toadd'   => [0 => Dropdown::EMPTY_VALUE],
+            'display' => false,
+        ]);
 
-        echo "<tr class='tab_bg_1'><td>" . __("My prefered type for widget", "mydashboard") . "</td>";
-        echo "<td>";
-        $params = ['value'  => $this->fields['prefered_type'],'toadd' => [0 => Dropdown::EMPTY_VALUE]];
-        Ticket::dropdownType('prefered_type', $params);
-        echo "</td>";
-        echo "</tr>";
+        $prefered_year_dd = Dropdown::showFromArray(
+            'prefered_year',
+            [0 => __('Current year', 'mydashboard'), 1 => __('Previous year', 'mydashboard')],
+            ['value' => $this->fields['prefered_year'], 'display' => false]
+        );
 
-        echo "<tr class='tab_bg_1'><td>" . __("My prefered year for widget", "mydashboard") . "</td>";
-        echo "<td>";
-        $params = ['value'  => $this->fields['prefered_year']];
-        $temp = [0 => __('Current year', 'mydashboard'),
-        1 => __('Previous year', 'mydashboard')];
-        Dropdown::showFromArray("prefered_year", $temp, $params);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __("Palette color", "mydashboard") . "</td>";
-        echo "<td>";
-        echo \Html::select(
+        $color_palette_html = \Html::select(
             'color_palette',
             $this->getPalettes(),
-            [
-                'id'        => 'theme-selector',
-                'selected'  => $this->fields['color_palette'],
-            ]
+            ['id' => 'theme-selector', 'selected' => $this->fields['color_palette']]
         );
-        echo "</td>";
-        echo "</tr>";
 
+        $this->showFormHeader($options);
+
+        TemplateRenderer::getInstance()->display('@mydashboard/preferences.html.twig', [
+            'automatic_refresh_dd'        => $automatic_refresh_dd,
+            'automatic_refresh_delay_dd'  => $automatic_refresh_delay_dd,
+            'replace_central_dd'          => $replace_central_dd,
+            'is_central'                  => $is_central,
+            'prefered_group_dd'           => $prefered_group_dd,
+            'requester_prefered_group_dd' => $requester_prefered_group_dd,
+            'prefered_entity_dd'          => $prefered_entity_dd,
+            'prefered_category_dd'        => $prefered_category_dd,
+            'prefered_type_dd'            => $prefered_type_dd,
+            'prefered_year_dd'            => $prefered_year_dd,
+            'color_palette_html'          => $color_palette_html,
+        ]);
 
         $this->showFormButtons($options);
 

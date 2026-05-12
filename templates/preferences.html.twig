@@ -1,0 +1,79 @@
+{#
+# -------------------------------------------------------------------------
+# Mydashboard plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Mydashboard.
+#
+# Mydashboard is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Mydashboard is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Mydashboard. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Mydashboard plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Mydashboard
+# -------------------------------------------------------------------------
+#}
+
+<tr class="tab_bg_1">
+    <td>{{ __("Automatic refreshing of the widgets that can be refreshed", "mydashboard") }}</td>
+    <td>{{ automatic_refresh_dd|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __("Refresh every ", "mydashboard") }}</td>
+    <td>{{ automatic_refresh_delay_dd|raw }} {{ __('minute(s)', "mydashboard") }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __("Replace central interface", "mydashboard") }}</td>
+    <td>{{ replace_central_dd|raw }}</td>
+</tr>
+
+{% if is_central %}
+<tr class="tab_bg_1">
+    <td>{{ __("My prefered groups for widget", "mydashboard") }}</td>
+    <td>{{ prefered_group_dd|raw }}</td>
+</tr>
+{% endif %}
+
+<tr class="tab_bg_1">
+    <td>{{ __("My requester prefered groups for widget", "mydashboard") }}</td>
+    <td>{{ requester_prefered_group_dd|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __("My prefered entity for widget", "mydashboard") }}</td>
+    <td>{{ prefered_entity_dd|raw }}</td>
+</tr>
+
+<tr>
+    <td>{{ __('My favorite category for widgets', 'mydashboard') }}</td>
+    <td>{{ prefered_category_dd|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __("My prefered type for widget", "mydashboard") }}</td>
+    <td>{{ prefered_type_dd|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __("My prefered year for widget", "mydashboard") }}</td>
+    <td>{{ prefered_year_dd|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __("Palette color", "mydashboard") }}</td>
+    <td>{{ color_palette_html|raw }}</td>
+</tr>
