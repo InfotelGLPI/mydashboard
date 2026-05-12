@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 08:45+0000\n"
+"POT-Creation-Date: 2026-05-12 09:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgid "Year"
 msgstr ""
 
 #: ajax/loadscripts.php:41 ajax/loadscripts.php:64 src/Config.php:64
-#: src/Preference.php:82 src/Menu.php:105 setup.php:214
+#: src/Preference.php:83 src/Menu.php:105 setup.php:214
 msgid "My Dashboard"
 msgstr ""
 
@@ -547,7 +547,7 @@ msgstr ""
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: src/Config.php:289 src/Preference.php:171
+#: src/Config.php:289
 msgid "Replace central interface"
 msgstr ""
 
@@ -592,52 +592,12 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: src/Preference.php:154
-msgid "Automatic refreshing of the widgets that can be refreshed"
-msgstr ""
-
-#: src/Preference.php:160
-msgid "Refresh every "
-msgstr ""
-
-#: src/Preference.php:167
-msgid "minute(s)"
-msgstr ""
-
-#: src/Preference.php:179
-msgid "My prefered groups for widget"
-msgstr ""
-
-#: src/Preference.php:216
-msgid "My requester prefered groups for widget"
-msgstr ""
-
-#: src/Preference.php:252
-msgid "My prefered entity for widget"
-msgstr ""
-
-#: src/Preference.php:262
-msgid "My favorite category for widgets"
-msgstr ""
-
-#: src/Preference.php:281
-msgid "My prefered type for widget"
-msgstr ""
-
-#: src/Preference.php:288
-msgid "My prefered year for widget"
-msgstr ""
-
-#: src/Preference.php:291
+#: src/Preference.php:238
 msgid "Current year"
 msgstr ""
 
-#: src/Preference.php:292
+#: src/Preference.php:238
 msgid "Previous year"
-msgstr ""
-
-#: src/Preference.php:297
-msgid "Palette color"
 msgstr ""
 
 #: src/Profile.php:54
