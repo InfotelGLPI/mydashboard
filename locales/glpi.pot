@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-13 12:44+0000\n"
+"POT-Creation-Date: 2026-05-13 15:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 #: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:66
 #: src/Criterias/Year.php:81 src/Criterias/DisplayData.php:68
 #: src/Criterias/DisplayData.php:187 src/Criterias/FilterDate.php:65
-#: src/Criterias/FilterDate.php:134
+#: src/Criterias/FilterDate.php:134 src/Menu.php:967
 msgid "Year"
 msgstr ""
 
@@ -502,11 +502,11 @@ msgstr ""
 msgid "50 rows"
 msgstr ""
 
-#: src/Widget.php:619 src/Menu.php:1073
+#: src/Widget.php:619 src/Menu.php:1195
 msgid "Show all"
 msgstr ""
 
-#: src/Widget.php:785 src/Menu.php:1252 src/Chart.php:129
+#: src/Widget.php:785 src/Menu.php:1374 src/Chart.php:129
 msgid "No data available"
 msgstr ""
 
@@ -518,8 +518,8 @@ msgstr ""
 msgid "Plugin setup"
 msgstr ""
 
-#: src/Config.php:64 src/Preference.php:83 src/Menu.php:105 src/Menu.php:817
-#: src/Menu.php:1631 setup.php:199
+#: src/Config.php:64 src/Preference.php:83 src/Menu.php:109 src/Menu.php:821
+#: src/Menu.php:1756 setup.php:199
 msgid "My Dashboard"
 msgstr ""
 
@@ -580,7 +580,7 @@ msgstr ""
 #: src/Html.php:54 src/Module.php:64 src/Dashboard.php:71 src/Datatable.php:56
 #: src/Reports/Planning.php:49 src/Reports/Change.php:55
 #: src/Reports/ProjectTask.php:53 src/Reports/Problem.php:55
-#: src/Reports/Project.php:50 src/Menu.php:1079 src/Chart.php:58
+#: src/Reports/Project.php:50 src/Menu.php:1201 src/Chart.php:58
 msgid "Dashboard"
 msgstr ""
 
@@ -650,7 +650,7 @@ msgstr ""
 msgid "error"
 msgstr ""
 
-#: src/Dashboard.php:143 src/Menu.php:121
+#: src/Dashboard.php:143 src/Menu.php:125
 msgid "GLPI admin grid"
 msgstr ""
 
@@ -1236,200 +1236,204 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: src/Menu.php:120
+#: src/Menu.php:124
 msgid "My view"
 msgstr ""
 
-#: src/Menu.php:453 src/Menu.php:718
+#: src/Menu.php:457 src/Menu.php:722
 msgid "Add widgets"
 msgstr ""
 
-#: src/Menu.php:458 src/Menu.php:706
+#: src/Menu.php:462 src/Menu.php:710
 msgid "Edit mode"
 msgstr ""
 
-#: src/Menu.php:460 src/Menu.php:708
+#: src/Menu.php:464 src/Menu.php:712
 msgid "Global"
 msgstr ""
 
-#: src/Menu.php:481 src/Menu.php:755 src/Menu.php:756
+#: src/Menu.php:485 src/Menu.php:759 src/Menu.php:760
 msgid "Load a predefined grid"
 msgstr ""
 
-#: src/Menu.php:503 src/Menu.php:505 src/Menu.php:723
+#: src/Menu.php:507 src/Menu.php:509 src/Menu.php:727
 msgid "Load widgets"
 msgstr ""
 
-#: src/Menu.php:511 src/Menu.php:513 src/Menu.php:596 src/Menu.php:598
-#: src/Menu.php:728 src/Menu.php:732 src/Menu.php:823
+#: src/Menu.php:515 src/Menu.php:517 src/Menu.php:600 src/Menu.php:602
+#: src/Menu.php:732 src/Menu.php:736 src/Menu.php:827
 msgid "Save grid"
 msgstr ""
 
-#: src/Menu.php:519 src/Menu.php:521
+#: src/Menu.php:523 src/Menu.php:525
 msgid "Save default grid"
 msgstr ""
 
-#: src/Menu.php:527 src/Menu.php:529 src/Menu.php:737
+#: src/Menu.php:531 src/Menu.php:533 src/Menu.php:741
 msgid "Clear grid"
 msgstr ""
 
-#: src/Menu.php:535 src/Menu.php:537 src/Menu.php:621 src/Menu.php:623
-#: src/Menu.php:742 src/Menu.php:835
+#: src/Menu.php:539 src/Menu.php:541 src/Menu.php:625 src/Menu.php:627
+#: src/Menu.php:746 src/Menu.php:839
 msgid "Permit drag / resize widgets"
 msgstr ""
 
-#: src/Menu.php:543 src/Menu.php:545 src/Menu.php:603 src/Menu.php:605
-#: src/Menu.php:746 src/Menu.php:825
+#: src/Menu.php:547 src/Menu.php:549 src/Menu.php:607 src/Menu.php:609
+#: src/Menu.php:750 src/Menu.php:829
 msgid "Block drag / resize widgets"
 msgstr ""
 
-#: src/Menu.php:555 src/Menu.php:557 src/Menu.php:642 src/Menu.php:644
-#: src/Menu.php:848
+#: src/Menu.php:559 src/Menu.php:561 src/Menu.php:646 src/Menu.php:648
+#: src/Menu.php:852
 msgid "Fullscreen"
 msgstr ""
 
-#: src/Menu.php:562 src/Menu.php:564 src/Menu.php:799
+#: src/Menu.php:566 src/Menu.php:568 src/Menu.php:803
 msgid "Close edit mode"
 msgstr ""
 
-#: src/Menu.php:576 src/Menu.php:1228
+#: src/Menu.php:580 src/Menu.php:1350
 msgid "Success"
 msgstr ""
 
-#: src/Menu.php:577
+#: src/Menu.php:581
 msgid "The widget was added to dashboard. Save the dashboard."
 msgstr ""
 
-#: src/Menu.php:584
+#: src/Menu.php:588
 msgid "Error"
 msgstr ""
 
-#: src/Menu.php:585
+#: src/Menu.php:589
 msgid "Please reload your page."
 msgstr ""
 
-#: src/Menu.php:612 src/Menu.php:614 src/Menu.php:830
+#: src/Menu.php:616 src/Menu.php:618 src/Menu.php:834
 msgid "Switch to edit mode"
 msgstr ""
 
-#: src/Menu.php:630 src/Menu.php:632 src/Menu.php:840
+#: src/Menu.php:634 src/Menu.php:636 src/Menu.php:844
 msgid "Custom and save default grid"
 msgstr ""
 
-#: src/Menu.php:658
+#: src/Menu.php:662
 msgid "Availables widgets"
 msgstr ""
 
-#: src/Menu.php:844
+#: src/Menu.php:848
 msgid "Export to PDF"
 msgstr ""
 
-#: src/Menu.php:1036
+#: src/Menu.php:947
+msgid "Global filter"
+msgstr ""
+
+#: src/Menu.php:1158
 msgid "No data available in table"
 msgstr ""
 
-#: src/Menu.php:1037
+#: src/Menu.php:1159
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: src/Menu.php:1038
+#: src/Menu.php:1160
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: src/Menu.php:1039
+#: src/Menu.php:1161
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: src/Menu.php:1046
+#: src/Menu.php:1168
 msgid "No matching records found"
 msgstr ""
 
-#: src/Menu.php:1054
+#: src/Menu.php:1176
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: src/Menu.php:1055
+#: src/Menu.php:1177
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: src/Menu.php:1061
+#: src/Menu.php:1183
 msgid "1 row selected"
 msgstr ""
 
-#: src/Menu.php:1065 src/Menu.php:1078
+#: src/Menu.php:1187 src/Menu.php:1200
 msgid "Close"
 msgstr ""
 
-#: src/Menu.php:1066
+#: src/Menu.php:1188
 msgid "Maximize"
 msgstr ""
 
-#: src/Menu.php:1067
+#: src/Menu.php:1189
 msgid "Minimize"
 msgstr ""
 
-#: src/Menu.php:1068
+#: src/Menu.php:1190
 msgid "Refresh"
 msgstr ""
 
-#: src/Menu.php:1070
+#: src/Menu.php:1192
 msgid "Column visibility"
 msgstr ""
 
-#: src/Menu.php:1072
+#: src/Menu.php:1194
 #, php-format
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Menu.php:1080
+#: src/Menu.php:1202
 msgid "Dashboard saved"
 msgstr ""
 
-#: src/Menu.php:1081
+#: src/Menu.php:1203
 msgid "Dashboard not saved"
 msgstr ""
 
-#: src/Menu.php:1082
+#: src/Menu.php:1204
 msgid "Data received for"
 msgstr ""
 
-#: src/Menu.php:1083
+#: src/Menu.php:1205
 msgid "No data received for"
 msgstr ""
 
-#: src/Menu.php:1084
+#: src/Menu.php:1206
 msgid "Updating all widgets"
 msgstr ""
 
-#: src/Menu.php:1085
+#: src/Menu.php:1207
 msgid "Widget added on Dashboard"
 msgstr ""
 
-#: src/Menu.php:1229
+#: src/Menu.php:1351
 msgid "Save grid to see widget"
 msgstr ""
 
-#: src/Menu.php:1240
+#: src/Menu.php:1362
 msgid "Warning"
 msgstr ""
 
-#: src/Menu.php:1241
+#: src/Menu.php:1363
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
-#: src/Menu.php:1251
+#: src/Menu.php:1373
 msgid "Delete widget"
 msgstr ""
 
-#: src/Menu.php:1253
+#: src/Menu.php:1375
 msgid "Refresh widget"
 msgstr ""
 
-#: src/Menu.php:1630
+#: src/Menu.php:1755
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:1632
+#: src/Menu.php:1757
 msgid "PDF export failed. Please try again."
 msgstr ""
 
