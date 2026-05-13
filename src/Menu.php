@@ -707,42 +707,42 @@ class Menu extends CommonGLPI
         if ($edit == 2) {
             $badge .= ' ' . __('Global', 'mydashboard');
         }
-        $out .= "<span class='badge bg-warning text-dark'><i class='ti ti-pencil me-1'></i>{$badge}</span>";
+        $out .= "<span class='badge bg-warning text-dark' style='padding: 5px;'><i class='ti ti-pencil me-1'></i>{$badge}</span>";
 
         $out .= "<div class='vr mx-1'></div>";
 
         // Bouton d'ajout de widget (déclenche l'offcanvas)
-        $out .= "<button type='button' class='btn btn-primary btn-sm plugin_mydashboard_add_button'"
+        $out .= "<button type='button' style='padding: 5px;' class='btn btn-primary btn-sm plugin_mydashboard_add_button'"
               . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
               . " aria-controls='md-widget-offcanvas'>"
               . "<i class='ti ti-plus me-1'></i>" . __('Add widgets', 'mydashboard')
               . "</button>";
 
         // Charger les widgets
-        $out .= "<a id='load-widgets' role='button' class='btn btn-info btn-sm'>"
+        $out .= "<a id='load-widgets' role='button' style='padding: 5px;' class='btn btn-info btn-sm'>"
               . "<i class='ti ti-loader me-1'></i>" . __('Load widgets', 'mydashboard') . "</a>";
 
         // Sauvegarder
         if ($edit == 1) {
-            $out .= "<a id='save-grid' role='button' class='btn btn-success btn-sm'>"
+            $out .= "<a id='save-grid' role='button' style='padding: 5px;' class='btn btn-success btn-sm'>"
                   . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
         }
         if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            $out .= "<a id='save-default-grid' role='button' class='btn btn-success btn-sm'>"
+            $out .= "<a id='save-default-grid' role='button' style='padding: 5px;' class='btn btn-success btn-sm'>"
                   . "<i class='ti ti-layout-grid me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
         }
 
         // Vider la grille
-        $out .= "<a id='clear-grid' role='button' class='btn btn-danger btn-sm'>"
+        $out .= "<a id='clear-grid' role='button' style='padding: 5px;' class='btn btn-danger btn-sm'>"
               . "<i class='ti ti-trash me-1'></i>" . __('Clear grid', 'mydashboard') . "</a>";
 
         // Glisser-déposer
         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='drag-grid' role='button' class='btn btn-outline-warning btn-sm'>"
+            $out .= "<a id='drag-grid' role='button' style='padding: 5px;' class='btn btn-outline-warning btn-sm'>"
                   . "<i class='ti ti-lock me-1'></i>" . __('Permit drag / resize widgets', 'mydashboard') . "</a>";
         }
         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='undrag-grid' role='button' class='btn btn-outline-success btn-sm'>"
+            $out .= "<a id='undrag-grid' role='button' style='padding: 5px;' class='btn btn-outline-success btn-sm'>"
                   . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
         }
 
@@ -795,7 +795,7 @@ class Menu extends CommonGLPI
         }
 
         // Fermer le mode édition (poussé à droite)
-        $out .= "<a id='close-edit' role='button' class='btn btn-outline-danger btn-sm ms-auto'>"
+        $out .= "<a id='close-edit' role='button' style='padding: 5px;' class='btn btn-outline-danger btn-sm ms-auto'>"
               . "<i class='ti ti-x me-1'></i>" . __('Close edit mode', 'mydashboard') . "</a>";
 
         $out .= "</div>";
@@ -819,32 +819,32 @@ class Menu extends CommonGLPI
         $out .= "<div class='vr mx-1'></div>";
 
         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='save-grid' role='button' class='btn btn-success btn-sm'>"
+            $out .= "<a id='save-grid' role='button' style='padding: 5px;' class='btn btn-success btn-sm'>"
                   . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
-            $out .= "<a id='undrag-grid' role='button' class='btn btn-outline-success btn-sm'>"
+            $out .= "<a id='undrag-grid' role='button' style='padding: 5px;' class='btn btn-outline-success btn-sm'>"
                   . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
         }
 
         if (Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='edit-grid' role='button' class='btn btn-primary btn-sm'>"
+            $out .= "<a id='edit-grid' role='button' style='padding: 5px;' class='btn btn-primary btn-sm'>"
                   . "<i class='ti ti-edit me-1'></i>" . __('Switch to edit mode', 'mydashboard') . "</a>";
         }
 
         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='drag-grid' role='button' class='btn btn-outline-warning btn-sm'>"
+            $out .= "<a id='drag-grid' role='button' style='padding: 5px;' class='btn btn-outline-warning btn-sm'>"
                   . "<i class='ti ti-lock me-1'></i>" . __('Permit drag / resize widgets', 'mydashboard') . "</a>";
         }
 
         if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-            $out .= "<a id='edit-default-grid' role='button' class='btn btn-outline-secondary btn-sm'>"
+            $out .= "<a id='edit-default-grid' role='button' style='padding: 5px;' class='btn btn-outline-secondary btn-sm'>"
                   . "<i class='ti ti-adjustments me-1'></i>" . __('Custom and save default grid', 'mydashboard') . "</a>";
         }
 
-        $out .= "<a id='exportByHTML' role='button' class='btn btn-outline-secondary btn-sm ms-auto'>"
+        $out .= "<a id='exportByHTML' role='button' style='padding: 5px;' class='btn btn-outline-secondary btn-sm ms-auto'>"
               . "<i class='ti ti-file-type-pdf me-1'></i>" . __("Export to PDF", "mydashboard") . "</a>";
 
         if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen'] && $interface === 1) {
-            $out .= "<a id='header_fullscreen' role='button' class='btn btn-info btn-sm'>"
+            $out .= "<a id='header_fullscreen' role='button' style='padding: 5px;' class='btn btn-info btn-sm'>"
                   . "<i class='ti ti-maximize me-1'></i>" . __("Fullscreen", "mydashboard") . "</a>";
         }
 
