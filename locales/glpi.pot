@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 16:19+0000\n"
+"POT-Creation-Date: 2026-05-13 12:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -779,27 +779,27 @@ msgid "Top ten of opened tickets by appliance"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:529 src/Reports/Reports_Pie.php:547
-#: src/Reports/Reports_Bar.php:3040
+#: src/Reports/Reports_Bar.php:3043
 msgid "Not respected TTR"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:534 src/Reports/Reports_Pie.php:546
-#: src/Reports/Reports_Bar.php:3046
+#: src/Reports/Reports_Bar.php:3049
 msgid "Respected TTR"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:670 src/Reports/Reports_Pie.php:686
-#: src/Reports/Reports_Bar.php:2936
+#: src/Reports/Reports_Bar.php:2939
 msgid "Not respected TTO"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:675 src/Reports/Reports_Pie.php:686
-#: src/Reports/Reports_Bar.php:2942
+#: src/Reports/Reports_Bar.php:2945
 msgid "Respected TTO"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:1050 src/Reports/Reports_Pie.php:1053
-#: src/Reports/Reports_Bar.php:1797 src/Reports/Reports_Line.php:611
+#: src/Reports/Reports_Bar.php:1800 src/Reports/Reports_Line.php:611
 #: src/Reports/Reports_Line.php:888 src/Reports/Reports_Line.php:1255
 msgid "Opened tickets"
 msgstr ""
@@ -1031,7 +1031,7 @@ msgid "Last synchronization of computers by month"
 msgstr ""
 
 #: src/Reports/Reports_Bar.php:303 src/Reports/Reports_Bar.php:559
-#: src/Reports/Reports_Bar.php:947 src/Reports/Reports_Bar.php:1360
+#: src/Reports/Reports_Bar.php:947 src/Reports/Reports_Bar.php:1363
 #: src/Reports/Reports_Line.php:312 src/Reports/Reports_Line.php:1408
 #: src/Reports/Reports_Line.php:1486 src/Reports/Reports_Line.php:1620
 #: src/Reports/Reports_Line.php:1753 src/Reports/Reports_Line.php:1856
@@ -1043,71 +1043,71 @@ msgstr ""
 msgid "Tasks duration (minutes)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1251
+#: src/Reports/Reports_Bar.php:1255
 msgid "Not resolved tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1553
+#: src/Reports/Reports_Bar.php:1556
 msgid "Trimester 1"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1613
+#: src/Reports/Reports_Bar.php:1616
 msgid "Trimester 2"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1673
+#: src/Reports/Reports_Bar.php:1676
 msgid "Trimester 3"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1734
+#: src/Reports/Reports_Bar.php:1737
 msgid "Trimester 4"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1798
+#: src/Reports/Reports_Bar.php:1801
 msgid "Average Satisfaction"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2147
+#: src/Reports/Reports_Bar.php:2150
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2156
+#: src/Reports/Reports_Bar.php:2159
 msgid "Sum of tickets solved in less than a week"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2165
+#: src/Reports/Reports_Bar.php:2168
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2504
+#: src/Reports/Reports_Bar.php:2507
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2505
+#: src/Reports/Reports_Bar.php:2508
 msgid "Take into account average (hour)"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2722
+#: src/Reports/Reports_Bar.php:2725
 msgid "Number of surveys answered"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2730
+#: src/Reports/Reports_Bar.php:2733
 msgid "Satisfy number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2736
+#: src/Reports/Reports_Bar.php:2739
 msgid "Not satisfy number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2828
+#: src/Reports/Reports_Bar.php:2831
 msgid "Computers number"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2948
+#: src/Reports/Reports_Bar.php:2951
 msgid "Percent - Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3052
+#: src/Reports/Reports_Bar.php:3055
 msgid "Percent - Respected TTR"
 msgstr ""
 
