@@ -84,6 +84,8 @@ Chemin : `Préférences > onglet My Dashboard`
 
 > Dans les préférences, l'utilisateur peut également **masquer des groupes de widgets** provenant de plugins tiers (liste de plugins intégrés à MyDashboard).
 
+> **Lien avec la barre de filtres globaux :** les préférences *Entité préférée*, *Groupe(s) technicien préféré(s)*, *Type de ticket préféré* et *Année préférée* sont utilisées pour **pré-remplir la barre de filtres globaux** à chaque chargement du tableau de bord (voir section 5.2). Modifier un filtre dans la barre ne modifie pas les préférences enregistrées : les préférences constituent uniquement la valeur initiale.
+
 ---
 
 ## 5. Interface du tableau de bord
@@ -101,7 +103,29 @@ La barre d'outils (en haut du tableau de bord) contient :
 | Exporter en PDF | Exporter le tableau de bord entier en PDF |
 | Plein écran | Afficher en plein écran (si activé dans la config) |
 
-### 5.2 Mode édition
+### 5.2 Barre de filtres globaux
+
+Directement sous la barre d'outils se trouve la **barre de filtres globaux**. Elle permet d'appliquer simultanément des critères à **tous les widgets graphiques affichés**, sans avoir à configurer chaque widget individuellement.
+
+#### Filtres disponibles
+
+| Filtre | Description |
+|--------|-------------|
+| **Entité** | Restreindre tous les graphiques à une entité GLPI précise. La valeur `0` correspond à l'entité racine et est un filtre valide. |
+| **Groupe technicien** | Un ou plusieurs groupes techniciens assignés (sélection multiple) |
+| **Type** | Incident, Demande ou Tous |
+| **Année** | Année de référence pour les données |
+
+#### Fonctionnement
+
+- Les sélecteurs sont **pré-remplis** depuis les préférences utilisateur (voir section 4) à chaque chargement du tableau de bord.
+- Dès qu'un filtre est modifié, **tous les widgets visibles sont automatiquement rafraîchis** avec les nouvelles valeurs.
+- Les filtres globaux s'appliquent comme **valeur par défaut** : si un widget possède son propre formulaire de critères (icône ⚙ dans son en-tête) et que l'utilisateur y a défini des valeurs, **les critères locaux du widget ont la priorité** sur les filtres globaux.
+- Le formulaire de critères de chaque widget est **mis à jour** lors du rafraîchissement : les sélecteurs internes du widget reflètent les valeurs en cours (globales ou locales).
+
+> **Exemple :** Si le filtre global est réglé sur l'entité "Site Paris" et l'année 2025, tous les graphiques affichent les données correspondantes. Si l'utilisateur ouvre ensuite le formulaire de critères du widget "Top 10 catégories" et y sélectionne "Site Lyon", ce widget affichera "Site Lyon" tandis que les autres conserveront "Site Paris".
+
+### 5.3 Mode édition
 
 En mode édition (requiert le droit `plugin_mydashboard_edit`) :
 
@@ -111,7 +135,7 @@ En mode édition (requiert le droit `plugin_mydashboard_edit`) :
 - **Configurer** les critères d'un widget (icône engrenage)
 - La disposition est **sauvegardée automatiquement** dans la base de données
 
-### 5.3 Mises en page prédéfinies
+### 5.4 Mises en page prédéfinies
 
 11 dispositions prédéfinies sont disponibles comme point de départ :
 
@@ -406,11 +430,17 @@ Lorsque des alertes actives existent, un **bandeau défilant** (newsTicker) s'af
 
 ## 12. Filtres et critères des widgets
 
-La plupart des widgets graphiques disposent d'un formulaire de filtres dans leur en-tête. Les critères disponibles varient selon le widget :
+### 12.1 Barre de filtres globaux
+
+La **barre de filtres globaux** (section 5.2) permet de filtrer tous les widgets d'un seul geste. Elle est initialisée depuis les préférences utilisateur et déclenche un rafraîchissement automatique de tous les widgets à chaque modification.
+
+### 12.2 Critères par widget
+
+La plupart des widgets graphiques disposent également d'un formulaire de filtres propre, accessible via l'icône ⚙ dans l'en-tête du widget. Les critères disponibles varient selon le widget :
 
 | Critère | Description |
 |---------|-------------|
-| Entité | Filtrer par entité GLPI (visible en mode multi-entités uniquement) |
+| Entité | Filtrer par entité GLPI. L'entité racine (id=0) est un filtre valide. |
 | Groupe technicien | Un ou plusieurs groupes techniciens assignés |
 | Groupe demandeur | Un ou plusieurs groupes demandeurs |
 | Technicien | Technicien assigné spécifique |
@@ -424,7 +454,17 @@ La plupart des widgets graphiques disposent d'un formulaire de filtres dans leur
 | Limite | Nombre maximum de lignes à retourner (0=Tous) |
 | Type d'ordinateur | Pour les widgets inventaire |
 
-> Les valeurs par défaut de ces critères sont lues depuis les préférences utilisateur (section 4).
+### 12.3 Priorité des filtres
+
+Les filtres s'appliquent dans l'ordre de priorité suivant (du plus fort au plus faible) :
+
+1. **Critères locaux du widget** — définis via le formulaire ⚙ de chaque widget
+2. **Filtres globaux** — définis dans la barre de filtres globaux (section 5.2)
+3. **Préférences utilisateur** — valeurs enregistrées dans les préférences (section 4)
+
+Lorsque le formulaire de critères d'un widget est soumis, les filtres globaux actifs lui sont transmis en base, et les critères locaux écrasent les clés en conflit. Ainsi un widget peut affiner ou contredire le filtre global sans affecter les autres widgets.
+
+> Lorsque la barre de filtres globaux modifie un widget, le formulaire de critères interne (icône ⚙) est régénéré et reflète les valeurs en cours.
 
 ---
 

@@ -84,6 +84,8 @@ Path: `Preferences > My Dashboard tab`
 
 > In preferences, users can also **hide widget groups** from third-party plugins integrated into MyDashboard.
 
+> **Link with the global filter bar:** the *Preferred entity*, *Preferred technician group(s)*, *Preferred ticket type*, and *Preferred year* preferences are used to **pre-populate the global filter bar** on every dashboard load (see section 5.2). Changing a filter in the bar does not modify the saved preferences: preferences are only the initial values.
+
 ---
 
 ## 5. Dashboard Interface
@@ -101,7 +103,29 @@ The toolbar (at the top of the dashboard) contains:
 | Export to PDF | Export the entire dashboard as PDF |
 | Fullscreen | Display fullscreen (if enabled in config) |
 
-### 5.2 Edit Mode
+### 5.2 Global Filter Bar
+
+Directly below the toolbar is the **global filter bar**. It lets you apply criteria to **all displayed chart widgets simultaneously**, without configuring each widget individually.
+
+#### Available Filters
+
+| Filter | Description |
+|--------|-------------|
+| **Entity** | Restrict all charts to a specific GLPI entity. Value `0` is the root entity and is a valid filter. |
+| **Technician group** | One or more assigned technician groups (multi-select) |
+| **Type** | Incident, Request, or All |
+| **Year** | Reference year for the data |
+
+#### How It Works
+
+- Selectors are **pre-populated** from user preferences (see section 4) on every dashboard load.
+- Whenever a filter is changed, **all visible widgets are automatically refreshed** with the new values.
+- Global filters act as the **default value**: if a widget has its own criteria form (⚙ icon in its header) and the user has set values there, **the widget's local criteria take priority** over the global filters.
+- Each widget's criteria form is **updated** when the widget refreshes: the internal selectors reflect the current values (global or local).
+
+> **Example:** If the global filter is set to entity "Paris Site" and year 2025, all charts display the matching data. If the user then opens the criteria form of the "Top 10 categories" widget and selects "Lyon Site", that widget shows "Lyon Site" while all others keep "Paris Site".
+
+### 5.3 Edit Mode
 
 In edit mode (requires `plugin_mydashboard_edit` right):
 
@@ -111,7 +135,7 @@ In edit mode (requires `plugin_mydashboard_edit` right):
 - **Configure** widget filter criteria (gear icon)
 - The layout is **saved automatically** to the database
 
-### 5.3 Predefined Layouts
+### 5.4 Predefined Layouts
 
 11 predefined layouts are available as starting points:
 
@@ -406,11 +430,17 @@ When active alerts exist, a **scrolling banner** (newsTicker) is automatically d
 
 ## 12. Widget Filters and Criteria
 
-Most chart widgets have a filter form in their header. Available criteria vary by widget:
+### 12.1 Global Filter Bar
+
+The **global filter bar** (section 5.2) filters all widgets in one action. It is initialised from user preferences and triggers an automatic refresh of all widgets on every change.
+
+### 12.2 Per-Widget Criteria
+
+Most chart widgets also have their own filter form, accessible via the ⚙ icon in the widget header. Available criteria vary by widget:
 
 | Criterion | Description |
 |-----------|-------------|
-| Entity | Filter by GLPI entity (visible in multi-entity mode only) |
+| Entity | Filter by GLPI entity. The root entity (id=0) is a valid filter value. |
 | Technician group | One or more assigned technician groups |
 | Requester group | One or more requester groups |
 | Technician | Specific assigned technician |
@@ -424,7 +454,17 @@ Most chart widgets have a filter form in their header. Available criteria vary b
 | Limit | Maximum number of rows to return (0=All) |
 | Computer type | For inventory widgets |
 
-> Default values for these criteria are read from user preferences (section 4).
+### 12.3 Filter Priority
+
+Filters are applied in the following priority order (highest to lowest):
+
+1. **Widget-local criteria** — set via the widget's own ⚙ form
+2. **Global filters** — set in the global filter bar (section 5.2)
+3. **User preferences** — saved values from preferences (section 4)
+
+When a widget's criteria form is submitted, the active global filters are passed as the base, and local criteria overwrite any conflicting keys. A widget can therefore refine or override the global filter without affecting other widgets.
+
+> When the global filter bar refreshes a widget, the internal criteria form (⚙ icon) is regenerated and reflects the current values.
 
 ---
 
