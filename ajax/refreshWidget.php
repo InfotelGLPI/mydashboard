@@ -52,6 +52,9 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
     $data = [];
     if (isset($widgets[$gsid])) {
         $opt      = [];
+        if (isset($_POST['params']) && is_array($_POST['params'])) {
+            $opt = $_POST['params'];
+        }
         $class    = $widgets[$gsid]["class"];
         $id_class = $widgets[$gsid]["id"];
         $widget   = Widget::loadWidget($class, $id_class, "bt-col-md-11", $opt);

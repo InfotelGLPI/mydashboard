@@ -29,6 +29,9 @@ namespace GlpiPlugin\Mydashboard;
 use CommonGLPI;
 use DbUtils;
 use Dropdown;
+use Entity;
+use Group;
+use GlpiPlugin\Mydashboard\Criterias\Year;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
 use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
 use GlpiPlugin\Mydashboard\Reports\Reports_Funnel;
@@ -38,6 +41,7 @@ use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use Plugin;
 use Profile;
 use Session;
+use Ticket;
 use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 /**
@@ -853,6 +857,124 @@ class Menu extends CommonGLPI
     }
 
     /**
+     * Barre de filtres globaux affichée sous la toolbar, pré-remplie depuis les préférences utilisateur.
+     * Tout changement déclenche un rafraîchissement de tous les widgets visibles.
+     */
+    private function getGlobalFilterBar(): string
+    {
+        $pref = new MydashboardPreference();
+        if (!$pref->getFromDB(Session::getLoginUserID())) {
+            $pref->initPreferences(Session::getLoginUserID());
+            $pref->getFromDB(Session::getLoginUserID());
+        }
+        $fields = $pref->fields;
+
+        $year_default   = Year::getDefaultValue();
+        $type_default   = (int) ($fields['prefered_type'] ?? 0);
+        $entity_default = (int) ($fields['prefered_entity'] ?? 0);
+        $group_default  = json_decode($fields['prefered_group'] ?? '[]', true) ?: [];
+
+        $entity_dd = Entity::dropdown([
+            'name'    => 'md_gf_entities_id',
+            'value'   => $entity_default,
+            'entity'  => $_SESSION['glpiactiveentities'],
+            'display' => false,
+        ]);
+
+        $dbu         = new DbUtils();
+        $groups_data = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
+        $groups_list = [];
+        foreach ($groups_data as $g) {
+            $groups_list[$g['id']] = $g['name'];
+        }
+        $techgroup_dd = Dropdown::showFromArray('md_gf_technicians_groups_id', $groups_list, [
+            'values'              => $group_default,
+            'multiple'            => true,
+            'display'             => false,
+            'width'               => '200px',
+            'display_emptychoice' => true,
+        ]);
+
+        $type_dd = Ticket::dropdownType('md_gf_type', [
+            'value'   => $type_default,
+            'toadd'   => [0 => Dropdown::EMPTY_VALUE],
+            'display' => false,
+        ]);
+
+        $year_range = [];
+        $start_year = (int) date('Y') - 10;
+        for ($i = 0; $i <= 10; $i++) {
+            $year_range[$start_year + $i] = $start_year + $i;
+        }
+        $year_dd = Dropdown::showFromArray('md_gf_year', $year_range, [
+            'value'   => $year_default,
+            'display' => false,
+        ]);
+
+        $init_js = json_encode([
+            'entities_id'           => $entity_default,
+            'technicians_groups_id' => $group_default,
+            'type'                  => $type_default ?: null,
+            'year'                  => $year_default,
+        ]);
+
+        $change_js = \Html::scriptBlock("
+            window.mdGlobalFilters = {$init_js};
+
+            $(document).on('change', '#md-global-filter-bar select', function () {
+                var filters = {};
+                $('#md-global-filter-bar select').each(function () {
+                    var rawName = \$(this).attr('name');
+                    if (!rawName) return;
+                    var key = rawName.replace(/^md_gf_/, '').replace(/\[\]\$/, '');
+                    var val = \$(this).val();
+                    if (val === null || val === '' || (Array.isArray(val) && val.length === 0)) return;
+                    if (key === 'type' && parseInt(val) === 0) return;
+                    filters[key] = val;
+                });
+                window.mdGlobalFilters = filters;
+
+                if (Array.isArray(window.mdDisplayedWidgetIds)) {
+                    window.mdDisplayedWidgetIds.forEach(function (gsid) {
+                        refreshWidget(gsid);
+                    });
+                }
+            });
+        ");
+
+        $out  = "<div id='md-global-filter-bar' class='d-flex flex-wrap align-items-center gap-2 p-2 mb-2 bg-light border-bottom rounded-1'>";
+        $out .= "<span class='badge bg-outline-secondary'><i class='ti ti-filter me-1'></i>"
+              . __('Global filter', 'mydashboard') . "</span>";
+
+        $out .= "<div class='d-flex align-items-center gap-1'>";
+        $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Entity') . "</label>";
+        $out .= $entity_dd;
+        $out .= "</div>";
+
+        if (!empty($groups_list)) {
+            $out .= "<div class='d-flex align-items-center gap-1'>";
+            $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Technician group') . "</label>";
+            $out .= $techgroup_dd;
+            $out .= "</div>";
+        }
+
+        $out .= "<div class='d-flex align-items-center gap-1'>";
+        $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Type') . "</label>";
+        $out .= $type_dd;
+        $out .= "</div>";
+
+        $out .= "<div class='d-flex align-items-center gap-1'>";
+        $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Year', 'mydashboard') . "</label>";
+        $out .= $year_dd;
+        $out .= "</div>";
+
+        $out .= $change_js;
+        $out .= "</div>";
+
+        return $out;
+    }
+
+    /**
      * @return string
      */
     public function getscripts()
@@ -1284,6 +1406,8 @@ class Menu extends CommonGLPI
             echo $this->getActionModal($drag);
         }
         echo $this->getscripts();
+        echo $this->getGlobalFilterBar();
+        echo \Html::scriptBlock("window.mdDisplayedWidgetIds = {$all_displayed_widgets_id};");
 
         if (!empty($warning_no_widgets)) {
             echo $warning_no_widgets;
@@ -1532,7 +1656,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
         }
 
         function refreshWidget (id) {
-            var widgetOptionsObject = [];
+            var widgetOptionsObject = Object.assign({}, window.mdGlobalFilters || {});
             $.ajax({
               url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
               type: 'POST',
@@ -1573,6 +1697,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                  }
               }
            );
+           widgetOptionsObject = Object.assign({}, window.mdGlobalFilters || {}, widgetOptionsObject);
            var widget = $('div[id='+ id + ']');
            $.ajax({
               url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
