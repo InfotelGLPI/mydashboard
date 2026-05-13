@@ -158,8 +158,8 @@ class Entity
     {
         return Criteria::addUrlCriteria(
             self::$criteria_number,
-            (isset($params["params"]["sons"])
-                && $params["params"]["sons"] > 0) ? 'under' : 'equals',
+            (isset($params["params"]["is_recursive_entities"])
+                && $params["params"]["is_recursive_entities"] > 0) ? 'under' : 'equals',
             $params["params"][self::$criteria_name],
             'AND'
         );

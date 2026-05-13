@@ -31,19 +31,16 @@ $(function() {
 
    var fuzzy_started = false;
     var md_trigger_homesearch_fuzzy = function() {
-        // remove old fuzzy modal
-        //removeFuzzy();
+            // focus input element
+            $("#md-fuzzysearch input").trigger("focus");
 
-        // retrieve html of fuzzy input
-        //$.get(root_my_doc+'/ajax/fuzzysearch.php', {
-        //    'action': 'getHtml',
-        //}, function(html) {
-            // add modal to body and show it
+            // don't bind key events or re-fetch data twice
+            if (fuzzy_started) {
+                return;
+            }
+            fuzzy_started = true;
 
-            //$('#searchwidgets').append(html);
-            //$('#md-fuzzysearch').modal('show');
-
-            // retrieve current menu data
+            // retrieve current menu data (once)
             $.getJSON(root_my_doc+'/ajax/fuzzysearch.php', {
                 'action': 'getList',
             }, function(data) {
@@ -56,15 +53,6 @@ $(function() {
                     }
                 }, 100);
             });
-
-            // focus input element
-            $("#md-fuzzysearch input").trigger("focus");
-
-            // don't bind key events twice
-            if (fuzzy_started) {
-                return;
-            }
-            fuzzy_started = true;
 
             // general key matches
             $(document).on('keyup', function(key) {
@@ -150,12 +138,8 @@ $(function() {
       results.map(function(el) {
           var finaltitle = el.item.title;
          $("#md-fuzzysearch .results")
-            .append("<span class='plugin_mydashboard_menuDashboardListItem' data-widgetid='"+el.item.widgetid+"'><i class='"+el.item.icon+"'></i> "+finaltitle+"</span>");
+            .append("<li class='plugin_mydashboard_menuDashboardListItem list-group-item list-group-item-action d-flex align-items-center gap-2' role='button' tabindex='0' data-widgetid='"+el.item.widgetid+"'><i class='"+el.item.icon+" fa-fw'></i><span>"+finaltitle+"</span></li>");
       });
-       $('.plugin_mydashboard_menuDashboardListItem').click(function () {
-           var widgetId = $(this).attr('data-widgetid');
-           addNewWidget(widgetId);
-       });
 
       selectFirst();
    };

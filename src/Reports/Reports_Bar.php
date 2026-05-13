@@ -1208,19 +1208,23 @@ class Reports_Bar extends CommonDBTM
                 //                 $categories_criteria
                 //                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')";
 
+                $year = $params['opt']['year'] ?? $default["year"];
                 $criteria4 = [
                     'SELECT' => [
                         new QueryExpression("CONCAT('> 6 Mois') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
                         new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin"),
-                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end"),
+                        new QueryExpression("ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY) as period_end"),
                     ],
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         $is_deleted,
                         'status' => \Ticket::getNotSolvedStatusArray(),
-                        'glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH")],
+                        [
+                            ['glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH")]],
+                            ['glpi_tickets.date' => ['>=', $year . '-01-01 00:00:00']],
+                        ],
                     ],
                 ];
 
@@ -1277,7 +1281,6 @@ class Reports_Bar extends CommonDBTM
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
-                $widget->setWidgetHtmlContent($graph);
 
                 $params = [
                     "widgetId" => $widgetId,
@@ -3910,7 +3913,12 @@ class Reports_Bar extends CommonDBTM
         // open date
         $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'contains', $options["selected_id"], 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+        // Strip date criteria from base params — the bar's period defines its own date range
+        $base_criteria = array_values(array_filter(
+            $options['params']['criteria'] ?? [],
+            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
+        ));
+        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -3992,7 +4000,6 @@ class Reports_Bar extends CommonDBTM
     {
         global $CFG_GLPI;
 
-
         $begin = null;
         $end = null;
         if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
@@ -4016,7 +4023,12 @@ class Reports_Bar extends CommonDBTM
             $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $end, 'AND');
         }
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+        // Strip date criteria from base params — the bar's period defines its own date range
+        $base_criteria = array_values(array_filter(
+            $options['params']['criteria'] ?? [],
+            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
+        ));
+        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'

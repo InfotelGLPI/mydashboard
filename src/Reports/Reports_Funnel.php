@@ -408,7 +408,6 @@ class Reports_Funnel extends CommonGLPI
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
                 $graph = FunnelChart::launchFunnelGraph($graph_datas, $graph_criterias);
-                $widget->setWidgetHtmlContent($graph);
 
                 $params = [
                     "widgetId" => $widgetId,

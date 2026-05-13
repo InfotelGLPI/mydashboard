@@ -2308,7 +2308,12 @@ class Reports_Line extends CommonGLPI
             }
         }
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+        // Strip date criteria from base params — the clicked period defines its own date range
+        $base_criteria = array_values(array_filter(
+            $options['params']['criteria'] ?? [],
+            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
+        ));
+        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");
@@ -2355,7 +2360,12 @@ class Reports_Line extends CommonGLPI
                 $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
             }
         }
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+        // Strip date criteria from base params — the clicked period defines its own date range
+        $base_criteria = array_values(array_filter(
+            $options['params']['criteria'] ?? [],
+            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
+        ));
+        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
 
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
@@ -2480,7 +2490,12 @@ class Reports_Line extends CommonGLPI
         $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $start, 'AND');
         $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $end, 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
+        // Strip date criteria from base params — the clicked week defines its own date range
+        $base_criteria = array_values(array_filter(
+            $options['params']['criteria'] ?? [],
+            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
+        ));
+        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
 
         return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
             . Toolbox::append_params($options, "&");

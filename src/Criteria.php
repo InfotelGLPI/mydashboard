@@ -121,6 +121,7 @@ class Criteria
         $criterias_values = [];
 
         $criterias_list = self::$criterias_list;
+
         foreach ($criterias_list as $criteria) {
             if (in_array($criteria, $params['criterias'])) {
                 $criterias_values[$criteria] = $opt[$criteria] ?? $default[$criteria];
@@ -164,6 +165,10 @@ class Criteria
         }
 
         $values['params'][Entity::$criteria_name] = $criterias_values[Entity::$criteria_name];
+
+        $values['params']['is_recursive_entities'] = $criterias_values['is_recursive_entities'];
+        $values['params']['is_recursive_technicians'] = $criterias_values['is_recursive_technicians'];
+
         $options = Entity::getSearchCriteria($values);
 
         return $options;
@@ -493,7 +498,7 @@ class Criteria
                 $default[$criteria] = $critClass::getDefaultValue();
             }
         }
-        $default['is_recursive_entities'] = false;
+        $default['is_recursive_entities'] = true;
         $default['is_recursive_technicians'] = false;
         $default['is_recursive_requesters'] = false;
         $default['is_recursive_locations'] = false;
