@@ -157,8 +157,8 @@ class Criteria
             $values['params'][RequesterGroup::$criteria_name] = $criterias_values[RequesterGroup::$criteria_name];
             $options = RequesterGroup::getSearchCriteria($values);
         }
-        if (isset($criterias_values[RequesterGroup::$criteria_name])
-            && is_array($criterias_values[RequesterGroup::$criteria_name])
+        if (isset($criterias_values[TechnicianGroup::$criteria_name])
+            && is_array($criterias_values[TechnicianGroup::$criteria_name])
             && count($criterias_values[TechnicianGroup::$criteria_name]) > 0) {
             $values['params'][TechnicianGroup::$criteria_name] = $criterias_values[TechnicianGroup::$criteria_name];
             $options = TechnicianGroup::getSearchCriteria($values);

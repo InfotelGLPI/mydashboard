@@ -1020,6 +1020,10 @@ class Reports_Bar extends CommonDBTM
                     $criterias = array_merge($criterias, $specific_criterias);
                 }
 
+                // Le rapport d'âge définit ses propres tranches de dates — le filtre Year
+                // entrerait en conflit avec les buckets (ex. "> 6 Mois" + filtre Jan 2026 → 0)
+                $criterias = array_values(array_filter($criterias, fn($c) => $c !== Year::$criteria_name));
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
@@ -1208,23 +1212,19 @@ class Reports_Bar extends CommonDBTM
                 //                 $categories_criteria
                 //                AND `glpi_tickets`.`status` NOT IN ('" . \Ticket::CLOSED . "', '" . \Ticket::SOLVED . "')";
 
-                $year = $params['opt']['year'] ?? $default["year"];
                 $criteria4 = [
                     'SELECT' => [
                         new QueryExpression("CONCAT('> 6 Mois') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
                         new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin"),
-                        new QueryExpression("ADDDATE('$year-01-01 00:00:00' , INTERVAL 1 DAY) as period_end"),
+                        new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end"),
                     ],
                     'FROM' => 'glpi_tickets',
                     'WHERE' => [
                         $is_deleted,
                         'status' => \Ticket::getNotSolvedStatusArray(),
-                        [
-                            ['glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH")]],
-                            ['glpi_tickets.date' => ['>=', $year . '-01-01 00:00:00']],
-                        ],
+                        'glpi_tickets.date' => ['<=', new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH")],
                     ],
                 ];
 
