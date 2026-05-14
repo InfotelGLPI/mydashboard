@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-13 16:55+0000\n"
+"POT-Creation-Date: 2026-05-14 08:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/Menu.php:1161
+#: src/Menu.php:1172
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: src/Menu.php:1183
+#: src/Menu.php:1194
 msgid "1 row selected"
 msgstr ""
 
@@ -50,11 +50,11 @@ msgstr ""
 msgid "50 rows"
 msgstr ""
 
-#: src/Menu.php:1176
+#: src/Menu.php:1187
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: src/Menu.php:1177
+#: src/Menu.php:1188
 msgid ": activate to sort column descending"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
-#: src/Menu.php:457 src/Menu.php:722
+#: src/Menu.php:457 src/Menu.php:733
 msgid "Add widgets"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgid "Bar charts"
 msgstr ""
 
 #: src/Menu.php:547 src/Menu.php:549 src/Menu.php:607 src/Menu.php:609
-#: src/Menu.php:750 src/Menu.php:829
+#: src/Menu.php:761 src/Menu.php:840
 msgid "Block drag / resize widgets"
 msgstr ""
 
@@ -220,15 +220,15 @@ msgstr ""
 msgid "Class"
 msgstr ""
 
-#: src/Menu.php:531 src/Menu.php:533 src/Menu.php:741
+#: src/Menu.php:531 src/Menu.php:533 src/Menu.php:752
 msgid "Clear grid"
 msgstr ""
 
-#: src/Menu.php:1187 src/Menu.php:1200
+#: src/Menu.php:1198 src/Menu.php:1211
 msgid "Close"
 msgstr ""
 
-#: src/Menu.php:566 src/Menu.php:568 src/Menu.php:803
+#: src/Menu.php:566 src/Menu.php:568 src/Menu.php:814
 msgid "Close edit mode"
 msgstr ""
 
@@ -237,7 +237,7 @@ msgstr ""
 msgid "Closed tickets"
 msgstr ""
 
-#: src/Menu.php:1192
+#: src/Menu.php:1203
 msgid "Column visibility"
 msgstr ""
 
@@ -278,14 +278,14 @@ msgstr ""
 msgid "Custom Widgets"
 msgstr ""
 
-#: src/Menu.php:634 src/Menu.php:636 src/Menu.php:844
+#: src/Menu.php:634 src/Menu.php:636 src/Menu.php:855
 msgid "Custom and save default grid"
 msgstr ""
 
 #: src/Html.php:54 src/Module.php:64 src/Dashboard.php:71 src/Datatable.php:56
 #: src/Reports/Planning.php:49 src/Reports/Change.php:55
 #: src/Reports/ProjectTask.php:53 src/Reports/Problem.php:55
-#: src/Reports/Project.php:50 src/Menu.php:1201 src/Chart.php:58
+#: src/Reports/Project.php:50 src/Menu.php:1212 src/Chart.php:58
 msgid "Dashboard"
 msgstr ""
 
@@ -297,15 +297,15 @@ msgstr ""
 msgid "Dashboard access"
 msgstr ""
 
-#: src/Menu.php:1203
+#: src/Menu.php:1214
 msgid "Dashboard not saved"
 msgstr ""
 
-#: src/Menu.php:1202
+#: src/Menu.php:1213
 msgid "Dashboard saved"
 msgstr ""
 
-#: src/Menu.php:1204
+#: src/Menu.php:1215
 msgid "Data received for"
 msgstr ""
 
@@ -321,7 +321,7 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: src/Menu.php:1373
+#: src/Menu.php:1384
 msgid "Delete widget"
 msgstr ""
 
@@ -411,7 +411,7 @@ msgstr ""
 msgid "Display your equipments"
 msgstr ""
 
-#: src/Menu.php:462 src/Menu.php:710
+#: src/Menu.php:462 src/Menu.php:721
 msgid "Edit mode"
 msgstr ""
 
@@ -451,7 +451,7 @@ msgstr ""
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: src/Menu.php:848
+#: src/Menu.php:859
 msgid "Export to PDF"
 msgstr ""
 
@@ -480,7 +480,7 @@ msgid "Full"
 msgstr ""
 
 #: src/Menu.php:559 src/Menu.php:561 src/Menu.php:646 src/Menu.php:648
-#: src/Menu.php:852
+#: src/Menu.php:863
 msgid "Fullscreen"
 msgstr ""
 
@@ -496,15 +496,15 @@ msgstr ""
 msgid "GLPI is OK"
 msgstr ""
 
-#: src/Menu.php:1755
+#: src/Menu.php:1767
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:464 src/Menu.php:712
+#: src/Menu.php:464 src/Menu.php:723
 msgid "Global"
 msgstr ""
 
-#: src/Menu.php:947
+#: src/Menu.php:958
 msgid "Global filter"
 msgstr ""
 
@@ -631,11 +631,11 @@ msgstr ""
 msgid "Linked with a ticket category"
 msgstr ""
 
-#: src/Menu.php:485 src/Menu.php:759 src/Menu.php:760
+#: src/Menu.php:485 src/Menu.php:770 src/Menu.php:771
 msgid "Load a predefined grid"
 msgstr ""
 
-#: src/Menu.php:507 src/Menu.php:509 src/Menu.php:727
+#: src/Menu.php:507 src/Menu.php:509 src/Menu.php:738
 msgid "Load widgets"
 msgstr ""
 
@@ -643,11 +643,11 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: src/Menu.php:1188
+#: src/Menu.php:1199
 msgid "Maximize"
 msgstr ""
 
-#: src/Menu.php:1189
+#: src/Menu.php:1200
 msgid "Minimize"
 msgstr ""
 
@@ -666,8 +666,8 @@ msgstr ""
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: src/Config.php:64 src/Preference.php:83 src/Menu.php:109 src/Menu.php:821
-#: src/Menu.php:1756 setup.php:199
+#: src/Config.php:64 src/Preference.php:83 src/Menu.php:109 src/Menu.php:832
+#: src/Menu.php:1768 setup.php:199
 msgid "My Dashboard"
 msgstr ""
 
@@ -731,11 +731,11 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Widget.php:785 src/Menu.php:1374 src/Chart.php:129
+#: src/Widget.php:785 src/Menu.php:1385 src/Chart.php:129
 msgid "No data available"
 msgstr ""
 
-#: src/Menu.php:1158
+#: src/Menu.php:1169
 msgid "No data available in table"
 msgstr ""
 
@@ -743,7 +743,7 @@ msgstr ""
 msgid "No data is given to the widget"
 msgstr ""
 
-#: src/Menu.php:1205
+#: src/Menu.php:1216
 msgid "No data received for"
 msgstr ""
 
@@ -759,7 +759,7 @@ msgstr ""
 msgid "No informations founded"
 msgstr ""
 
-#: src/Menu.php:1168
+#: src/Menu.php:1179
 msgid "No matching records found"
 msgstr ""
 
@@ -775,7 +775,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr ""
 
-#: src/Menu.php:1363
+#: src/Menu.php:1374
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
@@ -933,7 +933,7 @@ msgstr ""
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Menu.php:1757
+#: src/Menu.php:1769
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -962,7 +962,7 @@ msgid "Period"
 msgstr ""
 
 #: src/Menu.php:539 src/Menu.php:541 src/Menu.php:625 src/Menu.php:627
-#: src/Menu.php:746 src/Menu.php:839
+#: src/Menu.php:757 src/Menu.php:850
 msgid "Permit drag / resize widgets"
 msgstr ""
 
@@ -1034,7 +1034,7 @@ msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
 
-#: src/Menu.php:1190
+#: src/Menu.php:1201
 msgid "Refresh"
 msgstr ""
 
@@ -1042,7 +1042,7 @@ msgstr ""
 msgid "Refresh every "
 msgstr ""
 
-#: src/Menu.php:1375
+#: src/Menu.php:1386
 msgid "Refresh widget"
 msgstr ""
 
@@ -1133,11 +1133,11 @@ msgid "Save default grid"
 msgstr ""
 
 #: src/Menu.php:515 src/Menu.php:517 src/Menu.php:600 src/Menu.php:602
-#: src/Menu.php:732 src/Menu.php:736 src/Menu.php:827
+#: src/Menu.php:743 src/Menu.php:747 src/Menu.php:838
 msgid "Save grid"
 msgstr ""
 
-#: src/Menu.php:1351
+#: src/Menu.php:1362
 msgid "Save grid to see widget"
 msgstr ""
 
@@ -1184,20 +1184,20 @@ msgstr ""
 msgid "Setup stock widget"
 msgstr ""
 
-#: src/Menu.php:1194
+#: src/Menu.php:1205
 #, php-format
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Widget.php:619 src/Menu.php:1195
+#: src/Widget.php:619 src/Menu.php:1206
 msgid "Show all"
 msgstr ""
 
-#: src/Menu.php:1160
+#: src/Menu.php:1171
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: src/Menu.php:1159
+#: src/Menu.php:1170
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
@@ -1231,7 +1231,7 @@ msgid_plural "Stock widgets"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:580 src/Menu.php:1350
+#: src/Menu.php:580 src/Menu.php:1361
 msgid "Success"
 msgstr ""
 
@@ -1259,7 +1259,7 @@ msgstr ""
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Menu.php:616 src/Menu.php:618 src/Menu.php:834
+#: src/Menu.php:616 src/Menu.php:618 src/Menu.php:845
 msgid "Switch to edit mode"
 msgstr ""
 
@@ -1414,7 +1414,7 @@ msgstr ""
 msgid "Trimester 4"
 msgstr ""
 
-#: src/Menu.php:1206
+#: src/Menu.php:1217
 msgid "Updating all widgets"
 msgstr ""
 
@@ -1426,7 +1426,7 @@ msgstr ""
 msgid "User ticket alerts"
 msgstr ""
 
-#: src/Menu.php:1362
+#: src/Menu.php:1373
 msgid "Warning"
 msgstr ""
 
@@ -1439,7 +1439,7 @@ msgstr ""
 msgid "Widget"
 msgstr ""
 
-#: src/Menu.php:1207
+#: src/Menu.php:1218
 msgid "Widget added on Dashboard"
 msgstr ""
 
@@ -1450,7 +1450,7 @@ msgstr ""
 #: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:66
 #: src/Criterias/Year.php:81 src/Criterias/DisplayData.php:68
 #: src/Criterias/DisplayData.php:187 src/Criterias/FilterDate.php:65
-#: src/Criterias/FilterDate.php:134 src/Menu.php:967
+#: src/Criterias/FilterDate.php:134 src/Menu.php:978
 msgid "Year"
 msgstr ""
 
