@@ -44,7 +44,11 @@ $(function() {
             $.getJSON(root_my_doc+'/ajax/fuzzysearch.php', {
                 'action': 'getList',
             }, function(data) {
-                list = data;
+                // Exclure les widgets déjà présents dans la grille
+                var used = (typeof window.md_used_widgets !== 'undefined') ? window.md_used_widgets : [];
+                list = data.filter(function(item) {
+                    return !used.includes(item.widgetid);
+                });
 
                 // start fuzzy after some time
                 setTimeout(function() {
@@ -103,6 +107,12 @@ $(function() {
       //clean old results
       $("#md-fuzzysearch .results").empty();
 
+      // Exclure les widgets ajoutés depuis le chargement initial de la liste
+      var used = (typeof window.md_used_widgets !== 'undefined') ? window.md_used_widgets : [];
+      var filteredList = list.filter(function(item) {
+          return !used.includes(item.widgetid);
+      });
+
       // launch fuzzy search on this list
       //var results = fuzzy.filter(input_text, list, fuzzy_options);
        const options = {
@@ -129,7 +139,7 @@ $(function() {
            ]
        };
 
-      const myfuse = new Fuse(list, options);
+      const myfuse = new Fuse(filteredList, options);
 
       var results = myfuse.search(removeDiacritics(input_text));
        var target = '_blank';

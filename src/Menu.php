@@ -661,11 +661,22 @@ class Menu extends CommonGLPI
         $close_label = __s('Close');
         $title_label = __('Availables widgets', 'mydashboard');
 
+        $usedJson = json_encode(array_values($used));
         $wl  = \Html::scriptBlock("
+            if (typeof window.md_used_widgets === 'undefined') {
+                window.md_used_widgets = $usedJson;
+            }
             $(document).ready(function () {
                 $(document).on('click', '.plugin_mydashboard_menuDashboardListItem', function () {
-                    const widgetId = $(this).attr('data-widgetid');
+                    const \$btn    = $(this);
+                    const widgetId = \$btn.attr('data-widgetid');
                     if (addNewWidget(widgetId) === true) {
+                        // Masquer ce bouton dans l'accordéon et dans la recherche floue
+                        $('[data-widgetid=\"' + widgetId + '\"]').hide();
+                        // Mémoriser ce widget comme déjà placé pour la recherche floue
+                        if (!window.md_used_widgets.includes(widgetId)) {
+                            window.md_used_widgets.push(widgetId);
+                        }
                         const ocEl = document.getElementById('md-widget-offcanvas');
                         if (ocEl) {
                             bootstrap.Offcanvas.getOrCreateInstance(ocEl).hide();
@@ -1516,6 +1527,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                                                 }
                                              );
                         refreshWidget(value);
+                        return true;
                      }
             }
             // 3.1 full method saving the grid options + children (which is recursive for nested grids)
