@@ -1,0 +1,1497 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# INOUE Daisuke, 2026
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-14 18:09+0000\n"
+"PO-Revision-Date: 2020-11-02 16:12+0000\n"
+"Last-Translator: INOUE Daisuke, 2026\n"
+"Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/teams/65490/ja_JP/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/Menu.php:1172
+msgid "(filtered from _MAX_ total entries)"
+msgstr "( 全 _MAX_ 件からフィルター )"
+
+#: src/Menu.php:1194
+msgid "1 row selected"
+msgstr "1 行選択"
+
+#: src/Widget.php:616
+msgid "10 rows"
+msgstr "10 行"
+
+#: src/Reports/Reports_Funnel.php:343
+msgid "2-4 years"
+msgstr "2 ～ 4 年"
+
+#: src/Widget.php:617
+msgid "25 rows"
+msgstr "25 行"
+
+#: src/Reports/Reports_Funnel.php:342
+msgid "4-6 years"
+msgstr "4 ～ 6 年"
+
+#: src/Widget.php:615
+msgid "5 rows"
+msgstr "5 行"
+
+#: src/Widget.php:618
+msgid "50 rows"
+msgstr "50 行"
+
+#: src/Menu.php:1187
+msgid ": activate to sort column ascending"
+msgstr " : 列を昇順で並び替え"
+
+#: src/Menu.php:1188
+msgid ": activate to sort column descending"
+msgstr " : 列を降順で並び替え"
+
+#: src/Reports/Reports_Funnel.php:344
+msgid "< 2 years"
+msgstr "2 年未満"
+
+#: src/Reports/Reports_Funnel.php:341
+msgid "> 6 years"
+msgstr "6 年経過"
+
+#: src/Alert.php:3481
+msgid "A network alert can impact you and will avoid creating a ticket"
+msgstr "ネットワーク警告は影響を与える可能性があり、チケットの作成を回避できます"
+
+#: src/Menu.php:457 src/Menu.php:733
+msgid "Add widgets"
+msgstr "ウィジェットを追加"
+
+#: src/Reports/Reports_Bar.php:156
+msgid "Age of tickets"
+msgstr "チケットの経過時間"
+
+#: src/Reports/Reports_Funnel.php:74
+msgid "Age pyramid"
+msgstr "期間ピラミッド"
+
+#: src/Alert.php:3258 src/Alert.php:3261 src/Alert.php:3398
+#: src/ItilAlert.php:125
+msgid "Alert"
+msgid_plural "Alerts"
+msgstr[0] "警告"
+
+#: src/Alert.php:89
+msgid "Alert Dashboard"
+msgid_plural "Alerts Dashboard"
+msgstr[0] "警告ダッシュボード"
+
+#: src/Alert.php:3533
+msgid ""
+"Alert is not properly configured or is not reachable (or exceeded the "
+"timeout)"
+msgstr "アラートを適切に設定していないか、到達不能（またはタイムアウト）です。"
+
+#: src/Alert.php:3280 src/Alert.php:3421 src/ItilAlert.php:145
+msgid "Alert level"
+msgstr "警告レベル"
+
+#: src/Dashboard.php:150
+msgid "All bar charts"
+msgstr "すべての棒グラフ"
+
+#: src/Alert.php:3298
+msgid "All categories"
+msgstr "すべてのカテゴリー"
+
+#: src/Dashboard.php:153
+msgid "All indicators"
+msgstr "すべてのインジケーター"
+
+#: src/Dashboard.php:151
+msgid "All line charts"
+msgstr "すべての折れ線グラフ"
+
+#: src/Dashboard.php:149
+msgid "All pie charts"
+msgstr "すべての円グラフ"
+
+#: src/Dashboard.php:152
+msgid "All table charts"
+msgstr "すべての表"
+
+#: src/Reports/Reports_Table.php:99
+msgid "All unpublished articles"
+msgstr "すべての未公開記事"
+
+#: src/Reports/Change.php:81 src/Reports/Change.php:416
+msgid "Applied changes"
+msgstr "実施済みの変更"
+
+#: src/ProfileAuthorizedWidget.php:102
+msgid "Authorize/Unauthorize all"
+msgstr "すべてを認証・非認証"
+
+#: src/ProfileAuthorizedWidget.php:90
+msgid "Authorized widgets"
+msgstr "認証済みウィジェット"
+
+#: src/Alert.php:184
+msgid "Automatic actions in error"
+msgstr "エラー時の自動実行処理"
+
+#: templates/preferences.html.twig:30
+msgid "Automatic refreshing of the widgets that can be refreshed"
+msgstr "ウィジェットの自動再読み込み"
+
+#: src/Menu.php:662
+msgid "Availables widgets"
+msgstr "利用できるウィジェット"
+
+#: src/Reports/Reports_Bar.php:1801
+msgid "Average Satisfaction"
+msgstr "平均満足度"
+
+#: src/Reports/Reports_Bar.php:143
+msgid "Average real duration of treatment of the ticket"
+msgstr "チケットの平均実対応期間"
+
+#: src/Reports/Reports_Line.php:118
+msgid "Backlog tickets by week"
+msgstr "週ごとの未処理チケット"
+
+#: src/Widget.php:248
+msgid "Bar charts"
+msgstr "棒グラフ"
+
+#: src/Menu.php:547 src/Menu.php:549 src/Menu.php:607 src/Menu.php:609
+#: src/Menu.php:761 src/Menu.php:840
+msgid "Block drag / resize widgets"
+msgstr "ウィジェットのドラッグ・サイズ変更を不許可"
+
+#: src/Config.php:359
+msgid "Can take many time if you have many tickets"
+msgstr "多数のチケットがあると多くの時間を費やします"
+
+#: src/StockWidget.php:62
+msgid "Cannot create alert without a type"
+msgstr "警告を作成する際は型を指定してください"
+
+#: src/Criterias/ITILCategory.php:67 src/Criterias/ITILCategory.php:79
+#: src/Criterias/Other.php:279 src/Criterias/Other.php:545
+msgid "Category"
+msgstr "カテゴリー"
+
+#: src/Reports/Change.php:86 src/Reports/Change.php:660
+#: src/Reports/Change.php:666
+msgid "Change followup"
+msgstr "回答の変更"
+
+#: src/Reports/Change.php:76 src/Reports/Change.php:99
+#: src/Reports/Change.php:159 src/Reports/Change.php:302
+#: src/Reports/Change.php:373
+msgid "Changes on pending status"
+msgstr "保留状態の変更"
+
+#: src/Reports/Change.php:71 src/Reports/Change.php:94
+#: src/Reports/Change.php:161 src/Reports/Change.php:325
+#: src/Reports/Change.php:399
+msgid "Changes to be processed"
+msgstr "要対応の変更"
+
+#: src/Alert.php:181 src/Alert.php:487
+msgid "Check if GLPI have no problem"
+msgstr "GLPI に問題がないかチェック"
+
+#: src/Criterias/MultipleLocation.php:115
+msgid "Child locations"
+msgstr "下位の場所"
+
+#: src/Widget.php:150 src/Widget.php:188
+msgid "Class"
+msgstr "クラス"
+
+#: src/Menu.php:531 src/Menu.php:533 src/Menu.php:752
+msgid "Clear grid"
+msgstr "グリッドを初期化"
+
+#: src/Menu.php:1198 src/Menu.php:1211
+msgid "Close"
+msgstr "閉じる"
+
+#: src/Menu.php:566 src/Menu.php:568 src/Menu.php:814
+msgid "Close edit mode"
+msgstr "編集モードを終了"
+
+#: src/Reports/Reports_Pie.php:1079 src/Reports/Reports_Pie.php:1082
+#: src/Reports/Reports_Line.php:612 src/Reports/Reports_Line.php:1256
+msgid "Closed tickets"
+msgstr "終了チケット"
+
+#: src/Menu.php:1203
+msgid "Column visibility"
+msgstr "列の表示状態"
+
+#: src/Reports/Reports_Bar.php:2831
+msgid "Computers number"
+msgstr "コンピューター数"
+
+#: src/Profile.php:187
+msgid "Configuration Access"
+msgstr "設定へのアクセス"
+
+#: src/Reports/Contract.php:157
+msgid "Contract followup"
+msgstr "契約のフォロー"
+
+#: src/Reports/Contract.php:67
+msgid "Contracts status"
+msgstr "契約状態"
+
+#: src/Alert.php:3335 src/Alert.php:3340 src/ItilAlert.php:62
+#: src/ItilAlert.php:65
+msgid "Create a new alert"
+msgstr "新しい警告の作成"
+
+#: src/Alert.php:3555
+msgid "Curl PHP package not installed"
+msgstr "Curl PHP パッケージをインストールしていません"
+
+#: src/Preference.php:238
+msgid "Current year"
+msgstr "今年"
+
+#: src/Profile.php:173
+msgid "Custom"
+msgstr "カスタム"
+
+#: src/Customswidget.php:50
+msgid "Custom Widgets"
+msgstr "カスタム ウィジェット"
+
+#: src/Menu.php:634 src/Menu.php:636 src/Menu.php:855
+msgid "Custom and save default grid"
+msgstr "デフォルトグリッドをカスタマイズして保存してください"
+
+#: src/Html.php:54 src/Module.php:64 src/Dashboard.php:71 src/Datatable.php:56
+#: src/Reports/Planning.php:49 src/Reports/Change.php:55
+#: src/Reports/ProjectTask.php:53 src/Reports/Problem.php:55
+#: src/Reports/Project.php:50 src/Menu.php:1212 src/Chart.php:58
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#: src/Profile.php:175
+msgid "Dashboard Access"
+msgstr "ダッシュボードへのアクセス"
+
+#: src/Servicecatalog.php:84 src/Servicecatalog.php:91
+msgid "Dashboard access"
+msgstr "ダッシュボード アクセス"
+
+#: src/Menu.php:1214
+msgid "Dashboard not saved"
+msgstr "ダッシュボードは未保存"
+
+#: src/Menu.php:1213
+msgid "Dashboard saved"
+msgstr "ダッシュボードを保存しました"
+
+#: src/Menu.php:1215
+msgid "Data received for"
+msgstr "受信データ : "
+
+#: src/Criterias/Other.php:451
+msgid "Day"
+msgstr "日"
+
+#: src/Groupprofile.php:65
+msgid "Default dashboard group"
+msgstr "標準ダッシュボードグループ"
+
+#: src/Groupprofile.php:77
+msgid "Default groups"
+msgstr "標準グループ"
+
+#: src/Menu.php:1384
+msgid "Delete widget"
+msgstr "ウィジェットの削除"
+
+#: src/Criterias/DisplayData.php:104
+msgid "Display"
+msgstr "表示"
+
+#: src/Reports/Reports_Map.php:68
+msgid "Display Tickets by location (Latitude / Longitude)"
+msgstr "場所 ( 緯度・経度 ) ごとのチケット表示"
+
+#: src/Alert.php:217 src/Alert.php:2333
+msgid "Display alerts for SLA of Incidents tickets"
+msgstr "SLA インシデントのチケットについて警告を表示"
+
+#: src/Alert.php:227 src/Alert.php:2336
+msgid "Display alerts for SLA of Requests tickets"
+msgstr "SLA 要求のチケットについて警告を表示"
+
+#: src/Alert.php:212 src/Alert.php:1676
+msgid "Display alerts for incidents and problems"
+msgstr "インシデントと問題の警告を表示"
+
+#: src/Alert.php:199
+msgid "Display alerts for inventory stocks"
+msgstr "情報資産の在庫の警告を表示"
+
+#: src/Alert.php:232 src/Alert.php:1679
+msgid "Display alerts for requests"
+msgstr "要求の警告を表示"
+
+#: src/Alert.php:186
+msgid "Display automatic actions in error"
+msgstr "エラー時の自動実行処理を表示"
+
+#: src/Reports/Reports_Table.php:93
+msgid "Display if you have duplicates into inventory"
+msgstr "インベントリーに重複が見つかったら表示"
+
+#: src/Reports/Reports_Bar.php:135
+msgid "Display of Top ten ticket categories by type of ticket"
+msgstr "チケット型別でのチケットカテゴリー上位 10 の表示"
+
+#: src/Reports/Reports_Bar.php:146
+msgid ""
+"Display of average real duration of treatment of tickets (actiontime of "
+"tasks)"
+msgstr "チケットの実対応時間 ( タスクの稼働時間 ) の平均値の表示"
+
+#: src/Alert.php:191
+msgid "Display of mails which are not imported"
+msgstr "インポートしていないメールを表示"
+
+#: src/Reports/Reports_Bar.php:153
+msgid "Display of number of tickets by technicians"
+msgstr "技術者別のチケット数の表示"
+
+#: src/Reports/Reports_Bar.php:125
+msgid "Display of opened tickets by month"
+msgstr "月別未処理チケットの表示"
+
+#: src/Reports/Reports_Pie.php:173
+msgid "Display percent of request sources for closed tickets"
+msgstr "終了チケットの要求元の割合を表示"
+
+#: src/Reports/Reports_Pie.php:153
+msgid "Display percent of solution types for tickets"
+msgstr "チケットの解決型の割合を表示"
+
+#: src/Alert.php:222
+msgid "Display tickets where last modification is a user action"
+msgstr "最終更新がユーザー操作であるチケットを表示"
+
+#: src/Reports/Reports_Pie.php:133
+msgid "Display tickets where time to own is respected (percent)"
+msgstr "チケットの担当割り当て目標時間 ( % ) を表示"
+
+#: src/Reports/Reports_Pie.php:128
+msgid "Display tickets where time to resolve is respected (percent)"
+msgstr "チケットの解決目標期間 ( % ) を表示"
+
+#: src/Reports/Reports_Table.php:101
+msgid "Display unpublished articles of Knowbase"
+msgstr "未公開ナレッジベースの表示"
+
+#: src/Alert.php:204
+msgid "Display your equipments"
+msgstr "あなたの機器を表示"
+
+#: src/Menu.php:462 src/Menu.php:721
+msgid "Edit mode"
+msgstr "編集モード"
+
+#: src/Config.php:279
+msgid "Enable the possibility to display Dashboard in full screen"
+msgstr "ダッシュボードを全画面で表示する権限を有効に"
+
+#: ajax/dropdownUpdateDisplaydata.php:76 src/Criterias/DisplayData.php:148
+msgid "End month"
+msgstr "終了月"
+
+#: ajax/dropdownUpdateDisplaydata.php:90 src/Criterias/DisplayData.php:162
+msgid "End year"
+msgstr "終了年"
+
+#: src/Menu.php:588
+msgid "Error"
+msgstr "エラー"
+
+#: src/Reports/Reports_Bar.php:201
+msgid "Evolution of TTO respect"
+msgstr "対応開始時間の遵守率の推移"
+
+#: src/Reports/Reports_Bar.php:206
+msgid "Evolution of TTR respect"
+msgstr "解決時間の遵守率の推移"
+
+#: src/Reports/Reports_Bar.php:188
+msgid "Evolution of solution types by year"
+msgstr "年別の解決型の推移"
+
+#: src/Reports/Reports_Bar.php:196
+msgid "Evolution of ticket satisfaction by year"
+msgstr "年別チケット満足度の推移"
+
+#: src/Reports/Reports_Bar.php:183
+msgid "Evolution of tickets request sources types by year"
+msgstr "年別のチケット要求ルートの推移"
+
+#: src/Menu.php:859
+msgid "Export to PDF"
+msgstr "PDF 出力"
+
+#: src/CheckSchema.php:150
+msgid "Failed to check the sanity of the tables!"
+msgstr "テーブルの整合性チェックで失敗！"
+
+#: src/Criterias/FilterDate.php:96
+msgid "Filter date"
+msgstr "日付フィルター"
+
+#: src/Widget.php:113
+msgid "Filters"
+msgstr "フィルター"
+
+#: src/Widgetlist.php:534
+msgid "Find a widget"
+msgstr "ウィジェット検索"
+
+#: src/PreferenceUserBlacklist.php:64
+msgid "From which plugins you want to display the widgets?"
+msgstr "どのプラグインのウィジェットを表示しますか？"
+
+#: src/Profile.php:173
+msgid "Full"
+msgstr "すべて"
+
+#: src/Menu.php:559 src/Menu.php:561 src/Menu.php:646 src/Menu.php:648
+#: src/Menu.php:863
+msgid "Fullscreen"
+msgstr "全画面"
+
+#: src/Alert.php:179 src/Alert.php:486
+msgid "GLPI Status"
+msgstr "GLPI 状態"
+
+#: src/Dashboard.php:143 src/Menu.php:125
+msgid "GLPI admin grid"
+msgstr "GLPI 管理グリッド"
+
+#: src/Alert.php:3527
+msgid "GLPI is OK"
+msgstr "GLPI は OK"
+
+#: src/Menu.php:1767
+msgid "Generating PDF..."
+msgstr "PDF を生成しています..."
+
+#: src/Menu.php:464 src/Menu.php:723
+msgid "Global"
+msgstr "全体"
+
+#: src/Menu.php:958
+msgid "Global filter"
+msgstr "全体フィルター"
+
+#: src/Alert.php:240 src/Alert.php:4251 src/Alert.php:4278
+msgid "Global indicators"
+msgstr "全体インジケーター"
+
+#: src/Alert.php:245 src/Alert.php:4252
+msgid "Global indicators by week"
+msgstr "週ごとの全体インジケーター"
+
+#: src/Reports/Reports_Pie.php:161
+msgid "Global satisfaction level"
+msgstr "全体満足度レベル"
+
+#: ajax/clearGrid.php:41
+msgid "Grid cleared"
+msgstr "初期化しました"
+
+#: src/Dashboard.php:145
+msgid "Helpdesk supervisor grid"
+msgstr "ユーザーサポート助言者グリッド"
+
+#: src/Dashboard.php:148
+msgid "Helpdesk technician grid"
+msgstr "ユーザーサポート技術者グリッド"
+
+#: src/Alert.php:534 src/Reports/Ticket.php:504 src/Reports/Ticket.php:943
+msgid "ID and priority"
+msgstr "ID と優先度"
+
+#: src/Config.php:296
+msgid "Impact colors for alerts"
+msgstr "アラートの警告色"
+
+#: src/Dashboard.php:146
+msgid "Incident supervisor grid"
+msgstr "インシデント助言者グリッド"
+
+#: src/Customswidget.php:159 src/Customswidget.php:160
+msgid "Incidents"
+msgstr "インシデント"
+
+#: src/Alert.php:210 src/Alert.php:1675
+msgid "Incidents alerts"
+msgstr "インシデント警告"
+
+#: src/Alert.php:4048 src/Alert.php:4308
+msgid "Incidents in progress"
+msgstr "対応中のインシデント"
+
+#: src/Alert.php:2221
+msgid "Incidents where time to own is exceeded"
+msgstr "割当までの時間を超過したインシデント"
+
+#: src/Alert.php:2074
+msgid "Incidents where time to own will be exceeded"
+msgstr "割当までの時間を超過しそうなインシデント"
+
+#: src/Alert.php:2298
+msgid "Incidents where time to resolve is exceeded"
+msgstr "解決までの時間を超過したインシデント"
+
+#: src/Alert.php:2145
+msgid "Incidents where time to resolve will be exceeded"
+msgstr "解決までの時間を超過しそうなインシデント"
+
+#: src/Alert.php:1575 src/Alert.php:1589
+msgid "Incidents with very high or major priority"
+msgstr "重要度が「最高」または「重要」のインシデント"
+
+#: src/Widget.php:242
+msgid "Indicators"
+msgstr "インジケーター"
+
+#: src/Alert.php:174 src/Alert.php:3263 src/Alert.php:3403 src/Config.php:387
+#: src/Config.php:571 src/ItilAlert.php:130
+msgid "Information"
+msgid_plural "Informations"
+msgstr[0] "お知らせ"
+
+#: src/Reports/Reports_Table.php:108
+msgid "Internal annuary"
+msgstr "内部年度"
+
+#: src/Widget.php:137 src/Widget.php:179
+msgid "Internal name"
+msgstr "内部名"
+
+#: src/Dashboard.php:144
+msgid "Inventory admin grid"
+msgstr "情報資産管理グリッド"
+
+#: src/Alert.php:197
+msgid "Inventory stock alerts"
+msgstr "情報資産の在庫警告"
+
+#: src/Criterias/Other.php:252 src/Criterias/Other.php:486
+msgid "Last month"
+msgstr "先月"
+
+#: src/Reports/Reports_Bar.php:213
+msgid "Last synchronization of computers by month"
+msgstr "月別コンピューター最終同期"
+
+#: src/Criterias/Other.php:258
+msgid "Last year"
+msgstr "昨年"
+
+#: src/Config.php:318
+msgid "Level of categories to show"
+msgstr "表示するカテゴリーレベル"
+
+#: src/Widget.php:250
+msgid "Line charts"
+msgstr "折れ線グラフ"
+
+#: src/Alert.php:3365 src/ItilAlert.php:91
+msgid "Linked reminder"
+msgstr "リンク付通知"
+
+#: src/Alert.php:3291 src/Alert.php:3432 src/ItilAlert.php:153
+msgid "Linked with a ticket category"
+msgstr "チケットカテゴリーとのリンク"
+
+#: src/Menu.php:485 src/Menu.php:770 src/Menu.php:771
+msgid "Load a predefined grid"
+msgstr "定義済みのグリッド"
+
+#: src/Menu.php:507 src/Menu.php:509 src/Menu.php:738
+msgid "Load widgets"
+msgstr "ウィジェットを読み込み"
+
+#: src/Widget.php:252
+msgid "Map"
+msgstr "マップ"
+
+#: src/Menu.php:1199
+msgid "Maximize"
+msgstr "最大化"
+
+#: src/Menu.php:1200
+msgid "Minimize"
+msgstr "最小化"
+
+#: src/Reports/KnowbaseItem.php:169
+msgid "Modification date"
+msgstr "変更日時"
+
+#: ajax/dropdownMonth.php:41 src/Criterias/Month.php:51
+#: src/Criterias/Month.php:65 src/Criterias/Other.php:270
+#: src/Criterias/Other.php:453 src/Criterias/Other.php:487
+#: src/Criterias/Other.php:512
+msgid "Month"
+msgstr "月"
+
+#: src/Reports/Reports_Line.php:123
+msgid "Monthly tickets in progress"
+msgstr "月別対応中チケット数"
+
+#: src/Config.php:64 src/Preference.php:83 src/Menu.php:109 src/Menu.php:832
+#: src/Menu.php:1768 setup.php:199
+msgid "My Dashboard"
+msgstr "マイ ダッシュボード"
+
+#: templates/preferences.html.twig:62
+msgid "My favorite category for widgets"
+msgstr "ウィジェットのお気に入りカテゴリー"
+
+#: templates/preferences.html.twig:57
+msgid "My prefered entity for widget"
+msgstr "ウィジェットのお気に入りエンティティー"
+
+#: templates/preferences.html.twig:46
+msgid "My prefered groups for widget"
+msgstr "ウィジェットのお気に入りグループ"
+
+#: templates/preferences.html.twig:67
+msgid "My prefered type for widget"
+msgstr "ウィジェットのお気に入り型"
+
+#: templates/preferences.html.twig:72
+msgid "My prefered year for widget"
+msgstr "ウィジェットのお気に入り年"
+
+#: templates/preferences.html.twig:52
+msgid "My requester prefered groups for widget"
+msgstr "ウィジェットのお気に入り要求グループ"
+
+#: src/Menu.php:124
+msgid "My view"
+msgstr "マイ ビュー"
+
+#: src/Alert.php:164 src/Alert.php:3401 src/Config.php:385 src/Config.php:569
+#: src/ItilAlert.php:128
+msgid "Network alert"
+msgid_plural "Network alerts"
+msgstr[0] "ネットワーク アラート"
+
+#: src/Alert.php:644
+msgid "New document"
+msgstr "新しいドキュメント"
+
+#: src/Alert.php:1418 src/Alert.php:1432
+msgid "New incidents"
+msgstr "新しいインシデント"
+
+#: src/Alert.php:1423 src/Alert.php:1434
+msgid "New requests"
+msgstr "新しいリクエスト"
+
+#: src/Alert.php:3882 src/Alert.php:4290 src/Reports/Ticket.php:111
+#: src/Reports/Ticket.php:1608
+msgid "New tickets"
+msgstr "新しいチケット"
+
+#: src/Alert.php:1020
+msgid "No alerts are setup"
+msgstr "警告を設定していません"
+
+#: src/Datatable.php:234
+msgid "No column defined"
+msgstr "列の定義がありません"
+
+#: src/Widget.php:785 src/Menu.php:1385 src/Chart.php:129
+msgid "No data available"
+msgstr "データがありません"
+
+#: src/Menu.php:1169
+msgid "No data available in table"
+msgstr "テーブルにデータがありません"
+
+#: src/Chart.php:111
+msgid "No data is given to the widget"
+msgstr "ウィジェットのデータがありません"
+
+#: src/Menu.php:1216
+msgid "No data received for"
+msgstr "受信データなし : "
+
+#: src/Widget.php:1119
+msgid "No equipments founded"
+msgstr "機器は見つかりませんでした"
+
+#: src/Alert.php:3275 src/Alert.php:3416 src/ItilAlert.php:140
+msgid "No impact"
+msgstr "影響なし"
+
+#: src/Alert.php:2758 src/Widget.php:980
+msgid "No informations founded"
+msgstr "情報はありません"
+
+#: src/Menu.php:1179
+msgid "No matching records found"
+msgstr "一致する記録が見つかりません"
+
+#: src/Alert.php:2967 src/Alert.php:3226 src/Widget.php:843
+msgid "No problem detected"
+msgstr "問題ありません"
+
+#: src/Alert.php:2541 src/Widget.php:912
+msgid "No scheduled maintenance"
+msgstr "メンテナンス スケジュールなし"
+
+#: src/Widgetlist.php:430
+msgid "No widgets available"
+msgstr "有効なウィジェットはありません"
+
+#: src/Menu.php:1374
+msgid "No widgets founded, please add widgets"
+msgstr "ウィジェットが見つかりません。追加してください"
+
+#: src/Helper.php:353
+msgid "Not a valid SQL SELECT query"
+msgstr "有効な SQL SELECT クエリーではありません"
+
+#: src/Datatable.php:127 src/Chart.php:135
+msgid "Not an array"
+msgstr "配列ではない"
+
+#: src/Alert.php:189
+msgid "Not imported mails in collectors"
+msgstr "未インポートのコレクターメール"
+
+#: src/Reports/Reports_Pie.php:1115 src/Reports/Reports_Pie.php:1118
+#: src/Reports/Reports_Line.php:1257
+msgid "Not planned"
+msgstr "未計画"
+
+#: src/Reports/Reports_Bar.php:1255
+msgid "Not resolved tickets"
+msgstr "解決チケットなし"
+
+#: src/Reports/Reports_Pie.php:670 src/Reports/Reports_Pie.php:686
+#: src/Reports/Reports_Bar.php:2939
+msgid "Not respected TTO"
+msgstr "開始時間遅延"
+
+#: src/Reports/Reports_Pie.php:529 src/Reports/Reports_Pie.php:547
+#: src/Reports/Reports_Bar.php:3043
+msgid "Not respected TTR"
+msgstr "解決時間遅延"
+
+#: src/Reports/Reports_Bar.php:2739
+msgid "Not satisfy number"
+msgstr "不満数"
+
+#: src/Reports/Reports_Pie.php:1489 src/Reports/Reports_Pie.php:1503
+msgid "Not satisfy percent"
+msgstr "不満割合"
+
+#: src/Reports/Reports_Line.php:120
+msgid "Number of in progress (not new and pending) tickets by week"
+msgstr "週ごとの対応中（新規でも保留でもない）チケット数"
+
+#: src/Reports/Reports_Line.php:126
+msgid "Number of open tickets in the month still in progress for each month"
+msgstr "月ごとの対応中チケット数"
+
+#: src/Reports/Reports_Line.php:83 src/Reports/Reports_Line.php:606
+msgid "Number of opened and closed tickets by month"
+msgstr "月ごとの対応中・終了チケット数"
+
+#: src/Reports/Reports_Line.php:88 src/Reports/Reports_Line.php:883
+msgid "Number of opened and resolved / closed tickets by month"
+msgstr "月ごとの対応中および解決・終了チケット数"
+
+#: src/Reports/Reports_Pie.php:136
+msgid "Number of opened incidents by category"
+msgstr "カテゴリー別対応中インシデント数"
+
+#: src/Reports/Reports_Pie.php:141
+msgid "Number of opened requests by category"
+msgstr "カテゴリー別対応中要求数"
+
+#: src/Reports/Reports_Bar.php:171
+msgid "Number of opened ticket and average satisfaction per trimester"
+msgstr "四半期ごとの未処理チケット数と平均満足度"
+
+#: src/Reports/Reports_Table.php:83 src/Reports/Reports_Table.php:1018
+msgid "Number of opened tickets by group and by status"
+msgstr "進行中チケットのグループ別・状態別の数"
+
+#: src/Reports/Reports_Pie.php:116 src/Reports/Reports_Bar.php:161
+msgid "Number of opened tickets by priority"
+msgstr "優先度別未処理チケット数"
+
+#: src/Reports/Reports_Table.php:78
+msgid "Number of opened tickets by technician and by status"
+msgstr "状態別・技術者別の対応中チケット数"
+
+#: src/Reports/Reports_Line.php:1250
+msgid "Number of opened, closed  and unplanned tickets by month"
+msgstr "月別対応中、終了、未計画チケット数"
+
+#: src/Reports/Reports_Pie.php:146
+msgid "Number of opened, closed and unplanned tickets by month"
+msgstr "月別対応中、終了、未計画チケット数"
+
+#: src/Reports/Reports_Line.php:93
+msgid "Number of opened, closed, unplanned tickets by month"
+msgstr "月別対応中、終了、未計画チケット数"
+
+#: src/Reports/Reports_Bar.php:2725
+msgid "Number of surveys answered"
+msgstr "回答アンケート数"
+
+#: src/Reports/Reports_Bar.php:138
+msgid "Number of tickets affected by technicians by month"
+msgstr "月別技術者別対応チケット数"
+
+#: src/Reports/Reports_Line.php:98
+msgid "Number of tickets created each months"
+msgstr "月別作成チケット数"
+
+#: src/Reports/Reports_Line.php:103
+msgid "Number of tickets created each week"
+msgstr "週別作成チケット数"
+
+#: src/Reports/Reports_Line.php:113
+msgid "Number of tickets linked with problems"
+msgstr "問題とリンクしたチケット数"
+
+#: src/Reports/Reports_Table.php:707
+msgid "Number of tickets open by technician and by status"
+msgstr "状態別・担当技術者別の対応中チケット数"
+
+#: src/Reports/Reports_Pie.php:176
+msgid "Number of tickets per location per period"
+msgstr "期間別・場所別チケット数"
+
+#: src/Reports/Reports_Line.php:131
+msgid "Number of tickets with more than one solution"
+msgstr "解決ありチケット数"
+
+#: src/Reports/Reports_Line.php:108
+msgid "Number of tickets with validation refusal"
+msgstr "承認拒否チケット数"
+
+#: src/Reports/Reports_Pie.php:171
+msgid "Number of use of request sources"
+msgstr "要求元利用数"
+
+#: src/Reports/Reports_Map.php:66
+msgid "OpenStreetMap - Opened tickets by location"
+msgstr "OpenStreetMap - 場所別対応中チケット"
+
+#: src/Alert.php:1493 src/Alert.php:1509
+msgid "Opened incidents without assigned technicians"
+msgstr "技術者が割り当てられていない進行中のチケット"
+
+#: src/Alert.php:1498 src/Alert.php:1514
+msgid "Opened requests without assigned technicians"
+msgstr "技術者が割り当てられていない進行中の要求"
+
+#: src/Reports/Reports_Pie.php:1050 src/Reports/Reports_Pie.php:1053
+#: src/Reports/Reports_Bar.php:1800 src/Reports/Reports_Line.php:611
+#: src/Reports/Reports_Line.php:888 src/Reports/Reports_Line.php:1255
+msgid "Opened tickets"
+msgstr "未処理チケット"
+
+#: src/Reports/Reports_Bar.php:123 src/Reports/Reports_Line.php:613
+#: src/Reports/Reports_Line.php:890 src/Reports/Reports_Line.php:1258
+msgid "Opened tickets backlog"
+msgstr "未処理チケットのバックログ"
+
+#: src/Menu.php:1769
+msgid "PDF export failed. Please try again."
+msgstr "PDF エクスポートに失敗。再試行してください。"
+
+#: templates/preferences.html.twig:77
+msgid "Palette color"
+msgstr "パレット色"
+
+#: src/Alert.php:3983 src/Alert.php:4302
+msgid "Pending tickets"
+msgstr "保留チケット"
+
+#: src/Reports/Reports_Bar.php:2951
+msgid "Percent - Respected TTO"
+msgstr "開始時間遵守率"
+
+#: src/Reports/Reports_Bar.php:3055
+msgid "Percent - Respected TTR"
+msgstr "解決時間遵守率"
+
+#: src/Reports/Reports_Pie.php:151
+msgid "Percent of use of solution types"
+msgstr "解決型の利用率"
+
+#: src/Criterias/DisplayData.php:76 src/Criterias/FilterDate.php:68
+msgid "Period"
+msgstr "期間"
+
+#: src/Menu.php:539 src/Menu.php:541 src/Menu.php:625 src/Menu.php:627
+#: src/Menu.php:757 src/Menu.php:850
+msgid "Permit drag / resize widgets"
+msgstr "ウィジェットのドラッグ・サイズ変更を許可"
+
+#: src/Widget.php:246
+msgid "Pie charts"
+msgstr "円グラフ"
+
+#: front/config.php:45
+msgid "Please activate the plugin"
+msgstr "プラグインを有効にしてください"
+
+#: src/Menu.php:589
+msgid "Please reload your page."
+msgstr "ページを読み込みなおしてください。"
+
+#: public/scripts/insert_stock_tickets.php:56
+#: public/scripts/insert_stock_ticketindicators.php:56
+#: public/scripts/clean_stock_tickets.php:136
+msgid "Plugin disabled"
+msgstr "プラグインを無効にしました"
+
+#: src/Config.php:59
+msgid "Plugin setup"
+msgstr "プラグイン設定"
+
+#: src/Preference.php:238
+msgid "Previous year"
+msgstr "前年"
+
+#: src/Reports/Problem.php:81 src/Reports/Problem.php:635
+#: src/Reports/Problem.php:641
+msgid "Problem followup"
+msgstr "問題のフォロー"
+
+#: src/Alert.php:3522
+msgid "Problem with GLPI"
+msgstr "GLPI についての問題"
+
+#: src/Alert.php:1632 src/Alert.php:1639
+msgid "Problems with very high or major priority"
+msgstr "重要度が「最高」または「重要」の問題"
+
+#: src/Reports/Reports_Bar.php:128
+msgid "Process time by technicians by month"
+msgstr "月別・技術者別対応時間"
+
+#: src/Reports/ProjectTask.php:69 src/Reports/ProjectTask.php:77
+#: src/Reports/ProjectTask.php:228 src/Reports/ProjectTask.php:268
+msgid "Projects tasks to be processed"
+msgstr "要対応プロジェクトタスク"
+
+#: src/Reports/Project.php:66 src/Reports/Project.php:74
+#: src/Reports/Project.php:121 src/Reports/Project.php:223
+#: src/Reports/Project.php:248
+msgid "Projects to be processed"
+msgstr "対応中プロジェクト"
+
+#: src/Reports/KnowbaseItem.php:167
+msgid "Publication date"
+msgstr "発行日"
+
+#: src/Config.php:350
+msgctxt "button"
+msgid "Reconstruct global backlog"
+msgstr "全体バックログの再構築"
+
+#: src/Config.php:355
+msgctxt "button"
+msgid "Reconstruct global indicators per week"
+msgstr "週ごとの全体インジケーターの再構築"
+
+#: src/Menu.php:1201
+msgid "Refresh"
+msgstr "再読み込み"
+
+#: templates/preferences.html.twig:35
+msgid "Refresh every "
+msgstr "更新間隔"
+
+#: src/Menu.php:1386
+msgid "Refresh widget"
+msgstr "ウィジェットの再読み込み"
+
+#: src/Config.php:289 templates/preferences.html.twig:40
+msgid "Replace central interface"
+msgstr "センター インターフェースを置き換える"
+
+#: src/Dashboard.php:147
+msgid "Request supervisor grid"
+msgstr "要求助言者グリッド"
+
+#: src/Customswidget.php:168 src/Customswidget.php:169
+msgid "Requests"
+msgstr "要求"
+
+#: src/Alert.php:230 src/Alert.php:1678
+msgid "Requests alerts"
+msgstr "要求警告"
+
+#: src/Alert.php:4113 src/Alert.php:4314
+msgid "Requests in progress"
+msgstr "対応中の要求"
+
+#: src/Alert.php:2228
+msgid "Requests where time to own is exceeded"
+msgstr "割当までの時間を超過した要求"
+
+#: src/Alert.php:2078
+msgid "Requests where time to own will be exceeded"
+msgstr "割当までの時間を超過しそうな要求"
+
+#: src/Alert.php:2305
+msgid "Requests where time to resolve is exceeded"
+msgstr "解決までの時間を超過した要求"
+
+#: src/Alert.php:2152
+msgid "Requests where time to resolve will be exceeded"
+msgstr "解決までの時間を超過しそうな要求"
+
+#: src/Alert.php:1580 src/Alert.php:1594
+msgid "Requests with very high or major priority"
+msgstr "重要度が「最高」または「重要」の要求"
+
+#: src/Reports/Reports_Line.php:889
+msgid "Resolved / closed tickets"
+msgstr "解決・終了チケット数"
+
+#: src/Reports/Reports_Pie.php:675 src/Reports/Reports_Pie.php:686
+#: src/Reports/Reports_Bar.php:2945
+msgid "Respected TTO"
+msgstr "開始時間遵守"
+
+#: src/Reports/Reports_Pie.php:534 src/Reports/Reports_Pie.php:546
+#: src/Reports/Reports_Bar.php:3049
+msgid "Respected TTR"
+msgstr "解決時間遵守"
+
+#: src/Reports/Reports_Bar.php:176
+msgid "Responsiveness over 12 rolling months"
+msgstr "過去 12 カ月間の反応率"
+
+#: src/Profile.php:54
+msgid "Rights management"
+msgstr "権限管理"
+
+#: src/Alert.php:215 src/Alert.php:2332
+msgid "SLA Incidents alerts"
+msgstr "SLA インシデント警告"
+
+#: src/Alert.php:225 src/Alert.php:2335
+msgid "SLA Requests alerts"
+msgstr "SLA 要求警告"
+
+#: src/Reports/Reports_Pie.php:163
+msgid "Satisfaction average"
+msgstr "平均満足度"
+
+#: src/Reports/Reports_Bar.php:2733
+msgid "Satisfy number"
+msgstr "満足数"
+
+#: src/Reports/Reports_Pie.php:1484 src/Reports/Reports_Pie.php:1503
+msgid "Satisfy percent"
+msgstr "満足率"
+
+#: src/Menu.php:523 src/Menu.php:525
+msgid "Save default grid"
+msgstr "デフォルトグリッドを保存"
+
+#: src/Menu.php:515 src/Menu.php:517 src/Menu.php:600 src/Menu.php:602
+#: src/Menu.php:743 src/Menu.php:747 src/Menu.php:838
+msgid "Save grid"
+msgstr "グリッドを保存"
+
+#: src/Menu.php:1362
+msgid "Save grid to see widget"
+msgstr "ウィジェット表示のためにグリッドを保存"
+
+#: src/Alert.php:169 src/Alert.php:3262 src/Alert.php:3402 src/Config.php:386
+#: src/Config.php:570 src/ItilAlert.php:129
+msgid "Scheduled maintenance"
+msgid_plural "Scheduled maintenances"
+msgstr[0] "メンテナンス計画"
+
+#: src/CheckSchema.php:54
+msgid "Schema check"
+msgstr "スキーマチェック"
+
+#: src/Reports/Reports_Table.php:110
+msgid "Search users of your organisation"
+msgstr "自分の組織内のユーザーを検索"
+
+#: src/Profile.php:195 src/Profile.php:298
+msgid "See edit mode"
+msgstr "編集モードを表示"
+
+#: src/Alert.php:176
+msgid "See informations block"
+msgstr "情報ブロックを確認"
+
+#: src/Alert.php:166
+msgid "See network alert block"
+msgstr "ネットワーク警告ブロックを確認"
+
+#: src/Alert.php:171
+msgid "See scheduled maintenances information block"
+msgstr "メンテナンススケジュール情報ブロックを確認"
+
+#: src/Profile.php:294
+msgid "See the configuration"
+msgstr "設定を確認"
+
+#: src/Profile.php:290
+msgid "See the dashboard"
+msgstr "ダッシュボードを確認"
+
+#: src/Profile.php:206 src/Profile.php:286
+msgid "Setup stock widget"
+msgstr "在庫ウィジェットの設定"
+
+#: src/Menu.php:1205
+#, php-format
+msgid "Show %d elements"
+msgstr "%d 件の要素を表示"
+
+#: src/Widget.php:619 src/Menu.php:1206
+msgid "Show all"
+msgstr "すべて表示"
+
+#: src/Menu.php:1171
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "0 ～ 0 ( 全 0 件中 )"
+
+#: src/Menu.php:1170
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "_START_ ～ _END_ ( 全 _TOTAL_ 件 )"
+
+#: src/Reports/Reports_Bar.php:191
+msgid "Solve delay and take into account of tickets"
+msgstr "チケットの遅延を解決し考慮する"
+
+#: src/Reports/Reports_Bar.php:2507
+msgid "Solve delay average (hour)"
+msgstr "平均遅延時間 ( 時間 )"
+
+#: src/Criterias/DisplayData.php:90
+msgid "Start end"
+msgstr "範囲"
+
+#: ajax/dropdownUpdateDisplaydata.php:44 src/Criterias/DisplayData.php:116
+msgid "Start month"
+msgstr "開始月"
+
+#: ajax/dropdownUpdateDisplaydata.php:58 src/Criterias/DisplayData.php:130
+msgid "Start year"
+msgstr "開始年"
+
+#: src/Reports/Reports_Bar.php:166
+msgid "Stock of tickets by status"
+msgstr "状態別チケット残数"
+
+#: src/StockWidget.php:50
+msgid "Stock widget"
+msgid_plural "Stock widgets"
+msgstr[0] "在庫ウィジェット"
+
+#: src/Menu.php:580 src/Menu.php:1361
+msgid "Success"
+msgstr "OK"
+
+#: src/Reports/Reports_Line.php:80
+msgid "Sum of not solved tickets by month"
+msgstr "月ごとの未解決チケット合計"
+
+#: src/Reports/Reports_Bar.php:140
+msgid "Sum of ticket affected by technicians"
+msgstr "技術者別総対応チケット数"
+
+#: src/Reports/Reports_Bar.php:130
+msgid "Sum of ticket tasks duration by technicians"
+msgstr "技術者別総チケットタスク数"
+
+#: src/Reports/Reports_Bar.php:2150
+msgid "Sum of tickets solved in less than 24 hours"
+msgstr "24 時間以内に解決したチケット総数"
+
+#: src/Reports/Reports_Bar.php:2159
+msgid "Sum of tickets solved in less than a week"
+msgstr "1 週間以内に解決したチケット総数"
+
+#: src/Reports/Reports_Bar.php:2168
+msgid "Sum of tickets solved in more than a week"
+msgstr "解決に 1 週間以上要したチケット総数"
+
+#: src/Menu.php:616 src/Menu.php:618 src/Menu.php:845
+msgid "Switch to edit mode"
+msgstr "編集モードに切り替え"
+
+#: src/Reports/Reports_Pie.php:131
+msgid "TTO Compliance"
+msgstr "TTO ( 担当割り当て目標時間 ) コンプライアンス"
+
+#: src/Reports/Reports_Pie.php:126
+msgid "TTR Compliance"
+msgstr "TTR ( 解決目標時間 ) コンプライアンス"
+
+#: src/Widget.php:244
+msgid "Tables"
+msgstr "表"
+
+#: src/Criterias/Other.php:582
+msgid "Tag"
+msgstr "タグ"
+
+#: src/Reports/Reports_Bar.php:2508
+msgid "Take into account average (hour)"
+msgstr "平均チケット開始時間 ( 時間 )"
+
+#: src/Reports/Reports_Bar.php:797
+msgid "Tasks duration (minutes)"
+msgstr "タスク期間 ( 分 )"
+
+#: src/Criterias/Other.php:228 src/Criterias/Other.php:390
+msgid "Technician"
+msgid_plural "Technicians"
+msgstr[0] "技術者"
+
+#: src/Reports/Reports_Table.php:710
+msgid "Technicians"
+msgstr "技術者"
+
+#: src/CheckSchema.php:168
+msgid "The plugin schema is good"
+msgstr "プラグインのスキーマは問題なし"
+
+#: src/Menu.php:581
+msgid "The widget was added to dashboard. Save the dashboard."
+msgstr "ウィジェットをダッシュボードに追加しました。ダッシュボードを保存してください。"
+
+#: src/Alert.php:2350 src/Alert.php:3139
+msgid ""
+"There is at least on planned scheduled maintenance. Please log on to see "
+"more"
+msgstr "メンテナンススケジュールがあります。詳細はログインして確認を"
+
+#: src/Widget.php:442
+msgid "This widget doesn't exist anymore"
+msgstr "このウィジェットはすでに存在しません"
+
+#: src/Alert.php:4211
+msgid "Ticket closed"
+msgstr "終了チケット"
+
+#: src/Reports/Ticket.php:167 src/Reports/Ticket.php:1396
+#: src/Reports/Ticket.php:1420
+msgid "Ticket followup"
+msgstr "チケットの回答"
+
+#: src/Alert.php:4327
+msgid "Tickets closed"
+msgstr "終了チケット"
+
+#: src/Alert.php:3936 src/Alert.php:4296
+msgid "Tickets late"
+msgstr "遅延チケット"
+
+#: src/Reports/Reports_Bar.php:303 src/Reports/Reports_Bar.php:559
+#: src/Reports/Reports_Bar.php:947 src/Reports/Reports_Bar.php:1363
+#: src/Reports/Reports_Line.php:312 src/Reports/Reports_Line.php:1408
+#: src/Reports/Reports_Line.php:1486 src/Reports/Reports_Line.php:1620
+#: src/Reports/Reports_Line.php:1753 src/Reports/Reports_Line.php:1856
+#: src/Reports/Reports_Line.php:1992 src/Reports/Reports_Line.php:2138
+msgid "Tickets number"
+msgstr "チケット数"
+
+#: src/Reports/Reports_Bar.php:181
+msgid "Tickets request sources evolution"
+msgstr "チケット要求ルートの推移"
+
+#: src/Reports/Reports_Bar.php:186
+msgid "Tickets solution types evolution"
+msgstr "チケットの解決型の推移"
+
+#: src/Alert.php:4162 src/Alert.php:4320
+msgid "Tickets solved"
+msgstr "解決チケット"
+
+#: src/Reports/Reports_Line.php:78
+msgid "Tickets stock by month"
+msgstr "月ごとのチケット在庫"
+
+#: src/Criterias/Other.php:251 src/Criterias/Other.php:257
+#: src/Criterias/Other.php:263 src/Criterias/Other.php:269
+#: src/Criterias/Other.php:464 src/Criterias/Other.php:500
+msgid "Time display"
+msgstr "時間表示"
+
+#: src/Config.php:226 src/Config.php:331
+msgid "Title of alerts widget"
+msgstr "アラート ウィジェットのタイトル"
+
+#: src/Config.php:244 src/Config.php:343
+msgid "Title of informations widget"
+msgstr "お知らせウィジェットのタイトル"
+
+#: src/Config.php:235 src/Config.php:337
+msgid "Title of scheduled maintenances widget"
+msgstr "メンテナンス計画ウィジェットのタイトル"
+
+#: src/Reports/Reports_Pie.php:181
+msgid "Top ten of opened tickets by appliance"
+msgstr "情報資産トップ  10 - 対応中チケット数"
+
+#: src/Reports/Reports_Pie.php:166
+msgid "Top ten of opened tickets by location"
+msgstr "場所トップ 10 - 対応中チケット数"
+
+#: src/Reports/Reports_Pie.php:156
+msgid "Top ten of opened tickets by requester groups"
+msgstr "要求グループトップ 10 - 対応中チケット数"
+
+#: src/Reports/Reports_Bar.php:151
+msgid "Top ten technicians (by tickets number)"
+msgstr "( チケット数別 ) 技術者トップ 10"
+
+#: src/Reports/Reports_Bar.php:133
+msgid "Top ten ticket categories by type of ticket"
+msgstr "チケット型別チケットカテゴリートップ 10"
+
+#: src/Reports/Reports_Pie.php:121
+msgid "Top ten ticket requesters by month"
+msgstr "月別要求者トップ 10"
+
+#: src/Reports/Reports_Bar.php:1556
+msgid "Trimester 1"
+msgstr "☆★★★"
+
+#: src/Reports/Reports_Bar.php:1616
+msgid "Trimester 2"
+msgstr "☆☆★★"
+
+#: src/Reports/Reports_Bar.php:1676
+msgid "Trimester 3"
+msgstr "☆☆☆★"
+
+#: src/Reports/Reports_Bar.php:1737
+msgid "Trimester 4"
+msgstr "☆☆☆☆"
+
+#: src/Menu.php:1217
+msgid "Updating all widgets"
+msgstr "すべてのウィジェットを更新しています"
+
+#: src/Groupprofile.php:75
+msgid "Use profile group"
+msgstr "プロファイルグループを利用"
+
+#: src/Alert.php:220
+msgid "User ticket alerts"
+msgstr "ユーザーチケット警告"
+
+#: src/Menu.php:1373
+msgid "Warning"
+msgstr "警告"
+
+#: src/Criterias/Other.php:214 src/Criterias/Other.php:304
+#: src/Criterias/Other.php:452
+msgid "Week"
+msgstr "週"
+
+#: src/Widget.php:69
+msgid "Widget"
+msgstr "ウィジェット"
+
+#: src/Menu.php:1218
+msgid "Widget added on Dashboard"
+msgstr "ウィジェットをダッシュボードに追加しました"
+
+#: src/Reports/Reports_Funnel.php:340
+msgid "Without buy date"
+msgstr "購入日なし"
+
+#: ajax/dropdownUpdateDisplaydata.php:116 src/Criterias/Year.php:66
+#: src/Criterias/Year.php:81 src/Criterias/DisplayData.php:68
+#: src/Criterias/DisplayData.php:187 src/Criterias/FilterDate.php:65
+#: src/Criterias/FilterDate.php:134 src/Menu.php:978
+msgid "Year"
+msgstr "年"
+
+#: src/Criterias/Other.php:264 src/Criterias/Other.php:484
+msgid "Year to date"
+msgstr "今年度"
+
+#: src/Alert.php:202 src/Widget.php:1013
+msgid "Your equipments"
+msgstr "あなたの機器"
+
+#: src/Reports/Ticket.php:86
+msgid "Your rejected tickets"
+msgstr "拒否されたチケット"
+
+#: src/Reports/Ticket.php:96
+msgid "Your satisfaction surveys"
+msgstr "満足度調査"
+
+#: src/Reports/Ticket.php:104 src/Reports/Ticket.php:723
+msgid "Your tickets to validate"
+msgstr "未承認チケット"
+
+#: src/Criterias/FilterDate.php:82
+msgid "begin and end date"
+msgstr "開始日・終了日"
+
+#: src/Module.php:173 src/Module.php:384
+msgid "error"
+msgstr "エラー"
+
+#: templates/preferences.html.twig:36
+msgid "minute(s)"
+msgstr "分"
+
+#: src/Module.php:171 src/Module.php:368
+msgid "notice"
+msgstr "通知"
+
+#: src/Module.php:172 src/Module.php:376
+msgid "warning"
+msgstr "警告"
+
+#: src/Criterias/DisplayData.php:89 src/Criterias/FilterDate.php:81
+#: src/Criterias/Other.php:485
+msgid "year"
+msgstr "年"
