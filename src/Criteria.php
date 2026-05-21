@@ -36,7 +36,9 @@ use GlpiPlugin\Mydashboard\Criterias\Limit;
 use GlpiPlugin\Mydashboard\Criterias\Location;
 use GlpiPlugin\Mydashboard\Criterias\Month;
 use GlpiPlugin\Mydashboard\Criterias\MultipleLocation;
+use GlpiPlugin\Mydashboard\Criterias\Priority;
 use GlpiPlugin\Mydashboard\Criterias\RequesterGroup;
+use GlpiPlugin\Mydashboard\Criterias\Status;
 use GlpiPlugin\Mydashboard\Criterias\Technician;
 use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
 use GlpiPlugin\Mydashboard\Criterias\Type;
@@ -50,6 +52,8 @@ class Criteria
         'is_recursive_entities',
         'type',
         'locations_id',
+        'status',
+        'priority',
         'technicians_groups_id',
         'is_recursive_technicians',
         'requesters_groups_id',
@@ -60,6 +64,7 @@ class Criteria
         'year',
         'month',
         'limit',
+        'multiple_time',
         'display_data',
         'filter_date',
         'multiple_locations_id',
@@ -203,6 +208,12 @@ class Criteria
         if (in_array(Location::$criteria_name, $params['criterias'])) {
             $locations_id = $opt[Location::$criteria_name] ?? $default[Location::$criteria_name];
         }
+        if (in_array(Status::$criteria_name, $params['criterias'])) {
+            $status = $opt[Status::$criteria_name] ?? $default[Status::$criteria_name];
+        }
+        if (in_array(Priority::$criteria_name, $params['criterias'])) {
+            $priority = $opt[Priority::$criteria_name] ?? $default[Priority::$criteria_name];
+        }
         if (in_array(ITILCategory::$criteria_name, $params['criterias'])) {
             $itilcategories_id = $opt[ITILCategory::$criteria_name] ?? $default[ITILCategory::$criteria_name];
         }
@@ -297,6 +308,20 @@ class Criteria
                 $params_query['criteria'] = $criterion;
                 $params_query['query'] = $query;
                 $params_query[$criterion] = $locations_id;
+                $query = self::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($table == 'glpi_tickets' && $criterion == Status::$criteria_name && $status > 0) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $status;
+                $query = self::defineWhereByCriteria($params_query, $table);
+            }
+
+            if ($table == 'glpi_tickets' && $criterion == Priority::$criteria_name && $priority > 0) {
+                $params_query['criteria'] = $criterion;
+                $params_query['query'] = $query;
+                $params_query[$criterion] = $priority;
                 $query = self::defineWhereByCriteria($params_query, $table);
             }
 
@@ -406,6 +431,10 @@ class Criteria
             $query['WHERE'] = ITILCategory::getQueryCriteria($params);
         } elseif ($params['criteria'] == Location::$criteria_name) {
             $query['WHERE'] = Location::getQueryCriteria($params);
+        } elseif ($params['criteria'] == Status::$criteria_name) {
+            $query['WHERE'] = Status::getQueryCriteria($params);
+        } elseif ($params['criteria'] == Priority::$criteria_name) {
+            $query['WHERE'] = Priority::getQueryCriteria($params);
         } elseif ($params['criteria'] == MultipleLocation::$criteria_name) {
             $query['WHERE'] = MultipleLocation::getQueryCriteria($params);
         } elseif ($params['criteria'] == Year::$criteria_name) {
@@ -482,6 +511,8 @@ class Criteria
             RequesterGroup::$criteria_name => RequesterGroup::class,
             Limit::$criteria_name => Limit::class,
             Location::$criteria_name => Location::class,
+            Status::$criteria_name => Status::class,
+            Priority::$criteria_name => Priority::class,
             Technician::$criteria_name => Technician::class,
             ITILCategory::$criteria_name => ITILCategory::class,
             Year::$criteria_name => Year::class,
@@ -548,6 +579,8 @@ class Criteria
             RequesterGroup::$criteria_name => RequesterGroup::class,
             Limit::$criteria_name => Limit::class,
             Location::$criteria_name => Location::class,
+            Status::$criteria_name => Status::class,
+            Priority::$criteria_name => Priority::class,
             Technician::$criteria_name => Technician::class,
             ITILCategory::$criteria_name => ITILCategory::class,
             Year::$criteria_name => Year::class,
@@ -612,6 +645,8 @@ class Criteria
             RequesterGroup::$criteria_name => RequesterGroup::class,
             Limit::$criteria_name => Limit::class,
             Location::$criteria_name => Location::class,
+            Status::$criteria_name => Status::class,
+            Priority::$criteria_name => Priority::class,
             Technician::$criteria_name => Technician::class,
             ITILCategory::$criteria_name => ITILCategory::class,
             Year::$criteria_name => Year::class,
