@@ -2039,6 +2039,19 @@ class Reports_Pie extends CommonGLPI
         return false;
     }
 
+    public static function getLinkForWidget(string $widget, array $options): ?string
+    {
+        return match (str_replace(self::class, '', $widget)) {
+            '2'  => self::pluginMydashboardReports_Pie2link($options),
+            '16' => self::pluginMydashboardReports_Pie16link($options),
+            '17' => self::pluginMydashboardReports_Pie17link($options),
+            '25' => self::pluginMydashboardReports_Pie25link($options),
+            '27' => self::pluginMydashboardReports_Pie27link($options),
+            default => null,
+        };
+    }
+
+
     /**
      * @param $selected_id
      *
@@ -2046,18 +2059,10 @@ class Reports_Pie extends CommonGLPI
      */
     public static function pluginMydashboardReports_Pie2link($options)
     {
-        global $CFG_GLPI;
-
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $options_selected = Criteria::addUrlCriteria(Criteria::PRIORITY, 'equals', $options["selected_id"], 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -2068,17 +2073,11 @@ class Reports_Pie extends CommonGLPI
      */
     public static function pluginMydashboardReports_Pie16link($options)
     {
-        global $CFG_GLPI;
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $params["params"][ITILCategory::$criteria_name] = $options["selected_id"];
         $options_selected = ITILCategory::getSearchCriteria($params);
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
     /**
@@ -2088,17 +2087,11 @@ class Reports_Pie extends CommonGLPI
      */
     public static function pluginMydashboardReports_Pie17link($options)
     {
-        global $CFG_GLPI;
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $params["params"][ITILCategory::$criteria_name] = $options["selected_id"];
         $options_selected = ITILCategory::getSearchCriteria($params);
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -2109,18 +2102,11 @@ class Reports_Pie extends CommonGLPI
      */
     public static function pluginMydashboardReports_Pie25link($options)
     {
-        global $CFG_GLPI;
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $params["params"][RequesterGroup::$criteria_name] = $options["selected_id"];
         $options_selected = RequesterGroup::getSearchCriteria($params);
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -2131,17 +2117,10 @@ class Reports_Pie extends CommonGLPI
      */
     public static function pluginMydashboardReports_Pie27link($options)
     {
-        global $CFG_GLPI;
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $params["params"][Location::$criteria_name] = $options["selected_id"];
         $options_selected = Location::getSearchCriteria($params);
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 }

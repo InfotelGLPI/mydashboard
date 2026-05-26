@@ -1097,6 +1097,16 @@ class Reports_Table extends CommonGLPI
         return false;
     }
 
+    public static function getLinkForWidget(string $widget, array $options): ?string
+    {
+        return match (str_replace(self::class, '', $widget)) {
+            '32' => self::pluginMydashboardReports_Table32link($options),
+            '33' => self::pluginMydashboardReports_Table33link($options),
+            default => null,
+        };
+    }
+
+
     /**
      * @param $selected_id
      *

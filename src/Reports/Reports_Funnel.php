@@ -433,6 +433,15 @@ class Reports_Funnel extends CommonGLPI
         }
     }
 
+    public static function getLinkForWidget(string $widget, array $options): ?string
+    {
+        return match (str_replace(self::class, '', $widget)) {
+            '1' => self::pluginMydashboardReports_Funnel1link($options),
+            default => null,
+        };
+    }
+
+
     /**
      * @param $params ['selected_id']
      *

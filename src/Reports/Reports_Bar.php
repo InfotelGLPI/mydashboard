@@ -3900,6 +3900,22 @@ class Reports_Bar extends CommonDBTM
     }
 
 
+    public static function getLinkForWidget(string $widget, array $options): ?string
+    {
+        return match (str_replace(self::class, '', $widget)) {
+            '1'  => self::pluginMydashboardReports_Bar1link($options),
+            '15' => self::pluginMydashboardReports_Bar15link($options),
+            '24' => self::pluginMydashboardReports_Bar24link($options),
+            '35' => self::pluginMydashboardReports_Bar35link($options),
+            '36' => self::pluginMydashboardReports_Bar36link($options),
+            '37' => self::pluginMydashboardReports_Bar37link($options),
+            '43' => self::pluginMydashboardReports_Bar43link($options),
+            '44' => self::pluginMydashboardReports_Bar44link($options),
+            default => null,
+        };
+    }
+
+
     /**
      * @param $selected_id
      *
@@ -3907,21 +3923,10 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar1link($options)
     {
-        global $CFG_GLPI;
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-        // open date
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'contains', $options["selected_id"], 'AND');
 
-        // Strip date criteria from base params — the bar's period defines its own date range
-        $base_criteria = array_values(array_filter(
-            $options['params']['criteria'] ?? [],
-            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
-        ));
-        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria'], [Criteria::OPEN_DATE]);
     }
 
 
@@ -3932,9 +3937,6 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar15link($options)
     {
-        global $CFG_GLPI;
-
-
         if (isset($options["params"]["year"]) && !isset($options["params"]["begin"])) {
             $options["params"]["begin"] = $options["params"]["year"] . "-01-01 00:00:01";
             $options["params"]["end"] = $options["params"]["year"] . "-12-31 23:59:00";
@@ -3953,10 +3955,7 @@ class Reports_Bar extends CommonDBTM
         $params["params"][ITILCategory::$criteria_name] = $options["selected_id"];
         $options_selected = ITILCategory::getSearchCriteria($params);
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
     /**
@@ -3966,9 +3965,6 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar24link($options)
     {
-        global $CFG_GLPI;
-
-
         if (isset($options["params"]["year"]) && !isset($options["params"]["begin"])) {
             $options["params"]["begin"] = $options["params"]["year"] . "-01-01 00:00:01";
             $options["params"]["end"] = $options["params"]["year"] . "-12-31 23:59:00";
@@ -3984,10 +3980,7 @@ class Reports_Bar extends CommonDBTM
         $params["params"][Technician::$criteria_name] = $options["selected_id"];
         $options_selected = Technician::getSearchCriteria($params);
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -3998,7 +3991,6 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar35link($options)
     {
-        global $CFG_GLPI;
 
         $begin = null;
         $end = null;
@@ -4023,16 +4015,7 @@ class Reports_Bar extends CommonDBTM
             $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $end, 'AND');
         }
 
-        // Strip date criteria from base params — the bar's period defines its own date range
-        $base_criteria = array_values(array_filter(
-            $options['params']['criteria'] ?? [],
-            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
-        ));
-        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
-
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria'], [Criteria::OPEN_DATE]);
     }
 
 
@@ -4043,18 +4026,10 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar36link($options)
     {
-        global $CFG_GLPI;
-
-
-        $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
-
+        Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
         $options_selected = Criteria::addUrlCriteria(Criteria::PRIORITY, 'equals', $options["selected_id"], 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -4065,24 +4040,17 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar37link($options)
     {
-        global $CFG_GLPI;
-
-
         // STATUS
         if (strpos($options["selected_id"], 'moreticket_') !== false) {
             $status = explode("_", $options["selected_id"]);
 
-            $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', \Ticket::WAITING, 'AND');
-
+            Criteria::addUrlCriteria(Criteria::STATUS, 'equals', \Ticket::WAITING, 'AND');
             $options_selected = Criteria::addUrlCriteria(Criteria::MORETICKET_WAITINGTYPE, 'equals', $status[1], 'AND');
         } else {
             $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', $options["selected_id"], 'AND');
         }
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -4134,7 +4102,6 @@ class Reports_Bar extends CommonDBTM
      */
     public static function pluginMydashboardReports_Bar44link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
             $dateParts = explode('-', $options['selected_id']);
@@ -4149,9 +4116,6 @@ class Reports_Bar extends CommonDBTM
             $options_selected = Criteria::addUrlCriteria(Criteria::INVENTORY_DATE, 'contains', 'NULL', 'AND');
         }
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/computer.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildComputerUrl($options, $options_selected['criteria']);
     }
 }

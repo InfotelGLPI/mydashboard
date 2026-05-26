@@ -421,9 +421,11 @@ class Reports_Line extends CommonGLPI
                 ];
 
                 $default = Criteria::manageCriterias($params);
-
-                $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-
+                $technicians_groups_id = [];
+                if (isset($_SESSION['glpiactiveprofile']['interface'])
+                    && Session::getCurrentInterface() != 'central') {
+                    $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
+                }
                 if (isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
                     if (isset($opt["year"]) && $opt["year"] > 0) {
                         $currentyear = $opt["year"];
@@ -2266,6 +2268,22 @@ class Reports_Line extends CommonGLPI
     }
 
 
+    public static function getLinkForWidget(string $widget, array $options): ?string
+    {
+        return match (str_replace(self::class, '', $widget)) {
+            '22' => self::pluginMydashboardReports_Line22link($options),
+            '34' => self::pluginMydashboardReports_Line34link($options),
+            '35' => self::pluginMydashboardReports_Line35link($options),
+            '43' => self::pluginMydashboardReports_Line43link($options),
+            '44' => self::pluginMydashboardReports_Line44link($options),
+            '45' => self::pluginMydashboardReports_Line45link($options),
+            '46' => self::pluginMydashboardReports_Line46link($options),
+            '48' => self::pluginMydashboardReports_Line48link($options),
+            default => null,
+        };
+    }
+
+
     /**
      * @param $selected_id
      *
@@ -2273,7 +2291,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line22link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
             $eventParts = explode('_', $options['selected_id']);
@@ -2308,15 +2325,7 @@ class Reports_Line extends CommonGLPI
             }
         }
 
-        // Strip date criteria from base params — the clicked period defines its own date range
-        $base_criteria = array_values(array_filter(
-            $options['params']['criteria'] ?? [],
-            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
-        ));
-        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria'], [Criteria::OPEN_DATE]);
     }
 
 
@@ -2327,7 +2336,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line34link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
             $eventParts = explode('_', $options['selected_id']);
@@ -2360,16 +2368,7 @@ class Reports_Line extends CommonGLPI
                 $options_selected = Criteria::addUrlCriteria($crit, 'lessthan', $date, 'AND');
             }
         }
-        // Strip date criteria from base params — the clicked period defines its own date range
-        $base_criteria = array_values(array_filter(
-            $options['params']['criteria'] ?? [],
-            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
-        ));
-        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
-
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria'], [Criteria::OPEN_DATE]);
     }
 
 
@@ -2380,7 +2379,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line35link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
             $eventParts = explode('_', $options['selected_id']);
@@ -2423,10 +2421,7 @@ class Reports_Line extends CommonGLPI
             $options_selected = Criteria::addUrlCriteria(Criteria::TASK_ACTIONTIME, 'contains', '0', 'AND');
         }
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
     /**
@@ -2436,7 +2431,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line43link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
             $dateParts = explode('-', $options['selected_id']);
@@ -2451,10 +2445,7 @@ class Reports_Line extends CommonGLPI
             $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $date, 'AND');
         }
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
     /**
@@ -2464,7 +2455,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line44link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '_') !== false) {
             $eventParts = explode('_', $options['selected_id']);
@@ -2490,16 +2480,7 @@ class Reports_Line extends CommonGLPI
         $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'morethan', $start, 'AND');
         $options_selected = Criteria::addUrlCriteria(Criteria::OPEN_DATE, 'lessthan', $end, 'AND');
 
-        // Strip date criteria from base params — the clicked week defines its own date range
-        $base_criteria = array_values(array_filter(
-            $options['params']['criteria'] ?? [],
-            fn($c) => ($c['field'] ?? null) != Criteria::OPEN_DATE
-        ));
-        $options['criteria'] = array_merge($base_criteria, $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
-
+        return Criteria::buildTicketUrl($options, $options_selected['criteria'], [Criteria::OPEN_DATE]);
     }
 
 
@@ -2510,7 +2491,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line45link($options)
     {
-        global $CFG_GLPI;
 
         if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
             $dateParts = explode('-', $options['selected_id']);
@@ -2526,10 +2506,7 @@ class Reports_Line extends CommonGLPI
         }
         $options_selected = Criteria::addUrlCriteria(Criteria::VALIDATION_STATS, 'equals', Criteria::VALIDATION_REFUSED, 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -2540,8 +2517,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line46link($options)
     {
-        global $CFG_GLPI;
-
         if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
             $dateParts = explode('-', $options['selected_id']);
             $year = $dateParts[0];
@@ -2556,10 +2531,7 @@ class Reports_Line extends CommonGLPI
         }
         $options_selected = Criteria::addUrlCriteria(Criteria::NUMBER_OF_PROBLEMS, 'equals', '>0', 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 
 
@@ -2570,8 +2542,6 @@ class Reports_Line extends CommonGLPI
      */
     public static function pluginMydashboardReports_Line48link($options)
     {
-        global $CFG_GLPI;
-
         if (isset($options['selected_id']) && strpos($options['selected_id'], '-') !== false) {
             $dateParts = explode('-', $options['selected_id']);
             $year = $dateParts[0];
@@ -2586,9 +2556,6 @@ class Reports_Line extends CommonGLPI
         }
         $options_selected = Criteria::addUrlCriteria(Criteria::STATUS, 'equals', 'notold', 'AND');
 
-        $options['criteria'] = array_merge($options['params']['criteria'], $options_selected['criteria']);
-
-        return $CFG_GLPI["root_doc"] . '/front/ticket.php?is_deleted=0&'
-            . Toolbox::append_params($options, "&");
+        return Criteria::buildTicketUrl($options, $options_selected['criteria']);
     }
 }

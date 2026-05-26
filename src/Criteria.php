@@ -42,6 +42,7 @@ use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
 use GlpiPlugin\Mydashboard\Criterias\Type;
 use GlpiPlugin\Mydashboard\Criterias\Year;
 use Session;
+use Toolbox;
 
 class Criteria
 {
@@ -640,5 +641,37 @@ class Criteria
         $form .= "</div>";
 
         return $form;
+    }
+
+    /**
+     * Construit une URL ticket.php avec les critères de base (issus du widget) et des critères spécifiques.
+     * Les champs listés dans $strip sont exclus des critères de base avant la fusion.
+     *
+     * @param array    $options  Tableau $_POST reçu par la fonction link (contient params.criteria)
+     * @param array    $specific Critères spécifiques à la barre/section cliquée
+     * @param int[]    $strip    IDs de champs à exclure des critères de base (ex. OPEN_DATE)
+     */
+    public static function buildTicketUrl(array $options, array $specific, array $strip = []): string
+    {
+        global $CFG_GLPI;
+        $base = array_values(array_filter(
+            $options['params']['criteria'] ?? [],
+            fn($c) => !in_array($c['field'] ?? null, $strip)
+        ));
+        $options['criteria'] = array_merge($base, $specific);
+        return $CFG_GLPI['root_doc'] . '/front/ticket.php?is_deleted=0&' . Toolbox::append_params($options, '&');
+    }
+
+    /**
+     * Construit une URL computer.php avec les critères de base et des critères spécifiques.
+     *
+     * @param array $options  Tableau $_POST reçu par la fonction link
+     * @param array $specific Critères spécifiques à la section cliquée
+     */
+    public static function buildComputerUrl(array $options, array $specific): string
+    {
+        global $CFG_GLPI;
+        $options['criteria'] = array_merge($options['params']['criteria'] ?? [], $specific);
+        return $CFG_GLPI['root_doc'] . '/front/computer.php?is_deleted=0&' . Toolbox::append_params($options, '&');
     }
 }
