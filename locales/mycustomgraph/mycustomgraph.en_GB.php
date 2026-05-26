@@ -1,4 +1,31 @@
 <?php
 
+/*
+ -------------------------------------------------------------------------
+ mydashboard plugin for GLPI
+ Copyright (C) 2016-2026 by the mydashboard Development Team.
+
+ https://github.com/InfotelGLPI/mydashboard
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of mydashboard.
+
+ mydashboard is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ mydashboard is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+
 $LANG['plugin_mydashboard']['mycustomgraph']['title_new_request_vs_closed'] = "Title of my custom chart";
 $LANG['plugin_mydashboard']['mycustomgraph']['comment_new_request_vs_closed'] = "Comment of my custom chart";
