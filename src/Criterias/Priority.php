@@ -94,21 +94,12 @@ class Priority
 
     private static function priorityDropdown(mixed $selected = null)
     {
-        $criteria_name = self::$criteria_name;
 
         $opt = [
             'value' => $selected,
             'display' => false,
         ];
 
-        $values = [];
-        $values[5] = CommonITILObject::getPriorityName(5);
-        $values[4] = CommonITILObject::getPriorityName(4);
-        $values[3] = CommonITILObject::getPriorityName(3);
-        $values[2] = CommonITILObject::getPriorityName(2);
-        $values[1] = CommonITILObject::getPriorityName(1);
-
-
-        return Dropdown::showFromArray($criteria_name, $values, $opt);
+        return \Ticket::dropdownPriority($opt);
     }
 }
