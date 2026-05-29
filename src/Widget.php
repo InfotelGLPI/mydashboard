@@ -809,7 +809,7 @@ class Widget extends CommonDBTM
         }
         $display = "";
         if ($hidewidget != false) {
-            $display .= "<div id='gridcontentgs4'>";
+            $display .= "<div class='card' id='gridcontentgs4'>";
         }
         $display .= "<div id='gs4' class=\"bt-row $delclass $addclass\" style='$style'>";
         $display .= "<div class=\"bt-feature $class \">";
@@ -879,7 +879,7 @@ class Widget extends CommonDBTM
         }
         $display = "";
         if ($hidewidget != false) {
-            $display .= "<div id='gridcontentgs5'>";
+            $display .= "<div class='card' id='gridcontentgs5'>";
         }
         $display .= "<div id='gs5' class=\"bt-row $delclass $addclass\" style='$style'>";
         $display .= "<div class=\"bt-feature $class \">";
@@ -948,7 +948,7 @@ class Widget extends CommonDBTM
         }
         $display = "";
         if ($hidewidget != false) {
-            $display .= "<div id='gridcontentgs6'>";
+            $display .= "<div class='card' id='gridcontentgs6'>";
         }
         $display .= "<div id='gs6' class=\"bt-row $delclass $addclass\" style='$style'>";
         $display .= "<div class=\"bt-feature $class \">";
