@@ -55,6 +55,15 @@ if ($widget === "PluginOcsinventoryngDashboard1") {
     $link = Dashboard::pluginOcsinventoryngDashboard1link($_POST);
 } else {
     $classes = [Reports_Bar::class, Reports_Pie::class, Reports_Line::class, Reports_Table::class, Reports_Funnel::class];
+
+    //Add custom classes
+    $result = preg_replace('/\d+$/', '', $widget);
+    if(class_exists($result)){
+        if(!in_array($result,$classes)){
+            $classes[] = $result;
+        }
+    }
+
     foreach ($classes as $class) {
         if (str_starts_with($widget, $class)) {
             $link = $class::getLinkForWidget($widget, $_POST) ?? '';
