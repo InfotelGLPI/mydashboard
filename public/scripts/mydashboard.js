@@ -53,9 +53,7 @@ const observer = new MutationObserver(() => {
         const inst = echarts.getInstanceByDom(el);
         if (inst) charts.push(inst);
     });
-
-    console.log(charts)
-
+    
     charts.forEach(chart => {
         const opt = chart.getOption();
 
