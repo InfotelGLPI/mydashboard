@@ -1,0 +1,60 @@
+<?php
+// Stubs for GLPI core classes — used by Psalm in CI (GLPI core is not installed).
+
+class CommonGLPI {}
+
+class CommonDBTM extends CommonGLPI
+{
+    /** @var array<string, mixed> */
+    public array $fields = [];
+
+    public function getFromDB(int $id): bool { return true; }
+    public function can(int $id, int $right): bool { return true; }
+    public static function getTypeName(int $nb = 0): string { return ''; }
+    public function getType(): string { return ''; }
+    public static function getTable(string $classname = ''): string { return ''; }
+    public static function getSearchURL(bool $full = true): string { return ''; }
+}
+
+class CommonDropdown extends CommonDBTM {}
+
+class CommonDBChild extends CommonDBTM {}
+
+class Session
+{
+    public static function checkLoginUser(): void {}
+    public static function checkRight(string $right, int $value): void {}
+    public static function checkRightsOr(string $right, array $values): void {}
+    public static function haveRight(string $right, int $value): bool { return true; }
+    public static function haveRightsOr(string $right, array $values): bool { return true; }
+    public static function getLoginUserID(bool $force_human = true): int|false { return 0; }
+    public static function getCurrentInterface(): string { return 'central'; }
+    public static function getNewCSRFToken(bool $standalone = false): string { return ''; }
+}
+
+class Html
+{
+    public static function header(string $title, string $url = '', string $sector = 'none', string $item = '', string $option = ''): void {}
+    public static function helpHeader(string $title, string $sector = 'none', string $item = '', string $option = ''): void {}
+    public static function footer(): void {}
+    public static function helpFooter(): void {}
+    public static function back(): void {}
+    public static function redirect(string $url): void {}
+    public static function showDateTimeField(string $name, array $options = []): string { return ''; }
+}
+
+class Plugin
+{
+    public static function isPluginActive(string $plugin): bool { return true; }
+}
+
+class Dropdown
+{
+    public static function showFromArray(string $name, array $elements, array $options = []): string { return ''; }
+    public static function showNumber(string $name, array $options = []): string { return ''; }
+}
+
+namespace Glpi\Exception\Http {
+    class AccessDeniedHttpException extends \RuntimeException {}
+    class NotFoundHttpException extends \RuntimeException {}
+}

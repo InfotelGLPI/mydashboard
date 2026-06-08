@@ -9,6 +9,10 @@
         <file name="setup.php" />
     </projectFiles>
 
+    <stubs>
+        <file name="stubs/glpi.phpstub" />
+    </stubs>
+
     <issueHandlers>
         <!--
             Too many false positives.
