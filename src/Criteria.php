@@ -172,10 +172,10 @@ class Criteria
             $options = TechnicianGroup::getSearchCriteria($values);
         }
 
-        $values['params'][Entity::$criteria_name] = $criterias_values[Entity::$criteria_name];
+        $values['params'][Entity::$criteria_name] = $criterias_values[Entity::$criteria_name] ?? 0;
 
-        $values['params']['is_recursive_entities'] = $criterias_values['is_recursive_entities'];
-        $values['params']['is_recursive_technicians'] = $criterias_values['is_recursive_technicians'];
+        $values['params']['is_recursive_entities'] = $criterias_values['is_recursive_entities'] ?? 0;
+        $values['params']['is_recursive_technicians'] = $criterias_values['is_recursive_technicians'] ?? 0;
 
         $options = Entity::getSearchCriteria($values);
 

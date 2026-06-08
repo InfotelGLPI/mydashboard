@@ -160,6 +160,9 @@ class StockTicket extends CommonDBTM
 
         ini_set("memory_limit", "-1");
         ini_set("max_execution_time", "0");
+
+        $DB->delete(self::getTable(), [1]);
+
         $currentmonth = date("m");
         $currentyear  = date("Y");
         $previousyear = $currentyear - 1;
@@ -221,16 +224,11 @@ class StockTicket extends CommonDBTM
                 'WHERE' => [
                     $is_deleted,
                     'entities_id' => $entities_id,
-                    ['OR'         =>
-                        [
-                            ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                            ['status' => \Ticket::getNotSolvedStatusArray()],
-                        ],
-                        [
-                            ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                            ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                        ],
-                    ],
+                    ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                    ['OR' => [
+                        ['status' => \Ticket::getNotSolvedStatusArray()],
+                        ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                    ]],
                 ],
             ];
             $iterator = $DB->request($criteria);
@@ -323,16 +321,11 @@ class StockTicket extends CommonDBTM
                         $is_deleted,
                         'glpi_tickets.entities_id' => $entities_id,
                         'glpi_groups_tickets.groups_id' => $groups_id,
-                        ['OR'         =>
-                            [
-                                ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                                ['status' => \Ticket::getNotSolvedStatusArray()],
-                            ],
-                            [
-                                ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                                ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                            ],
-                        ],
+                        ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                        ['OR' => [
+                            ['status' => \Ticket::getNotSolvedStatusArray()],
+                            ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                        ]],
                     ],
                 ];
                 $iterator = $DB->request($criteria);
@@ -388,16 +381,11 @@ class StockTicket extends CommonDBTM
                         $is_deleted,
                         'glpi_tickets.entities_id' => $entities_id,
                         ['glpi_tickets.id' => ['NOT IN', new QuerySubQuery($criteria_init)]],
-                        ['OR'         =>
-                            [
-                                ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                                ['status' => \Ticket::getNotSolvedStatusArray()],
-                            ],
-                            [
-                                ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                                ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                            ],
-                        ],
+                        ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
+                        ['OR' => [
+                            ['status' => \Ticket::getNotSolvedStatusArray()],
+                            ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
+                        ]],
                     ],
                 ];
                 $iterator = $DB->request($criteria);

@@ -703,8 +703,8 @@ class StockTicketIndicator extends CommonDBTM
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
-                new QueryExpression("WEEK(" . $DB->quoteName("date") . ") = $week"),
-                new QueryExpression("YEAR(" . $DB->quoteName("date") . ") = $year") ,
+                new QueryExpression("WEEK(" . $DB->quoteName("solvedate") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("solvedate") . ") = $year") ,
                 'status' => \Ticket::SOLVED,
             ],
             'GROUPBY' => 'entities_id',
@@ -727,20 +727,6 @@ class StockTicketIndicator extends CommonDBTM
             );
         }
 
-//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`,
-//                    `glpi_groups_tickets`.`groups_id`
-//                  FROM glpi_tickets
-//                    LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                   LEFT JOIN `glpi_groups_tickets`
-//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
-//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
-
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
@@ -759,8 +745,8 @@ class StockTicketIndicator extends CommonDBTM
             ],
             'WHERE' => [
                 $is_deleted,
-                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
-                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.solvedate") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.solvedate") . ") = $year") ,
                 'status' => \Ticket::SOLVED,
             ],
             'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
@@ -820,8 +806,8 @@ class StockTicketIndicator extends CommonDBTM
             'FROM' => 'glpi_tickets',
             'WHERE' => [
                 $is_deleted,
-                new QueryExpression("WEEK(" . $DB->quoteName("date") . ") = $week"),
-                new QueryExpression("YEAR(" . $DB->quoteName("date") . ") = $year") ,
+                new QueryExpression("WEEK(" . $DB->quoteName("closedate") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("closedate") . ") = $year") ,
                 'status' => \Ticket::CLOSED,
             ],
             'GROUPBY' => 'entities_id',
@@ -845,20 +831,6 @@ class StockTicketIndicator extends CommonDBTM
 
         }
 
-//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`,
-//                    `glpi_groups_tickets`.`groups_id`
-//                  FROM glpi_tickets
-//                    LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                   LEFT JOIN `glpi_groups_tickets`
-//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
-//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
-
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
@@ -877,8 +849,8 @@ class StockTicketIndicator extends CommonDBTM
             ],
             'WHERE' => [
                 $is_deleted,
-                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
-                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
+                new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.closedate") . ") = $week"),
+                new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.closedate") . ") = $year") ,
                 'status' => \Ticket::CLOSED,
             ],
             'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],

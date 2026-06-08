@@ -1508,28 +1508,42 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
             deleteWidget = function(value) {
                 widget = 'div[gs-id='+ value + ']';
                 grid.removeWidget(widget);
+                // Restore the widget button in the offcanvas
+                $('[data-widgetid=\"' + value + '\"]').show();
+                var idx = window.md_used_widgets ? window.md_used_widgets.indexOf(value) : -1;
+                if (idx !== -1) {
+                    window.md_used_widgets.splice(idx, 1);
+                }
             }
 
             addNewWidget = function(value) {
                 if (value != 0){
-                        var widgetArray = $allwidgetjson;
-                        widget = widgetArray['' + value + ''];
-                        var el = '<div id=\"gridcontent' + value + '\">'  + widget + '</div>';
-//                        var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\">' +
-//                                 '<button class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + value + '\');\">' +
-//                                  '<i class=\"ti ti-circle-x md-close\"></i></button>' + widget + '</div></div>';
-        //                grid = $('.grid-stack').data('gridstack');
-                        grid.addWidget({
-                                                   x: 0,
-                                                       y: 0,
-                                                       w: 4,
-                                                       h: 12,
-                                                       id: value,
-                                                    content: el,
-                                                    sizeToContent: false
-                                                }
-                                             );
-                        refreshWidget(value);
+                        var widgetOptionsObject = Object.assign({}, window.mdGlobalFilters || {});
+                        $.ajax({
+                            url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
+                            type: 'POST',
+                            data: {gsid: value, params: widgetOptionsObject},
+                            dataType: 'json',
+                            success: function(data) {
+                                var wid = data.id;
+                                var delbutton = '';
+                                var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + value + '\');\"><i class=\"ti ti-refresh\"></i></button>';
+                                if ($delete_button == true) {
+                                    delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + value + '\');\"><i class=\"ti ti-circle-x md-close\"></i></button>';
+                                }
+                                var el = '<div id=\"gridcontent' + value + '\">' + refreshbutton + delbutton + '<div id=\"' + wid + '\"></div></div>';
+                                grid.addWidget({
+                                    x: 0,
+                                    y: 0,
+                                    w: 4,
+                                    h: 12,
+                                    id: value,
+                                    content: el,
+                                    sizeToContent: false
+                                });
+                                $('div[id=' + wid + ']').replaceWith(data.widget);
+                            }
+                        });
                         return true;
                      }
             }
