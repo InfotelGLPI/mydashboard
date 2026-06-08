@@ -216,6 +216,7 @@ class Preference extends CommonDBTM
             'value'   => $this->fields['prefered_entity'],
             'entity'  => $_SESSION['glpiactiveentities'],
             'display' => false,
+            'toadd'   => [0 => Dropdown::EMPTY_VALUE],
         ]);
 
         $prefered_category_dd = ITILCategory::dropdown([

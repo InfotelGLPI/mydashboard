@@ -12,7 +12,7 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
   schedule:
-    - cron: '44 14 * * 1'
+    - cron: '28 8 * * 1'
 
 permissions:
   contents: read
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Psalm Security Scan
-        uses: psalm/psalm-github-security-scan@9ec1b5e2b854b3f048fa32e8c4aaa9ae05d77345
+        uses: psalm/psalm-github-security-scan@1.4.0
 
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v4

@@ -885,7 +885,7 @@ class Menu extends CommonGLPI
 
         $year_default   = Year::getDefaultValue();
         $type_default   = (int) ($fields['prefered_type'] ?? 0);
-        $entity_default = (int) ($fields['prefered_entity'] ?? 0);
+        $entity_default = (int) ($fields['prefered_entity'] ?? 0) ?: (int) $_SESSION['glpiactive_entity'];
         $group_default  = json_decode($fields['prefered_group'] ?? '[]', true) ?: [];
 
         $entity_dd = Entity::dropdown([

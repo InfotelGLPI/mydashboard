@@ -64,7 +64,9 @@ class Type
     public static function getDisplayValue($opt) {
 
         $form = "";
-        if ($opt[self::$criteria_name] != 0) {
+
+        if (!empty($opt[self::$criteria_name])
+            && $opt[self::$criteria_name] != 0) {
             $form = "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . Ticket::getTicketTypeName($opt[self::$criteria_name]);
         }
         return $form;
