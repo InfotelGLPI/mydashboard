@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 12:18+0000\n"
+"POT-Creation-Date: 2026-06-08 10:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -496,7 +496,7 @@ msgstr ""
 msgid "GLPI is OK"
 msgstr ""
 
-#: src/Menu.php:1770
+#: src/Menu.php:1784
 msgid "Generating PDF..."
 msgstr ""
 
@@ -667,7 +667,7 @@ msgid "Monthly tickets in progress"
 msgstr ""
 
 #: src/Config.php:66 src/Preference.php:85 src/Menu.php:112 src/Menu.php:835
-#: src/Menu.php:1771 setup.php:201
+#: src/Menu.php:1785 setup.php:201
 msgid "My Dashboard"
 msgstr ""
 
@@ -933,7 +933,7 @@ msgstr ""
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Menu.php:1772
+#: src/Menu.php:1786
 msgid "PDF export failed. Please try again."
 msgstr ""
 
