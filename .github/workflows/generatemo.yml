@@ -27,7 +27,7 @@ jobs:
       run:  perl tools/update_mo.pl;
 
     - name: Commit changes
-      uses: EndBug/add-and-commit@v9
+      uses: EndBug/add-and-commit@v10
       with:
        
         message: "Generate mo"
