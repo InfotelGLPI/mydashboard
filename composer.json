@@ -1,0 +1,24 @@
+{
+    "name": "infotelglpi/mydashboard",
+    "type": "glpi-plugin",
+    "description": "My Dashboard plugin for GLPI",
+    "homepage": "https://github.com/InfotelGLPI/mydashboard",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Infotel"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "GlpiPlugin\\Mydashboard\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
