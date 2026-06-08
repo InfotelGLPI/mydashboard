@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-08 10:29+0000\n"
+"POT-Creation-Date: 2026-06-08 10:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -266,7 +266,7 @@ msgstr ""
 msgid "Curl PHP package not installed"
 msgstr ""
 
-#: src/Preference.php:240
+#: src/Preference.php:241
 msgid "Current year"
 msgstr ""
 
@@ -988,7 +988,7 @@ msgstr ""
 msgid "Plugin setup"
 msgstr ""
 
-#: src/Preference.php:240
+#: src/Preference.php:241
 msgid "Previous year"
 msgstr ""
 
