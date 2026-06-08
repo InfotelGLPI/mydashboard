@@ -1095,9 +1095,7 @@ class Alert extends CommonDBTM
                 $widget->toggleWidgetRefresh();
 
                 $graph = self::displayIndicator($widgetId, "week", $opt, true);
-                $widget->setWidgetHtmlContent(
-                    $graph
-                );
+                $widget->setWidgetHtmlContent($graph);
                 return $widget;
         }
     }

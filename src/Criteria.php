@@ -44,6 +44,7 @@ use GlpiPlugin\Mydashboard\Criterias\Status;
 use GlpiPlugin\Mydashboard\Criterias\Technician;
 use GlpiPlugin\Mydashboard\Criterias\TechnicianGroup;
 use GlpiPlugin\Mydashboard\Criterias\Type;
+use GlpiPlugin\Mydashboard\Criterias\Week;
 use GlpiPlugin\Mydashboard\Criterias\Year;
 use Session;
 use Toolbox;
@@ -66,6 +67,7 @@ class Criteria
         'computertypes_id',
         'year',
         'month',
+        'week',
         'limit',
         'multiple_time',
         'display_data',
@@ -520,6 +522,7 @@ class Criteria
             ITILCategory::$criteria_name => ITILCategory::class,
             Year::$criteria_name => Year::class,
             Month::$criteria_name => Month::class,
+            Week::$criteria_name => Week::class,
             ComputerType::$criteria_name => ComputerType::class,
             MultipleLocation::$criteria_name => MultipleLocation::class,
             DisplayData::$criteria_name => DisplayData::class,
@@ -588,6 +591,7 @@ class Criteria
             ITILCategory::$criteria_name => ITILCategory::class,
             Year::$criteria_name => Year::class,
             Month::$criteria_name => Month::class,
+            Week::$criteria_name => Week::class,
             ComputerType::$criteria_name => ComputerType::class,
             MultipleLocation::$criteria_name => MultipleLocation::class,
             DisplayData::$criteria_name => DisplayData::class,
@@ -654,6 +658,7 @@ class Criteria
             ITILCategory::$criteria_name => ITILCategory::class,
             Year::$criteria_name => Year::class,
             Month::$criteria_name => Month::class,
+            Week::$criteria_name => Week::class,
             ComputerType::$criteria_name => ComputerType::class,
             MultipleLocation::$criteria_name => MultipleLocation::class,
             DisplayData::$criteria_name => DisplayData::class,

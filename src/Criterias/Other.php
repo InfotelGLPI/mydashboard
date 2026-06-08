@@ -48,7 +48,6 @@ class Other
 
     public static $criterias_list = [
         'status',
-        'week',
         'multiple_technicians_id',
         'end',
         'begin',
@@ -60,10 +59,6 @@ class Other
 
     public static function getDefaultValue()
     {
-//        if (in_array("week", $criterias)) {
-        $default['week'] = intval(date('W', time()) - 1);
-//        }
-
         // BEGIN DATE
 //        if (in_array("begin", $criterias)) {
         $default['begin'] = date("Y-m-d H:i:s");
@@ -212,10 +207,6 @@ class Other
     public static function getDisplayValue($opt)
     {
         $form = "";
-        if (isset($opt['week'])) {
-            $form .= "&nbsp;/&nbsp;" . __('Week', 'mydashboard') . "&nbsp;:&nbsp;" . $opt['week'];
-        }
-
 
         // TECHNICIAN MULTIPLE
         if (isset($opt['multiple_technicians_id'])) {
@@ -294,23 +285,6 @@ class Other
         $criterias = $opt['criterias'] ?? $default['criterias'];
         // DATE
         // YEAR
-
-        if (in_array("week", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-            //            $semaine_courante = date('W', time());
-            $semaine_courante = $default['week'];
-            if (isset($opt["week"])
-                && $opt["week"] > 0) {
-                $semaine_courante = $opt["week"];
-            }
-            $form .= __('Week', 'mydashboard');
-            $form .= "&nbsp;";
-            $form .= self::WeekDropdown($semaine_courante);
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
-        }
 
         // START DATE
         if (in_array("begin", $criterias)) {
@@ -630,20 +604,4 @@ class Other
         return $form;
     }
 
-    /**
-     * @param null $selected
-     *
-     * @return int|string
-     */
-    public static function WeekDropdown($selected = null)
-    {
-        $opt = [
-            'value' => $selected,
-            'min' => 1,
-            'max' => 53,
-            'display' => false,
-        ];
-
-        return Dropdown::showNumber("week", $opt);
-    }
 }
