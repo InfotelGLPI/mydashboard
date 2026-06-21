@@ -33,15 +33,24 @@ Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 $dashboard = new Dashboard();
 
-$profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+$profile   = (int) ($_POST['profiles_id'] ?? ($_SESSION['glpiactiveprofile']['id'] ?? -1));
+$edit_mode = (int) ($_POST['edit_mode'] ?? 0);
 
-$options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
+if ($edit_mode == 2 && Session::haveRight("plugin_mydashboard_config", CREATE)) {
+    // Global edit mode: clear the profile-wide grid (users_id = 0)
+    $options = ["users_id" => 0, "profiles_id" => $profile];
+} else {
+    // Personal edit mode: clear the current user's grid
+    $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
+}
+
 $id = Dashboard::checkIfPreferenceExists($options);
 if ($id) {
    $input['id'] = $id;
    $dashboard->delete($input);
-   $msg_clear = __('Grid cleared', 'mydashboard');
 }
+
+echo Session::getNewCSRFToken();
 
 
 

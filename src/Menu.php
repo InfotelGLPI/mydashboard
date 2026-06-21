@@ -506,13 +506,6 @@ class Menu extends CommonGLPI
                 $edit = 1;
             }
 
-            echo "<a id='load-widgets' class='submit btn btn-info'>";
-            echo "<i class='ti ti-loader pointer btn-mydashboard' title='" . __('Load widgets', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-            echo "&nbsp;" . __('Load widgets', 'mydashboard');
-            echo "</a>";
-            echo "<br><br>";
-
             if ($edit == 1) {
                 echo "<a id='save-grid' class='submit btn btn-success'>";
                 echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
@@ -634,9 +627,9 @@ class Menu extends CommonGLPI
 
             if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
                 echo "<a id='edit-default-grid' class='submit btn btn-danger'>";
-                echo "<i class='ti ti-adjustments pointer btn-mydashboard' title='" . __('Custom and save default grid', 'mydashboard') . "'
+                echo "<i class='ti ti-adjustments pointer btn-mydashboard' title='" . __('Custom and save profile grid', 'mydashboard') . "'
                            data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Custom and save default grid', 'mydashboard');
+                echo "&nbsp;" . __('Custom and save profile grid', 'mydashboard');
                 echo "</a>";
                 echo "<br><br>";
             }
@@ -735,10 +728,6 @@ class Menu extends CommonGLPI
               . " aria-controls='md-widget-offcanvas'>"
               . "<i class='ti ti-plus me-1'></i>" . __('Add widgets', 'mydashboard')
               . "</button>";
-
-        // Charger les widgets
-        $out .= "<a id='load-widgets' role='button' style='padding: 5px;' class='btn btn-info btn-sm'>"
-              . "<i class='ti ti-loader me-1'></i>" . __('Load widgets', 'mydashboard') . "</a>";
 
         // Sauvegarder
         if ($edit == 1) {
@@ -855,7 +844,7 @@ class Menu extends CommonGLPI
 
         if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
             $out .= "<a id='edit-default-grid' role='button' style='padding: 5px;' class='btn btn-outline-secondary btn-sm'>"
-                  . "<i class='ti ti-adjustments me-1'></i>" . __('Custom and save default grid', 'mydashboard') . "</a>";
+                  . "<i class='ti ti-adjustments me-1'></i>" . __('Custom and save profile grid', 'mydashboard') . "</a>";
         }
 
         $out .= "<a id='exportByHTML' role='button' style='padding: 5px;' class='btn btn-outline-secondary btn-sm ms-auto'>"
@@ -1377,7 +1366,7 @@ class Menu extends CommonGLPI
                 . __('No widgets founded, please add widgets', 'mydashboard')
                 . "</div>";
 
-            $grid = json_encode($grid);
+            $grid = '[]';
         }
 
 
@@ -1613,9 +1602,15 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
             $.ajax({
               url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/clearGrid.php',
                  type: 'POST',
+                 data: {profiles_id: $active_profile, edit_mode: $edit},
                  success:function(data) {
                         $('#ajax_loader').hide();
-                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
+                        var form = $('<form action=\"" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php\" method=\"post\">' +
+                           '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\">' +
+                           '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data + '\">' +
+                           '</form>');
+                        $('body').append(form);
+                        form.submit();
                      }
                  });
         }

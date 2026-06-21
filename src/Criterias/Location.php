@@ -63,7 +63,7 @@ class Location
     public static function getDisplayForm($default, $opt, $count) {
 
         $user = new User();
-        $default_location = $default[self::$criteria_name];
+        $default_location = $default[self::$criteria_name] ?? 0;
         if (isset($_SESSION['glpiactiveprofile']['interface'])
             && Session::getCurrentInterface() != 'central'
             && $user->getFromDB(Session::getLoginUserID())) {

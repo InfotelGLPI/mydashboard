@@ -1,5 +1,9 @@
-# mydashboard
-Plugin mydashboard for GLPI
+## Mydashboard plugin for GLPI
+
+[![License](https://img.shields.io/badge/License-GNU%20v2-blue.svg?style=flat-square)](https://github.com/InfotelGLPI/mydashboard/blob/master/LICENSE)
+[![Web](https://img.shields.io/badge/Web-Infotel-blue.svg?style=flat-square)](https://blogglpi.infotel.com)
+[![Translate](https://img.shields.io/badge/Translate-Transifex-cyan)](https://explore.transifex.com/infotelGLPI/GLPI_mydashboard/)
+
 
 ![Plugin mydashboard](https://raw.githubusercontent.com/InfotelGLPI/mydashboard/master/public/screenshots/mydashboard.png "Plugin mydashboard")
 

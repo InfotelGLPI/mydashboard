@@ -882,6 +882,8 @@ class Alert extends CommonDBTM
                 $stockwidget = new StockWidget();
                 $stocks = $stockwidget->find();
                 $script = "";
+                $types = [];
+                $states = [];
                 if (count($stocks) > 0) {
                     $nb = 0;
                     foreach ($stocks as $data) {
@@ -895,10 +897,12 @@ class Alert extends CommonDBTM
                             $typefield = $dbu->getForeignKeyFieldForTable(
                                 $dbu->getTableForItemType($itemtype . "Type")
                             );
-
-                            $types = json_decode($data["types"], true);
-                            $states = json_decode($data["states"], true);
-
+                            if ($data["types"] != null) {
+                                $types = json_decode($data["types"], true);
+                            }
+                            if ($data["states"] != null) {
+                                $states = json_decode($data["states"], true);
+                            }
 
                             //                            $q2 = "SELECT DISTINCT COUNT(`" . $itemtable . "`.`id`) AS nb
                             //                        FROM `" . $itemtable . "`

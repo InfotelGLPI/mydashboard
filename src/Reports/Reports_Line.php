@@ -423,10 +423,11 @@ class Reports_Line extends CommonGLPI
                 ];
 
                 $default = Criteria::manageCriterias($params);
+                $defaultcrit = $default['technicians_groups_id'] ?? [];
                 $technicians_groups_id = [];
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() != 'central') {
-                    $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
+                    $technicians_groups_id = $opt['technicians_groups_id'] ?? $defaultcrit;
                 }
                 if (isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
                     if (isset($opt["year"]) && $opt["year"] > 0) {

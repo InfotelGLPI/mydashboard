@@ -138,13 +138,13 @@ class TechnicianGroup
             $form .= "</br></br>";
         }
 
-        $sons = $opt['is_recursive_technicians'] ?? $default['is_recursive_technicians'];
+        $defaultcrit = $default['is_recursive_technicians'] ?? 0;
+        $sons = $opt['is_recursive_technicians'] ?? $defaultcrit;
         if ($sons > 0) {
             $form .= "<span class='md-widgetcrit'>";
             $form .= __('Child groups') . "&nbsp;";
             $paramsy = ['display' => false];
-            $ancestors = $opt['is_recursive_technicians'] ?? $default['is_recursive_technicians'];
-            $form .= Dropdown::showYesNo('is_recursive_technicians', $ancestors, -1, $paramsy);
+            $form .= Dropdown::showYesNo('is_recursive_technicians', $sons, -1, $paramsy);
             $form .= "</span>";
             if ($count > 1) {
                 $form .= "</br></br>";
