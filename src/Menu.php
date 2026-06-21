@@ -986,9 +986,9 @@ class Menu extends CommonGLPI
 
             $(document).ready(function () {
 
-                 $('#load-widgets').click(function () {
-                    launchloadWidgets();
-                });
+//                 $('#load-widgets').click(function () {
+//                    launchloadWidgets();
+//                });
                  $('#clear-grid').click(function () {
                     launchClearGrid();
                 });
@@ -1582,21 +1582,21 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
 
     </script>";
         echo "<script type='text/javascript'>
-        function launchloadWidgets() {
-           var modal = $('<div>').dialog({ modal: true });
-            modal.dialog('widget').hide();
-            $('#ajax_loader').show();
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/loadWidgets.php',
-                 type: 'POST',
-                 complete: function () {
-                          //back to normal!
-                          $('#ajax_loader').hide();
-                          modal.dialog('close');
-                          window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                      }
-                 });
-        }
+//        function launchloadWidgets() {
+//           var modal = $('<div>').dialog({ modal: true });
+//            modal.dialog('widget').hide();
+//            $('#ajax_loader').show();
+//            $.ajax({
+//              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/loadWidgets.php',
+//                 type: 'POST',
+//                 complete: function () {
+//                          //back to normal!
+//                          $('#ajax_loader').hide();
+//                          modal.dialog('close');
+//                          window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
+//                      }
+//                 });
+//        }
         function launchClearGrid() {
            $('#ajax_loader').show();
             $.ajax({

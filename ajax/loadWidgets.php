@@ -27,13 +27,13 @@
  --------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Mydashboard\Widget;
-
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
-
-ini_set("memory_limit", "-1");
-
-$widgets = Widget::getCompleteWidgetList(true);
-foreach ($widgets as $k => $val) {
-    $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::getWidget($k, $widgets, []);
-}
+//use GlpiPlugin\Mydashboard\Widget;
+//
+//Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+//
+//ini_set("memory_limit", "-1");
+//
+//$widgets = Widget::getCompleteWidgetList(true);
+//foreach ($widgets as $k => $val) {
+//    $_SESSION["glpi_plugin_mydashboard_allwidgets"][$k] = Widget::getWidget($k, $widgets, []);
+//}
