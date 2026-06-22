@@ -45,6 +45,52 @@ var mydashboard = {
     },
 };
 
+const observer = new MutationObserver(() => {
+
+    const charts = [];
+
+    document.querySelectorAll('*').forEach(el => {
+        const inst = echarts.getInstanceByDom(el);
+        if (inst) charts.push(inst);
+    });
+    
+    charts.forEach(chart => {
+        const opt = chart.getOption();
+
+        if (opt.toolbox?.[0]?.feature?.dataView) {
+            opt.toolbox[0].feature.dataView.optionToContent = function (opt) {
+
+                var axisData = opt.xAxis[0].data;
+                var series = opt.series;
+
+                var table =
+                    '<table class="table table-hover" style="width:100%;text-align:center"><tbody><tr>'
+                    + '<td>  </td>';
+                for (var i = 0, l = series.length; i < l; i++) {
+                    table += '<td>' + series[i].name + '</td>'
+                }
+                table += '</tr>';
+                for (var j = 0, l = axisData.length; j < l; j++) {
+                    table += '<tr>' + '<td>' + axisData[j] + '</td>';
+                    for (var i = 0, m = series.length; i < m; i++) {
+                        table += '<td>' + series[i].data[j] + '</td>'
+                    }
+                    table += '</tr>';
+                }
+
+                table += '</tbody></table>';
+                return table;
+            };
+
+            chart.setOption(opt);
+        }
+    });
+});
+
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+
 /**
  *  Load plugin scripts on page start
  */
@@ -53,16 +99,16 @@ var mydashboard = {
 
 //        init();
 
-        // Start the plugin
+// Start the plugin
 //        function init() {
-            //            $(document).ready(function () {
+//            $(document).ready(function () {
 //            var path = 'plugins/mydashboard/';
 //            var url = window.location.href.replace(/front\/.*/, path);
 //            if (window.location.href.indexOf('plugins') > 0) {
 //                url = window.location.href.replace(/plugins\/.*/, path);
 //            }
 
-            // Send data
+// Send data
 //            $.ajax({
 //                url: url+'ajax/loadscripts.php',
 //                type: "POST",
@@ -83,7 +129,7 @@ var mydashboard = {
 //                    </a>\
 //                </li>");
 //            }
-            //            });
+//            });
 //        }
 
 //        return this;
