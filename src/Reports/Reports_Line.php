@@ -208,6 +208,10 @@ class Reports_Line extends CommonGLPI
                     $onclick = 1;
                 }
 
+                if (($key = array_search('type', $criterias)) !== false) {
+                    unset($criterias[$key]);
+                }
+
                 $params = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
