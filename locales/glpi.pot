@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-22 06:50+0000\n"
+"POT-Creation-Date: 2026-06-24 08:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -233,7 +233,7 @@ msgid "Close edit mode"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:1081 src/Reports/Reports_Pie.php:1084
-#: src/Reports/Reports_Line.php:617 src/Reports/Reports_Line.php:1261
+#: src/Reports/Reports_Line.php:621 src/Reports/Reports_Line.php:1265
 msgid "Closed tickets"
 msgstr ""
 
@@ -784,7 +784,7 @@ msgid "Not imported mails in collectors"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:1117 src/Reports/Reports_Pie.php:1120
-#: src/Reports/Reports_Line.php:1262
+#: src/Reports/Reports_Line.php:1266
 msgid "Not planned"
 msgstr ""
 
@@ -818,11 +818,11 @@ msgstr ""
 msgid "Number of open tickets in the month still in progress for each month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:85 src/Reports/Reports_Line.php:611
+#: src/Reports/Reports_Line.php:85 src/Reports/Reports_Line.php:615
 msgid "Number of opened and closed tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:90 src/Reports/Reports_Line.php:888
+#: src/Reports/Reports_Line.php:90 src/Reports/Reports_Line.php:892
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr ""
 
@@ -850,7 +850,7 @@ msgstr ""
 msgid "Number of opened tickets by technician and by status"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:1255
+#: src/Reports/Reports_Line.php:1259
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr ""
 
@@ -915,13 +915,13 @@ msgid "Opened requests without assigned technicians"
 msgstr ""
 
 #: src/Reports/Reports_Pie.php:1052 src/Reports/Reports_Pie.php:1055
-#: src/Reports/Reports_Line.php:616 src/Reports/Reports_Line.php:893
-#: src/Reports/Reports_Line.php:1260 src/Reports/Reports_Bar.php:1802
+#: src/Reports/Reports_Line.php:620 src/Reports/Reports_Line.php:897
+#: src/Reports/Reports_Line.php:1264 src/Reports/Reports_Bar.php:1802
 msgid "Opened tickets"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:618 src/Reports/Reports_Line.php:895
-#: src/Reports/Reports_Line.php:1263 src/Reports/Reports_Bar.php:125
+#: src/Reports/Reports_Line.php:622 src/Reports/Reports_Line.php:899
+#: src/Reports/Reports_Line.php:1267 src/Reports/Reports_Bar.php:125
 msgid "Opened tickets backlog"
 msgstr ""
 
@@ -1078,7 +1078,7 @@ msgstr ""
 msgid "Requests with very high or major priority"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:894
+#: src/Reports/Reports_Line.php:898
 msgid "Resolved / closed tickets"
 msgstr ""
 
@@ -1323,10 +1323,10 @@ msgstr ""
 msgid "Tickets late"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:314 src/Reports/Reports_Line.php:1413
-#: src/Reports/Reports_Line.php:1491 src/Reports/Reports_Line.php:1625
-#: src/Reports/Reports_Line.php:1758 src/Reports/Reports_Line.php:1861
-#: src/Reports/Reports_Line.php:1997 src/Reports/Reports_Line.php:2143
+#: src/Reports/Reports_Line.php:318 src/Reports/Reports_Line.php:1417
+#: src/Reports/Reports_Line.php:1495 src/Reports/Reports_Line.php:1629
+#: src/Reports/Reports_Line.php:1762 src/Reports/Reports_Line.php:1865
+#: src/Reports/Reports_Line.php:2001 src/Reports/Reports_Line.php:2147
 #: src/Reports/Reports_Bar.php:305 src/Reports/Reports_Bar.php:561
 #: src/Reports/Reports_Bar.php:949 src/Reports/Reports_Bar.php:1365
 msgid "Tickets number"
