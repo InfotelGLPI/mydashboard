@@ -75,7 +75,7 @@ class Year
 
         $form = "<span class='md-widgetcrit'>";
         //            $annee_courante = date('Y', time());
-        $annee_courante = $default[self::$criteria_name];
+        $annee_courante = $default[self::$criteria_name] ?? date('Y');
         if (isset($opt[self::$criteria_name])
             && $opt[self::$criteria_name] > 0) {
             $annee_courante = $opt[self::$criteria_name];

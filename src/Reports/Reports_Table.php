@@ -539,7 +539,7 @@ class Reports_Table extends CommonGLPI
                             'glpi_plugin_moreticket_waitingtickets.plugin_moreticket_waitingtypes_id AS type',
                         ],
                         'DISTINCT' => true,
-                        'FROM' => 'glpi_tickets',
+                        'FROM' => 'glpi_plugin_moreticket_waitingtickets',
                         'INNER JOIN'       => [
                             'glpi_tickets' => [
                                 'ON' => [
@@ -856,7 +856,7 @@ class Reports_Table extends CommonGLPI
                             'glpi_plugin_moreticket_waitingtickets.plugin_moreticket_waitingtypes_id AS type',
                         ],
                         'DISTINCT' => true,
-                        'FROM' => 'glpi_tickets',
+                        'FROM' => 'glpi_plugin_moreticket_waitingtickets',
                         'INNER JOIN'       => [
                             'glpi_tickets' => [
                                 'ON' => [

@@ -58,7 +58,7 @@ class Month
 
     public static function getDisplayForm($default, $opt, $count) {
 
-        $mois_courant = $default[self::$criteria_name];
+        $mois_courant = $default[self::$criteria_name]?? date('m');
         if (isset($opt[self::$criteria_name])
             && $opt[self::$criteria_name] > 0) {
             $mois_courant = $opt[self::$criteria_name];
