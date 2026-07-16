@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-02 07:04+0000\n"
+"POT-Creation-Date: 2026-07-16 11:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -659,7 +659,7 @@ msgid "Monthly tickets in progress"
 msgstr ""
 
 #: src/Preference.php:85 src/Config.php:66 src/Menu.php:112 src/Menu.php:824
-#: src/Menu.php:1780 setup.php:201
+#: src/Menu.php:1780 setup.php:203
 msgid "My Dashboard"
 msgstr ""
 
