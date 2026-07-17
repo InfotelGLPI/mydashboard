@@ -2431,6 +2431,8 @@ class Alert extends CommonDBTM
                 $this->getTable() . '.type' => 1,
                 $visibility_criteria,
             ],
+            // Collapse rows duplicated by the visibility joins (entities/groups/profiles/users)
+            'GROUPBY' => 'glpi_reminders.id',
             'ORDERBY' => 'glpi_reminders.name',
         ];
 
@@ -2643,6 +2645,8 @@ class Alert extends CommonDBTM
                 $this->getTable() . '.type' => 2,
                 $visibility_criteria,
             ],
+            // Collapse rows duplicated by the visibility joins (entities/groups/profiles/users)
+            'GROUPBY' => 'glpi_reminders.id',
             'ORDERBY' => 'glpi_reminders.name',
         ];
 
@@ -2847,6 +2851,8 @@ class Alert extends CommonDBTM
                 $this->getTable() . '.type' => 0,
                 $visibility_criteria,
             ],
+            // Collapse rows duplicated by the visibility joins (entities/groups/profiles/users)
+            'GROUPBY' => 'glpi_reminders.id',
             'ORDERBY' => 'glpi_reminders.name',
         ];
 
@@ -3061,6 +3067,8 @@ class Alert extends CommonDBTM
                 $this->getTable() . '.type' => 0,
                 $visibility_criteria,
             ],
+            // Collapse rows duplicated by the visibility joins (entities/groups/profiles/users)
+            'GROUPBY' => 'glpi_reminders.id',
             'ORDERBY' => 'glpi_reminders.name',
         ];
 
