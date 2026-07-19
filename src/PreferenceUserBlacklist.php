@@ -96,8 +96,11 @@ class PreferenceUserBlacklist extends CommonDBTM {
     */
    public function save($post) {
 
-      if (isset($post) && isset($post['id'])) {
-         $user_id = $post['id'];
+      // IDOR guard: this is a per-user preference. Never trust $post['id'] as the
+      // target user (an attacker could rewrite another user's blacklist); always
+      // key on the authenticated session user. The form's hidden "id" is ignored.
+      $user_id = (int) Session::getLoginUserID();
+      if (!empty($post) && $user_id > 0) {
          $currentblacklist = $this->getBlacklistForUser($user_id);
          $newblacklist = [];
          foreach ($post as $key => $value) {

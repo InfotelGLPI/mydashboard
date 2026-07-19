@@ -1002,14 +1002,17 @@ class Alert extends CommonDBTM
                                 . Toolbox::append_params($search, "&");
 
                             $icon = $data['icon'];
+                            // Stock-widget names are admin-set DB values echoed raw; escape
+                            // them (attribute + text contexts) as defence in depth.
+                            $safe_stock_name = htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8');
                             $table .= "<div class=\"nbstock\" style=\"color:$color\">";
-                            $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $data['name'] . "'>";
+                            $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $safe_stock_name . "'>";
                             $table .= "<i style='color:$color;font-size:3em;' class=\"ti $icon fa-border\"></i>";
                             $table .= "<h3 style='margin-top: 10px;'>";
                             $table .= "<span class=\"counter count-number\" id=\"stock_$nb\"></span>";
                             //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
                             $table .= "</h3>";
-                            $table .= "<p class=\"count-text \">" . $data['name'] . "</p>";
+                            $table .= "<p class=\"count-text \">" . $safe_stock_name . "</p>";
                             $table .= "</a>";
                             $table .= "</div>";
 
@@ -3218,10 +3221,14 @@ class Alert extends CommonDBTM
                 //            $classfont = ' alert_fontimpact' . $listitem['impact'];
                 $styleFont = 'color : ' . $configColor;
                 $rand = mt_rand();
+                // Reminder names are stored raw (GLPI 10+): escape before echo. This
+                // is rendered to anonymous visitors on the login page via the
+                // DISPLAY_LOGIN hook, so an unescaped name is a stored XSS sink.
+                $safe_name = htmlspecialchars($listitem['name'], ENT_QUOTES, 'UTF-8');
                 $name = (Session::haveRight("reminder_public", READ))
                     ? "<a  href='" . \Reminder::getFormURL(
-                    ) . "?id=" . $listitem['id'] . "'>" . $listitem['name'] . "</a>"
-                    : $listitem['name'];
+                    ) . "?id=" . (int) $listitem['id'] . "'>" . $safe_name . "</a>"
+                    : $safe_name;
 
                 $l .= "<div id='alert$rand'>";
                 $l .= "<span style='$style' class='alert_impact'></span>";

@@ -27,8 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-use Glpi\Event;
-include('../../../../inc/includes.php');
 header('Content-Type: text/javascript');
 ?>
 var root_mydasboard_doc = "<?php echo PLUGIN_MYDASHBOARD_WEBDIR; ?>";

@@ -27,9 +27,14 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\ProfileAuthorizedWidget;
 
 Session::checkLoginUser();
+// This admin screen rewrites the per-profile widget-authorization matrix from an
+// arbitrary POST profiles_id. checkLoginUser() is not authorization on GLPI 11 and
+// ProfileAuthorizedWidget declares no $rightname, so gate on the plugin setup right.
+Session::checkRight(Config::$rightname, UPDATE);
 
 $paw = new ProfileAuthorizedWidget();
 
