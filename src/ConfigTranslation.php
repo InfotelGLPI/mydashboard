@@ -192,7 +192,7 @@ class ConfigTranslation extends CommonDBChild {
             echo "<td $onhover>";
             if ($canedit) {
                echo "\n<script type='text/javascript' >\n";
-               echo "function viewEditTranslationconfig" . $data['id'] . "$rand() {\n";
+               echo "function viewEditTranslationconfig" . (int) $data['id'] . "$rand() {\n";
                $params = ['type'                      => __CLASS__,
                                'parenttype'                => get_class($item),
                                $item->getForeignKeyField() => $item->getID(),
@@ -207,7 +207,9 @@ class ConfigTranslation extends CommonDBChild {
             echo "</td><td $onhover>";
             $searchOption = $item->getSearchOptionByField('field', $data['field']);
             echo $searchOption['name'] . "</td>";
-            echo "<td $onhover>" . $data['value'] . "</td>";
+            // Escape the translation value read from the database before echoing it
+            // (GLPI 11 stores raw data; escaping is done at render time).
+            echo "<td $onhover>" . htmlspecialchars($data['value'], ENT_QUOTES, 'UTF-8') . "</td>";
             echo "</tr>";
          }
          echo "</table>";

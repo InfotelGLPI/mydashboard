@@ -2563,8 +2563,14 @@ class Alert extends CommonDBTM
     {
         global $DB;
 
-        $note = new \Reminder();
-        $note->getFromDB($id);
+        // Anti-IDOR: $id comes straight from the client ($_GET['id'] in
+        // ajax/showalert.php). Without a visibility gate a user holding only the
+        // plugin READ right could enumerate id=1,2,3... and read the text and
+        // attached documents of any reminder, including alerts targeting another
+        // entity/profile. Only expose a reminder that (a) is linked to a
+        // mydashboard alert and (b) is currently visible through the exact same
+        // criteria the ticker itself uses (visibility joins + active view dates).
+        $id = (int) $id;
 
         $config = new Config();
         $config->getFromDB(1);
@@ -2572,6 +2578,35 @@ class Alert extends CommonDBTM
         $alert = new self();
 
         if ($alert->getFromDBByCrit(['reminders_id' => $id])) {
+            $now = date('Y-m-d H:i:s');
+            $visibility_check = [
+                'SELECT'    => 'glpi_reminders.id',
+                'FROM'      => 'glpi_reminders',
+                'LEFT JOIN' => Reminder::getVisibilityCriteriaCommonJoin(true),
+                'WHERE'     => [
+                    'glpi_reminders.id' => $id,
+                    [
+                        'OR' => [
+                            ['glpi_reminders.begin_view_date' => null],
+                            ['glpi_reminders.begin_view_date' => ['<', $now]],
+                        ],
+                    ],
+                    [
+                        'OR' => [
+                            ['glpi_reminders.end_view_date' => null],
+                            ['glpi_reminders.end_view_date' => ['>', $now]],
+                        ],
+                    ],
+                ],
+                'GROUPBY'   => 'glpi_reminders.id',
+            ];
+            if (count($DB->request($visibility_check)) === 0) {
+                return;
+            }
+
+            $note = new \Reminder();
+            $note->getFromDB($id);
+
             if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
                 $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
                 echo "<span style='$style_description'>";
@@ -3392,7 +3427,11 @@ class Alert extends CommonDBTM
             echo "<tr class='tab_bg_2'>";
             echo "<td>" . __("Comment") . "</td>";
             echo "<td>";
-            echo nl2br($reminder->fields['text']);
+            // The reminder text is stored raw (rich text) in GLPI 11 and must be
+            // sanitized at render time. getSafeHtml keeps the allowed formatting
+            // but strips scripts/event handlers, closing a stored-XSS path where a
+            // reminder author's payload would execute for any user opening this tab.
+            echo \Glpi\RichText\RichText::getSafeHtml($reminder->fields['text']);
             echo "</td>";
             echo "</tr>";
             echo "</table>";

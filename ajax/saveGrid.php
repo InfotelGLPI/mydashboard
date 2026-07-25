@@ -35,7 +35,9 @@ Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 $data      = stripslashes($_POST['data']);
 $dashboard = new Dashboard();
 
-$profile = $_POST['profiles_id'];
+// Cast the incoming profile id to an integer (consistent with clearGrid.php)
+// to avoid storing non-numeric identifiers in the dashboard preference rows.
+$profile = (int) ($_POST['profiles_id'] ?? 0);
 $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
 $id      = Dashboard::checkIfPreferenceExists($options);
 

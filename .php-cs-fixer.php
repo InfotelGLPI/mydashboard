@@ -27,28 +27,24 @@
  --------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Mydashboard\Alert;
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
 
-// Alerts feed the global ticker shown to every user (including on the login page),
-// so managing them is a plugin-configuration action, not personal dashboard editing.
-// Require the config right, consistent with ajax/createalert.php.
-Session::checkRight("plugin_mydashboard_config", UPDATE);
+$finder = Finder::create()
+    ->in(__DIR__)
+    ->name('*.php')
+    ->exclude('vendor')
+    ->exclude('tests/config')
+    ->ignoreVCSIgnored(true);
 
-$alert = new Alert();
+$config = new Config();
 
-if (isset($_POST['update'])) {
-   if (isset($_POST['id'])) {
-      if ($_POST['id'] == -1) {
-         unset($_POST['id']);
-         $alert->add($_POST);
-      } else {
-         $alert->update($_POST);
-      }
-   }
-} else if (isset($_POST['delete'])) {
-   if (isset($_POST['id'])) {
-      $alert->delete($_POST, true);
-   }
-}
-Html::back();
+$rules = [
+    '@PER-CS2.0'                  => true,
+    'trailing_comma_in_multiline' => ['elements' => ['arguments', 'array_destructuring', 'arrays']],
+];
 
+return $config
+    ->setRules($rules)
+    ->setFinder($finder)
+    ->setUsingCache(false);

@@ -52,7 +52,7 @@ class StockTicketIndicator extends CommonDBTM
 
         if ($type == "all") {
 
-            $DB->doQuery("TRUNCATE TABLE `glpi_plugin_mydashboard_stockticketindicators`");
+            $DB->delete("glpi_plugin_mydashboard_stockticketindicators", [1]);
 
             for ($y = 0; $y < 5; $y++) {
                 $year = date('Y') - $y;

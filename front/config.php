@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
 global $CFG_GLPI;
@@ -43,9 +44,10 @@ if (Plugin::isPluginActive("mydashboard")) {
    }
 
 } else {
-   Html::header(__('Setup'), '', "config", "plugin");
-   echo "<div class='alert  alert-warning d-flex'>";
-   echo "<b>" . __('Please activate the plugin', 'mydashboard') . "</b></div>";
-   Html::footer();
+    Html::header(__s('Setup'), '', "config", "plugin");
+    TemplateRenderer::getInstance()->display('@mydashboard/plugin_inactive.html.twig', [
+        'message' => __('Please activate the plugin', 'mydashboard'),
+    ]);
+    Html::footer();
 
 }

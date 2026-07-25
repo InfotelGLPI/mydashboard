@@ -34,6 +34,10 @@ Session::checkLoginUser();
 //Save user preferences
 if (isset ($_POST['update'])) {
    $pref = new Preference();
+   // IDOR guard: the Preference primary key is the user id. Never trust the POSTed
+   // "id" (an attacker with the plugin right could overwrite another user's
+   // preferences); always force the target to the authenticated session user.
+   $_POST['id'] = Session::getLoginUserID();
    $pref->check(-1, UPDATE, $_POST);
    if(isset($_POST["prefered_group"])){
       $_POST["prefered_group"] = json_encode($_POST["prefered_group"]);

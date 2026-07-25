@@ -102,7 +102,11 @@ class ItilAlert extends CommonDBTM {
          echo "<tr class='tab_bg_2'>";
          echo "<td>" . __("Comment") . "</td>";
          echo "<td>";
-         echo $reminder->fields['text'];
+         // The reminder text is stored raw (rich text) in GLPI 11 and must be
+         // sanitized at render time. getSafeHtml keeps the allowed formatting but
+         // strips scripts/event handlers, closing a stored-XSS path where a
+         // reminder author's payload would execute for any user opening this tab.
+         echo \Glpi\RichText\RichText::getSafeHtml($reminder->fields['text']);
          echo "</td>";
          echo "</tr>";
          echo "</table>";

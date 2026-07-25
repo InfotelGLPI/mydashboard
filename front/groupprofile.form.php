@@ -28,8 +28,11 @@
  */
 
 use GlpiPlugin\Mydashboard\Groupprofile;
+use GlpiPlugin\Mydashboard\Config;
 
 Session::checkLoginUser();
+
+Session::checkRight(Config::$rightname, UPDATE);
 
 $group = new Groupprofile();
 if (isset($_POST["addGroup"])) {

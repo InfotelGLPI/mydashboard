@@ -474,6 +474,39 @@ class Widget extends CommonDBTM
 
 
     /**
+     * Normalize the client-controlled widget parameters that end up interpolated
+     * into raw SQL by the report classes (date filters). Numeric year/month are
+     * cast to integers and free-form begin/end dates are reformatted to a canonical
+     * datetime, neutralizing any SQL injection payload while preserving behaviour.
+     * Array-valued year/month (multi-value criteria) are left untouched.
+     *
+     * @param array $opt
+     *
+     * @return array
+     */
+    public static function sanitizeWidgetParams($opt)
+    {
+        if (!is_array($opt)) {
+            return $opt;
+        }
+
+        foreach (['year', 'month', 'start_year', 'start_month', 'end_year', 'end_month'] as $key) {
+            if (isset($opt[$key]) && !is_array($opt[$key]) && $opt[$key] !== '') {
+                $opt[$key] = (int) $opt[$key];
+            }
+        }
+
+        foreach (['begin', 'end'] as $key) {
+            if (isset($opt[$key]) && is_string($opt[$key]) && $opt[$key] !== '') {
+                $timestamp = strtotime($opt[$key]);
+                $opt[$key] = ($timestamp !== false) ? date('Y-m-d H:i:s', $timestamp) : null;
+            }
+        }
+
+        return $opt;
+    }
+
+    /**
      * @param       $classname
      * @param       $widgetindex
      * @param       $parent
@@ -484,6 +517,12 @@ class Widget extends CommonDBTM
      */
     public static function loadWidget($classname, $widgetindex, $class, $opt = [])
     {
+        // Central sanitization of the fully client-controlled widget parameters
+        // ($opt originates from $_POST['params'] in ajax/refreshWidget.php and from the
+        // stored grid on initial render). Several report classes interpolate these date
+        // filters into raw SQL (QueryExpression / raw WHERE strings), so they must be
+        // normalized here to prevent SQL injection with only the plugin READ right.
+        $opt = self::sanitizeWidgetParams($opt);
 
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);

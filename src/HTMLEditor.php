@@ -130,7 +130,9 @@ class HTMLEditor extends CommonDBTM
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='tab_bg_1'>";
-        echo "<th>" . $item->fields['name'] . "</th></tr>";
+        // Escape the widget name read from the database before echoing it (GLPI 11
+        // stores raw data; escaping is done at render time).
+        echo "<th>" . htmlspecialchars($item->fields['name'], ENT_QUOTES, 'UTF-8') . "</th></tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td>";
 

@@ -71,4 +71,6 @@ if (!isset($_POST['itemtype']) || !isset($_POST['params'])) {
    $result['points'] = $points;
 }
 
-echo json_encode($result);
+// Escape HTML-significant characters so the DB-derived labels cannot be
+// interpreted as HTML (XSS defense). Content-Type is already set to JSON above.
+echo json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);

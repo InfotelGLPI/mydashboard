@@ -51,7 +51,8 @@ if (isset($dashboardWidgets->fields['id'])) {
     $edit = Preference::checkEditMode(Session::getLoginUserID());
     if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
         $idUser    = 0;
-        $idProfile = $_GET['profiles_id'];
+        // Cast the incoming profile id to int (consistent with saveGrid/clearGrid).
+        $idProfile = (int) ($_GET['profiles_id'] ?? 0);
     }
     if ($idProfile > 0) {
         if ($dashboard->getFromDBByCrit(['users_id' => $idUser, 'profiles_id' => $idProfile])) {
@@ -60,7 +61,13 @@ if (isset($dashboardWidgets->fields['id'])) {
                 foreach ($grids_saved as $key => $grid_saved) {
                     if ($key == $gsId) {
                         $result = $grid_saved;
-                        $result = json_encode($result, JSON_NUMERIC_CHECK);
+                        // Escape HTML-significant characters so the stored grid
+                        // payload cannot be interpreted as HTML (stored-XSS defense,
+                        // aligned with state_save.php).
+                        $result = json_encode(
+                            $result,
+                            JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                        );
                         $result = str_replace(['"true"', '"false"'], ['true', 'false'], $result);
                     }
                 }
@@ -71,7 +78,13 @@ if (isset($dashboardWidgets->fields['id'])) {
                 foreach ($grids_saved as $key => $grid_saved) {
                     if ($key == $gsId) {
                         $result = $grid_saved;
-                        $result = json_encode($result, JSON_NUMERIC_CHECK);
+                        // Escape HTML-significant characters so the stored grid
+                        // payload cannot be interpreted as HTML (stored-XSS defense,
+                        // aligned with state_save.php).
+                        $result = json_encode(
+                            $result,
+                            JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                        );
                         $result = str_replace(['"true"', '"false"'], ['true', 'false'], $result);
                     }
                 }
@@ -80,4 +93,5 @@ if (isset($dashboardWidgets->fields['id'])) {
     }
 }
 
-echo $result;
+header('Content-Type: application/json');
+echo $result ?? json_encode(null);

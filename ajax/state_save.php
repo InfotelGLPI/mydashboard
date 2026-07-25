@@ -96,4 +96,7 @@ if (!isset($_POST)) {
    }
 }
 
-echo json_encode($result);
+// Return a proper JSON content type and escape HTML-significant characters so the
+// reflected request payload cannot be interpreted as HTML (reflected XSS defense).
+header('Content-Type: application/json');
+echo json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);

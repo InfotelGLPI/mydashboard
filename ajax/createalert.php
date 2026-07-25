@@ -40,15 +40,18 @@ if (strpos($_SERVER['PHP_SELF'], "createalert.php")) {
 
 if (isset($_POST['itemtype'])) {
    $class = $_POST['itemtype'];
-   $allowed_types = array_merge(['PluginEventsmanagerEvent', 'Problem', 'Change'], Alert::getTypes());
+   $allowed_types = array_merge([\GlpiPlugin\Eventsmanager\Event::class, 'Problem', 'Change'], Alert::getTypes());
    if (!in_array($class, $allowed_types, true)) {
       http_response_code(400);
       exit;
    }
    $item = new $class();
-   if ($class == 'PluginEventsmanagerEvent') {
+   if ($class == \GlpiPlugin\Eventsmanager\Event::class) {
       if (isset($_POST['items_id'])) {
-         if ($item->getFromDB($_POST['items_id'])) {
+         // Enforce access control on the source item (global right + entity) before
+         // copying its data and updating it: this branch updates the event, so
+         // require UPDATE. can() also loads the record into $item->fields.
+         if ($item->can($_POST['items_id'], UPDATE)) {
             $reminder     = new Reminder();
             $reminders_id = $reminder->add(['name'     => addslashes($item->fields['name']),
                                                  'text'     => addslashes($item->fields['comment']),
@@ -60,7 +63,9 @@ if (isset($_POST['itemtype'])) {
       }
    } else if ($class == 'Problem' || $class == 'Change') {
       if (isset($_POST['items_id'])) {
-         if ($item->getFromDB($_POST['items_id'])) {
+         // Enforce access control on the source item (global right + entity) before
+         // copying its name/content into a reminder. can() also loads $item->fields.
+         if ($item->can($_POST['items_id'], READ)) {
             $reminder = new Reminder();
             $reminders_id = $reminder->add(['name' => addslashes($item->fields['name']),
                'text' => addslashes($item->fields['content']),
@@ -73,7 +78,9 @@ if (isset($_POST['itemtype'])) {
       }
    } else if (in_array($class,Alert::getTypes())){
       if (isset($_POST['items_id'])) {
-         if ($item->getFromDB($_POST['items_id'])) {
+         // Enforce access control on the source item (global right + entity) before
+         // copying its name/content into a reminder. can() also loads $item->fields.
+         if ($item->can($_POST['items_id'], READ)) {
             $name = method_exists($item,"getNameAlert")?$item->getNameAlert():$item->fields["name"];
             $content = method_exists($item,"getContentAlert")?$item->getContentAlert():$item->fields["content"];
             $reminder     = new Reminder();

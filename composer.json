@@ -19,6 +19,27 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.99"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "glpi-project/tools": "^0.8",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "glpi-project/phpstan-glpi": "^1.1",
+        "phpunit/phpunit": "^11.5"
+    },
+    "scripts": {
+        "lint": "parallel-lint --exclude vendor --exclude node_modules .",
+        "cs": "php-cs-fixer fix --dry-run --diff --ansi",
+        "cs-fix": "php-cs-fixer fix --ansi",
+        "phpstan": "phpstan analyze --ansi --memory-limit=1G",
+        "qa": [
+            "@lint",
+            "@phpstan",
+            "@cs"
+        ]
     }
 }

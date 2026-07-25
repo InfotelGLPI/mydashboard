@@ -170,7 +170,9 @@ class Profile extends \Profile
         //      Toolbox::logDebug($effective_rights);
         echo "<table class='tab_cadre_fixehov'>";
         echo "<tr class='tab_bg_2'>";
-        echo "<th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), self::getTypeName(1), $profile->fields["name"]) . "</th>";
+        // Escape the profile name read from the database before echoing it (GLPI 11
+        // stores raw data; escaping is done at render time).
+        echo "<th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), self::getTypeName(1), htmlspecialchars($profile->fields["name"], ENT_QUOTES, 'UTF-8')) . "</th>";
         echo "</tr>";
         echo "<tr class='tab_bg_1'><td></td><td>" . __("Full", "mydashboard") . "</td><td>" . __("Custom", "mydashboard") . "</td></tr>";
         echo "<tr class='tab_bg_2'>";

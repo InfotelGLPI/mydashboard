@@ -45,7 +45,15 @@ if (Session::getCurrentInterface() == 'central') {
 }
 
 if (isset($_POST["profiles_id"])) {
-   $_SESSION['plugin_mydashboard_profiles_id'] = $_POST["profiles_id"];
+   // Anti-IDOR: only accept a profile actually granted to the user (present in
+   // $_SESSION['glpiprofiles']). Config-right holders may switch to any profile
+   // for global dashboard editing (consistent with saveGrid/state_save). A forged
+   // profiles_id is ignored so it cannot load another profile's dashboard layout.
+   $requested_profile = (int) $_POST["profiles_id"];
+   if (isset($_SESSION['glpiprofiles'][$requested_profile])
+       || Session::haveRight("plugin_mydashboard_config", CREATE)) {
+      $_SESSION['plugin_mydashboard_profiles_id'] = $requested_profile;
+   }
 }
 if (isset($_POST["predefined_grid"])) {
    $_SESSION['plugin_mydashboard_predefined_grid'] = $_POST["predefined_grid"];
@@ -55,8 +63,9 @@ if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
     $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
     $predefined_grid = 0;
 
-    if (isset($_POST["profiles_id"])) {
-        $profile = $_POST["profiles_id"];
+    // Use the validated profile stored above (never the raw POST value).
+    if (isset($_POST["profiles_id"]) && isset($_SESSION['plugin_mydashboard_profiles_id'])) {
+        $profile = (int) $_SESSION['plugin_mydashboard_profiles_id'];
     }
     if (isset($_POST["predefined_grid"])) {
         $predefined_grid = $_POST["predefined_grid"];

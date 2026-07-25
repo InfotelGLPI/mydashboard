@@ -34,8 +34,13 @@ Session::checkRight("plugin_mydashboard_config", UPDATE);
 $customsWidget = new Customswidget();
 
 if(isset($_POST['update'])){
-   //decode html marks
-   $_POST["content"] = html_entity_decode($_POST["content"]);
+   // Decode the HTML marks then sanitize the free-HTML widget content before
+   // storing it. This keeps the allowed formatting but strips scripts and event
+   // handlers, closing the stored-XSS path where a config admin could persist a
+   // payload executed in every user's browser that displays this shared widget.
+   $_POST["content"] = \Glpi\RichText\RichText::getSafeHtml(
+      html_entity_decode($_POST["content"])
+   );
    $customsWidget->update($_POST);
 
    Html::back();

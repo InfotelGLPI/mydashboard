@@ -63,5 +63,10 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
         $widget   = Widget::loadWidget($class, $id_class, "bt-col-md-11", $opt);
         $data     = ["id" => Widget::removeBackslashes($id_class), "widget" => $widget];
     }
-    echo json_encode($data);
+    // Return a proper JSON content type and escape HTML-significant characters.
+    // The widget HTML stays intact (JSON unicode escapes are decoded by the client's
+    // JSON.parse before DOM insertion); this only prevents the raw response from
+    // being interpreted as HTML.
+    header('Content-Type: application/json');
+    echo json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 }

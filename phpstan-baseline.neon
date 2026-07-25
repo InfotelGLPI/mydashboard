@@ -1,0 +1,2095 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: ajax/createalert.php
+
+		-
+			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/createalert.php
+
+		-
+			message: '#^You should not use the `http_response_code` function to change the response code\. Due to a PHP bug, it may not provide the expected result \(see https\://bugs\.php\.net/bug\.php\?id\=81451\)\.$#'
+			identifier: glpi.forbidHttpResponseCode
+			count: 1
+			path: ajax/createalert.php
+
+		-
+			message: '#^Parameter \#2 \$selected of static method GlpiPlugin\\Mydashboard\\Criterias\\Month\:\:monthDropdown\(\) expects null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ajax/dropdownMonth.php
+
+		-
+			message: '#^Call to static method pluginOcsinventoryngDashboard1link\(\) on an unknown class GlpiPlugin\\Ocsinventoryng\\Dashboard\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/launchURL.php
+
+		-
+			message: '#^You should not use the `http_response_code` function to change the response code\. Due to a PHP bug, it may not provide the expected result \(see https\://bugs\.php\.net/bug\.php\?id\=81451\)\.$#'
+			identifier: glpi.forbidHttpResponseCode
+			count: 1
+			path: ajax/map.php
+
+		-
+			message: '#^Variable \$_POST in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: ajax/state_save.php
+
+		-
+			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/updateTranslationFields.php
+
+		-
+			message: '#^You should not use the `http_response_code` function to change the response code\. Due to a PHP bug, it may not provide the expected result \(see https\://bugs\.php\.net/bug\.php\?id\=81451\)\.$#'
+			identifier: glpi.forbidHttpResponseCode
+			count: 1
+			path: ajax/updateTranslationFields.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/configtranslation.form.php
+
+		-
+			message: '#^Offset ''groups_id'' on non\-empty\-array\<mixed\> in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: front/groupprofile.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/menu.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/menu.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/stockwidget.form.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: setup.php
+
+		-
+			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: setup.php
+
+		-
+			message: '#^Call to function is_array\(\) with non\-empty\-array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Call to function rtrim\(\) on a separate line has no effect\.$#'
+			identifier: function.resultUnused
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Class GlpiPlugin\\Eventsmanager\\Event not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Class GlpiPlugin\\Releases\\Release not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Loose comparison using \=\= between false and false will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 9
+			path: src/Alert.php
+
+		-
+			message: '#^Loose comparison using \=\= between false and true will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:displayTicketsAlertsWidgets\(\) has invalid return type GlpiPlugin\\Mydashboard\\PluginMydashboardHtml\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:displayTicketsAlertsWidgets\(\) should return GlpiPlugin\\Mydashboard\\PluginMydashboardHtml but returns GlpiPlugin\\Mydashboard\\Html\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getMaintenanceMessage\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			identifier: return.type
+			count: 3
+			path: src/Alert.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns GlpiPlugin\\Mydashboard\\PluginMydashboardHtml\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Offset ''LEFT JOIN'' on array\{SELECT\: array\{COUNT\: ''glpi_tickets\.id AS…''\}, DISTINCT\: true, FROM\: ''glpi_tickets'', WHERE\: array\{0\: array\{''glpi_tickets\.is_deleted''\: 0\}, ''glpi_tickets\.status''\: mixed, ''glpi_tickets\.priority''\: array\{''\>'', 4\}, ''glpi_tickets\.type''\: mixed\}\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Offset ''LEFT JOIN'' on array\{SELECT\: array\{COUNT\: ''glpi_tickets\.id AS…''\}, DISTINCT\: true, FROM\: ''glpi_tickets'', WHERE\: array\{0\: array\{''glpi_tickets\.is_deleted''\: 0\}, ''glpi_tickets\.status''\: mixed, ''glpi_tickets\.solve_delay_stat''\: 0, ''glpi_tickets\.time_to_resolve''\: array\{''\<'', Glpi\\DBAL\\QueryExpression\}, ''glpi_tickets\.type''\: mixed\}\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Offset ''LEFT JOIN'' on array\{SELECT\: array\{COUNT\: ''glpi_tickets\.id AS…''\}, DISTINCT\: true, FROM\: ''glpi_tickets'', WHERE\: array\{0\: array\{''glpi_tickets\.is_deleted''\: 0\}, ''glpi_tickets\.status''\: mixed, ''glpi_tickets\.solve_delay_stat''\: 0, ''glpi_tickets\.time_to_resolve''\: array\{''\>'', Glpi\\DBAL\\QueryExpression\}, ''glpi_tickets\.type''\: mixed\}\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Offset ''LEFT JOIN'' on array\{SELECT\: array\{COUNT\: ''glpi_tickets\.id AS…''\}, DISTINCT\: true, FROM\: ''glpi_tickets'', WHERE\: array\{0\: array\{''glpi_tickets\.is_deleted''\: 0\}, ''glpi_tickets\.status''\: mixed, ''glpi_tickets\.takeintoaccount_delay_stat''\: 0, ''glpi_tickets\.time_to_own''\: array\{''\<'', Glpi\\DBAL\\QueryExpression\}, ''glpi_tickets\.type''\: mixed\}\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Offset ''LEFT JOIN'' on array\{SELECT\: array\{COUNT\: ''glpi_tickets\.id AS…''\}, DISTINCT\: true, FROM\: ''glpi_tickets'', WHERE\: array\{0\: array\{''glpi_tickets\.is_deleted''\: 0\}, ''glpi_tickets\.status''\: mixed, ''glpi_tickets\.takeintoaccount_delay_stat''\: 0, ''glpi_tickets\.time_to_own''\: array\{''\>'', Glpi\\DBAL\\QueryExpression\}, ''glpi_tickets\.type''\: mixed\}\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Offset ''LEFT JOIN'' on array\{SELECT\: array\{COUNT\: ''glpi_tickets\.id AS…''\}, DISTINCT\: true, FROM\: ''glpi_tickets'', WHERE\: array\{0\: array\{''glpi_tickets\.is_deleted''\: 0\}, 1\: array\{''glpi_tickets\.id''\: array\{''NOT IN'', Glpi\\DBAL\\QuerySubQuery\}\}, ''glpi_tickets\.status''\: mixed, ''glpi_tickets\.type''\: mixed\}\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$item with type GlpiPlugin\\Mydashboard\\Reports\\Reminder is incompatible with native type Reminder\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$withtemplate$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 9
+			path: src/Alert.php
+
+		-
+			message: '#^Parameter \#1 \$item of method GlpiPlugin\\Mydashboard\\Alert\:\:showReminderForm\(\) expects Reminder, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) expects GlpiPlugin\\Mydashboard\\type, GlpiPlugin\\Mydashboard\\Config given\.$#'
+			identifier: argument.type
+			count: 8
+			path: src/Alert.php
+
+		-
+			message: '#^Parameter \#1 \$nTitle of method GlpiPlugin\\Mydashboard\\Module\:\:setWidgetTitle\(\) expects string, GlpiPlugin\\Mydashboard\\type given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Alert.php
+
+		-
+			message: '#^Parameter \#2 \$field of static method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) expects GlpiPlugin\\Mydashboard\\type, string given\.$#'
+			identifier: argument.type
+			count: 8
+			path: src/Alert.php
+
+		-
+			message: '#^Parameter \#2 \$week of method DateTime\:\:setISODate\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Parameter \#3 \$value of function curl_setopt expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Static method Glpi\\System\\Status\\StatusChecker\:\:getServiceStatus\(\) invoked with 3 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 7
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$crits might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$default might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$list might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$reminders_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$stats_tickets2 might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$technicians_groups_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 6
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_closed might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_dempro might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_due might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_incpro might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_new might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_pend might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_res might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Variable \$total_resolved might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Alert.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Mydashboard\\Charts\\HBarChart\:\:setOrientation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Charts/HBarChart.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Mydashboard\\Charts\\VBarChart\:\:setOrientation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Charts/VBarChart.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\CheckSchema\:\:\$table is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/CheckSchema.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/CheckSchema.php
+
+		-
+			message: '#^Access to property \$fields on an unknown class GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Config\:\:canCreate\(\) has invalid return type GlpiPlugin\\Mydashboard\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Config\:\:canView\(\) has invalid return type GlpiPlugin\\Mydashboard\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) has invalid return type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Config\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Mydashboard\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 2
+			path: src/Config.php
+
+		-
+			message: '#^Parameter \$field of method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Parameter \$item of method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\ConfigTranslation\:\:canBeTranslated\(\) should return true but returns bool\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ConfigTranslation.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(item the item to check\)\: Unexpected token "the", expected variable at offset 242 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ConfigTranslation.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(item\)\: Unexpected token "\\r\\n    \*", expected variable at offset 82 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ConfigTranslation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(true;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 124 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ConfigTranslation.php
+
+		-
+			message: '#^Variable \$item might not be defined\.$#'
+			identifier: variable.undefined
+			count: 8
+			path: src/ConfigTranslation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ConfigTranslation.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$options$#'
+			identifier: glpi.missingGlobalVarType
+			count: 2
+			path: src/Criteria.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$onsubmit$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$widgetId$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$computertypes_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$criterias might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$entities_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$is_recursive_entities might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$is_recursive_locations might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$itilcategories_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$locations_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$month might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$multiple_locations_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$priority might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$requesters_groups_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$status might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$technicians_groups_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$technicians_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$type might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criteria.php
+
+		-
+			message: '#^Variable \$year might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Criteria.php
+
+		-
+			message: '#^Parameter \#2 \$selected of static method GlpiPlugin\\Mydashboard\\Criterias\\Month\:\:monthDropdown\(\) expects null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Criterias/Month.php
+
+		-
+			message: '#^Variable \$multiple_locations_id on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Criterias/MultipleLocation.php
+
+		-
+			message: '#^Call to method find\(\) on an unknown class PluginTagTag\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class PluginTagTag\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Instantiated class PluginTagTag not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Offset ''status'' does not exist on array\{1, 2, 3, 4\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Variable \$form might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Variable \$tags might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Variable \$users on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Criterias/Other.php
+
+		-
+			message: '#^Undefined variable\: \$params$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criterias/Priority.php
+
+		-
+			message: '#^Variable \$params in isset\(\) is never defined\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Criterias/Priority.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Criterias/RequesterGroup.php
+
+		-
+			message: '#^Variable \$requesters_groups_id on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Criterias/RequesterGroup.php
+
+		-
+			message: '#^Undefined variable\: \$params$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criterias/Status.php
+
+		-
+			message: '#^Variable \$params in isset\(\) is never defined\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Criterias/Status.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Criterias/TechnicianGroup.php
+
+		-
+			message: '#^Variable \$technicians_groups_id on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Criterias/TechnicianGroup.php
+
+		-
+			message: '#^Variable \$options might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Criterias/Year.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 3
+			path: src/Customswidget.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Customswidget.php
+
+		-
+			message: '#^Class GlpiPlugin\\Ocsinventoryng\\Dashboard not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Offset int on non\-empty\-array\<string, mixed\> in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Iterating over an object of an unknown class GlpiPlugin\\Mydashboard\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Datatable.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Datatable\:\:getOptions\(\) has invalid return type GlpiPlugin\\Mydashboard\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Datatable.php
+
+		-
+			message: '#^Parameter \$canedit of method GlpiPlugin\\Mydashboard\\Groupprofile\:\:addGroup\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Groupprofile.php
+
+		-
+			message: '#^Parameter \$profiles_id of method GlpiPlugin\\Mydashboard\\Groupprofile\:\:addGroup\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Groupprofile.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Groupprofile.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^Cannot access property \$fields on int\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$openform \(true\) of method GlpiPlugin\\Mydashboard\\HTMLEditor\:\:showForm\(\) is incompatible with type array\<string, mixed\>\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\HTMLEditor\:\:rawSearchOptions\(\) should return array\<array\<string, mixed\>\> but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\HTMLEditor\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^Parameter \#1 \$item of method GlpiPlugin\\Mydashboard\\HTMLEditor\:\:showForm\(\) expects int, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/HTMLEditor.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<mixed, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Helper.php
+
+		-
+			message: '#^Call to function is_array\(\) with mixed will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/Helper.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$params \(array\) of method GlpiPlugin\\Mydashboard\\Helper\:\:getGroup\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Helper.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(array 2D \$arrayToEval\)\: Unexpected token "2", expected variable at offset 141 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Helper.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Helper.php
+
+		-
+			message: '#^Variable \$reminders_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: src/ItilAlert.php
+
+		-
+			message: '#^Cannot assign offset ''enable_fullscreen'' to string\.$#'
+			identifier: offsetAssign.dimType
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Menu\:\:getPluginsNames\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Menu\:\:showMenu\(\) should return false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 2
+			path: src/Menu.php
+
+		-
+			message: '#^Offset ''automatic_refresh'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Offset ''automatic_refresh_delay'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Offset ''enable_fullscreen'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: src/Menu.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Menu\:\:\$addfunction is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Menu\:\:\$dashboard is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Menu\:\:\$stats is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Menu\:\:\$widgets is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Static property GlpiPlugin\\Mydashboard\\Menu\:\:\$_PLUGIN_MYDASHBOARD_CFG \(string\) does not accept default value of type array\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(array of string \$_scripts\)\: Unexpected token "of", expected variable at offset 74 on line 3$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/Module.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$_html$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Module.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(string, ''true'' if refresh is enabled, else ''false''\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 72 on line 3$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Module.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Preference\:\:canUpdate\(\) has invalid return type GlpiPlugin\\Mydashboard\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Preference.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Preference\:\:getTabNameForItem\(\) has invalid return type GlpiPlugin\\Mydashboard\\translated\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Preference.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(boolean, TRUE if dashboard must replace, FALSE otherwise\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 92 on line 3$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Preference.php
+
+		-
+			message: '#^PHPDoc tag @return with type bool\|GlpiPlugin\\Mydashboard\\booleen is not subtype of native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Preference.php
+
+		-
+			message: '#^Variable \$type might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Preference.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\PreferenceUserBlacklist\:\:showUserForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/PreferenceUserBlacklist.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array, \$arrayFrom \- \$arrayAgainst\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 139 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/PreferenceUserBlacklist.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$openform \(true\) of method GlpiPlugin\\Mydashboard\\Profile\:\:showForm\(\) is incompatible with type array\<string, mixed\>\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Profile\:\:getTabNameForItem\(\) has invalid return type GlpiPlugin\\Mydashboard\\translated\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Profile\:\:migrateOneProfile\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Profile\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Profile.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$options$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Parameter \#1 \$profiles_id of static method GlpiPlugin\\Mydashboard\\Groupprofile\:\:addGroup\(\) expects GlpiPlugin\\Mydashboard\\type, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Parameter \#2 \$canedit of static method GlpiPlugin\\Mydashboard\\Groupprofile\:\:addGroup\(\) expects GlpiPlugin\\Mydashboard\\type, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\ProfileAuthorizedWidget\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ProfileAuthorizedWidget.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Method CommonITILObject\:\:getFromDBwithData\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Change\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Change\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns GlpiPlugin\\Mydashboard\\Html\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Change\:\:showCentralCount\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Change\:\:showCentralList\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 6
+			path: src/Reports/Change.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Contract\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable\|false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Contract.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Contract\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable\|false but returns GlpiPlugin\\Mydashboard\\Html\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Contract.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Contract\:\:showCentral\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Contract.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Reports/Contract.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Event\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Reports/Event.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Reports/Event.php
+
+		-
+			message: '#^Variable \$output in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Reports/Event.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Reports/Event.php
+
+		-
+			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 1
+			path: src/Reports/MyCustomGraph.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$LANG$#'
+			identifier: glpi.missingGlobalVarType
+			count: 2
+			path: src/Reports/MyCustomGraph.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Planning\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Planning.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Planning\:\:showCentral\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Planning.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Reports/Planning.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^Method CommonITILObject\:\:getFromDBwithData\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Problem\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Problem\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns GlpiPlugin\\Mydashboard\\Html\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Problem\:\:showCentralCount\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Problem\:\:showCentralList\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 5
+			path: src/Reports/Problem.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Reports/Project.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Project\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Reports/Project.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Project\:\:showCentralList\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Project.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Reports/ProjectTask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\ProjectTask\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Reports/ProjectTask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\ProjectTask\:\:showCentralList\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/ProjectTask.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: src/Reports/ProjectTask.php
+
+		-
+			message: '#^Variable \$icon might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/ProjectTask.php
+
+		-
+			message: '#^Variable \$widgetTitle might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/ProjectTask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\RSSFeed\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable\|false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/RSSFeed.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\RSSFeed\:\:showListForCentral\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Reports/RSSFeed.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reminder\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Reminder.php
+
+		-
+			message: '#^Call to function array_key_exists\(\) with ''month'' and array\{month_name\: list, total\: list\<mixed\>\} will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 3
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 4
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Bar\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 3
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 6
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<0\|float\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 2
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#2 \$month of function cal_days_in_month expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#3 \$pad_string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#3 \$year of function cal_days_in_month expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#4 \$month of function mktime expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Parameter \#6 \$year of function mktime expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Bar\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Bar\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Static method GlpiPlugin\\Mydashboard\\Reports\\Reports_Bar\:\:getCategorySonsOf\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 10
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$average_by_ticket on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$date in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$numberanswered might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$options_selected might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$tabdata in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 2
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$tabdate might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Variable \$total might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: src/Reports/Reports_Bar.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:getWidgetContentForItem\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Reports_Custom.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:getWidgetContentForItem\(\) should return string but returns GlpiPlugin\\Mydashboard\\Html\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Reports_Custom.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Custom.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Custom.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Funnel\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Reports_Funnel.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Reports/Reports_Funnel.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Funnel\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Funnel.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Funnel\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Funnel.php
+
+		-
+			message: '#^Variable \$criterias might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Reports/Reports_Funnel.php
+
+		-
+			message: '#^Variable \$tabdate might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Reports_Funnel.php
+
+		-
+			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 3
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Line\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Parameter \#4 \$month of function mktime expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 16
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Parameter \#6 \$year of function mktime expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 16
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Line\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Line\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 6
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$crit might not be defined\.$#'
+			identifier: variable.undefined
+			count: 9
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$currentyear might not be defined\.$#'
+			identifier: variable.undefined
+			count: 6
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$datas in isset\(\) is never defined\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$date in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 4
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$graph_criterias might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$opt on left side of \?\? is never defined\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$options_selected might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Variable \$year might not be defined\.$#'
+			identifier: variable.undefined
+			count: 14
+			path: src/Reports/Reports_Line.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Reports/Reports_Map.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Map\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Reports_Map.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Map\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Map.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Map\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Map.php
+
+		-
+			message: '#^Variable \$criterias might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Reports/Reports_Map.php
+
+		-
+			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 1
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Pie\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Pie\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Pie\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^Variable \$graph_criterias might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^Variable \$name_user might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Reports/Reports_Pie.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Table\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Table\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Reports_Table\:\:\$pref is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^Variable \$array in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^Variable \$fields in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Reports/Reports_Table.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value 2 \(2, 2\)\.$#'
+			identifier: array.duplicateKey
+			count: 2
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Loose comparison using \=\= between ''TicketTask'' and ''TicketTask'' will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 2
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Method CommonITILObject\:\:getFromDBwithData\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Ticket\:\:getWidgetContentForItem\(\) should return bool\|GlpiPlugin\\Mydashboard\\Datatable\|string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Ticket\:\:showCentralCount\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns GlpiPlugin\\Mydashboard\\Html\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Ticket\:\:showCentralCount\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Ticket\:\:showCentralList\(\) should return GlpiPlugin\\Mydashboard\\Datatable\|string but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Parameter \#4 \$limit of static method CommonITILTask\:\:getTaskList\(\) expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 7
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Variable \$item_link might not be defined\.$#'
+			identifier: variable.undefined
+			count: 12
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Variable \$output in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 2
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Variable \$tab_name might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Reports/Ticket.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Reports/Urgo.php
+
+		-
+			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 8
+			path: src/Reports/Urgo.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$LANG$#'
+			identifier: glpi.missingGlobalVarType
+			count: 1
+			path: src/Reports/Urgo.php
+
+		-
+			message: '#^Offset ''infosTicketsUrgoN1S…'' on array\{infosTicketsUrgoN1Solved\: int\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Reports/Urgo.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Urgo\:\:\$locales is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Reports/Urgo.php
+
+		-
+			message: '#^Property GlpiPlugin\\Mydashboard\\Reports\\Urgo\:\:\$options is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Reports/Urgo.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Servicecatalog.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Servicecatalog.php
+
+		-
+			message: '#^Parameter \#4 \$month of function mktime expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/StockTicket.php
+
+		-
+			message: '#^Parameter \#6 \$year of function mktime expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/StockTicket.php
+
+		-
+			message: '#^Variable \$countTicket might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: src/StockTicket.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/StockTicket.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/StockTicketIndicator.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/StockWidget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\StockWidget\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/StockWidget.php
+
+		-
+			message: '#^Access to constant THUMBNAIL on an unknown class GlpiPlugin\\Servicecatalog\\Config\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Widget.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Mydashboard\\Module\:\:getJSonDatas\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Mydashboard\\Module\:\:getOptions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Call to method getLayout\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Config\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Widget.php
+
+		-
+			message: '#^Class GlpiPlugin\\Badges\\Badge not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Servicecatalog\\Config not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Widget.php
+
+		-
+			message: '#^Loose comparison using \!\= between non\-falsy\-string and '''' will always evaluate to true\.$#'
+			identifier: notEqual.alwaysTrue
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:getWidgetIdByName\(\) has invalid return type GlpiPlugin\\Mydashboard\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:getWidgetIdByName\(\) should return GlpiPlugin\\Mydashboard\\the but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:getWidgetMydashboardAlert\(\) should return string but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:getWidgetMydashboardInformation\(\) should return string but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:getWidgetMydashboardMaintenance\(\) should return string but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:loadWidget\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Widget.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widget\:\:saveWidget\(\) should return true but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(ID of user\)\: Unexpected token "of", expected variable at offset 63 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(string, the widget ''name''\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 108 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) expects GlpiPlugin\\Mydashboard\\type, GlpiPlugin\\Mydashboard\\Config given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Widget.php
+
+		-
+			message: '#^Parameter \#2 \$field of static method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) expects GlpiPlugin\\Mydashboard\\type, string given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Widget.php
+
+		-
+			message: '#^Parameter \$widgetId of method GlpiPlugin\\Mydashboard\\Widget\:\:getWidgetNameById\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Variable \$TIMER might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Variable \$loadwidget might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Variable \$rand might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Widget.php
+
+		-
+			message: '#^Argument of an invalid type null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 2
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Comparison operation "\<" between mixed and 0 is always false\.$#'
+			identifier: smaller.alwaysFalse
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Comparison operation "\>" between \*NEVER\* and 0 results in an error\.$#'
+			identifier: greater.invalid
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Widgetlist\:\:getAllWidgetsList\(\) with return type void returns array\<list\> but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$used$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array, widgetlist cleaned\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 265 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Parameter \#1 \$array of function ksort expects array, null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Parameter \#1 \$widgetsarray of static method GlpiPlugin\\Mydashboard\\Widgetlist\:\:getWidgetsListFromWidgetsArray\(\) expects GlpiPlugin\\Mydashboard\\type, array\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Parameter \#2 \$classname of static method GlpiPlugin\\Mydashboard\\Widgetlist\:\:getWidgetsListFromWidgetsArray\(\) expects GlpiPlugin\\Mydashboard\\type, \(int\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Parameter \$classname of method GlpiPlugin\\Mydashboard\\Widgetlist\:\:getWidgetsListFromWidgetsArray\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Parameter \$widgetsarray of method GlpiPlugin\\Mydashboard\\Widgetlist\:\:getWidgetsListFromWidgetsArray\(\) has invalid type GlpiPlugin\\Mydashboard\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Result of static method GlpiPlugin\\Mydashboard\\Widgetlist\:\:getAllWidgetsList\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 2
+			path: src/Widgetlist.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Widgetlist.php

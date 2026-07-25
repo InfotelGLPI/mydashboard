@@ -56,12 +56,18 @@ if ($widget === "PluginOcsinventoryngDashboard1") {
 } else {
     $classes = [Reports_Bar::class, Reports_Pie::class, Reports_Line::class, Reports_Table::class, Reports_Funnel::class];
 
-    //Add custom classes
+    //Add custom classes. Only accept report classes shipped by a GLPI plugin
+    // (GlpiPlugin\ namespace) that actually expose the fixed getLinkForWidget()
+    // method: the widget name is fully attacker-controlled, so this prevents
+    // triggering a static call (and a fatal error usable for class enumeration)
+    // on an arbitrary existing class.
     $result = preg_replace('/\d+$/', '', $widget);
-    if(class_exists($result)){
-        if(!in_array($result,$classes)){
-            $classes[] = $result;
-        }
+    if (is_string($result)
+        && str_starts_with($result, 'GlpiPlugin\\')
+        && class_exists($result)
+        && method_exists($result, 'getLinkForWidget')
+        && !in_array($result, $classes, true)) {
+        $classes[] = $result;
     }
 
     foreach ($classes as $class) {

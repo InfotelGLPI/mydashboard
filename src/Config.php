@@ -426,12 +426,16 @@ class Config extends CommonDBTM
                 'language' => $_SESSION['glpilanguage'],
             ]]);
 
+        // These configuration titles are rendered as raw HTML by every caller
+        // (including the alert banner shown to anonymous users on the login page).
+        // GLPI 11 stores the values raw, so escape them here at the single point of
+        // use to close a stored-XSS path without touching each display site.
         if (count($iterator)) {
             foreach ($iterator as $data) {
-                return $data['value'];
+                return htmlspecialchars($data['value'], ENT_QUOTES, 'UTF-8');
             }
         }
-        return $item->fields[$field];
+        return htmlspecialchars($item->fields[$field] ?? '', ENT_QUOTES, 'UTF-8');
     }
 
     /**

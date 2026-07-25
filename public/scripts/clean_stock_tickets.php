@@ -29,6 +29,14 @@
 
 use Glpi\DBAL\QueryExpression;
 
+// This maintenance script performs an unbounded scan of glpi_tickets and forges a
+// cron session; it is designed to be run from the command line (see run.php).
+// Because it lives under public/ (web-routed by GLPI 11), refuse any web request
+// to close a denial-of-service vector reachable without authentication.
+if (PHP_SAPI !== 'cli') {
+    die('This script can only be run from the command line.');
+}
+
 ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 

@@ -302,58 +302,13 @@ class Helper
 
                 $widget->setTabDatas($tab);
             }
-        } elseif (!is_array($query) && stripos(trim($query), "SELECT") === 0) {
-            $result = $DB->doQuery($query);
-            $tab = [];
-            if ($result) {
-                while ($row = $DB->fetchAssoc($result)) {
-                    $tab[] = $row;
-                }
-                $linechart = false;
-                $chart = false;
-                switch ($widgettype) {
-                    case 'datatable':
-                    case 'table':
-                        $widget = new Datatable();
-                        break;
-                    case 'hbarchart':
-                        $chart = true;
-                        $widget = new HBarChart();
-                        break;
-                    case 'vbarchart':
-                        $chart = true;
-                        $widget = new VBarChart();
-                        break;
-                    case 'piechart':
-                        $chart = true;
-                        $widget = new PieChart();
-                        break;
-                    case 'linechart':
-                        $linechart = true;
-                        $widget = new LineChart();
-                        break;
-                }
-                //            $widget = new HBarChart();
-                //        $widget->setTabNames(array('Category','Count'));
-                if ($chart) {
-                    $newtab = [];
-                    foreach ($tab as $key => $line) {
-                        $line = array_values($line);
-                        $newtab[$line[0]] = $line[1];
-                        unset($tab[$key]);
-                    }
-                    $tab = $newtab;
-                } elseif ($linechart) {
-                    //TODO format for linechart
-                } else {
-                    //$widget->setTabNames(array('Category','Count'));
-                }
-                $widget->setTabDatas($tab);
-            }
         } else {
+            // Only structured query arrays are accepted here. Executing a raw SQL
+            // string (formerly via $DB->doQuery()) is refused to avoid a raw-SQL
+            // primitive: all queries must go through $DB->request() with the array
+            // builder above.
             $widget = new MyDashboardHtml();
             $widget->debugError(__('Not a valid SQL SELECT query', 'mydashboard'));
-            $widget->debugNotice($query);
         }
 
         return $widget;

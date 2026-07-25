@@ -101,7 +101,14 @@ class Reports_Custom extends CommonGLPI
 
                     $widget->setWidgetTitle($content['name']);
 
-                    $htmlContent = html_entity_decode($content['content']);
+                    // Sanitize the stored free-HTML widget content before rendering it
+                    // as raw HTML on every user's dashboard. This keeps the allowed
+                    // formatting (headings, styles, images, links) but strips scripts
+                    // and event handlers, closing the stored-XSS path where a config
+                    // admin could inject a payload executed in another user's browser.
+                    $htmlContent = \Glpi\RichText\RichText::getSafeHtml(
+                        html_entity_decode($content['content'])
+                    );
 
                     // Edit style to avoid padding, margin, and limited width
 

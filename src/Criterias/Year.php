@@ -117,8 +117,12 @@ class Year
         $year = $params['year'];
 
         if (!is_array($year)) {
+            // $year is interpolated into a raw QueryExpression (DATE_ADD) below, so it
+            // must be forced to an integer to prevent SQL injection from the fully
+            // client-controlled widget "year" parameter.
+            $year = (int) $year;
             if (isset($params['month'])) {
-                $month = $params['month'];
+                $month = (int) $params['month'];
                 $month = sprintf('%02d', $month);
                 $date_criteria = [
                     ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
