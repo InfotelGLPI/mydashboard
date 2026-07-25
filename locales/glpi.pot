@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-25 14:20+0000\n"
+"POT-Creation-Date: 2026-07-25 14:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,8 +191,8 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: src/Reports/Change.php:88 src/Reports/Change.php:662
-#: src/Reports/Change.php:668
+#: src/Reports/Change.php:88 src/Reports/Change.php:663
+#: src/Reports/Change.php:669
 msgid "Change followup"
 msgstr ""
 
@@ -984,8 +984,8 @@ msgstr ""
 msgid "Previous year"
 msgstr ""
 
-#: src/Reports/Problem.php:83 src/Reports/Problem.php:637
-#: src/Reports/Problem.php:643
+#: src/Reports/Problem.php:83 src/Reports/Problem.php:638
+#: src/Reports/Problem.php:644
 msgid "Problem followup"
 msgstr ""
 
