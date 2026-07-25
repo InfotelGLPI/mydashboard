@@ -500,7 +500,8 @@ class Problem extends CommonGLPI
             }
             // echo "###########".$problem->fields["name"];
             $link .= "'>";
-            $link .= "<span class='b'>" . $problem->fields["name"] . "</span></a>";
+            // Escape the problem name (raw in DB) before echoing it into the widget.
+            $link .= "<span class='b'>" . htmlspecialchars($problem->fields["name"], ENT_QUOTES, 'UTF-8') . "</span></a>";
 
             $link = sprintf(
                 __('%1$s %2$s'),

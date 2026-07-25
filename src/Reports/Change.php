@@ -536,7 +536,8 @@ class Change extends CommonGLPI
             }
             // echo "###########".$change->fields["name"];
             $link .= "'>";
-            $link .= "<span class='b'>" . $change->fields["name"] . "</span></a>";
+            // Escape the change name (raw in DB) before echoing it into the widget.
+            $link .= "<span class='b'>" . htmlspecialchars($change->fields["name"], ENT_QUOTES, 'UTF-8') . "</span></a>";
 
             $link = sprintf(
                 __('%1$s %2$s'),
