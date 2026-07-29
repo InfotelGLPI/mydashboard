@@ -2608,7 +2608,8 @@ class Alert extends CommonDBTM
             $note->getFromDB($id);
 
             if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
-                $style_description = "color:" . $config->getField('impact_' . $alert->fields['impact']);
+                // impact_* colors are stored raw; escape before emitting into the style attribute.
+                $style_description = "color:" . htmlspecialchars((string) $config->getField('impact_' . $alert->fields['impact']), ENT_QUOTES, 'UTF-8');
                 echo "<span style='$style_description'>";
             }
             echo htmlspecialchars(ReminderTranslation::getTranslatedValue($note, 'text'), ENT_QUOTES, 'UTF-8');
@@ -3222,7 +3223,8 @@ class Alert extends CommonDBTM
         $config->getFromDB(1);
 
         $class = "plugin_mydashboard_fa-thermometer-" . ($impact - 1);
-        $style = "color:" . $config->getField('impact_' . $impact);
+        // impact_* colors are stored raw; escape before emitting into the style attribute.
+        $style = "color:" . htmlspecialchars((string) $config->getField('impact_' . $impact), ENT_QUOTES, 'UTF-8');
 
         $div .= "<div class='card-header mb-4'>";
         $div .= "<h2 class='mx-auto'>" . Config::displayField($config, 'title_alerts_widget') . "</h2></div>";
@@ -3249,7 +3251,8 @@ class Alert extends CommonDBTM
         $config->getFromDB(1);
         if (!empty($list)) {
             foreach ($list as $listitem) {
-                $configColor = $config->getField("impact_" . $listitem['impact']);
+                // impact_* colors are stored raw; escape before emitting into style attributes.
+                $configColor = htmlspecialchars((string) $config->getField("impact_" . $listitem['impact']), ENT_QUOTES, 'UTF-8');
                 //            $class     = (Html::convDate(date("Y-m-d")) == Html::convDate($listitem['date'])) ? 'alert_new' : '';
                 //            $class     = ' alert_impact' . $listitem['impact'];
                 $style = "background-color : " . $configColor;

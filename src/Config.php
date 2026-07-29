@@ -88,6 +88,28 @@ class Config extends CommonDBTM
     }
 
     /**
+     * The impact_* colors are re-emitted verbatim inside `style` attributes, including on
+     * the anonymous login page (DISPLAY_LOGIN hook). The color picker only ever produces
+     * a hex value, so reject anything that is not a plain CSS hex color at write time to
+     * close the stored-XSS path at the source (display sites also escape, defense in depth).
+     *
+     * @param array $input
+     *
+     * @return array|false
+     */
+    public function prepareInputForUpdate($input)
+    {
+        foreach (['impact_1', 'impact_2', 'impact_3', 'impact_4', 'impact_5'] as $field) {
+            if (isset($input[$field])
+                && !preg_match('/^#[0-9a-fA-F]{3,8}$/', (string) $input[$field])) {
+                // Drop the malformed value so the stored (safe) color is kept unchanged.
+                unset($input[$field]);
+            }
+        }
+        return $input;
+    }
+
+    /**
      * Have I the global right to "view" the Object
      *
      * Default is true and check entity if the objet is entity assign
