@@ -33,6 +33,6 @@ jobs:
         uses: psalm/psalm-github-security-scan@1.4.0
 
       - name: Upload Security Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.3
         with:
           sarif_file: results.sarif
