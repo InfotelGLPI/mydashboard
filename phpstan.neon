@@ -11,6 +11,10 @@ parameters:
         - src
         - hook.php
         - setup.php
+    excludePaths:
+        # Untracked local-only report, absent on the CI runner: the (?) marker
+        # keeps PHPStan from failing when the path does not exist.
+        - src/Reports/Urgo.php (?)
     scanDirectories:
         - ../../inc
         - ../../src
