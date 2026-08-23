@@ -102,7 +102,7 @@ class CheckSchema extends CommonDBTM
      *
      * @return string|null
      */
-    public function getSchemaPath(string $version = null): ?string
+    public function getSchemaPath(?string $version = null): ?string
     {
         if ($version === null) {
             $version = PLUGIN_MYDASHBOARD_VERSION;
