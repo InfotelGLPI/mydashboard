@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -154,20 +154,20 @@ class Preference extends CommonDBTM
             'automatic_refresh',
             $this->fields['automatic_refresh'],
             -1,
-            ['display' => false]
+            ['display' => false],
         );
 
         $automatic_refresh_delay_dd = Dropdown::showFromArray(
             'automatic_refresh_delay',
             [1 => 1, 2 => 2, 5 => 5, 10 => 10, 30 => 30, 60 => 60],
-            ['value' => $this->fields['automatic_refresh_delay'], 'display' => false]
+            ['value' => $this->fields['automatic_refresh_delay'], 'display' => false],
         );
 
         $replace_central_dd = Dropdown::showYesNo(
             'replace_central',
             $this->fields['replace_central'],
             -1,
-            ['display' => false]
+            ['display' => false],
         );
 
         $prefered_group_dd = '';
@@ -239,13 +239,13 @@ class Preference extends CommonDBTM
         $prefered_year_dd = Dropdown::showFromArray(
             'prefered_year',
             [0 => __('Current year', 'mydashboard'), 1 => __('Previous year', 'mydashboard')],
-            ['value' => $this->fields['prefered_year'], 'display' => false]
+            ['value' => $this->fields['prefered_year'], 'display' => false],
         );
 
         $color_palette_html = \Html::select(
             'color_palette',
             $this->getPalettes(),
-            ['id' => 'theme-selector', 'selected' => $this->fields['color_palette']]
+            ['id' => 'theme-selector', 'selected' => $this->fields['color_palette']],
         );
 
         $this->showFormHeader($options);
@@ -382,7 +382,7 @@ class Preference extends CommonDBTM
                 [
                     "update" => $replace_central,
                     "value"  => 0,
-                ]
+                ],
             );
             $mig->executeMigration();
         }
@@ -430,10 +430,10 @@ class Preference extends CommonDBTM
 
         if ($type != "varchar") {
 
-            $migration->changeField($table, "prefered_group" , "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
+            $migration->changeField($table, "prefered_group", "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
             $migration->migrationOneTable($table);
 
-            $migration->changeField("glpi_plugin_mydashboard_groupprofiles", "prefered_group" , "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
+            $migration->changeField("glpi_plugin_mydashboard_groupprofiles", "prefered_group", "prefered_group", "varchar(255) NOT NULL DEFAULT '[]'");
             $migration->migrationOneTable($table);
 
             $pref  = new self();

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -42,8 +42,8 @@ use Session;
 use Ticket;
 use Toolbox;
 
-class MyCustomGraph extends CommonGLPI {
-
+class MyCustomGraph extends CommonGLPI
+{
     public static $reports = [1000];
 
     public $widget = [];
@@ -147,86 +147,86 @@ class MyCustomGraph extends CommonGLPI {
                 'glpi_tickets.status'     => Ticket::getNotSolvedStatusArray(),
             ];
 
-                $criteria = [
-                    'SELECT' => [
-                        'COUNT' => 'glpi_tickets.id AS count_nb_tickets',
-                        'glpi_tickets.status as status',
-                    ],
-                    'FROM' => 'glpi_tickets',
-                    'WHERE' => $conditions,
-                    'GROUPBY' => [
-                        'glpi_tickets.status',
-                    ],
-                    'ORDERBY' => [
-                        'glpi_tickets.status'
-                    ]
-                ];
+            $criteria = [
+                'SELECT' => [
+                    'COUNT' => 'glpi_tickets.id AS count_nb_tickets',
+                    'glpi_tickets.status as status',
+                ],
+                'FROM' => 'glpi_tickets',
+                'WHERE' => $conditions,
+                'GROUPBY' => [
+                    'glpi_tickets.status',
+                ],
+                'ORDERBY' => [
+                    'glpi_tickets.status',
+                ],
+            ];
 
-                $criteria = Criteria::addCriteriasForQuery($criteria, $params);
+            $criteria = Criteria::addCriteriasForQuery($criteria, $params);
 
-                $iterator = $DB->request($criteria);
+            $iterator = $DB->request($criteria);
 
-                $values = [];
-                $labelsLine = [];
-                if (count($iterator) > 0) {
-                    foreach ($iterator as $item) {
-                        $labelsLine[] = Ticket::getStatus($item['status']);
-                        $values[] = (int) $item['count_nb_tickets'];
-                    }
+            $values = [];
+            $labelsLine = [];
+            if (count($iterator) > 0) {
+                foreach ($iterator as $item) {
+                    $labelsLine[] = Ticket::getStatus($item['status']);
+                    $values[] = (int) $item['count_nb_tickets'];
                 }
+            }
 
-                $dataset = [
-                    [
-                        "name"     => __("Tickets"),
-                        "data"     => $values,
-                        "type"     => "bar",
-                        "label"    => ['show' => true],
-                        "emphasis" => ['focus' => 'series'],
-                    ],
-                ];
+            $dataset = [
+                [
+                    "name"     => __("Tickets"),
+                    "data"     => $values,
+                    "type"     => "bar",
+                    "label"    => ['show' => true],
+                    "emphasis" => ['focus' => 'series'],
+                ],
+            ];
 
-                $widget = new MydashboardHtml();
-                $title = $this->getTitleForWidget($widgetId);
-                $comment = $this->getCommentForWidget($widgetId);
-                $widget->setWidgetTitle((($isDebug) ? "1000 " : "") . $title);
-                $widget->setWidgetComment($comment);
-                $widget->toggleWidgetRefresh();
+            $widget = new MydashboardHtml();
+            $title = $this->getTitleForWidget($widgetId);
+            $comment = $this->getCommentForWidget($widgetId);
+            $widget->setWidgetTitle((($isDebug) ? "1000 " : "") . $title);
+            $widget->setWidgetComment($comment);
+            $widget->toggleWidgetRefresh();
 
-                $dataLineset = json_encode($dataset);
+            $dataLineset = json_encode($dataset);
 
-                $graph_datas = [
-                    'title' => $title,
-                    'comment' => $comment,
-                    'name' => $name,
-                    'ids' => json_encode([]),
-                    'data' => $dataLineset,
-                    'labels' => json_encode($labelsLine),
-                ];
+            $graph_datas = [
+                'title' => $title,
+                'comment' => $comment,
+                'name' => $name,
+                'ids' => json_encode([]),
+                'data' => $dataLineset,
+                'labels' => json_encode($labelsLine),
+            ];
 
-                $graph_criterias = [];
-                if ($onclick == 1) {
-                    $criterias_values = Criteria::getGraphCriterias($params);
-                    $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
-                }
+            $graph_criterias = [];
+            if ($onclick == 1) {
+                $criterias_values = Criteria::getGraphCriterias($params);
+                $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
+            }
 
-                $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
+            $graph = BarChart::launchGraph($graph_datas, $graph_criterias);
 
-                $params = [
-                    "widgetId" => $widgetId,
-                    "name" => $name,
-                    "onsubmit" => true,
-                    "opt" => $opt,
-                    "default" => $default,
-                    "criterias" => $criterias,
-                    "export" => true,
-                    "canvas" => true,
-                    "nb" => count($dataset)
-                ];
+            $params = [
+                "widgetId" => $widgetId,
+                "name" => $name,
+                "onsubmit" => true,
+                "opt" => $opt,
+                "default" => $default,
+                "criterias" => $criterias,
+                "export" => true,
+                "canvas" => true,
+                "nb" => count($dataset),
+            ];
 
-                $widget->setWidgetHeader(Helper::getGraphHeader($params));
-                $widget->setWidgetHtmlContent($graph);
+            $widget->setWidgetHeader(Helper::getGraphHeader($params));
+            $widget->setWidgetHtmlContent($graph);
 
-                return $widget;
+            return $widget;
         }
 
         return false;
@@ -243,4 +243,3 @@ class MyCustomGraph extends CommonGLPI {
             . Toolbox::append_params($options);
     }
 }
-

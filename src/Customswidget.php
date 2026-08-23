@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -83,7 +83,7 @@ class Customswidget extends CommonDropdown
 
         $iterator = $DB->request([
             'SELECT'    => '*',
-            'FROM'      => Customswidget::getTable()
+            'FROM'      => Customswidget::getTable(),
         ]);
 
         foreach ($iterator as $data) {
@@ -108,7 +108,7 @@ class Customswidget extends CommonDropdown
             'SELECT'    => '*',
             'FROM'      => Customswidget::getTable(),
             'WHERE'     => [
-                'id'  => $id
+                'id'  => $id,
             ],
         ]);
 
@@ -162,7 +162,7 @@ class Customswidget extends CommonDropdown
                     'name'    => __('Incidents', 'mydashboard'),
                     'content' => $startTitle . __("Incidents", 'mydashboard') . $endTitle,
                     'comment' => '',
-                ]
+                ],
             );
 
             $DB->insert(
@@ -171,7 +171,7 @@ class Customswidget extends CommonDropdown
                     'name'    => __('Requests', 'mydashboard'),
                     'content' => $startTitle . __("Requests", 'mydashboard') . $endTitle,
                     'comment' => '',
-                ]
+                ],
             );
 
             $DB->insert(
@@ -180,7 +180,7 @@ class Customswidget extends CommonDropdown
                     'name'    => __('Problems'),
                     'content' => $startTitle . __("Problems") . $endTitle,
                     'comment' => '',
-                ]
+                ],
             );
         }
     }

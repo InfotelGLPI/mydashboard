@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -126,7 +126,7 @@ class Reports_Line extends CommonGLPI
                     "type" => Widget::$LINE,
                     "comment" => __(
                         "Number of open tickets in the month still in progress for each month",
-                        "mydashboard"
+                        "mydashboard",
                     ),
                 ],
                 $this->getType() . "49" => [
@@ -232,13 +232,13 @@ class Reports_Line extends CommonGLPI
                     'SELECT' => [
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName(
-                                "glpi_plugin_mydashboard_stocktickets.date"
-                            ) . ", '%Y-%m') AS month"
+                                "glpi_plugin_mydashboard_stocktickets.date",
+                            ) . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName(
-                                "glpi_plugin_mydashboard_stocktickets.date"
-                            ) . ", '%b %Y') AS monthname"
+                                "glpi_plugin_mydashboard_stocktickets.date",
+                            ) . ", '%b %Y') AS monthname",
                         ),
                         'SUM' => 'nbStockTickets AS nbStockTickets',
                     ],
@@ -270,7 +270,7 @@ class Reports_Line extends CommonGLPI
                 }
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_plugin_mydashboard_stocktickets'
+                    'glpi_plugin_mydashboard_stocktickets',
                 );
 
                 $iterator = $DB->request($criteria);
@@ -292,13 +292,13 @@ class Reports_Line extends CommonGLPI
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum",
                         ),
                         new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . "))"),
                     ],
@@ -386,7 +386,7 @@ class Reports_Line extends CommonGLPI
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -498,7 +498,7 @@ class Reports_Line extends CommonGLPI
                 }
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_plugin_mydashboard_stocktickets'
+                    'glpi_plugin_mydashboard_stocktickets',
                 );
 
                 $iterator = $DB->request($criteria);
@@ -527,13 +527,13 @@ class Reports_Line extends CommonGLPI
                 $query_tickets = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum",
                         ),
                         new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_opened"),
                     ],
@@ -679,7 +679,7 @@ class Reports_Line extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -726,13 +726,13 @@ class Reports_Line extends CommonGLPI
                     'SELECT' => [
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName(
-                                "glpi_plugin_mydashboard_stocktickets.date"
-                            ) . ", '%Y-%m') AS month"
+                                "glpi_plugin_mydashboard_stocktickets.date",
+                            ) . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName(
-                                "glpi_plugin_mydashboard_stocktickets.date"
-                            ) . ", '%b %Y') AS monthname"
+                                "glpi_plugin_mydashboard_stocktickets.date",
+                            ) . ", '%b %Y') AS monthname",
                         ),
                         'SUM' => 'nbStockTickets AS nbStockTickets',
                     ],
@@ -759,7 +759,7 @@ class Reports_Line extends CommonGLPI
                 }
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_plugin_mydashboard_stocktickets'
+                    'glpi_plugin_mydashboard_stocktickets',
                 );
 
                 $iterator = $DB->request($criteria);
@@ -787,13 +787,13 @@ class Reports_Line extends CommonGLPI
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum",
                         ),
                         new QueryExpression("COUNT(DISTINCT " . $DB->quoteName("glpi_tickets.id") . ") AS nb_opened"),
                     ],
@@ -954,7 +954,7 @@ class Reports_Line extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1014,13 +1014,13 @@ class Reports_Line extends CommonGLPI
                     'SELECT' => [
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName(
-                                "glpi_plugin_mydashboard_stocktickets.date"
-                            ) . ", '%Y-%m') AS month"
+                                "glpi_plugin_mydashboard_stocktickets.date",
+                            ) . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
                             "DATE_FORMAT(" . $DB->quoteName(
-                                "glpi_plugin_mydashboard_stocktickets.date"
-                            ) . ", '%b %Y') AS monthname"
+                                "glpi_plugin_mydashboard_stocktickets.date",
+                            ) . ", '%b %Y') AS monthname",
                         ),
                         'SUM' => 'nbStockTickets AS nbStockTickets',
                     ],
@@ -1043,7 +1043,7 @@ class Reports_Line extends CommonGLPI
                 }
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_plugin_mydashboard_stocktickets'
+                    'glpi_plugin_mydashboard_stocktickets',
                 );
 
                 $iterator = $DB->request($criteria);
@@ -1074,13 +1074,13 @@ class Reports_Line extends CommonGLPI
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS month",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y%m') AS monthnum",
                         ),
                         new QueryExpression("count(MONTH(" . $DB->quoteName("glpi_tickets.date") . "))"),
                     ],
@@ -1329,7 +1329,7 @@ class Reports_Line extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1368,10 +1368,10 @@ class Reports_Line extends CommonGLPI
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS period"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS period",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         'COUNT' => 'glpi_tickets.id AS count',
                     ],
@@ -1573,10 +1573,10 @@ class Reports_Line extends CommonGLPI
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS period"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS period",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         'COUNT' => 'glpi_tickets.id AS count',
                     ],
@@ -1707,10 +1707,10 @@ class Reports_Line extends CommonGLPI
                 $criteria_1 = [
                     'SELECT' => [
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS period"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%Y-%m') AS period",
                         ),
                         new QueryExpression(
-                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname"
+                            "DATE_FORMAT(" . $DB->quoteName("glpi_tickets.date") . ", '%b %Y') AS monthname",
                         ),
                         'COUNT' => 'glpi_tickets.id AS count',
                     ],
@@ -2479,7 +2479,7 @@ class Reports_Line extends CommonGLPI
         $firstMonday = date("d", strtotime("first monday of january $year"));
         $start = date(
             "Y-m-d 00:00:00",
-            strtotime("$firstMonday Jan " . $year . " 00:00:00 GMT + " . $week_number . " weeks")
+            strtotime("$firstMonday Jan " . $year . " 00:00:00 GMT + " . $week_number . " weeks"),
         );
         $end = date("Y-m-d 23:59:59", strtotime($start . " + 1 week"));
         $end = date("Y-m-d 23:59:59", strtotime($end . " - 1 day"));

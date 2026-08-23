@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Criterias;
@@ -43,7 +43,8 @@ class ITILCategory
     public static $criteria_name = 'itilcategories_id';
     public static $criteria_number = 7;
 
-    public static function getDefaultValue() {
+    public static function getDefaultValue()
+    {
 
         $itilcategories_id = 0;
 
@@ -62,19 +63,21 @@ class ITILCategory
         return $itilcategories_id;
     }
 
-    public static function getDisplayValue($opt) {
+    public static function getDisplayValue($opt)
+    {
 
         $form = "";
         if ($opt[self::$criteria_name] != 0) {
             $form = "&nbsp;/&nbsp;" . __("Category", 'mydashboard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_itilcategories',
-                    $opt[self::$criteria_name]
-                );
+                'glpi_itilcategories',
+                $opt[self::$criteria_name],
+            );
         }
         return $form;
     }
 
-    public static function getDisplayForm($default, $opt, $count) {
+    public static function getDisplayForm($default, $opt, $count)
+    {
 
         $form = "<span class='md-widgetcrit'>";
 
@@ -85,7 +88,7 @@ class ITILCategory
                 'glpi_entities',
                 '',
                 $opt['entities_id'],
-                $opt['is_recursive_entities'] ?? false
+                $opt['is_recursive_entities'] ?? false,
             );
         } else {
             $restrict = [];
@@ -97,7 +100,7 @@ class ITILCategory
                 'value' => $opt['itilcategories_id'] ?? $default['itilcategories_id'],
                 'display' => false,
                 'condition' => ['OR' => ['is_request' => 1, 'is_incident' => 1]],
-            ] + $restrict
+            ] + $restrict,
         );
 
         $form .= $dropdown;
@@ -110,12 +113,14 @@ class ITILCategory
         return $form;
     }
 
-    public static function getQueryCriteria($params) {
+    public static function getQueryCriteria($params)
+    {
 
-        return $params['query']['WHERE'] + ['glpi_tickets.'.self::$criteria_name => $params[self::$criteria_name]];
+        return $params['query']['WHERE'] + ['glpi_tickets.' . self::$criteria_name => $params[self::$criteria_name]];
     }
 
-    public static function getSearchCriteria($params, $value = 0) {
+    public static function getSearchCriteria($params, $value = 0)
+    {
 
         $searchtype = 'equals';
         if (empty($params["params"][self::$criteria_name])) {

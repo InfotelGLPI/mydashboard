@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 define('PLUGIN_MYDASHBOARD_VERSION', '2.3.2');
@@ -87,7 +87,7 @@ function plugin_init_mydashboard()
     if (Session::getCurrentInterface() == 'central'
         && isset($_SERVER['REQUEST_URI'])
         && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
-//        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
+        //        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
     }
     $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
 
@@ -128,7 +128,7 @@ function plugin_init_mydashboard()
                         if (Session::getCurrentInterface() == 'central') {
                             if (!$_SESSION['glpiactiveprofile']['create_ticket_on_login']) {
                                 $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-//                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
+                                //                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
                                 $dest = PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
                                 $toadd = '';
                                 $dest = addslashes($dest);
@@ -145,7 +145,7 @@ function plugin_init_mydashboard()
                             } elseif (!Plugin::isPluginActive("servicecatalog")
                                        || Session::haveRight("plugin_servicecatalog", 1)) {
                                 $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
-//                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
+                                //                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
                                 $dest = PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
                                 $toadd = '';
                                 $dest = addslashes($dest);
@@ -176,12 +176,12 @@ function plugin_init_mydashboard()
 
                 Plugin::registerClass(
                     Preference::class,
-                    ['addtabon' => 'Preference']
+                    ['addtabon' => 'Preference'],
                 );
 
                 Plugin::registerClass(
                     Alert::class,
-                    ['addtabon' => ['Reminder', 'Problem', 'Change']]
+                    ['addtabon' => ['Reminder', 'Problem', 'Change']],
                 );
 
                 Plugin::registerClass(HTMLEditor::class, ['addtabon' => Customswidget::class]);

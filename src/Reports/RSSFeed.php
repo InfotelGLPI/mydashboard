@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -67,14 +67,14 @@ class RSSFeed extends CommonGLPI
             $widgets[Menu::$TOOLS]["rssfeedpersonalwidget"] = [
                 "title" => _n('Personal RSS feed', 'Personal RSS feeds', 2),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
         if (Session::haveRight("rssfeed_public", READ)) {
             $widgets[Menu::$TOOLS]["rssfeedpublicwidget"] = [
                 "title" => _n('Public RSS feed', 'Public RSS feeds', 2),
                 "type" => Widget::$TABLE,
-                "comment" => ""
+                "comment" => "",
             ];
         }
 
@@ -130,10 +130,10 @@ class RSSFeed extends CommonGLPI
             ];
 
             $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
-                    'Personal RSS feed',
-                    'Personal RSS feeds',
-                    2
-                ) . "</a>";
+                'Personal RSS feed',
+                'Personal RSS feeds',
+                2,
+            ) . "</a>";
         } else {
             // Show public rssfeeds / not mines : need to have access to public rssfeeds
             if (!Session::haveRight('rssfeed_public', READ)) {
@@ -163,17 +163,17 @@ class RSSFeed extends CommonGLPI
                 // Anonymous access
                 if (Session::isMultiEntitiesMode()) {
                     $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                            'glpi_rssfeeds'
-                        );
+                        'glpi_rssfeeds',
+                    );
                 }
             }
 
             if (Session::getCurrentInterface() != 'helpdesk') {
                 $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
-                        'Public RSS feed',
-                        'Public RSS feeds',
-                        2
-                    ) . "</a>";
+                    'Public RSS feed',
+                    'Public RSS feeds',
+                    2,
+                ) . "</a>";
             } else {
                 $titre = _n('Public RSS feed', 'Public RSS feeds', 2);
             }
@@ -220,7 +220,7 @@ class RSSFeed extends CommonGLPI
                     $output['body'][$count][1] = $item->feed->get_title();
                 } else {
                     $output['body'][$count][1] = "<a target=\"_blank'\" href=\"$link\">" . $item->feed->get_title(
-                        ) . '</a>';
+                    ) . '</a>';
                 }
                 $link = $item->get_permalink();
                 $rand = mt_rand();
@@ -237,8 +237,8 @@ class RSSFeed extends CommonGLPI
                     RichText::getSafeHtml($item->get_content()),
                     [
                         'applyto' => "rssitem$rand",
-                        'display' => false
-                    ]
+                        'display' => false,
+                    ],
                 );
                 $count++;
             }
@@ -256,9 +256,9 @@ class RSSFeed extends CommonGLPI
         $widget->setTabDatas($output['body']);
 
         //Here we set few otions concerning the jquery library Datatable, bSort for sorting, bPaginate for paginating ...
-//        if (count($output['body']) > 0) {
-//            $widget->setOption("bSort", false);
-//        }
+        //        if (count($output['body']) > 0) {
+        //            $widget->setOption("bSort", false);
+        //        }
         $widget->setOption("bPaginate", false);
         $widget->setOption("bFilter", false);
         $widget->setOption("bInfo", false);
@@ -386,14 +386,14 @@ class RSSFeed extends CommonGLPI
             '',
             '',
             true,
-            true
+            true,
         );
 
         return [
             Group_RssFeed::getTableField('groups_id') => $groups,
             'OR' => [
-                    Group_RssFeed::getTableField('no_entity_restriction') => 1,
-                ] + $entity_restriction,
+                Group_RssFeed::getTableField('no_entity_restriction') => 1,
+            ] + $entity_restriction,
         ];
     }
 
@@ -410,14 +410,14 @@ class RSSFeed extends CommonGLPI
             '',
             '',
             true,
-            true
+            true,
         );
 
         return [
             Profile_RssFeed::getTableField('profiles_id') => $profile,
             'OR' => [
-                    Profile_RssFeed::getTableField('no_entity_restriction') => 1,
-                ] + $entity_restriction,
+                Profile_RssFeed::getTableField('no_entity_restriction') => 1,
+            ] + $entity_restriction,
         ];
     }
 
@@ -433,7 +433,7 @@ class RSSFeed extends CommonGLPI
             '',
             '',
             true,
-            true
+            true,
         );
 
         // All entities

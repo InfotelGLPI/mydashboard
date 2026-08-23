@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Mydashboard\Config;
@@ -38,12 +38,12 @@ Html::header_nocache();
 Session::checkRight("plugin_mydashboard_config", UPDATE);
 
 if (isset($_POST['itemtype']) && isset($_POST['language'])) {
-   $allowed_types = [Config::class, ConfigTranslation::class];
-   if (!in_array($_POST['itemtype'], $allowed_types, true)) {
-      http_response_code(400);
-      exit;
-   }
-   $item = new $_POST['itemtype'];
-   $item->getFromDB($_POST['items_id']);
-   ConfigTranslation::dropdownFields($item, $_POST['language']);
+    $allowed_types = [Config::class, ConfigTranslation::class];
+    if (!in_array($_POST['itemtype'], $allowed_types, true)) {
+        http_response_code(400);
+        exit;
+    }
+    $item = new $_POST['itemtype']();
+    $item->getFromDB($_POST['items_id']);
+    ConfigTranslation::dropdownFields($item, $_POST['language']);
 }

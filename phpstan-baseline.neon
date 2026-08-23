@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Class GlpiPlugin\\Eventsmanager\\Event not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: ajax/createalert.php
+
+		-
 			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
 			identifier: glpi.forbidDynamicInstantiation
 			count: 1
@@ -433,6 +439,12 @@ parameters:
 			path: src/Config.php
 
 		-
+			message: '#^Method GlpiPlugin\\Mydashboard\\Config\:\:displayField\(\) should return GlpiPlugin\\Mydashboard\\type but returns string\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Config.php
+
+		-
 			message: '#^Method GlpiPlugin\\Mydashboard\\Config\:\:showForm\(\) should return bool but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -475,7 +487,7 @@ parameters:
 			path: src/ConfigTranslation.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(item\)\: Unexpected token "\\r\\n    \*", expected variable at offset 82 on line 4$#'
+			message: '#^PHPDoc tag @param has invalid value \(item\)\: Unexpected token "\\n     \*", expected variable at offset 82 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ConfigTranslation.php
@@ -825,12 +837,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array\<mixed, mixed\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Helper.php
-
-		-
-			message: '#^Call to function is_array\(\) with mixed will always evaluate to false\.$#'
-			identifier: function.impossibleType
 			count: 1
 			path: src/Helper.php
 

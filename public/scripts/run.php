@@ -1,37 +1,38 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
-function usage() {
+function usage()
+{
 
-   echo "Usage:\n";
-   echo "\t" . $_SERVER["argv"][0] . " [--args]\n";
-   echo "\n\tArguments:\n";
+    echo "Usage:\n";
+    echo "\t" . $_SERVER["argv"][0] . " [--args]\n";
+    echo "\n\tArguments:\n";
 }
 
 if (!isset($_SERVER["argv"][0])) {
@@ -50,9 +51,9 @@ $kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
 $logfilename = GLPI_LOG_DIR . "/insert_stock_tickets.log";
 
 if (!is_writable(GLPI_LOCK_DIR)) {
-   echo "\tERROR : " . GLPI_LOCK_DIR . " not writable\n";
-   echo "\trun script as 'apache' user\n";
-   exit(1);
+    echo "\tERROR : " . GLPI_LOCK_DIR . " not writable\n";
+    echo "\trun script as 'apache' user\n";
+    exit(1);
 }
 $log = fopen($logfilename, "at");
 
@@ -61,7 +62,7 @@ fwrite($log, date("r") . " " . $_SERVER["argv"][0] . " started\n");
 
 if (function_exists("pcntl_fork")) {
     # Unix/Linux
-    $pids = array();
+    $pids = [];
     $thread_nbr = 1;
     for ($i = 0; $i < $thread_nbr;) {
         $i++;
@@ -73,7 +74,7 @@ if (function_exists("pcntl_fork")) {
             $pids[$pid] = 1;
         } else {
             $cmd = "php -q -d -f insert_stock_tickets.php";
-            $out = array();
+            $out = [];
             exec($cmd, $out, $ret);
             foreach ($out as $line) {
                 fwrite($log, $line . "\n");
@@ -94,13 +95,13 @@ if (function_exists("pcntl_fork")) {
     }
 
 } else {
-   // Windows - No fork, so Only one process :(
-   $cmd = "php -q -d -f insert_stock_tickets.php";
-   $out = [];
-   $test = exec($cmd, $out, $ret);
-   foreach ($out as $line) {
-      fwrite($log, $line . "\n");
-   }
+    // Windows - No fork, so Only one process :(
+    $cmd = "php -q -d -f insert_stock_tickets.php";
+    $out = [];
+    $test = exec($cmd, $out, $ret);
+    foreach ($out as $line) {
+        fwrite($log, $line . "\n");
+    }
 }
 
 fwrite($log, date("r") . " " . $_SERVER["argv"][0] . " ended\n\n");

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -355,7 +355,7 @@ class Reports_Pie extends CommonGLPI
                 $criteria = [
                     'SELECT' => [
                         new QueryExpression(
-                            "IFNULL(" . $DB->quoteName('glpi_tickets_users.users_id') . ",-1) AS users_id"
+                            "IFNULL(" . $DB->quoteName('glpi_tickets_users.users_id') . ",-1) AS users_id",
                         ),
                         'COUNT' => 'glpi_tickets.id AS count',
                     ],
@@ -437,7 +437,7 @@ class Reports_Pie extends CommonGLPI
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -574,7 +574,7 @@ class Reports_Pie extends CommonGLPI
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -641,7 +641,7 @@ class Reports_Pie extends CommonGLPI
                                 '>',
                                 new QueryExpression(
                                     "TIMESTAMPDIFF(SECOND," . $DB::quoteName('date') . ",
-                                                                               " . $DB::quoteName('time_to_own') . ")"
+                                                                               " . $DB::quoteName('time_to_own') . ")",
                                 ),
                             ],
                             'OR' => [
@@ -711,7 +711,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -847,7 +847,7 @@ class Reports_Pie extends CommonGLPI
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -981,7 +981,7 @@ class Reports_Pie extends CommonGLPI
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1157,7 +1157,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1273,7 +1273,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1411,7 +1411,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1502,7 +1502,7 @@ class Reports_Pie extends CommonGLPI
 
                 $dataPieset = json_encode($datas);
                 $labelsPie = json_encode(
-                    [__("Satisfy percent", "mydashboard"), __("Not satisfy percent", "mydashboard")]
+                    [__("Satisfy percent", "mydashboard"), __("Not satisfy percent", "mydashboard")],
                 );
 
                 $graph_datas = [
@@ -1530,7 +1530,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1663,7 +1663,7 @@ class Reports_Pie extends CommonGLPI
 
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
                 return $widget;
 
@@ -1766,7 +1766,7 @@ class Reports_Pie extends CommonGLPI
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1896,7 +1896,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -2031,7 +2031,7 @@ class Reports_Pie extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;

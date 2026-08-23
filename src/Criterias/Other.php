@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Criterias;
@@ -44,7 +44,7 @@ use User;
  */
 class Other
 {
-//    public static $criteria_name = '...';
+    //    public static $criteria_name = '...';
 
     public static $criterias_list = [
         'status',
@@ -60,15 +60,15 @@ class Other
     public static function getDefaultValue()
     {
         // BEGIN DATE
-//        if (in_array("begin", $criterias)) {
+        //        if (in_array("begin", $criterias)) {
         $default['begin'] = date("Y-m-d H:i:s");
-//        }
+        //        }
 
 
         // END DATE
-//        if (in_array("end", $criterias)) {
+        //        if (in_array("end", $criterias)) {
         $default['end'] = date("Y-m-d H:i:s");
-//        }
+        //        }
 
 
         // TECHNICIAN MULTIPLE
@@ -211,18 +211,18 @@ class Other
         // TECHNICIAN MULTIPLE
         if (isset($opt['multiple_technicians_id'])) {
             $opt['multiple_technicians_id'] = is_array(
-                $opt['multiple_technicians_id']
+                $opt['multiple_technicians_id'],
             ) ? $opt['multiple_technicians_id'] : [];
 
             $opt['multiple_technicians_id'] = array_filter($opt['multiple_technicians_id']);
 
             if (count($opt['multiple_technicians_id']) > 0) {
                 $form .= "&nbsp;/&nbsp;" . _n(
-                        'Technician',
-                        'Technicians',
-                        count($opt['multiple_technicians_id']),
-                        'mydashboard'
-                    ) . "&nbsp;:&nbsp;";
+                    'Technician',
+                    'Technicians',
+                    count($opt['multiple_technicians_id']),
+                    'mydashboard',
+                ) . "&nbsp;:&nbsp;";
                 foreach ($opt['multiple_technicians_id'] as $k => $v) {
                     $form .= getUserName($v);
                     if (count($opt['multiple_technicians_id']) > 1) {
@@ -234,35 +234,35 @@ class Other
 
         if (isset($opt['tag']) && $opt['tag'] > 0) {
             $form .= "&nbsp;/&nbsp;" . PluginTagTag::getTypeName() . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_tag_tags',
-                    $opt['tag']
-                );
+                'glpi_plugin_tag_tags',
+                $opt['tag'],
+            );
         }
         if (isset($opt['multiple_year_time'])) {
             switch ($opt['multiple_year_time']) {
                 case "LASTMONTH":
                     $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                            "Last month",
-                            'mydashboard'
-                        );
+                        "Last month",
+                        'mydashboard',
+                    );
                     break;
                 case "LASTYEAR":
                     $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                            "Last year",
-                            'mydashboard'
-                        );
+                        "Last year",
+                        'mydashboard',
+                    );
                     break;
                 case "YEARTODATE":
                     $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                            "Year to date",
-                            'mydashboard'
-                        );
+                        "Year to date",
+                        'mydashboard',
+                    );
                     break;
                 case "MONTH":
                     $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                            "Month",
-                            'mydashboard'
-                        );
+                        "Month",
+                        'mydashboard',
+                    );
                     break;
             }
         }
@@ -270,9 +270,9 @@ class Other
 
         if (isset($opt['itilcategorielvl1']) && $opt['itilcategorielvl1'] > 0) {
             $form .= "&nbsp;/&nbsp;" . __("Category", 'mydashboard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_itilcategories',
-                    $opt['itilcategorielvl1']
-                );
+                'glpi_itilcategories',
+                $opt['itilcategorielvl1'],
+            );
         }
 
         return $form;
@@ -293,7 +293,7 @@ class Other
             $form .= "&nbsp;";
             $form .= Html::showDateTimeField(
                 "begin",
-                ['value' => $opt['begin'] ?? $default['begin'], 'maybeempty' => false, 'display' => false]
+                ['value' => $opt['begin'] ?? $default['begin'], 'maybeempty' => false, 'display' => false],
             );
             $form .= "</span>";
             if ($count > 1 && !in_array("end", $criterias)) {
@@ -309,7 +309,7 @@ class Other
             $form .= "&nbsp;";
             $form .= Html::showDateTimeField(
                 "end",
-                ['value' => $opt['end'] ?? $default['end'], 'maybeempty' => false, 'display' => false]
+                ['value' => $opt['end'] ?? $default['end'], 'maybeempty' => false, 'display' => false],
             );
             $form .= "</span>";
             if ($count > 1) {
@@ -329,7 +329,7 @@ class Other
             $params['groups_id'] = 0;
             if (isset($opt['technicians_groups_id'])) {
                 $technicians_groups_id = (is_array(
-                    $opt['technicians_groups_id']
+                    $opt['technicians_groups_id'],
                 ) ? $opt['technicians_groups_id'] : []);
             } else {
                 $technicians_groups_id = [];
@@ -354,7 +354,7 @@ class Other
                     $data['id'],
                     $data['name'],
                     $data['realname'],
-                    $data['firstname']
+                    $data['firstname'],
                 );
                 $params['values'][] = $data['id'];
             }
@@ -369,7 +369,7 @@ class Other
             $dropdownusers = Dropdown::showFromArray(
                 "multiple_technicians_id",
                 $users ?? $default['multiple_technicians_id'],
-                $params
+                $params,
             );
 
             $form .= $dropdownusers;
@@ -489,7 +489,7 @@ class Other
                 $form .= "&nbsp;";
                 $form .= Month::monthDropdown(
                     "month_year",
-                    ($opt['month_year'] ?? $default['multiple_year_time'])
+                    ($opt['month_year'] ?? $default['multiple_year_time']),
                 );
                 $form .= "</span>";
             } else {
@@ -506,7 +506,7 @@ class Other
                 "month_crit$rand",
                 $root . "/ajax/dropdownMonth.php",
                 $params2,
-                false
+                false,
             );
 
             if ($count > 1) {
@@ -526,7 +526,7 @@ class Other
                     'glpi_entities',
                     '',
                     $_POST["params"]['entities_id'],
-                    $_POST["params"]['sons']
+                    $_POST["params"]['sons'],
                 );
             } else {
                 $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $opt['entities_id'], $opt['sons']);
@@ -538,7 +538,7 @@ class Other
                     'value' => $opt['itilcategorielvl1'] ?? $default['itilcategorielvl1'],
                     'display' => false,
                     'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]],
-                ] + $restrict
+                ] + $restrict,
             );
 
             $form .= $dropdown;
@@ -563,14 +563,14 @@ class Other
                     'glpi_plugin_tag_tags',
                     '',
                     $_POST["params"]['entities_id'],
-                    $_POST["params"]['is_recursive_entities']
+                    $_POST["params"]['is_recursive_entities'],
                 );
             } else {
                 $restrict = $dbu->getEntitiesRestrictCriteria(
                     'glpi_plugin_tag_tags',
                     '',
                     $opt['entities_id'],
-                    $opt['is_recursive_entities']
+                    $opt['is_recursive_entities'],
                 );
             }
             $tag = new PluginTagTag();

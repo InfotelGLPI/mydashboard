@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -117,22 +117,22 @@ class StockTicketIndicator extends CommonDBTM
         global $DB;
 
         //New tickets
-//        $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . "
-//                        GROUP BY `glpi_tickets`.`entities_id`";
-//
+        //        $sql_new = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::INCOMING . "
+        //                        GROUP BY `glpi_tickets`.`entities_id`";
+        //
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'id AS total',
-                'entities_id'
+                'entities_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -151,14 +151,14 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::NEWT,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
         }
 
@@ -177,25 +177,25 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-//        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                  LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::INCOMING . "," . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
-//                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-//                        AND `glpi_tickets`.`time_to_resolve` < NOW()
-//                  GROUP BY `glpi_tickets`.`entities_id`";
+        //        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                  LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::INCOMING . "," . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
+        //                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
+        //                        AND `glpi_tickets`.`time_to_resolve` < NOW()
+        //                  GROUP BY `glpi_tickets`.`entities_id`";
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
-                'glpi_tickets.entities_id'
+                'glpi_tickets.entities_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -220,34 +220,34 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::LATET,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
 
         }
-//
-//        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
-//                    `glpi_tickets`.`entities_id`,
-//                    `glpi_groups_tickets`.`groups_id`
-//                  FROM glpi_tickets
-//                  LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  LEFT JOIN `glpi_groups_tickets`
-//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
-//                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
-//                        AND `glpi_tickets`.`time_to_resolve` < NOW()
-//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
-//
+        //
+        //        $sql_due = "SELECT COUNT(DISTINCT glpi_tickets.id) AS due,
+        //                    `glpi_tickets`.`entities_id`,
+        //                    `glpi_groups_tickets`.`groups_id`
+        //                  FROM glpi_tickets
+        //                  LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  LEFT JOIN `glpi_groups_tickets`
+        //                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . \Ticket::WAITING . "," . \Ticket::SOLVED . ", " . \Ticket::CLOSED . ")
+        //                        AND `glpi_tickets`.`time_to_resolve` IS NOT NULL
+        //                        AND `glpi_tickets`.`time_to_resolve` < NOW()
+        //                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+        //
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -255,7 +255,7 @@ class StockTicketIndicator extends CommonDBTM
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
                 'glpi_tickets.entities_id',
-                'glpi_groups_tickets.groups_id'
+                'glpi_groups_tickets.groups_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -263,9 +263,9 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_groups_tickets' => [
                     'ON' => [
                         'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets'          => 'id'
-                    ]
-                ]
+                        'glpi_tickets'          => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 $is_deleted,
@@ -289,14 +289,14 @@ class StockTicketIndicator extends CommonDBTM
 
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
-                    ['id' => NULL,
+                    ['id' => null,
                         'year' => $year,
                         'week' => $week,
                         'nbTickets' => $data['total'],
                         'indicator_id' => self::LATET,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
-                    ]
+                    ],
                 );
             }
         }
@@ -314,23 +314,23 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-//        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                    LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
-//                  GROUP BY `glpi_tickets`.`entities_id`";
+        //        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                    LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
+        //                  GROUP BY `glpi_tickets`.`entities_id`";
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'id AS total',
-                'entities_id'
+                'entities_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -349,32 +349,32 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::PENDINGT,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
 
         }
 
-//        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`,
-//                    `glpi_groups_tickets`.`groups_id`
-//                  FROM glpi_tickets
-//                   LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                   LEFT JOIN `glpi_groups_tickets`
-//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
-//                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
-//
+        //        $sql_pend = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`,
+        //                    `glpi_groups_tickets`.`groups_id`
+        //                  FROM glpi_tickets
+        //                   LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                   LEFT JOIN `glpi_groups_tickets`
+        //                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::WAITING . "
+        //                   GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+        //
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -382,7 +382,7 @@ class StockTicketIndicator extends CommonDBTM
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
                 'glpi_tickets.entities_id',
-                'glpi_groups_tickets.groups_id'
+                'glpi_groups_tickets.groups_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -390,9 +390,9 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_groups_tickets' => [
                     'ON' => [
                         'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets'          => 'id'
-                    ]
-                ]
+                        'glpi_tickets'          => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 $is_deleted,
@@ -410,14 +410,14 @@ class StockTicketIndicator extends CommonDBTM
 
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
-                    ['id' => NULL,
+                    ['id' => null,
                         'year' => $year,
                         'week' => $week,
                         'nbTickets' => $data['total'],
                         'indicator_id' => self::PENDINGT,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
-                    ]
+                    ],
                 );
 
             }
@@ -438,18 +438,18 @@ class StockTicketIndicator extends CommonDBTM
 
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
 
-//
-//        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                  LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
-//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-//                  GROUP BY `glpi_tickets`.`entities_id`";
+        //
+        //        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                  LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+        //                  GROUP BY `glpi_tickets`.`entities_id`";
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
@@ -465,7 +465,7 @@ class StockTicketIndicator extends CommonDBTM
                 new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
-                'NOT'       => ['glpi_tickets.status' => $statuses]
+                'NOT'       => ['glpi_tickets.status' => $statuses],
             ],
             'GROUPBY' => 'glpi_tickets.entities_id',
         ];
@@ -476,37 +476,37 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::INCIDENTPROGRESST,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
         }
 
-//        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`,
-//                    `glpi_groups_tickets`.`groups_id`
-//                  FROM glpi_tickets
-//                  LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                   LEFT JOIN `glpi_groups_tickets`
-//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
-//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+        //        $sql_incpro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`,
+        //                    `glpi_groups_tickets`.`groups_id`
+        //                  FROM glpi_tickets
+        //                  LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                   LEFT JOIN `glpi_groups_tickets`
+        //                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`type` = '" . \Ticket::INCIDENT_TYPE . "'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+        //                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
                 'glpi_tickets.entities_id',
-                'glpi_groups_tickets.groups_id'
+                'glpi_groups_tickets.groups_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -514,16 +514,16 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_groups_tickets' => [
                     'ON' => [
                         'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets'          => 'id'
-                    ]
-                ]
+                        'glpi_tickets'          => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 $is_deleted,
                 new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'glpi_tickets.type' => \Ticket::INCIDENT_TYPE,
-                'NOT'       => ['glpi_tickets.status' => $statuses]
+                'NOT'       => ['glpi_tickets.status' => $statuses],
             ],
             'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
@@ -535,14 +535,14 @@ class StockTicketIndicator extends CommonDBTM
 
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
-                    ['id' => NULL,
+                    ['id' => null,
                         'year' => $year,
                         'week' => $week,
                         'nbTickets' => $data['total'],
                         'indicator_id' => self::INCIDENTPROGRESST,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
-                    ]
+                    ],
                 );
             }
         }
@@ -563,17 +563,17 @@ class StockTicketIndicator extends CommonDBTM
         $statuses = [\Ticket::SOLVED, \Ticket::CLOSED, \Ticket::WAITING, \Ticket::INCOMING];
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
-//        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                   LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
-//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-//                  GROUP BY `glpi_tickets`.`entities_id`";
+        //        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                   LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+        //                  GROUP BY `glpi_tickets`.`entities_id`";
 
         $criteria = [
             'SELECT' => [
@@ -587,7 +587,7 @@ class StockTicketIndicator extends CommonDBTM
                 new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
-                'NOT'       => ['glpi_tickets.status' => $statuses]
+                'NOT'       => ['glpi_tickets.status' => $statuses],
             ],
             'GROUPBY' => 'glpi_tickets.entities_id',
         ];
@@ -598,37 +598,37 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::REQUESTPROGRESST,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
         }
-//
-//        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`,
-//                    `glpi_groups_tickets`.`groups_id`
-//                  FROM glpi_tickets
-//                   LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                    LEFT JOIN `glpi_groups_tickets`
-//                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`date`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`date`) = '$year'
-//                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
-//                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
-//                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
+        //
+        //        $sql_dempro = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`,
+        //                    `glpi_groups_tickets`.`groups_id`
+        //                  FROM glpi_tickets
+        //                   LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                    LEFT JOIN `glpi_groups_tickets`
+        //                  ON `glpi_groups_tickets`.`tickets_id`=`glpi_tickets`.`id`
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`date`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`date`) = '$year'
+        //                        AND `glpi_tickets`.`type` = '" . \Ticket::DEMAND_TYPE . "'
+        //                        AND `glpi_tickets`.`status` NOT IN (" . implode(",", $statuses) . ")
+        //                  GROUP BY `glpi_groups_tickets`.`groups_id`,`glpi_tickets`.`entities_id`";
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
                 'glpi_tickets.entities_id',
-                'glpi_groups_tickets.groups_id'
+                'glpi_groups_tickets.groups_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -636,16 +636,16 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_groups_tickets' => [
                     'ON' => [
                         'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets'          => 'id'
-                    ]
-                ]
+                        'glpi_tickets'          => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 $is_deleted,
                 new QueryExpression("WEEK(" . $DB->quoteName("glpi_tickets.date") . ") = $week"),
                 new QueryExpression("YEAR(" . $DB->quoteName("glpi_tickets.date") . ") = $year") ,
                 'glpi_tickets.type' => \Ticket::DEMAND_TYPE,
-                'NOT'       => ['glpi_tickets.status' => $statuses]
+                'NOT'       => ['glpi_tickets.status' => $statuses],
             ],
             'GROUPBY' => ['glpi_groups_tickets.groups_id', 'glpi_tickets.entities_id'],
         ];
@@ -656,14 +656,14 @@ class StockTicketIndicator extends CommonDBTM
             if (isset($data['groups_id']) && $data['groups_id'] > 0) {
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
-                    ['id' => NULL,
+                    ['id' => null,
                         'year' => $year,
                         'week' => $week,
                         'nbTickets' => $data['total'],
                         'indicator_id' => self::REQUESTPROGRESST,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
-                    ]
+                    ],
                 );
             }
 
@@ -681,23 +681,23 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                    LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
-//                  GROUP BY `glpi_tickets`.`entities_id`";
+        //        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                    LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`solvedate`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`solvedate`) = '$year'
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::SOLVED . "
+        //                  GROUP BY `glpi_tickets`.`entities_id`";
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'id AS total',
-                'entities_id'
+                'entities_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -716,14 +716,14 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::SOLVEDT,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
         }
 
@@ -731,7 +731,7 @@ class StockTicketIndicator extends CommonDBTM
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
                 'glpi_tickets.entities_id',
-                'glpi_groups_tickets.groups_id'
+                'glpi_groups_tickets.groups_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -739,9 +739,9 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_groups_tickets' => [
                     'ON' => [
                         'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets'          => 'id'
-                    ]
-                ]
+                        'glpi_tickets'          => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 $is_deleted,
@@ -759,14 +759,14 @@ class StockTicketIndicator extends CommonDBTM
 
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
-                    ['id' => NULL,
+                    ['id' => null,
                         'year' => $year,
                         'week' => $week,
                         'nbTickets' => $data['total'],
                         'indicator_id' => self::SOLVEDT,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
-                    ]
+                    ],
                 );
             }
         }
@@ -784,23 +784,23 @@ class StockTicketIndicator extends CommonDBTM
     {
         global $DB;
 
-//        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
-//                    `glpi_tickets`.`entities_id`
-//                  FROM glpi_tickets
-//                    LEFT JOIN glpi_entities
-//                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
-//                  WHERE `glpi_tickets`.`is_deleted` = 0
-//                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
-//                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
-//                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
-//                  GROUP BY `glpi_tickets`.`entities_id`";
+        //        $sql_res = "SELECT COUNT(DISTINCT glpi_tickets.id) as total,
+        //                    `glpi_tickets`.`entities_id`
+        //                  FROM glpi_tickets
+        //                    LEFT JOIN glpi_entities
+        //                  ON (`glpi_tickets`.`entities_id` = `glpi_entities`.`id`)
+        //                  WHERE `glpi_tickets`.`is_deleted` = 0
+        //                        AND WEEK(`glpi_tickets`.`closedate`) = '$week'
+        //                        AND YEAR(`glpi_tickets`.`closedate`) = '$year'
+        //                        AND `glpi_tickets`.`status` = " . \Ticket::CLOSED . "
+        //                  GROUP BY `glpi_tickets`.`entities_id`";
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
         $criteria = [
             'SELECT' => [
                 'COUNT' => 'id AS total',
-                'entities_id'
+                'entities_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -819,14 +819,14 @@ class StockTicketIndicator extends CommonDBTM
 
             $DB->insert(
                 'glpi_plugin_mydashboard_stockticketindicators',
-                ['id' => NULL,
+                ['id' => null,
                     'year' => $year,
                     'week' => $week,
                     'nbTickets' => $data['total'],
                     'indicator_id' => self::CLOSEDT,
                     'groups_id' => 0,
                     'entities_id' => $data['entities_id'],
-                ]
+                ],
             );
 
         }
@@ -835,7 +835,7 @@ class StockTicketIndicator extends CommonDBTM
             'SELECT' => [
                 'COUNT' => 'glpi_tickets.id AS total',
                 'glpi_tickets.entities_id',
-                'glpi_groups_tickets.groups_id'
+                'glpi_groups_tickets.groups_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_tickets',
@@ -843,9 +843,9 @@ class StockTicketIndicator extends CommonDBTM
                 'glpi_groups_tickets' => [
                     'ON' => [
                         'glpi_groups_tickets' => 'tickets_id',
-                        'glpi_tickets'          => 'id'
-                    ]
-                ]
+                        'glpi_tickets'          => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 $is_deleted,
@@ -863,14 +863,14 @@ class StockTicketIndicator extends CommonDBTM
 
                 $DB->insert(
                     'glpi_plugin_mydashboard_stockticketindicators',
-                    ['id' => NULL,
+                    ['id' => null,
                         'year' => $year,
                         'week' => $week,
                         'nbTickets' => $data['total'],
                         'indicator_id' => self::CLOSEDT,
                         'groups_id' => $data['groups_id'],
                         'entities_id' => $data['entities_id'],
-                    ]
+                    ],
                 );
             }
         }

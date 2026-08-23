@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -47,12 +47,13 @@ use Session;
 use Ticket;
 use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
+
 /**
  * Class Menu
  */
 class Menu extends CommonGLPI
 {
-    const DASHBOARD_NAME = "myDashboard";
+    public const DASHBOARD_NAME = "myDashboard";
     /**
      * Will contain an array indexed with classnames, each element of this array<br>
      * will be an array containing widgetId s
@@ -111,7 +112,6 @@ class Menu extends CommonGLPI
     {
         return __('My Dashboard', 'mydashboard');
     }
-
 
     public function defineTabs($options = [])
     {
@@ -226,8 +226,8 @@ class Menu extends CommonGLPI
             'page'  => StockWidget::getSearchURL(false),
             'links' => [
                 'search' => StockWidget::getSearchURL(false),
-                'add'    => StockWidget::getFormURL(false)
-            ]
+                'add'    => StockWidget::getFormURL(false),
+            ],
         ];
 
         $menu['icon'] = self::getIcon();
@@ -271,7 +271,6 @@ class Menu extends CommonGLPI
         $this->showDashboard($rand, $active_profile, $predefined_grid);
     }
 
-
     /**
      * Dropdown profiles which have rights under the active one
      *
@@ -296,23 +295,23 @@ class Menu extends CommonGLPI
         $iterator = $DB->request(
             ['SELECT'    => [
                 'glpi_profiles.name',
-                'glpi_profiles.id'
+                'glpi_profiles.id',
             ],
-             'FROM'      => Profile::getTable(),
-             'LEFT JOIN' => [
-                 'glpi_profilerights' => [
-                     'FKEY' => [
-                         'glpi_profilerights' => 'profiles_id',
-                         'glpi_profiles'      => 'id'
-                     ]
-                 ]
-             ],
-             'WHERE'     => [Profile::getUnderActiveProfileRestrictCriteria(),
-                             'glpi_profilerights.name'   => 'plugin_mydashboard',
-                             'glpi_profilerights.rights' => ['>', 0],
-             ],
-             'ORDER'     => 'glpi_profilerights.name'
-            ]
+                'FROM'      => Profile::getTable(),
+                'LEFT JOIN' => [
+                    'glpi_profilerights' => [
+                        'FKEY' => [
+                            'glpi_profilerights' => 'profiles_id',
+                            'glpi_profiles'      => 'id',
+                        ],
+                    ],
+                ],
+                'WHERE'     => [Profile::getUnderActiveProfileRestrictCriteria(),
+                    'glpi_profilerights.name'   => 'plugin_mydashboard',
+                    'glpi_profilerights.rights' => ['>', 0],
+                ],
+                'ORDER'     => 'glpi_profilerights.name',
+            ],
         );
 
         //New rule -> get the next free ranking
@@ -326,7 +325,7 @@ class Menu extends CommonGLPI
             if ($id == $p['value']) {
                 $selected = 'selected';
             }
-            echo "<option $selected value='$id'>$name</option>";
+            echo "<option $selected value='" . (int) $id . "'>" . htmlescape($name) . "</option>";
         }
         echo "</select>";
         //
@@ -395,7 +394,7 @@ class Menu extends CommonGLPI
 
         echo $this->getscripts();
 
-//        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
+        //        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
         if ($edit > 0) {
             //force loading new widgets
             self::installWidgets();
@@ -419,7 +418,7 @@ class Menu extends CommonGLPI
 
             if ($edit == 2) {
                 $options = ["users_id"    => 0,
-                            "profiles_id" => $selected_profile];
+                    "profiles_id" => $selected_profile];
                 $id      = Dashboard::checkIfPreferenceExists($options);
                 if ($dashboard->getFromDB($id)) {
                     $grid = stripslashes($dashboard->fields['grid']);
@@ -427,7 +426,7 @@ class Menu extends CommonGLPI
             }
             if ($edit == 1) {
                 $option_users = ["users_id"    => Session::getLoginUserID(),
-                                 "profiles_id" => $selected_profile];
+                    "profiles_id" => $selected_profile];
                 $id           = Dashboard::checkIfPreferenceExists($option_users);
                 if ($dashboard->getFromDB($id)) {
                     $grid = stripslashes($dashboard->fields['grid']);
@@ -480,7 +479,6 @@ class Menu extends CommonGLPI
             } else {
                 echo \Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
             }
-
 
             echo "<tr class='plugin_mydashboard_trWidget'>";
             echo "<td class='center' style='border: 0;'>";
@@ -570,7 +568,6 @@ class Menu extends CommonGLPI
             echo "</table>";
             \Html::closeForm();
             echo "</div>";
-
 
             echo "<div class='alert alert-success' id='success-alert'>
                 <strong>" . __('Success', 'mydashboard') . "</strong> -
@@ -700,7 +697,6 @@ class Menu extends CommonGLPI
         return $wl;
     }
 
-
     /**
      * Barre d'actions horizontale en mode édition, affichée au-dessus de la grille.
      */
@@ -762,7 +758,7 @@ class Menu extends CommonGLPI
                   . " onChange='this.form.submit()' title='" . __s('Load a predefined grid', 'mydashboard') . "'>";
             $out .= "<option value=''>" . __('Load a predefined grid', 'mydashboard') . "</option>";
             foreach ($elements as $id => $name) {
-                $out .= "<option value='" . (int)$id . "'>" . htmlspecialchars($name) . "</option>";
+                $out .= "<option value='" . (int) $id . "'>" . htmlspecialchars($name) . "</option>";
             }
             $out .= "</select>";
         }
@@ -791,14 +787,14 @@ class Menu extends CommonGLPI
                   . " onChange='this.form.submit()' title='" . __s('Profile') . "'>";
             $out .= "<option value=''>" . Dropdown::EMPTY_VALUE . "</option>";
             foreach ($iterator as $data) {
-                $sel  = ((int)$data['id'] === (int)$selected_profile) ? ' selected' : '';
-                $out .= "<option value='" . (int)$data['id'] . "'{$sel}>"
+                $sel  = ((int) $data['id'] === (int) $selected_profile) ? ' selected' : '';
+                $out .= "<option value='" . (int) $data['id'] . "'{$sel}>"
                       . htmlspecialchars($data['name']) . "</option>";
             }
             $out .= "</select>";
         } else {
             $out .= "<input type='hidden' name='profiles_id'"
-                  . " value='" . (int)$_SESSION['glpiactiveprofile']['id'] . "'>";
+                  . " value='" . (int) $_SESSION['glpiactiveprofile']['id'] . "'>";
         }
 
         // Fermer le mode édition (poussé à droite)
@@ -1056,26 +1052,25 @@ class Menu extends CommonGLPI
     /**
      * Stores every widgets in Database (see Widget)
      */
-//    private function initDBWidgets()
-//    {
-//        $widgetDB    = new Widget();
-//        $dbu         = new DbUtils();
-//        $widgetsinDB = $dbu->getAllDataFromTable(Widget::getTable());
-//
-//        $widgetsnames = [];
-//        foreach ($widgetsinDB as $widget) {
-//            $widgetsnames[$widget['name']] = $widget['id'];
-//        }
-//
-//        foreach ($this->widgets as $classname => $classwidgets) {
-//            foreach ($classwidgets as $widgetId => $view) {
-//                if (!isset($widgetsnames[$widgetId])) {
-//                    $widgetDB->saveWidget($widgetId);
-//                }
-//            }
-//        }
-//    }
-
+    //    private function initDBWidgets()
+    //    {
+    //        $widgetDB    = new Widget();
+    //        $dbu         = new DbUtils();
+    //        $widgetsinDB = $dbu->getAllDataFromTable(Widget::getTable());
+    //
+    //        $widgetsnames = [];
+    //        foreach ($widgetsinDB as $widget) {
+    //            $widgetsnames[$widget['name']] = $widget['id'];
+    //        }
+    //
+    //        foreach ($this->widgets as $classname => $classwidgets) {
+    //            foreach ($classwidgets as $widgetId => $view) {
+    //                if (!isset($widgetsnames[$widgetId])) {
+    //                    $widgetDB->saveWidget($widgetId);
+    //                }
+    //            }
+    //        }
+    //    }
 
     /**
      * Get an array of widgetNames as ["id1","id2"] for a specifid users_id
@@ -1084,12 +1079,12 @@ class Menu extends CommonGLPI
      *
      * @return array of string
      */
-//    private function getDashboardForUser($id)
-//    {
-//        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-//        $user_widget     = new UserWidget($id, $interface);
-//        return $user_widget->getWidgets();
-//    }
+    //    private function getDashboardForUser($id)
+    //    {
+    //        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+    //        $user_widget     = new UserWidget($id, $interface);
+    //        return $user_widget->getWidgets();
+    //    }
 
     //   /**
     //    * Get the widget index on dash, to add it in the correct order
@@ -1173,18 +1168,18 @@ class Menu extends CommonGLPI
                     'sFirst'    => __('First'),
                     'sLast'     => __('Last'),
                     'sNext'     => " " . __('Next'),
-                    'sPrevious' => __('Previous')
+                    'sPrevious' => __('Previous'),
                 ];
                 $languages['oAria']           = [
                     'sSortAscending'  => __(': activate to sort column ascending', 'mydashboard'),
-                    'sSortDescending' => __(': activate to sort column descending', 'mydashboard')
+                    'sSortDescending' => __(': activate to sort column descending', 'mydashboard'),
                 ];
                 $languages['select']          = [
                     "rows" => [
                         "_" => "",// __('You have selected %d rows', 'mydashboard')
                         //                  "0" => "Click a row to select",
-                        "1" => __('1 row selected', 'mydashboard')
-                    ]
+                        "1" => __('1 row selected', 'mydashboard'),
+                    ],
                 ];
 
                 $languages['close']    = __("Close", "mydashboard");
@@ -1213,8 +1208,6 @@ class Menu extends CommonGLPI
         return $languages;
     }
 
-
-
     /**
      * Log $msg only when DEBUG_MODE is set
      *
@@ -1226,7 +1219,6 @@ class Menu extends CommonGLPI
     //      }
     //   }
 
-
     /***********************/
 
     /**
@@ -1236,7 +1228,7 @@ class Menu extends CommonGLPI
     {
         global $CFG_GLPI;
 
-//        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
+        //        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.js");
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.css");
         //
@@ -1250,10 +1242,10 @@ class Menu extends CommonGLPI
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.js");
 
-//        \Html::requireJs('charts');
+        //        \Html::requireJs('charts');
         $theme = MydashboardPreference::getPalette(Session::getLoginUserID());
         //TODO v11
-//        echo \Html::script($CFG_GLPI['root_doc']."/lib/echarts.js");
+        //        echo \Html::script($CFG_GLPI['root_doc']."/lib/echarts.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/echarts.js");
         if (!empty($theme)) {
             echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/theme/$theme.js");
@@ -1271,20 +1263,20 @@ class Menu extends CommonGLPI
         $this->users_id = Session::getLoginUserID();
         $this->showMenu($rand, $this->users_id, $active_profile, $predefined_grid);
 
-//        $this->initDBWidgets();
+        //        $this->initDBWidgets();
         $grid = [];
 
-//        $list = $this->getDashboardForUser($this->users_id);
-//        $data = [];
-//        if (count($list) > 0) {
-//            foreach ($list as $k => $v) {
-//                $id = Widget::getGsID($v);
-//                if ($id) {
-//                    $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
-//                }
-//            }
-//            $grid = json_encode($data);
-//        }
+        //        $list = $this->getDashboardForUser($this->users_id);
+        //        $data = [];
+        //        if (count($list) > 0) {
+        //            foreach ($list as $k => $v) {
+        //                $id = Widget::getGsID($v);
+        //                if ($id) {
+        //                    $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
+        //                }
+        //            }
+        //            $grid = json_encode($data);
+        //        }
         //LOAD WIDGETS
         $edit = MydashboardPreference::checkEditMode(Session::getLoginUserID());
         $drag = MydashboardPreference::checkDragMode(Session::getLoginUserID());
@@ -1352,7 +1344,7 @@ class Menu extends CommonGLPI
                             "<div class='alert alert-success' id='success-alert'>
                             <strong>" . __('Success', 'mydashboard') . "</strong> -
                             " . __('Save grid to see widget', 'mydashboard') . "
-                        </div>"
+                        </div>",
                         ];
                         //NOT LOAD ALL WIDGETS FOR PERF
                         //               $allwidgetjson[$k] = Widget::getWidget($k, [], $widgets);
@@ -1368,7 +1360,6 @@ class Menu extends CommonGLPI
 
             $grid = '[]';
         }
-
 
         $datajson = json_encode($datajson);
 
@@ -1390,6 +1381,34 @@ class Menu extends CommonGLPI
 
         $all_displayed_widgets    = json_encode($displayed_widgets);
         $all_displayed_widgets_id = json_encode($displayed_widgets_id);
+
+        // [S1] Re-encode the grid layout instead of interpolating the raw stored
+        // string into the inline <script> below. The `grid` column is persisted
+        // from client input by ajax/saveGrid.php, so emitting it verbatim
+        // (`var items = $grid;`) would let a crafted payload break out of the
+        // script context (stored XSS), the same way state_save.php was hardened.
+        // Decode, keep only the geometry keys the loader actually reads, and
+        // re-encode with the HTML-hardening flags.
+        $grid_nodes = json_decode((string) $grid, true);
+        $grid_safe  = [];
+        if (is_array($grid_nodes)) {
+            foreach ($grid_nodes as $node) {
+                if (!is_array($node) || !isset($node['id'])) {
+                    continue;
+                }
+                $grid_safe[] = [
+                    'id' => (string) $node['id'],
+                    'x'  => (int) ($node['x'] ?? 0),
+                    'y'  => (int) ($node['y'] ?? 0),
+                    'w'  => (int) ($node['w'] ?? 0),
+                    'h'  => (int) ($node['h'] ?? 0),
+                ];
+            }
+        }
+        $grid_json = json_encode(
+            $grid_safe,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
 
         // Toolbar d'édition ou popup d'actions selon le mode
         if ($edit > 0) {
@@ -1417,8 +1436,8 @@ class Menu extends CommonGLPI
         }
 
         echo "<div id='mygrid$rand' class='mygrid'>";
-//        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
-//        echo "</div>";
+        //        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
+        //        echo "</div>";
 
         echo "<script type='text/javascript'>
         $(function () {
@@ -1440,7 +1459,7 @@ class Menu extends CommonGLPI
             new function () {
                 this.loadGrid = function () {
                     grid.removeAll();
-                    var items = $grid;
+                    var items = $grid_json;
                      items.forEach(function(node)  {
                          var nodeid = node.id;
 
@@ -1578,7 +1597,6 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
                    });
             }
         });
-
 
     </script>";
         echo "<script type='text/javascript'>
@@ -1738,7 +1756,6 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
            return false;
         };
 
-
 //         function downloadGraph(id) {
 ////             if (!isChartRendered) return; // return if chart not rendered
 //                html2canvas(document.getElementById(id), {
@@ -1878,7 +1895,7 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
             'display'  => true,
             'icon'     => false,
             'icon_url' => false,
-            'icon_txt' => false
+            'icon_txt' => false,
         ];
 
         if (count($options)) {

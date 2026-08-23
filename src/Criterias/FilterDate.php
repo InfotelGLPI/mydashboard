@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Criterias;
@@ -42,7 +42,8 @@ class FilterDate
 {
     public static $criteria_name = 'filter_date';
 
-    public static function getDefaultValue() {
+    public static function getDefaultValue()
+    {
 
         $year = intval(date('Y', time()));
 
@@ -54,13 +55,14 @@ class FilterDate
         $preferences = $preference->fields;
         if (isset($preferences['prefered_year'])) {
             if ($preferences['prefered_year'] > 0) {
-                $year = intval(date('Y', time()) -1);
+                $year = intval(date('Y', time()) - 1);
             }
         }
         return $year;
     }
 
-    public static function getDisplayValue($opt) {
+    public static function getDisplayValue($opt)
+    {
 
         $form = "";
         if ($opt[self::$criteria_name] && preg_match('/^\d{4}$/', $opt[self::$criteria_name])) {
@@ -68,12 +70,13 @@ class FilterDate
         }
         if (isset($opt['begin']) && isset($opt['end'])) {
             $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard') .
-                "&nbsp;:&nbsp;" .Html::convDateTime($opt['begin'])." / ".Html::convDateTime($opt['end']);
+                "&nbsp;:&nbsp;" . Html::convDateTime($opt['begin']) . " / " . Html::convDateTime($opt['end']);
         }
         return $form;
     }
 
-    public static function getDisplayForm($default, $opt, $count) {
+    public static function getDisplayForm($default, $opt, $count)
+    {
 
         global $CFG_GLPI;
 
@@ -112,7 +115,7 @@ class FilterDate
             $form .= "&nbsp;";
             $form .= Html::showDateTimeField(
                 "begin",
-                ['value' => $opt['begin'] ?? null, 'maybeempty' => false, 'display' => false]
+                ['value' => $opt['begin'] ?? null, 'maybeempty' => false, 'display' => false],
             );
             $form .= "</span>";
             $form .= "</br>";
@@ -121,7 +124,7 @@ class FilterDate
             $form .= "&nbsp;";
             $form .= Html::showDateTimeField(
                 "end",
-                ['value' => $opt['end'] ?? null, 'maybeempty' => false, 'display' => false]
+                ['value' => $opt['end'] ?? null, 'maybeempty' => false, 'display' => false],
             );
             $form .= "</span>";
             $form .= "</span>";
@@ -149,7 +152,7 @@ class FilterDate
             "filter_date_crit$rand",
             $root . "/ajax/dropdownUpdateDisplaydata.php",
             $params2,
-            false
+            false,
         );
 
         if ($count > 1) {

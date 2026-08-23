@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -94,7 +94,7 @@ class Profile extends \Profile
                 ['plugin_mydashboard'             => 0,
                     'plugin_mydashboard_config'      => 0,
                     'plugin_mydashboard_edit'        => 0,
-                    'plugin_mydashboard_stockwidget' => 0]
+                    'plugin_mydashboard_stockwidget' => 0],
             );
             $prof->showForm($ID);
         }
@@ -115,13 +115,13 @@ class Profile extends \Profile
         foreach ($rights as $right => $value) {
             if ($dbu->countElementsInTable(
                 'glpi_profilerights',
-                ["profiles_id" => $profiles_id, "name" => $right]
+                ["profiles_id" => $profiles_id, "name" => $right],
             ) && $drop_existing) {
                 $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
             }
             if (!$dbu->countElementsInTable(
                 'glpi_profilerights',
-                ["profiles_id" => $profiles_id, "name" => $right]
+                ["profiles_id" => $profiles_id, "name" => $right],
             )) {
                 $myright['profiles_id'] = $profiles_id;
                 $myright['name']        = $right;
@@ -146,7 +146,7 @@ class Profile extends \Profile
                 'plugin_mydashboard_config'      => CREATE + UPDATE + PURGE,
                 'plugin_mydashboard_edit'        => 6,
                 'plugin_mydashboard_stockwidget' => READ + CREATE + UPDATE + PURGE],
-            true
+            true,
         );
     }
 
@@ -242,7 +242,7 @@ class Profile extends \Profile
         foreach ($profile->getAllRights(true) as $data) {
             if ($dbu->countElementsInTable(
                 "glpi_profilerights",
-                ["name" => $data['field']]
+                ["name" => $data['field']],
             ) == 0) {
                 ProfileRight::addProfileRights([$data['field']]);
             }

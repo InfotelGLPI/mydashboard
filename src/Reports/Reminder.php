@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -171,7 +171,7 @@ class Reminder extends CommonGLPI
         }
 
         $widget->setWidgetTitle(
-            $icon . " " . $widgetTitle
+            $icon . " " . $widgetTitle,
         );
 
         $entries = [];
@@ -189,7 +189,7 @@ class Reminder extends CommonGLPI
                     '<a id="content_reminder_%s" href="%s">%s</a>',
                     htmlescape($data["id"] . $rand),
                     htmlescape(\Reminder::getFormURLWithID($data["id"])),
-                    htmlescape($name)
+                    htmlescape($name),
                 );
                 $text = $data["text"];
                 if (!empty($data['transtext'])) {
@@ -200,7 +200,7 @@ class Reminder extends CommonGLPI
                     [
                         'applyto' => "content_reminder_" . $data["id"] . $rand,
                         'display' => false,
-                    ]
+                    ],
                 );
                 $name = sprintf(__s('%1$s %2$s'), $link, $tooltip);
 
@@ -210,13 +210,13 @@ class Reminder extends CommonGLPI
                     $planning_text = sprintf(
                         __('From %1$s to %2$s'),
                         Html::convDateTime($data["begin"]),
-                        Html::convDateTime($data["end"])
+                        Html::convDateTime($data["end"]),
                     );
                     $planning = sprintf(
                         '<a href="%s" class="pointer float-end" title="%s"><i class="ti ti-bell"></i><span class="sr-only">%s</span></a>',
                         htmlescape(sprintf('%s/front/planning.php?date=%s&type=day', $CFG_GLPI['root_doc'], $date_url)),
                         htmlescape($planning_text),
-                        __s('Planning')
+                        __s('Planning'),
                     );
                 } else {
                     $planning = '';

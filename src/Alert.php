@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -426,7 +426,7 @@ class Alert extends CommonDBTM
                 $datas = $this->getMaintenanceList();
                 $widget->setWidgetHeaderType('warning');
                 $widget->setWidgetHtmlContent(
-                    $datas
+                    $datas,
                 );
                 $widget->setWidgetTitle(Config::displayField($config, 'title_maintenances_widget'));
                 return $widget;
@@ -437,7 +437,7 @@ class Alert extends CommonDBTM
                 $datas = $this->getInformationList();
                 $widget->setWidgetHeaderType('info');
                 $widget->setWidgetHtmlContent(
-                    $datas
+                    $datas,
                 );
                 $widget->setWidgetTitle(Config::displayField($config, 'title_informations_widget'));
                 return $widget;
@@ -448,7 +448,7 @@ class Alert extends CommonDBTM
                     'GlpiPlugin\Mydashboard\Alert4',
                     $widgetId,
                     $opt,
-                    \Ticket::INCIDENT_TYPE
+                    \Ticket::INCIDENT_TYPE,
                 );
                 return $widget;
                 break;
@@ -458,7 +458,7 @@ class Alert extends CommonDBTM
                     'GlpiPlugin\Mydashboard\Alert5',
                     $widgetId,
                     $opt,
-                    \Ticket::INCIDENT_TYPE
+                    \Ticket::INCIDENT_TYPE,
                 );
                 return $widget;
                 break;
@@ -481,7 +481,7 @@ class Alert extends CommonDBTM
                     $table .= "</div>";
                 }
                 $widget->setWidgetHtmlContent(
-                    $table
+                    $table,
                 );
                 //            $widget->toggleWidgetRefresh();
 
@@ -510,7 +510,7 @@ class Alert extends CommonDBTM
                     'ORDERBY' => 'glpi_tickets.date_mod DESC',
                 ];
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 if (count($_SESSION['glpigroups'])) {
@@ -578,12 +578,12 @@ class Alert extends CommonDBTM
                             $ticketdocument = new Document();
                             $documents = $ticketdocument->find(
                                 ['tickets_id' => $ticket->fields['id']],
-                                ['date_mod DESC']
+                                ['date_mod DESC'],
                             );
 
                             if ((count($followups) > 0 && current($followups)['date'] >= $ticket->fields['date_mod'])
                                 || (count($documents) > 0 && current(
-                                    $documents
+                                    $documents,
                                 )['date_mod'] >= $ticket->fields['date_mod'])) {
                                 $bgcolor = $_SESSION["glpipriority_" . $ticket->fields["priority"]];
                                 $textColor = "color:black!important;";
@@ -657,7 +657,7 @@ class Alert extends CommonDBTM
                                 // Priorities
                                 $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
                                 $priority .= "<span class='b'>" . $ticket->fields["priority"] . " - " . \Ticket::getPriorityName(
-                                    $ticket->fields["priority"]
+                                    $ticket->fields["priority"],
                                 ) . "</span>";
                                 $priority .= "</div>";
                                 $datas[$i]["priority"] = $priority;
@@ -685,7 +685,7 @@ class Alert extends CommonDBTM
                                     $datas[$i]["category"] = "<span class='b'>" . substr(
                                         $haystack,
                                         0,
-                                        $pos
+                                        $pos,
                                     ) . "</span>";
                                 } else {
                                     $datas[$i]["category"] = "<span></span>";
@@ -726,15 +726,15 @@ class Alert extends CommonDBTM
                             [
                                 new QueryExpression(
                                     "UNIX_TIMESTAMP(" . $DB->quoteName("lastrun") . ") + 2 * " . $DB->quoteName(
-                                        "frequency"
-                                    ) . " < UNIX_TIMESTAMP(NOW())"
+                                        "frequency",
+                                    ) . " < UNIX_TIMESTAMP(NOW())",
                                 ),
                             ],
                             [
                                 new QueryExpression(
                                     "UNIX_TIMESTAMP(" . $DB->quoteName(
-                                        "lastrun"
-                                    ) . ") + 2 * " . HOUR_TIMESTAMP . " < UNIX_TIMESTAMP(NOW())"
+                                        "lastrun",
+                                    ) . ") + 2 * " . HOUR_TIMESTAMP . " < UNIX_TIMESTAMP(NOW())",
                                 ),
                             ],
                         ],
@@ -895,7 +895,7 @@ class Alert extends CommonDBTM
                         if ($item = getItemForItemtype($itemtype)) {
                             $itemtable = getTableForItemType($itemtype);
                             $typefield = $dbu->getForeignKeyFieldForTable(
-                                $dbu->getTableForItemType($itemtype . "Type")
+                                $dbu->getTableForItemType($itemtype . "Type"),
                             );
                             if ($data["types"] != null) {
                                 $types = json_decode($data["types"], true);
@@ -938,7 +938,7 @@ class Alert extends CommonDBTM
                             }
 
                             if (is_array($types) && count($types) > 0) {
-                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable .'.'. $typefield => $types];
+                                $criteria2['WHERE'] = $criteria2['WHERE'] + [$itemtable . '.' . $typefield => $types];
                             }
 
                             if (isset($opt['locations_id']) && ($opt['locations_id'] != 0)) {
@@ -946,7 +946,7 @@ class Alert extends CommonDBTM
                             }
 
                             $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
-                                $itemtype::getTable()
+                                $itemtype::getTable(),
                             );
 
                             $iterator2 = $DB->request($criteria2);
@@ -1031,7 +1031,7 @@ class Alert extends CommonDBTM
                 $table .= "</div>";
                 $table .= Helper::getGraphFooter($params);
                 $widget->setWidgetHtmlContent(
-                    $table
+                    $table,
                 );
 
                 $widget->setWidgetHeaderType('danger');
@@ -1064,7 +1064,7 @@ class Alert extends CommonDBTM
                     'GlpiPlugin\Mydashboard\Alert12',
                     $widgetId,
                     $opt,
-                    \Ticket::DEMAND_TYPE
+                    \Ticket::DEMAND_TYPE,
                 );
                 return $widget;
 
@@ -1075,7 +1075,7 @@ class Alert extends CommonDBTM
                     'GlpiPlugin\Mydashboard\Alert13',
                     $widgetId,
                     $opt,
-                    \Ticket::DEMAND_TYPE
+                    \Ticket::DEMAND_TYPE,
                 );
                 return $widget;
 
@@ -1089,7 +1089,7 @@ class Alert extends CommonDBTM
                 $widget->toggleWidgetRefresh();
                 $graph = self::displayIndicator($widgetId, "all", $opt, true);
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
                 return $widget;
             case $this->getType() . "SC33":
@@ -1211,7 +1211,7 @@ class Alert extends CommonDBTM
             $criteria1['WHERE'] = $criteria1['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
         $criteria1['WHERE'] = $criteria1['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator1 = $DB->request($criteria1);
@@ -1256,7 +1256,7 @@ class Alert extends CommonDBTM
             ];
 
             $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
-                'glpi_problems'
+                'glpi_problems',
             );
 
             $iterator2 = $DB->request($criteria2);
@@ -1297,7 +1297,7 @@ class Alert extends CommonDBTM
         ];
 
         $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator3 = $DB->request($criteria3);
@@ -1377,7 +1377,7 @@ class Alert extends CommonDBTM
             $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
         $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator4 = $DB->request($criteria4);
@@ -1423,12 +1423,12 @@ class Alert extends CommonDBTM
             if ($type == \Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
                     'New incidents',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             } else {
                 $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
                     'New requests',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             }
         }
@@ -1498,12 +1498,12 @@ class Alert extends CommonDBTM
             if ($type == \Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
                     'Opened incidents without assigned technicians',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             } else {
                 $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
                     'Opened requests without assigned technicians',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             }
         }
@@ -1514,12 +1514,12 @@ class Alert extends CommonDBTM
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<p class=\"count-text \">" . __(
                 'Opened incidents without assigned technicians',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         } else {
             $table .= "<p class=\"count-text \">" . __(
                 'Opened requests without assigned technicians',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         }
 
@@ -1580,12 +1580,12 @@ class Alert extends CommonDBTM
             if ($type == \Ticket::INCIDENT_TYPE) {
                 $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
                     'Incidents with very high or major priority',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             } else {
                 $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
                     'Requests with very high or major priority',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             }
         }
@@ -1594,12 +1594,12 @@ class Alert extends CommonDBTM
         if ($type == \Ticket::INCIDENT_TYPE) {
             $table .= "<p class=\"count-text \">" . __(
                 'Incidents with very high or major priority',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         } else {
             $table .= "<p class=\"count-text \">" . __(
                 'Requests with very high or major priority',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         }
 
@@ -1637,14 +1637,14 @@ class Alert extends CommonDBTM
             if ($stats_tickets2 > 0) {
                 $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __(
                     'Problems with very high or major priority',
-                    'mydashboard'
+                    'mydashboard',
                 ) . "'>";
             }
             $table .= "<i style='color:$colorstats2;font-size:34px' class=\"ti ti-bug fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets2'></span></h3>";
             $table .= "<p class=\"count-text \">" . __(
                 'Problems with very high or major priority',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
             if ($stats_tickets2 > 0) {
                 $table .= "</a>";
@@ -1674,7 +1674,7 @@ class Alert extends CommonDBTM
         $table .= "</div>";
 
         $widget->setWidgetHtmlContent(
-            $table
+            $table,
         );
         $widget->toggleWidgetRefresh();
         $widget->setWidgetHeaderType('danger');
@@ -1723,7 +1723,7 @@ class Alert extends CommonDBTM
         $default = Criteria::manageCriterias($params);
 
         if (!isset($opt['technicians_groups_id']) || (is_array($opt['technicians_groups_id']) && count(
-            $opt['technicians_groups_id']
+            $opt['technicians_groups_id'],
         ) == 0)) {
             $technicians_groups_id = Helper::getGroup($preferences['prefered_group'], $opt);
         } else {
@@ -1791,7 +1791,7 @@ class Alert extends CommonDBTM
             $criteria2['WHERE'] = $criteria2['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
         $criteria2['WHERE'] = $criteria2['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator2 = $DB->request($criteria2);
@@ -1860,7 +1860,7 @@ class Alert extends CommonDBTM
             $criteria3['WHERE'] = $criteria3['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
         $criteria3['WHERE'] = $criteria3['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator3 = $DB->request($criteria3);
@@ -1932,7 +1932,7 @@ class Alert extends CommonDBTM
             $criteria4['WHERE'] = $criteria4['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
         $criteria4['WHERE'] = $criteria4['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator4 = $DB->request($criteria4);
@@ -2003,7 +2003,7 @@ class Alert extends CommonDBTM
             $criteria5['WHERE'] = $criteria5['WHERE'] + ['glpi_groups_tickets.groups_id' => $technicians_groups_id];
         }
         $criteria5['WHERE'] = $criteria5['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator5 = $DB->request($criteria5);
@@ -2150,14 +2150,14 @@ class Alert extends CommonDBTM
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __(
                 'Incidents where time to resolve will be exceeded',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
                <p class=\"count-text \">" . __(
                 'Requests where time to resolve will be exceeded',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         }
         if ($stats3 > 0) {
@@ -2226,14 +2226,14 @@ class Alert extends CommonDBTM
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __(
                 'Incidents where time to own is exceeded',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
                            <p class=\"count-text \">" . __(
                 'Requests where time to own is exceeded',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         }
 
@@ -2303,14 +2303,14 @@ class Alert extends CommonDBTM
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __(
                 'Incidents where time to resolve is exceeded',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         } else {
             $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
                            <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
                            <p class=\"count-text \">" . __(
                 'Requests where time to resolve is exceeded',
-                'mydashboard'
+                'mydashboard',
             ) . "</p>";
         }
 
@@ -2331,7 +2331,7 @@ class Alert extends CommonDBTM
         $table .= "</div>";
 
         $widget->setWidgetHtmlContent(
-            $table
+            $table,
         );
         $widget->toggleWidgetRefresh();
         $widget->setWidgetHeaderType('danger');
@@ -3188,7 +3188,7 @@ class Alert extends CommonDBTM
                 $wl .= "<div class='red bt-col-xs-11 alert-title-div red '>";
                 $wl .= __(
                     'There is at least on planned scheduled maintenance. Please log on to see more',
-                    'mydashboard'
+                    'mydashboard',
                 );
                 $wl .= "</div>";
             }
@@ -3324,7 +3324,7 @@ class Alert extends CommonDBTM
             $types,
             [
                 'value' => $type,
-            ]
+            ],
         );
         echo "</td></tr>";
 
@@ -3340,7 +3340,7 @@ class Alert extends CommonDBTM
             $impacts,
             [
                 'value' => $impact,
-            ]
+            ],
         );
         echo "</td></tr>";
 
@@ -3390,7 +3390,7 @@ class Alert extends CommonDBTM
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo "<button type='submit' class='submit btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __(
                 "Create a new alert",
-                "mydashboard"
+                "mydashboard",
             ) . "</button>";
             echo '<script>
             function createAlert(itemtype, items_id) {
@@ -3469,7 +3469,7 @@ class Alert extends CommonDBTM
                 $types,
                 [
                     'value' => $type,
-                ]
+                ],
             );
             echo "</td></tr>";
 
@@ -3485,7 +3485,7 @@ class Alert extends CommonDBTM
                 $impacts,
                 [
                     'value' => $impact,
-                ]
+                ],
             );
             echo "</td></tr>";
 
@@ -3540,7 +3540,7 @@ class Alert extends CommonDBTM
             $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
             $display .= __(
                 'A network alert can impact you and will avoid creating a ticket',
-                'mydashboard'
+                'mydashboard',
             ) . "</small></div>";
             $display .= "<div id=\"display-sc\">";
             $alerts = new self();
@@ -3592,7 +3592,7 @@ class Alert extends CommonDBTM
                 $alert .= "<b>";
                 $alert .= __(
                     "Alert is not properly configured or is not reachable (or exceeded the timeout)",
-                    "mydashboard"
+                    "mydashboard",
                 );
                 $alert .= "</b>";
                 $alert .= "<br><br><a href='$url' target='_blank'>" . $url . "</a></div>";
@@ -3860,28 +3860,28 @@ class Alert extends CommonDBTM
                     $params['year'],
                     $params['week'],
                     StockTicketIndicator::LATET,
-                    $technicians_groups_id
+                    $technicians_groups_id,
                 );
                 //Waiting tickets
                 $total_pend = self::commonQueryWeek(
                     $params['year'],
                     $params['week'],
                     StockTicketIndicator::PENDINGT,
-                    $technicians_groups_id
+                    $technicians_groups_id,
                 );
                 //Processing incidents
                 $total_incpro = self::commonQueryWeek(
                     $params['year'],
                     $params['week'],
                     StockTicketIndicator::INCIDENTPROGRESST,
-                    $technicians_groups_id
+                    $technicians_groups_id,
                 );
                 //Processing requests
                 $total_dempro = self::commonQueryWeek(
                     $params['year'],
                     $params['week'],
                     StockTicketIndicator::REQUESTPROGRESST,
-                    $technicians_groups_id
+                    $technicians_groups_id,
                 );
                 //Validate tickets
                 //            $total_validate = self::queryValidateTickets($left, $search_assign);
@@ -3890,14 +3890,14 @@ class Alert extends CommonDBTM
                     $params['year'],
                     $params['week'],
                     StockTicketIndicator::SOLVEDT,
-                    $technicians_groups_id
+                    $technicians_groups_id,
                 );
                 //Resolved tickets
                 $total_closed = self::commonQueryWeek(
                     $params['year'],
                     $params['week'],
                     StockTicketIndicator::CLOSEDT,
-                    $technicians_groups_id
+                    $technicians_groups_id,
                 );
             }
         }
@@ -4311,7 +4311,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                     "widgetId" => $id,
                     "name" => ($type == "all") ? __("Global indicators", "mydashboard") : __(
                         "Global indicators by week",
-                        "mydashboard"
+                        "mydashboard",
                     ),
                     "onsubmit" => true,
                     "opt" => $opt,
@@ -4516,7 +4516,7 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
         }
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_plugin_mydashboard_stockticketindicators'
+            'glpi_plugin_mydashboard_stockticketindicators',
         );
 
         $iterator = $DB->request($criteria);

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Criterias;
@@ -70,7 +70,7 @@ class TechnicianGroup
     {
 
         $technicians_groups_id = is_array(
-            $opt[self::$criteria_name]
+            $opt[self::$criteria_name],
         ) ? $opt[self::$criteria_name] : [];
 
         $technicians_groups_id = array_filter($technicians_groups_id);
@@ -100,12 +100,12 @@ class TechnicianGroup
         $result = getAllDataFromTable(
             Group::getTable(),
             ['is_assign' => 1, 'ORDER' => "completename"],
-            false
+            false,
         );
 
         if (isset($opt[self::$criteria_name])) {
             $technicians_groups_id = (is_array(
-                $opt[self::$criteria_name]
+                $opt[self::$criteria_name],
             ) ? $opt[self::$criteria_name] : []);
         } else {
             $technicians_groups_id = [];
@@ -186,7 +186,7 @@ class TechnicianGroup
             self::$criteria_number,
             ((isset($params["params"]["is_recursive_technicians"])
                 && !empty($params["params"]["is_recursive_technicians"])) ? 'under' : 'equals'),
-            $params["params"][self::$criteria_name]
+            $params["params"][self::$criteria_name],
         );
 
     }

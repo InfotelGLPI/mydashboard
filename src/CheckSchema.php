@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -39,8 +39,7 @@ use Plugin;
  */
 class CheckSchema extends CommonDBTM
 {
-
-    static $rightname = 'plugin_mydashboard';
+    public static $rightname = 'plugin_mydashboard';
     private $table = "";
 
     /**
@@ -51,7 +50,7 @@ class CheckSchema extends CommonDBTM
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Schema check', 'mydashboard');
     }
@@ -73,7 +72,7 @@ class CheckSchema extends CommonDBTM
      * @return string
      * @see CommonGLPI::getTabNameForItem()
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == Config::class) {
             return self::createTabEntry(self::getTypeName());
@@ -89,7 +88,7 @@ class CheckSchema extends CommonDBTM
      * @return bool
      * @see CommonGLPI::displayTabContentForItem()
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Config::class) {
             $self = new self();
@@ -103,7 +102,7 @@ class CheckSchema extends CommonDBTM
      *
      * @return string|null
      */
-    function getSchemaPath(string $version = null): ?string
+    public function getSchemaPath(string $version = null): ?string
     {
         if ($version === null) {
             $version = PLUGIN_MYDASHBOARD_VERSION;
@@ -142,12 +141,12 @@ class CheckSchema extends CommonDBTM
             $ignore_timestamps_migration,
             $ignore_utf8mb4_migration,
             $ignore_dynamic_row_format_migration,
-            $ignore_unsigned_keys_migration
+            $ignore_unsigned_keys_migration,
         );
 
         try {
             $differences = $checker->checkCompleteSchema($schemaFile, true, 'plugin:mydashboard');
-//            Toolbox::logInfo($differences);
+            //            Toolbox::logInfo($differences);
         } catch (\Throwable $e) {
             $message = __('Failed to check the sanity of the tables!', 'mydashboard');
             //            if (isCommandLine()) {

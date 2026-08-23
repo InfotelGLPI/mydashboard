@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Criterias;
@@ -40,12 +40,13 @@ class Month
 {
     public static $criteria_name = 'month';
 
-
-    public static function getDefaultValue() {
+    public static function getDefaultValue()
+    {
         return intval(date('m', time()) - 1);
     }
 
-    public static function getDisplayValue($opt) {
+    public static function getDisplayValue($opt)
+    {
 
         $form = "";
         if ($opt[self::$criteria_name]) {
@@ -56,9 +57,10 @@ class Month
         return $form;
     }
 
-    public static function getDisplayForm($default, $opt, $count) {
+    public static function getDisplayForm($default, $opt, $count)
+    {
 
-        $mois_courant = $default[self::$criteria_name]?? date('m');
+        $mois_courant = $default[self::$criteria_name] ?? date('m');
         if (isset($opt[self::$criteria_name])
             && $opt[self::$criteria_name] > 0) {
             $mois_courant = $opt[self::$criteria_name];
@@ -92,7 +94,8 @@ class Month
         return Dropdown::showFromArray($name, $monthsarray, $opt);
     }
 
-    public static function getQueryCriteria($params) {
+    public static function getQueryCriteria($params)
+    {
 
         $year = $params['year'];
 
@@ -109,15 +112,15 @@ class Month
             $month = sprintf('%02d', $month);
             $date_criteria = [
                 ['glpi_tickets.date' => ['>=', "$year-$month-01 00:00:00"]],
-                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]]
+                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-$month-01', INTERVAL 1 MONTH)")]],
             ];
         } else {
             $date_criteria = [
                 ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
-                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]]
+                ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]],
             ];
         }
 
-        return array_merge($params['query']['WHERE'],$date_criteria);
+        return array_merge($params['query']['WHERE'], $date_criteria);
     }
 }

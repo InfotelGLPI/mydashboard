@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -85,8 +85,8 @@ class HTMLEditor extends CommonDBTM
                         Customswidget::getTypeName(),
                         $dbu->countElementsInTable(
                             Customswidget::getTable(),
-                            ["`id`" => $item->getID()]
-                        )
+                            ["`id`" => $item->getID()],
+                        ),
                     );
                 }
                 return self::createTabEntry(Customswidget::getTypeName());
@@ -120,8 +120,8 @@ class HTMLEditor extends CommonDBTM
     {
 
         // Codemirror lib
-//        echo \Html::css('/lib/codemirror.css');
-//        echo \Html::script("/lib/codemirror.js");
+        //        echo \Html::css('/lib/codemirror.css');
+        //        echo \Html::script("/lib/codemirror.js");
 
         echo "<div class='firstbloc'>";
         if ($openform) {
@@ -143,33 +143,33 @@ class HTMLEditor extends CommonDBTM
             'editor_id'           => 'custom_css_code_' . $rand,
             'enable_richtext' => true]);
 
-//        $editor_options = [
-//            'mode'         => 'text/css',
-//            'lineNumbers'  => true,
-//            //         'lineWrapping' => true,
-//            // Autocomplete with CTRL+SPACE
-//            'extraKeys'    => [
-//                'Ctrl-Space' => 'autocomplete',
-//            ],
-//
-//            // Code folding configuration
-//            'foldGutter'   => true,
-//            'gutters'      => [
-//                'CodeMirror-linenumbers',
-//                'CodeMirror-foldgutter',
-//            ],
-//        ];
-//
-//        echo \Html::scriptBlock('
-//              $(function() {
-//                 var textarea = document.getElementById("custom_css_code_' . $rand . '");
-//                 var editor = CodeMirror.fromTextArea(textarea, ' . json_encode($editor_options) . ');
-//
-//                 // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
-//                 setTimeout(function () {editor.refresh();}, 10);
-//
-//              });
-//           ');
+        //        $editor_options = [
+        //            'mode'         => 'text/css',
+        //            'lineNumbers'  => true,
+        //            //         'lineWrapping' => true,
+        //            // Autocomplete with CTRL+SPACE
+        //            'extraKeys'    => [
+        //                'Ctrl-Space' => 'autocomplete',
+        //            ],
+        //
+        //            // Code folding configuration
+        //            'foldGutter'   => true,
+        //            'gutters'      => [
+        //                'CodeMirror-linenumbers',
+        //                'CodeMirror-foldgutter',
+        //            ],
+        //        ];
+        //
+        //        echo \Html::scriptBlock('
+        //              $(function() {
+        //                 var textarea = document.getElementById("custom_css_code_' . $rand . '");
+        //                 var editor = CodeMirror.fromTextArea(textarea, ' . json_encode($editor_options) . ');
+        //
+        //                 // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
+        //                 setTimeout(function () {editor.refresh();}, 10);
+        //
+        //              });
+        //           ');
 
         echo "</td></tr>\n";
 

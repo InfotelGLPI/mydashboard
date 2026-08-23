@@ -1,5 +1,5 @@
 includes:
-    - vendor/glpi-project/phpstan-glpi/extension.neon
+    - ../../vendor/glpi-project/phpstan-glpi/extension.neon
     - phpstan-baseline.neon
 
 parameters:

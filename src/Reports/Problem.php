@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -213,7 +213,7 @@ class Problem extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems.status' =>  \Problem::WAITING];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_problems'
+                    'glpi_problems',
                 );
                 break;
 
@@ -224,7 +224,7 @@ class Problem extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_problems.status' =>  [\Problem::PLANNED, \Problem::ASSIGNED]];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_problems'
+                    'glpi_problems',
                 );
 
                 break;
@@ -238,11 +238,11 @@ class Problem extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['solvedate' => ['>', QueryFunction::dateSub(
                     date: QueryFunction::now(),
                     interval: '30',
-                    interval_unit: 'DAY'
+                    interval_unit: 'DAY',
                 )]];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_problems'
+                    'glpi_problems',
                 );
         }
 
@@ -462,7 +462,7 @@ class Problem extends CommonGLPI
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
                 __('%1$s: %2$s'),
                 __('ID'),
-                $problem->fields["id"]
+                $problem->fields["id"],
             ) . "</div>";
             $colnum++;
 
@@ -511,8 +511,8 @@ class Problem extends CommonGLPI
                     [
                         'applyto' => 'problem' . $problem->fields["id"] . $rand,
                         'display' => false,
-                    ]
-                )
+                    ],
+                ),
             );
             //echo $link;
             //$colnum++;
@@ -574,7 +574,7 @@ class Problem extends CommonGLPI
         }
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_problems'
+            'glpi_problems',
         );
 
         if ($foruser) {
@@ -632,10 +632,10 @@ class Problem extends CommonGLPI
             ],
         ]);
 
-        $icon = "<i class='".\Problem::getIcon()."'></i>";
+        $icon = "<i class='" . \Problem::getIcon() . "'></i>";
         $widget->setWidgetTitle(
-            $icon." <a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?reset=reset\">"
-            .  __('Problem followup', 'mydashboard') . "</a>"
+            $icon . " <a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?reset=reset\">"
+            . __('Problem followup', 'mydashboard') . "</a>",
         );
 
         $twig_params = [

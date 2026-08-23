@@ -1,45 +1,45 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownStatus.php")) {
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
-Global $DB;
+global $DB;
 // Make a select box
 if (isset($_POST["itemtype"])) {
 
     $criteria = [
-        'SELECT' => [\State::getTable().'.id', \State::getTable().'.name'],
+        'SELECT' => [\State::getTable() . '.id', \State::getTable() . '.name'],
         'FROM' => \State::getTable(),
         'LEFT JOIN' => [
             DropdownVisibility::getTable() => [
@@ -60,14 +60,14 @@ if (isset($_POST["itemtype"])) {
         ],
     ];
     $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            \State::getTable()
-        );
+        \State::getTable(),
+    );
 
 
-   $states     = [];
+    $states     = [];
     $iterator = $DB->request($criteria);
     foreach ($iterator as $data) {
-      $states[$data['id']] = $data['name'];
-   }
-   Dropdown::showFromArray('states', $states, ['multiple' => true]);
+        $states[$data['id']] = $data['name'];
+    }
+    Dropdown::showFromArray('states', $states, ['multiple' => true]);
 }

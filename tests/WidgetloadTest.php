@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Tests;
@@ -58,11 +58,11 @@ class WidgetloadTest extends DbTestCase
 
         $this->assertIsArray(
             $widgets,
-            'Widget::getCompleteWidgetList() doit retourner un tableau'
+            'Widget::getCompleteWidgetList() doit retourner un tableau',
         );
         $this->assertNotEmpty(
             $widgets,
-            'Widget::getCompleteWidgetList() ne doit pas retourner un tableau vide'
+            'Widget::getCompleteWidgetList() ne doit pas retourner un tableau vide',
         );
     }
 
@@ -72,27 +72,27 @@ class WidgetloadTest extends DbTestCase
 
         $this->assertNotEmpty(
             $widgets,
-            'Widget::getCompleteWidgetList() ne doit pas retourner un tableau vide (prérequis de structure)'
+            'Widget::getCompleteWidgetList() ne doit pas retourner un tableau vide (prérequis de structure)',
         );
 
         foreach ($widgets as $gsId => $entry) {
             $this->assertArrayHasKey(
                 'class',
                 $entry,
-                "L'entrée $gsId doit contenir une clé 'class'"
+                "L'entrée $gsId doit contenir une clé 'class'",
             );
             $this->assertArrayHasKey(
                 'id',
                 $entry,
-                "L'entrée $gsId doit contenir une clé 'id'"
+                "L'entrée $gsId doit contenir une clé 'id'",
             );
             $this->assertNotEmpty(
                 $entry['class'],
-                "La classe du widget $gsId ne doit pas être vide"
+                "La classe du widget $gsId ne doit pas être vide",
             );
             $this->assertNotEmpty(
                 $entry['id'],
-                "L'identifiant du widget $gsId ne doit pas être vide"
+                "L'identifiant du widget $gsId ne doit pas être vide",
             );
         }
     }

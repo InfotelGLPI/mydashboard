@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -76,9 +76,9 @@ class Event extends \Glpi\Event
                     "eventwidgetglobal" => [
                         "title" => sprintf(__('Last %d events'), $_SESSION['glpilist_limit']),
                         "type" => Widget::$TABLE,
-                        "comment" => ""
+                        "comment" => "",
                     ],
-                ]
+                ],
             ];
         }
         return $widgets;
@@ -94,9 +94,9 @@ class Event extends \Glpi\Event
     {
         if (Session::haveRight("logs", READ)) {
             switch ($widgetId) {
-//                case "eventwidgetpersonal":
-//                    return Event::showForUser($_SESSION['glpiname']);
-//                    break;
+                //                case "eventwidgetpersonal":
+                //                    return Event::showForUser($_SESSION['glpiname']);
+                //                    break;
                 case "eventwidgetglobal":
                     return Event::showForUser();
                     break;
@@ -183,10 +183,10 @@ class Event extends \Glpi\Event
             'SELECT'    => '*',
             'FROM'      => 'glpi_events',
             'WHERE'     => [
-                'message'   => ['LIKE', $usersearch.'%']
+                'message'   => ['LIKE', $usersearch . '%'],
             ],
             'ORDERBY'   => 'date DESC',
-            'LIMIT'    => intval($_SESSION['glpilist_limit'])
+            'LIMIT'    => intval($_SESSION['glpilist_limit']),
         ]);
 
         // Number of results
@@ -226,7 +226,7 @@ class Event extends \Glpi\Event
             }
 
             $output['body'][$i][0] = $itemtype;
-            $output['body'][$i][1] = self::displayItemLogID($data['type'],$data['items_id']);
+            $output['body'][$i][1] = self::displayItemLogID($data['type'], $data['items_id']);
             $output['body'][$i][2] = \Html::convDateTime($data['date']);
             $output['body'][$i][3] = $logService[$data['service']] ?? "";
             $output['body'][$i][4] = $data['message'];
@@ -246,9 +246,9 @@ class Event extends \Glpi\Event
             $widget->setOption("bPaginate", false);
             $widget->setOption("bFilter", false);
             $widget->setOption("bInfo", false);
-//            if (count($output['body']) > 0) {
-//                $widget->setOption("bSort", false);
-//            }
+            //            if (count($output['body']) > 0) {
+            //                $widget->setOption("bSort", false);
+            //            }
         }
 
         $widget->toggleWidgetRefresh();

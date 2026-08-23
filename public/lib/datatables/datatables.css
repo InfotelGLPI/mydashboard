@@ -1,13 +1,28 @@
-/*
- * This combined file was created by the DataTables downloader builder:
- *   https://datatables.net/download
+/*!
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
  *
- * To rebuild or modify this file with the latest versions of the included
- * software please visit:
- *   https://datatables.net/download/#dt/jszip-3.10.1/pdfmake-0.2.7/dt-2.3.7/b-3.2.6/b-colvis-3.2.6/b-html5-3.2.6/b-print-3.2.6/cr-2.1.2
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
  *
- * Included libraries:
- *   JSZip 3.10.1, pdfmake 0.2.7, DataTables 2.3.7, Buttons 3.2.6, Column visibility 3.2.6, HTML5 export 3.2.6, Print view 3.2.6, ColReorder 2.1.2
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 :root {

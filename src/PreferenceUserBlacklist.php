@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -40,173 +40,179 @@ use Session;
  * Preference_User_Blacklist is the class that handles plugins blacklist for a User
  * An user can disable the display of widgets of some plugins (because it doesn't need widgets of this plugin for example)
  */
-class PreferenceUserBlacklist extends CommonDBTM {
+class PreferenceUserBlacklist extends CommonDBTM
+{
+    /**
+     * Show a form to blacklist some plugins for Dashboard
+     * @param int $user_id , id of the user concerned
+     * @return bool
+     */
+    public function showUserForm($user_id)
+    {
+        global $CFG_GLPI, $PLUGIN_HOOKS;
+        $options['candel'] = false;
+        $options['colspan'] = 1;
 
-   /**
-    * Show a form to blacklist some plugins for Dashboard
-    * @param int $user_id , id of the user concerned
-    * @return bool
-    */
-   public function showUserForm($user_id) {
-      global $CFG_GLPI, $PLUGIN_HOOKS;
-      $options['candel'] = false;
-      $options['colspan'] = 1;
+        //We don't display this form in helpdesk interface
+        if (Session::getCurrentInterface() != 'central') {
+            return false;
+        }
 
-      //We don't display this form in helpdesk interface
-      if (Session::getCurrentInterface() != 'central') {
-         return false;
-      }
+        //If there is plugin hooked to dashboard
+        if (isset($PLUGIN_HOOKS['mydashboard'])) {
+            $blacklist = $this->getBlacklistForUser($user_id);
 
-      //If there is plugin hooked to dashboard
-      if (isset($PLUGIN_HOOKS['mydashboard'])) {
-         $blacklist = $this->getBlacklistForUser($user_id);
-
-         echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/preferenceuserblacklist.form.php' onsubmit='return true;'>";
-         echo "<table class='tab_cadre_fixe'>";
-         echo "<tr class='headerRow'><th class='center' colspan='2'>";
-         echo __("From which plugins you want to display the widgets?", 'mydashboard');
-         echo "</th></tr>";
-         //Every plugins can be blacklisted by user, by default every plugins
-         foreach ($PLUGIN_HOOKS['mydashboard'] as $pluginname => $x) {
-            if (Plugin::isPluginActive($pluginname)) {
-               echo "<tr class='tab_bg_1'><td>" . $this->getLocalName($pluginname) . "</td>";
-               echo "<td>";
-               $yesno = 1;
-               if (isset($blacklist[$pluginname])) {
-                  $yesno = 0;
-               }
-               Dropdown::showYesNo("pn" . $pluginname, $yesno);
-               echo "</td>";
-               echo "</tr>";
+            echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/preferenceuserblacklist.form.php' onsubmit='return true;'>";
+            echo "<table class='tab_cadre_fixe'>";
+            echo "<tr class='headerRow'><th class='center' colspan='2'>";
+            echo __("From which plugins you want to display the widgets?", 'mydashboard');
+            echo "</th></tr>";
+            //Every plugins can be blacklisted by user, by default every plugins
+            foreach ($PLUGIN_HOOKS['mydashboard'] as $pluginname => $x) {
+                if (Plugin::isPluginActive($pluginname)) {
+                    echo "<tr class='tab_bg_1'><td>" . $this->getLocalName($pluginname) . "</td>";
+                    echo "<td>";
+                    $yesno = 1;
+                    if (isset($blacklist[$pluginname])) {
+                        $yesno = 0;
+                    }
+                    Dropdown::showYesNo("pn" . $pluginname, $yesno);
+                    echo "</td>";
+                    echo "</tr>";
+                }
             }
-         }
 
-         echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-         echo \Html::submit(_sx('button', 'Save'), ['name'=>'update', 'class' => 'btn btn-primary']);
-         echo \Html::hidden("id", ['value' => Session::getLoginUserID()]);
-         \Html::closeForm();
+            echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
+            echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
+            echo \Html::hidden("id", ['value' => Session::getLoginUserID()]);
+            \Html::closeForm();
 
-         echo "</td></tr></table>";
-      }
-   }
+            echo "</td></tr></table>";
+        }
+    }
 
-   /**
-    * Save a black list from the form
-    * @param array $post , values
-    */
-   public function save($post) {
+    /**
+     * Save a black list from the form
+     * @param array $post , values
+     */
+    public function save($post)
+    {
 
-      // IDOR guard: this is a per-user preference. Never trust $post['id'] as the
-      // target user (an attacker could rewrite another user's blacklist); always
-      // key on the authenticated session user. The form's hidden "id" is ignored.
-      $user_id = (int) Session::getLoginUserID();
-      if (!empty($post) && $user_id > 0) {
-         $currentblacklist = $this->getBlacklistForUser($user_id);
-         $newblacklist = [];
-         foreach ($post as $key => $value) {
-            if ($key == "id") {
-               continue;
+        // IDOR guard: this is a per-user preference. Never trust $post['id'] as the
+        // target user (an attacker could rewrite another user's blacklist); always
+        // key on the authenticated session user. The form's hidden "id" is ignored.
+        $user_id = (int) Session::getLoginUserID();
+        if (!empty($post) && $user_id > 0) {
+            $currentblacklist = $this->getBlacklistForUser($user_id);
+            $newblacklist = [];
+            foreach ($post as $key => $value) {
+                if ($key == "id") {
+                    continue;
+                }
+                if (substr($key, 0, 2) == "pn" && $value == 0) {
+                    $newblacklist[] = substr($key, 2);
+                }
             }
-            if (substr($key, 0, 2) == "pn" && $value == 0) {
-               $newblacklist[] = substr($key, 2);
+            //to_delete contains names of the plugins that will no longer be blacklisted
+            $to_delete = self::arrayDiffEmulation($currentblacklist, $newblacklist);
+            //newblacklist contains names of the plugins newly blacklisted
+            $newblacklist = self::arrayDiffEmulation($newblacklist, $currentblacklist);
+            //We store new blacklist
+            foreach ($newblacklist as $plugin_name) {
+                $this->saveItem($user_id, $plugin_name);
             }
-         }
-         //to_delete contains names of the plugins that will no longer be blacklisted
-         $to_delete = self::arrayDiffEmulation($currentblacklist, $newblacklist);
-         //newblacklist contains names of the plugins newly blacklisted
-         $newblacklist = self::arrayDiffEmulation($newblacklist, $currentblacklist);
-         //We store new blacklist
-         foreach ($newblacklist as $plugin_name) {
-            $this->saveItem($user_id, $plugin_name);
-         }
-         //We remove no longer blacklisted
-         foreach ($to_delete as $delete_blacklist_item) {
-            $this->deleteByCriteria(['users_id' =>$user_id, 'plugin_name' => $delete_blacklist_item]);
-         }
-      }
-   }
+            //We remove no longer blacklisted
+            foreach ($to_delete as $delete_blacklist_item) {
+                $this->deleteByCriteria(['users_id' => $user_id, 'plugin_name' => $delete_blacklist_item]);
+            }
+        }
+    }
 
-   /**
-    * Save an item correponding to a blacklisting of a plugin for an user
-    * @param int $user_id , id of user
-    * @param string $plugin_name , name of the plugin
-    */
-   private function saveItem($user_id, $plugin_name) {
-      global $DB;
+    /**
+     * Save an item correponding to a blacklisting of a plugin for an user
+     * @param int $user_id , id of user
+     * @param string $plugin_name , name of the plugin
+     */
+    private function saveItem($user_id, $plugin_name)
+    {
+        global $DB;
 
-       $iterator = $DB->request([
-           'SELECT'    => [
-               '*'
-           ],
-           'FROM'      => 'glpi_plugin_mydashboard_preferenceuserblacklists',
-           'WHERE'     => [
-               'users_id'  => $user_id,
-               'plugin_name' => $plugin_name
-           ],
-       ]);
+        $iterator = $DB->request([
+            'SELECT'    => [
+                '*',
+            ],
+            'FROM'      => 'glpi_plugin_mydashboard_preferenceuserblacklists',
+            'WHERE'     => [
+                'users_id'  => $user_id,
+                'plugin_name' => $plugin_name,
+            ],
+        ]);
 
-       if (count($iterator) == 0) {
-           $this->add(['users_id' =>$user_id, 'plugin_name' => $plugin_name]);
-       }
-   }
+        if (count($iterator) == 0) {
+            $this->add(['users_id' => $user_id, 'plugin_name' => $plugin_name]);
+        }
+    }
 
 
 
-   /**
-    * Get an array of plugin names that are blacklisted by user
-    * @param int $user_id
-    * @return array of string
-    */
-   function getBlacklistForUser($user_id) {
-      global $DB;
+    /**
+     * Get an array of plugin names that are blacklisted by user
+     * @param int $user_id
+     * @return array of string
+     */
+    public function getBlacklistForUser($user_id)
+    {
+        global $DB;
 
-       $iterator = $DB->request([
-           'SELECT'    => [
-               'plugin_name'
-           ],
-           'FROM'      => 'glpi_plugin_mydashboard_preferenceuserblacklists',
-           'WHERE'     => [
-               'users_id'  => $user_id
-           ],
-       ]);
-       $tab = [];
-       if (count($iterator) > 0) {
-           foreach ($iterator as $row) {
-               $tab[$row['plugin_name']] = $row['plugin_name'];
-           }
-       }
+        $iterator = $DB->request([
+            'SELECT'    => [
+                'plugin_name',
+            ],
+            'FROM'      => 'glpi_plugin_mydashboard_preferenceuserblacklists',
+            'WHERE'     => [
+                'users_id'  => $user_id,
+            ],
+        ]);
+        $tab = [];
+        if (count($iterator) > 0) {
+            foreach ($iterator as $row) {
+                $tab[$row['plugin_name']] = $row['plugin_name'];
+            }
+        }
 
-      return $tab;
-   }
+        return $tab;
+    }
 
-   /**
-    * Get the localized name for a plugin
-    * @param string $plugin_name
-    * @return string
-    */
-   private function getLocalName($plugin_name) {
-      $infos = Plugin::getInfo($plugin_name);
+    /**
+     * Get the localized name for a plugin
+     * @param string $plugin_name
+     * @return string
+     */
+    private function getLocalName($plugin_name)
+    {
+        $infos = Plugin::getInfo($plugin_name);
 
-      return isset($infos['name']) ? $infos['name'] : $plugin_name;
-   }
+        return isset($infos['name']) ? $infos['name'] : $plugin_name;
+    }
 
-   /**
-    * Replacement of array_diff, normally faster
-    * @param array $arrayFrom
-    * @param array $arrayAgainst
-    * @return array, $arrayFrom - $arrayAgainst
-    */
-   public static function arrayDiffEmulation($arrayFrom, $arrayAgainst) {
-      $arrayAgainst = array_flip($arrayAgainst);
+    /**
+     * Replacement of array_diff, normally faster
+     * @param array $arrayFrom
+     * @param array $arrayAgainst
+     * @return array, $arrayFrom - $arrayAgainst
+     */
+    public static function arrayDiffEmulation($arrayFrom, $arrayAgainst)
+    {
+        $arrayAgainst = array_flip($arrayAgainst);
 
-      foreach ($arrayFrom as $key => $value) {
-         if (isset($arrayAgainst[$value])) {
-            unset($arrayFrom[$key]);
-         }
-      }
+        foreach ($arrayFrom as $key => $value) {
+            if (isset($arrayAgainst[$value])) {
+                unset($arrayFrom[$key]);
+            }
+        }
 
-      return $arrayFrom;
-   }
+        return $arrayFrom;
+    }
 
     public static function install(Migration $migration)
     {

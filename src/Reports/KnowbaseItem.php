@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -70,19 +70,19 @@ class KnowbaseItem extends CommonGLPI
                 "knowbaseitempopular" => [
                     "title" => __('FAQ') . " - " . __('Most popular questions'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 "knowbaseitemrecent" => [
                     "title" => __('FAQ') . " - " . __('Recent entries'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 "knowbaseitemlastupdate" => [
                     "title" => __('FAQ') . " - " . __('Last updated entries'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
-            ]
+            ],
         ];
 
         return $widgets;
@@ -128,7 +128,7 @@ class KnowbaseItem extends CommonGLPI
                     ['NOT'       => ['glpi_groups_knowbaseitems.groups_id' => null]],
                     ['NOT'       => ['glpi_knowbaseitems_users.users_id' => null]],
                 ],
-                ],
+            ],
             'ORDERBY' => $orderby,
             'LIMIT' => 10,
         ];
@@ -139,8 +139,8 @@ class KnowbaseItem extends CommonGLPI
             // Anonymous access
             if (Session::isMultiEntitiesMode()) {
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_entities_knowbaseitems'
-                    );
+                    'glpi_entities_knowbaseitems',
+                );
             }
         }
 
@@ -163,7 +163,7 @@ class KnowbaseItem extends CommonGLPI
                 "<a href=\"" .
                 $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
                 \Html::resume_text($row["name"], 80) . "</a>",
-                \Html::convDateTime($date)
+                \Html::convDateTime($date),
             ];
         }
         if ($widgetId == "knowbaseitemrecent") {
@@ -211,14 +211,14 @@ class KnowbaseItem extends CommonGLPI
             '',
             '',
             true,
-            true
+            true,
         );
 
         return [
             Group_KnowbaseItem::getTableField('groups_id') => $groups,
             'OR' => [
-                    Group_KnowbaseItem::getTableField('no_entity_restriction') => 1,
-                ] + $entity_restriction,
+                Group_KnowbaseItem::getTableField('no_entity_restriction') => 1,
+            ] + $entity_restriction,
         ];
     }
 
@@ -235,14 +235,14 @@ class KnowbaseItem extends CommonGLPI
             '',
             '',
             true,
-            true
+            true,
         );
 
         return [
             KnowbaseItem_Profile::getTableField('profiles_id') => $profile,
             'OR' => [
-                    KnowbaseItem_Profile::getTableField('no_entity_restriction') => 1,
-                ] + $entity_restriction,
+                KnowbaseItem_Profile::getTableField('no_entity_restriction') => 1,
+            ] + $entity_restriction,
         ];
     }
 
@@ -258,7 +258,7 @@ class KnowbaseItem extends CommonGLPI
             '',
             '',
             true,
-            true
+            true,
         );
 
         // All entities

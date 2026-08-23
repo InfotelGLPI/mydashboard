@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -53,7 +53,7 @@ class ProfileAuthorizedWidget extends CommonDBTM
     {
         $profileright = new ProfileRight();
         $profileright->getFromDBByCrit(['name'        => 'plugin_mydashboard',
-                                        'profiles_id' => $profiles_id]);
+            'profiles_id' => $profiles_id]);
 
         //If profile has right CREATE+UPDATE it means it can see every widgets
         if (isset($profileright->fields['rights'])
@@ -87,7 +87,7 @@ class ProfileAuthorizedWidget extends CommonDBTM
         $this->authorized = $this->getAuthorizedListForProfile($ID);
         $widgetlist       = Widgetlist::getList(false, -1, $options['interface']);
 
-        echo "<form method='post' action='".PLUGIN_MYDASHBOARD_WEBDIR."/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
+        echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='tab_bg_2'>";
         echo "<th colspan='2' class='center b'>" . __('Authorized widgets', 'mydashboard') . "</th>";
@@ -177,7 +177,7 @@ class ProfileAuthorizedWidget extends CommonDBTM
                     }
 
                     if (is_numeric($widgetId)) {
-                        $widgetId = isset($viewNames[$widgetId])?$viewNames[$widgetId]:0;
+                        $widgetId = isset($viewNames[$widgetId]) ? $viewNames[$widgetId] : 0;
                     }
                     $newcategory .= $widgetId;
                     $this->displayWidgetList($widgetTitle, $newcategory, $pluginname);
@@ -211,9 +211,9 @@ class ProfileAuthorizedWidget extends CommonDBTM
                     && $widgetId != null
                     && !empty($widgetId)) {
                     $this->add([
-                                  'profiles_id' => $profiles_id,
-                                  'widgets_id'  => $widgetId
-                               ]);
+                        'profiles_id' => $profiles_id,
+                        'widgets_id'  => $widgetId,
+                    ]);
                 }
             } else {
                 if (isset($this->authorized[$widgetName])) {

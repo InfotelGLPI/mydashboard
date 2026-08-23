@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -223,7 +223,7 @@ class Change extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_changes.status' =>  \Change::WAITING];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_changes'
+                    'glpi_changes',
                 );
                 break;
 
@@ -234,7 +234,7 @@ class Change extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_changes.status' =>  \Change::getProcessStatusArray()];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_changes'
+                    'glpi_changes',
                 );
                 break;
 
@@ -245,11 +245,11 @@ class Change extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['solvedate' => ['>', QueryFunction::dateSub(
                     date: QueryFunction::now(),
                     interval: '30',
-                    interval_unit: 'DAY'
+                    interval_unit: 'DAY',
                 )]];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_changes'
+                    'glpi_changes',
                 );
                 break;
 
@@ -262,11 +262,11 @@ class Change extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['solvedate' => ['>', QueryFunction::dateSub(
                     date: QueryFunction::now(),
                     interval: '30',
-                    interval_unit: 'DAY'
+                    interval_unit: 'DAY',
                 )]];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_changes'
+                    'glpi_changes',
                 );
         }
 
@@ -289,13 +289,13 @@ class Change extends CommonGLPI
                                     'value'      => $_SESSION['glpigroups'],
                                     'searchtype' => 'equals',
                                     'field'      => 8,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                                 1 => [
                                     'value'      => \Change::WAITING,
                                     'searchtype' => 'equals',
                                     'field'      => 12,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                             ],
                         ]);
@@ -312,13 +312,13 @@ class Change extends CommonGLPI
                                     'value'      => $_SESSION['glpigroups'],
                                     'searchtype' => 'equals',
                                     'field'      => 8,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                                 1 => [
                                     'value'      => 'process',
                                     'searchtype' => 'equals',
                                     'field'      => 12,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                             ],
                         ]);
@@ -335,13 +335,13 @@ class Change extends CommonGLPI
                                     'value'      => $_SESSION['glpigroups'],
                                     'searchtype' => 'equals',
                                     'field'      => 71,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                                 1 => [
                                     'value'      => 'process',
                                     'searchtype' => 'equals',
                                     'field'      => 12,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                             ],
                         ]);
@@ -359,7 +359,7 @@ class Change extends CommonGLPI
                                     'value'      => Session::getLoginUserID(),
                                     'searchtype' => 'equals',
                                     'field'      => 5,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                                 1 => [
                                     'value'      => \Change::WAITING,
@@ -374,7 +374,7 @@ class Change extends CommonGLPI
                             . Html::makeTitle(
                                 __('Changes on pending status', 'mydashboard'),
                                 $numrows,
-                                $numrows
+                                $numrows,
                             ) . "</a>";
                         break;
 
@@ -386,7 +386,7 @@ class Change extends CommonGLPI
                                     'value'      => Session::getLoginUserID(),
                                     'searchtype' => 'equals',
                                     'field'      => 5,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                                 1 => [
                                     'value'      => 'process',
@@ -426,7 +426,7 @@ class Change extends CommonGLPI
                                     'value'      => Session::getLoginUserID(),
                                     'searchtype' => 'equals',
                                     'field'      => 4,
-                                    'link'       => 'AND'
+                                    'link'       => 'AND',
                                 ],
                                 1 => [
                                     'value'      => 'notold',
@@ -498,7 +498,7 @@ class Change extends CommonGLPI
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
                 __('%1$s: %2$s'),
                 __('ID'),
-                $change->fields["id"]
+                $change->fields["id"],
             ) . "</div>";
             $colnum++;
 
@@ -547,8 +547,8 @@ class Change extends CommonGLPI
                     [
                         'applyto' => 'change' . $change->fields["id"] . $rand,
                         'display' => false,
-                    ]
-                )
+                    ],
+                ),
             );
             //echo $link;
             $output[$colnum] = $link;
@@ -611,7 +611,7 @@ class Change extends CommonGLPI
         }
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_changes'
+            'glpi_changes',
         );
 
         if ($foruser) {
@@ -657,10 +657,10 @@ class Change extends CommonGLPI
 
         $widget = new MydashboardHtml();
         $widget->setWidgetId("changecountwidget");
-        $icon = "<i class='".\Change::getIcon()."'></i>";
+        $icon = "<i class='" . \Change::getIcon() . "'></i>";
         $widget->setWidgetTitle(
-            $icon." <a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?reset=reset\">"
-            . __('Change followup', 'mydashboard') . "</a>"
+            $icon . " <a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?reset=reset\">"
+            . __('Change followup', 'mydashboard') . "</a>",
         );
 
         $twig_params = [

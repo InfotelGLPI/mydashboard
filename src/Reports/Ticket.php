@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -356,7 +356,7 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.status' => \Ticket::WAITING];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 break;
@@ -368,7 +368,7 @@ class Ticket extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_tickets.status' => \Ticket::getProcessStatusArray()];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 break;
@@ -388,7 +388,7 @@ class Ticket extends CommonGLPI
                 }
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 break;
@@ -411,7 +411,7 @@ class Ticket extends CommonGLPI
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 break;
@@ -426,7 +426,7 @@ class Ticket extends CommonGLPI
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
                 break;
 
@@ -444,7 +444,7 @@ class Ticket extends CommonGLPI
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 break;
@@ -472,7 +472,7 @@ class Ticket extends CommonGLPI
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
 
                 break;
@@ -494,7 +494,7 @@ class Ticket extends CommonGLPI
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_tickets'
+                    'glpi_tickets',
                 );
         }
 
@@ -1117,8 +1117,8 @@ class Ticket extends CommonGLPI
                 sprintf(
                     __('%1$s - %2$s'),
                     $job->numberOfFollowups($showprivate),
-                    $job->numberOfTasks($showprivate)
-                )
+                    $job->numberOfTasks($showprivate),
+                ),
             );
             $link = sprintf(
                 __('%1$s %2$s'),
@@ -1128,8 +1128,8 @@ class Ticket extends CommonGLPI
                     [
                         'applyto' => 'ticket' . $job->fields["id"] . $rand,
                         'display' => false,
-                    ]
-                )
+                    ],
+                ),
             );
             $output[$colnum] = $link;
 
@@ -1149,7 +1149,7 @@ class Ticket extends CommonGLPI
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>
                                 <span class='b'>" . $job->fields["priority"] . " - " . \Ticket::getPriorityName(
-                $job->fields["priority"]
+                $job->fields["priority"],
             ) . "</span>
                              </div>";
             //Categories
@@ -1228,7 +1228,7 @@ class Ticket extends CommonGLPI
             $colnum++;
             //echo "<td>";
             $link = "<a id='" . strtolower(
-                $item_link->getType()
+                $item_link->getType(),
             ) . "ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
                 . "/front/" . strtolower($item_link->getType()) . ".form.php?id=" . $item_link->fields["id"];
             $link .= "&amp;forcetab=" . $tab_name . "$1";
@@ -1339,7 +1339,7 @@ class Ticket extends CommonGLPI
         }
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         if ($foruser) {
@@ -1426,7 +1426,7 @@ class Ticket extends CommonGLPI
         ];
 
         $widget->setWidgetTitle(
-            $icon . " " . $widgetTitle
+            $icon . " " . $widgetTitle,
         );
 
 
@@ -1572,7 +1572,7 @@ class Ticket extends CommonGLPI
         ];
 
         $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets'
+            'glpi_tickets',
         );
 
         $iterator = $DB->request($criteria);
@@ -1597,7 +1597,7 @@ class Ticket extends CommonGLPI
             //TRANS: %d is the number of new tickets
             $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
             $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options . "\">" . __(
-                'Show all'
+                'Show all',
             ) . "</a>)";
 
             $output['header'] = self::commonListHeader();
@@ -1690,7 +1690,7 @@ class Ticket extends CommonGLPI
                 $first_col = sprintf(
                     __('%1$s - %2$s'),
                     $first_col,
-                    \Ticket::getStatus($job->fields["status"])
+                    \Ticket::getStatus($job->fields["status"]),
                 );
             }
 
@@ -1703,32 +1703,32 @@ class Ticket extends CommonGLPI
                 $output[$colnum] = sprintf(
                     __('Closed on %s'),
                     ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['closedate'])
+                    . \Html::convDateTime($job->fields['closedate']),
                 );
             } elseif ($job->fields['status'] == \Ticket::SOLVED) {
                 $output[$colnum] = sprintf(
                     __('Solved on %s'),
                     ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['solvedate'])
+                    . \Html::convDateTime($job->fields['solvedate']),
                 );
             } elseif ($job->fields['begin_waiting_date']) {
                 $output[$colnum] = sprintf(
                     __('Put on hold on %s'),
                     ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['begin_waiting_date'])
+                    . \Html::convDateTime($job->fields['begin_waiting_date']),
                 );
             } elseif ($job->fields['time_to_resolve']) {
                 $output[$colnum] = sprintf(
                     __('%1$s: %2$s'),
                     __('Time to resolve'),
                     ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['time_to_resolve'])
+                    . \Html::convDateTime($job->fields['time_to_resolve']),
                 );
             } else {
                 $output[$colnum] = sprintf(
                     __('Opened on %s'),
                     ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['date'])
+                    . \Html::convDateTime($job->fields['date']),
                 );
             }
 
@@ -1812,8 +1812,8 @@ class Ticket extends CommonGLPI
                         sprintf(
                             __('%1$s - %2$s'),
                             $job->numberOfFollowups($showprivate),
-                            $job->numberOfTasks($showprivate)
-                        )
+                            $job->numberOfTasks($showprivate),
+                        ),
                     );
                 } else {
                     $eigth_column = sprintf(
@@ -1822,8 +1822,8 @@ class Ticket extends CommonGLPI
                         sprintf(
                             __('%1$s - %2$s'),
                             $job->numberOfFollowups($showprivate),
-                            $job->numberOfTasks($showprivate)
-                        )
+                            $job->numberOfTasks($showprivate),
+                        ),
                     );
                 }
             }
@@ -1838,8 +1838,8 @@ class Ticket extends CommonGLPI
                             'display' => false,
                             'applyto' => "ticket" . $job->fields["id"]
                                 . $rand,
-                        ]
-                    )
+                        ],
+                    ),
                 );
             }
 

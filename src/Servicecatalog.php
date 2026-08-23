@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -33,72 +33,80 @@ use CommonGLPI;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 class Servicecatalog extends CommonGLPI
 {
+    public static $rightname = 'plugin_mydashboard';
 
-   static $rightname = 'plugin_mydashboard';
+    public $dohistory = false;
 
-   var $dohistory = false;
+    public static function canUse()
+    {
+        return Session::haveRightsOr("plugin_mydashboard", [CREATE, READ]);
+    }
 
-   static function canUse() {
-      return Session::haveRightsOr("plugin_mydashboard", [CREATE, READ]);
-   }
+    /**
+     * @return string
+     */
+    public static function getMenuLink()
+    {
+        global $CFG_GLPI;
 
-   /**
-    * @return string
-    */
-   static function getMenuLink() {
-      global $CFG_GLPI;
+        return PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
+    }
 
-      return PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
-   }
+    /**
+     * @return string
+     */
+    public static function getNavBarLink()
+    {
+        global $CFG_GLPI;
 
-   /**
-    * @return string
-    */
-   static function getNavBarLink() {
-      global $CFG_GLPI;
+        return PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
+    }
 
-      return PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
-   }
+    public static function getMenuLogo()
+    {
 
-   static function getMenuLogo() {
+        return Menu::getIcon();
 
-      return Menu::getIcon();
+    }
 
-   }
+    /**
+     * @return string
+     * @throws \GlpitestSQLError
+     */
+    public static function getMenuLogoCss()
+    {
 
-   /**
-    * @return string
-    * @throws \GlpitestSQLError
-    */
-   static function getMenuLogoCss() {
+        $addstyle = "font-size: 4.5em;";
+        return $addstyle;
 
-      $addstyle = "font-size: 4.5em;";
-      return $addstyle;
+    }
 
-   }
+    public static function getMenuTitle()
+    {
 
-   static function getMenuTitle() {
+        return __('Dashboard access', 'mydashboard');
 
-      return __('Dashboard access', 'mydashboard');
-
-   }
+    }
 
 
-   static function getMenuComment() {
+    public static function getMenuComment()
+    {
 
-      return __('Dashboard access', 'mydashboard');
-   }
+        return __('Dashboard access', 'mydashboard');
+    }
 
-   static function getLinkList() {
-      return "";
-   }
+    public static function getLinkList()
+    {
+        return "";
+    }
 
-   static function getList() {
-      return "";
-   }
+    public static function getList()
+    {
+        return "";
+    }
 }

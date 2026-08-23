@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -146,7 +146,7 @@ class Reports_Bar extends CommonDBTM
                     "type" => Widget::$BAR,
                     "comment" => __(
                         "Display of average real duration of treatment of tickets (actiontime of tasks)",
-                        "mydashboard"
+                        "mydashboard",
                     ),
                 ],
                 $this->getType() . "24" => [
@@ -447,7 +447,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -697,7 +697,7 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -839,7 +839,7 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1001,7 +1001,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->toggleWidgetRefresh();
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -1297,7 +1297,7 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -2094,7 +2094,7 @@ class Reports_Bar extends CommonDBTM
                             if (!array_key_exists('month', $tabTicketsMoreThanOneWeek)) {
                                 if (!in_array(
                                     $data['Monthname'],
-                                    $tabTicketsMoreThanOneWeek['month_name']
+                                    $tabTicketsMoreThanOneWeek['month_name'],
                                 ) && !in_array($datePeriod, $tabTicketsMoreThanOneWeek['month_name'])) {
                                     if ($data['Monthname'] !== $datePeriod) {
                                         $tabTicketsMoreThanOneWeek['month_name'][] = $datePeriod;
@@ -2199,7 +2199,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -2342,7 +2342,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -2496,7 +2496,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -2557,12 +2557,12 @@ class Reports_Bar extends CommonDBTM
                         $avg_lifetime_ticket_data [] = round(
                             ($avg_tickets_d['lifetime'] / $avg_tickets_d['nb']) ?? 0,
                             2,
-                            PHP_ROUND_HALF_UP
+                            PHP_ROUND_HALF_UP,
                         );
                         $avg_takeintoaccount_ticket_data [] = round(
                             ($avg_tickets_d['takeintoaccount'] / $avg_tickets_d['nb']) ?? 0,
                             2,
-                            PHP_ROUND_HALF_UP
+                            PHP_ROUND_HALF_UP,
                         );
                     } else {
                         $avg_lifetime_ticket_data [] = 0;
@@ -2783,7 +2783,7 @@ class Reports_Bar extends CommonDBTM
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
 
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -2794,7 +2794,7 @@ class Reports_Bar extends CommonDBTM
                 $onclick = 0;
 
                 $criterias = [ Entity::$criteria_name,
-                            'is_recursive_entities'];
+                    'is_recursive_entities'];
 
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
                     && Session::getCurrentInterface() == 'central') {
@@ -2867,7 +2867,7 @@ class Reports_Bar extends CommonDBTM
 
                 $graph_criterias = [];
                 if ($onclick == 1) {
-                    $criterias_values = Criteria::getGraphCriterias($params,  \Computer::getTable());
+                    $criterias_values = Criteria::getGraphCriterias($params, \Computer::getTable());
                     $graph_criterias = array_merge(['widget' => $widgetId], $criterias_values);
                 }
 
@@ -2886,7 +2886,7 @@ class Reports_Bar extends CommonDBTM
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params));
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
@@ -3247,13 +3247,13 @@ class Reports_Bar extends CommonDBTM
                             $time_per_tech[$techid][$key] += round(
                                 ($data['actiontime_date'] / 3600 / 8) ?? 0,
                                 2,
-                                PHP_ROUND_HALF_UP
+                                PHP_ROUND_HALF_UP,
                             );
                         } else {
                             $time_per_tech[$techid][$key] = round(
                                 ($data['actiontime_date'] / 3600 / 8) ?? 0,
                                 2,
-                                PHP_ROUND_HALF_UP
+                                PHP_ROUND_HALF_UP,
                             );
                         }
                     }
@@ -3698,8 +3698,8 @@ class Reports_Bar extends CommonDBTM
                                     '>',
                                     new QueryExpression(
                                         "TIME_TO_SEC(TIMEDIFF(" . $DB->quoteName(
-                                            "glpi_tickets.time_to_own"
-                                        ) . ", " . $DB->quoteName("glpi_tickets.date") . "))"
+                                            "glpi_tickets.time_to_own",
+                                        ) . ", " . $DB->quoteName("glpi_tickets.date") . "))",
                                     ),
                                 ],
                             ],
@@ -3747,8 +3747,8 @@ class Reports_Bar extends CommonDBTM
                                     '>',
                                     new QueryExpression(
                                         $DB->quoteName(
-                                            "glpi_tickets.time_to_resolve"
-                                        )
+                                            "glpi_tickets.time_to_resolve",
+                                        ),
                                     ),
                                 ],
                             ],
@@ -3777,7 +3777,7 @@ class Reports_Bar extends CommonDBTM
                     $respected_percent = round(
                         ($total['nb'] - $sum['nb']) * 100 / ($total['nb']),
                         2,
-                        PHP_ROUND_HALF_UP
+                        PHP_ROUND_HALF_UP,
                     );
 
                     $tickets_helpdesk[$key]['notrespected'] = $notrespected;

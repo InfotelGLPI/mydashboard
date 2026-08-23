@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -131,7 +131,7 @@ class ProjectTask extends CommonGLPI
                 ['glpi_projecttasks.users_id' => Session::getLoginUserID()],
                 [
                     'glpi_projecttaskteams.items_id' => Session::getLoginUserID(),
-                    'glpi_projecttaskteams.itemtype' => 'User'
+                    'glpi_projecttaskteams.itemtype' => 'User',
                 ],
             ],
         ];
@@ -140,7 +140,7 @@ class ProjectTask extends CommonGLPI
             if (count($_SESSION['glpigroups'])) {
                 $search_assign = [
                     'glpi_projecttaskteams.items_id' => $_SESSION['glpigroups'],
-                    'glpi_projecttaskteams.itemtype' => 'Group'
+                    'glpi_projecttaskteams.itemtype' => 'Group',
                 ];
             }
         }
@@ -172,15 +172,15 @@ class ProjectTask extends CommonGLPI
                 $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
 
                 $criteria['WHERE'] = $criteria['WHERE'] + [
-                        'OR' => [
-                            ['glpi_projectstates.is_finished' => 0],
-                            ['glpi_projecttasks.projectstates_id' => 0],
-                        ],
-                    ];
+                    'OR' => [
+                        ['glpi_projectstates.is_finished' => 0],
+                        ['glpi_projecttasks.projectstates_id' => 0],
+                    ],
+                ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                        'glpi_projecttasks'
-                    );
+                    'glpi_projecttasks',
+                );
                 break;
         }
 
@@ -215,13 +215,13 @@ class ProjectTask extends CommonGLPI
                                 ],
                             ],
                         ]);
-//                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
-//                            . $options . "\">"
-//                            . Html::makeTitle(
-//                                __('Projects tasks to be processed', 'mydashboard'),
-//                                $numrows,
-//                                $numrows
-//                            ) . "</a>";
+                        //                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
+                        //                            . $options . "\">"
+                        //                            . Html::makeTitle(
+                        //                                __('Projects tasks to be processed', 'mydashboard'),
+                        //                                $numrows,
+                        //                                $numrows
+                        //                            ) . "</a>";
 
                         $icon = "<i class='" . \ProjectTask::getIcon() . "'></i>";
                         $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
@@ -229,7 +229,7 @@ class ProjectTask extends CommonGLPI
                             . Html::makeTitle(
                                 __('Projects tasks to be processed', 'mydashboard'),
                                 $numrows,
-                                $numrows
+                                $numrows,
                             ) . "</a>";
 
 
@@ -255,13 +255,13 @@ class ProjectTask extends CommonGLPI
                             ],
                         ]);
 
-//                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
-//                            . $options . "\">"
-//                            . Html::makeTitle(
-//                                __('Projects tasks to be processed', 'mydashboard'),
-//                                $numrows,
-//                                $numrows
-//                            ) . "</a>";
+                        //                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
+                        //                            . $options . "\">"
+                        //                            . Html::makeTitle(
+                        //                                __('Projects tasks to be processed', 'mydashboard'),
+                        //                                $numrows,
+                        //                                $numrows
+                        //                            ) . "</a>";
 
                         $icon = "<i class='" . \ProjectTask::getIcon() . "'></i>";
                         $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
@@ -269,7 +269,7 @@ class ProjectTask extends CommonGLPI
                             . Html::makeTitle(
                                 __('Projects tasks to be processed', 'mydashboard'),
                                 $numrows,
-                                $numrows
+                                $numrows,
                             ) . "</a>";
 
 
@@ -278,14 +278,14 @@ class ProjectTask extends CommonGLPI
             }
 
             $widget->setWidgetTitle(
-                $icon . " " . $widgetTitle
+                $icon . " " . $widgetTitle,
             );
 
             if ($numrows) {
 
                 foreach ($iterator as $data) {
                     $ID = $data["id"];
-//                    $values = self::showVeryShort($ID, $forcetab);
+                    //                    $values = self::showVeryShort($ID, $forcetab);
 
                     $projecttask = new \ProjectTask();
 
@@ -297,7 +297,7 @@ class ProjectTask extends CommonGLPI
                             $project->getFromDB($projecttask->fields["projects_id"]);
                             $bgcolor = $_SESSION["glpipriority_" . $project->fields["priority"]];
 
-                            $status_badge_style = "background-color:{$bgcolor};;";
+                            $status_badge_style = "background-color:{$bgcolor};";
                             $status = '<span class="badge" style="' . htmlescape($status_badge_style) . '">' . htmlescape($data['id']) . '</span>';
                         }
 
@@ -327,7 +327,7 @@ class ProjectTask extends CommonGLPI
                         $entries[] = [
                             'itemtype' => \ProjectTask::class,
                             'id' => $status,
-                            'requester' =>$requesters,
+                            'requester' => $requesters,
                             'name' => $namelink,
                         ];
                     }
@@ -402,10 +402,10 @@ class ProjectTask extends CommonGLPI
             $bgcolor = $_SESSION["glpipriority_" . $project->fields["priority"]];
             //      $rand    = mt_rand();
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                    __('%1$s: %2$s'),
-                    __('ID'),
-                    $projecttask->fields["id"]
-                ) . "</div>";
+                __('%1$s: %2$s'),
+                __('ID'),
+                $projecttask->fields["id"],
+            ) . "</div>";
             $colnum++;
 
             $output[$colnum] = '';
@@ -444,8 +444,8 @@ class ProjectTask extends CommonGLPI
                     [
                         'applyto' => 'projecttask' . $projecttask->fields["id"] . $rand,
                         'display' => false,
-                    ]
-                )
+                    ],
+                ),
             );
             //echo $link;
             //$colnum++;

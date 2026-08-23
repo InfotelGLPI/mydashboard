@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -257,8 +257,8 @@ class Criteria
             }
 
             if ($table == 'glpi_tickets' && $criterion == TechnicianGroup::$criteria_name && is_array(
-                    $technicians_groups_id
-                )) {
+                $technicians_groups_id,
+            )) {
                 $technicians_groups_id = array_filter($technicians_groups_id);
 
                 if (count($technicians_groups_id) > 0) {
@@ -274,8 +274,8 @@ class Criteria
             }
 
             if ($table == 'glpi_tickets' && $criterion == RequesterGroup::$criteria_name && is_array(
-                    $requesters_groups_id
-                )) {
+                $requesters_groups_id,
+            )) {
                 $requesters_groups_id = array_filter($requesters_groups_id);
 
                 if (count($requesters_groups_id) > 0) {
@@ -634,13 +634,13 @@ class Criteria
         if ($onsubmit) {
             $form .= "<form id='" . $formId . "' action='' "
                 . "onsubmit=\"refreshWidgetByForm('" . Widget::removeBackslashes(
-                    $widgetId
+                    $widgetId,
                 ) . "','" . $gsid . "','" . $formId . "'); return false;\">";
         } else {
             $form .= "<form id='" . $formId . "' action='' onsubmit='return false;' ";
             $form .= "onchange=\"refreshWidgetByForm('" . Widget::removeBackslashes(
-                    $widgetId
-                ) . "','" . $gsid . "','" . $formId . "');\">";
+                $widgetId,
+            ) . "','" . $gsid . "','" . $formId . "');\">";
         }
 
         $count = count($criterias);
@@ -698,7 +698,7 @@ class Criteria
         global $CFG_GLPI;
         $base = array_values(array_filter(
             $options['params']['criteria'] ?? [],
-            fn($c) => !in_array($c['field'] ?? null, $strip)
+            fn($c) => !in_array($c['field'] ?? null, $strip),
         ));
         $options['criteria'] = array_merge($base, $specific);
         return $CFG_GLPI['root_doc'] . '/front/ticket.php?is_deleted=0&' . Toolbox::append_params($options, '&');

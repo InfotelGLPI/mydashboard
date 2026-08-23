@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -444,7 +444,7 @@ class Dashboard extends CommonDBTM
         $iterator = $DB->request([
             'SELECT'    => [
                 'id',
-                'grid'
+                'grid',
             ],
             'FROM'      => 'glpi_plugin_mydashboard_dashboards',
         ]);
@@ -494,7 +494,7 @@ class Dashboard extends CommonDBTM
                 'PluginSatisfactionDashboard' => 'GlpiPlugin\\\Satisfaction\\\Dashboard',
                 'PluginServicecatalogIndicator' => 'GlpiPlugin\\\Servicecatalog\\\Indicator',
                 'PluginTasklistsDashboard' => 'GlpiPlugin\\\Tasklists\\\Dashboard',
-                'PluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard'
+                'PluginVipDashboard' => 'GlpiPlugin\\\Vip\\\Dashboard',
             ];
 
             $grid_dest_widgets = $grid_widgets;
@@ -598,14 +598,14 @@ class Dashboard extends CommonDBTM
 
         }
 
-//        $widgetuser = new UserWidget();
-//        if ($ids = $widgetuser->find()) {
-//            foreach ($ids as $values) {
-//                if (isset($allmapping[$values['widgets_id']])) {
-//                    $widgetuser->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
-//                }
-//            }
-//        }
+        //        $widgetuser = new UserWidget();
+        //        if ($ids = $widgetuser->find()) {
+        //            foreach ($ids as $values) {
+        //                if (isset($allmapping[$values['widgets_id']])) {
+        //                    $widgetuser->update(['id' => $values['id'], 'widgets_id' => $allmapping[$values['widgets_id']]]);
+        //                }
+        //            }
+        //        }
 
         $widgetprofile = new ProfileAuthorizedWidget();
         if ($ids = $widgetprofile->find()) {

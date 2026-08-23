@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -135,9 +135,9 @@ class Project extends CommonGLPI
         }
 
         $search_assign = [ 'OR' => [
-                ['glpi_projects.users_id' => Session::getLoginUserID()],
-                ['glpi_projectteams.items_id' => Session::getLoginUserID(), 'glpi_projectteams.itemtype' => 'User'],
-            ],
+            ['glpi_projects.users_id' => Session::getLoginUserID()],
+            ['glpi_projectteams.items_id' => Session::getLoginUserID(), 'glpi_projectteams.itemtype' => 'User'],
+        ],
         ];
 
 
@@ -147,9 +147,9 @@ class Project extends CommonGLPI
             if (count($_SESSION['glpigroups'])) {
 
                 $search_assign = [ 'OR' => [
-                        ['glpi_projects.groups_id' => $_SESSION['glpigroups']],
-                        ['glpi_projectteams.items_id' => $_SESSION['glpigroups'], 'glpi_projectteams.itemtype' => 'Group'],
-                    ],
+                    ['glpi_projects.groups_id' => $_SESSION['glpigroups']],
+                    ['glpi_projectteams.items_id' => $_SESSION['glpigroups'], 'glpi_projectteams.itemtype' => 'Group'],
+                ],
                 ];
             }
         }
@@ -187,7 +187,7 @@ class Project extends CommonGLPI
                 ];
 
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-                    'glpi_projects'
+                    'glpi_projects',
                 );
                 break;
         }
@@ -306,7 +306,7 @@ class Project extends CommonGLPI
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
                 __('%1$s: %2$s'),
                 __('ID'),
-                $project->fields["id"]
+                $project->fields["id"],
             ) . "</div>";
             $colnum++;
 
@@ -346,8 +346,8 @@ class Project extends CommonGLPI
                     [
                         'applyto' => 'project' . $project->fields["id"] . $rand,
                         'display' => false,
-                    ]
-                )
+                    ],
+                ),
             );
             //echo $link;
             //$colnum++;

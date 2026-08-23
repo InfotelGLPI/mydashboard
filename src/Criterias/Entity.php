@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Criterias;
@@ -95,7 +95,7 @@ class Entity
             }
 
             $sons = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-                if ($sons > 0) {
+            if ($sons > 0) {
                 $form .= "<span class='md-widgetcrit'>";
                 $form .= __('Recursive') . "&nbsp;";
                 $paramsy = [
@@ -129,28 +129,28 @@ class Entity
 
     public static function getQueryCriteria($params, $table = 'glpi_tickets')
     {
-//        return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
-//            'glpi_entities',
-//            'id',
-//            $params[self::$criteria_name],
-//            $params['is_recursive_entities']
-//        );
+        //        return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
+        //            'glpi_entities',
+        //            'id',
+        //            $params[self::$criteria_name],
+        //            $params['is_recursive_entities']
+        //        );
 
         if (isset($params[self::$criteria_name]) && $params[self::$criteria_name] == "") {
             $params[self::$criteria_name] = $_SESSION['glpiactive_entity'];
         }
         if (isset($params[self::$criteria_name]) && ($params[self::$criteria_name] != -1)) {
             if ($params['is_recursive_entities'] == 1) {
-                $entities = [$table.".".self::$criteria_name => getSonsOf("glpi_entities", $params[self::$criteria_name][0])];
+                $entities = [$table . "." . self::$criteria_name => getSonsOf("glpi_entities", $params[self::$criteria_name][0])];
             } else {
-                $entities = [$table.".".self::$criteria_name => $params[self::$criteria_name][0]];
+                $entities = [$table . "." . self::$criteria_name => $params[self::$criteria_name][0]];
             }
         } else {
             if (isset($params['is_recursive_entities'])
                 && $params['is_recursive_entities'] == 1) {
-                $entities = [$table.".".self::$criteria_name => getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])];
+                $entities = [$table . "." . self::$criteria_name => getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])];
             } else {
-                $entities = [$table.".".self::$criteria_name => $_SESSION['glpiactive_entity']];
+                $entities = [$table . "." . self::$criteria_name => $_SESSION['glpiactive_entity']];
             }
         }
         return $params['query']['WHERE'] + $entities;
@@ -163,7 +163,7 @@ class Entity
             (isset($params["params"]["is_recursive_entities"])
                 && $params["params"]["is_recursive_entities"] > 0) ? 'under' : 'equals',
             $params["params"][self::$criteria_name],
-            'AND'
+            'AND',
         );
     }
 }

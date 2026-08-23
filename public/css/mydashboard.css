@@ -1,26 +1,28 @@
-/*
- -------------------------------------------------------------------------
- MyDashboard plugin for GLPI
- Copyright (C) 2015-2022 by the MyDashboard Development Team.
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of MyDashboard.
-
- MyDashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- MyDashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with MyDashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/*!
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 .slidepanel {
@@ -142,7 +144,6 @@
 .alert_date {
     font-style: italic;
 }
-
 
 .fa-alert-orange {
     color: orange;
@@ -288,7 +289,6 @@ div#tabcontent{
     margin-top: 2px;
     margin-right: 2px;
 }
-
 
 .cadre_edit_button {
     display: block;
@@ -472,8 +472,6 @@ div#tabcontent{
     font-family: "Font Awesome 5 Free";
 }
 
-
-
 .plugin_mydashboard_menuDashboardListContainer {
 //background-color: #FFF;
 }
@@ -484,7 +482,6 @@ div#tabcontent{
     padding-top: 1px;
     padding-bottom: 1px;
 }
-
 
 .plugin_mydashboard_menuDashboardListTitle1 {
     margin: 0px;
@@ -508,7 +505,6 @@ div#tabcontent{
     padding-top: 5px;
 }
 
-
 .plugin_mydashboard_menuDashboardListWidget {
     margin: 10px;
 //background-color: #FFF;
@@ -520,11 +516,9 @@ div#tabcontent{
     cursor: pointer;
 }
 
-
 .plugin_mydashboard_menuDashboardListItem {
     cursor: pointer;
 }
-
 
 /* Barre d'actions mode édition */
 .md-edit-toolbar {
@@ -591,7 +585,6 @@ div#tabcontent{
     padding: 2px 0px 2px 0px;
     border-bottom: 1px lightgrey dashed;
 }
-
 
 /*END===plugin_mydashboard_menu============================*/
 /*STA===sDashboard============================*/
@@ -984,7 +977,6 @@ div.dt-button-background {
     box-sizing: content-box;
 }
 
-
 .tickets-ind .nb {
     display: inline-block;
     position: relative;
@@ -1070,7 +1062,6 @@ div.dt-button-background {
 .fc-scroller {
     height: auto !important;
 }
-
 
 /*****Gridstack******/
 /* 9.3 */
@@ -1177,7 +1168,6 @@ a#showMyDashboardLateralMenuLink {
     /*margin: 2px;*/
 }
 
-
 .infos-text {
     min-height: 180px;
 }
@@ -1207,7 +1197,6 @@ a#showMyDashboardLateralMenuLink {
     max-width: 100%;
     margin-left: 100px;
 }
-
 
 #GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container::before {
     margin-top: 100px;
@@ -1241,7 +1230,6 @@ a#showMyDashboardLateralMenuLink {
     transform: rotate(350deg);
 }
 
-
 #GlpiPluginMydashboardAlert3 #display-sc #nt_info-container::before {
     margin-top: 100px;
 //margin-left: 10px;
@@ -1256,7 +1244,6 @@ a#showMyDashboardLateralMenuLink {
     -webkit-transform: rotate(350deg);
     transform: rotate(350deg);
 }
-
 
 #GlpiPluginMydashboardAlert1 #display-sc #nt_alert-container #nt_alert-infos,
 #GlpiPluginMydashboardAlert2 #display-sc #nt_maint-container #nt_maint-infos,

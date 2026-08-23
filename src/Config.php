@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard;
@@ -372,12 +372,12 @@ class Config extends CommonDBTM
 
         echo Html::submit(
             _sx('button', 'Reconstruct global backlog', 'mydashboard'),
-            ['name' => 'reconstructBacklog', 'class' => 'btn btn-primary']
+            ['name' => 'reconstructBacklog', 'class' => 'btn btn-primary'],
         );
         echo "&nbsp;";
         echo Html::submit(
             _sx('button', 'Reconstruct global indicators per week', 'mydashboard'),
-            ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary']
+            ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary'],
         );
         echo "<br/><br/><div class='alert  alert-warning d-flex'>";
         echo  __('Can take many time if you have many tickets', 'mydashboard');
@@ -397,7 +397,7 @@ class Config extends CommonDBTM
         $iterator = $DB->request([
             'SELECT'    => '*',
             'FROM'      => $this->getTable(),
-            'LIMIT'    => 1
+            'LIMIT'    => 1,
         ]);
 
         if (count($iterator) == 0) {
@@ -607,7 +607,7 @@ class Config extends CommonDBTM
         }
 
         if ($DB->fieldExists($table, "display_special_plugin_widget")) {
-        $migration->dropField($table, "display_special_plugin_widget");
+            $migration->dropField($table, "display_special_plugin_widget");
             $migration->migrationOneTable($table);
         }
 

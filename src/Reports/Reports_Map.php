@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- mydashboard plugin for GLPI
- Copyright (C) 2016-2026 by the mydashboard Development Team.
-
- https://github.com/InfotelGLPI/mydashboard
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of mydashboard.
-
- mydashboard is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- mydashboard is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * mydashboard plugin for GLPI
+ * Copyright (C) 2016-2026 by the mydashboard Development Team.
+ *
+ * https://github.com/InfotelGLPI/mydashboard
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of mydashboard.
+ *
+ * mydashboard is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * mydashboard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Mydashboard\Reports;
@@ -68,7 +68,7 @@ class Reports_Map extends CommonGLPI
             $this->getType() . "29" => [
                 "title" => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
                 "type" => Widget::$MAP,
-                "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard")
+                "comment" => __("Display Tickets by location (Latitude / Longitude)", "mydashboard"),
             ],
         ];
         return $widgets;
@@ -140,7 +140,7 @@ class Reports_Map extends CommonGLPI
                         'is_recursive_entities',
                         'type',
                         'technicians_groups_id',
-                        'is_recursive_technicians'
+                        'is_recursive_technicians',
                     ];
                 }
                 if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -151,7 +151,7 @@ class Reports_Map extends CommonGLPI
                 $paramsc = [
                     "preferences" => $preferences,
                     "criterias" => $criterias,
-                    "opt" => $opt
+                    "opt" => $opt,
                 ];
                 $default = Criteria::manageCriterias($paramsc);
 
@@ -179,32 +179,32 @@ class Reports_Map extends CommonGLPI
                     $params['criteria'][] = [
                         'field' => 80,
                         'searchtype' => 'under',
-                        'value' => $entities_id_criteria
+                        'value' => $entities_id_criteria,
                     ];
                 } else {
                     $params['criteria'][] = [
                         'field' => 80,
                         'searchtype' => 'equals',
-                        'value' => $entities_id_criteria
+                        'value' => $entities_id_criteria,
                     ];
                 }
                 $params['criteria'][] = [
                     'link' => 'AND',
                     'field' => 12,
                     'searchtype' => 'equals',
-                    'value' => 'notold'
+                    'value' => 'notold',
                 ];
                 $params['criteria'][] = [
                     'link' => 'AND NOT',
                     'field' => 998,
                     'searchtype' => 'contains',
-                    'value' => 'NULL'
+                    'value' => 'NULL',
                 ];
                 $params['criteria'][] = [
                     'link' => 'AND NOT',
                     'field' => 999,
                     'searchtype' => 'contains',
-                    'value' => 'NULL'
+                    'value' => 'NULL',
                 ];
 
                 if ($type > 0) {
@@ -212,7 +212,7 @@ class Reports_Map extends CommonGLPI
                         'link' => 'AND',
                         'field' => 14,
                         'searchtype' => 'equals',
-                        'value' => $type
+                        'value' => $type,
                     ];
                 }
                 $grp_criteria = is_array($groups_criteria) ? $groups_criteria : [$groups_criteria];
@@ -232,14 +232,14 @@ class Reports_Map extends CommonGLPI
                     }
                 }
 
-//            if ($groups_criteria > 0) {
-//               $params['criteria'][] = [
-//                  'link'       => 'AND',
-//                  'field'      => 8,
-//                  'searchtype' => 'equals',
-//                  'value'      => $groups_criteria
-//               ];
-//            }
+                //            if ($groups_criteria > 0) {
+                //               $params['criteria'][] = [
+                //                  'link'       => 'AND',
+                //                  'field'      => 8,
+                //                  'searchtype' => 'equals',
+                //                  'value'      => $groups_criteria
+                //               ];
+                //            }
                 $data = Search::prepareDatasForSearch('Ticket', $params);
                 Search::constructSQL($data);
                 Search::constructData($data);
@@ -253,7 +253,7 @@ class Reports_Map extends CommonGLPI
                     "criterias" => $criterias,
                     "export" => false,
                     "canvas" => false,
-                    "nb" => 1
+                    "nb" => 1,
                 ];
                 $graph = Helper::getGraphHeader($paramsh);
 
@@ -265,14 +265,14 @@ class Reports_Map extends CommonGLPI
                         'link' => 'AND',
                         'field' => 83,
                         'searchtype' => 'equals',
-                        'value' => 'CURLOCATION'
+                        'value' => 'CURLOCATION',
                     ];
                     $globallinkto = Toolbox::append_params(
                         [
                             'criteria' => $criteria,
-                            'metacriteria' => $data['search']['metacriteria']
+                            'metacriteria' => $data['search']['metacriteria'],
                         ],
-                        '&amp;'
+                        '&amp;',
                     );
                     $parameters = "as_map=0&amp;" . $globallinkto;
 
@@ -357,10 +357,10 @@ class Reports_Map extends CommonGLPI
 
                      $.each(_points, function(index, point) {
                         var _title = '<strong>' + point.title + '</strong><br/><a target=\'_blank\' href=\''+'$fulltarget'.replace(/CURLOCATION/, point.loc_id)+'\'>" . sprintf(
-                            __('%1$s %2$s'),
-                            'COUNT',
-                            $typename
-                        ) . "'.replace(/COUNT/, point.count)+'</a>';
+                        __('%1$s %2$s'),
+                        'COUNT',
+                        $typename,
+                    ) . "'.replace(/COUNT/, point.count)+'</a>';
                         if (point.types) {
                            $.each(point.types, function(tindex, type) {
                               _title += '<br/>" . sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE') . "'.replace(/COUNT/, type.count).replace(/TYPE/, type.name);
@@ -403,8 +403,8 @@ class Reports_Map extends CommonGLPI
                      fail_info.onAdd = function (map) {
                         this._div = L.DomUtil.create('div', 'fail_info');
                         this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'ti ti-refresh\'></i> " . __s(
-                            'Reload'
-                        ) . "</span>';
+                        'Reload',
+                    ) . "</span>';
                         return this._div;
                      };
                      fail_info.addTo(map_elt);
@@ -427,7 +427,7 @@ class Reports_Map extends CommonGLPI
                 $graph .= "<div id=\"TicketsByLocationOpenStreetMap\" class=\"mapping\"></div>";
                 $widget->toggleWidgetRefresh();
                 $widget->setWidgetHtmlContent(
-                    $graph
+                    $graph,
                 );
 
                 return $widget;
