@@ -695,6 +695,12 @@ class Widget extends CommonDBTM
                                     url: '$root_doc/ajax/state_load.php?gsId={$widgetindex}&profiles_id='+profiles_id,
                                     dataType: 'json',
                                     success: function (json) {
+                                      // state_load.php returns null when no grid state has been
+                                      // saved yet (fresh widget/profile); guard before touching it.
+                                      if (json === null) {
+                                        callback(null);
+                                        return;
+                                      }
                                       //JSON parse the saved filter and set the time equal to now.
                                       json.time = +new Date();
                                       callback(json);
