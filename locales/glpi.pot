@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-26 11:44+0000\n"
+"POT-Creation-Date: 2026-08-26 15:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: src/Customswidget.php:53
+#: src/Customswidget.php:59
 msgid "Custom Widgets"
 msgstr ""
 
@@ -523,7 +523,7 @@ msgstr ""
 msgid "Incident supervisor grid"
 msgstr ""
 
-#: src/Customswidget.php:162 src/Customswidget.php:163
+#: src/Customswidget.php:168 src/Customswidget.php:169
 msgid "Incidents"
 msgstr ""
 
@@ -691,7 +691,7 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Widget.php:832 src/Chart.php:186 src/Menu.php:1368
+#: src/Widget.php:844 src/Chart.php:186 src/Menu.php:1368
 msgid "No data available"
 msgstr ""
 
@@ -707,7 +707,7 @@ msgstr ""
 msgid "No data received for"
 msgstr ""
 
-#: src/Widget.php:1166
+#: src/Widget.php:1178
 msgid "No equipments founded"
 msgstr ""
 
@@ -715,7 +715,7 @@ msgstr ""
 msgid "No impact"
 msgstr ""
 
-#: src/Alert.php:2821 src/Widget.php:1027
+#: src/Alert.php:2821 src/Widget.php:1039
 msgid "No informations founded"
 msgstr ""
 
@@ -723,11 +723,11 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Alert.php:3040 src/Alert.php:3307 src/Widget.php:890
+#: src/Alert.php:3040 src/Alert.php:3307 src/Widget.php:902
 msgid "No problem detected"
 msgstr ""
 
-#: src/Alert.php:2558 src/Widget.php:959
+#: src/Alert.php:2558 src/Widget.php:971
 msgid "No scheduled maintenance"
 msgstr ""
 
@@ -1014,7 +1014,7 @@ msgstr ""
 msgid "Request supervisor grid"
 msgstr ""
 
-#: src/Customswidget.php:171 src/Customswidget.php:172
+#: src/Customswidget.php:177 src/Customswidget.php:178
 msgid "Requests"
 msgstr ""
 
@@ -1402,7 +1402,7 @@ msgstr ""
 msgid "Year to date"
 msgstr ""
 
-#: src/Alert.php:204 src/Widget.php:1060
+#: src/Alert.php:204 src/Widget.php:1072
 msgid "Your equipments"
 msgstr ""
 
