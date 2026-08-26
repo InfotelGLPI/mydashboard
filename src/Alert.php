@@ -2467,7 +2467,7 @@ class Alert extends CommonDBTM
                 $name = htmlspecialchars(
                     (string) ReminderTranslation::getTranslatedValue($note, 'name'),
                     ENT_QUOTES,
-                    'UTF-8'
+                    'UTF-8',
                 );
 
                 $style_title = "text-align:center;color:orange";
@@ -2725,7 +2725,7 @@ class Alert extends CommonDBTM
                 $name = htmlspecialchars(
                     (string) ReminderTranslation::getTranslatedValue($note, 'name'),
                     ENT_QUOTES,
-                    'UTF-8'
+                    'UTF-8',
                 );
 
                 $style_title = "text-align:center;";
@@ -2943,7 +2943,7 @@ class Alert extends CommonDBTM
                 $name .= htmlspecialchars(
                     (string) ReminderTranslation::getTranslatedValue($note, 'name'),
                     ENT_QUOTES,
-                    'UTF-8'
+                    'UTF-8',
                 );
 
                 $description = "";
