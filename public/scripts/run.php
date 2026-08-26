@@ -27,6 +27,15 @@
  * --------------------------------------------------------------------------
  */
 
+// CLI-only launcher: it boots the GLPI kernel with no memory/time limits and
+// exec()s a heavy stock-ticket job. $_SERVER['argv'] is populated from the query
+// string under the web SAPI (register_argc_argv), so the argv check below is NOT a
+// CLI proof — gate on PHP_SAPI before anything runs, like the sibling scripts, so
+// this cannot be abused as an unauthenticated DoS / side-effect trigger over HTTP.
+if (PHP_SAPI !== 'cli') {
+    die('This script can only be run from the command line.');
+}
+
 function usage()
 {
 

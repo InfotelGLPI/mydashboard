@@ -2462,10 +2462,18 @@ class Alert extends CommonDBTM
                 $note->getFromDB($row["id"]);
 
                 //                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
-                $name = ReminderTranslation::getTranslatedValue($note, 'name');
+                // Reminder names are stored raw (GLPI 10+): escape at the source so the
+                // value stays safe wherever $name is later emitted into the widget HTML.
+                $name = htmlspecialchars(
+                    (string) ReminderTranslation::getTranslatedValue($note, 'name'),
+                    ENT_QUOTES,
+                    'UTF-8'
+                );
 
                 $style_title = "text-align:center;color:orange";
-                $description = ReminderTranslation::getTranslatedValue($note, 'text');
+                // Reminder text is rich HTML stored raw: sanitize at the source (strips
+                // scripts / event handlers) while preserving allowed formatting.
+                $description = \Glpi\RichText\RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'));
                 $cleaned_description = $description;
                 if ($i == 1) {
                     $firstdescription = $cleaned_description;
@@ -2712,10 +2720,18 @@ class Alert extends CommonDBTM
                 $note->getFromDB($row["id"]);
 
                 //                $name = "<i class='ti ti-info-circle'></i>";
-                $name = ReminderTranslation::getTranslatedValue($note, 'name');
+                // Reminder names are stored raw (GLPI 10+): escape at the source so the
+                // value stays safe wherever $name is later emitted into the widget HTML.
+                $name = htmlspecialchars(
+                    (string) ReminderTranslation::getTranslatedValue($note, 'name'),
+                    ENT_QUOTES,
+                    'UTF-8'
+                );
 
                 $style_title = "text-align:center;";
-                $description = ReminderTranslation::getTranslatedValue($note, 'text');
+                // Reminder text is rich HTML stored raw: sanitize at the source (strips
+                // scripts / event handlers) while preserving allowed formatting.
+                $description = \Glpi\RichText\RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'));
                 $cleaned_description = $description;
 
                 if ($i == 1) {
@@ -2922,14 +2938,22 @@ class Alert extends CommonDBTM
 
                 $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
                 $name = "<i class='fas $class'></i>";
-                $name .= ReminderTranslation::getTranslatedValue($note, 'name');
+                // Reminder names are stored raw (GLPI 10+): escape before appending to
+                // the trusted icon markup.
+                $name .= htmlspecialchars(
+                    (string) ReminderTranslation::getTranslatedValue($note, 'name'),
+                    ENT_QUOTES,
+                    'UTF-8'
+                );
 
                 $description = "";
                 //            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
                 $style_title = "text-align: center;color:" . $config->getField('impact_' . $row['impact']);
                 $style_description = "color:" . $config->getField('impact_' . $row['impact']);
                 $description .= "<span style='$style_description'>";
-                $description .= ReminderTranslation::getTranslatedValue($note, 'text');
+                // Reminder text is rich HTML stored raw: sanitize before appending to
+                // the trusted span wrapper.
+                $description .= \Glpi\RichText\RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'));
                 $description .= "</span>";
 
                 $cleaned_description = $description;
