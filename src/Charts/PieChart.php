@@ -50,16 +50,16 @@ class PieChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name           = $graph_datas['name'];
-        $datas          = $graph_datas['data'];
-        $ids            = $graph_datas['ids'];
+        $name           = self::sanitizeCanvasName($graph_datas['name']);
+        $datas          = self::hardenJson($graph_datas['data']);
+        $ids            = self::hardenJson($graph_datas['ids']);
         $label          = $graph_datas['label'] ?? "";
-        $labels         = $graph_datas['labels'];
+        $labels         = self::hardenJson($graph_datas['labels']);
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = "<script type='text/javascript'>
           var id$name = $ids;
@@ -155,7 +155,7 @@ class PieChart extends Chart
               series: [
                         {
                           type: 'pie',
-                          name: \"$label\",
+                          name: " . self::encodeForScript($label) . ",
                           radius: '50%',
                           data: $datas,
                           emphasis: {
@@ -212,16 +212,16 @@ class PieChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name           = $graph_datas['name'];
-        $datas          = $graph_datas['data'];
-        $ids            = $graph_datas['ids'];
+        $name           = self::sanitizeCanvasName($graph_datas['name']);
+        $datas          = self::hardenJson($graph_datas['data']);
+        $ids            = self::hardenJson($graph_datas['ids']);
         $label          = $graph_datas['label'] ?? "";
-        $labels         = $graph_datas['labels'];
+        $labels         = self::hardenJson($graph_datas['labels']);
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = "<script type='text/javascript'>
 
@@ -319,7 +319,7 @@ class PieChart extends Chart
               series: [
                         {
                           type: 'pie',
-                          name: \"$label\",
+                          name: " . self::encodeForScript($label) . ",
                           radius: [20, 140],
                           center: ['50%', '50%'],
                           roseType: 'area',
@@ -373,16 +373,16 @@ class PieChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name           = $graph_datas['name'];
-        $datas          = $graph_datas['data'];
-        $ids            = $graph_datas['ids'];
+        $name           = self::sanitizeCanvasName($graph_datas['name']);
+        $datas          = self::hardenJson($graph_datas['data']);
+        $ids            = self::hardenJson($graph_datas['ids']);
         $label          = $graph_datas['label'] ?? "";
-        $labels         = $graph_datas['labels'];
+        $labels         = self::hardenJson($graph_datas['labels']);
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = "<script type='text/javascript'>
             var id$name = $ids;
@@ -480,7 +480,7 @@ class PieChart extends Chart
                           type: 'pie',
                           radius: ['40%', '70%'],
                           avoidLabelOverlap: false,
-                          name: \"$label\",
+                          name: " . self::encodeForScript($label) . ",
                           label: {
                             show: false,
                             position: 'center'

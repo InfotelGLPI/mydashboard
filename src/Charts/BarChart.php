@@ -51,16 +51,16 @@ abstract class BarChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name    = $graph_datas['name'];
-        $datas   = $graph_datas['data'];
-        $ids     = $graph_datas['ids'];
+        $name    = self::sanitizeCanvasName($graph_datas['name']);
+        $datas   = self::hardenJson($graph_datas['data']);
+        $ids     = self::hardenJson($graph_datas['ids']);
         $label   = $graph_datas['label'] ?? "";
-        $labels  = $graph_datas['labels'];
+        $labels  = self::hardenJson($graph_datas['labels']);
         $title   = $graph_datas['title'] ?? "";
         $comment = $graph_datas['comment'] ?? "";
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $graph          = "<script type='text/javascript'>
 
@@ -218,17 +218,17 @@ abstract class BarChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name    = $graph_datas['name'];
-        $datas   = $graph_datas['data'];
-        $ids     = $graph_datas['ids'];
+        $name    = self::sanitizeCanvasName($graph_datas['name']);
+        $datas   = self::hardenJson($graph_datas['data']);
+        $ids     = self::hardenJson($graph_datas['ids']);
         $label   = $graph_datas['label'] ?? "";
-        $labels  = $graph_datas['labels'];
+        $labels  = self::hardenJson($graph_datas['labels']);
         $title   = $graph_datas['title'] ?? "";
         $comment = $graph_datas['comment'] ?? "";
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-        $legends = $graph_datas['legends'] ?? "";
-        $yaxis = $graph_datas['yaxis'];
-        $json_criterias = json_encode($graph_criterias);
+        $legends = self::hardenJson($graph_datas['legends'] ?? "");
+        $yaxis = self::hardenJson($graph_datas['yaxis']);
+        $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $graph          = "<script type='text/javascript'>
 
@@ -380,16 +380,16 @@ abstract class BarChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name    = $graph_datas['name'];
-        $datas   = $graph_datas['data'];
-        $ids     = $graph_datas['ids'];
+        $name    = self::sanitizeCanvasName($graph_datas['name']);
+        $datas   = self::hardenJson($graph_datas['data']);
+        $ids     = self::hardenJson($graph_datas['ids']);
         $label   = $graph_datas['label'] ?? "";
-        $labels  = $graph_datas['labels'];
+        $labels  = self::hardenJson($graph_datas['labels']);
         $title   = $graph_datas['title'] ?? "";
         $comment = $graph_datas['comment'] ?? "";
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $graph          = "<script type='text/javascript'>
 
@@ -545,16 +545,16 @@ abstract class BarChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name    = $graph_datas['name'];
-        $datas   = $graph_datas['data'];
-        $ids     = $graph_datas['ids'];
+        $name    = self::sanitizeCanvasName($graph_datas['name']);
+        $datas   = self::hardenJson($graph_datas['data']);
+        $ids     = self::hardenJson($graph_datas['ids']);
         $label   = $graph_datas['label'] ?? "";
-        $labels  = $graph_datas['labels'];
+        $labels  = self::hardenJson($graph_datas['labels']);
         $title   = $graph_datas['title'] ?? "";
         $comment = $graph_datas['comment'] ?? "";
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $graph          = "<script type='text/javascript'>
 

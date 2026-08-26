@@ -87,6 +87,61 @@ class Chart extends Module
     }
 
     /**
+     * JSON encoding flags that make a value safe to inline inside a <script>
+     * block: they neutralise the sequences used to break out of the script
+     * context (</script>, quotes and ampersands) by emitting \u escapes.
+     */
+    protected const SCRIPT_JSON_FLAGS = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
+
+    /**
+     * Encode a raw PHP value for safe interpolation inside a <script> block.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    protected static function encodeForScript($value): string
+    {
+        return json_encode($value, self::SCRIPT_JSON_FLAGS);
+    }
+
+    /**
+     * Re-encode chart data that may already be a JSON string so that it is safe
+     * to inline inside a <script> block. Falls back to an empty JSON array when
+     * the input is not decodable, so raw text is never emitted into the script.
+     *
+     * @param mixed $value already-encoded JSON string or raw PHP value
+     * @return string
+     */
+    protected static function hardenJson($value): string
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return '[]';
+            }
+        } else {
+            $decoded = $value;
+        }
+
+        return json_encode($decoded, self::SCRIPT_JSON_FLAGS);
+    }
+
+    /**
+     * Validate a chart canvas identifier before it is interpolated into JS.
+     * Only word characters are allowed so untrusted input can never be
+     * reintroduced as a raw JS identifier.
+     *
+     * @param mixed $name
+     * @return string
+     */
+    protected static function sanitizeCanvasName($name): string
+    {
+        $name = preg_replace('/[^A-Za-z0-9_]/', '', (string) $name);
+
+        return $name !== '' ? $name : 'mydashboard_chart';
+    }
+
+    /**
      * @param $optionName
      * @param $optionValue
      * @param bool $force

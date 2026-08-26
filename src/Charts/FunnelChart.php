@@ -48,16 +48,16 @@ class FunnelChart extends Chart
         if (count($graph_criterias) > 0) {
             $onclick = 1;
         }
-        $name           = $graph_datas['name'];
-        $datas          = $graph_datas['data'];
-        $ids            = $graph_datas['ids'];
+        $name           = self::sanitizeCanvasName($graph_datas['name']);
+        $datas          = self::hardenJson($graph_datas['data']);
+        $ids            = self::hardenJson($graph_datas['ids']);
         $label          = $graph_datas['label'] ?? "";
-        $labels         = $graph_datas['labels'];
+        $labels         = self::hardenJson($graph_datas['labels']);
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $json_criterias = json_encode($graph_criterias);
+        $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = "<script type='text/javascript'>
           var id$name = $ids;
@@ -152,7 +152,7 @@ class FunnelChart extends Chart
               series: [
                         {
                           type: 'funnel',
-                          name: \"$title\",
+                          name: " . self::encodeForScript($title) . ",
                           left: '10%',
                           top: 60,
                           bottom: 60,
