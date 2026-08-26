@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 14:05+0000\n"
+"POT-Creation-Date: 2026-08-24 07:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -691,7 +691,7 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Widget.php:826 src/Chart.php:131 src/Menu.php:1368
+#: src/Widget.php:832 src/Chart.php:131 src/Menu.php:1368
 msgid "No data available"
 msgstr ""
 
@@ -707,7 +707,7 @@ msgstr ""
 msgid "No data received for"
 msgstr ""
 
-#: src/Widget.php:1160
+#: src/Widget.php:1166
 msgid "No equipments founded"
 msgstr ""
 
@@ -715,7 +715,7 @@ msgstr ""
 msgid "No impact"
 msgstr ""
 
-#: src/Alert.php:2805 src/Widget.php:1021
+#: src/Alert.php:2805 src/Widget.php:1027
 msgid "No informations founded"
 msgstr ""
 
@@ -723,11 +723,11 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Alert.php:3016 src/Alert.php:3283 src/Widget.php:884
+#: src/Alert.php:3016 src/Alert.php:3283 src/Widget.php:890
 msgid "No problem detected"
 msgstr ""
 
-#: src/Alert.php:2550 src/Widget.php:953
+#: src/Alert.php:2550 src/Widget.php:959
 msgid "No scheduled maintenance"
 msgstr ""
 
@@ -1402,7 +1402,7 @@ msgstr ""
 msgid "Year to date"
 msgstr ""
 
-#: src/Alert.php:204 src/Widget.php:1054
+#: src/Alert.php:204 src/Widget.php:1060
 msgid "Your equipments"
 msgstr ""
 
