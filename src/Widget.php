@@ -790,12 +790,12 @@ class Widget extends CommonDBTM
                         $widgetdisplay .= '<thead>';
                         $widgetdisplay .= '<tr>';
                         foreach ($head as $k => $th) {
-                            $widgetdisplay .= '<th>' . $th['sTitle'] . '</th>';
+                            $widgetdisplay .= '<th>' . (str_contains((string) $th['sTitle'], '<') ? \Glpi\RichText\RichText::getSafeHtml((string) $th['sTitle']) : $th['sTitle']) . '</th>';
                         }
                         $widgetdisplay .= '</tr>';
                         $widgetdisplay .= '</thead><tfoot><tr>';
                         foreach ($head as $k => $th) {
-                            $widgetdisplay .= '<th>' . $th['sTitle'] . '</th>';
+                            $widgetdisplay .= '<th>' . (str_contains((string) $th['sTitle'], '<') ? \Glpi\RichText\RichText::getSafeHtml((string) $th['sTitle']) : $th['sTitle']) . '</th>';
                         }
                         $widgetdisplay .= '</tr></tfoot>';
                         $widgetdisplay .= ' <tbody>';
@@ -803,7 +803,19 @@ class Widget extends CommonDBTM
                         foreach ($data as $k => $v) {
                             $widgetdisplay .= '<tr>';
                             for ($i = 0; $i < $nb; $i++) {
-                                $widgetdisplay .= '<td>' . $v[$i] . '</td>';
+                                // Table cells legitimately carry server-built HTML (ticket
+                                // links, priority color badges, icons) but also embed raw,
+                                // user-controlled values such as a ticket title (getNameID()).
+                                // Run any markup-bearing cell through the same sanitizer the
+                                // plugin already uses for custom content: it preserves safe
+                                // formatting (class/style/links) while stripping <script> and
+                                // event handlers, closing the stored-XSS path. Plain cells
+                                // (no tag) are emitted untouched to avoid <p> wrapping.
+                                $cell = (string) $v[$i];
+                                if (str_contains($cell, '<')) {
+                                    $cell = \Glpi\RichText\RichText::getSafeHtml($cell);
+                                }
+                                $widgetdisplay .= '<td>' . $cell . '</td>';
                             }
                             $widgetdisplay .= '</tr>';
                         }

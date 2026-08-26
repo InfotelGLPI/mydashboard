@@ -65,7 +65,11 @@ class Reports_Custom extends CommonGLPI
         if (!empty($customsWidgets)) {
             foreach ($customsWidgets as $customWidget) {
                 $addwidgets[$this->getType() . "cw" . $customWidget['id']] = [
-                    "title" => $customWidget['name'],
+                    // The widget name is user-controlled free text stored raw and later
+                    // emitted as a menu label (and into a data-classname attribute) in the
+                    // widget picker. Escape it here at the source so the shared render path
+                    // keeps working for report widgets whose titles are legitimate HTML.
+                    "title" => htmlspecialchars($customWidget['name'], ENT_QUOTES, 'UTF-8'),
                     "type" => Widget::$OTHERS,
                     "icon" => "ti ti-edit",
                     "comment" => "",
@@ -97,7 +101,11 @@ class Reports_Custom extends CommonGLPI
 
                         $widget = new Html(true);
 
-                        $widget->setWidgetTitle($content['name']);
+                        // Escape the user-controlled custom widget name at the source.
+                        // setWidgetTitle() is also fed trusted HTML titles (e.g. <a> links)
+                        // by report widgets, so escaping must happen here, not in the shared
+                        // render path where the title is emitted raw.
+                        $widget->setWidgetTitle(htmlspecialchars($content['name'], ENT_QUOTES, 'UTF-8'));
 
                         // Sanitize the stored free-HTML widget content before rendering it
                         // as raw HTML on every user's dashboard. This keeps the allowed

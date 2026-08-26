@@ -42,6 +42,12 @@ if (!defined('GLPI_ROOT')) {
  */
 class Customswidget extends CommonDropdown
 {
+    // Restrict custom-widget CRUD to dashboard config admins. Without this the
+    // class inherits CommonDropdown's generic 'dropdown' right, letting any user
+    // with that right create a widget whose (unescaped) name is rendered on every
+    // other user's dashboard - a stored-XSS vector.
+    public static $rightname = 'plugin_mydashboard_config';
+
     /**
      * @param int $nb
      *
