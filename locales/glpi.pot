@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-24 07:14+0000\n"
+"POT-Creation-Date: 2026-08-26 09:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -691,7 +691,7 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Widget.php:832 src/Chart.php:131 src/Menu.php:1368
+#: src/Widget.php:832 src/Chart.php:186 src/Menu.php:1368
 msgid "No data available"
 msgstr ""
 
@@ -699,7 +699,7 @@ msgstr ""
 msgid "No data available in table"
 msgstr ""
 
-#: src/Chart.php:113
+#: src/Chart.php:168
 msgid "No data is given to the widget"
 msgstr ""
 
@@ -743,7 +743,7 @@ msgstr ""
 msgid "Not a valid SQL SELECT query"
 msgstr ""
 
-#: src/Chart.php:137 src/Datatable.php:129
+#: src/Chart.php:192 src/Datatable.php:129
 msgid "Not an array"
 msgstr ""
 
