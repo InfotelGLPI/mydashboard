@@ -555,7 +555,10 @@ HTML;
                 $graphs = self::loadWidgetsListForFuzzy($widgetlist);
 
                 // return the entries to ajax call
-                return json_encode($graphs);
+                // Widget labels can include a Customswidget name entered by a config admin and stored raw;
+                // hex-escape HTML-significant characters so the payload stays inert even if the client
+                // inserts it via innerHTML, matching the JSON hardening of the sibling endpoints.
+                return json_encode($graphs, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
                 break;
         }
     }

@@ -52,15 +52,18 @@ if (isset($_POST["addGroup"])) {
         }
 
         if (isset($_POST["use_group_profile"])) {
+            // The stored right is a boolean flag (consumed as == 1); constrain the posted value to {0,1}
+            // so an arbitrary string / bitmask cannot land raw in glpi_profilerights.
+            $use_group_profile = !empty($_POST["use_group_profile"]) ? 1 : 0;
             $profile = new ProfileRight();
             if ($profile->getFromDBByCrit(['profiles_id' => $_POST['profiles_id'],
                 'name'        => 'plugin_mydashboard_groupprofile'])) {
                 $profile->update(['id'     => $profile->fields['id'],
-                    'rights' => $_POST["use_group_profile"]]);
+                    'rights' => $use_group_profile]);
             } else {
                 $profile->add(['profiles_id' => $_POST['profiles_id'],
                     'name'        => 'plugin_mydashboard_groupprofile',
-                    'rights'      => $_POST["use_group_profile"]]);
+                    'rights'      => $use_group_profile]);
             }
         }
         Html::back();

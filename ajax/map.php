@@ -43,6 +43,18 @@ if (!isset($_POST['itemtype']) || !isset($_POST['params'])) {
     $itemtype = $_POST['itemtype'];
     $params   = $_POST['params'];
 
+    // Validate the client-supplied itemtype against an allow-list (consistent with dropdownType.php)
+    // so it cannot flow unchecked into field-name construction or a future dynamic instantiation.
+    $allowed_itemtypes = ['Ticket', 'Change', 'Problem'];
+    if (!in_array($itemtype, $allowed_itemtypes, true)) {
+        http_response_code(400);
+        echo json_encode(
+            ['success' => false, 'message' => __('Invalid itemtype')],
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
+        return;
+    }
+
     $data = Search::prepareDatasForSearch('Ticket', $params);
     Search::constructSQL($data);
     Search::constructData($data);
