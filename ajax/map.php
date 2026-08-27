@@ -47,40 +47,38 @@ if (!isset($_POST['itemtype']) || !isset($_POST['params'])) {
     // so it cannot flow unchecked into field-name construction or a future dynamic instantiation.
     $allowed_itemtypes = ['Ticket', 'Change', 'Problem'];
     if (!in_array($itemtype, $allowed_itemtypes, true)) {
+        // Route the error through $result so it flows to the single json_encode() sink below
+        // (a separate echo would be an extra tainted-HTML sink outside the shared response path).
         http_response_code(400);
-        echo json_encode(
-            ['success' => false, 'message' => __('Invalid itemtype')],
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
-        );
-        return;
-    }
+        $result = ['success' => false, 'message' => __('Invalid itemtype')];
+    } else {
+        $data = Search::prepareDatasForSearch('Ticket', $params);
+        Search::constructSQL($data);
+        Search::constructData($data);
 
-    $data = Search::prepareDatasForSearch('Ticket', $params);
-    Search::constructSQL($data);
-    Search::constructData($data);
+        $lat_field = $itemtype . '_998';
+        $lng_field = $itemtype . '_999';
+        $name_field = $itemtype . '_3';
 
-    $lat_field = $itemtype . '_998';
-    $lng_field = $itemtype . '_999';
-    $name_field = $itemtype . '_3';
+        $rows   = $data['data']['rows'];
+        $points = [];
+        foreach ($rows as $row) {
+            $idx = $row['raw']["ITEM_$lat_field"] . ',' . $row['raw']["ITEM_$lng_field"];
 
-    $rows   = $data['data']['rows'];
-    $points = [];
-    foreach ($rows as $row) {
-        $idx = $row['raw']["ITEM_$lat_field"] . ',' . $row['raw']["ITEM_$lng_field"];
-
-        if (isset($points[$idx])) {
-            $points[$idx]['count'] += 1;
-        } else {
-            $points[$idx] = [
-                'lat'    => $row['raw']["ITEM_$lat_field"],
-                'lng'    => $row['raw']["ITEM_$lng_field"],
-                'title'  => $row['raw']["ITEM_$name_field"],
-                'loc_id' => $row['raw']['loc_id'],
-                'count'  => 1,
-            ];
+            if (isset($points[$idx])) {
+                $points[$idx]['count'] += 1;
+            } else {
+                $points[$idx] = [
+                    'lat'    => $row['raw']["ITEM_$lat_field"],
+                    'lng'    => $row['raw']["ITEM_$lng_field"],
+                    'title'  => $row['raw']["ITEM_$name_field"],
+                    'loc_id' => $row['raw']['loc_id'],
+                    'count'  => 1,
+                ];
+            }
         }
+        $result['points'] = $points;
     }
-    $result['points'] = $points;
 }
 
 // Escape HTML-significant characters so the DB-derived labels cannot be
