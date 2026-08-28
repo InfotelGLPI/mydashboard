@@ -53,9 +53,15 @@ ini_set("max_execution_time", "0");
 
 chdir(dirname($_SERVER["argv"][0]));
 
-define("GLPI_DIR_ROOT", realpath(dirname($_SERVER["argv"][0]) . "/../../../.."));
+// __DIR__ is the launcher's absolute directory regardless of the cwd or of how the
+// script path was passed (relative or absolute), unlike $_SERVER['argv'][0] which
+// stays relative after the chdir() above and would make realpath() return false.
+define("GLPI_DIR_ROOT", realpath(__DIR__ . "/../../../.."));
 require_once GLPI_DIR_ROOT . '/vendor/autoload.php';
 $kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
+// Boot the kernel so the GLPI_* constants (GLPI_LOG_DIR, GLPI_LOCK_DIR) used below
+// are defined.
+$kernel->boot();
 
 $logfilename = GLPI_LOG_DIR . "/insert_stock_tickets.log";
 

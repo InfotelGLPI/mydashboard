@@ -46,9 +46,15 @@ $DBCONNECTION_REQUIRED = 1;
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
-define("GLPI_DIR_ROOT", realpath(dirname($_SERVER["SCRIPT_FILENAME"]) . "/../../../.."));
+// __DIR__ is the script's absolute directory regardless of the cwd or of how the
+// script path was passed (relative or absolute), unlike $_SERVER['SCRIPT_FILENAME']
+// which stays relative after the chdir() above and would make realpath() return false.
+define("GLPI_DIR_ROOT", realpath(__DIR__ . "/../../../.."));
 require_once GLPI_DIR_ROOT . '/vendor/autoload.php';
 $kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
+// Boot the kernel so the DB connection ($DB), $CFG_GLPI and the GLPI_* constants
+// are initialized; without it $DB stays null and any query fatals.
+$kernel->boot();
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
 
