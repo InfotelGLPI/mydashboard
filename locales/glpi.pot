@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 09:40+0000\n"
+"POT-Creation-Date: 2026-08-28 13:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -932,9 +932,9 @@ msgstr ""
 msgid "Please reload your page."
 msgstr ""
 
-#: public/scripts/insert_stock_ticketindicators.php:66
-#: public/scripts/clean_stock_tickets.php:146
-#: public/scripts/insert_stock_tickets.php:66
+#: public/scripts/insert_stock_ticketindicators.php:72
+#: public/scripts/clean_stock_tickets.php:152
+#: public/scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr ""
 
