@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 13:20+0000\n"
+"POT-Creation-Date: 2026-08-29 10:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,6 +66,10 @@ msgstr ""
 msgid "> 6 years"
 msgstr ""
 
+#: src/Alert.php:3566
+msgid "A network alert can impact you and will avoid creating a ticket"
+msgstr ""
+
 #: src/Menu.php:459 src/Menu.php:725
 msgid "Add widgets"
 msgstr ""
@@ -90,6 +94,12 @@ msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/Alert.php:3618
+msgid ""
+"Alert is not properly configured or is not reachable (or exceeded the "
+"timeout)"
+msgstr ""
 
 #: src/ItilAlert.php:157 src/Alert.php:3361 src/Alert.php:3506
 msgid "Alert level"
@@ -247,7 +257,8 @@ msgstr ""
 msgid "Contracts status"
 msgstr ""
 
-#: src/ItilAlert.php:67 src/ItilAlert.php:70 src/Alert.php:3421
+#: src/ItilAlert.php:67 src/ItilAlert.php:70 src/Alert.php:3416
+#: src/Alert.php:3421
 msgid "Create a new alert"
 msgstr ""
 
@@ -352,6 +363,12 @@ msgstr ""
 
 #: src/Reports/Reports_Bar.php:137
 msgid "Display of Top ten ticket categories by type of ticket"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:148
+msgid ""
+"Display of average real duration of treatment of tickets (actiontime of "
+"tasks)"
 msgstr ""
 
 #: src/Alert.php:193
@@ -495,7 +512,7 @@ msgstr ""
 msgid "Global indicators"
 msgstr ""
 
-#: src/Alert.php:247
+#: src/Alert.php:247 src/Alert.php:4337
 msgid "Global indicators by week"
 msgstr ""
 
@@ -535,8 +552,24 @@ msgstr ""
 msgid "Incidents in progress"
 msgstr ""
 
+#: src/Alert.php:2228
+msgid "Incidents where time to own is exceeded"
+msgstr ""
+
 #: src/Alert.php:2081
 msgid "Incidents where time to own will be exceeded"
+msgstr ""
+
+#: src/Alert.php:2305
+msgid "Incidents where time to resolve is exceeded"
+msgstr ""
+
+#: src/Alert.php:2152
+msgid "Incidents where time to resolve will be exceeded"
+msgstr ""
+
+#: src/Alert.php:1582 src/Alert.php:1596
+msgid "Incidents with very high or major priority"
 msgstr ""
 
 #: src/Widget.php:244
@@ -566,12 +599,16 @@ msgstr ""
 msgid "Inventory stock alerts"
 msgstr ""
 
-#: src/Criterias/Other.php:462
+#: src/Criterias/Other.php:245 src/Criterias/Other.php:462
 msgid "Last month"
 msgstr ""
 
 #: src/Reports/Reports_Bar.php:215
 msgid "Last synchronization of computers by month"
+msgstr ""
+
+#: src/Criterias/Other.php:251
+msgid "Last year"
 msgstr ""
 
 #: src/Config.php:342
@@ -617,8 +654,9 @@ msgid "Modification date"
 msgstr ""
 
 #: src/Criterias/Month.php:54 src/Criterias/Month.php:69
-#: src/Criterias/Other.php:429 src/Criterias/Other.php:463
-#: src/Criterias/Other.php:488 ajax/dropdownMonth.php:44
+#: src/Criterias/Other.php:263 src/Criterias/Other.php:429
+#: src/Criterias/Other.php:463 src/Criterias/Other.php:488
+#: ajax/dropdownMonth.php:44
 msgid "Month"
 msgstr ""
 
@@ -670,11 +708,11 @@ msgstr[1] ""
 msgid "New document"
 msgstr ""
 
-#: src/Alert.php:1439
+#: src/Alert.php:1425 src/Alert.php:1439
 msgid "New incidents"
 msgstr ""
 
-#: src/Alert.php:1441
+#: src/Alert.php:1430 src/Alert.php:1441
 msgid "New requests"
 msgstr ""
 
@@ -782,6 +820,10 @@ msgstr ""
 msgid "Number of in progress (not new and pending) tickets by week"
 msgstr ""
 
+#: src/Reports/Reports_Line.php:128
+msgid "Number of open tickets in the month still in progress for each month"
+msgstr ""
+
 #: src/Reports/Reports_Line.php:85 src/Reports/Reports_Line.php:615
 msgid "Number of opened and closed tickets by month"
 msgstr ""
@@ -870,6 +912,14 @@ msgstr ""
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr ""
 
+#: src/Alert.php:1500 src/Alert.php:1516
+msgid "Opened incidents without assigned technicians"
+msgstr ""
+
+#: src/Alert.php:1505 src/Alert.php:1521
+msgid "Opened requests without assigned technicians"
+msgstr ""
+
 #: src/Reports/Reports_Bar.php:1802 src/Reports/Reports_Line.php:620
 #: src/Reports/Reports_Line.php:897 src/Reports/Reports_Line.php:1264
 #: src/Reports/Reports_Pie.php:1052 src/Reports/Reports_Pie.php:1055
@@ -955,6 +1005,10 @@ msgstr ""
 msgid "Problem with GLPI"
 msgstr ""
 
+#: src/Alert.php:1639 src/Alert.php:1646
+msgid "Problems with very high or major priority"
+msgstr ""
+
 #: src/Reports/Reports_Bar.php:130
 msgid "Process time by technicians by month"
 msgstr ""
@@ -1026,8 +1080,24 @@ msgstr ""
 msgid "Requests in progress"
 msgstr ""
 
+#: src/Alert.php:2235
+msgid "Requests where time to own is exceeded"
+msgstr ""
+
 #: src/Alert.php:2085
 msgid "Requests where time to own will be exceeded"
+msgstr ""
+
+#: src/Alert.php:2312
+msgid "Requests where time to resolve is exceeded"
+msgstr ""
+
+#: src/Alert.php:2159
+msgid "Requests where time to resolve will be exceeded"
+msgstr ""
+
+#: src/Alert.php:1587 src/Alert.php:1601
+msgid "Requests with very high or major priority"
 msgstr ""
 
 #: src/Reports/Reports_Line.php:898
@@ -1231,7 +1301,7 @@ msgstr ""
 msgid "Tasks duration (minutes)"
 msgstr ""
 
-#: src/Criterias/Other.php:366
+#: src/Criterias/Other.php:221 src/Criterias/Other.php:366
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] ""
@@ -1249,7 +1319,7 @@ msgstr ""
 msgid "The widget was added to dashboard. Save the dashboard."
 msgstr ""
 
-#: src/Alert.php:2357
+#: src/Alert.php:2357 src/Alert.php:3214
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
@@ -1398,7 +1468,7 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: src/Criterias/Other.php:460
+#: src/Criterias/Other.php:257 src/Criterias/Other.php:460
 msgid "Year to date"
 msgstr ""
 
