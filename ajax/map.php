@@ -52,7 +52,7 @@ if (!isset($_POST['itemtype']) || !isset($_POST['params'])) {
         http_response_code(400);
         $result = ['success' => false, 'message' => __('Invalid itemtype')];
     } else {
-        $data = Search::prepareDatasForSearch('Ticket', $params);
+        $data = Search::prepareDatasForSearch($itemtype, $params);
         Search::constructSQL($data);
         Search::constructData($data);
 

@@ -44,6 +44,63 @@ if (!isset($_POST)) {
 } elseif (!empty($_POST)) {
     $gsIdName = $_POST['gsId'];
     unset($_POST['gsId']);
+
+    // Whitelist the DataTables state before persisting it: keep only the keys the
+    // table state is expected to carry, coerced to strict types, and drop anything
+    // else a client might inject. This mirrors the grid normalization already applied
+    // in saveGrid.php so the grid_statesave column cannot store an arbitrary client
+    // payload verbatim (defense in depth against a future consumer that would render
+    // this state as HTML). profiles_id, a client-side routing hint, is intentionally
+    // not part of the persisted state.
+    $raw_state   = $_POST;
+    $to_bool     = static function ($value): bool {
+        return $value === true || $value === 1 || $value === '1' || $value === 'true';
+    };
+    $safe_search = static function ($search) use ($to_bool): array {
+        $search = is_array($search) ? $search : [];
+        return [
+            'search'          => (string) ($search['search'] ?? ''),
+            'smart'           => $to_bool($search['smart'] ?? true),
+            'regex'           => $to_bool($search['regex'] ?? false),
+            'caseInsensitive' => $to_bool($search['caseInsensitive'] ?? true),
+        ];
+    };
+    $safe_state = [];
+    if (isset($raw_state['time'])) {
+        $safe_state['time'] = (int) $raw_state['time'];
+    }
+    if (isset($raw_state['start'])) {
+        $safe_state['start'] = (int) $raw_state['start'];
+    }
+    if (isset($raw_state['length'])) {
+        $safe_state['length'] = (int) $raw_state['length'];
+    }
+    if (isset($raw_state['order']) && is_array($raw_state['order'])) {
+        $safe_state['order'] = [];
+        foreach ($raw_state['order'] as $rule) {
+            if (!is_array($rule) || !isset($rule[0], $rule[1])) {
+                continue;
+            }
+            $safe_state['order'][] = [
+                (int) $rule[0],
+                strtolower((string) $rule[1]) === 'desc' ? 'desc' : 'asc',
+            ];
+        }
+    }
+    if (isset($raw_state['search'])) {
+        $safe_state['search'] = $safe_search($raw_state['search']);
+    }
+    if (isset($raw_state['columns']) && is_array($raw_state['columns'])) {
+        $safe_state['columns'] = [];
+        foreach ($raw_state['columns'] as $column) {
+            $column = is_array($column) ? $column : [];
+            $safe_state['columns'][] = [
+                'visible' => $to_bool($column['visible'] ?? true),
+                'search'  => $safe_search($column['search'] ?? []),
+            ];
+        }
+    }
+
     $dashboardWidgets = new Widget();
     $dashboardWidgets->getFromDBByCrit(['name' => $gsIdName]);
 
@@ -74,14 +131,14 @@ if (!isset($_POST)) {
                     $arrayFinal[$key] = $grid_saved;
                     if ($key == $gsId) {
                         $gsExist           = true;
-                        $arrayFinal[$gsId] = $_POST;
+                        $arrayFinal[$gsId] = $safe_state;
                     }
                 }
                 if (!$gsExist) {
-                    $arrayFinal[$gsId] = $_POST;
+                    $arrayFinal[$gsId] = $safe_state;
                 }
             } else {
-                $arrayFinal[$gsId] = $_POST;
+                $arrayFinal[$gsId] = $safe_state;
             }
             $res = json_encode($arrayFinal, JSON_NUMERIC_CHECK);
             $res = str_replace(['"true"', '"false"'], ['true', 'false'], $res);
@@ -90,7 +147,7 @@ if (!isset($_POST)) {
                 'grid_statesave' => $res]);
             $result = [
                 'success' => true,
-                'message' => $_POST,
+                'message' => $safe_state,
             ];
         }
     }

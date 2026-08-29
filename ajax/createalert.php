@@ -53,8 +53,8 @@ if (isset($_POST['itemtype'])) {
             // require UPDATE. can() also loads the record into $item->fields.
             if ($item->can($_POST['items_id'], UPDATE)) {
                 $reminder     = new Reminder();
-                $reminders_id = $reminder->add(['name'     => addslashes($item->fields['name']),
-                    'text'     => addslashes($item->fields['comment']),
+                $reminders_id = $reminder->add(['name'     => $item->fields['name'],
+                    'text'     => $item->fields['comment'],
                     'users_id' => $_SESSION['glpiID']]);
 
                 $item->update(['id'           => $_POST['items_id'],
@@ -67,8 +67,8 @@ if (isset($_POST['itemtype'])) {
             // copying its name/content into a reminder. can() also loads $item->fields.
             if ($item->can($_POST['items_id'], READ)) {
                 $reminder = new Reminder();
-                $reminders_id = $reminder->add(['name' => addslashes($item->fields['name']),
-                    'text' => addslashes($item->fields['content']),
+                $reminders_id = $reminder->add(['name' => $item->fields['name'],
+                    'text' => $item->fields['content'],
                     'users_id' => $_SESSION['glpiID']]);
                 $alert = new ItilAlert();
                 $alert->add(['items_id' => $_POST['items_id'],
@@ -84,8 +84,8 @@ if (isset($_POST['itemtype'])) {
                 $name = method_exists($item, "getNameAlert") ? $item->getNameAlert() : $item->fields["name"];
                 $content = method_exists($item, "getContentAlert") ? $item->getContentAlert() : $item->fields["content"];
                 $reminder     = new Reminder();
-                $reminders_id = $reminder->add(['name'     => addslashes($name),
-                    'text'     => addslashes($content),
+                $reminders_id = $reminder->add(['name'     => $name,
+                    'text'     => $content,
                     'users_id' => $_SESSION['glpiID']]);
                 $alert        = new ItilAlert();
                 $alert->add(['items_id'  => $_POST['items_id'],
