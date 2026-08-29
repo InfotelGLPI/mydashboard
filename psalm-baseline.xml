@@ -27,10 +27,8 @@
   <file src="ajax/state_save.php">
     <TaintedHtml>
       <code><![CDATA[json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>
-      <code><![CDATA[json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>
     </TaintedHtml>
     <TaintedTextWithQuotes>
-      <code><![CDATA[json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>
       <code><![CDATA[json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>
     </TaintedTextWithQuotes>
   </file>
