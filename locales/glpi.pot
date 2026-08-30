@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 11:25+0000\n"
+"POT-Creation-Date: 2026-08-30 08:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "1 row selected"
 msgstr ""
 
-#: src/Widget.php:657
+#: src/Widget.php:651
 msgid "10 rows"
 msgstr ""
 
@@ -34,7 +34,7 @@ msgstr ""
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:658
+#: src/Widget.php:652
 msgid "25 rows"
 msgstr ""
 
@@ -42,11 +42,11 @@ msgstr ""
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:656
+#: src/Widget.php:650
 msgid "5 rows"
 msgstr ""
 
-#: src/Widget.php:659
+#: src/Widget.php:653
 msgid "50 rows"
 msgstr ""
 
@@ -66,11 +66,15 @@ msgstr ""
 msgid "> 6 years"
 msgstr ""
 
-#: src/Alert.php:3566
+#: src/Alert.php:3487
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 
-#: src/Menu.php:459 src/Menu.php:725
+#: templates/configtranslation_list.html.twig:33
+msgid "Add a new translation"
+msgstr ""
+
+#: src/Menu.php:725
 msgid "Add widgets"
 msgstr ""
 
@@ -82,34 +86,38 @@ msgstr ""
 msgid "Age pyramid"
 msgstr ""
 
-#: src/ItilAlert.php:134 src/Alert.php:3339 src/Alert.php:3342
-#: src/Alert.php:3483
+#: src/Alert.php:3326 templates/alert_form.html.twig:31
+#: templates/itilalert_item.html.twig:63
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Alert.php:91
+#: src/Alert.php:92
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Alert.php:3618
+#: src/Alert.php:3539
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
 
-#: src/ItilAlert.php:157 src/Alert.php:3361 src/Alert.php:3506
+#: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
 msgid "Alert level"
+msgstr ""
+
+#: templates/stockwidget_form.html.twig:58
+msgid "Alert threshold"
 msgstr ""
 
 #: src/Dashboard.php:152
 msgid "All bar charts"
 msgstr ""
 
-#: src/Alert.php:3379
+#: src/Alert.php:3327
 msgid "All categories"
 msgstr ""
 
@@ -137,15 +145,15 @@ msgstr ""
 msgid "Applied changes"
 msgstr ""
 
-#: src/ProfileAuthorizedWidget.php:105
+#: templates/profileauthorizedwidget_form.html.twig:37
 msgid "Authorize/Unauthorize all"
 msgstr ""
 
-#: src/ProfileAuthorizedWidget.php:93
+#: templates/profileauthorizedwidget_form.html.twig:31
 msgid "Authorized widgets"
 msgstr ""
 
-#: src/Alert.php:186
+#: src/Alert.php:187
 msgid "Automatic actions in error"
 msgstr ""
 
@@ -169,20 +177,19 @@ msgstr ""
 msgid "Backlog tickets by week"
 msgstr ""
 
-#: src/Widget.php:250
+#: src/Widget.php:244
 msgid "Bar charts"
 msgstr ""
 
-#: src/Menu.php:541 src/Menu.php:543 src/Menu.php:600 src/Menu.php:602
 #: src/Menu.php:749 src/Menu.php:828
 msgid "Block drag / resize widgets"
 msgstr ""
 
-#: src/Config.php:383
+#: templates/config_form.html.twig:88
 msgid "Can take many time if you have many tickets"
 msgstr ""
 
-#: src/StockWidget.php:67
+#: src/StockWidget.php:68
 msgid "Cannot create alert without a type"
 msgstr ""
 
@@ -208,7 +215,7 @@ msgstr ""
 msgid "Changes to be processed"
 msgstr ""
 
-#: src/Alert.php:183 src/Alert.php:489
+#: src/Alert.php:184 src/Alert.php:490
 msgid "Check if GLPI have no problem"
 msgstr ""
 
@@ -216,11 +223,11 @@ msgstr ""
 msgid "Child locations"
 msgstr ""
 
-#: src/Widget.php:152 src/Widget.php:190
+#: src/Widget.php:184 templates/widget_form.html.twig:37
 msgid "Class"
 msgstr ""
 
-#: src/Menu.php:525 src/Menu.php:527 src/Menu.php:740
+#: src/Menu.php:740
 msgid "Clear grid"
 msgstr ""
 
@@ -228,7 +235,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/Menu.php:560 src/Menu.php:562 src/Menu.php:802
+#: src/Menu.php:802
 msgid "Close edit mode"
 msgstr ""
 
@@ -241,11 +248,15 @@ msgstr ""
 msgid "Column visibility"
 msgstr ""
 
+#: templates/itilalert_item.html.twig:54 templates/alert_item.html.twig:54
+msgid "Comment"
+msgstr ""
+
 #: src/Reports/Reports_Bar.php:2833
 msgid "Computers number"
 msgstr ""
 
-#: src/Profile.php:191
+#: src/Profile.php:182
 msgid "Configuration Access"
 msgstr ""
 
@@ -257,12 +268,12 @@ msgstr ""
 msgid "Contracts status"
 msgstr ""
 
-#: src/ItilAlert.php:67 src/ItilAlert.php:70 src/Alert.php:3416
-#: src/Alert.php:3421
+#: src/ItilAlert.php:73 src/Alert.php:3423
+#: templates/itilalert_item.html.twig:36 templates/alert_item.html.twig:36
 msgid "Create a new alert"
 msgstr ""
 
-#: src/Alert.php:3640
+#: src/Alert.php:3561
 msgid "Curl PHP package not installed"
 msgstr ""
 
@@ -270,7 +281,7 @@ msgstr ""
 msgid "Current year"
 msgstr ""
 
-#: src/Profile.php:177
+#: templates/profile.html.twig:39
 msgid "Custom"
 msgstr ""
 
@@ -278,7 +289,7 @@ msgstr ""
 msgid "Custom Widgets"
 msgstr ""
 
-#: src/Menu.php:627 src/Menu.php:629 src/Menu.php:843
+#: src/Menu.php:843
 msgid "Custom and save profile grid"
 msgstr ""
 
@@ -289,7 +300,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: src/Profile.php:179
+#: src/Profile.php:171
 msgid "Dashboard Access"
 msgstr ""
 
@@ -313,11 +324,11 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: src/Groupprofile.php:70
+#: templates/groupprofile_form.html.twig:32
 msgid "Default dashboard group"
 msgstr ""
 
-#: src/Groupprofile.php:82
+#: templates/groupprofile_form.html.twig:38
 msgid "Default groups"
 msgstr ""
 
@@ -333,27 +344,27 @@ msgstr ""
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr ""
 
-#: src/Alert.php:219 src/Alert.php:2340
+#: src/Alert.php:220 src/Alert.php:2341
 msgid "Display alerts for SLA of Incidents tickets"
 msgstr ""
 
-#: src/Alert.php:229 src/Alert.php:2343
+#: src/Alert.php:230 src/Alert.php:2344
 msgid "Display alerts for SLA of Requests tickets"
 msgstr ""
 
-#: src/Alert.php:214 src/Alert.php:1683
+#: src/Alert.php:215 src/Alert.php:1684
 msgid "Display alerts for incidents and problems"
 msgstr ""
 
-#: src/Alert.php:201
+#: src/Alert.php:202
 msgid "Display alerts for inventory stocks"
 msgstr ""
 
-#: src/Alert.php:234 src/Alert.php:1686
+#: src/Alert.php:235 src/Alert.php:1687
 msgid "Display alerts for requests"
 msgstr ""
 
-#: src/Alert.php:188
+#: src/Alert.php:189
 msgid "Display automatic actions in error"
 msgstr ""
 
@@ -371,7 +382,7 @@ msgid ""
 "tasks)"
 msgstr ""
 
-#: src/Alert.php:193
+#: src/Alert.php:194
 msgid "Display of mails which are not imported"
 msgstr ""
 
@@ -391,7 +402,7 @@ msgstr ""
 msgid "Display percent of solution types for tickets"
 msgstr ""
 
-#: src/Alert.php:224
+#: src/Alert.php:225
 msgid "Display tickets where last modification is a user action"
 msgstr ""
 
@@ -407,15 +418,15 @@ msgstr ""
 msgid "Display unpublished articles of Knowbase"
 msgstr ""
 
-#: src/Alert.php:206
+#: src/Alert.php:207
 msgid "Display your equipments"
 msgstr ""
 
-#: src/Menu.php:464 src/Menu.php:713
+#: src/Menu.php:713
 msgid "Edit mode"
 msgstr ""
 
-#: src/Config.php:303
+#: templates/config_form.html.twig:32
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
@@ -425,10 +436,6 @@ msgstr ""
 
 #: src/Criterias/DisplayData.php:164 ajax/dropdownUpdateDisplaydata.php:93
 msgid "End year"
-msgstr ""
-
-#: src/Menu.php:581
-msgid "Error"
 msgstr ""
 
 #: src/Reports/Reports_Bar.php:203
@@ -459,11 +466,16 @@ msgstr ""
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
+#: templates/configtranslation_list.html.twig:66
+#: templates/configtranslation_form.html.twig:46
+msgid "Field"
+msgstr ""
+
 #: src/Criterias/FilterDate.php:101
 msgid "Filter date"
 msgstr ""
 
-#: src/Widget.php:115
+#: src/Widget.php:116
 msgid "Filters"
 msgstr ""
 
@@ -471,20 +483,19 @@ msgstr ""
 msgid "Find a widget"
 msgstr ""
 
-#: src/PreferenceUserBlacklist.php:68
+#: templates/preferenceuserblacklist_form.html.twig:32
 msgid "From which plugins you want to display the widgets?"
 msgstr ""
 
-#: src/Profile.php:177
+#: templates/profile.html.twig:38
 msgid "Full"
 msgstr ""
 
-#: src/Menu.php:553 src/Menu.php:555 src/Menu.php:639 src/Menu.php:641
 #: src/Menu.php:851
 msgid "Fullscreen"
 msgstr ""
 
-#: src/Alert.php:181 src/Alert.php:488
+#: src/Alert.php:182 src/Alert.php:489
 msgid "GLPI Status"
 msgstr ""
 
@@ -492,7 +503,7 @@ msgstr ""
 msgid "GLPI admin grid"
 msgstr ""
 
-#: src/Alert.php:3612
+#: src/Alert.php:3533
 msgid "GLPI is OK"
 msgstr ""
 
@@ -500,7 +511,7 @@ msgstr ""
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:466 src/Menu.php:715
+#: src/Menu.php:715
 msgid "Global"
 msgstr ""
 
@@ -508,11 +519,11 @@ msgstr ""
 msgid "Global filter"
 msgstr ""
 
-#: src/Alert.php:242 src/Alert.php:4336 src/Alert.php:4363
+#: src/Alert.php:243 src/Alert.php:4257 src/Alert.php:4284
 msgid "Global indicators"
 msgstr ""
 
-#: src/Alert.php:247 src/Alert.php:4337
+#: src/Alert.php:248 src/Alert.php:4258
 msgid "Global indicators by week"
 msgstr ""
 
@@ -528,11 +539,15 @@ msgstr ""
 msgid "Helpdesk technician grid"
 msgstr ""
 
-#: src/Reports/Ticket.php:506 src/Reports/Ticket.php:945 src/Alert.php:536
+#: src/Reports/Ticket.php:506 src/Reports/Ticket.php:945 src/Alert.php:537
 msgid "ID and priority"
 msgstr ""
 
-#: src/Config.php:320
+#: templates/stockwidget_form.html.twig:56
+msgid "Icon"
+msgstr ""
+
+#: templates/config_form.html.twig:48
 msgid "Impact colors for alerts"
 msgstr ""
 
@@ -544,40 +559,40 @@ msgstr ""
 msgid "Incidents"
 msgstr ""
 
-#: src/Alert.php:212 src/Alert.php:1682
+#: src/Alert.php:213 src/Alert.php:1683
 msgid "Incidents alerts"
 msgstr ""
 
-#: src/Alert.php:4133 src/Alert.php:4393
+#: src/Alert.php:4054 src/Alert.php:4314
 msgid "Incidents in progress"
 msgstr ""
 
-#: src/Alert.php:2228
+#: src/Alert.php:2229
 msgid "Incidents where time to own is exceeded"
 msgstr ""
 
-#: src/Alert.php:2081
+#: src/Alert.php:2082
 msgid "Incidents where time to own will be exceeded"
 msgstr ""
 
-#: src/Alert.php:2305
+#: src/Alert.php:2306
 msgid "Incidents where time to resolve is exceeded"
 msgstr ""
 
-#: src/Alert.php:2152
+#: src/Alert.php:2153
 msgid "Incidents where time to resolve will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1582 src/Alert.php:1596
+#: src/Alert.php:1583 src/Alert.php:1597
 msgid "Incidents with very high or major priority"
 msgstr ""
 
-#: src/Widget.php:244
+#: src/Widget.php:238
 msgid "Indicators"
 msgstr ""
 
-#: src/Config.php:411 src/Config.php:599 src/ItilAlert.php:139
-#: src/Alert.php:176 src/Alert.php:3344 src/Alert.php:3488
+#: src/Config.php:398 src/Config.php:586 src/ItilAlert.php:119
+#: src/Alert.php:177 src/Alert.php:3362
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
@@ -587,7 +602,7 @@ msgstr[1] ""
 msgid "Internal annuary"
 msgstr ""
 
-#: src/Widget.php:139 src/Widget.php:181
+#: src/Widget.php:175 templates/widget_form.html.twig:32
 msgid "Internal name"
 msgstr ""
 
@@ -595,8 +610,21 @@ msgstr ""
 msgid "Inventory admin grid"
 msgstr ""
 
-#: src/Alert.php:199
+#: src/Alert.php:200
 msgid "Inventory stock alerts"
+msgstr ""
+
+#: templates/stockwidget_form.html.twig:51
+msgid "Item state"
+msgstr ""
+
+#: templates/stockwidget_form.html.twig:35
+msgid "Item type"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:65
+#: templates/configtranslation_form.html.twig:32
+msgid "Language"
 msgstr ""
 
 #: src/Criterias/Other.php:245 src/Criterias/Other.php:462
@@ -611,23 +639,27 @@ msgstr ""
 msgid "Last year"
 msgstr ""
 
-#: src/Config.php:342
+#: templates/config_form.html.twig:64
 msgid "Level of categories to show"
 msgstr ""
 
-#: src/Widget.php:252
+#: src/Widget.php:246
 msgid "Line charts"
 msgstr ""
 
-#: src/ItilAlert.php:96 src/Alert.php:3446
+#: templates/itilalert_item.html.twig:47 templates/alert_item.html.twig:47
 msgid "Linked reminder"
 msgstr ""
 
-#: src/ItilAlert.php:168 src/Alert.php:3372 src/Alert.php:3517
+#: templates/alert_form.html.twig:42 templates/itilalert_item.html.twig:74
 msgid "Linked with a ticket category"
 msgstr ""
 
-#: src/Menu.php:486 src/Menu.php:758 src/Menu.php:759
+#: templates/configtranslation_list.html.twig:59
+msgid "List of translations"
+msgstr ""
+
+#: src/Menu.php:758 src/Menu.php:759
 msgid "Load a predefined grid"
 msgstr ""
 
@@ -637,7 +669,7 @@ msgid_plural "Locations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Widget.php:254
+#: src/Widget.php:248
 msgid "Map"
 msgstr ""
 
@@ -664,7 +696,7 @@ msgstr ""
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: src/Config.php:66 src/Preference.php:85 src/Menu.php:113 src/Menu.php:820
+#: src/Config.php:67 src/Preference.php:85 src/Menu.php:113 src/Menu.php:820
 #: src/Menu.php:1797 setup.php:203
 msgid "My Dashboard"
 msgstr ""
@@ -697,31 +729,36 @@ msgstr ""
 msgid "My view"
 msgstr ""
 
-#: src/Config.php:409 src/Config.php:597 src/ItilAlert.php:137
-#: src/Alert.php:166 src/Alert.php:3486
+#: templates/stockwidget_form.html.twig:32
+#: templates/itilalert_item.html.twig:50 templates/alert_item.html.twig:50
+msgid "Name"
+msgstr ""
+
+#: src/Config.php:396 src/Config.php:584 src/ItilAlert.php:117
+#: src/Alert.php:167 src/Alert.php:3453
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Alert.php:646
+#: src/Alert.php:647
 msgid "New document"
 msgstr ""
 
-#: src/Alert.php:1425 src/Alert.php:1439
+#: src/Alert.php:1426 src/Alert.php:1440
 msgid "New incidents"
 msgstr ""
 
-#: src/Alert.php:1430 src/Alert.php:1441
+#: src/Alert.php:1431 src/Alert.php:1442
 msgid "New requests"
 msgstr ""
 
-#: src/Reports/Ticket.php:113 src/Reports/Ticket.php:1610 src/Alert.php:3967
-#: src/Alert.php:4375
+#: src/Reports/Ticket.php:113 src/Reports/Ticket.php:1610 src/Alert.php:3888
+#: src/Alert.php:4296
 msgid "New tickets"
 msgstr ""
 
-#: src/Alert.php:1029
+#: src/Alert.php:1030
 msgid "No alerts are setup"
 msgstr ""
 
@@ -729,7 +766,7 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Widget.php:844 src/Chart.php:186 src/Menu.php:1368
+#: src/Widget.php:838 src/Chart.php:186 src/Menu.php:1368
 msgid "No data available"
 msgstr ""
 
@@ -745,15 +782,15 @@ msgstr ""
 msgid "No data received for"
 msgstr ""
 
-#: src/Widget.php:1178
+#: src/Widget.php:1172
 msgid "No equipments founded"
 msgstr ""
 
-#: src/ItilAlert.php:152 src/Alert.php:3356 src/Alert.php:3501
+#: src/ItilAlert.php:122 src/Alert.php:3365
 msgid "No impact"
 msgstr ""
 
-#: src/Alert.php:2821 src/Widget.php:1039
+#: src/Alert.php:2822 src/Widget.php:1033
 msgid "No informations founded"
 msgstr ""
 
@@ -761,12 +798,16 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Alert.php:3040 src/Alert.php:3307 src/Widget.php:902
+#: src/Alert.php:3041 src/Alert.php:3308 src/Widget.php:896
 msgid "No problem detected"
 msgstr ""
 
-#: src/Alert.php:2558 src/Widget.php:971
+#: src/Alert.php:2559 src/Widget.php:965
 msgid "No scheduled maintenance"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:42
+msgid "No translation has been added yet"
 msgstr ""
 
 #: src/Widgetlist.php:432
@@ -785,7 +826,7 @@ msgstr ""
 msgid "Not an array"
 msgstr ""
 
-#: src/Alert.php:191
+#: src/Alert.php:192
 msgid "Not imported mails in collectors"
 msgstr ""
 
@@ -912,11 +953,11 @@ msgstr ""
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr ""
 
-#: src/Alert.php:1500 src/Alert.php:1516
+#: src/Alert.php:1501 src/Alert.php:1517
 msgid "Opened incidents without assigned technicians"
 msgstr ""
 
-#: src/Alert.php:1505 src/Alert.php:1521
+#: src/Alert.php:1506 src/Alert.php:1522
 msgid "Opened requests without assigned technicians"
 msgstr ""
 
@@ -939,7 +980,7 @@ msgstr ""
 msgid "Palette color"
 msgstr ""
 
-#: src/Alert.php:4068 src/Alert.php:4387
+#: src/Alert.php:3989 src/Alert.php:4308
 msgid "Pending tickets"
 msgstr ""
 
@@ -959,7 +1000,6 @@ msgstr ""
 msgid "Period"
 msgstr ""
 
-#: src/Menu.php:533 src/Menu.php:535 src/Menu.php:618 src/Menu.php:620
 #: src/Menu.php:745 src/Menu.php:838
 msgid "Permit drag / resize widgets"
 msgstr ""
@@ -970,16 +1010,12 @@ msgid_plural "Personal RSS feeds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Widget.php:248
+#: src/Widget.php:242
 msgid "Pie charts"
 msgstr ""
 
 #: front/config.php:47
 msgid "Please activate the plugin"
-msgstr ""
-
-#: src/Menu.php:582
-msgid "Please reload your page."
 msgstr ""
 
 #: public/scripts/insert_stock_ticketindicators.php:72
@@ -988,7 +1024,7 @@ msgstr ""
 msgid "Plugin disabled"
 msgstr ""
 
-#: src/Config.php:61
+#: src/Config.php:62
 msgid "Plugin setup"
 msgstr ""
 
@@ -1001,11 +1037,11 @@ msgstr ""
 msgid "Problem followup"
 msgstr ""
 
-#: src/Alert.php:3607
+#: src/Alert.php:3528
 msgid "Problem with GLPI"
 msgstr ""
 
-#: src/Alert.php:1639 src/Alert.php:1646
+#: src/Alert.php:1640 src/Alert.php:1647
 msgid "Problems with very high or major priority"
 msgstr ""
 
@@ -1024,6 +1060,10 @@ msgstr ""
 msgid "Projects to be processed"
 msgstr ""
 
+#: templates/alert_form.html.twig:46 templates/itilalert_item.html.twig:78
+msgid "Public"
+msgstr ""
+
 #: src/Reports/RSSFeed.php:173
 msgid "Public RSS feed"
 msgid_plural "Public RSS feeds"
@@ -1034,12 +1074,12 @@ msgstr[1] ""
 msgid "Publication date"
 msgstr ""
 
-#: src/Config.php:374
+#: src/Config.php:366
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr ""
 
-#: src/Config.php:379
+#: src/Config.php:370
 msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
@@ -1060,7 +1100,7 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: src/Config.php:313 templates/preferences.html.twig:39
+#: templates/config_form.html.twig:43 templates/preferences.html.twig:39
 msgid "Replace central interface"
 msgstr ""
 
@@ -1072,31 +1112,31 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-#: src/Alert.php:232 src/Alert.php:1685
+#: src/Alert.php:233 src/Alert.php:1686
 msgid "Requests alerts"
 msgstr ""
 
-#: src/Alert.php:4198 src/Alert.php:4399
+#: src/Alert.php:4119 src/Alert.php:4320
 msgid "Requests in progress"
 msgstr ""
 
-#: src/Alert.php:2235
+#: src/Alert.php:2236
 msgid "Requests where time to own is exceeded"
 msgstr ""
 
-#: src/Alert.php:2085
+#: src/Alert.php:2086
 msgid "Requests where time to own will be exceeded"
 msgstr ""
 
-#: src/Alert.php:2312
+#: src/Alert.php:2313
 msgid "Requests where time to resolve is exceeded"
 msgstr ""
 
-#: src/Alert.php:2159
+#: src/Alert.php:2160
 msgid "Requests where time to resolve will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1587 src/Alert.php:1601
+#: src/Alert.php:1588 src/Alert.php:1602
 msgid "Requests with very high or major priority"
 msgstr ""
 
@@ -1118,15 +1158,15 @@ msgstr ""
 msgid "Responsiveness over 12 rolling months"
 msgstr ""
 
-#: src/Profile.php:56
+#: src/Profile.php:57
 msgid "Rights management"
 msgstr ""
 
-#: src/Alert.php:217 src/Alert.php:2339
+#: src/Alert.php:218 src/Alert.php:2340
 msgid "SLA Incidents alerts"
 msgstr ""
 
-#: src/Alert.php:227 src/Alert.php:2342
+#: src/Alert.php:228 src/Alert.php:2343
 msgid "SLA Requests alerts"
 msgstr ""
 
@@ -1142,11 +1182,6 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr ""
 
-#: src/Menu.php:517 src/Menu.php:519
-msgid "Save default grid"
-msgstr ""
-
-#: src/Menu.php:509 src/Menu.php:511 src/Menu.php:593 src/Menu.php:595
 #: src/Menu.php:731 src/Menu.php:735 src/Menu.php:826
 msgid "Save grid"
 msgstr ""
@@ -1155,8 +1190,8 @@ msgstr ""
 msgid "Save grid to see widget"
 msgstr ""
 
-#: src/Config.php:410 src/Config.php:598 src/ItilAlert.php:138
-#: src/Alert.php:171 src/Alert.php:3343 src/Alert.php:3487
+#: src/Config.php:397 src/Config.php:585 src/ItilAlert.php:118
+#: src/Alert.php:172 src/Alert.php:3361
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
@@ -1170,31 +1205,31 @@ msgstr ""
 msgid "Search users of your organisation"
 msgstr ""
 
-#: src/Profile.php:199 src/Profile.php:302
+#: src/Profile.php:190 src/Profile.php:304
 msgid "See edit mode"
 msgstr ""
 
-#: src/Alert.php:178
+#: src/Alert.php:179
 msgid "See informations block"
 msgstr ""
 
-#: src/Alert.php:168
+#: src/Alert.php:169
 msgid "See network alert block"
 msgstr ""
 
-#: src/Alert.php:173
+#: src/Alert.php:174
 msgid "See scheduled maintenances information block"
 msgstr ""
 
-#: src/Profile.php:298
+#: src/Profile.php:300
 msgid "See the configuration"
 msgstr ""
 
-#: src/Profile.php:294
+#: src/Profile.php:296
 msgid "See the dashboard"
 msgstr ""
 
-#: src/Profile.php:210 src/Profile.php:290
+#: src/Profile.php:205 src/Profile.php:292
 msgid "Setup stock widget"
 msgstr ""
 
@@ -1203,7 +1238,7 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Reports/Ticket.php:1600 src/Widget.php:660 src/Menu.php:1193
+#: src/Reports/Ticket.php:1600 src/Widget.php:654 src/Menu.php:1193
 msgid "Show all"
 msgstr ""
 
@@ -1239,13 +1274,13 @@ msgstr ""
 msgid "Stock of tickets by status"
 msgstr ""
 
-#: src/StockWidget.php:53
+#: src/StockWidget.php:54
 msgid "Stock widget"
 msgid_plural "Stock widgets"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:573 src/Menu.php:1345
+#: src/Menu.php:1345
 msgid "Success"
 msgstr ""
 
@@ -1273,7 +1308,7 @@ msgstr ""
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Menu.php:609 src/Menu.php:611 src/Menu.php:833
+#: src/Menu.php:833
 msgid "Switch to edit mode"
 msgstr ""
 
@@ -1285,7 +1320,7 @@ msgstr ""
 msgid "TTR Compliance"
 msgstr ""
 
-#: src/Widget.php:246
+#: src/Widget.php:240
 msgid "Tables"
 msgstr ""
 
@@ -1315,20 +1350,16 @@ msgstr ""
 msgid "The plugin schema is good"
 msgstr ""
 
-#: src/Menu.php:574
-msgid "The widget was added to dashboard. Save the dashboard."
-msgstr ""
-
-#: src/Alert.php:2357 src/Alert.php:3214
+#: src/Alert.php:2358 src/Alert.php:3215
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: src/Widget.php:444
+#: src/Widget.php:438
 msgid "This widget doesn't exist anymore"
 msgstr ""
 
-#: src/Alert.php:4296
+#: src/Alert.php:4217
 msgid "Ticket closed"
 msgstr ""
 
@@ -1337,11 +1368,11 @@ msgstr ""
 msgid "Ticket followup"
 msgstr ""
 
-#: src/Alert.php:4412
+#: src/Alert.php:4333
 msgid "Tickets closed"
 msgstr ""
 
-#: src/Alert.php:4021 src/Alert.php:4381
+#: src/Alert.php:3942 src/Alert.php:4302
 msgid "Tickets late"
 msgstr ""
 
@@ -1362,7 +1393,7 @@ msgstr ""
 msgid "Tickets solution types evolution"
 msgstr ""
 
-#: src/Alert.php:4247 src/Alert.php:4405
+#: src/Alert.php:4168 src/Alert.php:4326
 msgid "Tickets solved"
 msgstr ""
 
@@ -1376,15 +1407,15 @@ msgstr ""
 msgid "Time display"
 msgstr ""
 
-#: src/Config.php:250 src/Config.php:355
+#: src/Config.php:251 templates/config_form.html.twig:69
 msgid "Title of alerts widget"
 msgstr ""
 
-#: src/Config.php:268 src/Config.php:367
+#: src/Config.php:269 templates/config_form.html.twig:79
 msgid "Title of informations widget"
 msgstr ""
 
-#: src/Config.php:259 src/Config.php:361
+#: src/Config.php:260 templates/config_form.html.twig:74
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
@@ -1428,16 +1459,26 @@ msgstr ""
 msgid "Trimester 4"
 msgstr ""
 
+#: templates/alert_form.html.twig:34 templates/stockwidget_form.html.twig:49
+#: templates/itilalert_item.html.twig:66
+msgid "Type"
+msgstr ""
+
 #: src/Menu.php:1204
 msgid "Updating all widgets"
 msgstr ""
 
-#: src/Groupprofile.php:80
+#: templates/groupprofile_form.html.twig:36
 msgid "Use profile group"
 msgstr ""
 
-#: src/Alert.php:222
+#: src/Alert.php:223
 msgid "User ticket alerts"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:67
+#: templates/configtranslation_form.html.twig:55
+msgid "Value"
 msgstr ""
 
 #: src/Menu.php:1357
@@ -1449,7 +1490,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: src/Widget.php:71
+#: src/Widget.php:72
 msgid "Widget"
 msgstr ""
 
@@ -1472,7 +1513,7 @@ msgstr ""
 msgid "Year to date"
 msgstr ""
 
-#: src/Alert.php:204 src/Widget.php:1072
+#: src/Alert.php:205 src/Widget.php:1066
 msgid "Your equipments"
 msgstr ""
 
