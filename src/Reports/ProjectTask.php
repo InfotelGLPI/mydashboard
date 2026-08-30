@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Reports;
 
+use GlpiPlugin\Mydashboard\Helper;
 use CommonGLPI;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
@@ -224,13 +225,14 @@ class ProjectTask extends CommonGLPI
                         //                            ) . "</a>";
 
                         $icon = "<i class='" . \ProjectTask::getIcon() . "'></i>";
-                        $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(
+                        $widgetTitle = Helper::getWidgetTitleHtml(
+                            $CFG_GLPI["root_doc"] . "/front/projecttask.php?" . $options,
+                            Html::makeTitle(
                                 __('Projects tasks to be processed', 'mydashboard'),
                                 $numrows,
                                 $numrows,
-                            ) . "</a>";
+                            ),
+                        );
 
 
                         break;
@@ -264,13 +266,14 @@ class ProjectTask extends CommonGLPI
                         //                            ) . "</a>";
 
                         $icon = "<i class='" . \ProjectTask::getIcon() . "'></i>";
-                        $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/projecttask.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(
+                        $widgetTitle = Helper::getWidgetTitleHtml(
+                            $CFG_GLPI["root_doc"] . "/front/projecttask.php?" . $options,
+                            Html::makeTitle(
                                 __('Projects tasks to be processed', 'mydashboard'),
                                 $numrows,
                                 $numrows,
-                            ) . "</a>";
+                            ),
+                        );
 
 
                         break;

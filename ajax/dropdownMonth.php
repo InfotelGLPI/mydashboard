@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Criterias\Month;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownMonth.php")) {
@@ -39,13 +40,11 @@ Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 // Make a select box
 if (isset($_POST["value"])) {
     if ($_POST['value'] == "MONTH") {
-        $form = "";
-        $form .= "</br></br>";
-        $form .= __('Month', 'mydashboard');
-        $form .= "&nbsp;";
-        $form .= Month::monthDropdown("month_year", (isset($opt['month_year']) ? $opt['month_year'] : 0));
-
-        echo  $form;
+        // The current value is not posted, so the dropdown always starts empty --
+        // this was already the case before, $opt was never defined in this endpoint.
+        echo TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_month.html.twig', [
+            'month_html' => Month::monthDropdown("month_year", 0),
+        ]);
     }
 
 }

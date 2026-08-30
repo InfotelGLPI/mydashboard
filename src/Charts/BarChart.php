@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Charts;
 
+use Html;
 use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 use Session;
@@ -62,7 +63,7 @@ abstract class BarChart extends Chart
 
         $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $graph          = "<script type='text/javascript'>
+        $graph          = \Html::scriptBlock("
 
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
@@ -200,7 +201,7 @@ abstract class BarChart extends Chart
 });
 
 
-          </script>";
+          ");
 
         return $graph;
     }
@@ -230,7 +231,7 @@ abstract class BarChart extends Chart
         $yaxis = self::hardenJson($graph_datas['yaxis']);
         $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $graph          = "<script type='text/javascript'>
+        $graph          = \Html::scriptBlock("
 
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
@@ -361,7 +362,7 @@ abstract class BarChart extends Chart
                  });
                }
          });
-          </script>";
+          ");
 
         return $graph;
     }
@@ -391,7 +392,7 @@ abstract class BarChart extends Chart
 
         $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $graph          = "<script type='text/javascript'>
+        $graph          = \Html::scriptBlock("
 
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
@@ -527,7 +528,7 @@ abstract class BarChart extends Chart
                  });
                }
          });
-          </script>";
+          ");
 
         return $graph;
     }
@@ -556,7 +557,7 @@ abstract class BarChart extends Chart
 
         $json_criterias = self::encodeForScript($graph_criterias);
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
-        $graph          = "<script type='text/javascript'>
+        $graph          = \Html::scriptBlock("
 
               var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
               window.onresize = function() {
@@ -685,7 +686,7 @@ abstract class BarChart extends Chart
                              });
                            }
             });
-          </script>";
+          ");
 
         return $graph;
     }

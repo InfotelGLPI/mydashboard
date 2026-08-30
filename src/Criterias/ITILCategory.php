@@ -79,10 +79,6 @@ class ITILCategory
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-
-        $form .= __('Category', 'mydashboard');
-        $form .= "&nbsp;";
         if (isset($opt['entities_id'])) {
             $restrict = getEntitiesRestrictCriteria(
                 'glpi_entities',
@@ -103,14 +99,7 @@ class ITILCategory
             ] + $restrict,
         );
 
-        $form .= $dropdown;
-
-        $form .= "</span>";
-
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-        return $form;
+        return Criteria::getFieldHtml(__('Category', 'mydashboard'), $dropdown, $count);
     }
 
     public static function getQueryCriteria($params)

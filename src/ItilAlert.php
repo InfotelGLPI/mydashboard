@@ -34,6 +34,7 @@ use CommonITILObject;
 use DBConnection;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Alert;
 use ITILCategory;
 use Migration;
@@ -93,7 +94,7 @@ class ItilAlert extends CommonDBTM
                 // sanitized at render time. getSafeHtml keeps the allowed formatting but
                 // strips scripts/event handlers, closing a stored-XSS path where a
                 // reminder author's payload would execute for any user opening this tab.
-                'text_html' => \Glpi\RichText\RichText::getSafeHtml($reminder->fields['text']),
+                'text_html' => RichText::getSafeHtml($reminder->fields['text']),
             ];
 
             $alert = new Alert();

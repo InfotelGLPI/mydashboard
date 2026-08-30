@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Charts;
 
+use Html;
 use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 use Session;
@@ -59,7 +60,7 @@ class FunnelChart extends Chart
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = self::encodeForScript($graph_criterias);
 
-        $graph = "<script type='text/javascript'>
+        $graph = \Html::scriptBlock("
           var id$name = $ids;
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
@@ -213,7 +214,7 @@ class FunnelChart extends Chart
                }
 });
 
-          </script>";
+          ");
 
         return $graph;
     }

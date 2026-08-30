@@ -95,8 +95,6 @@ class RequesterGroup
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-
         $result = getAllDataFromTable(
             Group::getTable(),
             ['is_requester' => 1, 'ORDER' => "completename"],
@@ -126,19 +124,11 @@ class RequesterGroup
         ];
 
 
-        $form .= __('Requester group');
-        $form .= "&nbsp;";
-
-        $dropdown = Dropdown::showFromArray("requesters_groups_id", $temp, $params);
-
-        $form .= $dropdown;
-
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Requester group'),
+            Dropdown::showFromArray("requesters_groups_id", $temp, $params),
+            $count,
+        );
     }
 
     public static function getQueryLeftJoin($params, $table)

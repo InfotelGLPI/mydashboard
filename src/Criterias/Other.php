@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Criterias;
 
+use Glpi\Application\View\TemplateRenderer;
 use Ajax;
 use CommonITILObject;
 use DbUtils;
@@ -278,78 +279,86 @@ class Other
         return $form;
     }
 
+    /**
+     * Render one criterion of this class.
+     *
+     * @param string $label
+     * @param string $input_html
+     * @param int    $count
+     * @param string $break      trailing spacing: 'double', 'single' or 'none'
+     * @param string $extra_html appended inside the span, after the widget
+     *
+     * @return string
+     */
+    private static function renderField($label, $input_html, $count, $break = 'double', $extra_html = '')
+    {
+        return TemplateRenderer::getInstance()->render('@mydashboard/criteria_other_field.html.twig', [
+            'label' => $label,
+            'input_html' => $input_html,
+            'extra_html' => $extra_html,
+            'break' => $count > 1 ? $break : 'none',
+        ]);
+    }
+
     public static function getDisplayForm($default, $opt, $count)
     {
         global $CFG_GLPI;
 
         $criterias = $opt['criterias'] ?? $default['criterias'];
-        // DATE
-        // YEAR
+
+        // Beware: each branch below ASSIGNS $form instead of appending to it, so when
+        // several criteria are active only the last one is rendered. Behaviour kept as is.
+        $form = '';
 
         // START DATE
         if (in_array("begin", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-            $form .= __('Start');
-            $form .= "&nbsp;";
-            $form .= Html::showDateTimeField(
-                "begin",
-                ['value' => $opt['begin'] ?? $default['begin'], 'maybeempty' => false, 'display' => false],
+            $form = self::renderField(
+                __('Start'),
+                Html::showDateTimeField(
+                    "begin",
+                    ['value' => $opt['begin'] ?? $default['begin'], 'maybeempty' => false, 'display' => false],
+                ),
+                $count,
+                in_array("end", $criterias) ? 'single' : 'double',
             );
-            $form .= "</span>";
-            if ($count > 1 && !in_array("end", $criterias)) {
-                $form .= "</br></br>";
-            } elseif ($count > 1 && in_array("end", $criterias)) {
-                $form .= "</br>";
-            }
         }
+
         // END DATE
         if (in_array("end", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-            $form .= __('End');
-            $form .= "&nbsp;";
-            $form .= Html::showDateTimeField(
-                "end",
-                ['value' => $opt['end'] ?? $default['end'], 'maybeempty' => false, 'display' => false],
+            $form = self::renderField(
+                __('End'),
+                Html::showDateTimeField(
+                    "end",
+                    ['value' => $opt['end'] ?? $default['end'], 'maybeempty' => false, 'display' => false],
+                ),
+                $count,
             );
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
         }
 
         // TECHNICIAN MULTIPLE
         if (in_array("multiple_technicians_id", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
+            $params = [
+                'entity' => $_SESSION['glpiactive_entity'],
+                'right' => ['groups'],
+                'groups_id' => 0,
+                'values' => [],
+                'multiple' => true,
+                'display' => false,
+            ];
 
-            $params['entity'] = $_SESSION['glpiactive_entity'];
-            $params['right'] = ['groups'];
-            $data_users = [];
-            $users = [];
-            $param['values'] = [];
-            $params['groups_id'] = 0;
-            if (isset($opt['technicians_groups_id'])) {
-                $technicians_groups_id = (is_array(
-                    $opt['technicians_groups_id'],
-                ) ? $opt['technicians_groups_id'] : []);
-            } else {
-                $technicians_groups_id = [];
-            }
-            $technicians_groups_id = 1;
             $list = [];
-            $restrict = [];
-            $res = User::getSqlSearchResult(false, $params['right'], $params['entity']);
-            foreach ($res as $data) {
+            foreach (User::getSqlSearchResult(false, $params['right'], $params['entity']) as $data) {
                 $list[] = $data['id'];
             }
+            $restrict = [];
             if (count($list) > 0) {
                 $restrict = ['glpi_users.id' => $list];
             }
             $restrict["glpi_users.is_deleted"] = 0;
             $restrict["glpi_users.is_active"] = 1;
 
-            $data_users = Group_User::getGroupUsers($technicians_groups_id, $restrict);
-
-            foreach ($data_users as $data) {
+            $users = [];
+            foreach (Group_User::getGroupUsers(1, $restrict) as $data) {
                 $users[$data['id']] = formatUserName(
                     $data['id'],
                     $data['name'],
@@ -358,112 +367,77 @@ class Other
                 );
                 $params['values'][] = $data['id'];
             }
-
-            $params['multiple'] = true;
-            $params['display'] = false;
             $params['size'] = count($users);
 
-            $form .= _n('Technician', 'Technicians', 2, 'mydashboard');
-            $form .= "&nbsp;";
-
-            $dropdownusers = Dropdown::showFromArray(
-                "multiple_technicians_id",
-                $users ?? $default['multiple_technicians_id'],
-                $params,
+            $form = self::renderField(
+                _n('Technician', 'Technicians', 2, 'mydashboard'),
+                Dropdown::showFromArray(
+                    "multiple_technicians_id",
+                    $users ?: $default['multiple_technicians_id'],
+                    $params,
+                ),
+                $count,
             );
-
-            $form .= $dropdownusers;
-
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
         }
 
         //STATUS
         if (in_array("status", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-            $form .= _n('Status', 'Statuses', 2) . "&nbsp;";
-            $default = [
+            // Local list renamed: it used to shadow the $default parameter, which made the
+            // "no selection" fallback below read $default['status'] off a plain list.
+            $default_status = [
                 CommonITILObject::INCOMING,
                 CommonITILObject::ASSIGNED,
                 CommonITILObject::PLANNED,
                 CommonITILObject::WAITING,
             ];
 
-
-            $i = 1;
+            $statuses = [];
             foreach (Ticket::getAllStatusArray() as $svalue => $sname) {
-                $form .= '<input type="hidden" name="status_' . $svalue . '" value="0" /> ';
-                $form .= '<input type="checkbox" name="status_' . $svalue . '" value="1"';
-
-                if (in_array($svalue, $opt['status'])) {
-                    $form .= ' checked="checked"';
-                }
-                if (count($opt['status']) < 1 && in_array($svalue, $default['status'])) {
-                    $form .= ' checked="checked"';
-                }
-
-                $form .= ' /> ';
-                $form .= $sname;
-                if ($i % 2 == 0) {
-                    $form .= "<br>";
-                } else {
-                    $form .= "&nbsp;";
-                }
-                $i++;
+                $statuses[] = [
+                    'value' => $svalue,
+                    'label' => $sname,
+                    'checked' => in_array($svalue, $opt['status'])
+                        || (count($opt['status']) < 1 && in_array($svalue, $default_status)),
+                ];
             }
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
+
+            $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_other_status.html.twig', [
+                'statuses' => $statuses,
+                'count' => $count,
+            ]);
         }
 
         if (in_array("multiple_time", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-
-
-            $temp = [];
-            $temp["DAY"] = __("Day", 'mydashboard');
-            $temp["WEEK"] = __("Week", 'mydashboard');
-            $temp["MONTH"] = __("Month", 'mydashboard');
-
-            $params = [
-                "name" => 'multiple_time',
-                "display" => false,
-                "multiple" => false,
-                "width" => '200px',
-                'value' => $opt['multiple_time'] ?? $default['multiple_time'],
-                'display_emptychoice' => false,
+            $temp = [
+                "DAY" => __("Day", 'mydashboard'),
+                "WEEK" => __("Week", 'mydashboard'),
+                "MONTH" => __("Month", 'mydashboard'),
             ];
 
-            $form .= __('Time display', 'mydashboard');
-            $form .= "&nbsp;";
-
-            $dropdown = Dropdown::showFromArray("multiple_time", $temp, $params);
-
-            $form .= $dropdown;
-
-            $form .= "</span>";
-
-
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
+            $form = self::renderField(
+                __('Time display', 'mydashboard'),
+                Dropdown::showFromArray("multiple_time", $temp, [
+                    "name" => 'multiple_time',
+                    "display" => false,
+                    "multiple" => false,
+                    "width" => '200px',
+                    'value' => $opt['multiple_time'] ?? $default['multiple_time'],
+                    'display_emptychoice' => false,
+                ]),
+                $count,
+            );
         }
 
         if (in_array("multiple_year_time", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-
-
-            $temp = [];
-            $temp["YEARTODATE"] = __("Year to date", 'mydashboard');
-            $temp["LASTYEAR"] = __("year", 'mydashboard');
-            $temp["LASTMONTH"] = __("Last month", 'mydashboard');
-            $temp["MONTH"] = __("Month", 'mydashboard');
+            $temp = [
+                "YEARTODATE" => __("Year to date", 'mydashboard'),
+                "LASTYEAR" => __("year", 'mydashboard'),
+                "LASTMONTH" => __("Last month", 'mydashboard'),
+                "MONTH" => __("Month", 'mydashboard'),
+            ];
 
             $rand = mt_rand();
-            $params = [
+            $dropdown = Dropdown::showFromArray("multiple_year_time", $temp, [
                 "name" => 'multiple_year_time',
                 "display" => false,
                 "multiple" => false,
@@ -471,55 +445,40 @@ class Other
                 "rand" => $rand,
                 'value' => $opt['multiple_year_time'] ?? $default['multiple_year_time'],
                 'display_emptychoice' => false,
-            ];
+            ]);
 
-            $form .= __('Time display', 'mydashboard');
-            $form .= "&nbsp;";
+            // The month picker lives in its own span, refreshed in place by the AJAX call
+            $month_html = TemplateRenderer::getInstance()->render(
+                '@mydashboard/criteria_other_month.html.twig',
+                [
+                    'rand' => $rand,
+                    'show_month' => isset($opt['multiple_year_time']) && $opt['multiple_year_time'] == 'MONTH',
+                    'month_html' => Month::monthDropdown(
+                        "month_year",
+                        $opt['month_year'] ?? $default['multiple_year_time'],
+                    ),
+                ],
+            );
 
-            $dropdown = Dropdown::showFromArray("multiple_year_time", $temp, $params);
-
-            $form .= $dropdown;
-
-
-            $form .= "</span>";
-            if (isset($opt['multiple_year_time']) && $opt['multiple_year_time'] == 'MONTH') {
-                $form .= "<span id='month_crit$rand' name= 'month_crit$rand' class='md-widgetcrit'>";
-                $form .= "</br></br>";
-                $form .= __('Month', 'mydashboard');
-                $form .= "&nbsp;";
-                $form .= Month::monthDropdown(
-                    "month_year",
-                    ($opt['month_year'] ?? $default['multiple_year_time']),
-                );
-                $form .= "</span>";
-            } else {
-                $form .= "<span id='month_crit$rand' name= 'month_crit$rand' class='md-widgetcrit'></span>";
-            }
-
-            $params2 = [
-                'value' => '__VALUE__',
-
-            ];
             $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
-            $form .= Ajax::updateItemOnSelectEvent(
+            $ajax_html = Ajax::updateItemOnSelectEvent(
                 'dropdown_multiple_year_time' . $rand,
                 "month_crit$rand",
                 $root . "/ajax/dropdownMonth.php",
-                $params2,
+                ['value' => '__VALUE__'],
                 false,
             );
 
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
+            $form = self::renderField(
+                __('Time display', 'mydashboard'),
+                $dropdown,
+                $count,
+                'double',
+            ) . $month_html . $ajax_html;
         }
 
         //ITILCATEGORY LVL1
         if (in_array("itilcategorielvl1", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-
-            $form .= __('Category', 'mydashboard');
-            $form .= "&nbsp;";
             $dbu = new DbUtils();
             if (isset($_POST["params"]['entities_id'])) {
                 $restrict = $dbu->getEntitiesRestrictCriteria(
@@ -532,31 +491,21 @@ class Other
                 $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $opt['entities_id'], $opt['sons']);
             }
 
-            $dropdown = \ITILCategory::dropdown(
-                [
-                    'name' => 'itilcategorielvl1',
-                    'value' => $opt['itilcategorielvl1'] ?? $default['itilcategorielvl1'],
-                    'display' => false,
-                    'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]],
-                ] + $restrict,
+            $form = self::renderField(
+                __('Category', 'mydashboard'),
+                \ITILCategory::dropdown(
+                    [
+                        'name' => 'itilcategorielvl1',
+                        'value' => $opt['itilcategorielvl1'] ?? $default['itilcategorielvl1'],
+                        'display' => false,
+                        'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]],
+                    ] + $restrict,
+                ),
+                $count,
             );
-
-            $form .= $dropdown;
-
-            $form .= "</span>";
-
-
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
         }
 
-
         if (in_array("tag", $criterias)) {
-            $form = "<span class='md-widgetcrit'>";
-
-            $form .= __('Tag', 'mydashboard');
-            $form .= "&nbsp;";
             $dbu = new DbUtils();
             if (isset($_POST["params"]['entities_id'])) {
                 $restrict = $dbu->getEntitiesRestrictCriteria(
@@ -573,33 +522,27 @@ class Other
                     $opt['is_recursive_entities'],
                 );
             }
+
+            $tags = [];
             $tag = new PluginTagTag();
-            $data_tags = $tag->find([$restrict]);
-            foreach ($data_tags as $data) {
+            foreach ($tag->find([$restrict]) as $data) {
                 $types = json_decode($data['type_menu']);
                 if (in_array('Ticket', $types)) {
                     $tags[$data['id']] = $data['name'];
                 }
             }
-            $params['multiple'] = false;
-            $params['display'] = false;
-            $params['value'] = $opt['tag'] ?? $default['tag'];
-            $params['size'] = count($tags);
 
-
-            $dropdown = Dropdown::showFromArray("tag", $tags, $params);
-
-
-            $form .= $dropdown;
-
-            $form .= "</span>";
-
-
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
+            $form = self::renderField(
+                __('Tag', 'mydashboard'),
+                Dropdown::showFromArray("tag", $tags, [
+                    'multiple' => false,
+                    'display' => false,
+                    'value' => $opt['tag'] ?? $default['tag'],
+                    'size' => count($tags),
+                ]),
+                $count,
+            );
         }
-
 
         return $form;
     }

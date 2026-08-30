@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Mydashboard\Criterias\DisplayData;
 use GlpiPlugin\Mydashboard\Criterias\Year;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownUpdateDisplaydata.php")) {
@@ -36,107 +38,35 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownUpdateDisplaydata.php")) {
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
-// Make a select box
+// Refresh the period block of a criteria bar after the mode dropdown changed.
+// The current values are not posted, so every field falls back to its default -- this
+// was already the case before, $opt was never defined in this endpoint.
 if (isset($_POST["value"])) {
+    $rand = mt_rand();
     $form = "";
+
     if ($_POST['value'] == "START_END") {
-        $rand = mt_rand();
-
-        $form .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= __('Start month', 'mydashboard');
-        $form .= "&nbsp;";
-        $options = [];
-        $options['value'] = $opt['start_month'] ?? date('m');
-        $options['rand'] = $rand;
-        $options['min'] = 1;
-        $options['max'] = 12;
-        $options['display'] = false;
-        $options['width'] = '200px';
-        $form .= Dropdown::showNumber('start_month', $options);
-        $form .= "</span>";
-
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= "</br>";
-        $form .= __('Start year', 'mydashboard');
-        $form .= "&nbsp;";
-        $options = [];
-        $options['value'] = $opt['start_year'] ?? date('Y');
-        $options['rand'] = $rand;
-        $options['display'] = false;
-        $year = date("Y") - 3;
-        for ($i = 0; $i <= 3; $i++) {
-            $elements[$year] = $year;
-
-            $year++;
-        }
-
-        $form .= Dropdown::showFromArray("start_year", $elements, $options);
-        $form .= "</span>";
-
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= "</br></br>";
-        $form .= __('End month', 'mydashboard');
-        $form .= "&nbsp;";
-        $options = [];
-        $options['value'] = $opt['end_month'] ?? date('m');
-        $options['rand'] = $rand;
-        $options['min'] = 1;
-        $options['max'] = 12;
-        $options['display'] = false;
-        $options['width'] = '200px';
-        $form .= Dropdown::showNumber('end_month', $options);
-        $form .= "</span>";
-
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= "</br>";
-        $form .= __('End year', 'mydashboard');
-        $form .= "&nbsp;";
-        $options = [];
-        $options['value'] = $opt['end_year'] ?? date('Y');
-        $options['rand'] = $rand;
-        $options['display'] = false;
-        $year = date("Y") - 3;
-        for ($i = 0; $i <= 3; $i++) {
-            $elements[$year] = $year;
-
-            $year++;
-        }
-
-        $form .= Dropdown::showFromArray("end_year", $elements, $options);
-        //            $form .= Dropdown::showNumber('end_year',$options);
-        $form .= "</span>";
-        $form .= "</span>";
-
+        // Same block as the inline criterion, rendered from the shared template
+        $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_fields.html.twig', [
+            'rand' => $rand,
+            'fields' => DisplayData::getPeriodFields($rand, [], 0),
+        ]);
     } elseif ($_POST['value'] == 'YEAR') {
-
-
-        $annee_courante = date('Y', time());
-        if (isset($opt["year"])
-            && $opt["year"] > 0) {
-            $annee_courante = $opt["year"];
-        }
-        $form .= __('Year', 'mydashboard');
-        $form .= "&nbsp;";
-        $form .= Year::YearDropdown($annee_courante);
-
-
+        $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_year.html.twig', [
+            'year_html' => Year::YearDropdown(date('Y', time())),
+        ]);
     } elseif ($_POST['value'] == 'BEGIN_END') {
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= __('Start');
-        $form .= "&nbsp;";
-        $form .= Html::showDateTimeField("begin", ['value' => isset($opt['begin']) ? $opt['begin'] : null, 'maybeempty' => false, 'display' => false]);
-        $form .= "</span>";
-        $form .= "</br>";
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= __('End');
-        $form .= "&nbsp;";
-        $form .= Html::showDateTimeField("end", ['value' => isset($opt['end']) ? $opt['end'] : null, 'maybeempty' => false, 'display' => false]);
-        $form .= "</span>";
+        $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_range.html.twig', [
+            'begin_html' => Html::showDateTimeField(
+                "begin",
+                ['value' => null, 'maybeempty' => false, 'display' => false],
+            ),
+            'end_html' => Html::showDateTimeField(
+                "end",
+                ['value' => null, 'maybeempty' => false, 'display' => false],
+            ),
+        ]);
     }
-    //     $form .= "</span>";
 
-    echo  $form;
-
-
+    echo $form;
 }

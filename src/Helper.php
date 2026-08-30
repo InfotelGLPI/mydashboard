@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Mydashboard;
 
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Charts\HBarChart;
 use GlpiPlugin\Mydashboard\Charts\LineChart;
 use GlpiPlugin\Mydashboard\Charts\PieChart;
@@ -48,20 +49,48 @@ class Helper
      *
      * @return string
      */
+    /**
+     * Title of a report widget: a link to the list, plus an optional "add" shortcut.
+     *
+     * Reports\Ticket, Reports\Reminder and Reports\ProjectTask each carried their own
+     * copy of this markup.
+     *
+     * @param string  $list_url
+     * @param string  $label_html label, possibly wrapped in a count badge by Html::makeTitle()
+     * @param ?string $add_url    null when the user cannot create the item
+     *
+     * @return string
+     */
+    public static function getWidgetTitleHtml($list_url, $label_html, $add_url = null)
+    {
+        return TemplateRenderer::getInstance()->render('@mydashboard/report_widget_title.html.twig', [
+            'list_url' => $list_url,
+            'label_html' => $label_html,
+            'add_url' => $add_url,
+        ]);
+    }
+
     public static function getGraphHeader($params)
     {
 
-        $name = $params['name'];
-        $graph = "<div class='bt-row'>";
-        if ($params["export"] == true) {
-            $graph .= "<div class='bt-col-md-8 left'>";
-        } else {
-            $graph .= "<div class='bt-col-md-12 left'>";
-        }
+        $criteria_html = '';
         if (count($params["criterias"]) > 0) {
-            $graph .= Criteria::getForm($params["widgetId"], $params["default"] ?? [], $params["opt"], $params["criterias"], $params["onsubmit"]);
+            $criteria_html = Criteria::getForm(
+                $params["widgetId"],
+                $params["default"] ?? [],
+                $params["opt"],
+                $params["criterias"],
+                $params["onsubmit"],
+            );
         }
-        $graph .= "</div>";
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/graph_header.html.twig', [
+            'name' => $params['name'],
+            'export' => $params["export"] == true,
+            'canvas' => $params["canvas"] == true,
+            'no_results' => $params["nb"] < 1,
+            'criteria_html' => $criteria_html,
+        ]);
         //        if ($params["export"] == true) {
         //            $graph .= "<div class='bt-col-md-2 center'>";
         //            $graph .= "<button class='submit btn btn-primary btn-sm' onclick='downloadGraph(\"$name\");'>PNG</button>";
@@ -136,21 +165,6 @@ class Helper
         //            $graph .= "</div>";
         //        }
         //        $graph .= "</div>";
-        if ($params["canvas"] == true) {
-            if ($params["nb"] < 1) {
-                $graph .= "<div class='center'><br><br><h3><span class ='maint-color'>";
-                $graph .= __("No results found");
-                $graph .= "</span></h3></div>";
-            }
-            $graph .= "<div id=\"chart-container\" class=\"chart-container\">"; // style="position: relative; height:45vh; width:45vw"
-
-            $graph .= "<div id=\"$name\" style='width: 100%; height: 400px;'></div>";
-            $graph .= "</div>";
-        }
-        $graph .= "</div>";
-
-
-        return $graph;
     }
 
 
@@ -161,16 +175,14 @@ class Helper
      */
     public static function getGraphFooter($params)
     {
-        $graph = "<div class='bt-row'>";
-        $graph .= "<div class='bt-col-md-12 left'>";
+        $setup_url = null;
         if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
-            $graph .= "<a target='_blank' href='" . $params["setup"] . "'><i class=\"ti ti-tool\"></i></a>";
+            $setup_url = $params["setup"];
         }
-        $graph .= "</div>";
-        $graph .= "</div>";
 
-
-        return $graph;
+        return TemplateRenderer::getInstance()->render('@mydashboard/graph_footer.html.twig', [
+            'setup_url' => $setup_url,
+        ]);
     }
 
 

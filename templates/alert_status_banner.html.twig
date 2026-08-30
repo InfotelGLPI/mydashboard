@@ -1,0 +1,44 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# GLPI status banner: maintenance mode uses the "center" class, the three probe
+   outcomes use "md-title-status". #}
+<div class="{{ wrapper_class }}" style="color:{{ color }}">
+    <i class="{{ icon }}" style="font-size:4em"></i>
+    <br><br>
+    <b>{{ label }}</b>
+    {%- if url %}
+        <br><br><a href="{{ url }}" target="_blank">{{ url }}</a>
+    {% endif -%}
+</div>
+
+{% if maintenance_text is not empty %}
+    <div class="md-status">
+        {# already passed through nl2br() by the controller #}
+        <p>{{ maintenance_text|raw }}</p>
+    </div>
+{% endif %}

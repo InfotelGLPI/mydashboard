@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Reports;
 
+use GlpiPlugin\Mydashboard\Helper;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
@@ -162,13 +163,11 @@ class Reminder extends CommonGLPI
         $widget->setWidgetId($widgetId);
 
         $icon = "<i class='" . \Reminder::getIcon() . "'></i>";
-        $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.php?reset=reset\">"
-            . $title . "</a>";
-        if (\Reminder::canCreate()) {
-            $widgetTitle .= "&nbsp;<span>";
-            $widgetTitle .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reminder.form.php\">";
-            $widgetTitle .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
-        }
+        $widgetTitle = Helper::getWidgetTitleHtml(
+            $CFG_GLPI["root_doc"] . "/front/reminder.php?reset=reset",
+            $title,
+            \Reminder::canCreate() ? $CFG_GLPI["root_doc"] . "/front/reminder.form.php" : null,
+        );
 
         $widget->setWidgetTitle(
             $icon . " " . $widgetTitle,

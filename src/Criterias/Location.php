@@ -78,16 +78,11 @@ class Location
             'value' => $opt[self::$criteria_name] ?? $default_location,
             'entity' => $_SESSION['glpiactiveentities'],
         ];
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Location');
-        $form .= "&nbsp;";
-        $form .= \Location::dropdown($gparams);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Location'),
+            \Location::dropdown($gparams),
+            $count,
+        );
     }
 
     public static function getQueryCriteria($params)

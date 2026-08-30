@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Criterias;
 
+use GlpiPlugin\Mydashboard\Criteria;
 use Dropdown;
 use Glpi\DBAL\QueryExpression;
 use Toolbox;
@@ -65,20 +66,16 @@ class Month
             && $opt[self::$criteria_name] > 0) {
             $mois_courant = $opt[self::$criteria_name];
         }
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Month', 'mydashboard');
-        $form .= "&nbsp;";
-        $form .= self::monthDropdown(self::$criteria_name, $mois_courant);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Month', 'mydashboard'),
+            self::monthDropdown(self::$criteria_name, $mois_courant),
+            $count,
+        );
     }
 
     /**
-     * @param null $selected
+     * @param string     $name
+     * @param int|string $selected selected month, 0 or null for none
      *
      * @return int|string
      */

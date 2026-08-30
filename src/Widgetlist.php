@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard;
 
+use Glpi\Application\View\TemplateRenderer;
 use DbUtils;
 use GlpiPlugin\Mydashboard\Reports\Change;
 use GlpiPlugin\Mydashboard\Reports\Contract;
@@ -363,71 +364,54 @@ class Widgetlist
     public static function loadWidgetsListForMenu($widgetlist, $used = [], &$html = "", $gslist = [])
     {
         $list_is_empty = true;
-        $is_empty      = true;
 
         $graphs = self::getAllWidgetsList($widgetlist);
-        if (count($graphs) > 0) {
-            $is_empty = false;
-        }
+        $is_empty = count($graphs) === 0;
         ksort($graphs);
 
         $accordion_id = 'md-wd-accordion';
-        $tmp          = "<div class='accordion' id='{$accordion_id}'>";
-        $cat_idx      = 0;
+        $categories = [];
+        $cat_idx = 0;
 
         foreach ($graphs as $globaltype => $widgetsplugin) {
-            $cat_id  = 'md-wd-cat-' . $cat_idx++;
-            $icon    = self::getIconByType($globaltype);
-            $label   = self::getFolderByType($globaltype);
-
-            $tmp .= "<div class='accordion-item'>";
-            $tmp .= "<h2 class='accordion-header' id='hd-{$cat_id}'>";
-            $tmp .= "<button class='accordion-button collapsed' type='button'"
-                  . " data-bs-toggle='collapse' data-bs-target='#body-{$cat_id}'"
-                  . " aria-expanded='false' aria-controls='body-{$cat_id}'>";
-            $tmp .= "<i class='{$icon} me-2'></i>{$label}";
-            $tmp .= "</button></h2>";
-            $tmp .= "<div id='body-{$cat_id}' class='accordion-collapse collapse'"
-                  . " aria-labelledby='hd-{$cat_id}' data-bs-parent='#{$accordion_id}'>";
-            $tmp .= "<div class='accordion-body p-0'>";
+            $cat_id = 'md-wd-cat-' . $cat_idx++;
 
             $graphbytype = [];
             foreach ($widgetsplugin as $widgets) {
                 foreach ($widgets as $widgetsname => $widgetdetail) {
-                    $typegraph                             = $widgetdetail['type'] ?? 0;
+                    $typegraph = $widgetdetail['type'] ?? 0;
                     $graphbytype[$typegraph][$widgetsname] = $widgetdetail;
                 }
             }
 
+            $groups = [];
             $sub_idx = 0;
             foreach ($graphbytype as $typegraph => $widgetdetail) {
-                $sub_id = $cat_id . '-sub-' . $sub_idx++;
-                $items  = self::getWidgetsListFromWidgetsArray($widgetdetail, $typegraph, 2, $used, $gslist);
-                if ($items === '') {
+                $items = self::getWidgetsItems($widgetdetail, $typegraph, $used, $gslist);
+                if ($items === []) {
                     continue;
                 }
-                $icon_sub = Widget::getIconByType($typegraph);
-                $res  = "<div class='accordion' id='{$sub_id}-acc'>";
-                $res .= "<div class='accordion-item border-0 border-top'>";
-                $res .= "<h2 class='accordion-header'>";
-                $res .= "<button class='accordion-button collapsed ps-4 py-2' type='button'"
-                      . " data-bs-toggle='collapse' data-bs-target='#{$sub_id}'"
-                      . " aria-expanded='false'>";
-                $res .= "<i class='{$icon_sub} me-2'></i>" . Widget::getNameByType($typegraph);
-                $res .= "</button></h2>";
-                $res .= "<div id='{$sub_id}' class='accordion-collapse collapse'>";
-                $res .= "<div class='accordion-body p-0'>";
-                $res .= "<div class='list-group list-group-flush'>{$items}</div>";
-                $res .= "</div></div></div></div>";
-                $tmp .= $res;
+                $groups[] = [
+                    'id' => $cat_id . '-sub-' . $sub_idx++,
+                    'icon' => Widget::getIconByType($typegraph),
+                    'label' => Widget::getNameByType($typegraph),
+                    'items' => $items,
+                ];
             }
 
-            $tmp .= "</div></div></div>"; // accordion-body + accordion-collapse + accordion-item
+            $categories[] = [
+                'id' => $cat_id,
+                'icon' => self::getIconByType($globaltype),
+                'label' => self::getFolderByType($globaltype),
+                'groups' => $groups,
+            ];
         }
-        $tmp .= "</div>"; // accordion
 
         if (!$is_empty) {
-            $html .= $tmp;
+            $html .= TemplateRenderer::getInstance()->render('@mydashboard/widgetlist_accordion.html.twig', [
+                'accordion_id' => $accordion_id,
+                'categories' => $categories,
+            ]);
             if ($list_is_empty) {
                 $list_is_empty = __('No widgets available', 'mydashboard');
             }
@@ -436,90 +420,95 @@ class Widgetlist
         return $list_is_empty;
     }
 
-
     /**
+     * Flatten a widget tree into renderable items: either an "add widget" button, or a
+     * folder carrying nested items.
      *
-     * @param type  $widgetsarray , an arry of widgets (or array of array ... of widgets)
-     * @param type  $classname , name of the class containing the widget
-     * @param int   $depth
+     * @param array  $widgetsarray
+     * @param string $classname    family the widgets belong to
+     * @param array  $used         widgets already placed on the grid
+     * @param array  $gslist       widget id => grid id
      *
-     * @param array $used
-     *
-     * @return string
+     * @return array
      */
-    private static function getWidgetsListFromWidgetsArray($widgetsarray, $classname, $depth = 2, $used = [], $gslist = [])
+    private static function getWidgetsItems($widgetsarray, $classname, $used = [], $gslist = [])
     {
-        $wl = "";
-        //        Toolbox::logInfo($widgetsarray);
-        if (is_array($widgetsarray) && count($widgetsarray) > 0) {
-            foreach ($widgetsarray as $widgetId => $widgetTitle) {
-                //We check if this widget is a real widget
-                if (!is_array($widgetTitle)) {
-                    //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
-                    if (is_numeric($widgetId)) {
-                        $widgetId = $widgetTitle;
-                    }
-                    //                    $this->widgets[$classname][$widgetId] = -1;
-                    if (isset($gslist[$widgetId])) {
-                        $gsid = $gslist[$widgetId];
-                        if (!in_array($gsid, $used)) {
-                            $debug = ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) ? " ({$gsid})" : "";
-                            $wl .= "<button type='button' id='btnAddWidgete" . $widgetId . "'"
-                                 . " class='list-group-item list-group-item-action plugin_mydashboard_menuDashboardListItem'"
-                                 . " data-widgetid='" . $gsid . "'"
-                                 . " data-classname='" . $classname . "'>";
-                            $wl .= $widgetTitle . $debug;
-                            $wl .= "</button>";
-                        }
-                    }
-                } else { //If it's not a real widget
-                    //It may/must be an array of widget, in this case we need to go deeper (increase $depth)
+        if (!is_array($widgetsarray) || count($widgetsarray) === 0) {
+            return [];
+        }
 
-                    if (isset($widgetTitle['title'])) {
-                        //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
-                        if (is_numeric($widgetId)) {
-                            $widgetId = $widgetTitle['title'];
-                        }
-                        $classname = $widgetTitle['title'];
-                        if (isset($gslist[$widgetId])) {
-                            $gsid = $gslist[$widgetId];
-                            if (!in_array($gsid, $used)) {
-                                $icon = $widgetTitle['icon'] ?? "";
-                                if (isset($widgetTitle['type'])) {
-                                    $icon = Widget::getIconByType($widgetTitle['type']);
-                                }
-                                $debug   = ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) ? " ({$gsid})" : "";
-                                $comment = $widgetTitle['comment'] ?? "";
-                                $wl .= "<button type='button' id='btnAddWidgete" . $widgetId . "'"
-                                     . " class='list-group-item list-group-item-action plugin_mydashboard_menuDashboardListItem'"
-                                     . " data-widgetid='" . $gsid . "'"
-                                     . " data-classname='" . $classname . "'>";
-                                if (!empty($icon)) {
-                                    $wl .= "<i class='{$icon} me-1'></i>";
-                                }
-                                $wl .= $widgetTitle['title'] . $debug;
-                                if (!empty($comment)) {
-                                    $wl .= "<br><small class='text-muted'>{$comment}</small>";
-                                }
-                                $wl .= "</button>";
-                            }
-                        }
-                    } else {
-                        $sub_label = self::getFolderByType($widgetId);
-                        $res = self::getWidgetsListFromWidgetsArray($widgetTitle, $classname, $depth + 1, $used, $gslist);
-                        if ($res !== '') {
-                            $wl .= "<div class='ps-3 border-start ms-2 mt-1'>";
-                            $wl .= "<div class='small text-muted py-1'>"
-                                 . "<i class='ti ti-folder me-1'></i>{$sub_label}</div>";
-                            $wl .= "<div class='list-group list-group-flush'>{$res}</div>";
-                            $wl .= "</div>";
-                        }
-                    }
+        $is_debug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
+        $items = [];
+
+        foreach ($widgetsarray as $widgetId => $widgetTitle) {
+            //We check if this widget is a real widget
+            if (!is_array($widgetTitle)) {
+                //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
+                if (is_numeric($widgetId)) {
+                    $widgetId = $widgetTitle;
                 }
+                if (!isset($gslist[$widgetId])) {
+                    continue;
+                }
+                $gsid = $gslist[$widgetId];
+                if (in_array($gsid, $used)) {
+                    continue;
+                }
+                $items[] = [
+                    'kind' => 'button',
+                    'widget_id' => $widgetId,
+                    'gsid' => $gsid,
+                    'classname' => $classname,
+                    'icon' => '',
+                    'label' => $widgetTitle,
+                    'debug' => $is_debug ? " ({$gsid})" : '',
+                    'comment' => '',
+                ];
+                continue;
+            }
+
+            if (isset($widgetTitle['title'])) {
+                //If no 'title' is specified it won't be 'widgetid' => 'widget Title' but 'widgetid' so
+                if (is_numeric($widgetId)) {
+                    $widgetId = $widgetTitle['title'];
+                }
+                // Kept as is: the family name is rebound for the remaining iterations too
+                $classname = $widgetTitle['title'];
+                if (!isset($gslist[$widgetId])) {
+                    continue;
+                }
+                $gsid = $gslist[$widgetId];
+                if (in_array($gsid, $used)) {
+                    continue;
+                }
+                $icon = $widgetTitle['icon'] ?? "";
+                if (isset($widgetTitle['type'])) {
+                    $icon = Widget::getIconByType($widgetTitle['type']);
+                }
+                $items[] = [
+                    'kind' => 'button',
+                    'widget_id' => $widgetId,
+                    'gsid' => $gsid,
+                    'classname' => $classname,
+                    'icon' => $icon,
+                    'label' => $widgetTitle['title'],
+                    'debug' => $is_debug ? " ({$gsid})" : '',
+                    'comment' => $widgetTitle['comment'] ?? "",
+                ];
+                continue;
+            }
+
+            $sub_items = self::getWidgetsItems($widgetTitle, $classname, $used, $gslist);
+            if ($sub_items !== []) {
+                $items[] = [
+                    'kind' => 'folder',
+                    'label' => self::getFolderByType($widgetId),
+                    'items' => $sub_items,
+                ];
             }
         }
 
-        return $wl;
+        return $items;
     }
 
     /**

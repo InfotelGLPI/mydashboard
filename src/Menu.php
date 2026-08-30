@@ -334,11 +334,7 @@ class Menu extends CommonGLPI
             'empty_value' => Dropdown::EMPTY_VALUE,
             'profiles' => $options,
             // Delegated handler on the data attribute, replacing the inline onChange
-            'submit_script_html' => \Html::scriptBlock(
-                '$(document).on("change", "select[data-md-submit-on-change]", function () {'
-                . 'this.form.submit();'
-                . '});',
-            ),
+            'submit_script_html' => self::getSubmitOnChangeScript(),
         ]);
         //
         //      Dropdown::showFromArray($p['name'], $profiles,
@@ -656,9 +652,6 @@ class Menu extends CommonGLPI
      */
     public function getWidgetsList($widgetlist, $gslist, $used): string
     {
-        $close_label = __s('Close');
-        $title_label = __('Availables widgets', 'mydashboard');
-
         $usedJson = json_encode(array_values($used));
         $wl  = \Html::scriptBlock("
             if (typeof window.md_used_widgets === 'undefined') {
@@ -684,91 +677,73 @@ class Menu extends CommonGLPI
             });
         ");
 
-        $wl .= "<div class='offcanvas offcanvas-end' tabindex='-1' id='md-widget-offcanvas'"
-             . " aria-labelledby='md-wd-oc-label'>";
-        $wl .= "<div class='offcanvas-header border-bottom'>";
-        $wl .= "<h5 class='offcanvas-title' id='md-wd-oc-label'>" . $title_label . "</h5>";
-        $wl .= "<button type='button' class='btn-close' data-bs-dismiss='offcanvas'"
-             . " aria-label='" . $close_label . "'></button>";
-        $wl .= "</div>";
-        $wl .= "<div class='offcanvas-body p-2'>";
-        $wl .= Widgetlist::fuzzySearch('getHtml');
-        $wl .= "<div class='mt-2'>";
+        // loadWidgetsListForMenu() appends to its third argument by reference
+        $list_html = '';
+        Widgetlist::loadWidgetsListForMenu($widgetlist, $used, $list_html, $gslist);
 
-        Widgetlist::loadWidgetsListForMenu($widgetlist, $used, $wl, $gslist);
-
-        $wl .= "</div></div></div>";
-
-        return $wl;
+        return TemplateRenderer::getInstance()->render('@mydashboard/menu_widgets_offcanvas.html.twig', [
+            'script_html' => $wl,
+            'search_html' => Widgetlist::fuzzySearch('getHtml'),
+            'list_html' => $list_html,
+        ]);
     }
 
     /**
      * Barre d'actions horizontale en mode édition, affichée au-dessus de la grille.
      */
+    /**
+     * Delegated handler replacing the inline onChange="this.form.submit()" of the selects.
+     *
+     * The event is namespaced and rebound with off(), so emitting this block more than
+     * once on a page cannot submit the form twice.
+     *
+     * @return string
+     */
+    public static function getSubmitOnChangeScript()
+    {
+        return \Html::scriptBlock(
+            '$(document).off("change.mdsubmit").on("change.mdsubmit", "select[data-md-submit-on-change]", function () {'
+            . 'this.form.submit();'
+            . '});',
+        );
+    }
+
     private function getEditToolbar(int $edit, int $selected_profile, int $drag): string
     {
         global $DB;
 
-        $csrf = \Session::getNewCSRFToken();
-        $out  = "<form method='post' action='" . $this->getSearchURL() . "'>";
-        $out .= "<input type='hidden' name='_glpi_csrf_token' value='" . htmlspecialchars($csrf) . "'>";
-        $out .= "<div class='md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2'>";
-
-        // Badge mode édition
         $badge = __('Edit mode', 'mydashboard');
         if ($edit == 2) {
             $badge .= ' ' . __('Global', 'mydashboard');
         }
-        $out .= "<span class='badge bg-warning text-dark' style='padding: 5px;'><i class='ti ti-pencil me-1'></i>{$badge}</span>";
 
-        $out .= "<div class='vr mx-1'></div>";
-
-        // Bouton d'ajout de widget (déclenche l'offcanvas)
-        $out .= "<button type='button' style='padding: 5px;' class='btn btn-primary btn-sm plugin_mydashboard_add_button'"
-              . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
-              . " aria-controls='md-widget-offcanvas'>"
-              . "<i class='ti ti-plus me-1'></i>" . __('Add widgets', 'mydashboard')
-              . "</button>";
-
-        // Sauvegarder
+        $actions = [];
         if ($edit == 1) {
-            $out .= "<a id='save-grid' role='button' style='padding: 5px;' class='btn btn-success btn-sm'>"
-                  . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
+            $actions[] = ['id' => 'save-grid', 'class' => 'btn-success',
+                'icon' => 'ti ti-device-floppy', 'label' => __('Save grid', 'mydashboard'),
+            ];
         }
         if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            $out .= "<a id='save-default-grid' role='button' style='padding: 5px;' class='btn btn-success btn-sm'>"
-                  . "<i class='ti ti-layout-grid me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
+            $actions[] = ['id' => 'save-default-grid', 'class' => 'btn-success',
+                'icon' => 'ti ti-layout-grid', 'label' => __('Save grid', 'mydashboard'),
+            ];
         }
-
-        // Vider la grille
-        $out .= "<a id='clear-grid' role='button' style='padding: 5px;' class='btn btn-danger btn-sm'>"
-              . "<i class='ti ti-trash me-1'></i>" . __('Clear grid', 'mydashboard') . "</a>";
-
-        // Glisser-déposer
+        $actions[] = ['id' => 'clear-grid', 'class' => 'btn-danger',
+            'icon' => 'ti ti-trash', 'label' => __('Clear grid', 'mydashboard'),
+        ];
         if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='drag-grid' role='button' style='padding: 5px;' class='btn btn-outline-warning btn-sm'>"
-                  . "<i class='ti ti-lock me-1'></i>" . __('Permit drag / resize widgets', 'mydashboard') . "</a>";
+            $actions[] = ['id' => 'drag-grid', 'class' => 'btn-outline-warning',
+                'icon' => 'ti ti-lock', 'label' => __('Permit drag / resize widgets', 'mydashboard'),
+            ];
         }
         if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='undrag-grid' role='button' style='padding: 5px;' class='btn btn-outline-success btn-sm'>"
-                  . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
+            $actions[] = ['id' => 'undrag-grid', 'class' => 'btn-outline-success',
+                'icon' => 'ti ti-lock-open', 'label' => __('Block drag / resize widgets', 'mydashboard'),
+            ];
         }
 
-        $out .= "<div class='vr mx-1'></div>";
-
-        // Sélecteur de grille prédéfinie
-        $elements = Dashboard::getPredefinedDashboardName();
-        if (!empty($elements)) {
-            $out .= "<select name='predefined_grid' class='form-select form-select-sm' style='width:auto'"
-                  . " onChange='this.form.submit()' title='" . __s('Load a predefined grid', 'mydashboard') . "'>";
-            $out .= "<option value=''>" . __('Load a predefined grid', 'mydashboard') . "</option>";
-            foreach ($elements as $id => $name) {
-                $out .= "<option value='" . (int) $id . "'>" . htmlspecialchars($name) . "</option>";
-            }
-            $out .= "</select>";
-        }
-
-        // Sélecteur de profil (mode global admin uniquement)
+        // Profile selector, in global admin mode only
+        $profiles = null;
         if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
             $iterator = $DB->request([
                 'SELECT'    => ['glpi_profiles.name', 'glpi_profiles.id'],
@@ -788,27 +763,29 @@ class Menu extends CommonGLPI
                 ],
                 'ORDER'     => 'glpi_profiles.name',
             ]);
-            $out .= "<select name='profiles_id' class='form-select form-select-sm' style='width:auto'"
-                  . " onChange='this.form.submit()' title='" . __s('Profile') . "'>";
-            $out .= "<option value=''>" . Dropdown::EMPTY_VALUE . "</option>";
+            $profiles = [];
             foreach ($iterator as $data) {
-                $sel  = ((int) $data['id'] === (int) $selected_profile) ? ' selected' : '';
-                $out .= "<option value='" . (int) $data['id'] . "'{$sel}>"
-                      . htmlspecialchars($data['name']) . "</option>";
+                $profiles[] = [
+                    'id' => (int) $data['id'],
+                    'name' => $data['name'],
+                    'selected' => (int) $data['id'] === (int) $selected_profile,
+                ];
             }
-            $out .= "</select>";
-        } else {
-            $out .= "<input type='hidden' name='profiles_id'"
-                  . " value='" . (int) $_SESSION['glpiactiveprofile']['id'] . "'>";
         }
 
-        // Fermer le mode édition (poussé à droite)
-        $out .= "<a id='close-edit' role='button' style='padding: 5px;' class='btn btn-outline-danger btn-sm ms-auto'>"
-              . "<i class='ti ti-x me-1'></i>" . __('Close edit mode', 'mydashboard') . "</a>";
+        $predefined_grids = Dashboard::getPredefinedDashboardName();
 
-        $out .= "</div>";
-        $out .= "</form>";
-        return $out;
+        return TemplateRenderer::getInstance()->render('@mydashboard/menu_edit_toolbar.html.twig', [
+            'form_action' => $this->getSearchURL(),
+            'csrf_token' => \Session::getNewCSRFToken(),
+            'badge' => $badge,
+            'actions' => $actions,
+            'predefined_grids' => is_array($predefined_grids) ? $predefined_grids : [],
+            'profiles' => $profiles,
+            'empty_value' => Dropdown::EMPTY_VALUE,
+            'current_profile_id' => (int) $_SESSION['glpiactiveprofile']['id'],
+            'submit_script_html' => self::getSubmitOnChangeScript(),
+        ]);
     }
 
     /**
@@ -817,47 +794,44 @@ class Menu extends CommonGLPI
     private function getActionModal(int $drag): string
     {
         $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+        $can_edit = Session::haveRight("plugin_mydashboard_edit", 6);
 
-        $out = "<div class='md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2'>";
-
-        // Badge mode visualisation
-        $out .= "<span class='badge bg-outline-secondary'>"
-              . "<i class='ti ti-layout-dashboard me-1'></i>" . __('My Dashboard', 'mydashboard')
-              . "</span>";
-        $out .= "<div class='vr mx-1'></div>";
-
-        if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='save-grid' role='button' style='padding: 5px;' class='btn btn-success btn-sm'>"
-                  . "<i class='ti ti-device-floppy me-1'></i>" . __('Save grid', 'mydashboard') . "</a>";
-            $out .= "<a id='undrag-grid' role='button' style='padding: 5px;' class='btn btn-outline-success btn-sm'>"
-                  . "<i class='ti ti-lock-open me-1'></i>" . __('Block drag / resize widgets', 'mydashboard') . "</a>";
+        $actions = [];
+        if ($drag > 0 && $can_edit) {
+            $actions[] = ['id' => 'save-grid', 'class' => 'btn-success',
+                'icon' => 'ti ti-device-floppy', 'label' => __('Save grid', 'mydashboard'),
+            ];
+            $actions[] = ['id' => 'undrag-grid', 'class' => 'btn-outline-success',
+                'icon' => 'ti ti-lock-open', 'label' => __('Block drag / resize widgets', 'mydashboard'),
+            ];
         }
-
-        if (Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='edit-grid' role='button' style='padding: 5px;' class='btn btn-primary btn-sm'>"
-                  . "<i class='ti ti-edit me-1'></i>" . __('Switch to edit mode', 'mydashboard') . "</a>";
+        if ($can_edit) {
+            $actions[] = ['id' => 'edit-grid', 'class' => 'btn-primary',
+                'icon' => 'ti ti-edit', 'label' => __('Switch to edit mode', 'mydashboard'),
+            ];
         }
-
-        if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-            $out .= "<a id='drag-grid' role='button' style='padding: 5px;' class='btn btn-outline-warning btn-sm'>"
-                  . "<i class='ti ti-lock me-1'></i>" . __('Permit drag / resize widgets', 'mydashboard') . "</a>";
+        if ($drag < 1 && $can_edit) {
+            $actions[] = ['id' => 'drag-grid', 'class' => 'btn-outline-warning',
+                'icon' => 'ti ti-lock', 'label' => __('Permit drag / resize widgets', 'mydashboard'),
+            ];
         }
-
         if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-            $out .= "<a id='edit-default-grid' role='button' style='padding: 5px;' class='btn btn-outline-secondary btn-sm'>"
-                  . "<i class='ti ti-adjustments me-1'></i>" . __('Custom and save profile grid', 'mydashboard') . "</a>";
+            $actions[] = ['id' => 'edit-default-grid', 'class' => 'btn-outline-secondary',
+                'icon' => 'ti ti-adjustments', 'label' => __('Custom and save profile grid', 'mydashboard'),
+            ];
         }
-
-        $out .= "<a id='exportByHTML' role='button' style='padding: 5px;' class='btn btn-outline-secondary btn-sm ms-auto'>"
-              . "<i class='ti ti-file-type-pdf me-1'></i>" . __("Export to PDF", "mydashboard") . "</a>";
-
+        $actions[] = ['id' => 'exportByHTML', 'class' => 'btn-outline-secondary', 'ms_auto' => true,
+            'icon' => 'ti ti-file-type-pdf', 'label' => __("Export to PDF", "mydashboard"),
+        ];
         if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen'] && $interface === 1) {
-            $out .= "<a id='header_fullscreen' role='button' style='padding: 5px;' class='btn btn-info btn-sm'>"
-                  . "<i class='ti ti-maximize me-1'></i>" . __("Fullscreen", "mydashboard") . "</a>";
+            $actions[] = ['id' => 'header_fullscreen', 'class' => 'btn-info',
+                'icon' => 'ti ti-maximize', 'label' => __("Fullscreen", "mydashboard"),
+            ];
         }
 
-        $out .= "</div>";
-        return $out;
+        return TemplateRenderer::getInstance()->render('@mydashboard/menu_action_toolbar.html.twig', [
+            'actions' => $actions,
+        ]);
     }
 
     /**
@@ -946,36 +920,19 @@ class Menu extends CommonGLPI
             });
         ");
 
-        $out  = "<div id='md-global-filter-bar' class='d-flex flex-wrap align-items-center gap-2 p-2 mb-2 bg-light border-bottom rounded-1'>";
-        $out .= "<span class='badge bg-outline-secondary'><i class='ti ti-filter me-1'></i>"
-              . __('Global filter', 'mydashboard') . "</span>";
-
-        $out .= "<div class='d-flex align-items-center gap-1'>";
-        $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Entity') . "</label>";
-        $out .= $entity_dd;
-        $out .= "</div>";
-
+        $filters = [
+            ['label' => __('Entity'), 'input_html' => $entity_dd],
+        ];
         if (!empty($groups_list)) {
-            $out .= "<div class='d-flex align-items-center gap-1'>";
-            $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Technician group') . "</label>";
-            $out .= $techgroup_dd;
-            $out .= "</div>";
+            $filters[] = ['label' => __('Technician group'), 'input_html' => $techgroup_dd];
         }
+        $filters[] = ['label' => __('Type'), 'input_html' => $type_dd];
+        $filters[] = ['label' => __('Year', 'mydashboard'), 'input_html' => $year_dd];
 
-        $out .= "<div class='d-flex align-items-center gap-1'>";
-        $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Type') . "</label>";
-        $out .= $type_dd;
-        $out .= "</div>";
-
-        $out .= "<div class='d-flex align-items-center gap-1'>";
-        $out .= "<label class='form-label mb-0 text-muted small me-1'>" . __('Year', 'mydashboard') . "</label>";
-        $out .= $year_dd;
-        $out .= "</div>";
-
-        $out .= $change_js;
-        $out .= "</div>";
-
-        return $out;
+        return TemplateRenderer::getInstance()->render('@mydashboard/menu_global_filter_bar.html.twig', [
+            'filters' => $filters,
+            'change_script_html' => $change_js,
+        ]);
     }
 
     /**
@@ -983,8 +940,8 @@ class Menu extends CommonGLPI
      */
     public function getscripts()
     {
-        $wl = "<script>
-
+        // Framework wrapper instead of a hand-written <script> tag
+        $wl = \Html::scriptBlock("
             $(document).ready(function () {
 
 //                 $('#load-widgets').click(function () {
@@ -1019,7 +976,7 @@ class Menu extends CommonGLPI
                 });
             });
 
-        </script>";
+        ");
 
         return $wl;
     }
@@ -1436,13 +1393,9 @@ class Menu extends CommonGLPI
         echo $this->getGlobalFilterBar();
         echo \Html::scriptBlock("window.mdDisplayedWidgetIds = {$all_displayed_widgets_id};");
 
-        if (!empty($warning_no_widgets)) {
-            echo $warning_no_widgets;
-        }
-
-        echo "<div id='mygrid$rand' class='mygrid'>";
-        //        echo "<div class='grid-stack$rand grid-stack md-grid-stack'>";
-        //        echo "</div>";
+        // The two GridStack script blocks below are captured rather than rewritten: they
+        // are large inline JS bodies, and buffering them keeps the migration to markup.
+        ob_start();
 
         echo "<script type='text/javascript'>
         $(function () {
@@ -1796,12 +1749,13 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
 //         }
     </script>";
 
-        echo "</div>";
+        $grid_script_html = ob_get_clean();
 
         $js_label_generating = json_encode(__('Generating PDF...', 'mydashboard'));
         $js_label_title      = json_encode(__('My Dashboard', 'mydashboard'));
         $js_label_error      = json_encode(__('PDF export failed. Please try again.', 'mydashboard'));
 
+        ob_start();
         echo "<script type='text/javascript'>
         (function () {
             const btnExport = document.getElementById('exportByHTML');
@@ -1873,105 +1827,13 @@ var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + 
             });
         }());
         </script>";
-    }
+        $export_script_html = ob_get_clean();
 
-    /**
-     * Create a side slide panel
-     *
-     * @param string $name name of the js object
-     * @param array  $options Possible options:
-     *          - title       Title to display
-     *          - position    position (either left or right - defaults to right)
-     *          - display     display or get string? (default true)
-     *          - icon        Path to aditional icon
-     *          - icon_url    Link for aditional icon
-     *          - icon_txt    Alternative text and title for aditional icon_
-     *
-     * @return void|string (see $options['display'])
-     */
-    public static function createSlidePanel($name, $options = [])
-    {
-        global $CFG_GLPI;
-
-        $param = [
-            'title'    => '',
-            'position' => 'right',
-            'url'      => '',
-            'display'  => true,
-            'icon'     => false,
-            'icon_url' => false,
-            'icon_txt' => false,
-        ];
-
-        if (count($options)) {
-            foreach ($options as $key => $val) {
-                if (isset($param[$key])) {
-                    $param[$key] = $val;
-                }
-            }
-        }
-
-        $out = "<script type='text/javascript'>\n";
-        $out .= "$(function() {";
-        $out .= "$('<div id=\'$name\' class=\'slidepanel on{$param['position']}\'><div class=\"header\">" .
-                "<button type=\'button\' class=\'close ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close\' title=\'" . __s('Close') . "\'><span class=\'ui-button-icon-primary ui-icon ui-icon-closethick\'></span><span class=\'ui-button-text\'>X</span></button>";
-
-        if ($param['icon']) {
-            $icon = "<img class=\'icon\' src=\'{$CFG_GLPI['root_doc']}{$param['icon']}\' alt=\'{$param['icon_txt']}\' title=\'{$param['icon_txt']}\'/>";
-            if ($param['icon_url']) {
-                $out .= "<a href=\'{$param['icon_url']}\'>$icon</a>";
-            } else {
-                $out .= $icon;
-            }
-        }
-
-        if ($param['title'] != '') {
-            $out .= "<h3>{$param['title']}</h3>";
-        }
-
-        $out .= "</div><div class=\'contents\'></div></div>')
-         .hide()
-         .appendTo('body');\n";
-        $out .= "$('#{$name} .close').on('click', function() {
-         $('#$name').hide(
-            'slow',
-            function () {
-               $(this).find('.contents').empty();
-            }
-         );
-       });\n";
-        $out .= "$('#{$name}Link').on('click', function() {
-         $('#$name').show(
-            'slow',
-            function() {
-               _load$name();
-            }
-         );
-      });\n";
-        $out .= "});";
-        if ($param['url'] != null) {
-            $out .= "var _load$name = function() {
-            $.ajax({
-               url: '{$param['url']}',
-               beforeSend: function() {
-                  var _loader = $('<div id=\'loadingslide\'><div class=\'loadingindicator\'>" . __s('Loading...') . "</div></div>');
-                  $('#$name .contents').html(_loader);
-               }
-            })
-            .always( function() {
-               $('#loadingslide').remove();
-            })
-            .done(function(res) {
-               $('#$name .contents').html(res);
-            });
-         };\n";
-        }
-        $out .= "</script>";
-
-        if ($param['display']) {
-            echo $out;
-        } else {
-            return $out;
-        }
+        echo TemplateRenderer::getInstance()->render('@mydashboard/menu_grid.html.twig', [
+            'rand' => $rand,
+            'show_warning' => !empty($warning_no_widgets),
+            'grid_script_html' => $grid_script_html,
+            'export_script_html' => $export_script_html,
+        ]);
     }
 }

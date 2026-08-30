@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Criterias;
 
+use Glpi\Application\View\TemplateRenderer;
 use Ajax;
 use Dropdown;
 use GlpiPlugin\Mydashboard\Preference;
@@ -81,16 +82,65 @@ class DisplayData
         return $form;
     }
 
+    /**
+     * Start/end month and year fields.
+     *
+     * Shared with ajax/dropdownUpdateDisplaydata.php, which refreshes this very block.
+     *
+     * @param int  $rand
+     * @param array $opt          current values
+     * @param int  $first_breaks  leading <br> count of the first field (the AJAX block
+     *                            starts flush, the inline criterion is spaced out)
+     *
+     * @return array
+     */
+    public static function getPeriodFields($rand, $opt = [], $first_breaks = 2)
+    {
+        $years = [];
+        $year = date("Y") - 3;
+        for ($i = 0; $i <= 3; $i++) {
+            $years[$year] = $year;
+            $year++;
+        }
+
+        $fields = [];
+        foreach ([['start', __('Start month', 'mydashboard'), __('Start year', 'mydashboard')],
+            ['end', __('End month', 'mydashboard'), __('End year', 'mydashboard')],
+        ] as [$prefix, $month_label, $year_label]) {
+            $fields[] = [
+                'label' => $month_label,
+                'breaks' => $fields === [] ? $first_breaks : 2,
+                'input_html' => Dropdown::showNumber($prefix . '_month', [
+                    'value' => $opt[$prefix . '_month'] ?? date('m'),
+                    'rand' => $rand,
+                    'min' => 1,
+                    'max' => 12,
+                    'display' => false,
+                    'width' => '200px',
+                ]),
+            ];
+            $fields[] = [
+                'label' => $year_label,
+                'breaks' => 1,
+                'input_html' => Dropdown::showFromArray($prefix . '_year', $years, [
+                    'value' => $opt[$prefix . '_year'] ?? date('Y'),
+                    'rand' => $rand,
+                    'display' => false,
+                ]),
+            ];
+        }
+
+        return $fields;
+    }
+
     public static function getDisplayForm($default, $opt, $count)
     {
         global $CFG_GLPI;
 
-        $form = "<span class='md-widgetcrit'>";
-
-        $temp = [];
-        $temp["YEAR"] = __("year", 'mydashboard');
-        $temp["START_END"] = __("Start end", 'mydashboard');
-
+        $temp = [
+            "YEAR" => __("year", 'mydashboard'),
+            "START_END" => __("Start end", 'mydashboard'),
+        ];
 
         $rand = mt_rand();
         $params = [
@@ -103,113 +153,38 @@ class DisplayData
             'display_emptychoice' => false,
         ];
 
-        $form .= __('Display', 'mydashboard');
-        $form .= "&nbsp;";
+        $start_end = isset($opt['display_data']) && $opt['display_data'] == 'START_END';
 
-        $dropdown = Dropdown::showFromArray("display_data", $temp, $params);
-
-        $form .= $dropdown;
-
-        $form .= "</span>";
-        if (isset($opt['display_data']) && $opt['display_data'] == 'START_END') {
-            $form .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= "</br></br>";
-            $form .= __('Start month', 'mydashboard');
-            $form .= "&nbsp;";
-            $options = [];
-            $options['value'] = $opt['start_month'] ?? date('m');
-            $options['rand'] = $rand;
-            $options['min'] = 1;
-            $options['max'] = 12;
-            $options['display'] = false;
-            $options['width'] = '200px';
-            $form .= Dropdown::showNumber('start_month', $options);
-            $form .= "</span>";
-
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= "</br>";
-            $form .= __('Start year', 'mydashboard');
-            $form .= "&nbsp;";
-            $options = [];
-            $options['value'] = $opt['start_year'] ?? date('Y');
-            $options['rand'] = $rand;
-            $options['display'] = false;
-            $year = date("Y") - 3;
-            for ($i = 0; $i <= 3; $i++) {
-                $elements[$year] = $year;
-
-                $year++;
-            }
-
-            $form .= Dropdown::showFromArray("start_year", $elements, $options);
-            $form .= "</span>";
-
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= "</br></br>";
-            $form .= __('End month', 'mydashboard');
-            $form .= "&nbsp;";
-            $options = [];
-            $options['value'] = $opt['end_month'] ?? date('m');
-            $options['rand'] = $rand;
-            $options['min'] = 1;
-            $options['max'] = 12;
-            $options['display'] = false;
-            $options['width'] = '200px';
-            $form .= Dropdown::showNumber('end_month', $options);
-            $form .= "</span>";
-
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= "</br>";
-            $form .= __('End year', 'mydashboard');
-            $form .= "&nbsp;";
-            $options = [];
-            $options['value'] = $opt['end_year'] ?? date('Y');
-            $options['rand'] = $rand;
-            $options['display'] = false;
-            $year = date("Y") - 3;
-            for ($i = 0; $i <= 3; $i++) {
-                $elements[$year] = $year;
-
-                $year++;
-            }
-
-            $form .= Dropdown::showFromArray("end_year", $elements, $options);
-            //            $form .= Dropdown::showNumber('end_year',$options);
-            $form .= "</span>";
-            $form .= "</span>";
+        $fields = [];
+        $year_html = '';
+        if ($start_end) {
+            $fields = self::getPeriodFields($rand, $opt);
         } else {
-            $form .= "</br></br>";
-            $form .= "<span id='display_data_crit$rand' name= 'display_data_crit$rand' class='md-widgetcrit'>";
             $annee_courante = date('Y', time());
             if (isset($opt["year"])
                 && $opt["year"] > 0) {
                 $annee_courante = $opt["year"];
             }
-            $form .= __('Year', 'mydashboard');
-            $form .= "&nbsp;";
-            $form .= Year::YearDropdown($annee_courante);
-            $form .= "</span>";
+            $year_html = Year::YearDropdown($annee_courante);
         }
 
-        $params2 = [
-            'value' => '__VALUE__',
-
-        ];
         $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
-        $form .= Ajax::updateItemOnSelectEvent(
-            'dropdown_display_data' . $rand,
-            "display_data_crit$rand",
-            $root . "/ajax/dropdownUpdateDisplaydata.php",
-            $params2,
-            false,
-        );
 
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return TemplateRenderer::getInstance()->render('@mydashboard/criteria_display_data.html.twig', [
+            'rand' => $rand,
+            'count' => $count,
+            'start_end' => $start_end,
+            'mode_html' => Dropdown::showFromArray("display_data", $temp, $params),
+            'fields' => $fields,
+            'year_html' => $year_html,
+            'ajax_html' => Ajax::updateItemOnSelectEvent(
+                'dropdown_display_data' . $rand,
+                "display_data_crit$rand",
+                $root . "/ajax/dropdownUpdateDisplaydata.php",
+                ['value' => '__VALUE__'],
+                false,
+            ),
+        ]);
     }
 
 }

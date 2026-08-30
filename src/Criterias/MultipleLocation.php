@@ -80,7 +80,6 @@ class MultipleLocation
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
         $result = getAllDataFromTable(\Location::getTable(), ['ORDER' => "completename"], false);
 
         if (isset($opt[self::$criteria_name])) {
@@ -105,28 +104,18 @@ class MultipleLocation
             'display_emptychoice' => true,
         ];
 
-        $form .= _n('Location', 'Locations', 2);
-        $form .= "&nbsp;";
-
-        $dropdown = Dropdown::showFromArray(self::$criteria_name, $temp, $params);
-
-        $form .= $dropdown;
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        $form .= "<span class='md-widgetcrit'>";
-        $form .= __('Child locations', 'mydashboard') . "&nbsp;";
-        $paramsy = ['display' => false];
         $ancestors = $opt['is_recursive_locations'] ?? $default['is_recursive_locations'];
-        $form .= Dropdown::showYesNo('is_recursive_locations', $ancestors, -1, $paramsy);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
 
-        return $form;
+        return Criteria::getFieldHtml(
+            _n('Location', 'Locations', 2),
+            Dropdown::showFromArray(self::$criteria_name, $temp, $params),
+            $count,
+        )
+        . Criteria::getFieldHtml(
+            __('Child locations', 'mydashboard'),
+            Dropdown::showYesNo('is_recursive_locations', $ancestors, -1, ['display' => false]),
+            $count,
+        );
     }
 
     public static function getQueryCriteria($params)

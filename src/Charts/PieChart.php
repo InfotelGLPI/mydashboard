@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Charts;
 
+use Html;
 use GlpiPlugin\Mydashboard\Chart;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 
@@ -61,7 +62,7 @@ class PieChart extends Chart
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = self::encodeForScript($graph_criterias);
 
-        $graph = "<script type='text/javascript'>
+        $graph = \Html::scriptBlock("
           var id$name = $ids;
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
@@ -194,7 +195,7 @@ class PieChart extends Chart
                }
 });
 
-          </script>";
+          ");
 
         return $graph;
     }
@@ -223,7 +224,7 @@ class PieChart extends Chart
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = self::encodeForScript($graph_criterias);
 
-        $graph = "<script type='text/javascript'>
+        $graph = \Html::scriptBlock("
 
           var id$name = $ids;
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
@@ -355,7 +356,7 @@ class PieChart extends Chart
                  });
                }
             });
-          </script>";
+          ");
 
         return $graph;
     }
@@ -384,7 +385,7 @@ class PieChart extends Chart
         $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
         $json_criterias = self::encodeForScript($graph_criterias);
 
-        $graph = "<script type='text/javascript'>
+        $graph = \Html::scriptBlock("
             var id$name = $ids;
           var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
           window.onresize = function() {
@@ -523,7 +524,7 @@ class PieChart extends Chart
                  });
                }
             });
-          </script>";
+          ");
 
         return $graph;
     }

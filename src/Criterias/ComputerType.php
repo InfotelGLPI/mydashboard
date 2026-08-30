@@ -65,23 +65,18 @@ class ComputerType
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-
-        $form .= __('Type');
-        $form .= "&nbsp;";
         $gparams = [
             'name' => self::$criteria_name,
             'display' => false,
             'value' => $opt[self::$criteria_name] ?? 0,
             'entity' => $_SESSION['glpiactiveentities'],
         ];
-        $form .= \ComputerType::Dropdown($gparams);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
 
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Type'),
+            \ComputerType::Dropdown($gparams),
+            $count,
+        );
     }
 
 

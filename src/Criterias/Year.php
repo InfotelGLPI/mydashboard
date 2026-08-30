@@ -75,26 +75,21 @@ class Year
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-        //            $annee_courante = date('Y', time());
         $annee_courante = $default[self::$criteria_name] ?? date('Y');
         if (isset($opt[self::$criteria_name])
             && $opt[self::$criteria_name] > 0) {
             $annee_courante = $opt[self::$criteria_name];
         }
-        $form .= __('Year', 'mydashboard');
-        $form .= "&nbsp;";
-        $form .= self::YearDropdown($annee_courante);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
 
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Year', 'mydashboard'),
+            self::YearDropdown($annee_courante),
+            $count,
+        );
     }
 
     /**
-     * @param null $selected
+     * @param int|string $selected selected year, null for none
      *
      * @return int|string
      */

@@ -1,0 +1,44 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{{ script_html|raw }}
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="md-widget-offcanvas"
+     aria-labelledby="md-wd-oc-label">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" id="md-wd-oc-label">{{ __('Availables widgets', 'mydashboard') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                aria-label="{{ __('Close') }}"></button>
+    </div>
+    <div class="offcanvas-body p-2">
+        {# fuzzy search box, then the accordion built by Widgetlist #}
+        {{ search_html|raw }}
+        <div class="mt-2">
+            {{ list_html|raw }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Two-column checkbox grid of ticket statuses. Each checkbox is preceded by a hidden
+   input so an unchecked box still posts a value. #}
+<span class="md-widgetcrit">
+    {{- _n('Status', 'Statuses', 2) }}&nbsp;
+    {% for status in statuses %}
+        <input type="hidden" name="status_{{ status.value }}" value="0" />
+        <input type="checkbox" name="status_{{ status.value }}" value="1"
+               {%- if status.checked %} checked="checked"{% endif %} />
+        {{ status.label }}
+        {%- if loop.index is even %}<br>{% else %}&nbsp;{% endif -%}
+    {% endfor %}
+</span>
+{%- if count > 1 %}<br><br>{% endif -%}

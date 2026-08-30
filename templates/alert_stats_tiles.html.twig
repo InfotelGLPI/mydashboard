@@ -1,0 +1,51 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Row of counter tiles shared by the ticket-alert and SLA-alert widgets. A tile is only
+   a link when its counter is above zero. #}
+<div class="tickets-stats">
+    {% for tile in tiles %}
+        <div class="nb" style="color:{{ tile.color }}">
+            {% if tile.url %}
+                <a style="color:{{ tile.color }}" target="_blank" href="{{ tile.url }}"
+                   {%- if tile.title %} title="{{ tile.title }}"{% endif %}>
+            {% endif %}
+
+            <i style="color:{{ tile.color }};{{ tile.icon_style }}" class="{{ tile.icon_class }}"></i>
+            <h3 style="{{ tile.heading_style }}">
+                <span class="counter count-number" id="{{ tile.id }}"></span>
+            </h3>
+            <p class="count-text ">{{ tile.label }}</p>
+
+            {% if tile.url %}
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {{ countup_script_html|raw }}
+</div>

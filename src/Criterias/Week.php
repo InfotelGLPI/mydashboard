@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Criterias;
 
+use GlpiPlugin\Mydashboard\Criteria;
 use Dropdown;
 
 /**
@@ -59,16 +60,11 @@ class Week
             $current_week = $opt[self::$criteria_name];
         }
 
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Week', 'mydashboard');
-        $form .= "&nbsp;";
-        $form .= self::weekDropdown(self::$criteria_name, $current_week);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Week', 'mydashboard'),
+            self::weekDropdown(self::$criteria_name, $current_week),
+            $count,
+        );
     }
 
     /**

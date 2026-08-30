@@ -1,0 +1,80 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<form method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token }}">
+
+    <div class="md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2">
+        <span class="badge bg-warning text-dark" style="padding: 5px;">
+            <i class="ti ti-pencil me-1"></i>{{ badge }}
+        </span>
+
+        <div class="vr mx-1"></div>
+
+        <button type="button" style="padding: 5px;" class="btn btn-primary btn-sm plugin_mydashboard_add_button"
+                data-bs-toggle="offcanvas" data-bs-target="#md-widget-offcanvas"
+                aria-controls="md-widget-offcanvas">
+            <i class="ti ti-plus me-1"></i>{{ __('Add widgets', 'mydashboard') }}
+        </button>
+
+        {% for action in actions %}
+            <a id="{{ action.id }}" role="button" style="padding: 5px;" class="btn {{ action.class }} btn-sm">
+                <i class="{{ action.icon }} me-1"></i>{{ action.label }}
+            </a>
+        {% endfor %}
+
+        <div class="vr mx-1"></div>
+
+        {% if predefined_grids|length %}
+            <select name="predefined_grid" class="form-select form-select-sm" style="width:auto"
+                    data-md-submit-on-change title="{{ __('Load a predefined grid', 'mydashboard') }}">
+                <option value="">{{ __('Load a predefined grid', 'mydashboard') }}</option>
+                {% for id, name in predefined_grids %}
+                    <option value="{{ id }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+
+        {% if profiles is not null %}
+            <select name="profiles_id" class="form-select form-select-sm" style="width:auto"
+                    data-md-submit-on-change title="{{ __('Profile') }}">
+                <option value="">{{ empty_value }}</option>
+                {% for profile in profiles %}
+                    <option value="{{ profile.id }}"{% if profile.selected %} selected{% endif %}>{{ profile.name }}</option>
+                {% endfor %}
+            </select>
+        {% else %}
+            <input type="hidden" name="profiles_id" value="{{ current_profile_id }}">
+        {% endif %}
+
+        <a id="close-edit" role="button" style="padding: 5px;" class="btn btn-outline-danger btn-sm ms-auto">
+            <i class="ti ti-x me-1"></i>{{ __('Close edit mode', 'mydashboard') }}
+        </a>
+    </div>
+</form>
+
+{{ submit_script_html|raw }}

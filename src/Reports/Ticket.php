@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Reports;
 
+use GlpiPlugin\Mydashboard\Helper;
 use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
@@ -1396,25 +1397,18 @@ class Ticket extends CommonGLPI
         $widget->setWidgetId("ticketcountwidget");
 
         $title = __('Ticket followup', 'mydashboard');
-        if (Session::getCurrentInterface() != "central") {
-            $icon = "<i class='" . \Ticket::getIcon() . "'></i>";
-            $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset\">"
-                . $title . "</a>";
-            if (\Ticket::canCreate()) {
-                $widgetTitle .= "&nbsp;<span>";
-                $widgetTitle .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1\">";
-                $widgetTitle .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
-            }
-        } else {
-            $icon = "<i class='" . \Ticket::getIcon() . "'></i>";
-            $widgetTitle = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset\">"
-                . $title . "</a>";
-            if (\Ticket::canCreate()) {
-                $widgetTitle .= "&nbsp;<span>";
-                $widgetTitle .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.form.php\">";
-                $widgetTitle .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a>";
-            }
+        $icon = "<i class='" . \Ticket::getIcon() . "'></i>";
+        $add_url = null;
+        if (\Ticket::canCreate()) {
+            $add_url = Session::getCurrentInterface() != "central"
+                ? $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1"
+                : $CFG_GLPI["root_doc"] . "/front/ticket.form.php";
         }
+        $widgetTitle = Helper::getWidgetTitleHtml(
+            $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset",
+            $title,
+            $add_url,
+        );
 
         $twig_params = [
             'title' => [

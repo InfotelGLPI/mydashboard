@@ -35,6 +35,7 @@ use DBConnection;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
 use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
@@ -740,100 +741,82 @@ class Widget extends CommonDBTM
                     } else {
                         $widgetdisplay = "";
                     }
-                    $delclass = "";
-
-                    $widgetdisplay .= "<div id='$widgetindex'>";
-                    $widgetdisplay .= "<div class=\"bt-row $delclass\">";
-                    $widgetdisplay .= "<div class=\"bt-feature $class \" style='width: 98%;margin-left:10px'>";
-
-                    if ($widget->getTitleVisibility()) {
-                        $titletype     = $widget->getWidgetHeaderType();
-                        if (!empty($titletype)) {
-                            $titletype = $widget->getWidgetHeaderType();
-                        } else {
-                            $titletype = 'info';
-                        }
-                        $widgetdisplay .= "<div class='display-4' style='margin: 15px;'>";
-                        $widgetdisplay .= "<h4>";
-                        $widgetdisplay .= $title;
-                        if ($comment != "") {
-                            $widgetdisplay .= "&nbsp;";
-                            $opt           = ['awesome-class' => 'fa-info-circle',
-                                'display'       => false];
-                            $widgetdisplay .= \Html::showToolTip($comment, $opt);
-                        }
-                        $widgetdisplay .= "</h4>";
-                        $widgetdisplay .= "</div><hr style='margin: 1.2rem 0;'>";
-                        //         $widget .= "<small>" . __('A comment') . "</small>";
+                    $tooltip_html = '';
+                    if ($widget->getTitleVisibility() && $comment != "") {
+                        $tooltip_html = \Html::showToolTip($comment, [
+                            'awesome-class' => 'fa-info-circle',
+                            'display' => false,
+                        ]);
                     }
 
-                    $widgetdisplay .= "<div id=\"display-sc\">";
+                    // Any markup-bearing header or cell goes through the sanitizer the plugin
+                    // already uses for custom content: it preserves safe formatting
+                    // (class/style/links) while stripping <script> and event handlers, closing
+                    // the stored-XSS path opened by raw values such as a ticket title.
+                    // Plain values are emitted untouched to avoid <p> wrapping.
+                    $sanitize = static function ($value) {
+                        $value = (string) $value;
+                        return str_contains($value, '<')
+                            ? RichText::getSafeHtml($value)
+                            : $value;
+                    };
 
-                    // HEADER
-                    $widgetdisplay .= $widget->getWidgetHeader();
-
+                    $table = null;
+                    $html_content = '';
                     if ($type == "table") {
-                        $head = $datas['aoColumns'];
                         $data = $datas['aaData'];
-                        $nb   = 0;
+                        $nb = 0;
                         if (($nb_data = reset($data)) == !false) {
                             $nb = count($nb_data);
                         }
 
-                        $widgetdisplay .= '<table id="' . $widgetindex . $rand . '" class="display tab_cadre" cellspacing="0" width="100%">';
-                        $widgetdisplay .= '<thead>';
-                        $widgetdisplay .= '<tr>';
-                        foreach ($head as $k => $th) {
-                            $widgetdisplay .= '<th>' . (str_contains((string) $th['sTitle'], '<') ? \Glpi\RichText\RichText::getSafeHtml((string) $th['sTitle']) : $th['sTitle']) . '</th>';
+                        $columns = [];
+                        foreach ($datas['aoColumns'] as $th) {
+                            $columns[] = $sanitize($th['sTitle']);
                         }
-                        $widgetdisplay .= '</tr>';
-                        $widgetdisplay .= '</thead><tfoot><tr>';
-                        foreach ($head as $k => $th) {
-                            $widgetdisplay .= '<th>' . (str_contains((string) $th['sTitle'], '<') ? \Glpi\RichText\RichText::getSafeHtml((string) $th['sTitle']) : $th['sTitle']) . '</th>';
-                        }
-                        $widgetdisplay .= '</tr></tfoot>';
-                        $widgetdisplay .= ' <tbody>';
 
-                        foreach ($data as $k => $v) {
-                            $widgetdisplay .= '<tr>';
+                        $rows = [];
+                        foreach ($data as $v) {
+                            $row = [];
                             for ($i = 0; $i < $nb; $i++) {
-                                // Table cells legitimately carry server-built HTML (ticket
-                                // links, priority color badges, icons) but also embed raw,
-                                // user-controlled values such as a ticket title (getNameID()).
-                                // Run any markup-bearing cell through the same sanitizer the
-                                // plugin already uses for custom content: it preserves safe
-                                // formatting (class/style/links) while stripping <script> and
-                                // event handlers, closing the stored-XSS path. Plain cells
-                                // (no tag) are emitted untouched to avoid <p> wrapping.
-                                $cell = (string) $v[$i];
-                                if (str_contains($cell, '<')) {
-                                    $cell = \Glpi\RichText\RichText::getSafeHtml($cell);
-                                }
-                                $widgetdisplay .= '<td>' . $cell . '</td>';
+                                $row[] = $sanitize($v[$i]);
                             }
-                            $widgetdisplay .= '</tr>';
+                            $rows[] = $row;
                         }
-                        $widgetdisplay .= '</tbody></table>';
 
-                        $widgetdisplay .= $widget->getWidgetHtmlContent();
+                        $table = [
+                            'id' => $widgetindex . $rand,
+                            'columns' => $columns,
+                            'rows' => $rows,
+                            'content_html' => $widget->getWidgetHtmlContent(),
+                        ];
                     } elseif ($type == "html") {
-                        $widgetdisplay .= $datas;
+                        $html_content = $datas;
                     }
 
-                    $widgetdisplay .= "</div>";
-                    $widgetdisplay .= "</div>";
-                    $widgetdisplay .= "</div>";
-                    $widgetdisplay .= "</div>";
-
+                    $scripts_html = '';
                     foreach ($scripts as $script) {
-                        $widgetdisplay .= "<script type='text/javascript'>" . $script . "</script>";
+                        $scripts_html .= \Html::scriptBlock($script);
                     }
 
+                    $debug_html = '';
                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                        $displayloadwidget = "Load widget " . $widgetindex . " : " . $loadwidget . "<br>";
-                        $widgetdisplay     .= $displayloadwidget;
+                        $debug_html = "Load widget " . $widgetindex . " : " . $loadwidget . "<br>";
                     }
-                    return $widgetdisplay;
+
+                    return TemplateRenderer::getInstance()->render('@mydashboard/widget_frame.html.twig', [
+                        'prelude_html' => $widgetdisplay,
+                        'widget_id' => $widgetindex,
+                        'feature_class' => $class,
+                        'show_title' => $widget->getTitleVisibility(),
+                        'title_html' => $title,
+                        'tooltip_html' => $tooltip_html,
+                        'header_html' => $widget->getWidgetHeader(),
+                        'table' => $table,
+                        'html_content' => $html_content,
+                        'scripts_html' => $scripts_html,
+                        'debug_html' => $debug_html,
+                    ]);
                 } else {
                     $widgetdisplay = $widgetindex . " : " . __('No data available', 'mydashboard');
                     return $widgetdisplay;
@@ -847,68 +830,77 @@ class Widget extends CommonDBTM
      *
      * @return string
      */
+    /**
+     * Render one of the alert / maintenance / information widgets.
+     *
+     * The three used to carry near-identical copies of this frame; only the grid id, the
+     * bootstrap alert flavour, the Config title field, the list builder and the empty
+     * wording ever differed.
+     *
+     * @param string $feature_class      css class of the widget body
+     * @param bool   $hidewidget         wrap in a card and use smaller headings
+     * @param array  $itilcategories_id  categories the widget is restricted to
+     * @param string $style              inline style of the row
+     * @param string $gs_id              grid id (gs4, gs5, gs6)
+     * @param string $alert_class        bootstrap alert flavour
+     * @param string $title_field        Config field holding the widget title
+     * @param string $list_html          rendered ticker, empty when there is nothing
+     * @param string $empty_label        message shown when the list is empty
+     *
+     * @return string
+     */
+    private static function getAlertWidgetHtml(
+        $feature_class,
+        $hidewidget,
+        $itilcategories_id,
+        $style,
+        $gs_id,
+        $alert_class,
+        $title_field,
+        $list_html,
+        $empty_label
+    ) {
+        $config = new Config();
+        $config->getFromDB(1);
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/widget_alert_block.html.twig', [
+            'hidewidget' => (bool) $hidewidget,
+            'heading' => $hidewidget ? 'h5' : 'h3',
+            'gs_id' => $gs_id,
+            'addclass' => count($itilcategories_id) > 0 ? 'details' : '',
+            'style' => $style,
+            'feature_class' => $feature_class,
+            'alert_class' => $alert_class,
+            'title_html' => Config::displayField($config, $title_field),
+            'list_html' => $list_html,
+            'empty_label' => $empty_label,
+        ]);
+    }
+
     public static function getWidgetMydashboardAlert($class, $hidewidget = false, $itilcategories_id = [], $style = "")
     {
-        if ($hidewidget == true && Alert::countForAlerts(0, 0, $itilcategories_id) < 1) {
-            $display = false;
-            return $display;
-        }
-        $delclass = "";
-        $addclass = "";
-        if (count($itilcategories_id) > 0) {
-            $addclass = "details";
-        }
-        $display = "";
-        if ($hidewidget != false) {
-            $display .= "<div class='card' id='gridcontentgs4'>";
-        }
-        $display .= "<div id='gs4' class=\"bt-row $delclass $addclass\" style='$style'>";
-        $display .= "<div class=\"bt-feature $class \">";
-        if ($hidewidget != true) {
-            $display .= "<h3>";
-        } else {
-            $display .= "<h5>";
-        }
-        $display .= "<div class='alert alert-danger ' role='alert'>";
-        $config  = new Config();
-        $config->getFromDB(1);
-        $display .= Config::displayField($config, 'title_alerts_widget');
-        $display .= "</div>";
-        if ($hidewidget != true) {
-            $display .= "</h3>";
-        } else {
-            $display .= "</h5>";
-        }
-        //      $display  .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
-        //      $display  .= __('A network alert can impact you and will avoid creating a ticket', 'mydashboard') . "</small></div>";
-        $display .= "<div id=\"display-sc\">";
-        if (Alert::countForAlerts(0, 0, $itilcategories_id) > 0) {
-            $alerts  = new Alert();
-            $display .= $alerts->getAlertList(0, $itilcategories_id);
-        } else {
-            $display .= "<div class='center'>";
-            if ($hidewidget != true) {
-                $display .= "<h3>";
-            } else {
-                $display .= "<h5>";
-            }
-            $display .= "<span class ='alert-color'>";
-            $display .= __("No problem detected", "mydashboard");
-            $display .= "</span>";
-            if ($hidewidget != true) {
-                $display .= "</h3>";
-            } else {
-                $display .= "</h5>";
-            }
-            $display .= "</div>";
+        $nb = Alert::countForAlerts(0, 0, $itilcategories_id);
+        if ($hidewidget == true && $nb < 1) {
+            return false;
         }
 
-        $display .= "</div>";
-        $display .= "</div>";
-        if ($hidewidget != false) {
-            $display .= "</div>";
+        $list_html = '';
+        if ($nb > 0) {
+            $alerts = new Alert();
+            $list_html = $alerts->getAlertList(0, $itilcategories_id);
         }
-        return $display;
+
+        return self::getAlertWidgetHtml(
+            $class,
+            $hidewidget,
+            $itilcategories_id,
+            $style,
+            'gs4',
+            'alert-danger',
+            'title_alerts_widget',
+            $list_html,
+            __("No problem detected", "mydashboard"),
+        );
     }
 
     /**
@@ -918,65 +910,28 @@ class Widget extends CommonDBTM
      */
     public static function getWidgetMydashboardMaintenance($class, $hidewidget = false, $itilcategories_id = [], $style = "")
     {
-        if ($hidewidget == true && Alert::countForAlerts(0, 1, $itilcategories_id) < 1) {
-            $display = false;
-            return $display;
+        $nb = Alert::countForAlerts(0, 1, $itilcategories_id);
+        if ($hidewidget == true && $nb < 1) {
+            return false;
         }
 
-        $delclass = "";
-        $addclass = "";
-        if (count($itilcategories_id) > 0) {
-            $addclass = "details";
+        $list_html = '';
+        if ($nb > 0) {
+            $alerts = new Alert();
+            $list_html = $alerts->getMaintenanceList($itilcategories_id);
         }
-        $display = "";
-        if ($hidewidget != false) {
-            $display .= "<div class='card' id='gridcontentgs5'>";
-        }
-        $display .= "<div id='gs5' class=\"bt-row $delclass $addclass\" style='$style'>";
-        $display .= "<div class=\"bt-feature $class \">";
-        if ($hidewidget != true) {
-            $display .= "<h3>";
-        } else {
-            $display .= "<h5>";
-        }
-        $display .= "<div class='alert alert-warning ' role='alert'>";
-        $config  = new Config();
-        $config->getFromDB(1);
-        $display .= Config::displayField($config, 'title_maintenances_widget');
-        //      $display .= "<small>" . __('A network maintenance can impact you and will avoid creating a ticket', 'mydashboard') . "</small>";
-        $display .= "</div>";
-        if ($hidewidget != true) {
-            $display .= "</h3>";
-        } else {
-            $display .= "</h5>";
-        }
-        $display .= "<div id=\"display-sc\">";
-        if (Alert::countForAlerts(0, 1, $itilcategories_id) > 0) {
-            $alerts  = new Alert();
-            $display .= $alerts->getMaintenanceList($itilcategories_id);
-        } else {
-            $display .= "<div class='center'>";
-            if ($hidewidget != true) {
-                $display .= "<h3>";
-            } else {
-                $display .= "<h5>";
-            }
-            $display .= "<span class ='alert-color'>";
-            $display .= __("No scheduled maintenance", "mydashboard");
-            $display .= "</span>";
-            if ($hidewidget != true) {
-                $display .= "</h3>";
-            } else {
-                $display .= "</h5>";
-            }
-            $display .= "</div>";
-        }
-        $display .= "</div>";
-        $display .= "</div>";
-        if ($hidewidget != false) {
-            $display .= "</div>";
-        }
-        return $display;
+
+        return self::getAlertWidgetHtml(
+            $class,
+            $hidewidget,
+            $itilcategories_id,
+            $style,
+            'gs5',
+            'alert-warning',
+            'title_maintenances_widget',
+            $list_html,
+            __("No scheduled maintenance", "mydashboard"),
+        );
     }
 
     /**
@@ -987,66 +942,29 @@ class Widget extends CommonDBTM
      */
     public static function getWidgetMydashboardInformation($class, $hidewidget = false, $itilcategories_id = [], $style = "")
     {
-        if ($hidewidget == true && Alert::countForAlerts(0, 2, $itilcategories_id) < 1) {
-            $display = false;
-            return $display;
+        $nb = Alert::countForAlerts(0, 2, $itilcategories_id);
+        if ($hidewidget == true && $nb < 1) {
+            return false;
         }
 
-        $delclass = "";
-        $addclass = "";
-        if (count($itilcategories_id) > 0) {
-            $addclass = "details";
+        $list_html = '';
+        if ($nb > 0) {
+            $alerts = new Alert();
+            $list_html = $alerts->getInformationList($itilcategories_id);
         }
-        $display = "";
-        if ($hidewidget != false) {
-            $display .= "<div class='card' id='gridcontentgs6'>";
-        }
-        $display .= "<div id='gs6' class=\"bt-row $delclass $addclass\" style='$style'>";
-        $display .= "<div class=\"bt-feature $class \">";
-        if ($hidewidget != true) {
-            $display .= "<h3>";
-        } else {
-            $display .= "<h5>";
-        }
-        $display .= "<div class='alert alert-info ' role='alert'>";
-        $config  = new Config();
-        $config->getFromDB(1);
-        $display .= Config::displayField($config, 'title_informations_widget');
-        $display .= "</div>";
-        if ($hidewidget != true) {
-            $display .= "</h3>";
-        } else {
-            $display .= "</h5>";
-        }
-        $display .= "<div id='display-sc'>";
-        if (Alert::countForAlerts(0, 2, $itilcategories_id) > 0) {
-            $alerts  = new Alert();
-            $display .= $alerts->getInformationList($itilcategories_id);
-        } else {
-            $display .= "<div class='center'>";
-            if ($hidewidget != true) {
-                $display .= "<h3>";
-            } else {
-                $display .= "<h5>";
-            }
-            $display .= "<span class ='alert-color'>";
-            $display .= __("No informations founded", "mydashboard");
-            $display .= "</span>";
-            if ($hidewidget != true) {
-                $display .= "<h3>";
-            } else {
-                $display .= "</h5>";
-            }
-            $display .= "</div>";
-        }
-        $display .= "</div>";
-        $display .= "</div>";
-        if ($hidewidget != false) {
-            $display .= "</div>";
-        }
-        return $display;
+
+        return self::getAlertWidgetHtml(
+            $class,
+            $hidewidget,
+            $itilcategories_id,
+            $style,
+            'gs6',
+            'alert-info',
+            'title_informations_widget',
+            $list_html,
+            __("No informations founded", "mydashboard"),
+        );
     }
-
     /**
      * @param $class
      *
@@ -1054,128 +972,39 @@ class Widget extends CommonDBTM
      */
     public static function getWidgetMydashboardEquipments($class, $fromsc)
     {
-        global $CFG_GLPI;
-
-        $delclass = "";
-        //      $display  = "<div id='gs17' class=\"bt-row $delclass\">";
-        $display = "";
+        $item_class = '';
         if ($fromsc == true) {
-            $display .= "<div class=\"bt-feature $class\">";
-            $display .= "<h3>";
-            $display .= "<div class='alert alert-light ' role='alert'>";
-            $display .= __('Your equipments', 'mydashboard');
-            $display .= "</div>";
-            $display .= "</h3>";
-            $display .= "</div>";
-        }
-        $allUsedItemsForUser = self::getAllUsedItemsForUser();
-
-        if (count($allUsedItemsForUser) > 0) {
-            if ($fromsc == true) {
-                $class  = "";
-                $config = new ServiceCatalogConfig();
-                if ($config->getLayout() == ServiceCatalogConfig::THUMBNAIL) {
-                    $class = "visitedchildbg widgetrow";
-                }
-                $display .= "<div class=\"bt-feature bt-col-md-12 count-title\">";
+            $config = new ServiceCatalogConfig();
+            if ($config->getLayout() == ServiceCatalogConfig::THUMBNAIL) {
+                $item_class = "visitedchildbg widgetrow";
             }
-            foreach ($allUsedItemsForUser as $itemtype => $used_items) {
-                $item = getItemForItemtype($itemtype);
+        }
 
+        $can_link = isset($_SESSION['glpiactiveprofile']['interface'])
+            && Session::getCurrentInterface() == 'central';
 
-                //            if ($i % 2 == 0 && $nb > 1) {
-                $class = "";
-                if ($fromsc == true) {
-                    $config = new ServiceCatalogConfig();
-                    if ($config->getLayout() == ServiceCatalogConfig::THUMBNAIL) {
-                        $class = "visitedchildbg widgetrow";
-                    }
-                }
-                $display .= "<div class=\"bt-feature bt-col-md-3 center equip-text $class\">";
-                //            }
-                //            if ($nb == 1) {
-                //               $display .= "<div class=\"bt-feature bt-col-md-6 center equip-text\">";
-                //            }
-                $i  = 0;
-                $nb = count($used_items);
-                foreach ($used_items as $item_datas) {
-                    //               if ($i % 2 == 0 && $nb > 1) {
-                    //                  $display .= "<div class=\"bt-col-md-6 center\">";
-                    //               }
-                    if ($nb == 1) {
-                        $display .= "<div class=\"equip-item\">";
-                    } else {
-                        $display .= "<div class=\"equip-item\">";
-                    }
-
-                    //               $display .= "<div class=\"nbstock\" style=\"color:$color\">";
-                    //               $display .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" .$item_datas['name']  . "'>";
-
-                    //               $display .= "<h4>";
-                    //               $display .= "<span class=\"counter count-number\" id=\"stock_$itemtype\"></span>";
-                    //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
-                    //               $display .= "<p class=\"count-text \">";
-
-                    $display .= "</br>";
-
-                    //               $types = ['Computer', 'Monitor','Peripheral','Phone','Printer','SoftwareLicense',Badge:class];
-                    $icon = $item->getIcon();
-                    if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])
-                        && Session::getCurrentInterface() == 'central') {
-                        $display .= "<a href='" . $item::getFormURL() . "?id=" . $item_datas['id'] . "' target='_blank'>";
-                    }
-
-
-                    $display .= "<i class=\"$icon fa-2x fa-border\"></i>";
-                    $display .= "</br>";
-                    $display .= $item_datas['name'];
-                    if ($item->canView() && isset($_SESSION['glpiactiveprofile']['interface'])
-                        && Session::getCurrentInterface() == 'central') {
-                        $display .= "</a>";
-                    }
-                    $display .= "</br>";
-                    $display .= $item->getTypeName();
-                    $display .= "</br>";
-                    //               $script .= "$('#stock_$itemtype').countup($nb);";
-
-                    $i++;
-                    //               if (($i == $nb) && (($nb % 2) != 0) && ($nb > 1)) {
-
-                    //               if ($item_datas['id']
-                    //                   && Ticket::isPossibleToAssignType($itemtype)
-                    //                   && Ticket::canCreate()
-                    //                   && (!isset($item->fields['is_template']) || ($item->fields['is_template'] == 0))) {
-                    //                  $link = Html::showSimpleForm(Ticket::getFormURL(),
-                    //                                       '_add_fromitem',
-                    //                                       __('New ticket for this item...'),
-                    //                                       ['itemtype' => $itemtype,
-                    //                                        'items_id' => $item_datas['id']],
-                    //                     'fa-plus-circle');
-                    //                  $display .= $link;
-                    //               }
-
-                    $display .= "</div>";
-                    //               }
-                }
-
-                $display .= "</div>";
+        $groups = [];
+        foreach (self::getAllUsedItemsForUser() as $itemtype => $used_items) {
+            $item = getItemForItemtype($itemtype);
+            $items = [];
+            foreach ($used_items as $item_datas) {
+                $items[] = [
+                    'url' => ($can_link && $item->canView())
+                        ? $item::getFormURL() . "?id=" . $item_datas['id']
+                        : null,
+                    'icon' => $item->getIcon(),
+                    'name' => $item_datas['name'],
+                    'typename' => $item->getTypeName(),
+                ];
             }
-            //         $display .= "<script type='text/javascript'>
-            //                         $(function(){
-            //                            $script;
-            //                         });
-            //                  </script>";
-            //                  $display .= "</div>";
-        } else {
-            $display .= "<div class=\"bt-feature bt-col-md-11 equip-item center\">";
-            $display .= "<h3><span class ='alert-color'>";
-            $display .= __("No equipments founded", "mydashboard");
-            $display .= "</span></h3></div>";
+            $groups[] = ['class' => $item_class, 'items' => $items];
         }
-        if ($fromsc == true) {
-            $display .= "</div>";
-        }
-        return $display;
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/widget_equipments.html.twig', [
+            'fromsc' => $fromsc == true,
+            'feature_class' => $class,
+            'groups' => $groups,
+        ]);
     }
 
     /**

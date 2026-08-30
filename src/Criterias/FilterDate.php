@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Criterias;
 
+use Glpi\Application\View\TemplateRenderer;
 use Ajax;
 use Dropdown;
 use GlpiPlugin\Mydashboard\Preference;
@@ -80,12 +81,10 @@ class FilterDate
 
         global $CFG_GLPI;
 
-        $form = "<span class='md-widgetcrit'>";
-
-        $temp = [];
-        $temp["YEAR"] = __("year", 'mydashboard');
-        $temp["BEGIN_END"] = __("begin and end date", 'mydashboard');
-
+        $temp = [
+            "YEAR" => __("year", 'mydashboard'),
+            "BEGIN_END" => __("begin and end date", 'mydashboard'),
+        ];
 
         $rand = mt_rand();
         $params = [
@@ -98,68 +97,47 @@ class FilterDate
             'display_emptychoice' => false,
         ];
 
-        $form .= __('Filter date', 'mydashboard');
-        $form .= "&nbsp;";
+        $begin_end = isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END';
 
-        $dropdown = Dropdown::showFromArray("filter_date", $temp, $params);
-
-        $form .= $dropdown;
-
-
-        $form .= "</span>";
-        if (isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END') {
-            $form .= "<span id='filter_date_crit$rand' name= 'filter_date_crit$rand' class='md-widgetcrit'>";
-            $form .= "<span class='md-widgetcrit'>";
-
-            $form .= __('Start');
-            $form .= "&nbsp;";
-            $form .= Html::showDateTimeField(
+        $begin_html = '';
+        $end_html = '';
+        $year_html = '';
+        if ($begin_end) {
+            $begin_html = Html::showDateTimeField(
                 "begin",
                 ['value' => $opt['begin'] ?? null, 'maybeempty' => false, 'display' => false],
             );
-            $form .= "</span>";
-            $form .= "</br>";
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= __('End');
-            $form .= "&nbsp;";
-            $form .= Html::showDateTimeField(
+            $end_html = Html::showDateTimeField(
                 "end",
                 ['value' => $opt['end'] ?? null, 'maybeempty' => false, 'display' => false],
             );
-            $form .= "</span>";
-            $form .= "</span>";
         } else {
-            $form .= "</br></br>";
-            $form .= "<span id='filter_date_crit$rand' name= 'filter_date_crit$rand' class='md-widgetcrit'>";
             $annee_courante = date('Y', time());
             if (isset($opt["year"])
                 && $opt["year"] > 0) {
                 $annee_courante = $opt["year"];
             }
-            $form .= __('Year', 'mydashboard');
-            $form .= "&nbsp;";
-            $form .= Year::YearDropdown($annee_courante);
-            $form .= "</span>";
+            $year_html = Year::YearDropdown($annee_courante);
         }
 
-        $params2 = [
-            'value' => '__VALUE__',
-
-        ];
         $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
-        $form .= Ajax::updateItemOnSelectEvent(
-            'dropdown_filter_date' . $rand,
-            "filter_date_crit$rand",
-            $root . "/ajax/dropdownUpdateDisplaydata.php",
-            $params2,
-            false,
-        );
 
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return TemplateRenderer::getInstance()->render('@mydashboard/criteria_filter_date.html.twig', [
+            'rand' => $rand,
+            'count' => $count,
+            'begin_end' => $begin_end,
+            'mode_html' => Dropdown::showFromArray("filter_date", $temp, $params),
+            'begin_html' => $begin_html,
+            'end_html' => $end_html,
+            'year_html' => $year_html,
+            'ajax_html' => Ajax::updateItemOnSelectEvent(
+                'dropdown_filter_date' . $rand,
+                "filter_date_crit$rand",
+                $root . "/ajax/dropdownUpdateDisplaydata.php",
+                ['value' => '__VALUE__'],
+                false,
+            ),
+        ]);
     }
 
 }

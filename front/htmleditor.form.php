@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Customswidget;
 
 Session::checkRight("plugin_mydashboard_config", UPDATE);
@@ -38,7 +39,7 @@ if (isset($_POST['update'])) {
     // storing it. This keeps the allowed formatting but strips scripts and event
     // handlers, closing the stored-XSS path where a config admin could persist a
     // payload executed in every user's browser that displays this shared widget.
-    $_POST["content"] = \Glpi\RichText\RichText::getSafeHtml(
+    $_POST["content"] = RichText::getSafeHtml(
         html_entity_decode($_POST["content"]),
     );
     $customsWidget->update($_POST);

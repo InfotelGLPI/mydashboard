@@ -77,7 +77,6 @@ class Entity
     {
         $form = '';
         if (Session::isMultiEntitiesMode()) {
-            $form = "<span class='md-widgetcrit'>";
             $params = [
                 'name' => self::$criteria_name,
                 'display' => false,
@@ -86,27 +85,15 @@ class Entity
                 'display_emptychoice' => true,
 
             ];
-            $form .= __('Entity');
-            $form .= "&nbsp;";
-            $form .= \Entity::dropdown($params);
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
+            $form = Criteria::getFieldHtml(__('Entity'), \Entity::dropdown($params), $count);
 
             $sons = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
             if ($sons > 0) {
-                $form .= "<span class='md-widgetcrit'>";
-                $form .= __('Recursive') . "&nbsp;";
-                $paramsy = [
-                    'display' => false,
-                ];
-                $sons = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-                $form .= Dropdown::showYesNo('is_recursive_entities', $sons, -1, $paramsy);
-                $form .= "</span>";
-                if ($count > 1) {
-                    $form .= "</br></br>";
-                }
+                $form .= Criteria::getFieldHtml(
+                    __('Recursive'),
+                    Dropdown::showYesNo('is_recursive_entities', $sons, -1, ['display' => false]),
+                    $count,
+                );
             }
         }
 

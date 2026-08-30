@@ -1,0 +1,47 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<div class="tickets-stats">
+    {% if not tiles|length %}
+        <i style="font-size:3em;color:orange" class="ti ti-alert-triangle"></i>
+        <br><br>
+        <span class="b">{{ __('No alerts are setup', 'mydashboard') }}</span>
+    {% else %}
+        {% for tile in tiles %}
+            <div class="nbstock" style="color:{{ tile.color }}">
+                <a style="color:{{ tile.color }}" target="_blank" href="{{ tile.url }}" title="{{ tile.name }}">
+                    <i style="color:{{ tile.color }};font-size:3em;" class="ti {{ tile.icon }} fa-border"></i>
+                    <h3 style="margin-top: 10px;">
+                        <span class="counter count-number" id="{{ tile.id }}"></span>
+                    </h3>
+                    <p class="count-text ">{{ tile.name }}</p>
+                </a>
+            </div>
+        {% endfor %}
+        {{ countup_script_html|raw }}
+    {% endif %}
+</div>

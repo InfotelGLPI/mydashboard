@@ -77,25 +77,21 @@ class Type
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
         $type = $default[self::$criteria_name];
         if (isset($opt[self::$criteria_name])
             && $opt[self::$criteria_name] > 0) {
             $type = $opt[self::$criteria_name];
         }
-        $form .= __('Type');
-        $form .= "&nbsp;";
-        $form .= Ticket::dropdownType(self::$criteria_name, [
-            'value' => $type,
-            'display' => false,
-            'display_emptychoice' => true,
-        ]);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
 
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Type'),
+            Ticket::dropdownType(self::$criteria_name, [
+                'value' => $type,
+                'display' => false,
+                'display_emptychoice' => true,
+            ]),
+            $count,
+        );
     }
 
 

@@ -1,0 +1,46 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# The mode selector is not wrapped with Criteria::getFieldHtml(): the legacy markup puts
+   no separator between it and the block below, which the AJAX call refreshes in place. #}
+<span class="md-widgetcrit">{{ __('Filter date', 'mydashboard') }}&nbsp;{{ mode_html|raw }}</span>
+
+{% if begin_end %}
+    <span id="filter_date_crit{{ rand }}" name="filter_date_crit{{ rand }}" class="md-widgetcrit">
+        <span class="md-widgetcrit">{{ __('Start') }}&nbsp;{{ begin_html|raw }}</span>
+        <br>
+        <span class="md-widgetcrit">{{ __('End') }}&nbsp;{{ end_html|raw }}</span>
+    </span>
+{% else %}
+    <br><br>
+    <span id="filter_date_crit{{ rand }}" name="filter_date_crit{{ rand }}" class="md-widgetcrit">
+        {{ __('Year', 'mydashboard') }}&nbsp;{{ year_html|raw }}
+    </span>
+{% endif %}
+
+{{ ajax_html|raw }}
+{%- if count > 1 %}<br><br>{% endif -%}

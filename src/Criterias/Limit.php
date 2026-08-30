@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Criterias;
 
+use GlpiPlugin\Mydashboard\Criteria;
 use Dropdown;
 
 /**
@@ -67,16 +68,11 @@ class Limit
             'display' => false,
             'toadd' => [0 => __('All')],
         ];
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Number of results');
-        $form .= "&nbsp;";
-        $form .= Dropdown::showNumber(self::$criteria_name, $params);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Number of results'),
+            Dropdown::showNumber(self::$criteria_name, $params),
+            $count,
+        );
     }
 
 }

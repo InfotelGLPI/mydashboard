@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
-  <file src="ajax/dropdownMonth.php">
-    <TaintedHtml>
-      <code><![CDATA[$form]]></code>
-    </TaintedHtml>
-    <TaintedTextWithQuotes>
-      <code><![CDATA[$form]]></code>
-    </TaintedTextWithQuotes>
-  </file>
-  <file src="ajax/dropdownUpdateDisplaydata.php">
-    <TaintedHtml>
-      <code><![CDATA[$form]]></code>
-    </TaintedHtml>
-    <TaintedTextWithQuotes>
-      <code><![CDATA[$form]]></code>
-    </TaintedTextWithQuotes>
-  </file>
   <file src="ajax/map.php">
     <TaintedHtml>
       <code><![CDATA[json_encode($result, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>

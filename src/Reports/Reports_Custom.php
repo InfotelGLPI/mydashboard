@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Customswidget;
@@ -112,7 +113,7 @@ class Reports_Custom extends CommonGLPI
                         // formatting (headings, styles, images, links) but strips scripts
                         // and event handlers, closing the stored-XSS path where a config
                         // admin could inject a payload executed in another user's browser.
-                        $htmlContent = \Glpi\RichText\RichText::getSafeHtml(
+                        $htmlContent = RichText::getSafeHtml(
                             html_entity_decode($content['content']),
                         );
 

@@ -1,0 +1,64 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Shared news-ticker markup for the alert / maintenance / information widgets.
+   Only the id prefix, the item data attribute and the empty-state wording differ. #}
+<div id="{{ prefix }}-container">
+    <ul id="{{ prefix }}">
+        {% if items|length %}
+            {% for item in items %}
+                {# name_html carries the already-escaped label, plus an icon for alerts #}
+                <li style="{{ item.style }}" data-{{ data_attr }}="{{ item.id }}">{{ item.name_html|raw }}</li>
+            {% endfor %}
+        {% else %}
+            <li>{{ empty_title_html|raw }}</li>
+        {% endif %}
+    </ul>
+
+    <div id="{{ prefix }}-infos-container">
+        <div id="{{ prefix }}-infos" class="">
+            <div class="col-xs-4 centered">
+                {%- if items|length %}
+                    <i class="ti ti-caret-left" id="{{ prefix }}-prev"></i>
+                    <i class="ti ti-caret-right" id="{{ prefix }}-next"></i>
+                {% endif -%}
+            </div>
+            <div class="col">
+                <div class="infos-text">
+                    {%- if items|length -%}
+                        {# already sanitized with RichText::getSafeHtml() #}
+                        {{ first_description|raw }}
+                    {%- else -%}
+                        {{ empty_label }}
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ ticker_script_html|raw }}

@@ -43,6 +43,7 @@ use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
 use Glpi\DBAL\QuerySubQuery;
+use Glpi\RichText\RichText;
 use Glpi\System\Status\StatusChecker;
 use GLPIKey;
 use GlpiPlugin\Eventsmanager\Event;
@@ -473,13 +474,16 @@ class Alert extends CommonDBTM
 
 
                 if (is_array($contents) && count($contents) > 0) {
-                    $table .= "<div class='md-status'>";
+                    $modules = [];
                     foreach ($contents as $module => $content) {
                         if ($module != 'glpi') {
-                            $table .= $module . " : " . $content['status'] . "<br>";
+                            $modules[] = ['name' => $module, 'status' => $content['status']];
                         }
                     }
-                    $table .= "</div>";
+                    $table .= TemplateRenderer::getInstance()->render(
+                        '@mydashboard/alert_modules_status.html.twig',
+                        ['modules' => $modules],
+                    );
                 }
                 $widget->setWidgetHtmlContent(
                     $table,
@@ -879,9 +883,9 @@ class Alert extends CommonDBTM
                 ];
                 $table = Helper::getGraphHeader($params);
 
-                $table .= "<div class=\"tickets-stats\">";
                 $stockwidget = new StockWidget();
                 $stocks = $stockwidget->find();
+                $stock_tiles = [];
                 $script = "";
                 $types = [];
                 $states = [];
@@ -1002,34 +1006,25 @@ class Alert extends CommonDBTM
                             $link = $CFG_GLPI["root_doc"] . $form . '?is_deleted=0&'
                                 . Toolbox::append_params($search, "&");
 
-                            $icon = $data['icon'];
-                            // Stock-widget names are admin-set DB values echoed raw; escape
-                            // them (attribute + text contexts) as defence in depth.
-                            $safe_stock_name = htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8');
-                            $table .= "<div class=\"nbstock\" style=\"color:$color\">";
-                            $table .= "<a style='color:$color' target='_blank' href=\"" . $link . "\" title='" . $safe_stock_name . "'>";
-                            $table .= "<i style='color:$color;font-size:3em;' class=\"ti $icon fa-border\"></i>";
-                            $table .= "<h3 style='margin-top: 10px;'>";
-                            $table .= "<span class=\"counter count-number\" id=\"stock_$nb\"></span>";
-                            //                     $table .= " / <span class=\"counter count-number\" id=\"all_$nb\"></span>";
-                            $table .= "</h3>";
-                            $table .= "<p class=\"count-text \">" . $safe_stock_name . "</p>";
-                            $table .= "</a>";
-                            $table .= "</div>";
+                            $stock_tiles[] = [
+                                'color' => $color,
+                                'url' => $link,
+                                'icon' => $data['icon'],
+                                'id' => 'stock_' . $nb,
+                                // Stock-widget names are admin-set DB values; the template
+                                // escapes them in both the title attribute and the text.
+                                'name' => $data['name'],
+                            ];
 
                             $script .= "$('#stock_$nb').countup($stock);";
                         }
                     }
-                    $table .= "<script type='text/javascript'>
-                         $(function(){
-                            $script;
-                         });
-                  </script>";
-                } else {
-                    $table .= "<i style='font-size:3em;color:orange' class='ti ti-alert-triangle'></i>";
-                    $table .= "<br><br><span class='b'>" . __("No alerts are setup", "mydashboard") . "</span>";
                 }
-                $table .= "</div>";
+
+                $table .= TemplateRenderer::getInstance()->render('@mydashboard/alert_stock_tiles.html.twig', [
+                    'tiles' => $stock_tiles,
+                    'countup_script_html' => \Html::scriptBlock('$(function(){' . $script . '});'),
+                ]);
                 $table .= Helper::getGraphFooter($params);
                 $widget->setWidgetHtmlContent(
                     $table,
@@ -1393,10 +1388,13 @@ class Alert extends CommonDBTM
             $colorstats4 = "indianred";
         }
 
-        $table = "<div class=\"tickets-stats\">";
+        $is_incident = $type == \Ticket::INCIDENT_TYPE;
+
+        $tiles = [];
 
         //////////////////////////////////////////
         //new tickets
+        $stats3link = null;
         if ($stats_tickets3 > 0) {
             // Reset criterias
             $options3['reset'][] = 'reset';
@@ -1419,36 +1417,24 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options3, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats3\">";
-        if ($stats_tickets3 > 0) {
-            if ($type == \Ticket::INCIDENT_TYPE) {
-                $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
-                    'New incidents',
-                    'mydashboard',
-                ) . "'>";
-            } else {
-                $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\" title='" . __(
-                    'New requests',
-                    'mydashboard',
-                ) . "'>";
-            }
-        }
-        $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets3'></span></h3>";
-
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<p class=\"count-text \">" . __('New incidents', 'mydashboard') . "</p>";
-        } else {
-            $table .= "<p class=\"count-text \">" . __('New requests', 'mydashboard') . "</p>";
-        }
-
-        if ($stats_tickets3 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
+        $label3 = $is_incident
+            ? __('New incidents', 'mydashboard')
+            : __('New requests', 'mydashboard');
+        $tiles[] = [
+            'color' => $colorstats3,
+            'url' => $stats3link,
+            'title' => $label3,
+            'icon_class' => 'ti ti-alert-circle fa-3x fa-border',
+            'icon_style' => 'font-size:34px',
+            'heading_style' => 'margin-top: 10px;',
+            'id' => 'stats_' . $type . '_tickets3',
+            'label' => $label3,
+            'value' => $stats_tickets3,
+        ];
 
         //////////////////////////////////////////
         //tickets without tech
+        $stats4link = null;
         if ($stats_tickets4 > 0) {
             // Reset criterias
             $options4['reset'][] = 'reset';
@@ -1474,11 +1460,10 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($technicians_groups_id) > 0
+            if (is_array($technicians_groups_id)
                 && count($technicians_groups_id) > 0) {
-                $groups = $technicians_groups_id;
                 $nb = 0;
-                foreach ($groups as $group) {
+                foreach ($technicians_groups_id as $group) {
                     $criterias['criteria'][$nb] = [
                         'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1494,43 +1479,24 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options4, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
-        if ($stats_tickets4 > 0) {
-            if ($type == \Ticket::INCIDENT_TYPE) {
-                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
-                    'Opened incidents without assigned technicians',
-                    'mydashboard',
-                ) . "'>";
-            } else {
-                $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\" title='" . __(
-                    'Opened requests without assigned technicians',
-                    'mydashboard',
-                ) . "'>";
-            }
-        }
-
-        $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-user-x fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets4'></span></h3>";
-
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<p class=\"count-text \">" . __(
-                'Opened incidents without assigned technicians',
-                'mydashboard',
-            ) . "</p>";
-        } else {
-            $table .= "<p class=\"count-text \">" . __(
-                'Opened requests without assigned technicians',
-                'mydashboard',
-            ) . "</p>";
-        }
-
-        if ($stats_tickets4 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
+        $label4 = $is_incident
+            ? __('Opened incidents without assigned technicians', 'mydashboard')
+            : __('Opened requests without assigned technicians', 'mydashboard');
+        $tiles[] = [
+            'color' => $colorstats4,
+            'url' => $stats4link,
+            'title' => $label4,
+            'icon_class' => 'ti ti-user-x fa-3x fa-border',
+            'icon_style' => 'font-size:34px',
+            'heading_style' => 'margin-top: 10px;',
+            'id' => 'stats_' . $type . '_tickets4',
+            'label' => $label4,
+            'value' => $stats_tickets4,
+        ];
 
         //////////////////////////////////////////
         //Tickets with very high or major priority
+        $stats1link = null;
         if ($stats_tickets1 > 0) {
             // Reset criterias
             $options1['reset'][] = 'reset';
@@ -1556,11 +1522,10 @@ class Alert extends CommonDBTM
                 'link' => 'AND',
             ];
 
-            if (is_array($technicians_groups_id) > 0
+            if (is_array($technicians_groups_id)
                 && count($technicians_groups_id) > 0) {
-                $groups = $technicians_groups_id;
                 $nb = 0;
-                foreach ($groups as $group) {
+                foreach ($technicians_groups_id as $group) {
                     $criterias['criteria'][$nb] = [
                         'field' => 8, // groups_id_assign
                         'searchtype' => 'equals',
@@ -1576,42 +1541,25 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options1, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats1\">";
-        if ($stats_tickets1 > 0) {
-            if ($type == \Ticket::INCIDENT_TYPE) {
-                $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
-                    'Incidents with very high or major priority',
-                    'mydashboard',
-                ) . "'>";
-            } else {
-                $table .= "<a style='color:$colorstats1' target='_blank' href=\"" . $stats1link . "\" title='" . __(
-                    'Requests with very high or major priority',
-                    'mydashboard',
-                ) . "'>";
-            }
-        }
-        $table .= "<i style='color:$colorstats1;font-size:3em;' class=\"ti ti-alert-triangle fa-border\"></i>
-               <h3 style='font-size:34px;margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets1'></span></h3>";
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<p class=\"count-text \">" . __(
-                'Incidents with very high or major priority',
-                'mydashboard',
-            ) . "</p>";
-        } else {
-            $table .= "<p class=\"count-text \">" . __(
-                'Requests with very high or major priority',
-                'mydashboard',
-            ) . "</p>";
-        }
-
-        if ($stats_tickets1 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
+        $label1 = $is_incident
+            ? __('Incidents with very high or major priority', 'mydashboard')
+            : __('Requests with very high or major priority', 'mydashboard');
+        $tiles[] = [
+            'color' => $colorstats1,
+            'url' => $stats1link,
+            'title' => $label1,
+            'icon_class' => 'ti ti-alert-triangle fa-border',
+            'icon_style' => 'font-size:3em;',
+            'heading_style' => 'font-size:34px;margin-top: 10px;',
+            'id' => 'stats_' . $type . '_tickets1',
+            'label' => $label1,
+            'value' => $stats_tickets1,
+        ];
 
         //////////////////////////////////////////
         //Problem with high priority
-        if ($type == \Ticket::INCIDENT_TYPE) {
+        if ($is_incident) {
+            $stats2link = null;
             if ($stats_tickets2 > 0) {
                 // Reset criterias
                 $options2['reset'][] = 'reset';
@@ -1634,49 +1582,21 @@ class Alert extends CommonDBTM
                     . Toolbox::append_params($options2, "&");
             }
 
-            $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
-            if ($stats_tickets2 > 0) {
-                $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\" title='" . __(
-                    'Problems with very high or major priority',
-                    'mydashboard',
-                ) . "'>";
-            }
-            $table .= "<i style='color:$colorstats2;font-size:34px' class=\"ti ti-bug fa-3x fa-border\"></i>
-                           <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_tickets2'></span></h3>";
-            $table .= "<p class=\"count-text \">" . __(
-                'Problems with very high or major priority',
-                'mydashboard',
-            ) . "</p>";
-            if ($stats_tickets2 > 0) {
-                $table .= "</a>";
-            }
-            $table .= "</div>";
+            $label2 = __('Problems with very high or major priority', 'mydashboard');
+            $tiles[] = [
+                'color' => $colorstats2,
+                'url' => $stats2link,
+                'title' => $label2,
+                'icon_class' => 'ti ti-bug fa-3x fa-border',
+                'icon_style' => 'font-size:34px',
+                'heading_style' => 'margin-top: 10px;',
+                'id' => 'stats_' . $type . '_tickets2',
+                'label' => $label2,
+                'value' => $stats_tickets2,
+            ];
         }
-        //////////////////////////////////////////
 
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<script type='text/javascript'>
-                         $(function(){
-                            $('#stats_" . $type . "_tickets1').countup($stats_tickets1);
-                            $('#stats_" . $type . "_tickets2').countup($stats_tickets2);
-                            $('#stats_" . $type . "_tickets3').countup($stats_tickets3);
-                            $('#stats_" . $type . "_tickets4').countup($stats_tickets4);
-                         });
-                  </script>";
-        } else {
-            $table .= "<script type='text/javascript'>
-                         $(function(){
-                            $('#stats_" . $type . "_tickets1').countup($stats_tickets1);
-                            $('#stats_" . $type . "_tickets3').countup($stats_tickets3);
-                            $('#stats_" . $type . "_tickets4').countup($stats_tickets4);
-                         });
-                  </script>";
-        }
-        $table .= "</div>";
-
-        $widget->setWidgetHtmlContent(
-            $table,
-        );
+        $widget->setWidgetHtmlContent(self::getStatsTilesHtml($tiles));
         $widget->toggleWidgetRefresh();
         $widget->setWidgetHeaderType('danger');
         if ($type == \Ticket::INCIDENT_TYPE) {
@@ -2019,7 +1939,13 @@ class Alert extends CommonDBTM
             $colorstats5 = "indianred";
         }
 
-        $table = "<div class=\"tickets-stats\">";
+        $is_incident = $type == \Ticket::INCIDENT_TYPE;
+        $tiles = [];
+        $stats2link = null;
+        $stats3link = null;
+        $stats4link = null;
+        $stats5link = null;
+
         if ($stats2 > 0) {
             // Reset criterias
             $options2['reset'][] = 'reset';
@@ -2072,24 +1998,19 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options2, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats2\">";
-        if ($stats2 > 0) {
-            $table .= "<a style='color:$colorstats2' target='_blank' href=\"" . $stats2link . "\">";
-        }
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<i style='color:$colorstats2;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla2'></span></h3>
-               <p class=\"count-text \">" . __('Incidents where time to own will be exceeded', 'mydashboard') . "</p>";
-        } else {
-            $table .= "<i style='color:$colorstats2;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla2'></span></h3>
-               <p class=\"count-text \">" . __('Requests where time to own will be exceeded', 'mydashboard') . "</p>";
-        }
-
-        if ($stats2 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
+        $tiles[] = [
+            'color' => $colorstats2,
+            'url' => $stats2link,
+            'title' => '',
+            'icon_class' => 'ti ti-alert-circle fa-3x fa-border',
+            'icon_style' => 'font-size:34px',
+            'heading_style' => 'margin-top: 10px;',
+            'id' => 'stats_' . $type . '_sla2',
+            'label' => $is_incident
+                ? __('Incidents where time to own will be exceeded', 'mydashboard')
+                : __('Requests where time to own will be exceeded', 'mydashboard'),
+            'value' => $stats2,
+        ];
         if ($stats3 > 0) {
             // Reset criterias
             $options2['reset'][] = 'reset';
@@ -2142,29 +2063,19 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options3, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats3\">";
-        if ($stats3 > 0) {
-            $table .= "<a style='color:$colorstats3' target='_blank' href=\"" . $stats3link . "\">";
-        }
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
-               <p class=\"count-text \">" . __(
-                'Incidents where time to resolve will be exceeded',
-                'mydashboard',
-            ) . "</p>";
-        } else {
-            $table .= "<i style='color:$colorstats3;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
-               <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla3'></span></h3>
-               <p class=\"count-text \">" . __(
-                'Requests where time to resolve will be exceeded',
-                'mydashboard',
-            ) . "</p>";
-        }
-        if ($stats3 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
+        $tiles[] = [
+            'color' => $colorstats3,
+            'url' => $stats3link,
+            'title' => '',
+            'icon_class' => 'ti ti-circle-x fa-3x fa-border',
+            'icon_style' => 'font-size:34px',
+            'heading_style' => 'margin-top: 10px;',
+            'id' => 'stats_' . $type . '_sla3',
+            'label' => $is_incident
+                ? __('Incidents where time to resolve will be exceeded', 'mydashboard')
+                : __('Requests where time to resolve will be exceeded', 'mydashboard'),
+            'value' => $stats3,
+        ];
 
         if ($stats4 > 0) {
             // Reset criterias
@@ -2218,30 +2129,19 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options4, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats4\">";
-        if ($stats4 > 0) {
-            $table .= "<a style='color:$colorstats4' target='_blank' href=\"" . $stats4link . "\">";
-        }
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
-                           <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
-                           <p class=\"count-text \">" . __(
-                'Incidents where time to own is exceeded',
-                'mydashboard',
-            ) . "</p>";
-        } else {
-            $table .= "<i style='color:$colorstats4;font-size:34px' class=\"ti ti-alert-circle fa-3x fa-border\"></i>
-                           <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla4'></span></h3>
-                           <p class=\"count-text \">" . __(
-                'Requests where time to own is exceeded',
-                'mydashboard',
-            ) . "</p>";
-        }
-
-        if ($stats4 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
+        $tiles[] = [
+            'color' => $colorstats4,
+            'url' => $stats4link,
+            'title' => '',
+            'icon_class' => 'ti ti-alert-circle fa-3x fa-border',
+            'icon_style' => 'font-size:34px',
+            'heading_style' => 'margin-top: 10px;',
+            'id' => 'stats_' . $type . '_sla4',
+            'label' => $is_incident
+                ? __('Incidents where time to own is exceeded', 'mydashboard')
+                : __('Requests where time to own is exceeded', 'mydashboard'),
+            'value' => $stats4,
+        ];
 
         if ($stats5 > 0) {
             // Reset criterias
@@ -2295,45 +2195,21 @@ class Alert extends CommonDBTM
                 . Toolbox::append_params($options5, "&");
         }
 
-        $table .= "<div class=\"nb\" style=\"color:$colorstats5\">";
-        if ($stats5 > 0) {
-            $table .= "<a style='color:$colorstats5' target='_blank' href=\"" . $stats5link . "\">";
-        }
-        if ($type == \Ticket::INCIDENT_TYPE) {
-            $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
-                           <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
-                           <p class=\"count-text \">" . __(
-                'Incidents where time to resolve is exceeded',
-                'mydashboard',
-            ) . "</p>";
-        } else {
-            $table .= "<i style='color:$colorstats5;font-size:34px' class=\"ti ti-circle-x fa-3x fa-border\"></i>
-                           <h3 style='margin-top: 10px;'><span class=\"counter count-number\" id='stats_" . $type . "_sla5'></span></h3>
-                           <p class=\"count-text \">" . __(
-                'Requests where time to resolve is exceeded',
-                'mydashboard',
-            ) . "</p>";
-        }
+        $tiles[] = [
+            'color' => $colorstats5,
+            'url' => $stats5link,
+            'title' => '',
+            'icon_class' => 'ti ti-circle-x fa-3x fa-border',
+            'icon_style' => 'font-size:34px',
+            'heading_style' => 'margin-top: 10px;',
+            'id' => 'stats_' . $type . '_sla5',
+            'label' => $is_incident
+                ? __('Incidents where time to resolve is exceeded', 'mydashboard')
+                : __('Requests where time to resolve is exceeded', 'mydashboard'),
+            'value' => $stats5,
+        ];
 
-        if ($stats5 > 0) {
-            $table .= "</a>";
-        }
-        $table .= "</div>";
-
-        $table .= "<script type='text/javascript'>
-                         $(function(){
-                            $('#stats_" . $type . "_sla2').countup($stats2);
-                            $('#stats_" . $type . "_sla3').countup($stats3);
-                            $('#stats_" . $type . "_sla4').countup($stats4);
-                            $('#stats_" . $type . "_sla5').countup($stats5);
-                         });
-                  </script>";
-
-        $table .= "</div>";
-
-        $widget->setWidgetHtmlContent(
-            $table,
-        );
+        $widget->setWidgetHtmlContent(self::getStatsTilesHtml($tiles));
         $widget->toggleWidgetRefresh();
         $widget->setWidgetHeaderType('danger');
         if ($type == \Ticket::INCIDENT_TYPE) {
@@ -2363,6 +2239,86 @@ class Alert extends CommonDBTM
     /**
      * @return string
      */
+    /**
+     * Render the news-ticker shared by the alert, maintenance and information widgets.
+     *
+     * @param string $prefix            id prefix of the ticker (nt_alert, nt_maint, nt_info)
+     * @param string $data_attr         suffix of the per-item data attribute
+     * @param array  $items             [['id' => int, 'style' => string, 'name_html' => string]]
+     * @param string $first_description sanitized text of the first item
+     * @param string $title_field       Config field holding the widget title, for the empty state
+     * @param string $empty_label       message shown when there is nothing to display
+     *
+     * @return string
+     */
+    /**
+     * Render a row of counter tiles, shared by the ticket-alert and SLA-alert widgets.
+     *
+     * @param array $tiles each entry carries color, url (null when the counter is zero),
+     *                     title, icon_class, icon_style, heading_style, id, label and the
+     *                     counter value used by the countup script
+     *
+     * @return string
+     */
+    private static function getStatsTilesHtml($tiles)
+    {
+        $script = '';
+        foreach ($tiles as $tile) {
+            $script .= "$('#" . $tile['id'] . "').countup(" . (int) $tile['value'] . ");";
+        }
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/alert_stats_tiles.html.twig', [
+            'tiles' => $tiles,
+            'countup_script_html' => \Html::scriptBlock('$(function(){' . $script . '});'),
+        ]);
+    }
+
+    private static function getTickerHtml($prefix, $data_attr, $items, $first_description, $title_field, $empty_label)
+    {
+        $ticker_script_html = '';
+        if (count($items) > 1) {
+            $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
+            $ticker_script_html = \Html::scriptBlock("
+                var {$prefix} = $('#{$prefix}').newsTicker({
+                    row_height: 60,
+                    max_rows: 1,
+                    speed: 300,
+                    duration: 6000,
+                    prevButton: $('#{$prefix}-prev'),
+                    nextButton: $('#{$prefix}-next'),
+                    hasMoved: function() {
+                        $('#{$prefix}-infos-container').fadeOut(200, function(){
+                            var item_id = $('#{$prefix} li:first').data('{$data_attr}');
+                            $('#{$prefix}-infos .infos-text').load('{$urlalert}?id=' + item_id);
+                            $(this).fadeIn(400);
+                        });
+                    }
+                });
+                $('#{$prefix}-infos').hover(function() {
+                    {$prefix}.newsTicker('pause');
+                }, function() {
+                    {$prefix}.newsTicker('unpause');
+                });");
+        }
+
+        $empty_title_html = '';
+        if ($items === []) {
+            $config = new Config();
+            $config->getFromDB(1);
+            $empty_title_html = Config::displayField($config, $title_field);
+        }
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/alert_ticker.html.twig', [
+            'prefix' => $prefix,
+            'data_attr' => $data_attr,
+            'items' => $items,
+            'first_description' => $first_description,
+            'empty_title_html' => $empty_title_html,
+            'empty_label' => $empty_label,
+            'ticker_script_html' => $ticker_script_html,
+        ]);
+    }
+
     public function getMaintenanceList($itilcategories_id = [])
     {
         global $DB;
@@ -2450,121 +2406,41 @@ class Alert extends CommonDBTM
 
         $iterator = $DB->request($criteria);
 
-        $nb = count($iterator);
+        $items = [];
+        $firstdescription = "";
+        foreach ($iterator as $row) {
+            $note = new \Reminder();
+            $note->getFromDB($row["id"]);
 
-        if ($nb) {
-            $wl .= '<div id="nt_maint-container">';
-            $wl .= '<ul id="nt_maint">';
-            $i = 1;
-            $firstdescription = "";
+            if ($items === []) {
+                // Reminder text is rich HTML stored raw: sanitize at the source (strips
+                // scripts / event handlers) while preserving allowed formatting.
+                $firstdescription = RichText::getSafeHtml(
+                    ReminderTranslation::getTranslatedValue($note, 'text'),
+                );
+            }
 
-            foreach ($iterator as $row) {
-                $note = new \Reminder();
-                $note->getFromDB($row["id"]);
-
-                //                $name = "<i class='ti ti-alert-triangle fa-alert-orange'></i>";
+            $items[] = [
+                'id' => $row["id"],
+                'style' => 'text-align:center;color:orange',
                 // Reminder names are stored raw (GLPI 10+): escape at the source so the
-                // value stays safe wherever $name is later emitted into the widget HTML.
-                $name = htmlspecialchars(
+                // value stays safe wherever it is later emitted into the widget HTML.
+                'name_html' => htmlspecialchars(
                     (string) ReminderTranslation::getTranslatedValue($note, 'name'),
                     ENT_QUOTES,
                     'UTF-8',
-                );
-
-                $style_title = "text-align:center;color:orange";
-                // Reminder text is rich HTML stored raw: sanitize at the source (strips
-                // scripts / event handlers) while preserving allowed formatting.
-                $description = \Glpi\RichText\RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'));
-                $cleaned_description = $description;
-                if ($i == 1) {
-                    $firstdescription = $cleaned_description;
-                }
-                $i++;
-                $wl .= "<li style='$style_title' data-maint='" . $row["id"] . "'>";
-                $wl .= $name;
-                $wl .= "</li>";
-            }
-            $wl .= "</ul>";
-            $wl .= "<div id='nt_maint-infos-container'>";
-            //            $wl .= "<div id='nt-infos-triangle'></div>";
-            $wl .= "<div id='nt_maint-infos' class=''>";
-            $wl .= "<div class='col-xs-4 centered'>";
-            //         if ($nb > 1) {
-            $wl .= "<i class='ti ti-caret-left' id='nt_maint-prev'></i>";
-            $wl .= "<i class='ti ti-caret-right' id='nt_maint-next'></i>";
-            //         }
-            $wl .= "</div>";
-
-            $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text'>";
-            $wl .= $firstdescription;
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-            if ($nb > 1) {
-                $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-                $wl .= "<script type='text/javascript'>
-                    var nt_maint = $('#nt_maint').newsTicker({
-                        row_height: 60,
-                        max_rows: 1,
-                        speed: 300,
-                        duration: 6000,
-                        prevButton: $('#nt_maint-prev'),
-                        nextButton: $('#nt_maint-next'),
-                        hasMoved: function() {
-                         $('#nt_maint-infos-container').fadeOut(200, function(){
-                               var maint_id = $('#nt_maint li:first').data('maint');
-                              $('#nt_maint-infos .infos-text').load('$urlalert?id='+maint_id);
-                              $(this).fadeIn(400);
-                             });
-                         },
-//                         pause: function() {
-//                           $('#nt_maint li i').removeClass('fa-play').addClass('fa-pause');
-//                         },
-//                         unpause: function() {
-//                         $('#nt_maint li i').removeClass('fa-pause').addClass('fa-play');
-//                         }
-                     });
-                     $('#nt_maint-infos').hover(function() {
-                         nt_maint.newsTicker('pause');
-                     }, function() {
-                         nt_maint.newsTicker('unpause');
-                     });
-               </script>";
-            }
-        } else {
-            $wl .= '<div id="nt_maint-container">';
-
-            $wl .= '<ul id="nt_maint">';
-            $wl .= "<li>";
-            $config = new Config();
-            $config->getFromDB(1);
-            $wl .= Config::displayField($config, 'title_maintenances_widget');
-            $wl .= "</li>";
-            $wl .= "</ul>";
-
-            $wl .= "<div id='nt_maint-infos-container'>";
-            $wl .= "<div id='nt_maint-infos' class=''>";
-
-            $wl .= "<div class='col-xs-4 centered'>";
-            $wl .= "</div>";
-
-            $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text'>";
-            $wl .= __("No scheduled maintenance", "mydashboard");
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-            $wl .= "</div>";
+                ),
+            ];
         }
-        $wl .= "</div>";
-        return $wl;
+
+        return $wl . self::getTickerHtml(
+            'nt_maint',
+            'maint',
+            $items,
+            $firstdescription,
+            'title_maintenances_widget',
+            __("No scheduled maintenance", "mydashboard"),
+        );
     }
 
 
@@ -2616,15 +2492,14 @@ class Alert extends CommonDBTM
             $note = new \Reminder();
             $note->getFromDB($id);
 
+            $color = null;
             if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
-                // impact_* colors are stored raw; escape before emitting into the style attribute.
-                $style_description = "color:" . htmlspecialchars((string) $config->getField('impact_' . $alert->fields['impact']), ENT_QUOTES, 'UTF-8');
-                echo "<span style='$style_description'>";
+                // impact_* colors only ever hold a CSS hex value (validated in
+                // Config::prepareInputForUpdate); the template escapes it anyway.
+                $color = (string) $config->getField('impact_' . $alert->fields['impact']);
             }
-            echo htmlspecialchars(ReminderTranslation::getTranslatedValue($note, 'text'), ENT_QUOTES, 'UTF-8');
-            if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
-                echo "</span>";
-            }
+
+            $document_links = [];
             $iterator = $DB->request([
                 'SELECT' => 'documents_id',
                 'FROM' => 'glpi_documents_items',
@@ -2633,20 +2508,22 @@ class Alert extends CommonDBTM
                     'itemtype' => 'Reminder',
                 ],
             ]);
-
-            $numrows = count($iterator);
-            if ($numrows > 0) {
-                $j = 0;
-                foreach ($iterator as $docs) {
-                    $doc = new Document();
-                    $doc->getFromDB($docs["documents_id"]);
-                    echo $doc->getDownloadLink();
-                    $j++;
-                    if ($j > 1) {
-                        echo "<br>";
-                    }
-                }
+            foreach ($iterator as $docs) {
+                $doc = new Document();
+                $doc->getFromDB($docs["documents_id"]);
+                $document_links[] = $doc->getDownloadLink();
             }
+
+            echo TemplateRenderer::getInstance()->render('@mydashboard/alert_ticker_description.html.twig', [
+                'color' => $color,
+                // The reminder text is rich HTML: sanitize it the same way getAlertList()
+                // does for the first item. htmlspecialchars() was used here instead, which
+                // is why the AJAX-loaded description showed its markup as literal text.
+                'text_html' => RichText::getSafeHtml(
+                    ReminderTranslation::getTranslatedValue($note, 'text'),
+                ),
+                'document_links' => $document_links,
+            ]);
         }
     }
 
@@ -2710,126 +2587,43 @@ class Alert extends CommonDBTM
 
         $nb = count($iterator);
 
-        if ($nb) {
-            $wl .= '<div id="nt_info-container">';
-            $wl .= '<ul id="nt_info">';
-            $i = 1;
-            $firstdescription = "";
+        $items = [];
+        $firstdescription = "";
+        foreach ($iterator as $row) {
+            $note = new \Reminder();
+            $note->getFromDB($row["id"]);
 
-            foreach ($iterator as $row) {
-                $note = new \Reminder();
-                $note->getFromDB($row["id"]);
+            if ($items === []) {
+                // Reminder text is rich HTML stored raw: sanitize at the source (strips
+                // scripts / event handlers) while preserving allowed formatting.
+                $firstdescription = RichText::getSafeHtml(
+                    ReminderTranslation::getTranslatedValue($note, 'text'),
+                );
+            }
 
-                //                $name = "<i class='ti ti-info-circle'></i>";
+            $items[] = [
+                'id' => $row["id"],
+                'style' => 'text-align:center;',
                 // Reminder names are stored raw (GLPI 10+): escape at the source so the
-                // value stays safe wherever $name is later emitted into the widget HTML.
-                $name = htmlspecialchars(
+                // value stays safe wherever it is later emitted into the widget HTML.
+                'name_html' => htmlspecialchars(
                     (string) ReminderTranslation::getTranslatedValue($note, 'name'),
                     ENT_QUOTES,
                     'UTF-8',
-                );
-
-                $style_title = "text-align:center;";
-                // Reminder text is rich HTML stored raw: sanitize at the source (strips
-                // scripts / event handlers) while preserving allowed formatting.
-                $description = \Glpi\RichText\RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'));
-                $cleaned_description = $description;
-
-                if ($i == 1) {
-                    $firstdescription = $cleaned_description;
-                }
-                $i++;
-                $wl .= "<li style='$style_title' data-info='" . $row["id"] . "'>";
-                $wl .= $name;
-                $wl .= "</li>";
-            }
-            $wl .= "</ul>";
-            $wl .= "<div id='nt_info-infos-container'>";
-            //            $wl .= "<div id='nt-infos-triangle'></div>";
-            $wl .= "<div id='nt_info-infos' class=''>";
-            $wl .= "<div class='col-xs-4 centered'>";
-            //         if ($nb > 1) {
-            $wl .= "<i class='ti ti-caret-left' id='nt_info-prev'></i>";
-            $wl .= "<i class='ti ti-caret-right' id='nt_info-next'></i>";
-            //         }
-            $wl .= "</div>";
-
-            $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text'>";
-            $wl .= $firstdescription;
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-
-            if ($nb > 1) {
-                $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-                $wl .= "<script type='text/javascript'>
-                    var nt_info = $('#nt_info').newsTicker({
-                        row_height: 60,
-                        max_rows: 1,
-                        speed: 300,
-                        duration: 6000,
-                        prevButton: $('#nt_info-prev'),
-                        nextButton: $('#nt_info-next'),
-                        hasMoved: function() {
-                         $('#nt_info-infos-container').fadeOut(200, function(){
-//                               $('#nt_info-infos .infos-text').html($('#nt_info li:first').data('info'));
-                              var info_id = $('#nt_info li:first').data('info');
-                              $('#nt_info-infos .infos-text').load('$urlalert?id='+info_id);
-
-                              $(this).fadeIn(400);
-                             });
-                         },
-//                         pause: function() {
-//                           $('#nt_info li i').removeClass('fa-play').addClass('fa-pause');
-//                         },
-//                         unpause: function() {
-//                           $('#nt_info li i').removeClass('fa-pause').addClass('fa-play');
-//                         }
-                     });
-                     $('#nt_info-infos').hover(function() {
-                         nt_info.newsTicker('pause');
-                     }, function() {
-                         nt_info.newsTicker('unpause');
-                     });
-               </script>";
-            }
-        } else {
-            $wl .= '<div id="nt_info-container">';
-
-            $wl .= '<ul id="nt_info">';
-            $wl .= "<li>";
-            $config = new Config();
-            $config->getFromDB(1);
-            $wl .= Config::displayField($config, 'title_informations_widget');
-            $wl .= "</li>";
-            $wl .= "</ul>";
-
-            $wl .= "<div id='nt_info-infos-container'>";
-            $wl .= "<div id='nt_info-infos' class=''>";
-
-            $wl .= "<div class='col-xs-4 centered'>";
-            $wl .= "</div>";
-
-            $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text'>";
-            $wl .= __("No informations founded", "mydashboard");
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-            $wl .= "</div>";
+                ),
+            ];
         }
-        $wl .= "</div>";
 
-        return $wl;
+        return $wl . self::getTickerHtml(
+            'nt_info',
+            'info',
+            $items,
+            $firstdescription,
+            'title_informations_widget',
+            __("No informations founded", "mydashboard"),
+        );
     }
+
 
 
     /**
@@ -2926,128 +2720,47 @@ class Alert extends CommonDBTM
 
         $iterator = $DB->request($criteria);
 
-        $nb = count($iterator);
+        $items = [];
+        $firstdescription = "";
+        foreach ($iterator as $row) {
+            $note = new \Reminder();
+            $note->getFromDB($row["id"]);
 
-        if ($nb) {
-            $wl .= '<div id="nt_alert-container">';
-            $wl .= '<ul id="nt_alert">';
-            $i = 1;
-            $firstdescription = "";
-            foreach ($iterator as $row) {
-                $note = new \Reminder();
-                $note->getFromDB($row["id"]);
+            // impact_* colors are stored raw; they only ever hold a CSS hex value
+            // (validated in Config::prepareInputForUpdate).
+            $impact_color = $config->getField('impact_' . $row['impact']);
 
-                $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
-                $name = "<i class='fas $class'></i>";
+            if ($items === []) {
+                // Reminder text is rich HTML stored raw: sanitize before wrapping it in
+                // the trusted span carrying the impact color.
+                $firstdescription = "<span style='color:" . $impact_color . "'>"
+                    . RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'))
+                    . "</span>";
+            }
+
+            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
+            $items[] = [
+                'id' => $row["id"],
+                'style' => "text-align: center;color:" . $impact_color,
                 // Reminder names are stored raw (GLPI 10+): escape before appending to
                 // the trusted icon markup.
-                $name .= htmlspecialchars(
-                    (string) ReminderTranslation::getTranslatedValue($note, 'name'),
-                    ENT_QUOTES,
-                    'UTF-8',
-                );
-
-                $description = "";
-                //            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
-                $style_title = "text-align: center;color:" . $config->getField('impact_' . $row['impact']);
-                $style_description = "color:" . $config->getField('impact_' . $row['impact']);
-                $description .= "<span style='$style_description'>";
-                // Reminder text is rich HTML stored raw: sanitize before appending to
-                // the trusted span wrapper.
-                $description .= \Glpi\RichText\RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'));
-                $description .= "</span>";
-
-                $cleaned_description = $description;
-                if ($i == 1) {
-                    $firstdescription = $cleaned_description;
-                }
-                $i++;
-                $wl .= "<li style='$style_title' data-alert='" . $row["id"] . "'>";
-                $wl .= $name;
-                $wl .= "</li>";
-            }
-            $wl .= "</ul>";
-            $wl .= "<div id='nt_alert-infos-container'>";
-            //            $wl .= "<div id='nt-infos-triangle'></div>";
-            $wl .= "<div id='nt_alert-infos' class=''>";
-            $wl .= "<div class='col-xs-4 centered'>";
-            //         if ($nb > 1) {
-            $wl .= "<i class='ti ti-caret-left' id='nt_alert-prev'></i>";
-            $wl .= "<i class='ti ti-caret-right' id='nt_alert-next'></i>";
-            //         }
-            $wl .= "</div>";
-
-            $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text'>";
-            $wl .= $firstdescription;
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-            if ($nb > 1) {
-                $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-                $wl .= "<script type='text/javascript'>
-                     var nt_alert = $('#nt_alert').newsTicker({
-                        row_height: 60,
-                        max_rows: 1,
-                        speed: 300,
-                        duration: 6000,
-                        prevButton: $('#nt_alert-prev'),
-                        nextButton: $('#nt_alert-next'),
-                        hasMoved: function() {
-                         $('#nt_alert-infos-container').fadeOut(200, function(){
-                              var alert_id = $('#nt_alert li:first').data('alert');
-                              $('#nt_alert-infos .infos-text').load('$urlalert?id='+alert_id);
-                              $(this).fadeIn(400);
-                             });
-                         },
-//                         pause: function() {
-//                           $('#nt_alert li i').removeClass('fa-play').addClass('fa-pause');
-//                         },
-//                         unpause: function() {
-//                            $('#nt_alert li i').removeClass('fa-pause').addClass('fa-play');
-//                         }
-                     });
-                     $('#nt_alert-infos').hover(function() {
-                         nt_alert.newsTicker('pause');
-                     }, function() {
-                         nt_alert.newsTicker('unpause');
-                     });
-               </script>";
-            }
-        } else {
-            $wl .= '<div id="nt_alert-container">';
-
-            $wl .= '<ul id="nt_alert">';
-            $wl .= "<li>";
-            $config = new Config();
-            $config->getFromDB(1);
-            $wl .= Config::displayField($config, 'title_alerts_widget');
-            $wl .= "</li>";
-            $wl .= "</ul>";
-
-            $wl .= "<div id='nt_alert-infos-container'>";
-            $wl .= "<div id='nt_alert-infos' class=''>";
-
-            $wl .= "<div class='col-xs-4 centered'>";
-            $wl .= "</div>";
-
-            $wl .= "<div class='col'>";
-            $wl .= "<div class='infos-text'>";
-            $wl .= __("No problem detected", "mydashboard");
-            $wl .= "</div>";
-            $wl .= "</div>";
-
-            $wl .= "</div>";
-            $wl .= "</div>";
+                'name_html' => "<i class='fas " . $class . "'></i>"
+                    . htmlspecialchars(
+                        (string) ReminderTranslation::getTranslatedValue($note, 'name'),
+                        ENT_QUOTES,
+                        'UTF-8',
+                    ),
+            ];
         }
-        $wl .= "</div>";
 
-        return $wl;
+        return $wl . self::getTickerHtml(
+            'nt_alert',
+            'alert',
+            $items,
+            $firstdescription,
+            'title_alerts_widget',
+            __("No problem detected", "mydashboard"),
+        );
     }
 
     /**
@@ -3444,7 +3157,7 @@ class Alert extends CommonDBTM
                 // sanitized at render time. getSafeHtml keeps the allowed formatting
                 // but strips scripts/event handlers, closing a stored-XSS path where a
                 // reminder author's payload would execute for any user opening this tab.
-                'text_html' => \Glpi\RichText\RichText::getSafeHtml($reminder->fields['text']),
+                'text_html' => RichText::getSafeHtml($reminder->fields['text']),
             ];
 
             $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
@@ -3509,43 +3222,52 @@ class Alert extends CommonDBTM
     {
         global $CFG_GLPI;
         //        Toolbox::logInfo($message);
-        $alert = "";
-        if ($message != null) {
-            if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
-                $alert .= "<div class='center' style='color:darkred'><i class='ti ti-exclamation-circle' style='font-size:4em'></i><br><br>";
-                $alert .= "<b>";
-                $alert .= __('Service is down for maintenance. It will be back shortly.');
-                $alert .= "</b></div>";
-                if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
-                    $alert .= "<div class='md-status'>";
-                    $alert .= "<p>" . nl2br($CFG_GLPI["maintenance_text"]) . "</p>";
-                    $alert .= "</div>";
-                }
-                $message = "";
-            } elseif (preg_match('/PROBLEM/is', $message)) {
-                $alert .= "<div class='md-title-status' style='color:darkred'><i class='ti ti-exclamation-circle' style='font-size:4em'></i><br><br>";
-                $alert .= "<b>";
-                $alert .= __("Problem with GLPI", "mydashboard");
-                $alert .= "</b></div>";
-            } elseif (preg_match('/OK/is', $message)) {
-                $alert .= "<div class='md-title-status' style='color:forestgreen'><i class='ti ti-circle-check' style='font-size:4em'></i><br><br>";
-                $alert .= "<b>";
-                $alert .= __("GLPI is OK", "mydashboard");
-                $alert .= "</b></div>";
-            } else {
-                $alert .= "<div class='md-title-status' style='color:orange'><i class='ti ti-alert-triangle' style='font-size:4em'></i><br><br>";
-                $alert .= "<b>";
-                $alert .= __(
-                    "Alert is not properly configured or is not reachable (or exceeded the timeout)",
-                    "mydashboard",
-                );
-                $alert .= "</b>";
-                $alert .= "<br><br><a href='$url' target='_blank'>" . $url . "</a></div>";
-            }
+        if ($message == null) {
+            return "";
         }
 
+        $params = [
+            'wrapper_class' => 'md-title-status',
+            'url' => null,
+            'maintenance_text' => '',
+        ];
 
-        return $alert;
+        if (isset($CFG_GLPI["maintenance_mode"]) && $CFG_GLPI["maintenance_mode"]) {
+            $params += [
+                'color' => 'darkred',
+                'icon' => 'ti ti-exclamation-circle',
+                'label' => __('Service is down for maintenance. It will be back shortly.'),
+            ];
+            $params['wrapper_class'] = 'center';
+            if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
+                $params['maintenance_text'] = nl2br($CFG_GLPI["maintenance_text"]);
+            }
+            $message = "";
+        } elseif (preg_match('/PROBLEM/is', $message)) {
+            $params += [
+                'color' => 'darkred',
+                'icon' => 'ti ti-exclamation-circle',
+                'label' => __("Problem with GLPI", "mydashboard"),
+            ];
+        } elseif (preg_match('/OK/is', $message)) {
+            $params += [
+                'color' => 'forestgreen',
+                'icon' => 'ti ti-circle-check',
+                'label' => __("GLPI is OK", "mydashboard"),
+            ];
+        } else {
+            $params += [
+                'color' => 'orange',
+                'icon' => 'ti ti-alert-triangle',
+                'label' => __(
+                    "Alert is not properly configured or is not reachable (or exceeded the timeout)",
+                    "mydashboard",
+                ),
+            ];
+            $params['url'] = $url;
+        }
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/alert_status_banner.html.twig', $params);
     }
 
     /**

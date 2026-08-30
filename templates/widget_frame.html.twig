@@ -1,0 +1,80 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# prelude_html carries the DataTables initialisation emitted before the frame #}
+{{ prelude_html|raw }}
+
+<div id="{{ widget_id }}">
+    <div class="bt-row">
+        <div class="bt-feature {{ feature_class }} " style="width: 98%;margin-left:10px">
+            {% if show_title %}
+                <div class="display-4" style="margin: 15px;">
+                    <h4>
+                        {# title and tooltip are built by the widget itself #}
+                        {{ title_html|raw }}
+                        {%- if tooltip_html %}&nbsp;{{ tooltip_html|raw }}{% endif -%}
+                    </h4>
+                </div>
+                <hr style="margin: 1.2rem 0;">
+            {% endif %}
+
+            <div id="display-sc">
+                {{ header_html|raw }}
+
+                {% if table is not null %}
+                    <table id="{{ table.id }}" class="display tab_cadre" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                {% for column in table.columns %}<th>{{ column|raw }}</th>{% endfor %}
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                {% for column in table.columns %}<th>{{ column|raw }}</th>{% endfor %}
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for row in table.rows %}
+                                <tr>
+                                    {# cells already run through RichText::getSafeHtml() when
+                                       they carry markup #}
+                                    {% for cell in row %}<td>{{ cell|raw }}</td>{% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ table.content_html|raw }}
+                {% elseif html_content is not empty %}
+                    {{ html_content|raw }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ scripts_html|raw }}
+{{ debug_html|raw }}

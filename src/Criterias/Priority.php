@@ -66,9 +66,6 @@ class Priority
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Priority') . "&nbsp;";
-
         $current_priority = 0;
 
         if (isset($opt[self::$criteria_name])
@@ -76,14 +73,11 @@ class Priority
             $current_priority = $opt[self::$criteria_name];
         }
 
-        $form .= self::priorityDropdown($current_priority);
-
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Priority'),
+            self::priorityDropdown($current_priority),
+            $count,
+        );
     }
 
     public static function getQueryCriteria($params)

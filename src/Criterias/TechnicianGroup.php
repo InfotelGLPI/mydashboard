@@ -95,8 +95,6 @@ class TechnicianGroup
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-
         $result = getAllDataFromTable(
             Group::getTable(),
             ['is_assign' => 1, 'ORDER' => "completename"],
@@ -126,29 +124,20 @@ class TechnicianGroup
         ];
 
 
-        $form .= __('Technician group');
-        $form .= "&nbsp;";
-
-        $dropdown = Dropdown::showFromArray(self::$criteria_name, $temp, $params);
-
-        $form .= $dropdown;
-
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
+        $form = Criteria::getFieldHtml(
+            __('Technician group'),
+            Dropdown::showFromArray(self::$criteria_name, $temp, $params),
+            $count,
+        );
 
         $defaultcrit = $default['is_recursive_technicians'] ?? 0;
         $sons = $opt['is_recursive_technicians'] ?? $defaultcrit;
         if ($sons > 0) {
-            $form .= "<span class='md-widgetcrit'>";
-            $form .= __('Child groups') . "&nbsp;";
-            $paramsy = ['display' => false];
-            $form .= Dropdown::showYesNo('is_recursive_technicians', $sons, -1, $paramsy);
-            $form .= "</span>";
-            if ($count > 1) {
-                $form .= "</br></br>";
-            }
+            $form .= Criteria::getFieldHtml(
+                __('Child groups'),
+                Dropdown::showYesNo('is_recursive_technicians', $sons, -1, ['display' => false]),
+                $count,
+            );
         }
 
         return $form;

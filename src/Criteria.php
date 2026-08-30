@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard;
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Criterias\ComputerType;
 use GlpiPlugin\Mydashboard\Criterias\DisplayData;
 use GlpiPlugin\Mydashboard\Criterias\Entity;
@@ -563,22 +564,34 @@ class Criteria
      *
      * @return string , like '<form id=...>'
      */
-    public static function getFormHeader($rand, $opt = [])
+    /**
+     * Render one labelled widget of the criteria filter bar.
+     *
+     * Every Criterias\*::getDisplayForm() used to inline this same span/spacing markup.
+     *
+     * @param string $label      criterion label, plain text
+     * @param string $input_html markup of a GLPI dropdown called with 'display' => false
+     * @param int    $count      number of criteria shown; above one they are stacked
+     *
+     * @return string
+     */
+    public static function getFieldHtml($label, $input_html, $count)
     {
-        $form = "<script type='text/javascript'>
-               $(document).ready(function () {
-                   $('#plugin_mydashboard_add_criteria$rand').on('click', function (e) {
-                       $('#plugin_mydashboard_see_criteria$rand').width(300);
-                       $('#plugin_mydashboard_see_criteria$rand').toggle();
-                   });
-                 });
-                </script>";
+        return TemplateRenderer::getInstance()->render('@mydashboard/criteria_field.html.twig', [
+            'label' => $label,
+            'input_html' => $input_html,
+            'count' => $count,
+        ]);
+    }
 
-        $form .= "<div id='plugin_mydashboard_add_criteria$rand' style='margin-bottom: 15px;'>";
-        $form .= "<i class=\"ti ti-adjustments\"></i>";
-        $form .= "<span style='font-size: 12px;font-family: verdana,serif;color: #CCC;font-weight: bold;'>";
-
-        $used_criterias = [
+    /**
+     * The criteria classes, in display order.
+     *
+     * @return array criteria name => class
+     */
+    private static function getUsedCriterias()
+    {
+        return [
             Entity::$criteria_name => Entity::class,
             Type::$criteria_name => Type::class,
             TechnicianGroup::$criteria_name => TechnicianGroup::class,
@@ -597,28 +610,8 @@ class Criteria
             DisplayData::$criteria_name => DisplayData::class,
             FilterDate::$criteria_name => FilterDate::class,
         ];
-
-        foreach ($used_criterias as $criteria => $class) {
-            if (isset($opt[$criteria])) {
-                $critClass = new $class();
-                $form .= $critClass::getDisplayValue($opt);
-            }
-        }
-
-        $form .= "</span>";
-        $form .= "</div>";
-
-        return $form;
     }
 
-    /**
-     * @param       $widgetId
-     * @param false $onsubmit
-     * @param       $opt
-     * @param       $criterias
-     *
-     * @return string
-     */
     public static function getForm($widgetId, $default, $opt, $criterias, $onsubmit = false)
     {
         $gsid = Widget::getGsID($widgetId);
@@ -626,63 +619,47 @@ class Criteria
         if (count($opt) == 0) {
             $opt = $default;
         }
-        $form = self::getFormHeader($rand, $opt);
 
         $formId = uniqid('form');
-
-        $form .= "<div class='plugin_mydashboard_menuWidget' id='plugin_mydashboard_see_criteria$rand'>";
-        if ($onsubmit) {
-            $form .= "<form id='" . $formId . "' action='' "
-                . "onsubmit=\"refreshWidgetByForm('" . Widget::removeBackslashes(
-                    $widgetId,
-                ) . "','" . $gsid . "','" . $formId . "'); return false;\">";
-        } else {
-            $form .= "<form id='" . $formId . "' action='' onsubmit='return false;' ";
-            $form .= "onchange=\"refreshWidgetByForm('" . Widget::removeBackslashes(
-                $widgetId,
-            ) . "','" . $gsid . "','" . $formId . "');\">";
-        }
-
         $count = count($criterias);
 
-        $used_criterias = [
-            Entity::$criteria_name => Entity::class,
-            Type::$criteria_name => Type::class,
-            TechnicianGroup::$criteria_name => TechnicianGroup::class,
-            RequesterGroup::$criteria_name => RequesterGroup::class,
-            Limit::$criteria_name => Limit::class,
-            Location::$criteria_name => Location::class,
-            Status::$criteria_name => Status::class,
-            Priority::$criteria_name => Priority::class,
-            Technician::$criteria_name => Technician::class,
-            ITILCategory::$criteria_name => ITILCategory::class,
-            Year::$criteria_name => Year::class,
-            Month::$criteria_name => Month::class,
-            Week::$criteria_name => Week::class,
-            ComputerType::$criteria_name => ComputerType::class,
-            MultipleLocation::$criteria_name => MultipleLocation::class,
-            DisplayData::$criteria_name => DisplayData::class,
-            FilterDate::$criteria_name => FilterDate::class,
-        ];
-
-        foreach ($used_criterias as $criteria => $class) {
+        $summary_html = '';
+        $fields_html = '';
+        foreach (self::getUsedCriterias() as $criteria => $class) {
+            if (isset($opt[$criteria])) {
+                $summary_html .= $class::getDisplayValue($opt);
+            }
             if (in_array($criteria, $criterias)) {
-                $critClass = new $class();
-                $form .= $critClass::getDisplayForm($default, $opt, $count);
+                $fields_html .= $class::getDisplayForm($default, $opt, $count);
             }
         }
 
-        if ($onsubmit) {
-            $form .= \Html::submit(_x('button', 'Send'), [
+        $refresh_js = sprintf(
+            "refreshWidgetByForm('%s','%s','%s');",
+            Widget::removeBackslashes($widgetId),
+            $gsid,
+            $formId,
+        );
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/criteria_form.html.twig', [
+            'rand' => $rand,
+            'form_id' => $formId,
+            'on_submit' => (bool) $onsubmit,
+            'refresh_js' => $refresh_js,
+            'summary_html' => $summary_html,
+            'fields_html' => $fields_html,
+            'submit_html' => \Html::submit(_x('button', 'Send'), [
                 'name' => 'submit',
                 'class' => 'btn btn-primary',
-            ]);
-        }
-
-        $form .= "</form>";
-        $form .= "</div>";
-
-        return $form;
+            ]),
+            'toggle_script_html' => \Html::scriptBlock("
+                $(document).ready(function () {
+                    $('#plugin_mydashboard_add_criteria{$rand}').on('click', function (e) {
+                        $('#plugin_mydashboard_see_criteria{$rand}').width(300);
+                        $('#plugin_mydashboard_see_criteria{$rand}').toggle();
+                    });
+                });"),
+        ]);
     }
 
     /**

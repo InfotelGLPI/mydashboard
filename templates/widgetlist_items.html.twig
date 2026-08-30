@@ -1,0 +1,48 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Recursive: a leaf is an "add widget" button, a folder nests another list. #}
+{% for item in items %}
+    {% if item.kind == 'button' %}
+        <button type="button" id="btnAddWidgete{{ item.widget_id }}"
+                class="list-group-item list-group-item-action plugin_mydashboard_menuDashboardListItem"
+                data-widgetid="{{ item.gsid }}" data-classname="{{ item.classname }}">
+            {%- if item.icon %}<i class="{{ item.icon }} me-1"></i>{% endif -%}
+            {{ item.label }}{{ item.debug }}
+            {%- if item.comment %}<br><small class="text-muted">{{ item.comment }}</small>{% endif -%}
+        </button>
+    {% else %}
+        <div class="ps-3 border-start ms-2 mt-1">
+            <div class="small text-muted py-1">
+                <i class="ti ti-folder me-1"></i>{{ item.label }}
+            </div>
+            <div class="list-group list-group-flush">
+                {% include '@mydashboard/widgetlist_items.html.twig' with {'items': item.items} only %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

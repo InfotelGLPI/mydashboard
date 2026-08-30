@@ -71,16 +71,11 @@ class Technician
             'width' => '50%',
             'display' => false,
         ];
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Technician');
-        $form .= "&nbsp;";
-        $form .= User::dropdown($params);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Technician'),
+            User::dropdown($params),
+            $count,
+        );
     }
 
     public static function getQueryLeftJoin($params, $table)

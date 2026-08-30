@@ -66,9 +66,6 @@ class Status
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $form = "<span class='md-widgetcrit'>";
-        $form .= __('Ticket') . " " . __('Status') . "&nbsp;";
-
         $current_status = 0;
 
         if (isset($opt[self::$criteria_name])
@@ -76,13 +73,11 @@ class Status
             $current_status = $opt[self::$criteria_name];
         }
 
-        $form .= self::statusDropdown($current_status);
-        $form .= "</span>";
-        if ($count > 1) {
-            $form .= "</br></br>";
-        }
-
-        return $form;
+        return Criteria::getFieldHtml(
+            __('Ticket') . " " . __('Status'),
+            self::statusDropdown($current_status),
+            $count,
+        );
     }
 
     public static function getQueryCriteria($params)

@@ -1,0 +1,44 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Summary line of the active criteria; clicking it toggles the panel below. #}
+<div id="plugin_mydashboard_add_criteria{{ rand }}" style="margin-bottom: 15px;">
+    <i class="ti ti-adjustments"></i>
+    <span style="font-size: 12px;font-family: verdana,serif;color: #CCC;font-weight: bold;">
+        {{ summary_html|raw }}
+    </span>
+</div>
+{{ toggle_script_html|raw }}
+
+<div class="plugin_mydashboard_menuWidget" id="plugin_mydashboard_see_criteria{{ rand }}">
+    <form id="{{ form_id }}" action=""
+          {%- if on_submit %} onsubmit="{{ refresh_js }} return false;"
+          {%- else %} onsubmit="return false;" onchange="{{ refresh_js }}"{% endif %}>
+        {{ fields_html|raw }}
+        {%- if on_submit %}{{ submit_html|raw }}{% endif %}
+    </form>
+</div>
