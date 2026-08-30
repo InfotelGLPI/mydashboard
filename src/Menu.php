@@ -33,6 +33,7 @@ use CommonGLPI;
 use DbUtils;
 use Dropdown;
 use Entity;
+use Glpi\Application\View\TemplateRenderer;
 use Group;
 use GlpiPlugin\Mydashboard\Criterias\Year;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
@@ -318,16 +319,27 @@ class Menu extends CommonGLPI
         foreach ($iterator as $data) {
             $profiles[$data['id']] = $data['name'];
         }
-        echo "<select name='" . $p['name'] . "' onChange='this.form.submit()'>";
-        echo "<option>" . Dropdown::EMPTY_VALUE . "</option>";
+
+        $options = [];
         foreach ($profiles as $id => $name) {
-            $selected = '';
-            if ($id == $p['value']) {
-                $selected = 'selected';
-            }
-            echo "<option $selected value='" . (int) $id . "'>" . htmlescape($name) . "</option>";
+            $options[] = [
+                'id' => (int) $id,
+                'name' => $name,
+                'selected' => $id == $p['value'],
+            ];
         }
-        echo "</select>";
+
+        echo TemplateRenderer::getInstance()->render('@mydashboard/menu_profiles_dropdown.html.twig', [
+            'name' => $p['name'],
+            'empty_value' => Dropdown::EMPTY_VALUE,
+            'profiles' => $options,
+            // Delegated handler on the data attribute, replacing the inline onChange
+            'submit_script_html' => \Html::scriptBlock(
+                '$(document).on("change", "select[data-md-submit-on-change]", function () {'
+                . 'this.form.submit();'
+                . '});',
+            ),
+        ]);
         //
         //      Dropdown::showFromArray($p['name'], $profiles,
         //                              ['value'               => $p['value'],
@@ -354,24 +366,14 @@ class Menu extends CommonGLPI
         //list item click with the adding on the mydashboard, and we need to display
         //this div contains the header and the content (basically the ul used by sDashboard)
 
-        echo "<div class='plugin_mydashboard_dashboard' >";//(div.plugin_mydashboard_dashboard)
-
-        //This first div is the header of the mydashboard, basically it display a name, informations and a button to toggle full screen
-        echo "<div class='plugin_mydashboard_header'>";//(div.plugin_mydashboard_header)
-        echo "</div>";//end(div.plugin_mydashboard_header)
-        //Now the content
-        //      echo "<div class='plugin_mydashboard_content'>";//(div.plugin_mydashboard_content)
-        //
-        //      echo "</div>";//end(div.plugin_mydashboard_content)
-        echo "</div>";//end(div.plugin_mydashboard_dashboard)
-
-        //      //Automatic refreshing of the widgets (that wants to be refreshed -> see Module::toggleRefresh() )
+        //Automatic refreshing of the widgets (that wants to be refreshed -> see Module::toggleRefresh() )
+        $refresh_script_html = '';
         if (self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh']) {
             //We need some javascript, here are scripts (script which have to be dynamically called)
             $refreshIntervalMs = 60000 * self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh_delay'];
             //this js function call itself every $refreshIntervalMs ms, each execution result in the refreshing of all refreshable widgets
 
-            echo \Html::scriptBlock('
+            $refresh_script_html = \Html::scriptBlock('
             function refreshAll() {
                  $(\'.refresh-icon\').trigger(\'click\');
              };
@@ -380,12 +382,15 @@ class Menu extends CommonGLPI
                      refreshAll();
                  }, delay);
              }
-            ');
-
-            echo \Html::scriptBlock('
+            ')
+            . \Html::scriptBlock('
                automaticRefreshAll(' . $refreshIntervalMs . ');
          ');
         }
+
+        echo TemplateRenderer::getInstance()->render('@mydashboard/menu_dashboard.html.twig', [
+            'refresh_script_html' => $refresh_script_html,
+        ]);
     }
 
     //    public function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0)

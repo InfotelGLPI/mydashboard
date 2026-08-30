@@ -4221,31 +4221,15 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
 
 
         if ($iswidget == false) {
-            //         echo "<li>";
-            echo "<table id='indicators' class='indicators'><tr>";
-
-            echo "<td class='ind-new'>";
-            echo $href_new;
-            echo "</td>";
-
-            echo "<td class='ind-late'>";
-            echo $href_due;
-            echo "</td>";
-
-            echo "<td class='ind-pending'>";
-            echo $href_pend;
-            echo "</td>";
-
-            echo "<td class='ind-process'>";
-            echo $href_incpro;
-            echo "</td>";
-
-            echo "<td class='dem-process'>";
-            echo $href_dempro;
-            echo "</td>";
-
-            echo "</tr></table>";
-            //         echo "</li>";
+            echo TemplateRenderer::getInstance()->render('@mydashboard/alert_indicators_table.html.twig', [
+                'cells' => [
+                    ['class' => 'ind-new', 'link_html' => $href_new],
+                    ['class' => 'ind-late', 'link_html' => $href_due],
+                    ['class' => 'ind-pending', 'link_html' => $href_pend],
+                    ['class' => 'ind-process', 'link_html' => $href_incpro],
+                    ['class' => 'dem-process', 'link_html' => $href_dempro],
+                ],
+            ]);
         } else {
             //         $graph = "<table id='indicators' class='indicators'><tr>";
 
@@ -4270,82 +4254,39 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
                 $stats .= Helper::getGraphHeader($params_header);
             }
 
-            if ($seeown == true) {
-                $delclass = "";
-                $class = "bt-col-md-12";
-                if (Session::haveRight("plugin_servicecatalog_view", CREATE)
-                    || Session::haveRight("plugin_servicecatalog_defaultview", CREATE)) {
-                    $delclass = "delclass";
-                }
-                $stats .= "<div id='gs20' class=\"bt-row $delclass\">";
-                $stats .= "<div class=\"bt-feature $class \">";
-                $stats .= "<h3 class=\"bt-title-divider\">";
-                $stats .= "<span>";
-                $stats .= __("Global indicators", "mydashboard");
-                $stats .= "</span>";
-                $stats .= "</h3>";
+            // The former "$seeown == true" branches (title block and its wrappers) are gone:
+            // $seeown is initialised to false at the top of this method and never
+            // reassigned, so they could not be reached.
+            $cells = [
+                ['class' => 'nb ind-widget-new', 'link_html' => $href_new,
+                    'label' => __('New tickets', 'mydashboard'),
+                ],
+                ['class' => 'nb ind-widget-late', 'link_html' => $href_due,
+                    'label' => __('Tickets late', 'mydashboard'),
+                ],
+                ['class' => 'nb ind-widget-pending', 'link_html' => $href_pend,
+                    'label' => __('Pending tickets', 'mydashboard'),
+                ],
+                ['class' => 'nb ind-widget-process', 'link_html' => $href_incpro,
+                    'label' => __('Incidents in progress', 'mydashboard'),
+                ],
+                ['class' => 'nb dem-widget-process', 'link_html' => $href_dempro,
+                    'label' => __('Requests in progress', 'mydashboard'),
+                ],
+                ['class' => 'nb ind-widget-solved', 'link_html' => $href_resolved,
+                    'label' => __('Tickets solved', 'mydashboard'),
+                ],
+            ];
+            if ($type == "week") {
+                $cells[] = ['class' => 'nb ind-widget-closed', 'link_html' => $href_closed,
+                    'label' => __('Tickets closed', 'mydashboard'),
+                ];
             }
 
-            $stats .= "<div id='indicators' class='tickets-ind' style='text-align: center;'>";
-            //         $stats .= "<div class='circle'>";
-
-            if ($seeown == false) {
-                $stats .= "<div class='nb ind-widget-new'>";
-                $stats .= $href_new;
-                $stats .= "<br><br>";
-                $stats .= __('New tickets', 'mydashboard');
-                $stats .= "</div>";
-
-                $stats .= "<div class='nb ind-widget-late'>";
-                $stats .= $href_due;
-                $stats .= "<br><br>";
-                $stats .= __('Tickets late', 'mydashboard');
-                $stats .= "</div>";
-
-                $stats .= "<div class='nb ind-widget-pending'>";
-                $stats .= $href_pend;
-                $stats .= "<br><br>";
-                $stats .= __('Pending tickets', 'mydashboard');
-                $stats .= "</div>";
-
-                $stats .= "<div class='nb ind-widget-process'>";
-                $stats .= $href_incpro;
-                $stats .= "<br><br>";
-                $stats .= __('Incidents in progress', 'mydashboard');
-                $stats .= "</div>";
-
-                $stats .= "<div class='nb dem-widget-process'>";
-                $stats .= $href_dempro;
-                $stats .= "<br><br>";
-                $stats .= __('Requests in progress', 'mydashboard');
-                $stats .= "</div>";
-
-                $stats .= "<div class='nb ind-widget-solved'>";
-                $stats .= $href_resolved;
-                $stats .= "<br><br>";
-                $stats .= __('Tickets solved', 'mydashboard');
-                $stats .= "</div>";
-
-                if ($type == "week") {
-                    $stats .= "<div class='nb ind-widget-closed'>";
-                    $stats .= $href_closed;
-                    $stats .= "<br><br>";
-                    $stats .= __('Tickets closed', 'mydashboard');
-                    $stats .= "</div>";
-                }
-            }
-            //         $stats .= "</div>";
-            $stats .= "</div>";
-            //         $stats .= "</tr></table>";
-
-            if ($seeown == true) {
-                if ($iswidget == false) {
-                    $stats .= "</div>";
-                    $stats .= "</div>";
-                }
-            }
-
-            return $stats;
+            return TemplateRenderer::getInstance()->render('@mydashboard/alert_indicators_widget.html.twig', [
+                'header_html' => $stats,
+                'cells' => $cells,
+            ]);
         }
     }
 
