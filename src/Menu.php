@@ -388,263 +388,263 @@ class Menu extends CommonGLPI
         }
     }
 
-    public function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0)
-    {
-        $drag = MydashboardPreference::checkDragMode(Session::getLoginUserID());
-
-        echo $this->getscripts();
-
-        //        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
-        if ($edit > 0) {
-            //force loading new widgets
-            self::installWidgets();
-        }
-
-        if ($edit > 0) {
-            /**** Loading widgets****/
-            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
-                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
-            }
-            $widgetslist = $_SESSION['glpi_plugin_mydashboard_widget_list'];
-
-            $gslist      = [];
-            foreach ($widgetslist as $gs => $widgetclasses) {
-                $gslist[$widgetclasses['id']] = $gs;
-            }
-            $grid = [];
-            $used = [];
-
-            $dashboard = new Dashboard();
-
-            if ($edit == 2) {
-                $options = ["users_id"    => 0,
-                    "profiles_id" => $selected_profile];
-                $id      = Dashboard::checkIfPreferenceExists($options);
-                if ($dashboard->getFromDB($id)) {
-                    $grid = stripslashes($dashboard->fields['grid']);
-                }
-            }
-            if ($edit == 1) {
-                $option_users = ["users_id"    => Session::getLoginUserID(),
-                    "profiles_id" => $selected_profile];
-                $id           = Dashboard::checkIfPreferenceExists($option_users);
-                if ($dashboard->getFromDB($id)) {
-                    $grid = stripslashes($dashboard->fields['grid']);
-                }
-            }
-
-            if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-                foreach ($datagrid as $k => $v) {
-                    $used[] = $v["id"];
-                }
-            }
-
-            $widgetlist = Widgetlist::getList(true, $selected_profile);
-            /**** End Loading widgets****/
-
-            // Offcanvas catalogue de widgets (hors sidebar, pour que Bootstrap le positionne correctement)
-            echo $this->getWidgetsList($widgetlist, $gslist, $used);
-
-            echo "<div class='left'>";
-
-            echo "<form method='post'
-                     action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
-
-            echo "<table class='tab_cadre_fixe' width='100%'>";
-
-            echo "<tr><td class='center' style='padding: 8px;'>";
-            echo "<button type='button' class='btn btn-primary w-100 plugin_mydashboard_add_button'"
-                . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
-                . " aria-controls='md-widget-offcanvas'>";
-            echo "<i class='ti ti-plus me-1'></i>&nbsp;" . __('Add widgets', 'mydashboard');
-            echo "</button>";
-            echo "</td></tr>";
-
-            echo "<tr><th style='background-color: #e3e3e3;padding: 10px;'>";
-            echo __('Edit mode', 'mydashboard');
-            if ($edit == 2) {
-                echo " (" . __('Global', 'mydashboard') . ")";
-            }
-            echo "</th>";
-            echo "</tr>";
-
-            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-                echo "<tr>";
-                echo "<td class='center'>";
-                echo "<span class='editmode_test'>" . __('Profile') . "</span>&nbsp;";
-                echo "<br><br>";
-                self::dropdownProfiles(['value' => $selected_profile]);
-                echo "</td>";
-                echo "<tr>";
-            } else {
-                echo \Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
-            }
-
-            echo "<tr class='plugin_mydashboard_trWidget'>";
-            echo "<td class='center' style='border: 0;'>";
-
-            echo "<br><span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
-            echo "<br><br>";
-            $elements = Dashboard::getPredefinedDashboardName();
-            echo "<select name='predefined_grid' onChange='this.form.submit()'>";
-            echo "<option>" . Dropdown::EMPTY_VALUE . "</option>";
-            foreach ($elements as $id => $name) {
-                echo "<option value='$id'>$name</option>";
-            }
-            echo "</select><br>";
-            //         Dropdown::showFromArray("predefined_grid", $elements, [
-            //            'value'               => $predefined_grid,
-            //            'width'               => '170px',
-            //            'display_emptychoice' => true,
-            //            'on_change'           => 'this.form.submit()']);
-            //
-            echo "<br>";
-
-            if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-                $edit = 1;
-            }
-
-            if ($edit == 1) {
-                echo "<a id='save-grid' class='submit btn btn-success'>";
-                echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Save grid', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-                echo "<a id='save-default-grid' class='submit btn btn-success'>";
-                echo "<i class='ti ti-layout-grid pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Save default grid', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-
-            echo "<a id='clear-grid' class='submit btn btn-danger'>";
-            echo "<i class='ti ti-brand-windows pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-            echo "&nbsp;" . __('Clear grid', 'mydashboard');
-            echo "</a>";
-            echo "<br><br>";
-
-            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-                echo "<a id='drag-grid' class='submit btn btn-danger'>";
-                echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-                echo "<a id='undrag-grid' class='submit btn btn-success'>";
-                echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Block drag / resize widgets', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-
-            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-            if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
-                && $edit < 1
-                && $interface == 1) {
-                echo "<a id='header_fullscreen' class='submit btn btn-info'>";
-                echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __("Fullscreen", "mydashboard");
-                echo "</a>";
-                echo "<br><br>";
-            }
-            echo "<a id='close-edit' class='submit btn btn-success'>";
-            echo "<i class='ti ti-circle-x pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-            echo "&nbsp;" . __("Close edit mode", "mydashboard");
-            echo "</a>";
-
-            echo "</td>";
-            echo "</tr>";
-
-            echo "</table>";
-            \Html::closeForm();
-            echo "</div>";
-
-            echo "<div class='alert alert-success' id='success-alert'>
-                <strong>" . __('Success', 'mydashboard') . "</strong> -
-                " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
-            </div>";
-            echo \Html::scriptBlock('
-               $("#success-alert").hide();
-         ');
-
-            echo "<div class='bt-alert bt-alert-error' id='error-alert'>
-                <strong>" . __('Error', 'mydashboard') . "</strong>
-                " . __('Please reload your page.', 'mydashboard') . "
-            </div>";
-            echo \Html::scriptBlock('
-               $("#error-alert").hide();
-         ');
-        } else {
-            echo "<div class='center'>";
-            echo "<br>";
-
-            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-                echo "<a id='save-grid' class='submit btn btn-success'>";
-                echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Save grid', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-
-                echo "<a id='undrag-grid' class='submit btn btn-success'>";
-                echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Block drag / resize widgets', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-
-            if (Session::haveRight("plugin_mydashboard_edit", 6)) {
-                echo "<a id='edit-grid' class='submit btn btn-danger'>";
-                echo "<i class='ti ti-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Switch to edit mode', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-
-            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-                echo "<a id='drag-grid' class='submit btn btn-danger'>";
-                echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-
-            if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-                echo "<a id='edit-default-grid' class='submit btn btn-danger'>";
-                echo "<i class='ti ti-adjustments pointer btn-mydashboard' title='" . __('Custom and save profile grid', 'mydashboard') . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __('Custom and save profile grid', 'mydashboard');
-                echo "</a>";
-                echo "<br><br>";
-            }
-
-            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-            if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
-                && $edit < 1
-                && $interface == 1) {
-                echo "<a id='header_fullscreen' class='submit btn btn-info'>";
-                echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
-                           data-hasqtip='0' aria-hidden='true'></i>";
-                echo "&nbsp;" . __("Fullscreen", "mydashboard");
-                echo "</a>";
-            }
-        }
-        echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
-        echo "</div>";
-    }
+    //    public function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0)
+    //    {
+    //        $drag = MydashboardPreference::checkDragMode(Session::getLoginUserID());
+    //
+    //        echo $this->getscripts();
+    //
+    //        //        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
+    //        if ($edit > 0) {
+    //            //force loading new widgets
+    //            self::installWidgets();
+    //        }
+    //
+    //        if ($edit > 0) {
+    //            /**** Loading widgets****/
+    //            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
+    //                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
+    //            }
+    //            $widgetslist = $_SESSION['glpi_plugin_mydashboard_widget_list'];
+    //
+    //            $gslist      = [];
+    //            foreach ($widgetslist as $gs => $widgetclasses) {
+    //                $gslist[$widgetclasses['id']] = $gs;
+    //            }
+    //            $grid = [];
+    //            $used = [];
+    //
+    //            $dashboard = new Dashboard();
+    //
+    //            if ($edit == 2) {
+    //                $options = ["users_id"    => 0,
+    //                    "profiles_id" => $selected_profile];
+    //                $id      = Dashboard::checkIfPreferenceExists($options);
+    //                if ($dashboard->getFromDB($id)) {
+    //                    $grid = stripslashes($dashboard->fields['grid']);
+    //                }
+    //            }
+    //            if ($edit == 1) {
+    //                $option_users = ["users_id"    => Session::getLoginUserID(),
+    //                    "profiles_id" => $selected_profile];
+    //                $id           = Dashboard::checkIfPreferenceExists($option_users);
+    //                if ($dashboard->getFromDB($id)) {
+    //                    $grid = stripslashes($dashboard->fields['grid']);
+    //                }
+    //            }
+    //
+    //            if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
+    //                foreach ($datagrid as $k => $v) {
+    //                    $used[] = $v["id"];
+    //                }
+    //            }
+    //
+    //            $widgetlist = Widgetlist::getList(true, $selected_profile);
+    //            /**** End Loading widgets****/
+    //
+    //            // Offcanvas catalogue de widgets (hors sidebar, pour que Bootstrap le positionne correctement)
+    //            echo $this->getWidgetsList($widgetlist, $gslist, $used);
+    //
+    //            echo "<div class='left'>";
+    //
+    //            echo "<form method='post'
+    //                     action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
+    //
+    //            echo "<table class='tab_cadre_fixe' width='100%'>";
+    //
+    //            echo "<tr><td class='center' style='padding: 8px;'>";
+    //            echo "<button type='button' class='btn btn-primary w-100 plugin_mydashboard_add_button'"
+    //                . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
+    //                . " aria-controls='md-widget-offcanvas'>";
+    //            echo "<i class='ti ti-plus me-1'></i>&nbsp;" . __('Add widgets', 'mydashboard');
+    //            echo "</button>";
+    //            echo "</td></tr>";
+    //
+    //            echo "<tr><th style='background-color: #e3e3e3;padding: 10px;'>";
+    //            echo __('Edit mode', 'mydashboard');
+    //            if ($edit == 2) {
+    //                echo " (" . __('Global', 'mydashboard') . ")";
+    //            }
+    //            echo "</th>";
+    //            echo "</tr>";
+    //
+    //            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+    //                echo "<tr>";
+    //                echo "<td class='center'>";
+    //                echo "<span class='editmode_test'>" . __('Profile') . "</span>&nbsp;";
+    //                echo "<br><br>";
+    //                self::dropdownProfiles(['value' => $selected_profile]);
+    //                echo "</td>";
+    //                echo "<tr>";
+    //            } else {
+    //                echo \Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
+    //            }
+    //
+    //            echo "<tr class='plugin_mydashboard_trWidget'>";
+    //            echo "<td class='center' style='border: 0;'>";
+    //
+    //            echo "<br><span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
+    //            echo "<br><br>";
+    //            $elements = Dashboard::getPredefinedDashboardName();
+    //            echo "<select name='predefined_grid' onChange='this.form.submit()'>";
+    //            echo "<option>" . Dropdown::EMPTY_VALUE . "</option>";
+    //            foreach ($elements as $id => $name) {
+    //                echo "<option value='$id'>$name</option>";
+    //            }
+    //            echo "</select><br>";
+    //            //         Dropdown::showFromArray("predefined_grid", $elements, [
+    //            //            'value'               => $predefined_grid,
+    //            //            'width'               => '170px',
+    //            //            'display_emptychoice' => true,
+    //            //            'on_change'           => 'this.form.submit()']);
+    //            //
+    //            echo "<br>";
+    //
+    //            if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+    //                $edit = 1;
+    //            }
+    //
+    //            if ($edit == 1) {
+    //                echo "<a id='save-grid' class='submit btn btn-success'>";
+    //                echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Save grid', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+    //                echo "<a id='save-default-grid' class='submit btn btn-success'>";
+    //                echo "<i class='ti ti-layout-grid pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Save default grid', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //
+    //            echo "<a id='clear-grid' class='submit btn btn-danger'>";
+    //            echo "<i class='ti ti-brand-windows pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //            echo "&nbsp;" . __('Clear grid', 'mydashboard');
+    //            echo "</a>";
+    //            echo "<br><br>";
+    //
+    //            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+    //                echo "<a id='drag-grid' class='submit btn btn-danger'>";
+    //                echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+    //                echo "<a id='undrag-grid' class='submit btn btn-success'>";
+    //                echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Block drag / resize widgets', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //
+    //            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+    //            if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
+    //                && $edit < 1
+    //                && $interface == 1) {
+    //                echo "<a id='header_fullscreen' class='submit btn btn-info'>";
+    //                echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __("Fullscreen", "mydashboard");
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //            echo "<a id='close-edit' class='submit btn btn-success'>";
+    //            echo "<i class='ti ti-circle-x pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //            echo "&nbsp;" . __("Close edit mode", "mydashboard");
+    //            echo "</a>";
+    //
+    //            echo "</td>";
+    //            echo "</tr>";
+    //
+    //            echo "</table>";
+    //            \Html::closeForm();
+    //            echo "</div>";
+    //
+    //            echo "<div class='alert alert-success' id='success-alert'>
+    //                <strong>" . __('Success', 'mydashboard') . "</strong> -
+    //                " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
+    //            </div>";
+    //            echo \Html::scriptBlock('
+    //               $("#success-alert").hide();
+    //         ');
+    //
+    //            echo "<div class='bt-alert bt-alert-error' id='error-alert'>
+    //                <strong>" . __('Error', 'mydashboard') . "</strong>
+    //                " . __('Please reload your page.', 'mydashboard') . "
+    //            </div>";
+    //            echo \Html::scriptBlock('
+    //               $("#error-alert").hide();
+    //         ');
+    //        } else {
+    //            echo "<div class='center'>";
+    //            echo "<br>";
+    //
+    //            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+    //                echo "<a id='save-grid' class='submit btn btn-success'>";
+    //                echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Save grid', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //
+    //                echo "<a id='undrag-grid' class='submit btn btn-success'>";
+    //                echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Block drag / resize widgets', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //
+    //            if (Session::haveRight("plugin_mydashboard_edit", 6)) {
+    //                echo "<a id='edit-grid' class='submit btn btn-danger'>";
+    //                echo "<i class='ti ti-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Switch to edit mode', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //
+    //            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+    //                echo "<a id='drag-grid' class='submit btn btn-danger'>";
+    //                echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //
+    //            if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
+    //                echo "<a id='edit-default-grid' class='submit btn btn-danger'>";
+    //                echo "<i class='ti ti-adjustments pointer btn-mydashboard' title='" . __('Custom and save profile grid', 'mydashboard') . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __('Custom and save profile grid', 'mydashboard');
+    //                echo "</a>";
+    //                echo "<br><br>";
+    //            }
+    //
+    //            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
+    //            if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
+    //                && $edit < 1
+    //                && $interface == 1) {
+    //                echo "<a id='header_fullscreen' class='submit btn btn-info'>";
+    //                echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
+    //                           data-hasqtip='0' aria-hidden='true'></i>";
+    //                echo "&nbsp;" . __("Fullscreen", "mydashboard");
+    //                echo "</a>";
+    //            }
+    //        }
+    //        echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
+    //        echo "</div>";
+    //    }
 
     /**
      * Génère l'offcanvas Bootstrap contenant la liste des widgets disponibles.

@@ -1,0 +1,39 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# form_header_html opens the <form> and its <table>; the caller closes them #}
+{{ form_header_html|raw }}
+
+<tr class="tab_bg_1">
+    <td><label for="textfield_name{{ rand }}">{{ __('Internal name', 'mydashboard') }}</label></td>
+    <td>{{ name_input_html|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td><label for="textfield_class{{ rand }}">{{ __('Class', 'mydashboard') }}</label></td>
+    <td>{{ class_input_html|raw }}</td>
+</tr>

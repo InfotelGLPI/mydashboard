@@ -33,6 +33,7 @@ use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use ITILCategory;
 use Migration;
@@ -290,8 +291,6 @@ class Config extends CommonDBTM
         $options['candel']  = false;
         $options['colspan'] = 1;
 
-        $this->showFormHeader($options);
-
         //canCreate means that user can update the configuration
         //        $canCreate = self::canCreate();
         $canCreate = true;
@@ -300,90 +299,78 @@ class Config extends CommonDBTM
         //This array is for those who can't update, it's to display the value of a boolean parameter
         $yesno = [__("No"), __("Yes")];
 
-        echo "<tr class='tab_bg_1'><td>" . __("Enable the possibility to display Dashboard in full screen", "mydashboard") . "</td>";
-        echo "<td>";
-        if ($canCreate) {
-            Dropdown::showYesNo("enable_fullscreen", $this->fields['enable_fullscreen']);
-        } else {
-            echo $yesno[$this->fields['enable_fullscreen']];
+        // showFormHeader()/showFormButtons() emit the surrounding <form> and <table>
+        ob_start();
+        $this->showFormHeader($options);
+        $form_header_html = ob_get_clean();
+
+        $impact_colors = [];
+        for ($level = 1; $level <= 5; $level++) {
+            $impact_colors[] = [
+                'level' => $level,
+                'field_html' => Html::showColorField('impact_' . $level, [
+                    'value' => $this->fields["impact_" . $level],
+                    'rand' => $rand,
+                    'display' => false,
+                ]),
+            ];
         }
-        echo "</td>";
-        echo "</tr>";
 
-        echo "<tr class='tab_bg_1'><td>" . __("Replace central interface", "mydashboard") . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo("replace_central", $this->fields['replace_central']);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>" . __('Impact colors for alerts', 'mydashboard') . "</td>";
-        echo "<td colspan='3'>";
-
-        echo "<table><tr>";
-        echo "<td><label for='dropdown_priority_1$rand'>1</label>&nbsp;";
-        Html::showColorField('impact_1', ['value' => $this->fields["impact_1"], 'rand' => $rand]);
-        echo "</td>";
-        echo "<td><label for='dropdown_priority_2$rand'>2</label>&nbsp;";
-        Html::showColorField('impact_2', ['value' => $this->fields["impact_2"], 'rand' => $rand]);
-        echo "</td>";
-        echo "<td><label for='dropdown_priority_3$rand'>3</label>&nbsp;";
-        Html::showColorField('impact_3', ['value' => $this->fields["impact_3"], 'rand' => $rand]);
-        echo "</td>";
-        echo "<td><label for='dropdown_priority_4$rand'>4</label>&nbsp;";
-        Html::showColorField('impact_4', ['value' => $this->fields["impact_4"], 'rand' => $rand]);
-        echo "</td>";
-        echo "<td><label for='dropdown_priority_5$rand'>5</label>&nbsp;";
-        Html::showColorField('impact_5', ['value' => $this->fields["impact_5"], 'rand' => $rand]);
-        echo "</td>";
-        echo "</tr></table>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Level of categories to show', 'mydashboard') . "</td>";
-        echo "<td>";
-        $itilCat        = new ITILCategory();
-        $itilCategories = $itilCat->find();
-        $levelsCat      = [];
-        foreach ($itilCategories as $categorie) {
+        $itilCat = new ITILCategory();
+        $levelsCat = [];
+        foreach ($itilCat->find() as $categorie) {
             $levelsCat[$categorie['level']] = $categorie['level'];
         }
         ksort($levelsCat);
-        Dropdown::showFromArray('levelCat', $levelsCat, ['value' => $this->fields["levelCat"]]);
-        echo "</td>";
-        echo "</tr>";
 
-        echo "<tr class='tab_bg_1'><td>" . __("Title of alerts widget", "mydashboard") . "</td>";
-        echo "<td>";
-        echo Html::input('title_alerts_widget', ['value' => $this->fields['title_alerts_widget'], 'size' => 70]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __("Title of scheduled maintenances widget", "mydashboard") . "</td>";
-        echo "<td>";
-        echo Html::input('title_maintenances_widget', ['value' => $this->fields['title_maintenances_widget'], 'size' => 70]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __("Title of informations widget", "mydashboard") . "</td>";
-        echo "<td>";
-        echo Html::input('title_informations_widget', ['value' => $this->fields['title_informations_widget'], 'size' => 70]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo Html::submit(
-            _sx('button', 'Reconstruct global backlog', 'mydashboard'),
-            ['name' => 'reconstructBacklog', 'class' => 'btn btn-primary'],
-        );
-        echo "&nbsp;";
-        echo Html::submit(
-            _sx('button', 'Reconstruct global indicators per week', 'mydashboard'),
-            ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary'],
-        );
-        echo "<br/><br/><div class='alert  alert-warning d-flex'>";
-        echo  __('Can take many time if you have many tickets', 'mydashboard');
-        echo "</div>";
-
+        ob_start();
         $this->showFormButtons($options);
+        $form_buttons_html = ob_get_clean();
+
+        echo TemplateRenderer::getInstance()->render('@mydashboard/config_form.html.twig', [
+            'form_header_html' => $form_header_html,
+            'form_buttons_html' => $form_buttons_html,
+            'rand' => $rand,
+            'can_create' => $canCreate,
+            'fullscreen_html' => Dropdown::showYesNo(
+                "enable_fullscreen",
+                $this->fields['enable_fullscreen'],
+                -1,
+                ['display' => false],
+            ),
+            'fullscreen_label' => $yesno[$this->fields['enable_fullscreen']],
+            'replace_central_html' => Dropdown::showYesNo(
+                "replace_central",
+                $this->fields['replace_central'],
+                -1,
+                ['display' => false],
+            ),
+            'impact_colors' => $impact_colors,
+            'level_cat_html' => Dropdown::showFromArray('levelCat', $levelsCat, [
+                'value' => $this->fields["levelCat"],
+                'display' => false,
+            ]),
+            'title_alerts_html' => Html::input('title_alerts_widget', [
+                'value' => $this->fields['title_alerts_widget'],
+                'size' => 70,
+            ]),
+            'title_maintenances_html' => Html::input('title_maintenances_widget', [
+                'value' => $this->fields['title_maintenances_widget'],
+                'size' => 70,
+            ]),
+            'title_informations_html' => Html::input('title_informations_widget', [
+                'value' => $this->fields['title_informations_widget'],
+                'size' => 70,
+            ]),
+            'reconstruct_backlog_html' => Html::submit(
+                _sx('button', 'Reconstruct global backlog', 'mydashboard'),
+                ['name' => 'reconstructBacklog', 'class' => 'btn btn-primary'],
+            ),
+            'reconstruct_indicators_html' => Html::submit(
+                _sx('button', 'Reconstruct global indicators per week', 'mydashboard'),
+                ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary'],
+            ),
+        ]);
     }
 
     /*

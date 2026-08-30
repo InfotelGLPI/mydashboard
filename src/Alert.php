@@ -39,6 +39,7 @@ use DBConnection;
 use DbUtils;
 use Document;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
 use Glpi\DBAL\QuerySubQuery;
@@ -3318,9 +3319,29 @@ class Alert extends CommonDBTM
     private function showReminderForm(\Reminder $item)
     {
         $reminders_id = $item->getID();
-
         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
+        echo $this->getAlertFormHtml(
+            $reminders_id,
+            _n('Alert', 'Alerts', 1, 'mydashboard'),
+            [-1 => __('All categories', 'mydashboard')],
+        );
+    }
+
+    /**
+     * Build the alert form attached to a reminder.
+     *
+     * Shared by showReminderForm() and showForItem(), which used to carry two nearly
+     * identical copies of it.
+     *
+     * @param int    $reminders_id
+     * @param string $first_type_name label of type 0, the only wording that differs
+     * @param array  $category_toadd  extra entries prepended to the category dropdown
+     *
+     * @return string
+     */
+    private function getAlertFormHtml($reminders_id, $first_type_name, $category_toadd = [])
+    {
         if (isset($this->fields['id'])) {
             $id = $this->fields['id'];
             $impact = $this->fields['impact'];
@@ -3334,67 +3355,46 @@ class Alert extends CommonDBTM
             $itilcategories_id = 0;
             $is_public = 0;
         }
-        echo "<form action='" . $this->getFormURL() . "' method='post' >";
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
 
-        $types = [];
-        $types[0] = _n('Alert', 'Alerts', 1, 'mydashboard');
-        $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
-        $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
-        echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-        Dropdown::showFromArray(
-            'type',
-            $types,
-            [
-                'value' => $type,
-            ],
-        );
-        echo "</td></tr>";
+        $types = [
+            0 => $first_type_name,
+            1 => _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard'),
+            2 => _n('Information', 'Informations', 1, 'mydashboard'),
+        ];
 
-        $impacts = [];
-        $impacts[0] = __("No impact", "mydashboard");
+        $impacts = [0 => __("No impact", "mydashboard")];
         for ($i = 1; $i <= 5; $i++) {
             $impacts[$i] = CommonITILObject::getImpactName($i);
         }
 
-        echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-        Dropdown::showFromArray(
-            'impact',
-            $impacts,
-            [
-                'value' => $impact,
-            ],
-        );
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
-        echo "<td>";
-        $opt = [
+        $category_options = [
             'name' => 'itilcategories_id',
             'value' => $itilcategories_id,
             'entity' => $_SESSION['glpiactiveentities'],
-            //              'entity_sons' => true,
-            'toadd' => [-1 => __('All categories', 'mydashboard')],
+            'display' => false,
         ];
-        ITILCategory::dropdown($opt);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
-        Dropdown::showYesNo('is_public', $is_public);
-        echo "</td></tr>";
-
-        if (Session::haveRight("reminder_public", UPDATE)) {
-            echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-            echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-            echo \Html::hidden("id", ['value' => $id]);
-            echo \Html::hidden("reminders_id", ['value' => $reminders_id]);
-            echo "</td></tr>";
+        if ($category_toadd !== []) {
+            $category_options['toadd'] = $category_toadd;
         }
-        echo "</table>";
-        \Html::closeForm();
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/alert_form.html.twig', [
+            'form_action' => $this->getFormURL(),
+            'type_html' => Dropdown::showFromArray('type', $types, ['value' => $type,
+                'display' => false,
+            ]),
+            'impact_html' => Dropdown::showFromArray('impact', $impacts, ['value' => $impact,
+                'display' => false,
+            ]),
+            'category_html' => ITILCategory::dropdown($category_options),
+            'public_html' => Dropdown::showYesNo('is_public', $is_public, -1, ['display' => false]),
+            'can_edit' => Session::haveRight("reminder_public", UPDATE),
+            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
+                'class' => 'btn btn-primary',
+            ]),
+            'hidden_html' => \Html::hidden("id", ['value' => $id])
+                . \Html::hidden("reminders_id", ['value' => $reminders_id]),
+            'close_form_html' => \Html::closeForm(false),
+        ]);
     }
 
 
@@ -3407,139 +3407,60 @@ class Alert extends CommonDBTM
         $item->getFromDB($items_id);
         $itemtype = $item->getType();
         $reminder = new \Reminder();
+        $has_reminder = isset($item->fields['reminders_id']);
 
-        if (!isset($item->fields['reminders_id'])) {
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<th>" . Menu::getTypeName(2) . "</th>";
-            echo "<tr class='tab_bg_1'><td class='center'>";
-            echo "<button type='submit' class='submit btn btn-primary' onclick=\"createAlert('$itemtype', $items_id)\">" . __(
-                "Create a new alert",
-                "mydashboard",
-            ) . "</button>";
-            echo '<script>
-            function createAlert(itemtype, items_id) {
-              $conf = confirm("' . __('Create a new alert', 'mydashboard') . '");
-              if($conf){
-                  $.ajax({
-                      url: "' . PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php",
-                      type: "POST",
-                      data: { "itemtype": itemtype, "items_id": items_id},
-                      success: function()
-                          {
-                              window.location.reload()
-                          }
-                  });
-                }
-              }
-
-            </script>';
-            echo "</td></tr>";
-            echo "</table>";
-        } else {
-            $reminders_id = $item->fields['reminders_id'];
+        $create_button = null;
+        if (!$has_reminder) {
+            $button_id = 'mydashboard_create_alert_' . mt_rand();
+            // The handler is bound by id rather than through an inline onclick, so the
+            // itemtype and the confirmation label never reach an HTML attribute.
+            $create_button = [
+                'id' => $button_id,
+                'menu_name' => Menu::getTypeName(2),
+                'script_html' => \Html::scriptBlock(
+                    '$(function () {'
+                    . '$("#' . $button_id . '").on("click", function () {'
+                    . 'if (!confirm(' . json_encode(__('Create a new alert', 'mydashboard')) . ')) { return; }'
+                    . '$.ajax({'
+                    . 'url: ' . json_encode(PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php') . ','
+                    . 'type: "POST",'
+                    . 'data: { itemtype: ' . json_encode($itemtype) . ', items_id: ' . (int) $items_id . ' },'
+                    . 'success: function () { window.location.reload(); }'
+                    . '});'
+                    . '});'
+                    . '});',
+                ),
+            ];
         }
 
-        if (isset($item->fields['reminders_id'])) {
+        $reminder_data = null;
+        $alert_form_html = '';
+        if ($has_reminder) {
+            $reminders_id = $item->fields['reminders_id'];
             $reminder->getFromDB($reminders_id);
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='2'>" . __('Linked reminder', 'mydashboard') . "</a></th>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_2'>";
-            echo "<td>" . __("Name") . "</td>";
-            echo "<td>";
-            echo nl2br($reminder->getLink());
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_2'>";
-            echo "<td>" . __("Comment") . "</td>";
-            echo "<td>";
-            // The reminder text is stored raw (rich text) in GLPI 11 and must be
-            // sanitized at render time. getSafeHtml keeps the allowed formatting
-            // but strips scripts/event handlers, closing a stored-XSS path where a
-            // reminder author's payload would execute for any user opening this tab.
-            echo \Glpi\RichText\RichText::getSafeHtml($reminder->fields['text']);
-            echo "</td>";
-            echo "</tr>";
-            echo "</table>";
+            $reminder_data = [
+                'link_html' => nl2br($reminder->getLink()),
+                // The reminder text is stored raw (rich text) in GLPI 11 and must be
+                // sanitized at render time. getSafeHtml keeps the allowed formatting
+                // but strips scripts/event handlers, closing a stored-XSS path where a
+                // reminder author's payload would execute for any user opening this tab.
+                'text_html' => \Glpi\RichText\RichText::getSafeHtml($reminder->fields['text']),
+            ];
 
             $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
-
-            if (isset($this->fields['id'])) {
-                $id = $this->fields['id'];
-                $impact = $this->fields['impact'];
-                $itilcategories_id = $this->fields['itilcategories_id'];
-                $type = $this->fields['type'];
-                $is_public = $this->fields['is_public'];
-            } else {
-                $id = -1;
-                $type = 0;
-                $impact = 0;
-                $itilcategories_id = 0;
-                $is_public = 0;
-            }
-            echo "<form action='" . $this->getFormURL() . "' method='post' >";
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='2'>" . _n('Alert', 'Alerts', 2, 'mydashboard') . "</th></tr>";
-
-            $types = [];
-            $types[0] = _n('Network alert', 'Network alerts', 1, 'mydashboard');
-            $types[1] = _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard');
-            $types[2] = _n('Information', 'Informations', 1, 'mydashboard');
-
-            echo "<tr class='tab_bg_2'><td>" . __("Type") . "</td><td>";
-            Dropdown::showFromArray(
-                'type',
-                $types,
-                [
-                    'value' => $type,
-                ],
+            $alert_form_html = $this->getAlertFormHtml(
+                $reminders_id,
+                _n('Network alert', 'Network alerts', 1, 'mydashboard'),
             );
-            echo "</td></tr>";
+        }
 
-            $impacts = [];
-            $impacts[0] = __("No impact", "mydashboard");
-            for ($i = 1; $i <= 5; $i++) {
-                $impacts[$i] = CommonITILObject::getImpactName($i);
-            }
+        echo TemplateRenderer::getInstance()->render('@mydashboard/alert_item.html.twig', [
+            'create_button' => $create_button,
+            'reminder' => $reminder_data,
+            'alert_form_html' => $alert_form_html,
+        ]);
 
-            echo "<tr class='tab_bg_2'><td>" . __("Alert level", "mydashboard") . "</td><td>";
-            Dropdown::showFromArray(
-                'impact',
-                $impacts,
-                [
-                    'value' => $impact,
-                ],
-            );
-            echo "</td></tr>";
-
-            echo "<tr class='tab_bg_2'>";
-            echo "<td>" . __('Linked with a ticket category', 'mydashboard') . "</td>";
-            echo "<td>";
-            $opt = [
-                'name' => 'itilcategories_id',
-                'value' => $itilcategories_id,
-                'entity' => $_SESSION['glpiactiveentities'],
-                //                 'entity_sons' => true
-            ];
-            ITILCategory::dropdown($opt);
-            echo "</td>";
-            echo "</tr>";
-
-            echo "<tr class='tab_bg_2'><td>" . __("Public") . "</td><td>";
-            Dropdown::showYesNo('is_public', $is_public);
-            echo "</td></tr>";
-
-            if (Session::haveRight("reminder_public", UPDATE)) {
-                echo "<tr class='tab_bg_1 center'><td colspan='2'>";
-                echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-                echo \Html::hidden("id", ['value' => $id]);
-                echo \Html::hidden("reminders_id", ['value' => $reminders_id]);
-                echo "</td></tr>";
-            }
-            echo "</table>";
-            \Html::closeForm();
-
+        if ($has_reminder) {
             $reminder->showVisibility();
         }
     }

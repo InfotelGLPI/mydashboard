@@ -1,0 +1,61 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<form method="post" action="{{ form_action }}" onsubmit="return true;">
+    <table class="tab_cadre_fixe">
+        <tr class="tab_bg_2">
+            <th colspan="2" class="center b">{{ __('Authorized widgets', 'mydashboard') }}</th>
+        </tr>
+        {% for plugin in plugins %}
+            <tr class="tab_bg_2" style="background-color: #CCC;">
+                <td>{{ plugin.label }}</td>
+                <td class="plugin_mydashboard_authorize_all" data-md-toggle-all="{{ plugin.css_class }}">
+                    {{- __('Authorize/Unauthorize all', 'mydashboard') }}&nbsp;
+                </td>
+            </tr>
+            {% for widget in plugin.widgets %}
+                <tr class="tab_bg_1 {{ plugin.css_class }}">
+                    <td class="{{ widget.authorized ? 'plugin_mydashboard_authorized' : 'plugin_mydashboard_unauthorized' }}">
+                        {{ widget.title }}
+                        {%- if widget.category %}
+                            <span class="plugin_mydashboard_discret" style="color:gray">&nbsp;&nbsp;{{ widget.category }}</span>
+                        {%- endif %}
+                    </td>
+                    <td>{{ widget.yesno_html|raw }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        <tr class="tab_bg_2">
+            <td class="center" colspan="2">
+                {{ submit_html|raw }}
+                {{ hidden_html|raw }}
+            </td>
+        </tr>
+    </table>
+    {# closes the <form> above and carries the CSRF token #}
+    {{ close_form_html|raw }}
+{{ toggle_script_html|raw }}

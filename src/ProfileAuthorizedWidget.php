@@ -33,6 +33,7 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Plugin;
 use ProfileRight;
@@ -85,105 +86,88 @@ class ProfileAuthorizedWidget extends CommonDBTM
     public function showForm($ID, $options = [])
     {
         $this->authorized = $this->getAuthorizedListForProfile($ID);
-        $widgetlist       = Widgetlist::getList(false, -1, $options['interface']);
+        $pluginlists      = Widgetlist::getList(false, -1, $options['interface']);
 
-        echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/profileauthorizedwidget.form.php' onsubmit='return true;'>";
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr class='tab_bg_2'>";
-        echo "<th colspan='2' class='center b'>" . __('Authorized widgets', 'mydashboard') . "</th>";
-        echo "</tr>";
-        foreach ($widgetlist as $plugin => $widgetclasses) {
-            echo "<tr class='tab_bg_2' style='background-color: #CCC;'>";
+        $plugins = [];
+        foreach ($pluginlists as $plugin => $widgetclasses) {
             $fct = 'plugin_version_' . strtolower($plugin);
-            if (function_exists($fct)) {
-                echo "<td>" . ucfirst($this->getLocalName($plugin)) . "</td>";
-            } else {
-                echo "<td>" . ucfirst($plugin) . "</td>";
+            $widgets = [];
+            foreach ($widgetclasses as $widgetclass => $widgets_of_class) {
+                $widgets = array_merge($widgets, $this->getWidgetRows($widgets_of_class, ''));
             }
-            echo "<td class='plugin_mydashboard_authorize_all' onclick=\""
-                 . "$('.from_$plugin').find('select').val(($('.from_$plugin').find('select').val() === '0')?'1':'0');
-                       $('.from_$plugin').find('select').trigger('change');\" >" . __('Authorize/Unauthorize all', 'mydashboard') . "&nbsp;"
-              //                     ."<input type='checkbox' value='all' />"
-
-                 . "</td>";
-            echo "</tr>";
-            foreach ($widgetclasses as $widgetclass => $widgetlist) {
-                $this->displayWidgetList($widgetlist, '', 'from_' . $plugin);
-            }
+            $plugins[] = [
+                'label' => ucfirst(function_exists($fct) ? $this->getLocalName($plugin) : $plugin),
+                'css_class' => 'from_' . $plugin,
+                'widgets' => $widgets,
+            ];
         }
-        echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-        echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-        echo \Html::hidden("id", ['value' => $ID]);
-        echo "</tr>";
-        echo "</table>";
 
-        \Html::closeForm();
+        echo TemplateRenderer::getInstance()->render('@mydashboard/profileauthorizedwidget_form.html.twig', [
+            'form_action' => PLUGIN_MYDASHBOARD_WEBDIR . '/front/profileauthorizedwidget.form.php',
+            'plugins' => $plugins,
+            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
+                'class' => 'btn btn-primary',
+            ]),
+            'hidden_html' => \Html::hidden("id", ['value' => $ID]),
+            'close_form_html' => \Html::closeForm(false),
+            // Delegated handler bound on the data attribute, replacing the inline onclick
+            // that used to carry the plugin name into an HTML attribute.
+            'toggle_script_html' => \Html::scriptBlock(
+                '$(document).on("click", "[data-md-toggle-all]", function () {'
+                . 'var $rows = $("." + $(this).data("md-toggle-all"));'
+                . 'var next = ($rows.find("select").val() === "0") ? "1" : "0";'
+                . '$rows.find("select").val(next).trigger("change");'
+                . '});',
+            ),
+        ]);
     }
 
     /**
-     * @param        $widgetlist
-     * @param string $category
-     * @param        $pluginname
+     * Flatten the (possibly nested) widget list into renderable rows.
+     *
+     * @param array  $widgetlist
+     * @param string $category parent category path, empty at the top level
+     *
+     * @return array
      */
-    private function displayWidgetList($widgetlist, $category, $pluginname)
+    private function getWidgetRows($widgetlist, $category)
     {
-        $widgetlistclass  = new Widgetlist();
+        $widgetlistclass = new Widgetlist();
         $viewNames = $widgetlistclass->getViewNames();
 
+        $rows = [];
         foreach ($widgetlist as $widgetId => $widgetTitle) {
-            if (!is_array($widgetTitle)) {
-                echo "<tr class='tab_bg_1 $pluginname'>";
-                $yesno = 0;
-                if (isset($this->authorized[$widgetId])) {
-                    echo "<td class='plugin_mydashboard_authorized' >";
-                    $yesno = 1;
-                } else {
-                    echo "<td class='plugin_mydashboard_unauthorized'>";
-                }
-
-                echo $widgetTitle;
-                if ($category != '') {
-                    echo "<span class='plugin_mydashboard_discret' style='color:gray'>&nbsp;&nbsp;$category</span>";
-                }
-                echo "</td>";
-                echo "<td>";
-                Dropdown::showYesNo($widgetId, $yesno);
-                echo "</td>";
-                echo "</tr>";
-            } else {
-                if (isset($widgetTitle['title'])) {
-                    echo "<tr class='tab_bg_1 $pluginname'>";
-                    $yesno = 0;
-                    if (isset($this->authorized[$widgetId])) {
-                        echo "<td class='plugin_mydashboard_authorized' >";
-                        $yesno = 1;
-                    } else {
-                        echo "<td class='plugin_mydashboard_unauthorized'>";
-                    }
-
-                    echo $widgetTitle['title'];
-                    if ($category != '') {
-                        echo "<span class='plugin_mydashboard_discret' style='color:gray'>&nbsp;&nbsp;$category</span>";
-                    }
-                    echo "</td>";
-                    echo "<td>";
-                    Dropdown::showYesNo($widgetId, $yesno);
-                    echo "</td>";
-                    echo "</tr>";
-                } else {
-                    $newcategory = "";
-                    if ($category != '') {
-                        $newcategory .= $category . ' > ';
-                    }
-
+            if (is_array($widgetTitle)) {
+                if (!isset($widgetTitle['title'])) {
+                    // Nested category: recurse, prefixing the category path
+                    $newcategory = $category != '' ? $category . ' > ' : '';
                     if (is_numeric($widgetId)) {
-                        $widgetId = isset($viewNames[$widgetId]) ? $viewNames[$widgetId] : 0;
+                        $widgetId = $viewNames[$widgetId] ?? 0;
                     }
                     $newcategory .= $widgetId;
-                    $this->displayWidgetList($widgetTitle, $newcategory, $pluginname);
+                    $rows = array_merge($rows, $this->getWidgetRows($widgetTitle, $newcategory));
+                    continue;
                 }
+                $title = $widgetTitle['title'];
+            } else {
+                $title = $widgetTitle;
             }
+
+            $authorized = isset($this->authorized[$widgetId]);
+            $rows[] = [
+                'title' => $title,
+                'category' => $category,
+                'authorized' => $authorized,
+                'yesno_html' => Dropdown::showYesNo(
+                    $widgetId,
+                    $authorized ? 1 : 0,
+                    -1,
+                    ['display' => false],
+                ),
+            ];
         }
+
+        return $rows;
     }
 
     /**

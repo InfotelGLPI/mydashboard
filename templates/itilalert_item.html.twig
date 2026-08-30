@@ -1,0 +1,95 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% if create_button is not null %}
+    <table class="tab_cadre_fixe">
+        <tr>
+            <th>{{ create_button.menu_name }}</th>
+        </tr>
+        <tr class="tab_bg_1">
+            <td class="center">
+                <button type="submit" class="submit btn btn-primary" id="{{ create_button.id }}">
+                    {{- __('Create a new alert', 'mydashboard') -}}
+                </button>
+            </td>
+        </tr>
+    </table>
+    {{ create_button.script_html|raw }}
+{% endif %}
+
+{% if reminder is not null %}
+    <table class="tab_cadre_fixe">
+        <tr>
+            <th colspan="2">{{ __('Linked reminder', 'mydashboard') }}</th>
+        </tr>
+        <tr class="tab_bg_2">
+            <td>{{ __('Name') }}</td>
+            <td>{{ reminder.link_html|raw }}</td>
+        </tr>
+        <tr class="tab_bg_2">
+            <td>{{ __('Comment') }}</td>
+            {# text already run through RichText::getSafeHtml() in the controller #}
+            <td>{{ reminder.text_html|raw }}</td>
+        </tr>
+    </table>
+
+    <form action="{{ alert.form_action }}" method="post">
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th colspan="2">{{ _n('Alert', 'Alerts', 2, 'mydashboard') }}</th>
+            </tr>
+            <tr class="tab_bg_2">
+                <td>{{ __('Type') }}</td>
+                <td>{{ alert.type_html|raw }}</td>
+            </tr>
+            <tr class="tab_bg_2">
+                <td>{{ __('Alert level', 'mydashboard') }}</td>
+                <td>{{ alert.impact_html|raw }}</td>
+            </tr>
+            <tr class="tab_bg_2">
+                <td>{{ __('Linked with a ticket category', 'mydashboard') }}</td>
+                <td>{{ alert.category_html|raw }}</td>
+            </tr>
+            <tr class="tab_bg_2">
+                <td>{{ __('Public') }}</td>
+                <td>{{ alert.public_html|raw }}</td>
+            </tr>
+            {% if alert.can_edit %}
+                <tr class="tab_bg_1 center">
+                    <td>
+                        {{ alert.hidden_html|raw }}
+                        {{ alert.submit_html|raw }}
+                    </td>
+                    <td>
+                        {%- if alert.delete_html %}{{ alert.delete_html|raw }}{% endif -%}
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+        {# closes the <form> above and carries the CSRF token #}
+        {{ alert.close_form_html|raw }}
+{% endif %}

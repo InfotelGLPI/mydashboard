@@ -1,0 +1,93 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# form_header_html / form_buttons_html open and close the <form> and its <table> #}
+{{ form_header_html|raw }}
+
+<tr class="tab_bg_1">
+    <td>{{ __('Enable the possibility to display Dashboard in full screen', 'mydashboard') }}</td>
+    <td>
+        {%- if can_create -%}
+            {{ fullscreen_html|raw }}
+        {%- else -%}
+            {{ fullscreen_label }}
+        {%- endif -%}
+    </td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Replace central interface', 'mydashboard') }}</td>
+    <td>{{ replace_central_html|raw }}</td>
+</tr>
+
+<tr class="tab_bg_2">
+    <td>{{ __('Impact colors for alerts', 'mydashboard') }}</td>
+    <td colspan="3">
+        <table>
+            <tr>
+                {% for color in impact_colors %}
+                    <td>
+                        <label for="dropdown_priority_{{ color.level }}{{ rand }}">{{ color.level }}</label>&nbsp;
+                        {{ color.field_html|raw }}
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
+    </td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Level of categories to show', 'mydashboard') }}</td>
+    <td>{{ level_cat_html|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Title of alerts widget', 'mydashboard') }}</td>
+    <td>{{ title_alerts_html|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Title of scheduled maintenances widget', 'mydashboard') }}</td>
+    <td>{{ title_maintenances_html|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Title of informations widget', 'mydashboard') }}</td>
+    <td>{{ title_informations_html|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td colspan="2">
+        {{ reconstruct_backlog_html|raw }}&nbsp;{{ reconstruct_indicators_html|raw }}
+        <br><br>
+        <div class="alert alert-warning d-flex">
+            {{ __('Can take many time if you have many tickets', 'mydashboard') }}
+        </div>
+    </td>
+</tr>
+
+{{ form_buttons_html|raw }}

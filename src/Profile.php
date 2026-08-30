@@ -31,6 +31,7 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonGLPI;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use ProfileRight;
 use Session;
 
@@ -161,62 +162,63 @@ class Profile extends \Profile
         //85
         $profile = new \Profile();
         $profile->getFromDB($profiles_id);
-        if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
-            echo "<form method='post' action='" . $profile->getFormURL() . "'>";
-        }
+        $canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
 
         $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_mydashboard_stockwidget', 'plugin_mydashboard', 'plugin_mydashboard_config', 'plugin_mydashboard_edit']);
 
-        //      Toolbox::logDebug($effective_rights);
-        echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr class='tab_bg_2'>";
-        // Escape the profile name read from the database before echoing it (GLPI 11
-        // stores raw data; escaping is done at render time).
-        echo "<th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), self::getTypeName(1), htmlspecialchars($profile->fields["name"], ENT_QUOTES, 'UTF-8')) . "</th>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'><td></td><td>" . __("Full", "mydashboard") . "</td><td>" . __("Custom", "mydashboard") . "</td></tr>";
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>" . __("Dashboard Access", "mydashboard") . "</td><td>";
-        $checked = ($effective_rights["plugin_mydashboard"] > 1) ? 1 : 0;
-        \Html::showCheckbox(['name'    => '_plugin_mydashboard[6_0]',
-            'checked' => $checked]);
-        echo "</td>";
-        echo "<td>";
-        $checked = ($effective_rights["plugin_mydashboard"] == 1) ? 1 : 0;
-        \Html::showCheckbox(['name'    => '_plugin_mydashboard[1_0]',
-            'checked' => $checked]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>" . __("Configuration Access", "mydashboard") . "</td><td>";
-        //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
-        \Html::showCheckbox(['name'    => '_plugin_mydashboard_config[22_0]',
-            'checked' => $effective_rights["plugin_mydashboard_config"]]);
-        echo "</td>";
-        echo "<td></td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>" . __("See edit mode", "mydashboard") . "</td><td>";
-        //      Profile::dropdownNoneReadWrite("_plugin_mydashboard_config",$effective_rights["plugin_mydashboard_config"],1,1,1);
-        \Html::showCheckbox(['name'    => '_plugin_mydashboard_edit[6_0]',
-            'checked' => $effective_rights["plugin_mydashboard_edit"]]);
-        echo "</td>";
-        echo "<td></td>";
-        echo "</tr>";
+        $rows = [
+            [
+                'label' => __("Dashboard Access", "mydashboard"),
+                'full_html' => \Html::getCheckbox([
+                    'name' => '_plugin_mydashboard[6_0]',
+                    'checked' => $effective_rights["plugin_mydashboard"] > 1 ? 1 : 0,
+                ]),
+                'custom_html' => \Html::getCheckbox([
+                    'name' => '_plugin_mydashboard[1_0]',
+                    'checked' => $effective_rights["plugin_mydashboard"] == 1 ? 1 : 0,
+                ]),
+            ],
+            [
+                'label' => __("Configuration Access", "mydashboard"),
+                'full_html' => \Html::getCheckbox([
+                    'name' => '_plugin_mydashboard_config[22_0]',
+                    'checked' => $effective_rights["plugin_mydashboard_config"],
+                ]),
+                'custom_html' => '',
+            ],
+            [
+                'label' => __("See edit mode", "mydashboard"),
+                'full_html' => \Html::getCheckbox([
+                    'name' => '_plugin_mydashboard_edit[6_0]',
+                    'checked' => $effective_rights["plugin_mydashboard_edit"],
+                ]),
+                'custom_html' => '',
+            ],
+        ];
 
-        $rights = $this->getAllRights();
-        $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
+        // displayRightsChoiceMatrix() renders its own table through TemplateRenderer and
+        // has no "display" option, so it has to be captured.
+        ob_start();
+        $profile->displayRightsChoiceMatrix($this->getAllRights(), [
+            'canedit' => $canedit,
             'default_class' => 'tab_bg_2',
-            'title'         => __('Setup stock widget', 'mydashboard')]);
+            'title' => __('Setup stock widget', 'mydashboard'),
+        ]);
+        $rights_matrix_html = ob_get_clean();
 
-        if ($canedit
-            && $closeform) {
-            echo "<div class='center'>";
-            echo \Html::hidden('id', ['value' => $profiles_id]);
-            echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-            echo "</div>\n";
-            \Html::closeForm();
-        }
+        echo TemplateRenderer::getInstance()->render('@mydashboard/profile.html.twig', [
+            'canedit' => $canedit,
+            'closeform' => $closeform,
+            'form_action' => $profile->getFormURL(),
+            'title' => sprintf(__('%1$s - %2$s'), self::getTypeName(1), $profile->fields["name"]),
+            'rows' => $rows,
+            'rights_matrix_html' => $rights_matrix_html,
+            'hidden_html' => \Html::hidden('id', ['value' => $profiles_id]),
+            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
+                'class' => 'btn btn-primary',
+            ]),
+            'close_form_html' => \Html::closeForm(false),
+        ]);
 
         Groupprofile::addGroup($profiles_id, $canedit);
 

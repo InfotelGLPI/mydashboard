@@ -32,6 +32,7 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DBConnection;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Plugin;
 use Session;
@@ -49,9 +50,7 @@ class PreferenceUserBlacklist extends CommonDBTM
      */
     public function showUserForm($user_id)
     {
-        global $CFG_GLPI, $PLUGIN_HOOKS;
-        $options['candel'] = false;
-        $options['colspan'] = 1;
+        global $PLUGIN_HOOKS;
 
         //We don't display this form in helpdesk interface
         if (Session::getCurrentInterface() != 'central') {
@@ -62,32 +61,32 @@ class PreferenceUserBlacklist extends CommonDBTM
         if (isset($PLUGIN_HOOKS['mydashboard'])) {
             $blacklist = $this->getBlacklistForUser($user_id);
 
-            echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/preferenceuserblacklist.form.php' onsubmit='return true;'>";
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='headerRow'><th class='center' colspan='2'>";
-            echo __("From which plugins you want to display the widgets?", 'mydashboard');
-            echo "</th></tr>";
             //Every plugins can be blacklisted by user, by default every plugins
+            $rows = [];
             foreach ($PLUGIN_HOOKS['mydashboard'] as $pluginname => $x) {
-                if (Plugin::isPluginActive($pluginname)) {
-                    echo "<tr class='tab_bg_1'><td>" . $this->getLocalName($pluginname) . "</td>";
-                    echo "<td>";
-                    $yesno = 1;
-                    if (isset($blacklist[$pluginname])) {
-                        $yesno = 0;
-                    }
-                    Dropdown::showYesNo("pn" . $pluginname, $yesno);
-                    echo "</td>";
-                    echo "</tr>";
+                if (!Plugin::isPluginActive($pluginname)) {
+                    continue;
                 }
+                $rows[] = [
+                    'label' => $this->getLocalName($pluginname),
+                    'yesno_html' => Dropdown::showYesNo(
+                        "pn" . $pluginname,
+                        isset($blacklist[$pluginname]) ? 0 : 1,
+                        -1,
+                        ['display' => false],
+                    ),
+                ];
             }
 
-            echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-            echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-            echo \Html::hidden("id", ['value' => Session::getLoginUserID()]);
-            \Html::closeForm();
-
-            echo "</td></tr></table>";
+            echo TemplateRenderer::getInstance()->render('@mydashboard/preferenceuserblacklist_form.html.twig', [
+                'form_action' => PLUGIN_MYDASHBOARD_WEBDIR . '/front/preferenceuserblacklist.form.php',
+                'rows' => $rows,
+                'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
+                    'class' => 'btn btn-primary',
+                ]),
+                'hidden_html' => \Html::hidden("id", ['value' => Session::getLoginUserID()]),
+                'close_form_html' => \Html::closeForm(false),
+            ]);
         }
     }
 

@@ -34,6 +34,7 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Session;
 use State;
@@ -112,119 +113,85 @@ class StockWidget extends CommonDBTM
         global $CFG_GLPI;
 
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
         if (!isset($options['item']) || empty($options['item'])) {
             $options['item'] = $this->fields["itemtype"];
         }
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo \Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-
-        echo "<td>" . __("Item type");
-        // Mandatory dropdown :
-        if ($ID <= 0) {
-            echo " <span class='red'>*</span>";
-        }
-        echo "</td>";
         $rand = mt_rand();
-        echo "<td>";
+
+        // showFormHeader()/showFormButtons() emit the surrounding <form> and <table>
+        ob_start();
+        $this->showFormHeader($options);
+        $form_header_html = ob_get_clean();
+
+        $itemtype_label = null;
+        $itemtype_hidden_html = '';
+        $itemtype_dropdown_html = '';
         if ($ID > 0) {
             $itemtype = $this->fields["itemtype"];
-            $item     = new $itemtype();
-            echo $item->getTypeName();
-            echo \Html::hidden('itemtype', ['value' => $itemtype]);
+            $item = new $itemtype();
+            $itemtype_label = $item->getTypeName();
+            $itemtype_hidden_html = \Html::hidden('itemtype', ['value' => $itemtype]);
         } else {
-
-            Dropdown::showItemTypes('itemtype', $CFG_GLPI['state_types'], ['value' => $this->fields["itemtype"],
-                'rand'  => $rand]);
-            $params = [
-                'itemtype'  => '__VALUE__',
-                'fieldname' => 'types',
-            ];
-            Ajax::updateItemOnSelectEvent(
+            $params = ['itemtype' => '__VALUE__', 'fieldname' => 'types'];
+            $itemtype_dropdown_html = Dropdown::showItemTypes(
+                'itemtype',
+                $CFG_GLPI['state_types'],
+                ['value' => $this->fields["itemtype"], 'rand' => $rand, 'display' => false],
+            )
+            . Ajax::updateItemOnSelectEvent(
                 "dropdown_itemtype$rand",
                 "show_types$rand",
                 "../ajax/dropdownType.php",
                 $params,
-            );
-
-            Ajax::updateItemOnSelectEvent(
+                false,
+            )
+            . Ajax::updateItemOnSelectEvent(
                 "dropdown_itemtype$rand",
                 "show_statuses$rand",
                 "../ajax/dropdownStatus.php",
                 $params,
+                false,
             );
         }
-        echo "</td>";
-        echo "</tr>";
 
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td>" . __("Type") . "</td>";
-        echo "<td>";
-        echo "<span id='show_types$rand'>";
+        $types_dropdown_html = '';
         if ($options['item']) {
             $itemtypeclass = $options['item'] . "Type";
             if ($item = getItemForItemtype($itemtypeclass)) {
-                $types    = [];
-                $alltypes = $item->find();
-                foreach ($alltypes as $k => $v) {
+                $types = [];
+                foreach ($item->find() as $v) {
                     $types[$v['id']] = $v['name'];
                 }
-                $values = [];
-                $stypes = [];
-                if ($ID > 0) {
-                    $values = json_decode($this->fields['types'], true);
-                    if (is_array($values) && count($values) > 0) {
-                        foreach ($values as $k => $v) {
-                            $stypes[] = $k;
-                        }
-                    }
-                }
-                Dropdown::showFromArray('types', $types, ['multiple' => true, 'values' => $stypes]);
+                $types_dropdown_html = Dropdown::showFromArray('types', $types, [
+                    'multiple' => true,
+                    'values' => self::getSelectedKeys($ID > 0 ? $this->fields['types'] : null),
+                    'display' => false,
+                ]);
             }
         }
-        echo "</span>";
-        echo "</td>";
-        echo "<td>" . __('Item state') . "</td>";
-        echo "<td>";
-        echo "<span id='show_statuses$rand'>";
+
+        $states_dropdown_html = '';
         if ($options['item']) {
-            $state     = new State();
-            $dbu       = new DbUtils();
-            $states    = [];
-            $field     = 'is_visible_' . strtolower($options['item']);
+            $state = new State();
+            $dbu = new DbUtils();
+            $field = 'is_visible_' . strtolower($options['item']);
             $condition = [$field => 1]
-                         + $dbu->getEntitiesRestrictCriteria('glpi_states', 'entities_id', $this->fields['entities_id'], true);
-            $allstates = $state->find($condition);
-            foreach ($allstates as $k => $v) {
+                + $dbu->getEntitiesRestrictCriteria('glpi_states', 'entities_id', $this->fields['entities_id'], true);
+            $states = [];
+            foreach ($state->find($condition) as $v) {
                 $states[$v['id']] = $v['name'];
             }
-            $values  = [];
-            $svalues = [];
-            if ($ID > 0) {
-                $values = json_decode($this->fields['states'], true);
-                if (is_array($values) && count($values) > 0) {
-                    foreach ($values as $k => $v) {
-                        $svalues[] = $k;
-                    }
-                }
-            }
-            Dropdown::showFromArray('states', $states, ['multiple' => true, 'values' => $svalues]);
+            $states_dropdown_html = Dropdown::showFromArray('states', $states, [
+                'multiple' => true,
+                'values' => self::getSelectedKeys($ID > 0 ? $this->fields['states'] : null),
+                'display' => false,
+            ]);
         }
-        echo "</span>";
-        echo "</td>";
-        echo "</tr>";
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Icon') . "</td>";
-        echo "<td>";
         $icon_selector_id = 'icon_' . mt_rand();
-        echo \Html::select(
+        $icon_select_html = \Html::select(
             'icon',
             [$this->fields['icon'] => $this->fields['icon']],
             [
@@ -232,10 +199,9 @@ class StockWidget extends CommonDBTM
                 'selected' => $this->fields['icon'],
                 'style' => 'width:175px;',
             ],
-        );
-
-        echo \Html::script('js/modules/Form/WebIconSelector.js');
-        echo \Html::scriptBlock("$(
+        )
+        . \Html::script('js/modules/Form/WebIconSelector.js')
+        . \Html::scriptBlock("$(
             function() {
             import('/js/modules/Form/WebIconSelector.js').then((m) => {
                var icon_selector = new m.default(document.getElementById('{$icon_selector_id}'));
@@ -244,18 +210,43 @@ class StockWidget extends CommonDBTM
             }
          );");
 
-        echo "</td>";
-
-        echo "<td>" . __('Alert threshold') . "</td>";
-        echo "<td>";
-        Dropdown::showNumber('alarm_threshold', ['value' => $this->fields["alarm_threshold"],
-            'min'   => 1,
-            'max'   => 100,
-            'step'  => 1]);
-        echo "</td>";
-        echo "</tr>";
-
+        ob_start();
         $this->showFormButtons($options);
+        $form_buttons_html = ob_get_clean();
+
+        echo TemplateRenderer::getInstance()->render('@mydashboard/stockwidget_form.html.twig', [
+            'form_header_html' => $form_header_html,
+            'form_buttons_html' => $form_buttons_html,
+            'rand' => $rand,
+            'is_new' => $ID <= 0,
+            'name_input_html' => \Html::input('name', ['value' => $this->fields['name'], 'size' => 40]),
+            'itemtype_label' => $itemtype_label,
+            'itemtype_hidden_html' => $itemtype_hidden_html,
+            'itemtype_dropdown_html' => $itemtype_dropdown_html,
+            'types_dropdown_html' => $types_dropdown_html,
+            'states_dropdown_html' => $states_dropdown_html,
+            'icon_select_html' => $icon_select_html,
+            'threshold_dropdown_html' => Dropdown::showNumber('alarm_threshold', [
+                'value' => $this->fields["alarm_threshold"],
+                'min' => 1,
+                'max' => 100,
+                'step' => 1,
+                'display' => false,
+            ]),
+        ]);
+    }
+
+    /**
+     * Keys of a JSON-encoded selection, as expected by a multiple dropdown.
+     *
+     * @param ?string $json
+     *
+     * @return array
+     */
+    private static function getSelectedKeys($json)
+    {
+        $values = $json !== null ? json_decode($json, true) : null;
+        return is_array($values) ? array_keys($values) : [];
     }
 
     public static function install(Migration $migration)

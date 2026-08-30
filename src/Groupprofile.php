@@ -33,6 +33,7 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Group;
 use Html;
 use Migration;
@@ -60,70 +61,47 @@ class Groupprofile extends CommonDBTM
      */
     public static function addGroup($profiles_id, $canedit)
     {
-        global $CFG_GLPI;
-        if ($canedit) {
-
-            echo "<form method='post' action='" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/groupprofile.form.php" . "'>";
-            echo Html::hidden('profiles_id', ['value' => $profiles_id]);
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='4'>";
-            echo __('Default dashboard group', 'mydashboard');
-            echo "</th></tr>";
-            $checked = '';
-            $profilerights = new ProfileRight();
-            if ($profilerights->getFromDBByCrit(['profiles_id' => $profiles_id,
-                'name'        => 'plugin_mydashboard_groupprofile'])) {
-                $checked = $profilerights->fields['rights'] ? 'checked' : '';
-            }
-            echo "<tr class='tab_bg_1'><td>";
-            Html::showCheckbox(['name' => 'use_group_profile','checked' => $checked]);
-            echo " " . __('Use profile group', 'mydashboard');
-            echo "</td><td>";
-            echo __('Default groups', 'mydashboard');
-            echo "</td><td>";
-            $groupprofile = new Groupprofile();
-            $groups_id = [];
-            if ($groupprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
-                $groups_id =  json_decode($groupprofile->fields['groups_id']);
-            }
-            //         Group::dropdown(['entity' => $_SESSION['glpiactive_entity'],
-            //                          'name'   => 'groups_id',
-            //                          'value'  => $groups_id]);
-
-            $dbu    = new DbUtils();
-            $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
-            //         $pref = json_decode($groupprofile->fields['prefered_group']);
-
-            $temp                         = [];
-            foreach ($result as $item) {
-                $temp[$item['id']] = $item['name'];
-            }
-
-            $params = [
-                "name"                => 'groups_id',
-                'entity'    => $_SESSION['glpiactive_entity'],
-                "display"             => false,
-                "multiple"            => true,
-                "width"               => '200px',
-                'values'              => isset($groups_id) ? $groups_id : [],
-                'display_emptychoice' => true,
-            ];
-
-
-
-            $dropdown = Dropdown::showFromArray("groups_id", $temp, $params);
-
-            echo $dropdown;
-
-            echo "</td></tr>";
-
-            echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'addGroup', 'class' => 'btn btn-primary']);
-            echo "</td></tr>";
-
-            echo "</table></div>";
-            Html::closeForm();
+        if (!$canedit) {
+            return;
         }
+
+        $checked = false;
+        $profilerights = new ProfileRight();
+        if ($profilerights->getFromDBByCrit(['profiles_id' => $profiles_id,
+            'name'        => 'plugin_mydashboard_groupprofile'])) {
+            $checked = (bool) $profilerights->fields['rights'];
+        }
+
+        $groupprofile = new Groupprofile();
+        $groups_id = [];
+        if ($groupprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
+            $groups_id = json_decode($groupprofile->fields['groups_id']);
+        }
+
+        $dbu = new DbUtils();
+        $groups = [];
+        foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]) as $group) {
+            $groups[$group['id']] = $group['name'];
+        }
+
+        echo TemplateRenderer::getInstance()->render('@mydashboard/groupprofile_form.html.twig', [
+            'form_action' => PLUGIN_MYDASHBOARD_WEBDIR . '/front/groupprofile.form.php',
+            'hidden_html' => Html::hidden('profiles_id', ['value' => $profiles_id]),
+            'checkbox_html' => Html::getCheckbox(['name' => 'use_group_profile', 'checked' => $checked]),
+            'groups_dropdown_html' => Dropdown::showFromArray('groups_id', $groups, [
+                'name' => 'groups_id',
+                'entity' => $_SESSION['glpiactive_entity'],
+                'display' => false,
+                'multiple' => true,
+                'width' => '200px',
+                'values' => $groups_id ?: [],
+                'display_emptychoice' => true,
+            ]),
+            'submit_html' => Html::submit(_sx('button', 'Save'), ['name' => 'addGroup',
+                'class' => 'btn btn-primary',
+            ]),
+            'close_form_html' => Html::closeForm(false),
+        ]);
     }
 
     public function getProfilGroup($profiles_id)

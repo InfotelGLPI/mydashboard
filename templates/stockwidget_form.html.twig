@@ -1,0 +1,62 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# form_header_html / form_buttons_html open and close the <form> and its <table> #}
+{{ form_header_html|raw }}
+
+<tr class="tab_bg_1">
+    <td>{{ __('Name') }}</td>
+    <td>{{ name_input_html|raw }}</td>
+    <td>
+        {{ __('Item type') }}
+        {%- if is_new %} <span class="red">*</span>{% endif %}
+    </td>
+    <td>
+        {% if itemtype_label is not null %}
+            {{ itemtype_label }}
+            {{ itemtype_hidden_html|raw }}
+        {% else %}
+            {{ itemtype_dropdown_html|raw }}
+        {% endif %}
+    </td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Type') }}</td>
+    <td><span id="show_types{{ rand }}">{{ types_dropdown_html|raw }}</span></td>
+    <td>{{ __('Item state') }}</td>
+    <td><span id="show_statuses{{ rand }}">{{ states_dropdown_html|raw }}</span></td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td>{{ __('Icon') }}</td>
+    <td>{{ icon_select_html|raw }}</td>
+    <td>{{ __('Alert threshold') }}</td>
+    <td>{{ threshold_dropdown_html|raw }}</td>
+</tr>
+
+{{ form_buttons_html|raw }}

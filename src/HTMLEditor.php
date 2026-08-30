@@ -32,6 +32,7 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use CommonGLPI;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
@@ -118,30 +119,7 @@ class HTMLEditor extends CommonDBTM
 
     public function showForm($item, $openform = true, $closeform = true)
     {
-
-        // Codemirror lib
-        //        echo \Html::css('/lib/codemirror.css');
-        //        echo \Html::script("/lib/codemirror.js");
-
-        echo "<div class='firstbloc'>";
-        if ($openform) {
-            echo "<form method='post' action='" . Toolbox::getItemTypeFormURL(HTMLEditor::class) . "'>";
-        }
-
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr class='tab_bg_1'>";
-        // Escape the widget name read from the database before echoing it (GLPI 11
-        // stores raw data; escaping is done at render time).
-        echo "<th>" . htmlspecialchars($item->fields['name'], ENT_QUOTES, 'UTF-8') . "</th></tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-
         $rand = mt_rand();
-
-        \Html::textarea(['name'            => 'content',
-            'value'           => htmlspecialchars($item->fields['content']),
-            'editor_id'           => 'custom_css_code_' . $rand,
-            'enable_richtext' => true]);
 
         //        $editor_options = [
         //            'mode'         => 'text/css',
@@ -171,18 +149,23 @@ class HTMLEditor extends CommonDBTM
         //              });
         //           ');
 
-        echo "</td></tr>\n";
-
-        if ($closeform) {
-            echo "<tr class='tab_bg_1 center'>";
-            echo "<td>";
-            echo \Html::hidden('id', ['value' => $item->fields['id']]);
-            echo \Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-            echo "</td></tr>\n";
-            echo "</table>";
-            \Html::closeForm();
-        } else {
-            echo "</table>";
-        }
+        echo TemplateRenderer::getInstance()->render('@mydashboard/htmleditor_form.html.twig', [
+            'openform' => $openform,
+            'closeform' => $closeform,
+            'form_action' => Toolbox::getItemTypeFormURL(HTMLEditor::class),
+            'name' => $item->fields['name'],
+            'textarea_html' => \Html::textarea([
+                'name' => 'content',
+                'value' => htmlspecialchars($item->fields['content']),
+                'editor_id' => 'custom_css_code_' . $rand,
+                'enable_richtext' => true,
+                'display' => false,
+            ]),
+            'hidden_html' => \Html::hidden('id', ['value' => $item->fields['id']]),
+            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
+                'class' => 'btn btn-primary',
+            ]),
+            'close_form_html' => \Html::closeForm(false),
+        ]);
     }
 }

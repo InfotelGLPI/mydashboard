@@ -33,6 +33,7 @@ use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
@@ -132,34 +133,27 @@ class Widget extends CommonDBTM
     public function showForm($ID, array $options = [])
     {
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
         $rand = mt_rand();
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td><label for='textfield_name$rand'>" . __s('Internal name', 'mydashboard') . "</label></td>";
-        echo "<td>";
-        echo \Html::input(
-            'name',
-            [
-                'value' => $this->fields["name"],
-                'id'    => "textfield_name$rand",
-                'readonly' => 'readonly',
-            ],
-        );
-        echo "</td></tr>";
+        // showFormHeader() emits the surrounding <form> and <table>
+        ob_start();
+        $this->showFormHeader($options);
+        $form_header_html = ob_get_clean();
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td><label for='textfield_class$rand'>" . __s('Class', 'mydashboard') . "</label></td>";
-        echo "<td>";
-        echo \Html::input(
-            'class',
-            [
-                'value' => $this->fields["class"],
-                'id'    => "textfield_class$rand",
+        echo TemplateRenderer::getInstance()->render('@mydashboard/widget_form.html.twig', [
+            'form_header_html' => $form_header_html,
+            'rand' => $rand,
+            'name_input_html' => \Html::input('name', [
+                'value' => $this->fields["name"],
+                'id' => "textfield_name$rand",
                 'readonly' => 'readonly',
-            ],
-        );
-        echo "</td></tr>";
+            ]),
+            'class_input_html' => \Html::input('class', [
+                'value' => $this->fields["class"],
+                'id' => "textfield_class$rand",
+                'readonly' => 'readonly',
+            ]),
+        ]);
 
         return true;
     }
