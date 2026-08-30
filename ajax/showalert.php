@@ -33,7 +33,13 @@ use GlpiPlugin\Mydashboard\Alert;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+// No plugin right is required here on purpose: this endpoint only returns the body of a
+// reminder the caller is already allowed to see, and the ticker is displayed in contexts
+// where the user has no plugin_mydashboard right. The previous check also tested the
+// meaningless value CREATE + UPDATE (6), which is not a GLPI right.
+// Access control is enforced in displayTickerDescription(), which resolves the reminder
+// through Reminder::getVisibilityCriteria() -- that returns "no rows" when there is no
+// session, so this endpoint exposes nothing anonymously.
 
 if (!isset($_GET['id'])) {
     throw new NotFoundHttpException();

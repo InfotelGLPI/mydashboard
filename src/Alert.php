@@ -2449,12 +2449,15 @@ class Alert extends CommonDBTM
         global $DB;
 
         // Anti-IDOR: $id comes straight from the client ($_GET['id'] in
-        // ajax/showalert.php). Without a visibility gate a user holding only the
-        // plugin READ right could enumerate id=1,2,3... and read the text and
-        // attached documents of any reminder, including alerts targeting another
-        // entity/profile. Only expose a reminder that (a) is linked to a
-        // mydashboard alert and (b) is currently visible through the exact same
-        // criteria the ticker itself uses (visibility joins + active view dates).
+        // ajax/showalert.php), which enforces no right of its own. This gate is therefore
+        // the only access control: without it any caller could enumerate id=1,2,3... and
+        // read the text and attached documents of any reminder, including alerts targeting
+        // another entity/profile.
+        //
+        // Reminder::getVisibilityCriteria() supplies BOTH the joins and the matching WHERE
+        // clause. Only the joins used to be applied, and a LEFT JOIN on its own filters
+        // nothing, so the check passed for every reminder. It also degrades safely: with no
+        // session it restricts on a falsy users_id and matches no row at all.
         $id = (int) $id;
 
         $config = new Config();
@@ -2464,25 +2467,29 @@ class Alert extends CommonDBTM
 
         if ($alert->getFromDBByCrit(['reminders_id' => $id])) {
             $now = date('Y-m-d H:i:s');
+            $visibility = Reminder::getVisibilityCriteria(true);
             $visibility_check = [
                 'SELECT'    => 'glpi_reminders.id',
                 'FROM'      => 'glpi_reminders',
-                'LEFT JOIN' => Reminder::getVisibilityCriteriaCommonJoin(true),
-                'WHERE'     => [
-                    'glpi_reminders.id' => $id,
+                'LEFT JOIN' => $visibility['LEFT JOIN'] ?? [],
+                'WHERE'     => array_merge(
                     [
-                        'OR' => [
-                            ['glpi_reminders.begin_view_date' => null],
-                            ['glpi_reminders.begin_view_date' => ['<', $now]],
+                        'glpi_reminders.id' => $id,
+                        [
+                            'OR' => [
+                                ['glpi_reminders.begin_view_date' => null],
+                                ['glpi_reminders.begin_view_date' => ['<', $now]],
+                            ],
+                        ],
+                        [
+                            'OR' => [
+                                ['glpi_reminders.end_view_date' => null],
+                                ['glpi_reminders.end_view_date' => ['>', $now]],
+                            ],
                         ],
                     ],
-                    [
-                        'OR' => [
-                            ['glpi_reminders.end_view_date' => null],
-                            ['glpi_reminders.end_view_date' => ['>', $now]],
-                        ],
-                    ],
-                ],
+                    isset($visibility['WHERE']) ? [$visibility['WHERE']] : [],
+                ),
                 'GROUPBY'   => 'glpi_reminders.id',
             ];
             if (count($DB->request($visibility_check)) === 0) {
