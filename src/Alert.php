@@ -2454,10 +2454,11 @@ class Alert extends CommonDBTM
         // read the text and attached documents of any reminder, including alerts targeting
         // another entity/profile.
         //
-        // Reminder::getVisibilityCriteria() supplies BOTH the joins and the matching WHERE
-        // clause. Only the joins used to be applied, and a LEFT JOIN on its own filters
-        // nothing, so the check passed for every reminder. It also degrades safely: with no
-        // session it restricts on a falsy users_id and matches no row at all.
+        // Core \Reminder::getVisibilityCriteria() supplies BOTH the joins and the matching
+        // WHERE clause -- the plugin's own Reports\Reminder only exposes the joins. Only
+        // those joins used to be applied here, and a LEFT JOIN on its own filters nothing,
+        // so the check passed for every reminder. The core helper also degrades safely:
+        // with no session it restricts on a falsy users_id and matches no row at all.
         $id = (int) $id;
 
         $config = new Config();
@@ -2467,7 +2468,7 @@ class Alert extends CommonDBTM
 
         if ($alert->getFromDBByCrit(['reminders_id' => $id])) {
             $now = date('Y-m-d H:i:s');
-            $visibility = Reminder::getVisibilityCriteria(true);
+            $visibility = \Reminder::getVisibilityCriteria(true);
             $visibility_check = [
                 'SELECT'    => 'glpi_reminders.id',
                 'FROM'      => 'glpi_reminders',
