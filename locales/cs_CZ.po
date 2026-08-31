@@ -2,204 +2,104 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2018
 # Pavel Borecki <pavel.borecki@gmail.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-20 14:17+0200\n"
+"POT-Creation-Date: 2026-08-31 14:53+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2019\n"
-"Language-Team: Czech (Czech Republic) (https://www.transifex.com/infotelGLPI/teams/65490/cs_CZ/)\n"
+"Language-Team: Czech (Czech Republic) (https://www.transifex.com/infotelGLPI/"
+"teams/65490/cs_CZ/)\n"
+"Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs_CZ\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: hook.php:208 inc/config.class.php:325 inc/itilalert.class.php:119
-#: reports/alert.class.php:124 reports/alert.class.php:2249
-msgid "Network alert"
-msgid_plural "Network alerts"
-msgstr[0] "Upozornění ze sítě"
-msgstr[1] "Upozornění ze sítě"
-msgstr[2] "Upozornění ze sítě"
-msgstr[3] "Upozornění ze sítě"
+#: src/Menu.php:1121
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtrováno z _MAX_ celkem položek)"
 
-#: hook.php:209 inc/config.class.php:326 inc/itilalert.class.php:120
-#: reports/alert.class.php:125 reports/alert.class.php:2118
-#: reports/alert.class.php:2250
-msgid "Scheduled maintenance"
-msgid_plural "Scheduled maintenances"
-msgstr[0] "Naplánovaná údržba"
-msgstr[1] "Naplánované údržby"
-msgstr[2] "Naplánovaných údržeb"
-msgstr[3] "Naplánované údržby"
+#: src/Menu.php:1143
+msgid "1 row selected"
+msgstr "Vybrán jeden řádek"
 
-#: hook.php:210 inc/config.class.php:327 inc/itilalert.class.php:121
-#: reports/alert.class.php:126 reports/alert.class.php:2119
-#: reports/alert.class.php:2251
-msgid "Information"
-msgid_plural "Informations"
-msgstr[0] "Informace"
-msgstr[1] "Informace"
-msgstr[2] "Informací"
-msgstr[3] "Informace"
+#: src/Widget.php:652
+msgid "10 rows"
+msgstr "10 řádků"
 
-#: hook.php:234 hook.php:235
-msgid "Incidents"
-msgstr "Incidenty"
-
-#: hook.php:241 hook.php:242
-msgid "Requests"
-msgstr "Požadavky"
-
-#: setup.php:146 inc/menu.class.php:87 inc/menu.class.php:974
-#: inc/preference.class.php:62
-msgid "My Dashboard"
-msgstr "Nástěnka"
-
-#: ajax/clearGrid.php:40
-msgid "Grid cleared"
-msgstr "Nástěnka vrácena do výchozího stavu"
-
-#: front/config.php:46
-msgid "Please activate the plugin"
+#: src/Reports/Reports_Funnel.php:345
+msgid "2-4 years"
 msgstr ""
 
-#: inc/chart.class.php:94 inc/datatable.class.php:196
-msgid "No data is given to the widget"
-msgstr "Ovládacímu prvku nebyla dodána žádná data"
+#: src/Widget.php:653
+msgid "25 rows"
+msgstr "25 řádků"
 
-#: inc/chart.class.php:111 inc/menu.class.php:815 inc/menu.class.php:1360
-#: inc/widget.class.php:217 inc/widget.class.php:549
-msgid "No data available"
-msgstr "Nejsou k dispozici žádná data"
-
-#: inc/chart.class.php:117 inc/datatable.class.php:120
-msgid "Not an array"
-msgstr "Není pole"
-
-#: inc/config.class.php:45
-msgid "Plugin setup"
+#: src/Reports/Reports_Funnel.php:344
+msgid "4-6 years"
 msgstr ""
 
-#: inc/config.class.php:169 inc/config.class.php:285
-msgid "Title of alerts widget"
+#: src/Widget.php:651
+msgid "5 rows"
+msgstr "5 řádků"
+
+#: src/Widget.php:654
+msgid "50 rows"
+msgstr "50 řádků"
+
+#: src/Menu.php:1136
+msgid ": activate to sort column ascending"
+msgstr ": aktivujte pro seřazení sloupce vzestupně"
+
+#: src/Menu.php:1137
+msgid ": activate to sort column descending"
+msgstr ": aktivujte pro seřazení sloupce sestupně"
+
+#: src/Reports/Reports_Funnel.php:346
+msgid "< 2 years"
 msgstr ""
 
-#: inc/config.class.php:178 inc/config.class.php:291
-msgid "Title of scheduled maintenances widget"
+#: src/Reports/Reports_Funnel.php:343
+msgid "> 6 years"
 msgstr ""
 
-#: inc/config.class.php:187 inc/config.class.php:297
-msgid "Title of informations widget"
+#: src/Alert.php:3208
+msgid "A network alert can impact you and will avoid creating a ticket"
+msgstr ""
+"Upozornění ohledně sítě, které se vás může týkat a zabránit vytvoření "
+"požadavku"
+
+#: templates/report_widget_title.html.twig:34
+msgid "Add"
 msgstr ""
 
-#: inc/config.class.php:221
-msgid "Enable the possibility to display Dashboard in full screen"
-msgstr "Zpřístupnit možnost zobrazit nástěnku na celou obrazovku"
+#: templates/configtranslation_list.html.twig:33
+msgid "Add a new translation"
+msgstr ""
 
-#: inc/config.class.php:231
-msgid "Display widgets from plugins"
-msgstr "Zobrazit ovládací prvky ze zásuvných modulů"
+#: templates/menu_edit_toolbar.html.twig:41
+msgid "Add widgets"
+msgstr ""
 
-#: inc/config.class.php:237 inc/preference.class.php:110
-msgid "Replace central interface"
-msgstr "Nahradit ústřední rozhraní"
+#: src/Reports/Reports_Bar.php:158
+msgid "Age of tickets"
+msgstr "Stáří požadavků"
 
-#: inc/config.class.php:243
-msgid "Google API Key"
-msgstr "Klíč ke Google API"
+#: src/Reports/Reports_Funnel.php:76
+msgid "Age pyramid"
+msgstr ""
 
-#: inc/config.class.php:250
-msgid "Impact colors for alerts"
-msgstr "Barvy označující závažnost dopadu výstrah"
-
-#: inc/config.class.php:272
-msgid "Level of categories to show"
-msgstr "Úroveň kategorií které zobrazit"
-
-#: inc/customswidget.class.php:47 reports/reports_custom.class.php:62
-msgid "Custom Widgets"
-msgstr "Uživatelsky určené ovládací prvky"
-
-#: inc/dashboard.class.php:52 inc/datatable.class.php:53 inc/html.class.php:50
-#: inc/menu.class.php:1194 inc/module.class.php:56 reports/change.class.php:38
-#: reports/planning.class.php:40 reports/problem.class.php:37
-#: reports/project.class.php:37 reports/projecttask.class.php:37
-msgid "Dashboard"
-msgstr "Nástěnka"
-
-#: inc/dashboard.class.php:118 inc/menu.class.php:103
-msgid "GLPI admin grid"
-msgstr "Správa GLPI"
-
-#: inc/dashboard.class.php:119
-msgid "Inventory admin grid"
-msgstr "Mřížka správce inventáře"
-
-#: inc/dashboard.class.php:120
-msgid "Helpdesk supervisor grid"
-msgstr "Dohlížení na podporu"
-
-#: inc/dashboard.class.php:121
-msgid "Incident supervisor grid"
-msgstr "Dohlížení na poruchy"
-
-#: inc/dashboard.class.php:122
-msgid "Request supervisor grid"
-msgstr "Dohlížení na požadavky"
-
-#: inc/dashboard.class.php:123
-msgid "Helpdesk technician grid"
-msgstr "Pro technika podpory"
-
-#: inc/datatable.class.php:222
-msgid "No column defined"
-msgstr "Není určen žádný sloupec"
-
-#: inc/groupprofile.class.php:56
-msgid "Default dashboard group"
-msgstr "Výchozí skupina nástěnky"
-
-#: inc/groupprofile.class.php:66
-msgid "Use profile group"
-msgstr "Použít skupinu profilu"
-
-#: inc/groupprofile.class.php:68
-msgid "Default groups"
-msgstr "Výchozí skupiny"
-
-#: inc/helper.class.php:853
-msgid "Year"
-msgstr "Rok"
-
-#: inc/helper.class.php:863
-msgid "Month"
-msgstr "Měsíc"
-
-#: inc/helper.class.php:1224
-msgid "Not a valid SQL SELECT query"
-msgstr "Není platný dotaz SQL SELECT"
-
-#: inc/itilalert.class.php:51 inc/itilalert.class.php:54
-#: reports/alert.class.php:2185 reports/alert.class.php:2188
-msgid "Create a new alert"
-msgstr "Vytvořit novou výstrahu"
-
-#: inc/itilalert.class.php:79 reports/alert.class.php:2213
-msgid "Linked reminder"
-msgstr "Připojená připomínka"
-
-#: inc/itilalert.class.php:116 reports/alert.class.php:123
-#: reports/alert.class.php:2114 reports/alert.class.php:2117
-#: reports/alert.class.php:2246
+#: src/Alert.php:3047 templates/alert_form.html.twig:31
+#: templates/itilalert_item.html.twig:63
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Výstraha"
@@ -207,373 +107,7 @@ msgstr[1] "Výstrahy"
 msgstr[2] "Výstrah"
 msgstr[3] "Výstrahy"
 
-#: inc/itilalert.class.php:131 reports/alert.class.php:2128
-#: reports/alert.class.php:2261
-msgid "No impact"
-msgstr "Bez dopadu"
-
-#: inc/itilalert.class.php:136 reports/alert.class.php:2133
-#: reports/alert.class.php:2266
-msgid "Alert level"
-msgstr "Stupeň výstrahy"
-
-#: inc/itilalert.class.php:144 reports/alert.class.php:2141
-#: reports/alert.class.php:2274
-msgid "Linked with a ticket category"
-msgstr ""
-
-#: inc/menu.class.php:102
-msgid "My view"
-msgstr "Můj pohled"
-
-#: inc/menu.class.php:407
-msgid "Edit mode"
-msgstr "Režim úprav"
-
-#: inc/menu.class.php:409
-msgid "Global"
-msgstr "Globální"
-
-#: inc/menu.class.php:416 inc/menu.class.php:419
-msgid "Load widgets"
-msgstr "Načíst ovládací prvky"
-
-#: inc/menu.class.php:437
-msgid "Add a widget"
-msgstr "Přidat ovládací prvek"
-
-#: inc/menu.class.php:446 inc/menu.class.php:447
-msgid "Load a predefined grid"
-msgstr "Načíst předpřipravenou mřížku"
-
-#: inc/menu.class.php:460 inc/menu.class.php:462
-msgid "Save grid"
-msgstr "Uložit mřížku"
-
-#: inc/menu.class.php:469 inc/menu.class.php:471
-msgid "Save default grid"
-msgstr "Uložit výchozí mřítku"
-
-#: inc/menu.class.php:478 inc/menu.class.php:480
-msgid "Clear grid"
-msgstr "Vyčistit mřížku"
-
-#: inc/menu.class.php:487 inc/menu.class.php:489 inc/menu.class.php:568
-#: inc/menu.class.php:570
-msgid "Permit drag / resize widgets"
-msgstr "Umožnit přemisťování a změnu velikosti miniaplikací"
-
-#: inc/menu.class.php:495 inc/menu.class.php:497 inc/menu.class.php:576
-#: inc/menu.class.php:578
-msgid "Block drag / resize widgets"
-msgstr "Znemožnit přemisťování a změnu velikosti miniaplikací"
-
-#: inc/menu.class.php:504 inc/menu.class.php:506
-msgid "Close edit mode"
-msgstr "Ukončit režim úprav"
-
-#: inc/menu.class.php:521 inc/menu.class.php:523 inc/menu.class.php:626
-#: inc/menu.class.php:628
-msgid "See menu"
-msgstr ""
-
-#: inc/menu.class.php:533
-msgid "Success"
-msgstr "Úspěch"
-
-#: inc/menu.class.php:534
-msgid "The widget was added to dashboard. Save the dashboard."
-msgstr "Ovládací prvek byl přidán do přehledu. Ten uložte."
-
-#: inc/menu.class.php:541
-msgid "Error"
-msgstr "Chyba"
-
-#: inc/menu.class.php:542
-msgid "Please reload your page."
-msgstr "Načtěte stránku znovu."
-
-#: inc/menu.class.php:559 inc/menu.class.php:561
-msgid "Switch to edit mode"
-msgstr "Přepnout do režimu úprav"
-
-#: inc/menu.class.php:583 inc/menu.class.php:585
-msgid "Save positions"
-msgstr "Uložit pozice"
-
-#: inc/menu.class.php:591 inc/menu.class.php:593
-msgid "Custom and save default grid"
-msgstr "Vlastní a uložit výchozí mřížku"
-
-#: inc/menu.class.php:602 inc/menu.class.php:603
-msgid "Fullscreen"
-msgstr "Na celou obrazovku"
-
-#: inc/menu.class.php:609 inc/menu.class.php:611
-msgid "Hide menu"
-msgstr ""
-
-#: inc/menu.class.php:1151
-msgid "No data available in table"
-msgstr "V tabulce nejsou k dispozici žádná data"
-
-#: inc/menu.class.php:1152
-msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Zobrazení _START_ po _END_ z _TOTAL_ položek"
-
-#: inc/menu.class.php:1153
-msgid "Showing 0 to 0 of 0 entries"
-msgstr "Zobrazuje se 0 až 0 z 0 položek"
-
-#: inc/menu.class.php:1154
-msgid "(filtered from _MAX_ total entries)"
-msgstr "(filtrováno z _MAX_ celkem položek)"
-
-#: inc/menu.class.php:1161
-msgid "No matching records found"
-msgstr "Nenalezeny žádné odpovídající záznamy"
-
-#: inc/menu.class.php:1169
-msgid ": activate to sort column ascending"
-msgstr ": aktivujte pro seřazení sloupce vzestupně"
-
-#: inc/menu.class.php:1170
-msgid ": activate to sort column descending"
-msgstr ": aktivujte pro seřazení sloupce sestupně"
-
-#: inc/menu.class.php:1176
-msgid "1 row selected"
-msgstr "Vybrán jeden řádek"
-
-#: inc/menu.class.php:1180 inc/menu.class.php:1193
-msgid "Close"
-msgstr "Zavřít"
-
-#: inc/menu.class.php:1181
-msgid "Maximize"
-msgstr "Maximalizovat"
-
-#: inc/menu.class.php:1182
-msgid "Minimize"
-msgstr "Minimalizovat"
-
-#: inc/menu.class.php:1183
-msgid "Refresh"
-msgstr "Načíst znovu"
-
-#: inc/menu.class.php:1185
-msgid "Column visibility"
-msgstr "Viditelnost sloupce"
-
-#: inc/menu.class.php:1187
-#, php-format
-msgid "Show %d elements"
-msgstr "Zobrazit %d prvků"
-
-#: inc/menu.class.php:1188 inc/widget.class.php:395
-msgid "Show all"
-msgstr "Zobrazit vše"
-
-#: inc/menu.class.php:1195
-msgid "Dashboard saved"
-msgstr "Nástěnka uložena"
-
-#: inc/menu.class.php:1196
-msgid "Dashboard not saved"
-msgstr "Nástěnka nebyla uložena"
-
-#: inc/menu.class.php:1197
-msgid "Data received for"
-msgstr "Obdržena data pro"
-
-#: inc/menu.class.php:1198
-msgid "No data received for"
-msgstr "Neobdržena žádná data pro"
-
-#: inc/menu.class.php:1199
-msgid "Updating all widgets"
-msgstr "Aktualizují se všechny miniaplikace"
-
-#: inc/menu.class.php:1200
-msgid "Widget added on Dashboard"
-msgstr "Miniaplikace přidána na nástěnku"
-
-#: inc/menu.class.php:1325
-msgid "Warning"
-msgstr "Varování"
-
-#: inc/menu.class.php:1326
-msgid "No widgets founded, please add widgets"
-msgstr "Nebyly nalezeny žádné miniaplikace, přidejte nějaké"
-
-#: inc/menu.class.php:1351
-msgid "Save grid to see widget"
-msgstr "Pro zobrazení miniaplikace uložte mřížku"
-
-#: inc/menu.class.php:1359
-msgid "Delete widget"
-msgstr "Smazat miniaplikaci"
-
-#: inc/menu.class.php:1361
-msgid "Refresh widget"
-msgstr "Znovu načíst miniaplikaci"
-
-#: inc/module.class.php:154 inc/module.class.php:304
-msgid "notice"
-msgstr "upozornění"
-
-#: inc/module.class.php:154 inc/module.class.php:311
-msgid "warning"
-msgstr "varování"
-
-#: inc/module.class.php:154 inc/module.class.php:318
-msgid "error"
-msgstr "chyba"
-
-#: inc/piechart.class.php:59
-msgid "You can't have more than one serie for a pie chart"
-msgstr "Pro koláčový graf není možné mít více než jednu sérii"
-
-#: inc/preference.class.php:96
-msgid "Automatic refreshing of the widgets that can be refreshed"
-msgstr "Automatické obnovování miniaplikací, u kterých je to možné"
-
-#: inc/preference.class.php:102
-msgid "Refresh every "
-msgstr "Znovu načíst každých"
-
-#: inc/preference.class.php:106
-msgid "minute(s)"
-msgstr "minut"
-
-#: inc/preference.class.php:118
-msgid "My prefered groups for widget"
-msgstr "Moje upřednostňovaná skupina pro ovládací prvek"
-
-#: inc/preference.class.php:152
-msgid "My requester prefered groups for widget"
-msgstr "Mým požadujícím upřednostňované skupiny pro ovládací prvek"
-
-#: inc/preference.class.php:186
-msgid "My prefered entity for widget"
-msgstr "Moje upřednostňovaná entita pro ovládací prvek"
-
-#: inc/preference.class.php:195 inc/preference.class.php:197
-#: inc/preference.class.php:198
-msgid "Palette color"
-msgstr ""
-
-#: inc/preferenceuserblacklist.class.php:56
-msgid "From which plugins you want to display the widgets?"
-msgstr "Ze kterých zásuvných modulů chcete zobrazovat miniaplikace?"
-
-#: inc/profileauthorizedwidget.class.php:80
-msgid "Authorized widgets"
-msgstr "Pověřené ovládací prvky"
-
-#: inc/profileauthorizedwidget.class.php:92
-msgid "Authorize/Unauthorize all"
-msgstr "Pověřit / zrušit pověření pro vše"
-
-#: inc/profile.class.php:45
-msgid "Rights management"
-msgstr "Správa oprávnění"
-
-#: inc/profile.class.php:148
-msgid "Full"
-msgstr "Plné"
-
-#: inc/profile.class.php:148
-msgid "Custom"
-msgstr "Uživatelem určené"
-
-#: inc/profile.class.php:150
-msgid "Dashboard Access"
-msgstr "Přístup k nástěnce"
-
-#: inc/profile.class.php:162
-msgid "Configuration Access"
-msgstr "Přístup k nastavení"
-
-#: inc/profile.class.php:170 inc/profile.class.php:264
-msgid "See edit mode"
-msgstr "Viz režim úprav"
-
-#: inc/profile.class.php:181 inc/profile.class.php:251
-msgid "Setup stock widget"
-msgstr "Nastavit ovládací prvek zásob"
-
-#: inc/profile.class.php:256
-msgid "See the dashboard"
-msgstr "Zobrazit nástěnku"
-
-#: inc/profile.class.php:260
-msgid "See the configuration"
-msgstr "Zobrazit nastavení"
-
-#: inc/servicecatalog.class.php:63 inc/servicecatalog.class.php:70
-msgid "Dashboard access"
-msgstr "Přístup k nástěnce"
-
-#: inc/stockwidget.class.php:38
-msgid "Stock widget"
-msgid_plural "Stock widgets"
-msgstr[0] "Ovládací prvek zásob"
-msgstr[1] "Ovládací prvky zásob"
-msgstr[2] "Ovládacích prvků zásob"
-msgstr[3] "Ovládací prvky zásob"
-
-#: inc/stockwidget.class.php:50
-msgid "Cannot create alert without a type"
-msgstr "Není možné vytvořit výstrahu bez zadání typu"
-
-#: inc/userwidget.class.php:65
-msgid "user_widget management"
-msgstr "správa user_widget"
-
-#: inc/widget.class.php:41
-msgid "Widget management"
-msgstr "Správa miniaplikace"
-
-#: inc/widget.class.php:391
-msgid "5 rows"
-msgstr "5 řádků"
-
-#: inc/widget.class.php:392
-msgid "10 rows"
-msgstr "10 řádků"
-
-#: inc/widget.class.php:393
-msgid "25 rows"
-msgstr "25 řádků"
-
-#: inc/widget.class.php:394
-msgid "50 rows"
-msgstr "50 řádků"
-
-#: inc/widget.class.php:589 reports/alert.class.php:1913
-#: reports/alert.class.php:2083
-msgid "No problem detected"
-msgstr "Nebyl zjištěn žádný problém"
-
-#: inc/widget.class.php:632 reports/alert.class.php:1697
-msgid "No scheduled maintenance"
-msgstr "Žádná naplánovaná údržba"
-
-#: inc/widget.class.php:677 reports/alert.class.php:1790
-msgid "No informations founded"
-msgstr "Nebyly nalezeny žádné informace"
-
-#: inc/widget.class.php:702 reports/alert.class.php:134
-#: reports/alert.class.php:694
-msgid "Your equipments"
-msgstr "Vaše vybavení"
-
-#: inc/widget.class.php:825
-msgid "No equipments founded"
-msgstr "Nebylo nalezeno žádné vybavení"
-
-#: reports/alert.class.php:62
+#: src/Alert.php:93
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] "Nástěnka s výstrahou"
@@ -581,518 +115,1556 @@ msgstr[1] "Nástěnka s výstrahami"
 msgstr[2] "Nástěnka s výstrahami"
 msgstr[3] "Nástěnka s výstrahami"
 
-#: reports/alert.class.php:127 reports/alert.class.php:1113
-msgid "Incidents alerts"
-msgstr "Upozornění na incidenty"
-
-#: reports/alert.class.php:128 reports/alert.class.php:1589
-msgid "SLA Incidents alerts"
-msgstr "Upozornění na SLA incidenty"
-
-#: reports/alert.class.php:129 reports/alert.class.php:259
-msgid "GLPI Status"
-msgstr "Stav GLPI"
-
-#: reports/alert.class.php:130 reports/alert.class.php:447
-msgid "User ticket alerts"
-msgstr "Upozornění na požadavky uživatelů"
-
-#: reports/alert.class.php:131 reports/alert.class.php:493
-msgid "Automatic actions in error"
-msgstr "Automatické akce s chybou"
-
-#: reports/alert.class.php:132 reports/alert.class.php:535
-msgid "Not imported mails in collectors"
-msgstr "Nenaimportované e-maily v kolektorech"
-
-#: reports/alert.class.php:133 reports/alert.class.php:683
-msgid "Inventory stock alerts"
-msgstr "Výstrahy ohledně zásob inventáře"
-
-#: reports/alert.class.php:135 reports/alert.class.php:1592
-msgid "SLA Requests alerts"
-msgstr "Výstrahy ohledně SLA požadavků"
-
-#: reports/alert.class.php:136 reports/alert.class.php:1116
-msgid "Requests alerts"
-msgstr "Výstrahy ohledně požadavků"
-
-#: reports/alert.class.php:260
-msgid "Check if GLPI have no problem"
-msgstr "Zkontrolovat zda je GLPI v pořádku"
-
-#: reports/alert.class.php:287 reports/ticket.class.php:327
-#: reports/ticket.class.php:651
-msgid "ID and priority"
-msgstr "Identif. a priorita"
-
-#: reports/alert.class.php:393
-msgid "New document"
-msgstr "Nový dokument"
-
-#: reports/alert.class.php:448
-msgid "Display tickets where last modification is a user action"
-msgstr "Zobrazit požadavky u kterých je poslední úprava akce uživatele"
-
-#: reports/alert.class.php:536
-msgid "Display of mails which are not imported"
-msgstr "Zobrazit e-maily, které nejsou naimportované"
-
-#: reports/alert.class.php:674
-msgid "No alerts are setup"
-msgstr "Nejsou nastavené žádné výstrahy"
-
-#: reports/alert.class.php:684
-msgid "Display alerts for inventory stocks"
-msgstr "Zobrazovat výstrahy ohledně zásob inventáře"
-
-#: reports/alert.class.php:885 reports/alert.class.php:894
-msgid "New incidents"
-msgstr "Nové incidenty"
-
-#: reports/alert.class.php:887 reports/alert.class.php:896
-msgid "New requests"
-msgstr "Nové požadavky"
-
-#: reports/alert.class.php:956 reports/alert.class.php:966
-msgid "Opened incidents without assigned technicians"
-msgstr "Otevřené incidenty, které nejsou přiřazené technikům"
-
-#: reports/alert.class.php:958 reports/alert.class.php:968
-msgid "Opened requests without assigned technicians"
-msgstr "Otevřené požadavky, které nejsou přiřazené technikům"
-
-#: reports/alert.class.php:1029 reports/alert.class.php:1037
-msgid "Incidents with very high or major priority"
-msgstr "Incidenty s velmi vysokou nebo nejvyšší prioritou"
-
-#: reports/alert.class.php:1031 reports/alert.class.php:1039
-msgid "Requests with very high or major priority"
-msgstr "Požadavky s prioritou velmi vysoká nebo hlavní"
-
-#: reports/alert.class.php:1075 reports/alert.class.php:1079
-msgid "Problems with very high or major priority"
-msgstr "Problémy s velmi vysokou nebo nejvyšší prioritou"
-
-#: reports/alert.class.php:1114
-msgid "Display alerts for incidents and problems"
-msgstr "Zobrazit výstrahy ohledně incidentů a problémů"
-
-#: reports/alert.class.php:1117
-msgid "Display alerts for requests"
-msgstr "Zobrazit výstrahy ohledně požadavků"
-
-#: reports/alert.class.php:1343
-msgid "Incidents where time to own will be exceeded"
-msgstr "Incidenty u kterých bude překročena doba pro přidělení"
-
-#: reports/alert.class.php:1347
-msgid "Requests where time to own will be exceeded"
-msgstr "Požadavky u kterých bude překročen časový limit na převzetí"
-
-#: reports/alert.class.php:1415
-msgid "Incidents where time to resolve will be exceeded"
-msgstr "Incidenty u kterých bude překročena doba pro vyřešení"
-
-#: reports/alert.class.php:1419
-msgid "Requests where time to resolve will be exceeded"
-msgstr "Požadavky u kterých bude překročen časový limit vyřešení"
-
-#: reports/alert.class.php:1487
-msgid "Incidents where time to own is exceeded"
-msgstr "Incidenty u kterých je překročená doba pro přidělení"
-
-#: reports/alert.class.php:1491
-msgid "Requests where time to own is exceeded"
-msgstr "Požadavky u kterých je překročen časový limit na převzetí"
-
-#: reports/alert.class.php:1560
-msgid "Incidents where time to resolve is exceeded"
-msgstr "Incidenty u kterých je překročená doba pro vyřešení"
-
-#: reports/alert.class.php:1564
-msgid "Requests where time to resolve is exceeded"
-msgstr "Požadavky u kterých je překročený časový limit vyřešení"
-
-#: reports/alert.class.php:1590
-msgid "Display alerts for SLA of Incidents tickets"
-msgstr "Zobrazit výstrahy ohledně SLA u požadavků-incidentů"
-
-#: reports/alert.class.php:1593
-msgid "Display alerts for SLA of Requests tickets"
-msgstr "Zobrazit výstrahy ohledně SLA u požadavků"
-
-#: reports/alert.class.php:1605
-msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see "
-"more"
-msgstr ""
-"V plánu je přinejmenším jedna údržba. Přihlaste se abyste se dozvěděli více"
-
-#: reports/alert.class.php:2147
-msgid "All categories"
-msgstr ""
-
-#: reports/alert.class.php:2320
-msgid "A network alert can impact you and will avoid creating a ticket"
-msgstr ""
-"Upozornění ohledně sítě, které se vás může týkat a zabránit vytvoření "
-"požadavku"
-
-#: reports/alert.class.php:2357
-msgid "Problem with GLPI"
-msgstr "Problém s GLPI"
-
-#: reports/alert.class.php:2362
-msgid "GLPI is OK"
-msgstr "GLPI je v pořádku"
-
-#: reports/alert.class.php:2367
+#: src/Alert.php:3271
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
 
-#: reports/alert.class.php:2384
-msgid "Curl PHP package not installed"
-msgstr "Není nainstalovaný balíček PHP curl"
+#: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
+msgid "Alert level"
+msgstr "Stupeň výstrahy"
 
-#: reports/change.class.php:52 reports/change.class.php:58
-#: reports/change.class.php:119 reports/change.class.php:245
-#: reports/change.class.php:296
-msgid "Changes to be processed"
-msgstr "Změny pro zpracování"
+#: templates/stockwidget_form.html.twig:58
+msgid "Alert threshold"
+msgstr ""
 
-#: reports/change.class.php:53 reports/change.class.php:59
-#: reports/change.class.php:117 reports/change.class.php:227
-#: reports/change.class.php:280
-msgid "Changes on pending status"
-msgstr "Změny na čekajícím stavu"
+#: src/Dashboard.php:152
+msgid "All bar charts"
+msgstr ""
 
-#: reports/change.class.php:54 reports/change.class.php:307
+#: src/Alert.php:3048
+msgid "All categories"
+msgstr ""
+
+#: src/Dashboard.php:155
+msgid "All indicators"
+msgstr ""
+
+#: src/Dashboard.php:153
+msgid "All line charts"
+msgstr ""
+
+#: src/Dashboard.php:151
+msgid "All pie charts"
+msgstr ""
+
+#: src/Dashboard.php:154
+msgid "All table charts"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:101
+msgid "All unpublished articles"
+msgstr ""
+
+#: src/Reports/Change.php:83 src/Reports/Change.php:418
 msgid "Applied changes"
 msgstr "Uplatněné změny"
 
-#: reports/change.class.php:64 reports/change.class.php:522
-msgid "Change followup"
-msgstr "Sledování změn"
+#: templates/profileauthorizedwidget_form.html.twig:37
+msgid "Authorize/Unauthorize all"
+msgstr "Pověřit / zrušit pověření pro vše"
 
-#: reports/knowbaseitem.class.php:127
-msgid "Publication date"
-msgstr "Datum zveřejnění"
+#: templates/profileauthorizedwidget_form.html.twig:31
+msgid "Authorized widgets"
+msgstr "Pověřené ovládací prvky"
 
-#: reports/knowbaseitem.class.php:129
-msgid "Modification date"
-msgstr "Datum úpravy"
+#: src/Alert.php:188
+msgid "Automatic actions in error"
+msgstr "Automatické akce s chybou"
 
-#: reports/project.class.php:51 reports/project.class.php:55
-#: reports/project.class.php:94 reports/project.class.php:176
-#: reports/project.class.php:195
-msgid "projects to be processed"
-msgstr "projekty ke zpracování"
+#: templates/preferences.html.twig:29
+msgid "Automatic refreshing of the widgets that can be refreshed"
+msgstr "Automatické obnovování miniaplikací, u kterých je to možné"
 
-#: reports/projecttask.class.php:51 reports/projecttask.class.php:55
-#: reports/projecttask.class.php:95 reports/projecttask.class.php:172
-#: reports/projecttask.class.php:192
-msgid "projects tasks to be processed"
-msgstr "projektové úkoly ke zpracování"
+#: templates/menu_widgets_offcanvas.html.twig:33
+msgid "Availables widgets"
+msgstr ""
 
-#: reports/reports_bar.class.php:61
-msgid "Bar charts"
-msgstr "Sloupcové grafy"
+#: src/Reports/Reports_Bar.php:1803
+msgid "Average Satisfaction"
+msgstr ""
 
-#: reports/reports_bar.class.php:62 reports/reports_bar.class.php:157
-#: reports/reports_line.class.php:419 reports/reports_line.class.php:670
-#: reports/reports_line.class.php:946
-msgid "Opened tickets backlog"
-msgstr "Seznam nahromaděných otevřených požadavků"
-
-#: reports/reports_bar.class.php:63 reports/reports_bar.class.php:255
-msgid "Process time by technicians by month"
-msgstr "Doba zpracovávání techniky v jednotlivých měsících"
-
-#: reports/reports_bar.class.php:64 reports/reports_bar.class.php:352
-msgid "Top ten ticket categories by type of ticket"
-msgstr "Deset nejčastějších kategorií požadavků dle typu požadavku"
-
-#: reports/reports_bar.class.php:65 reports/reports_bar.class.php:439
-msgid "Number of tickets affected by technicians by month"
-msgstr "Počet požadavků přiřazených jednotlivým technikům v každém měsíci"
-
-#: reports/reports_bar.class.php:66 reports/reports_bar.class.php:544
+#: src/Reports/Reports_Bar.php:145
 msgid "Average real duration of treatment of the ticket"
 msgstr "Průměrná doba nakládání s požadavkem"
 
-#: reports/reports_bar.class.php:67 reports/reports_bar.class.php:658
-msgid "Top ten technicians (by tickets number)"
-msgstr "Deset nejvytíženějších techniků (dle počtu požadavků)"
-
-#: reports/reports_bar.class.php:68 reports/reports_bar.class.php:791
-#: reports/reports_bar.class.php:795
-msgid "Age of tickets"
-msgstr "Stáří požadavků"
-
-#: reports/reports_bar.class.php:69 reports/reports_bar.class.php:884
-#: reports/reports_pie.class.php:63 reports/reports_pie.class.php:151
-msgid "Number of opened tickets by priority"
-msgstr "Počet otevřených požadavků dle priority"
-
-#: reports/reports_bar.class.php:70 reports/reports_bar.class.php:1021
-msgid "Stock of tickets by status"
-msgstr "Zásoba požadavků podle stavu"
-
-#: reports/reports_bar.class.php:71 reports/reports_bar.class.php:1147
-msgid "Number of opened ticket and average satisfaction per trimester"
+#: src/Reports/Reports_Line.php:120
+msgid "Backlog tickets by week"
 msgstr ""
 
-#: reports/reports_bar.class.php:158
-msgid "Display of opened tickets by month"
-msgstr "Zobrazit otevřené požadavky dle měsíců"
+#: src/Widget.php:245
+msgid "Bar charts"
+msgstr "Sloupcové grafy"
 
-#: reports/reports_bar.class.php:163 reports/reports_bar.class.php:359
-#: reports/reports_bar.class.php:664 reports/reports_line.class.php:190
-msgid "Tickets number"
-msgstr "Počet požadavků"
+#: src/Menu.php:741 src/Menu.php:805
+msgid "Block drag / resize widgets"
+msgstr "Znemožnit přemisťování a změnu velikosti miniaplikací"
 
-#: reports/reports_bar.class.php:257
-msgid "Sum of ticket tasks duration by technicians"
-msgstr "Součet čas stráveného jednotlivými techniky na požadavcích"
+#: templates/config_form.html.twig:88
+msgid "Can take many time if you have many tickets"
+msgstr ""
 
-#: reports/reports_bar.class.php:354
+#: src/StockWidget.php:68
+msgid "Cannot create alert without a type"
+msgstr "Není možné vytvořit výstrahu bez zadání typu"
+
+#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:102
+#: src/Criterias/Other.php:273 src/Criterias/Other.php:495
+msgid "Category"
+msgstr ""
+
+#: src/Reports/Change.php:88 src/Reports/Change.php:663
+#: src/Reports/Change.php:669
+msgid "Change followup"
+msgstr "Sledování změn"
+
+#: src/Reports/Change.php:78 src/Reports/Change.php:101
+#: src/Reports/Change.php:161 src/Reports/Change.php:304
+#: src/Reports/Change.php:375
+msgid "Changes on pending status"
+msgstr "Změny na čekajícím stavu"
+
+#: src/Reports/Change.php:73 src/Reports/Change.php:96
+#: src/Reports/Change.php:163 src/Reports/Change.php:327
+#: src/Reports/Change.php:401
+msgid "Changes to be processed"
+msgstr "Změny pro zpracování"
+
+#: src/Alert.php:185 src/Alert.php:494
+msgid "Check if GLPI have no problem"
+msgstr "Zkontrolovat zda je GLPI v pořádku"
+
+#: src/Criterias/MultipleLocation.php:115
+msgid "Child locations"
+msgstr ""
+
+#: src/Widget.php:185 templates/widget_form.html.twig:37
+msgid "Class"
+msgstr ""
+
+#: src/Menu.php:732
+msgid "Clear grid"
+msgstr "Vyčistit mřížku"
+
+#: src/Menu.php:1147 src/Menu.php:1160
+#: templates/menu_widgets_offcanvas.html.twig:35
+msgid "Close"
+msgstr "Zavřít"
+
+#: templates/menu_edit_toolbar.html.twig:75
+msgid "Close edit mode"
+msgstr "Ukončit režim úprav"
+
+#: src/Reports/Reports_Line.php:621 src/Reports/Reports_Line.php:1265
+#: src/Reports/Reports_Pie.php:1081 src/Reports/Reports_Pie.php:1084
+msgid "Closed tickets"
+msgstr "Uzavřené požadavky"
+
+#: src/Menu.php:1152
+msgid "Column visibility"
+msgstr "Viditelnost sloupce"
+
+#: templates/itilalert_item.html.twig:54 templates/alert_item.html.twig:54
+msgid "Comment"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2833
+msgid "Computers number"
+msgstr ""
+
+#: src/Profile.php:182
+msgid "Configuration Access"
+msgstr "Přístup k nastavení"
+
+#: src/Reports/Contract.php:159
+msgid "Contract followup"
+msgstr ""
+
+#: src/Reports/Contract.php:69
+msgid "Contracts status"
+msgstr ""
+
+#: src/ItilAlert.php:74 src/Alert.php:3144
+#: templates/itilalert_item.html.twig:36 templates/alert_item.html.twig:36
+msgid "Create a new alert"
+msgstr "Vytvořit novou výstrahu"
+
+#: src/Alert.php:3291
+msgid "Curl PHP package not installed"
+msgstr "Není nainstalovaný balíček PHP curl"
+
+#: src/Preference.php:241
+msgid "Current year"
+msgstr ""
+
+#: templates/profile.html.twig:39
+msgid "Custom"
+msgstr "Uživatelem určené"
+
+#: src/Customswidget.php:59
+msgid "Custom Widgets"
+msgstr "Uživatelsky určené ovládací prvky"
+
+#: src/Menu.php:820
+msgid "Custom and save profile grid"
+msgstr ""
+
+#: src/Reports/Planning.php:52 src/Reports/Problem.php:57
+#: src/Reports/ProjectTask.php:56 src/Reports/Change.php:57
+#: src/Reports/Project.php:52 src/Chart.php:60 src/Datatable.php:58
+#: src/Module.php:66 src/Html.php:57 src/Dashboard.php:73 src/Menu.php:1161
+msgid "Dashboard"
+msgstr "Nástěnka"
+
+#: src/Profile.php:171
+msgid "Dashboard Access"
+msgstr "Přístup k nástěnce"
+
+#: src/Servicecatalog.php:92 src/Servicecatalog.php:100
+msgid "Dashboard access"
+msgstr "Přístup k nástěnce"
+
+#: src/Menu.php:1163
+msgid "Dashboard not saved"
+msgstr "Nástěnka nebyla uložena"
+
+#: src/Menu.php:1162
+msgid "Dashboard saved"
+msgstr "Nástěnka uložena"
+
+#: src/Menu.php:1164
+msgid "Data received for"
+msgstr "Obdržena data pro"
+
+#: src/Criterias/Other.php:412
+msgid "Day"
+msgstr ""
+
+#: templates/groupprofile_form.html.twig:32
+msgid "Default dashboard group"
+msgstr "Výchozí skupina nástěnky"
+
+#: templates/groupprofile_form.html.twig:38
+msgid "Default groups"
+msgstr "Výchozí skupiny"
+
+#: src/Menu.php:1329
+msgid "Delete widget"
+msgstr "Smazat miniaplikaci"
+
+#: templates/criteria_display_data.html.twig:30
+msgid "Display"
+msgstr ""
+
+#: src/Reports/Reports_Map.php:71
+msgid "Display Tickets by location (Latitude / Longitude)"
+msgstr "Zobrazit požadavky podle umístění (zeměpisná šířka/délka)"
+
+#: src/Alert.php:221 src/Alert.php:2217
+msgid "Display alerts for SLA of Incidents tickets"
+msgstr "Zobrazit výstrahy ohledně SLA u požadavků-incidentů"
+
+#: src/Alert.php:231 src/Alert.php:2220
+msgid "Display alerts for SLA of Requests tickets"
+msgstr "Zobrazit výstrahy ohledně SLA u požadavků"
+
+#: src/Alert.php:216 src/Alert.php:1604
+msgid "Display alerts for incidents and problems"
+msgstr "Zobrazit výstrahy ohledně incidentů a problémů"
+
+#: src/Alert.php:203
+msgid "Display alerts for inventory stocks"
+msgstr "Zobrazovat výstrahy ohledně zásob inventáře"
+
+#: src/Alert.php:236 src/Alert.php:1607
+msgid "Display alerts for requests"
+msgstr "Zobrazit výstrahy ohledně požadavků"
+
+#: src/Alert.php:190
+msgid "Display automatic actions in error"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:95
+msgid "Display if you have duplicates into inventory"
+msgstr "Zobrazit zda máte duplicity v inventáři"
+
+#: src/Reports/Reports_Bar.php:137
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr "Zobrazit deset nejčastějších kategorií požadavků podle typu požadavku"
 
-#: reports/reports_bar.class.php:440
-msgid "Sum of ticket affected by technicians"
-msgstr "Součet požadavků přidělených technikům"
-
-#: reports/reports_bar.class.php:545
+#: src/Reports/Reports_Bar.php:148
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
 msgstr "Zobrazit průměrný skutečnou dobu zpracování požadavku (trvání úkolů)"
 
-#: reports/reports_bar.class.php:550
-msgid "Tasks duration (minutes)"
-msgstr "Trvání úkolů (minuty)"
+#: src/Alert.php:195
+msgid "Display of mails which are not imported"
+msgstr "Zobrazit e-maily, které nejsou naimportované"
 
-#: reports/reports_bar.class.php:659
+#: src/Reports/Reports_Bar.php:155
 msgid "Display of number of tickets by technicians"
 msgstr "Zobrazit počty požadavků dle techniků"
 
-#: reports/reports_bar.class.php:1079
-msgid "Trimester 1"
-msgstr ""
+#: src/Reports/Reports_Bar.php:127
+msgid "Display of opened tickets by month"
+msgstr "Zobrazit otevřené požadavky dle měsíců"
 
-#: reports/reports_bar.class.php:1097
-msgid "Trimester 2"
-msgstr ""
+#: src/Reports/Reports_Pie.php:175
+msgid "Display percent of request sources for closed tickets"
+msgstr "Zobrazit procenta zdrojů požadavků pro uzavřené požadavky"
 
-#: reports/reports_bar.class.php:1113
-msgid "Trimester 3"
-msgstr ""
+#: src/Reports/Reports_Pie.php:155
+msgid "Display percent of solution types for tickets"
+msgstr "Zobrazit procentuální podíly typů řešení požadavků"
 
-#: reports/reports_bar.class.php:1129
-msgid "Trimester 4"
-msgstr ""
+#: src/Alert.php:226
+msgid "Display tickets where last modification is a user action"
+msgstr "Zobrazit požadavky u kterých je poslední úprava akce uživatele"
 
-#: reports/reports_bar.class.php:1161 reports/reports_line.class.php:417
-#: reports/reports_line.class.php:668 reports/reports_line.class.php:943
-#: reports/reports_pie.class.php:725
-msgid "Opened tickets"
-msgstr "Otevřené požadavky"
-
-#: reports/reports_bar.class.php:1162
-msgid "Average Satisfaction"
-msgstr ""
-
-#: reports/reports_line.class.php:60
-msgid "Line charts"
-msgstr "Čárové grafy"
-
-#: reports/reports_line.class.php:61
-msgid "Tickets stock by month"
-msgstr "Množství požadavků v měsíci"
-
-#: reports/reports_line.class.php:62 reports/reports_line.class.php:413
-msgid "Number of opened and closed tickets by month"
-msgstr "Počet otevřených a uzavřených požadavků v jednotlivých měsících"
-
-#: reports/reports_line.class.php:63 reports/reports_line.class.php:664
-msgid "Number of opened and resolved / closed tickets by month"
-msgstr "Počet otevřených a vyřešených/uzavřených požadavků podle měsíců"
-
-#: reports/reports_line.class.php:64
-msgid "Number of opened, closed, unplanned tickets by month"
-msgstr ""
-
-#: reports/reports_line.class.php:180
-msgid "Tickets stock"
-msgstr "Množství požadavků"
-
-#: reports/reports_line.class.php:181
-msgid "Sum of not solved tickets by month"
-msgstr "Součet nevyřešených požadavků za měsíc"
-
-#: reports/reports_line.class.php:418 reports/reports_line.class.php:669
-#: reports/reports_line.class.php:944 reports/reports_pie.class.php:742
-msgid "Closed tickets"
-msgstr "Uzavřené požadavky"
-
-#: reports/reports_line.class.php:939
-msgid "Number of opened, closed  and unplanned tickets by month"
-msgstr ""
-
-#: reports/reports_line.class.php:945 reports/reports_pie.class.php:761
-msgid "Not planned"
-msgstr ""
-
-#: reports/reports_map.class.php:60
-msgid "Map"
-msgstr "Mapa"
-
-#: reports/reports_map.class.php:61 reports/reports_map.class.php:109
-msgid "OpenStreetMap - Opened tickets by location"
-msgstr "OpenStreetMap – otevřené požadavky podle umístění"
-
-#: reports/reports_map.class.php:110
-msgid "Display Tickets by location (Latitude / Longitude)"
-msgstr "Zobrazit požadavky podle umístění (zeměpisná šířka/délka)"
-
-#: reports/reports_pie.class.php:62
-msgid "Pie charts"
-msgstr "Koláčové grafy"
-
-#: reports/reports_pie.class.php:64 reports/reports_pie.class.php:260
-msgid "Top ten ticket requesters by month"
-msgstr "Deset nejčastějších požadovatelů v měsíci"
-
-#: reports/reports_pie.class.php:65 reports/reports_pie.class.php:341
-msgid "TTR Compliance"
-msgstr "Soulad s TTR"
-
-#: reports/reports_pie.class.php:66 reports/reports_pie.class.php:424
-msgid "TTO Compliance"
-msgstr "Soulad s TTO"
-
-#: reports/reports_pie.class.php:67 reports/reports_pie.class.php:522
-msgid "Number of opened incidents by category"
-msgstr "Počet otevřených incidentů dle kategorie"
-
-#: reports/reports_pie.class.php:68 reports/reports_pie.class.php:632
-msgid "Number of opened requests by category"
-msgstr "Počet otevřených požadavků dle kategorie"
-
-#: reports/reports_pie.class.php:69 reports/reports_pie.class.php:766
-msgid "Number of opened, closed and unplanned tickets by month"
-msgstr ""
-
-#: reports/reports_pie.class.php:70 reports/reports_pie.class.php:856
-msgid "Percent of use of solution types"
-msgstr "Procento využitý typů řešení"
-
-#: reports/reports_pie.class.php:71 reports/reports_pie.class.php:947
-msgid "Top ten of opened tickets by requester groups"
-msgstr "Deset nejčastějších otevřených požadavků podle skupin žadatelů"
-
-#: reports/reports_pie.class.php:72 reports/reports_pie.class.php:1035
-msgid "Global satisfaction level"
-msgstr "Celková úroveň spokojenosti"
-
-#: reports/reports_pie.class.php:73 reports/reports_pie.class.php:1138
-msgid "Top ten of opened tickets by location"
-msgstr "Deset nejčastějších otevřených požadavků podle umístění"
-
-#: reports/reports_pie.class.php:74 reports/reports_pie.class.php:1238
-msgid "Number of use of request sources"
-msgstr "Počet použití prostředků požadavku"
-
-#: reports/reports_pie.class.php:75 reports/reports_pie.class.php:1333
-msgid "Number of tickets per location per period"
-msgstr ""
-
-#: reports/reports_pie.class.php:343
-msgid "Display tickets where time to resolve is respected (percent)"
-msgstr "Zobrazit požadavky u kterých je dodržena doba pro vyřešení (procenta)"
-
-#: reports/reports_pie.class.php:348
-msgid "Respected TTR"
-msgstr "Respektované TTR"
-
-#: reports/reports_pie.class.php:348
-msgid "Not respected TTR"
-msgstr "Nerespektované TTR"
-
-#: reports/reports_pie.class.php:426
+#: src/Reports/Reports_Pie.php:135
 msgid "Display tickets where time to own is respected (percent)"
 msgstr ""
 "Zobrazit požadavky u kterých je dodržena doba na vzetí si na starost "
 "(procenta)"
 
-#: reports/reports_pie.class.php:431
-msgid "Respected TTO"
-msgstr "Respektované TTO"
+#: src/Reports/Reports_Pie.php:130
+msgid "Display tickets where time to resolve is respected (percent)"
+msgstr "Zobrazit požadavky u kterých je dodržena doba pro vyřešení (procenta)"
 
-#: reports/reports_pie.class.php:431
-msgid "Not respected TTO"
-msgstr "Nerespektované TTO"
+#: src/Reports/Reports_Table.php:103
+msgid "Display unpublished articles of Knowbase"
+msgstr ""
 
-#: reports/reports_pie.class.php:857
-msgid "Display percent of solution types for tickets"
-msgstr "Zobrazit procentuální podíly typů řešení požadavků"
+#: src/Alert.php:208
+msgid "Display your equipments"
+msgstr ""
 
-#: reports/reports_pie.class.php:1040
-msgid "Satisfy percent"
-msgstr "Procento spokojenosti"
+#: src/Menu.php:715
+msgid "Edit mode"
+msgstr "Režim úprav"
 
-#: reports/reports_pie.class.php:1040
-msgid "Not satisfy percent"
-msgstr "Procento nespokojenosti"
+#: templates/config_form.html.twig:32
+msgid "Enable the possibility to display Dashboard in full screen"
+msgstr "Zpřístupnit možnost zobrazit nástěnku na celou obrazovku"
 
-#: reports/reports_pie.class.php:1239
-msgid "Display percent of request sources for closed tickets"
-msgstr "Zobrazit procenta zdrojů požadavků pro uzavřené požadavky"
+#: templates/criteria_filter_date.html.twig:36
+#: templates/criteria_period_range.html.twig:30
+msgid "End"
+msgstr ""
 
-#: reports/reports_table.class.php:60
-msgid "Tables"
-msgstr "Tabulky"
+#: src/Criterias/DisplayData.php:108
+msgid "End month"
+msgstr ""
 
-#: reports/reports_table.class.php:60 reports/reports_table.class.php:117
+#: src/Criterias/DisplayData.php:108
+msgid "End year"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:203
+msgid "Evolution of TTO respect"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:208
+msgid "Evolution of TTR respect"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:190
+msgid "Evolution of solution types by year"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:198
+msgid "Evolution of ticket satisfaction by year"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:185
+msgid "Evolution of tickets request sources types by year"
+msgstr ""
+
+#: src/Menu.php:824
+msgid "Export to PDF"
+msgstr ""
+
+#: src/CheckSchema.php:151
+msgid "Failed to check the sanity of the tables!"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:66
+#: templates/configtranslation_form.html.twig:46
+msgid "Field"
+msgstr ""
+
+#: templates/criteria_filter_date.html.twig:30
+msgid "Filter date"
+msgstr ""
+
+#: src/Widget.php:117
+msgid "Filters"
+msgstr ""
+
+#: src/Widgetlist.php:525
+msgid "Find a widget"
+msgstr ""
+
+#: templates/preferenceuserblacklist_form.html.twig:32
+msgid "From which plugins you want to display the widgets?"
+msgstr "Ze kterých zásuvných modulů chcete zobrazovat miniaplikace?"
+
+#: templates/profile.html.twig:38
+msgid "Full"
+msgstr "Plné"
+
+#: src/Menu.php:828
+msgid "Fullscreen"
+msgstr "Na celou obrazovku"
+
+#: src/Alert.php:183 src/Alert.php:493
+msgid "GLPI Status"
+msgstr "Stav GLPI"
+
+#: src/Dashboard.php:145 src/Menu.php:129
+msgid "GLPI admin grid"
+msgstr "Správa GLPI"
+
+#: src/Alert.php:3264
+msgid "GLPI is OK"
+msgstr "GLPI je v pořádku"
+
+#: src/Menu.php:1754
+msgid "Generating PDF..."
+msgstr ""
+
+#: src/Menu.php:717
+msgid "Global"
+msgstr "Globální"
+
+#: templates/menu_global_filter_bar.html.twig:31
+msgid "Global filter"
+msgstr ""
+
+#: src/Alert.php:244 src/Alert.php:3971
+msgid "Global indicators"
+msgstr ""
+
+#: src/Alert.php:249 src/Alert.php:3972
+msgid "Global indicators by week"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:163
+msgid "Global satisfaction level"
+msgstr "Celková úroveň spokojenosti"
+
+#: src/Dashboard.php:147
+msgid "Helpdesk supervisor grid"
+msgstr "Dohlížení na podporu"
+
+#: src/Dashboard.php:150
+msgid "Helpdesk technician grid"
+msgstr "Pro technika podpory"
+
+#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:946 src/Alert.php:541
+msgid "ID and priority"
+msgstr "Identif. a priorita"
+
+#: templates/stockwidget_form.html.twig:56
+msgid "Icon"
+msgstr ""
+
+#: templates/config_form.html.twig:48
+msgid "Impact colors for alerts"
+msgstr "Barvy označující závažnost dopadu výstrah"
+
+#: src/Dashboard.php:148
+msgid "Incident supervisor grid"
+msgstr "Dohlížení na poruchy"
+
+#: src/Customswidget.php:168 src/Customswidget.php:169
+msgid "Incidents"
+msgstr "Incidenty"
+
+#: src/Alert.php:214 src/Alert.php:1603
+msgid "Incidents alerts"
+msgstr "Upozornění na incidenty"
+
+#: src/Alert.php:3784 src/Alert.php:4001
+msgid "Incidents in progress"
+msgstr ""
+
+#: src/Alert.php:2141
+msgid "Incidents where time to own is exceeded"
+msgstr "Incidenty u kterých je překročená doba pro přidělení"
+
+#: src/Alert.php:2010
+msgid "Incidents where time to own will be exceeded"
+msgstr "Incidenty u kterých bude překročena doba pro přidělení"
+
+#: src/Alert.php:2207
+msgid "Incidents where time to resolve is exceeded"
+msgstr "Incidenty u kterých je překročená doba pro vyřešení"
+
+#: src/Alert.php:2075
+msgid "Incidents where time to resolve will be exceeded"
+msgstr "Incidenty u kterých bude překročena doba pro vyřešení"
+
+#: src/Alert.php:1545
+msgid "Incidents with very high or major priority"
+msgstr "Incidenty s velmi vysokou nebo nejvyšší prioritou"
+
+#: src/Widget.php:239
+msgid "Indicators"
+msgstr ""
+
+#: src/Config.php:398 src/Config.php:586 src/ItilAlert.php:120
+#: src/Alert.php:178 src/Alert.php:3083
+msgid "Information"
+msgid_plural "Informations"
+msgstr[0] "Informace"
+msgstr[1] "Informace"
+msgstr[2] "Informací"
+msgstr[3] "Informace"
+
+#: src/Reports/Reports_Table.php:110
 msgid "Internal annuary"
 msgstr "Vnitřní adresář"
 
-#: reports/reports_table.class.php:63
-msgid "Number of opened tickets by technician and by status"
-msgstr "Počet otevřených požadavků podle jednotlivých techniků a stavu"
+#: src/Widget.php:176 templates/widget_form.html.twig:32
+msgid "Internal name"
+msgstr ""
 
-#: reports/reports_table.class.php:64 reports/reports_table.class.php:666
-msgid "Number of opened tickets by group and by status"
-msgstr "Počet otevřených požadavků podle skupin a stavu"
+#: src/Dashboard.php:146
+msgid "Inventory admin grid"
+msgstr "Mřížka správce inventáře"
 
-#: reports/reports_table.class.php:118
-msgid "Search users of your organisation"
-msgstr "Hledat uživatele vaší organizace"
+#: src/Alert.php:201
+msgid "Inventory stock alerts"
+msgstr "Výstrahy ohledně zásob inventáře"
 
-#: reports/reports_table.class.php:206
-msgid "Display if you have duplicates into inventory"
-msgstr "Zobrazit zda máte duplicity v inventáři"
+#: templates/stockwidget_form.html.twig:51
+msgid "Item state"
+msgstr ""
 
-#: reports/reports_table.class.php:438
-msgid "Number of tickets open by technician and by status"
-msgstr "Počet požadavků otevřených technikem a podle stavu"
+#: templates/stockwidget_form.html.twig:35
+msgid "Item type"
+msgstr ""
 
-#: reports/reports_table.class.php:441
-msgid "Technicians"
-msgstr "Technici"
+#: templates/configtranslation_list.html.twig:65
+#: templates/configtranslation_form.html.twig:32
+msgid "Language"
+msgstr ""
 
-#: reports/ticket.class.php:53
-msgid "Your rejected tickets"
-msgstr "Vaše zamítnuté požadavky"
+#: src/Criterias/Other.php:246 src/Criterias/Other.php:435
+msgid "Last month"
+msgstr ""
 
-#: reports/ticket.class.php:63 reports/ticket.class.php:1149
+#: src/Reports/Reports_Bar.php:215
+msgid "Last synchronization of computers by month"
+msgstr ""
+
+#: src/Criterias/Other.php:252
+msgid "Last year"
+msgstr ""
+
+#: templates/config_form.html.twig:64
+msgid "Level of categories to show"
+msgstr "Úroveň kategorií které zobrazit"
+
+#: src/Widget.php:247
+msgid "Line charts"
+msgstr "Čárové grafy"
+
+#: templates/itilalert_item.html.twig:47 templates/alert_item.html.twig:47
+msgid "Linked reminder"
+msgstr "Připojená připomínka"
+
+#: templates/alert_form.html.twig:42 templates/itilalert_item.html.twig:74
+msgid "Linked with a ticket category"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:59
+msgid "List of translations"
+msgstr ""
+
+#: templates/menu_edit_toolbar.html.twig:54
+#: templates/menu_edit_toolbar.html.twig:55
+msgid "Load a predefined grid"
+msgstr "Načíst předpřipravenou mřížku"
+
+#: src/Criterias/MultipleLocation.php:65
+msgid "Location"
+msgid_plural "Locations"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: src/Widget.php:249
+msgid "Map"
+msgstr "Mapa"
+
+#: src/Menu.php:1148
+msgid "Maximize"
+msgstr "Maximalizovat"
+
+#: src/Menu.php:1149
+msgid "Minimize"
+msgstr "Minimalizovat"
+
+#: src/Reports/KnowbaseItem.php:172
+msgid "Modification date"
+msgstr "Datum úpravy"
+
+#: src/Criterias/Month.php:55 src/Criterias/Month.php:70
+#: src/Criterias/Other.php:264 src/Criterias/Other.php:414
+#: src/Criterias/Other.php:436 templates/criteria_other_month.html.twig:33
+#: templates/criteria_period_month.html.twig:29
+msgid "Month"
+msgstr "Měsíc"
+
+#: src/Reports/Reports_Line.php:125
+msgid "Monthly tickets in progress"
+msgstr ""
+
+#: src/Config.php:67 src/Preference.php:85 src/Menu.php:114 src/Menu.php:1755
+#: setup.php:203 templates/menu_action_toolbar.html.twig:32
+msgid "My Dashboard"
+msgstr "Nástěnka"
+
+#: templates/preferences.html.twig:61
+msgid "My favorite category for widgets"
+msgstr ""
+
+#: templates/preferences.html.twig:56
+msgid "My prefered entity for widget"
+msgstr "Moje upřednostňovaná entita pro ovládací prvek"
+
+#: templates/preferences.html.twig:45
+msgid "My prefered groups for widget"
+msgstr "Moje upřednostňovaná skupina pro ovládací prvek"
+
+#: templates/preferences.html.twig:66
+msgid "My prefered type for widget"
+msgstr ""
+
+#: templates/preferences.html.twig:71
+msgid "My prefered year for widget"
+msgstr ""
+
+#: templates/preferences.html.twig:51
+msgid "My requester prefered groups for widget"
+msgstr "Mým požadujícím upřednostňované skupiny pro ovládací prvek"
+
+#: src/Menu.php:128
+msgid "My view"
+msgstr "Můj pohled"
+
+#: templates/stockwidget_form.html.twig:32
+#: templates/itilalert_item.html.twig:50 templates/alert_item.html.twig:50
+msgid "Name"
+msgstr ""
+
+#: src/Config.php:396 src/Config.php:584 src/ItilAlert.php:118
+#: src/Alert.php:168 src/Alert.php:3174
+msgid "Network alert"
+msgid_plural "Network alerts"
+msgstr[0] "Upozornění ze sítě"
+msgstr[1] "Upozornění ze sítě"
+msgstr[2] "Upozornění ze sítě"
+msgstr[3] "Upozornění ze sítě"
+
+#: src/Alert.php:651
+msgid "New document"
+msgstr "Nový dokument"
+
+#: src/Alert.php:1421
+msgid "New incidents"
+msgstr "Nové incidenty"
+
+#: src/Alert.php:1422
+msgid "New requests"
+msgstr "Nové požadavky"
+
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1604 src/Alert.php:3618
+#: src/Alert.php:3992
 msgid "New tickets"
 msgstr "Nové požadavky"
 
-#: scripts/clean_stock_tickets.php:85 scripts/insert_stock_tickets.php:56
+#: templates/alert_stock_tiles.html.twig:32
+msgid "No alerts are setup"
+msgstr "Nejsou nastavené žádné výstrahy"
+
+#: src/Datatable.php:236
+msgid "No column defined"
+msgstr "Není určen žádný sloupec"
+
+#: src/Widget.php:821 src/Chart.php:186 src/Menu.php:1330
+msgid "No data available"
+msgstr "Nejsou k dispozici žádná data"
+
+#: src/Menu.php:1118
+msgid "No data available in table"
+msgstr "V tabulce nejsou k dispozici žádná data"
+
+#: src/Chart.php:168
+msgid "No data is given to the widget"
+msgstr "Ovládacímu prvku nebyla dodána žádná data"
+
+#: src/Menu.php:1165
+msgid "No data received for"
+msgstr "Neobdržena žádná data pro"
+
+#: templates/widget_equipments.html.twig:38
+msgid "No equipments founded"
+msgstr "Nebylo nalezeno žádné vybavení"
+
+#: src/ItilAlert.php:123 src/Alert.php:3086
+msgid "No impact"
+msgstr "Bez dopadu"
+
+#: src/Alert.php:2631 src/Widget.php:965
+msgid "No informations founded"
+msgstr "Nebyly nalezeny žádné informace"
+
+#: src/Menu.php:1128
+msgid "No matching records found"
+msgstr "Nenalezeny žádné odpovídající záznamy"
+
+#: src/Alert.php:2770 src/Alert.php:3029 src/Widget.php:902
+msgid "No problem detected"
+msgstr "Nebyl zjištěn žádný problém"
+
+#: templates/graph_header.html.twig:38
+msgid "No results found"
+msgstr ""
+
+#: src/Alert.php:2442 src/Widget.php:933
+msgid "No scheduled maintenance"
+msgstr "Žádná naplánovaná údržba"
+
+#: templates/configtranslation_list.html.twig:42
+msgid "No translation has been added yet"
+msgstr ""
+
+#: src/Widgetlist.php:416
+msgid "No widgets available"
+msgstr ""
+
+#: src/Menu.php:1320 templates/menu_grid.html.twig:31
+msgid "No widgets founded, please add widgets"
+msgstr "Nebyly nalezeny žádné miniaplikace, přidejte nějaké"
+
+#: src/Helper.php:323
+msgid "Not a valid SQL SELECT query"
+msgstr "Není platný dotaz SQL SELECT"
+
+#: src/Chart.php:192 src/Datatable.php:129
+msgid "Not an array"
+msgstr "Není pole"
+
+#: src/Alert.php:193
+msgid "Not imported mails in collectors"
+msgstr "Nenaimportované e-maily v kolektorech"
+
+#: src/Reports/Reports_Line.php:1266 src/Reports/Reports_Pie.php:1117
+#: src/Reports/Reports_Pie.php:1120
+msgid "Not planned"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1257
+msgid "Not resolved tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2941 src/Reports/Reports_Pie.php:672
+#: src/Reports/Reports_Pie.php:688
+msgid "Not respected TTO"
+msgstr "Nerespektované TTO"
+
+#: src/Reports/Reports_Bar.php:3045 src/Reports/Reports_Pie.php:531
+#: src/Reports/Reports_Pie.php:549
+msgid "Not respected TTR"
+msgstr "Nerespektované TTR"
+
+#: src/Reports/Reports_Bar.php:2741
+msgid "Not satisfy number"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:1491 src/Reports/Reports_Pie.php:1505
+msgid "Not satisfy percent"
+msgstr "Procento nespokojenosti"
+
+#: src/Reports/Reports_Line.php:122
+msgid "Number of in progress (not new and pending) tickets by week"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:128
+msgid "Number of open tickets in the month still in progress for each month"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:85 src/Reports/Reports_Line.php:615
+msgid "Number of opened and closed tickets by month"
+msgstr "Počet otevřených a uzavřených požadavků v jednotlivých měsících"
+
+#: src/Reports/Reports_Line.php:90 src/Reports/Reports_Line.php:892
+msgid "Number of opened and resolved / closed tickets by month"
+msgstr "Počet otevřených a vyřešených/uzavřených požadavků podle měsíců"
+
+#: src/Reports/Reports_Pie.php:138
+msgid "Number of opened incidents by category"
+msgstr "Počet otevřených incidentů dle kategorie"
+
+#: src/Reports/Reports_Pie.php:143
+msgid "Number of opened requests by category"
+msgstr "Počet otevřených požadavků dle kategorie"
+
+#: src/Reports/Reports_Bar.php:173
+msgid "Number of opened ticket and average satisfaction per trimester"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:85 src/Reports/Reports_Table.php:1020
+msgid "Number of opened tickets by group and by status"
+msgstr "Počet otevřených požadavků podle skupin a stavu"
+
+#: src/Reports/Reports_Bar.php:163 src/Reports/Reports_Pie.php:118
+msgid "Number of opened tickets by priority"
+msgstr "Počet otevřených požadavků dle priority"
+
+#: src/Reports/Reports_Table.php:80
+msgid "Number of opened tickets by technician and by status"
+msgstr "Počet otevřených požadavků podle jednotlivých techniků a stavu"
+
+#: src/Reports/Reports_Line.php:1259
+msgid "Number of opened, closed  and unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:148
+msgid "Number of opened, closed and unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:95
+msgid "Number of opened, closed, unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2727
+msgid "Number of surveys answered"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:140
+msgid "Number of tickets affected by technicians by month"
+msgstr "Počet požadavků přiřazených jednotlivým technikům v každém měsíci"
+
+#: src/Reports/Reports_Line.php:100
+msgid "Number of tickets created each months"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:105
+msgid "Number of tickets created each week"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:115
+msgid "Number of tickets linked with problems"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:709
+msgid "Number of tickets open by technician and by status"
+msgstr "Počet požadavků otevřených technikem a podle stavu"
+
+#: src/Reports/Reports_Pie.php:178
+msgid "Number of tickets per location per period"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:133
+msgid "Number of tickets with more than one solution"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:110
+msgid "Number of tickets with validation refusal"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:173
+msgid "Number of use of request sources"
+msgstr "Počet použití prostředků požadavku"
+
+#: src/Reports/Reports_Map.php:69
+msgid "OpenStreetMap - Opened tickets by location"
+msgstr "OpenStreetMap – otevřené požadavky podle umístění"
+
+#: src/Alert.php:1483
+msgid "Opened incidents without assigned technicians"
+msgstr "Otevřené incidenty, které nejsou přiřazené technikům"
+
+#: src/Alert.php:1484
+msgid "Opened requests without assigned technicians"
+msgstr "Otevřené požadavky, které nejsou přiřazené technikům"
+
+#: src/Reports/Reports_Bar.php:1802 src/Reports/Reports_Line.php:620
+#: src/Reports/Reports_Line.php:897 src/Reports/Reports_Line.php:1264
+#: src/Reports/Reports_Pie.php:1052 src/Reports/Reports_Pie.php:1055
+msgid "Opened tickets"
+msgstr "Otevřené požadavky"
+
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:622
+#: src/Reports/Reports_Line.php:899 src/Reports/Reports_Line.php:1267
+msgid "Opened tickets backlog"
+msgstr "Seznam nahromaděných otevřených požadavků"
+
+#: src/Menu.php:1756
+msgid "PDF export failed. Please try again."
+msgstr ""
+
+#: templates/preferences.html.twig:76
+msgid "Palette color"
+msgstr ""
+
+#: src/Alert.php:3719 src/Alert.php:3998
+msgid "Pending tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2953
+msgid "Percent - Respected TTO"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:3057
+msgid "Percent - Respected TTR"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:153
+msgid "Percent of use of solution types"
+msgstr "Procento využitý typů řešení"
+
+#: src/Criterias/DisplayData.php:79 src/Criterias/FilterDate.php:73
+msgid "Period"
+msgstr ""
+
+#: src/Menu.php:736 src/Menu.php:815
+msgid "Permit drag / resize widgets"
+msgstr "Umožnit přemisťování a změnu velikosti miniaplikací"
+
+#: src/Reports/RSSFeed.php:133
+msgid "Personal RSS feed"
+msgid_plural "Personal RSS feeds"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: src/Widget.php:243
+msgid "Pie charts"
+msgstr "Koláčové grafy"
+
+#: front/config.php:47
+msgid "Please activate the plugin"
+msgstr ""
+
+#: public/scripts/insert_stock_ticketindicators.php:72
+#: public/scripts/clean_stock_tickets.php:152
+#: public/scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr "Zásuvný modul vypnut"
+
+#: src/Config.php:62
+msgid "Plugin setup"
+msgstr ""
+
+#: src/Preference.php:241
+msgid "Previous year"
+msgstr ""
+
+#: src/Reports/Problem.php:83 src/Reports/Problem.php:638
+#: src/Reports/Problem.php:644
+msgid "Problem followup"
+msgstr ""
+
+#: src/Alert.php:3258
+msgid "Problem with GLPI"
+msgstr "Problém s GLPI"
+
+#: src/Alert.php:1585
+msgid "Problems with very high or major priority"
+msgstr "Problémy s velmi vysokou nebo nejvyšší prioritou"
+
+#: src/Reports/Reports_Bar.php:130
+msgid "Process time by technicians by month"
+msgstr "Doba zpracovávání techniky v jednotlivých měsících"
+
+#: templates/menu_edit_toolbar.html.twig:64
+msgid "Profile"
+msgstr ""
+
+#: src/Reports/ProjectTask.php:72 src/Reports/ProjectTask.php:80
+#: src/Reports/ProjectTask.php:231 src/Reports/ProjectTask.php:272
+msgid "Projects tasks to be processed"
+msgstr ""
+
+#: src/Reports/Project.php:68 src/Reports/Project.php:76
+#: src/Reports/Project.php:123 src/Reports/Project.php:225
+#: src/Reports/Project.php:250
+msgid "Projects to be processed"
+msgstr ""
+
+#: templates/alert_form.html.twig:46 templates/itilalert_item.html.twig:78
+msgid "Public"
+msgstr ""
+
+#: src/Reports/RSSFeed.php:173
+msgid "Public RSS feed"
+msgid_plural "Public RSS feeds"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: src/Reports/KnowbaseItem.php:170
+msgid "Publication date"
+msgstr "Datum zveřejnění"
+
+#: src/Config.php:366
+msgctxt "button"
+msgid "Reconstruct global backlog"
+msgstr ""
+
+#: src/Config.php:370
+msgctxt "button"
+msgid "Reconstruct global indicators per week"
+msgstr ""
+
+#: src/Menu.php:1150
+msgid "Refresh"
+msgstr "Načíst znovu"
+
+#: templates/preferences.html.twig:34
+msgid "Refresh every "
+msgstr "Znovu načíst každých"
+
+#: src/Menu.php:1331
+msgid "Refresh widget"
+msgstr "Znovu načíst miniaplikaci"
+
+#: src/Reports/Reports_Map.php:406
+msgid "Reload"
+msgstr ""
+
+#: templates/config_form.html.twig:43 templates/preferences.html.twig:39
+msgid "Replace central interface"
+msgstr "Nahradit ústřední rozhraní"
+
+#: src/Dashboard.php:149
+msgid "Request supervisor grid"
+msgstr "Dohlížení na požadavky"
+
+#: src/Customswidget.php:177 src/Customswidget.php:178
+msgid "Requests"
+msgstr "Požadavky"
+
+#: src/Alert.php:234 src/Alert.php:1606
+msgid "Requests alerts"
+msgstr "Výstrahy ohledně požadavků"
+
+#: src/Alert.php:3849 src/Alert.php:4004
+msgid "Requests in progress"
+msgstr ""
+
+#: src/Alert.php:2142
+msgid "Requests where time to own is exceeded"
+msgstr "Požadavky u kterých je překročen časový limit na převzetí"
+
+#: src/Alert.php:2011
+msgid "Requests where time to own will be exceeded"
+msgstr "Požadavky u kterých bude překročen časový limit na převzetí"
+
+#: src/Alert.php:2208
+msgid "Requests where time to resolve is exceeded"
+msgstr "Požadavky u kterých je překročený časový limit vyřešení"
+
+#: src/Alert.php:2076
+msgid "Requests where time to resolve will be exceeded"
+msgstr "Požadavky u kterých bude překročen časový limit vyřešení"
+
+#: src/Alert.php:1546
+msgid "Requests with very high or major priority"
+msgstr "Požadavky s prioritou velmi vysoká nebo hlavní"
+
+#: src/Reports/Reports_Line.php:898
+msgid "Resolved / closed tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2947 src/Reports/Reports_Pie.php:677
+#: src/Reports/Reports_Pie.php:688
+msgid "Respected TTO"
+msgstr "Respektované TTO"
+
+#: src/Reports/Reports_Bar.php:3051 src/Reports/Reports_Pie.php:536
+#: src/Reports/Reports_Pie.php:548
+msgid "Respected TTR"
+msgstr "Respektované TTR"
+
+#: src/Reports/Reports_Bar.php:178
+msgid "Responsiveness over 12 rolling months"
+msgstr ""
+
+#: src/Profile.php:57
+msgid "Rights management"
+msgstr "Správa oprávnění"
+
+#: src/Alert.php:219 src/Alert.php:2216
+msgid "SLA Incidents alerts"
+msgstr "Upozornění na SLA incidenty"
+
+#: src/Alert.php:229 src/Alert.php:2219
+msgid "SLA Requests alerts"
+msgstr "Výstrahy ohledně SLA požadavků"
+
+#: src/Reports/Reports_Pie.php:165
+msgid "Satisfaction average"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2735
+msgid "Satisfy number"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:1486 src/Reports/Reports_Pie.php:1505
+msgid "Satisfy percent"
+msgstr "Procento spokojenosti"
+
+#: src/Menu.php:723 src/Menu.php:728 src/Menu.php:802
+msgid "Save grid"
+msgstr "Uložit mřížku"
+
+#: src/Menu.php:1308
+msgid "Save grid to see widget"
+msgstr "Pro zobrazení miniaplikace uložte mřížku"
+
+#: src/Config.php:397 src/Config.php:585 src/ItilAlert.php:119
+#: src/Alert.php:173 src/Alert.php:3082
+msgid "Scheduled maintenance"
+msgid_plural "Scheduled maintenances"
+msgstr[0] "Naplánovaná údržba"
+msgstr[1] "Naplánované údržby"
+msgstr[2] "Naplánovaných údržeb"
+msgstr[3] "Naplánované údržby"
+
+#: src/CheckSchema.php:55
+msgid "Schema check"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:112
+msgid "Search users of your organisation"
+msgstr "Hledat uživatele vaší organizace"
+
+#: src/Profile.php:190 src/Profile.php:304
+msgid "See edit mode"
+msgstr "Viz režim úprav"
+
+#: src/Alert.php:180
+msgid "See informations block"
+msgstr ""
+
+#: src/Alert.php:170
+msgid "See network alert block"
+msgstr ""
+
+#: src/Alert.php:175
+msgid "See scheduled maintenances information block"
+msgstr ""
+
+#: src/Profile.php:300
+msgid "See the configuration"
+msgstr "Zobrazit nastavení"
+
+#: src/Profile.php:296
+msgid "See the dashboard"
+msgstr "Zobrazit nástěnku"
+
+#: src/Profile.php:205 src/Profile.php:292
+msgid "Setup stock widget"
+msgstr "Nastavit ovládací prvek zásob"
+
+#: src/Menu.php:1154
+#, php-format
+msgid "Show %d elements"
+msgstr "Zobrazit %d prvků"
+
+#: src/Reports/Ticket.php:1594 src/Widget.php:655 src/Menu.php:1155
+msgid "Show all"
+msgstr "Zobrazit vše"
+
+#: src/Menu.php:1120
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Zobrazuje se 0 až 0 z 0 položek"
+
+#: src/Menu.php:1119
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Zobrazení _START_ po _END_ z _TOTAL_ položek"
+
+#: src/Reports/Reports_Bar.php:193
+msgid "Solve delay and take into account of tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2509
+msgid "Solve delay average (hour)"
+msgstr ""
+
+#: templates/criteria_filter_date.html.twig:34
+#: templates/criteria_period_range.html.twig:28
+msgid "Start"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:142
+msgid "Start end"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:107
+msgid "Start month"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:107
+msgid "Start year"
+msgstr ""
+
+#: templates/criteria_other_status.html.twig:31
+msgid "Status"
+msgid_plural "Statuses"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: src/Reports/Reports_Bar.php:168
+msgid "Stock of tickets by status"
+msgstr "Zásoba požadavků podle stavu"
+
+#: src/StockWidget.php:54
+msgid "Stock widget"
+msgid_plural "Stock widgets"
+msgstr[0] "Ovládací prvek zásob"
+msgstr[1] "Ovládací prvky zásob"
+msgstr[2] "Ovládacích prvků zásob"
+msgstr[3] "Ovládací prvky zásob"
+
+#: src/Menu.php:1307
+msgid "Success"
+msgstr "Úspěch"
+
+#: src/Reports/Reports_Line.php:82
+msgid "Sum of not solved tickets by month"
+msgstr "Součet nevyřešených požadavků za měsíc"
+
+#: src/Reports/Reports_Bar.php:142
+msgid "Sum of ticket affected by technicians"
+msgstr "Součet požadavků přidělených technikům"
+
+#: src/Reports/Reports_Bar.php:132
+msgid "Sum of ticket tasks duration by technicians"
+msgstr "Součet čas stráveného jednotlivými techniky na požadavcích"
+
+#: src/Reports/Reports_Bar.php:2152
+msgid "Sum of tickets solved in less than 24 hours"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2161
+msgid "Sum of tickets solved in less than a week"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2170
+msgid "Sum of tickets solved in more than a week"
+msgstr ""
+
+#: src/Menu.php:810
+msgid "Switch to edit mode"
+msgstr "Přepnout do režimu úprav"
+
+#: src/Reports/Reports_Pie.php:133
+msgid "TTO Compliance"
+msgstr "Soulad s TTO"
+
+#: src/Reports/Reports_Pie.php:128
+msgid "TTR Compliance"
+msgstr "Soulad s TTR"
+
+#: src/Widget.php:241
+msgid "Tables"
+msgstr "Tabulky"
+
+#: src/Criterias/Other.php:536
+msgid "Tag"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2510
+msgid "Take into account average (hour)"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:799
+msgid "Tasks duration (minutes)"
+msgstr "Trvání úkolů (minuty)"
+
+#: src/Criterias/Other.php:222 src/Criterias/Other.php:373
+msgid "Technician"
+msgid_plural "Technicians"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: src/Reports/Reports_Table.php:712
+msgid "Technicians"
+msgstr "Technici"
+
+#: src/CheckSchema.php:169
+msgid "The plugin schema is good"
+msgstr ""
+
+#: src/Alert.php:2234 src/Alert.php:2936
+msgid ""
+"There is at least on planned scheduled maintenance. Please log on to see more"
+msgstr ""
+"V plánu je přinejmenším jedna údržba. Přihlaste se abyste se dozvěděli více"
+
+#: src/Widget.php:439
+msgid "This widget doesn't exist anymore"
+msgstr ""
+
+#: src/Alert.php:3947
+msgid "Ticket closed"
+msgstr ""
+
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1399
+#: src/Reports/Ticket.php:1416
+msgid "Ticket followup"
+msgstr ""
+
+#: src/Alert.php:4012
+msgid "Tickets closed"
+msgstr ""
+
+#: src/Alert.php:3672 src/Alert.php:3995
+msgid "Tickets late"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:305 src/Reports/Reports_Bar.php:561
+#: src/Reports/Reports_Bar.php:949 src/Reports/Reports_Bar.php:1365
+#: src/Reports/Reports_Line.php:318 src/Reports/Reports_Line.php:1417
+#: src/Reports/Reports_Line.php:1495 src/Reports/Reports_Line.php:1629
+#: src/Reports/Reports_Line.php:1762 src/Reports/Reports_Line.php:1865
+#: src/Reports/Reports_Line.php:2001 src/Reports/Reports_Line.php:2147
+msgid "Tickets number"
+msgstr "Počet požadavků"
+
+#: src/Reports/Reports_Bar.php:183
+msgid "Tickets request sources evolution"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:188
+msgid "Tickets solution types evolution"
+msgstr ""
+
+#: src/Alert.php:3898 src/Alert.php:4007
+msgid "Tickets solved"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:80
+msgid "Tickets stock by month"
+msgstr "Množství požadavků v měsíci"
+
+#: src/Criterias/Other.php:245 src/Criterias/Other.php:251
+#: src/Criterias/Other.php:257 src/Criterias/Other.php:263
+#: src/Criterias/Other.php:418 src/Criterias/Other.php:473
+msgid "Time display"
+msgstr ""
+
+#: src/Config.php:251 templates/config_form.html.twig:69
+msgid "Title of alerts widget"
+msgstr ""
+
+#: src/Config.php:269 templates/config_form.html.twig:79
+msgid "Title of informations widget"
+msgstr ""
+
+#: src/Config.php:260 templates/config_form.html.twig:74
+msgid "Title of scheduled maintenances widget"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:183
+msgid "Top ten of opened tickets by appliance"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:168
+msgid "Top ten of opened tickets by location"
+msgstr "Deset nejčastějších otevřených požadavků podle umístění"
+
+#: src/Reports/Reports_Pie.php:158
+msgid "Top ten of opened tickets by requester groups"
+msgstr "Deset nejčastějších otevřených požadavků podle skupin žadatelů"
+
+#: src/Reports/Reports_Bar.php:153
+msgid "Top ten technicians (by tickets number)"
+msgstr "Deset nejvytíženějších techniků (dle počtu požadavků)"
+
+#: src/Reports/Reports_Bar.php:135
+msgid "Top ten ticket categories by type of ticket"
+msgstr "Deset nejčastějších kategorií požadavků dle typu požadavku"
+
+#: src/Reports/Reports_Pie.php:123
+msgid "Top ten ticket requesters by month"
+msgstr "Deset nejčastějších požadovatelů v měsíci"
+
+#: src/Reports/Reports_Bar.php:1558
+msgid "Trimester 1"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1618
+msgid "Trimester 2"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1678
+msgid "Trimester 3"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1739
+msgid "Trimester 4"
+msgstr ""
+
+#: templates/alert_form.html.twig:34 templates/stockwidget_form.html.twig:49
+#: templates/itilalert_item.html.twig:66
+msgid "Type"
+msgstr ""
+
+#: src/Menu.php:1166
+msgid "Updating all widgets"
+msgstr "Aktualizují se všechny miniaplikace"
+
+#: templates/groupprofile_form.html.twig:36
+msgid "Use profile group"
+msgstr "Použít skupinu profilu"
+
+#: src/Alert.php:224
+msgid "User ticket alerts"
+msgstr "Upozornění na požadavky uživatelů"
+
+#: templates/configtranslation_list.html.twig:67
+#: templates/configtranslation_form.html.twig:55
+msgid "Value"
+msgstr ""
+
+#: src/Menu.php:1319 templates/menu_grid.html.twig:30
+msgid "Warning"
+msgstr "Varování"
+
+#: src/Criterias/Week.php:51 src/Criterias/Week.php:64
+#: src/Criterias/Other.php:413
+msgid "Week"
+msgstr ""
+
+#: src/Widget.php:73
+msgid "Widget"
+msgstr ""
+
+#: src/Menu.php:1167
+msgid "Widget added on Dashboard"
+msgstr "Miniaplikace přidána na nástěnku"
+
+#: src/Reports/Reports_Funnel.php:342
+msgid "Without buy date"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:71 src/Criterias/Year.php:69
+#: src/Criterias/Year.php:85 src/Criterias/FilterDate.php:70 src/Menu.php:930
+#: templates/criteria_filter_date.html.twig:41
+#: templates/criteria_display_data.html.twig:37
+#: templates/criteria_period_year.html.twig:28
+msgid "Year"
+msgstr "Rok"
+
+#: src/Criterias/Other.php:258 src/Criterias/Other.php:433
+msgid "Year to date"
+msgstr ""
+
+#: src/Alert.php:206 templates/widget_equipments.html.twig:31
+msgid "Your equipments"
+msgstr "Vaše vybavení"
+
+#: src/Reports/Ticket.php:89
+msgid "Your rejected tickets"
+msgstr "Vaše zamítnuté požadavky"
+
+#: src/Reports/Ticket.php:99
+msgid "Your satisfaction surveys"
+msgstr ""
+
+#: src/Reports/Ticket.php:107 src/Reports/Ticket.php:726
+msgid "Your tickets to validate"
+msgstr ""
+
+#: src/Criterias/FilterDate.php:86
+msgid "begin and end date"
+msgstr ""
+
+#: src/Module.php:175 src/Module.php:386
+msgid "error"
+msgstr "chyba"
+
+#: templates/preferences.html.twig:35
+msgid "minute(s)"
+msgstr "minut"
+
+#: src/Module.php:173 src/Module.php:370
+msgid "notice"
+msgstr "upozornění"
+
+#: src/Module.php:174 src/Module.php:378
+msgid "warning"
+msgstr "varování"
+
+#: src/Criterias/DisplayData.php:141 src/Criterias/Other.php:434
+#: src/Criterias/FilterDate.php:85
+msgid "year"
+msgstr ""
+
+#~ msgid "Grid cleared"
+#~ msgstr "Nástěnka vrácena do výchozího stavu"
+
+#~ msgid "Display widgets from plugins"
+#~ msgstr "Zobrazit ovládací prvky ze zásuvných modulů"
+
+#~ msgid "Google API Key"
+#~ msgstr "Klíč ke Google API"
+
+#~ msgid "Load widgets"
+#~ msgstr "Načíst ovládací prvky"
+
+#~ msgid "Add a widget"
+#~ msgstr "Přidat ovládací prvek"
+
+#~ msgid "Save default grid"
+#~ msgstr "Uložit výchozí mřítku"
+
+#~ msgid "The widget was added to dashboard. Save the dashboard."
+#~ msgstr "Ovládací prvek byl přidán do přehledu. Ten uložte."
+
+#~ msgid "Error"
+#~ msgstr "Chyba"
+
+#~ msgid "Please reload your page."
+#~ msgstr "Načtěte stránku znovu."
+
+#~ msgid "Save positions"
+#~ msgstr "Uložit pozice"
+
+#~ msgid "Custom and save default grid"
+#~ msgstr "Vlastní a uložit výchozí mřížku"
+
+#~ msgid "You can't have more than one serie for a pie chart"
+#~ msgstr "Pro koláčový graf není možné mít více než jednu sérii"
+
+#~ msgid "user_widget management"
+#~ msgstr "správa user_widget"
+
+#~ msgid "Widget management"
+#~ msgstr "Správa miniaplikace"
+
+#~ msgid "projects to be processed"
+#~ msgstr "projekty ke zpracování"
+
+#~ msgid "projects tasks to be processed"
+#~ msgstr "projektové úkoly ke zpracování"
+
+#~ msgid "Tickets stock"
+#~ msgstr "Množství požadavků"
