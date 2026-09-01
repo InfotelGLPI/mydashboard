@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 07:21+0000\n"
+"POT-Creation-Date: 2026-09-01 08:07+0000\n"
 "PO-Revision-Date: 2020-07-20 14:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -145,6 +145,10 @@ msgstr ""
 
 #: src/Reports/Reports_Table.php:101
 msgid "All unpublished articles"
+msgstr ""
+
+#: templates/checkschema_result.html.twig:30
+msgid "Altered table"
 msgstr ""
 
 #: src/Reports/Change.php:83 src/Reports/Change.php:418
@@ -699,6 +703,10 @@ msgstr "Maximize"
 #: src/Menu.php:1149
 msgid "Minimize"
 msgstr "Minimize"
+
+#: templates/checkschema_result.html.twig:29
+msgid "Missing table"
+msgstr ""
 
 #: src/Reports/KnowbaseItem.php:172
 msgid "Modification date"
@@ -1527,6 +1535,10 @@ msgstr "Trimester 4"
 #: templates/alert_form.html.twig:34 templates/stockwidget_form.html.twig:49
 #: templates/itilalert_item.html.twig:66
 msgid "Type"
+msgstr ""
+
+#: templates/checkschema_result.html.twig:31
+msgid "Unknown table"
 msgstr ""
 
 #: src/Menu.php:1166

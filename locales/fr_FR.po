@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 07:21+0000\n"
+"POT-Creation-Date: 2026-09-01 08:07+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
@@ -153,6 +153,10 @@ msgstr "Tous les tableaux"
 #: src/Reports/Reports_Table.php:101
 msgid "All unpublished articles"
 msgstr "Tous les articles non publiés"
+
+#: templates/checkschema_result.html.twig:30
+msgid "Altered table"
+msgstr "Table modifiée"
 
 #: src/Reports/Change.php:83 src/Reports/Change.php:418
 msgid "Applied changes"
@@ -711,6 +715,10 @@ msgstr "Agrandir"
 #: src/Menu.php:1149
 msgid "Minimize"
 msgstr "Réduire"
+
+#: templates/checkschema_result.html.twig:29
+msgid "Missing table"
+msgstr "Table manquante"
 
 #: src/Reports/KnowbaseItem.php:172
 msgid "Modification date"
@@ -1558,6 +1566,10 @@ msgstr "Trimestre 4"
 #: templates/itilalert_item.html.twig:66
 msgid "Type"
 msgstr "Type"
+
+#: templates/checkschema_result.html.twig:31
+msgid "Unknown table"
+msgstr "Table inconnue"
 
 #: src/Menu.php:1166
 msgid "Updating all widgets"
