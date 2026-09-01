@@ -2,25 +2,27 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Alban Lesellier <alban.lesellier@infotel.com>, 2021
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 14:53+0000\n"
+"POT-Creation-Date: 2026-09-01 07:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
+"teams/65490/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #: src/Menu.php:1121
 msgid "(filtered from _MAX_ total entries)"
@@ -115,8 +117,8 @@ msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
-"L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède"
-" la limite)"
+"L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède "
+"la limite)"
 
 #: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
 msgid "Alert level"
@@ -350,6 +352,10 @@ msgstr "Groupes par défaut"
 msgid "Delete widget"
 msgstr "Supprimer un widget"
 
+#: templates/checkschema_result.html.twig:85
+msgid "Destructive queries"
+msgstr ""
+
 #: templates/criteria_display_data.html.twig:30
 msgid "Display"
 msgstr "Affichage"
@@ -486,7 +492,7 @@ msgstr "Évolution des types de sources de demandes des tickets par année"
 msgid "Export to PDF"
 msgstr "Export PDF"
 
-#: src/CheckSchema.php:151
+#: src/CheckSchema.php:157
 msgid "Failed to check the sanity of the tables!"
 msgstr "Échec de la vérification de l'intégrité des tables !"
 
@@ -830,6 +836,10 @@ msgstr "Pas de résultats trouvés"
 msgid "No problem detected"
 msgstr "Pas de problème détecté"
 
+#: templates/checkschema_result.html.twig:90
+msgid "No query could be suggested for this difference."
+msgstr ""
+
 #: templates/graph_header.html.twig:38
 msgid "No results found"
 msgstr "Aucun élément trouvé"
@@ -1113,6 +1123,10 @@ msgstr[2] "Flux RSS publics"
 msgid "Publication date"
 msgstr "Date de publication"
 
+#: templates/checkschema_result.html.twig:51
+msgid "Queries to run"
+msgstr ""
+
 #: src/Config.php:366
 msgctxt "button"
 msgid "Reconstruct global backlog"
@@ -1237,7 +1251,7 @@ msgstr[0] "Maintenance planifiée prévue"
 msgstr[1] "Maintenances planifiées prévues"
 msgstr[2] "Maintenances planifiées prévues"
 
-#: src/CheckSchema.php:55
+#: src/CheckSchema.php:56
 msgid "Schema check"
 msgstr "Vérification du schéma"
 
@@ -1337,6 +1351,10 @@ msgstr[2] "Widgets des stocks"
 msgid "Success"
 msgstr "Succès"
 
+#: templates/checkschema_result.html.twig:80
+msgid "Suggested queries"
+msgstr ""
+
 #: src/Reports/Reports_Line.php:82
 msgid "Sum of not solved tickets by month"
 msgstr "Somme des tickets non résolus par mois"
@@ -1400,17 +1418,30 @@ msgstr[2] "Techniciens"
 msgid "Technicians"
 msgstr "Techniciens"
 
-#: src/CheckSchema.php:169
+#: templates/checkschema_result.html.twig:60
+msgid ""
+"The following queries remove columns or tables that are not part of the "
+"expected schema: data will be lost. Check that they are not used by another "
+"plugin or by a custom development before running them."
+msgstr ""
+
+#: templates/checkschema_result.html.twig:42
 msgid "The plugin schema is good"
 msgstr "Le schéma du plugin est bon"
 
+#: templates/checkschema_result.html.twig:45
+msgid ""
+"The queries below are only suggestions built from the differences found. "
+"Review them, back up your database, then run them manually: they are never "
+"run by the plugin."
+msgstr ""
+
 #: src/Alert.php:2234 src/Alert.php:2936
 msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see "
-"more"
+"There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
-"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier"
-" pour plus de détails"
+"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier "
+"pour plus de détails"
 
 #: src/Widget.php:439
 msgid "This widget doesn't exist anymore"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 14:53+0000\n"
+"POT-Creation-Date: 2026-09-01 07:21+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Indonesian (Indonesia) (https://www.transifex.com/infotelGLPI/"
@@ -343,6 +343,10 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
+#: templates/checkschema_result.html.twig:85
+msgid "Destructive queries"
+msgstr ""
+
 #: templates/criteria_display_data.html.twig:30
 msgid "Display"
 msgstr ""
@@ -474,7 +478,7 @@ msgstr ""
 msgid "Export to PDF"
 msgstr ""
 
-#: src/CheckSchema.php:151
+#: src/CheckSchema.php:157
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
@@ -812,6 +816,10 @@ msgstr ""
 msgid "No problem detected"
 msgstr ""
 
+#: templates/checkschema_result.html.twig:90
+msgid "No query could be suggested for this difference."
+msgstr ""
+
 #: templates/graph_header.html.twig:38
 msgid "No results found"
 msgstr ""
@@ -1090,6 +1098,10 @@ msgstr[0] ""
 msgid "Publication date"
 msgstr ""
 
+#: templates/checkschema_result.html.twig:51
+msgid "Queries to run"
+msgstr ""
+
 #: src/Config.php:366
 msgctxt "button"
 msgid "Reconstruct global backlog"
@@ -1212,7 +1224,7 @@ msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
 
-#: src/CheckSchema.php:55
+#: src/CheckSchema.php:56
 msgid "Schema check"
 msgstr ""
 
@@ -1308,6 +1320,10 @@ msgstr[0] ""
 msgid "Success"
 msgstr ""
 
+#: templates/checkschema_result.html.twig:80
+msgid "Suggested queries"
+msgstr ""
+
 #: src/Reports/Reports_Line.php:82
 msgid "Sum of not solved tickets by month"
 msgstr ""
@@ -1369,8 +1385,22 @@ msgstr[0] ""
 msgid "Technicians"
 msgstr ""
 
-#: src/CheckSchema.php:169
+#: templates/checkschema_result.html.twig:60
+msgid ""
+"The following queries remove columns or tables that are not part of the "
+"expected schema: data will be lost. Check that they are not used by another "
+"plugin or by a custom development before running them."
+msgstr ""
+
+#: templates/checkschema_result.html.twig:42
 msgid "The plugin schema is good"
+msgstr ""
+
+#: templates/checkschema_result.html.twig:45
+msgid ""
+"The queries below are only suggestions built from the differences found. "
+"Review them, back up your database, then run them manually: they are never "
+"run by the plugin."
 msgstr ""
 
 #: src/Alert.php:2234 src/Alert.php:2936

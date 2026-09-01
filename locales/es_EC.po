@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 14:53+0000\n"
+"POT-Creation-Date: 2026-09-01 07:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -350,6 +350,10 @@ msgstr "Grupos predeterminados"
 msgid "Delete widget"
 msgstr "Eliminar widget"
 
+#: templates/checkschema_result.html.twig:85
+msgid "Destructive queries"
+msgstr ""
+
 #: templates/criteria_display_data.html.twig:30
 msgid "Display"
 msgstr "Mostrar"
@@ -482,7 +486,7 @@ msgstr ""
 msgid "Export to PDF"
 msgstr "Exportar a PDF"
 
-#: src/CheckSchema.php:151
+#: src/CheckSchema.php:157
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
@@ -826,6 +830,10 @@ msgstr "No se encontraron registros coincidentes"
 msgid "No problem detected"
 msgstr "No se ha detectado ningún problema"
 
+#: templates/checkschema_result.html.twig:90
+msgid "No query could be suggested for this difference."
+msgstr ""
+
 #: templates/graph_header.html.twig:38
 msgid "No results found"
 msgstr ""
@@ -1108,6 +1116,10 @@ msgstr[2] ""
 msgid "Publication date"
 msgstr ""
 
+#: templates/checkschema_result.html.twig:51
+msgid "Queries to run"
+msgstr ""
+
 #: src/Config.php:366
 msgctxt "button"
 msgid "Reconstruct global backlog"
@@ -1232,7 +1244,7 @@ msgstr[0] "Mantenimiento programado"
 msgstr[1] "Mantenimientos programados"
 msgstr[2] "Mantenimientos programados"
 
-#: src/CheckSchema.php:55
+#: src/CheckSchema.php:56
 msgid "Schema check"
 msgstr ""
 
@@ -1332,6 +1344,10 @@ msgstr[2] "Widgets de stock"
 msgid "Success"
 msgstr "Éxito"
 
+#: templates/checkschema_result.html.twig:80
+msgid "Suggested queries"
+msgstr ""
+
 #: src/Reports/Reports_Line.php:82
 msgid "Sum of not solved tickets by month"
 msgstr ""
@@ -1395,8 +1411,22 @@ msgstr[2] "Técnicos"
 msgid "Technicians"
 msgstr ""
 
-#: src/CheckSchema.php:169
+#: templates/checkschema_result.html.twig:60
+msgid ""
+"The following queries remove columns or tables that are not part of the "
+"expected schema: data will be lost. Check that they are not used by another "
+"plugin or by a custom development before running them."
+msgstr ""
+
+#: templates/checkschema_result.html.twig:42
 msgid "The plugin schema is good"
+msgstr ""
+
+#: templates/checkschema_result.html.twig:45
+msgid ""
+"The queries below are only suggestions built from the differences found. "
+"Review them, back up your database, then run them manually: they are never "
+"run by the plugin."
 msgstr ""
 
 #: src/Alert.php:2234 src/Alert.php:2936
