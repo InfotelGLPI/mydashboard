@@ -34,9 +34,14 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownStatus.php")) {
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
-global $DB;
+global $DB, $CFG_GLPI;
 // Make a select box
-if (isset($_POST["itemtype"])) {
+// [S1] The itemtype is reflected into the DropdownVisibility criterion: constrain it
+// to the very list the caller offers -- StockWidget::showForm() builds the itemtype
+// dropdown from $CFG_GLPI['state_types'] -- instead of accepting any POST value.
+// (Do not copy the ['Ticket', 'Change', 'Problem'] list of ajax/map.php here: that one
+// matches its own caller, whereas this endpoint feeds an asset-status dropdown.)
+if (isset($_POST["itemtype"]) && in_array($_POST["itemtype"], $CFG_GLPI['state_types'], true)) {
 
     $criteria = [
         'SELECT' => [\State::getTable() . '.id', \State::getTable() . '.name'],

@@ -34,9 +34,15 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownType.php")) {
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
+global $CFG_GLPI;
 // Make a select box
-$allowed_itemtypes = ['Ticket', 'Change', 'Problem'];
-if (isset($_POST["itemtype"]) && in_array($_POST["itemtype"], $allowed_itemtypes, true)) {
+// The itemtype drives a dynamic class name ($itemtype . "Type"), so it must be
+// validated against the list the caller offers: StockWidget::showForm() builds the
+// itemtype dropdown from $CFG_GLPI['state_types'] (asset itemtypes). The previous
+// ['Ticket', 'Change', 'Problem'] allow-list was copied over from ajax/map.php, whose
+// caller is a different one: since TicketType, ChangeType and ProblemType do not exist,
+// it made this endpoint return an empty dropdown for every legitimate itemtype.
+if (isset($_POST["itemtype"]) && in_array($_POST["itemtype"], $CFG_GLPI['state_types'], true)) {
 
     $itemtypeclass = $_POST["itemtype"] . "Type";
     if ($item = getItemForItemtype($itemtypeclass)) {

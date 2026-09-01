@@ -61,10 +61,18 @@ class StockWidget extends CommonDBTM
 
     public function prepareInputForAdd($input)
     {
+        global $CFG_GLPI;
 
         $input = parent::prepareInputForAdd($input);
 
         if (!$input["itemtype"]) {
+            Session::addMessageAfterRedirect(__("Cannot create alert without a type", "mydashboard"), false, ERROR);
+            return false;
+        }
+
+        // The stored itemtype is later turned into a class name by showForm() and by the
+        // stock computation, so keep it inside the very list the form offers.
+        if (!in_array($input["itemtype"], $CFG_GLPI['state_types'], true)) {
             Session::addMessageAfterRedirect(__("Cannot create alert without a type", "mydashboard"), false, ERROR);
             return false;
         }
@@ -90,6 +98,14 @@ class StockWidget extends CommonDBTM
 
     public function prepareInputForUpdate($input)
     {
+        global $CFG_GLPI;
+
+        // Same constraint as on creation: the form posts the itemtype back in a hidden
+        // field, so never let an arbitrary value reach the stored column.
+        if (isset($input["itemtype"]) && !in_array($input["itemtype"], $CFG_GLPI['state_types'], true)) {
+            Session::addMessageAfterRedirect(__("Cannot create alert without a type", "mydashboard"), false, ERROR);
+            return false;
+        }
 
         if (isset($input["states"])) {
             $states = [];
@@ -130,9 +146,12 @@ class StockWidget extends CommonDBTM
         $itemtype_dropdown_html = '';
         if ($ID > 0) {
             $itemtype = $this->fields["itemtype"];
-            $item = new $itemtype();
-            $itemtype_label = $item->getTypeName();
-            $itemtype_hidden_html = \Html::hidden('itemtype', ['value' => $itemtype]);
+            // Rows created before the itemtype was constrained may hold anything: resolve
+            // the class instead of instantiating the stored string blindly.
+            if ($item = getItemForItemtype($itemtype)) {
+                $itemtype_label = $item->getTypeName();
+                $itemtype_hidden_html = \Html::hidden('itemtype', ['value' => $itemtype]);
+            }
         } else {
             $params = ['itemtype' => '__VALUE__', 'fieldname' => 'types'];
             $itemtype_dropdown_html = Dropdown::showItemTypes(
