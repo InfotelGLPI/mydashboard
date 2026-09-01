@@ -114,33 +114,48 @@ class Entity
 
     }
 
+    /**
+     * Build the entity restriction of a widget query.
+     *
+     * $params is filled from $_POST['params'] by ajax/refreshWidget.php, so both
+     * entities_id and is_recursive_entities are attacker controlled. The resulting
+     * entity list is therefore intersected with $_SESSION['glpiactiveentities']:
+     * a forged criterion may only narrow the scope, never widen it.
+     *
+     * @param array  $params
+     * @param string $table
+     *
+     * @return array
+     */
     public static function getQueryCriteria($params, $table = 'glpi_tickets')
     {
-        //        return $params['query']['WHERE'] + getEntitiesRestrictCriteria(
-        //            'glpi_entities',
-        //            'id',
-        //            $params[self::$criteria_name],
-        //            $params['is_recursive_entities']
-        //        );
+        $field = $table . "." . self::$criteria_name;
 
-        if (isset($params[self::$criteria_name]) && $params[self::$criteria_name] == "") {
-            $params[self::$criteria_name] = $_SESSION['glpiactive_entity'];
+        $requested = $params[self::$criteria_name] ?? '';
+        if (is_array($requested)) {
+            $requested = reset($requested);
         }
-        if (isset($params[self::$criteria_name]) && ($params[self::$criteria_name] != -1)) {
-            if ($params['is_recursive_entities'] == 1) {
-                $entities = [$table . "." . self::$criteria_name => getSonsOf("glpi_entities", $params[self::$criteria_name][0])];
-            } else {
-                $entities = [$table . "." . self::$criteria_name => $params[self::$criteria_name][0]];
-            }
-        } else {
-            if (isset($params['is_recursive_entities'])
-                && $params['is_recursive_entities'] == 1) {
-                $entities = [$table . "." . self::$criteria_name => getSonsOf("glpi_entities", $_SESSION['glpiactive_entity'])];
-            } else {
-                $entities = [$table . "." . self::$criteria_name => $_SESSION['glpiactive_entity']];
-            }
+        if ($requested === '' || $requested === null || (int) $requested === -1) {
+            $requested = $_SESSION['glpiactive_entity'] ?? 0;
         }
-        return $params['query']['WHERE'] + $entities;
+
+        $recursive = isset($params['is_recursive_entities'])
+                     && (int) $params['is_recursive_entities'] === 1;
+
+        $entities = $recursive
+            ? getSonsOf('glpi_entities', (int) $requested)
+            : [(int) $requested];
+
+        // Entities the session may actually read. Fails closed: an empty
+        // intersection yields an impossible id rather than no criterion at all,
+        // which would expose every entity.
+        $allowed  = $_SESSION['glpiactiveentities'] ?? [];
+        $entities = array_values(array_intersect(
+            array_map('intval', $entities),
+            array_map('intval', $allowed),
+        ));
+
+        return $params['query']['WHERE'] + [$field => ($entities === [] ? [-1] : $entities)];
     }
 
     public static function getSearchCriteria($params, $value = 0)

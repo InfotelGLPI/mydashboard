@@ -356,14 +356,18 @@ class Reports_Map extends CommonGLPI
                      });
 
                      $.each(_points, function(index, point) {
-                        var _title = '<strong>' + point.title + '</strong><br/><a target=\'_blank\' href=\''+'$fulltarget'.replace(/CURLOCATION/, point.loc_id)+'\'>" . sprintf(
-                        __('%1$s %2$s'),
-                        'COUNT',
-                        $typename,
-                    ) . "'.replace(/COUNT/, point.count)+'</a>';
+                        // point.title is a DB value (the location completename) and _title is
+                        // handed to bindPopup(), which Leaflet renders as HTML. The JSON_HEX_*
+                        // flags used by ajax/map.php do not survive JSON.parse(), so escaping
+                        // here is the only defence -- same treatment as the core map template.
+                        var _target     = '$fulltarget'.replace(/CURLOCATION/, point.loc_id);
+                        var _count_text = '" . sprintf(__('%1$s %2$s'), 'COUNT', $typename) . "'.replace(/COUNT/, point.count);
+                        var _title      = '<strong>' + _.escape(point.title) + '</strong><br/>'
+                                        + '<a target=\'_blank\' href=\'' + _.escape(_target) + '\'>'
+                                        + _.escape(_count_text) + '</a>';
                         if (point.types) {
                            $.each(point.types, function(tindex, type) {
-                              _title += '<br/>" . sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE') . "'.replace(/COUNT/, type.count).replace(/TYPE/, type.name);
+                              _title += '<br/>' + _.escape('" . sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE') . "'.replace(/COUNT/, type.count).replace(/TYPE/, type.name));
                            });
                         }
                         var _icon = stdMarker;
