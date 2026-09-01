@@ -79,9 +79,13 @@ EXCLUDE_REGEX="${EXCLUDE_REGEX:-.*/(vendor|node_modules|public/lib)/.*}"
 
 for file in $(cd "$WORKING_DIR" && find . -regextype posix-egrep -not -regex "$EXCLUDE_REGEX" -name "*.twig")
 do
-    # 1. Convert file content to replace "{{ function(.*) }}" by "<?php function(.*); ?>" and extract strings via std input
+    # 1. Convert file content to replace "{{ function(.*) }}" and "{% ... %}" by
+    #    "<?php function(.*); ?>" and extract strings via std input.
+    #    Statement tags must be converted too, otherwise a call such as __() inside a
+    #    "{% set labels = {'k': __('Label', 'mydashboard')} %}" stays plain text for xgettext
+    #    and the string is silently dropped from the catalogue.
     # 2. Replace "standard input:line_no" by file location in po file comments
-    cat $file | perl -0pe "s/\{\{(.*?)\}\}/<?php \1; ?>/gism" | xgettext - \
+    cat $file | perl -0pe 's/\{\{(.*?)\}\}/<?php $1; ?>/gism; s/\{\%(.*?)\%\}/<?php $1; ?>/gism' | xgettext - \
         -o locales/glpi.pot \
         -L PHP \
         --add-comments=TRANS \
