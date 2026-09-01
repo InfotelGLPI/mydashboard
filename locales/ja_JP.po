@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 08:07+0000\n"
+"POT-Creation-Date: 2026-09-01 11:51+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -1133,7 +1133,7 @@ msgstr "更新間隔"
 msgid "Refresh widget"
 msgstr "ウィジェットの再読み込み"
 
-#: src/Reports/Reports_Map.php:406
+#: src/Reports/Reports_Map.php:410
 msgid "Reload"
 msgstr ""
 
