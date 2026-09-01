@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 08:07+0000\n"
+"POT-Creation-Date: 2026-09-01 11:51+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Diego Nobre <diego@koruma.com.br>, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/infotelGLPI/"
@@ -1152,7 +1152,7 @@ msgstr "Atualizar todo"
 msgid "Refresh widget"
 msgstr "Atualizar widget"
 
-#: src/Reports/Reports_Map.php:406
+#: src/Reports/Reports_Map.php:410
 msgid "Reload"
 msgstr ""
 
