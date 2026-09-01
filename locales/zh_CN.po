@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 07:21+0000\n"
+"POT-Creation-Date: 2026-09-01 08:07+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: fhuang1984 <168546@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/infotelGLPI/"
@@ -147,6 +147,10 @@ msgstr ""
 
 #: src/Reports/Reports_Table.php:101
 msgid "All unpublished articles"
+msgstr ""
+
+#: templates/checkschema_result.html.twig:30
+msgid "Altered table"
 msgstr ""
 
 #: src/Reports/Change.php:83 src/Reports/Change.php:418
@@ -697,6 +701,10 @@ msgstr "最大化"
 #: src/Menu.php:1149
 msgid "Minimize"
 msgstr "最小化"
+
+#: templates/checkschema_result.html.twig:29
+msgid "Missing table"
+msgstr ""
 
 #: src/Reports/KnowbaseItem.php:172
 msgid "Modification date"
@@ -1517,6 +1525,10 @@ msgstr ""
 #: templates/alert_form.html.twig:34 templates/stockwidget_form.html.twig:49
 #: templates/itilalert_item.html.twig:66
 msgid "Type"
+msgstr ""
+
+#: templates/checkschema_result.html.twig:31
+msgid "Unknown table"
 msgstr ""
 
 #: src/Menu.php:1166

@@ -2,25 +2,27 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Alban Lesellier <alban.lesellier@infotel.com>, 2021
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 07:21+0000\n"
+"POT-Creation-Date: 2026-09-01 08:07+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
+"teams/65490/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #: src/Menu.php:1121
 msgid "(filtered from _MAX_ total entries)"
@@ -115,8 +117,8 @@ msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
-"L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède"
-" la limite)"
+"L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède "
+"la limite)"
 
 #: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
 msgid "Alert level"
@@ -153,6 +155,10 @@ msgstr "Tous les tableaux"
 #: src/Reports/Reports_Table.php:101
 msgid "All unpublished articles"
 msgstr "Tous les articles non publiés"
+
+#: templates/checkschema_result.html.twig:30
+msgid "Altered table"
+msgstr ""
 
 #: src/Reports/Change.php:83 src/Reports/Change.php:418
 msgid "Applied changes"
@@ -711,6 +717,10 @@ msgstr "Agrandir"
 #: src/Menu.php:1149
 msgid "Minimize"
 msgstr "Réduire"
+
+#: templates/checkschema_result.html.twig:29
+msgid "Missing table"
+msgstr ""
 
 #: src/Reports/KnowbaseItem.php:172
 msgid "Modification date"
@@ -1422,10 +1432,10 @@ msgid ""
 "expected schema: data will be lost. Check that they are not used by another "
 "plugin or by a custom development before running them."
 msgstr ""
-"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas"
-" partie du schéma attendu : des données seront perdues. Avant de les "
-"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par"
-" un développement personnalisé."
+"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas "
+"partie du schéma attendu : des données seront perdues. Avant de les "
+"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par "
+"un développement personnalisé."
 
 #: templates/checkschema_result.html.twig:42
 msgid "The plugin schema is good"
@@ -1439,16 +1449,15 @@ msgid ""
 msgstr ""
 "Les requêtes ci-dessous ne sont que des suggestions basées sur les "
 "différences constatées. Veuillez les examiner, sauvegarder votre base de "
-"données, puis les exécuter manuellement : elles ne sont jamais exécutées par"
-" l’extension."
+"données, puis les exécuter manuellement : elles ne sont jamais exécutées par "
+"l’extension."
 
 #: src/Alert.php:2234 src/Alert.php:2936
 msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see "
-"more"
+"There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
-"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier"
-" pour plus de détails"
+"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier "
+"pour plus de détails"
 
 #: src/Widget.php:439
 msgid "This widget doesn't exist anymore"
@@ -1558,6 +1567,10 @@ msgstr "Trimestre 4"
 #: templates/itilalert_item.html.twig:66
 msgid "Type"
 msgstr "Type"
+
+#: templates/checkschema_result.html.twig:31
+msgid "Unknown table"
+msgstr ""
 
 #: src/Menu.php:1166
 msgid "Updating all widgets"
