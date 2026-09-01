@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-use Glpixception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Search\SearchOption;
 
 header("Content-Type: application/json; charset=UTF-8");
