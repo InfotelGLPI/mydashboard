@@ -2,858 +2,391 @@
 # Copyright (C) YEAR MyDashboard Development Team
 # This file is distributed under the same license as the GLPI - MyDashboard plugin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Markku Vepsä, 2018
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-20 14:17+0200\n"
+"POT-Creation-Date: 2026-08-31 14:53+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
-"Language-Team: Finnish (Finland) (https://www.transifex.com/infotelGLPI/teams/65490/fi_FI/)\n"
+"Language-Team: Finnish (Finland) (https://www.transifex.com/infotelGLPI/"
+"teams/65490/fi_FI/)\n"
+"Language: fi_FI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fi_FI\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hook.php:208 inc/config.class.php:325 inc/itilalert.class.php:119
-#: reports/alert.class.php:124 reports/alert.class.php:2249
-msgid "Network alert"
-msgid_plural "Network alerts"
-msgstr[0] "Verkon hälytys"
-msgstr[1] "Verkon hälytykset"
+#: src/Menu.php:1121
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(suodatettu _MAX_ kokonaismäärästä)"
 
-#: hook.php:209 inc/config.class.php:326 inc/itilalert.class.php:120
-#: reports/alert.class.php:125 reports/alert.class.php:2118
-#: reports/alert.class.php:2250
-msgid "Scheduled maintenance"
-msgid_plural "Scheduled maintenances"
-msgstr[0] "Ajoitettu ylläpitotoimi"
-msgstr[1] "Ajoitetut ylläpitotoimet"
+#: src/Menu.php:1143
+msgid "1 row selected"
+msgstr "1 rivi valittu"
 
-#: hook.php:210 inc/config.class.php:327 inc/itilalert.class.php:121
-#: reports/alert.class.php:126 reports/alert.class.php:2119
-#: reports/alert.class.php:2251
-msgid "Information"
-msgid_plural "Informations"
-msgstr[0] "Tieto"
-msgstr[1] "Tiedot"
-
-#: hook.php:234 hook.php:235
-msgid "Incidents"
+#: src/Widget.php:652
+msgid "10 rows"
 msgstr ""
 
-#: hook.php:241 hook.php:242
-msgid "Requests"
+#: src/Reports/Reports_Funnel.php:345
+msgid "2-4 years"
 msgstr ""
 
-#: setup.php:146 inc/menu.class.php:87 inc/menu.class.php:974
-#: inc/preference.class.php:62
-msgid "My Dashboard"
-msgstr "Oma raportointinäkymä"
-
-#: ajax/clearGrid.php:40
-msgid "Grid cleared"
-msgstr "Ruudukko tyhjennetty"
-
-#: front/config.php:46
-msgid "Please activate the plugin"
+#: src/Widget.php:653
+msgid "25 rows"
 msgstr ""
 
-#: inc/chart.class.php:94 inc/datatable.class.php:196
-msgid "No data is given to the widget"
-msgstr "Mitään tietoa ei anneta widgetille"
-
-#: inc/chart.class.php:111 inc/menu.class.php:815 inc/menu.class.php:1360
-#: inc/widget.class.php:217 inc/widget.class.php:549
-msgid "No data available"
-msgstr "Tietoja ei ole saatavilla"
-
-#: inc/chart.class.php:117 inc/datatable.class.php:120
-msgid "Not an array"
-msgstr "Ei taulukko"
-
-#: inc/config.class.php:45
-msgid "Plugin setup"
+#: src/Reports/Reports_Funnel.php:344
+msgid "4-6 years"
 msgstr ""
 
-#: inc/config.class.php:169 inc/config.class.php:285
-msgid "Title of alerts widget"
+#: src/Widget.php:651
+msgid "5 rows"
 msgstr ""
 
-#: inc/config.class.php:178 inc/config.class.php:291
-msgid "Title of scheduled maintenances widget"
+#: src/Widget.php:654
+msgid "50 rows"
 msgstr ""
 
-#: inc/config.class.php:187 inc/config.class.php:297
-msgid "Title of informations widget"
+#: src/Menu.php:1136
+msgid ": activate to sort column ascending"
+msgstr ": aktivoi lajitellaksesi sarake nousevaksi"
+
+#: src/Menu.php:1137
+msgid ": activate to sort column descending"
+msgstr ": aktivoi lajitellaksesi sarake laskevaksi"
+
+#: src/Reports/Reports_Funnel.php:346
+msgid "< 2 years"
 msgstr ""
 
-#: inc/config.class.php:221
-msgid "Enable the possibility to display Dashboard in full screen"
-msgstr "Ota käyttöön mahdollisuus avata raportointinäkymä koko näytöllä"
-
-#: inc/config.class.php:231
-msgid "Display widgets from plugins"
-msgstr "Näytä widgetit liitännäisistä"
-
-#: inc/config.class.php:237 inc/preference.class.php:110
-msgid "Replace central interface"
-msgstr "Korvaa pää-käyttöliittymä"
-
-#: inc/config.class.php:243
-msgid "Google API Key"
-msgstr "Google API-avain"
-
-#: inc/config.class.php:250
-msgid "Impact colors for alerts"
+#: src/Reports/Reports_Funnel.php:343
+msgid "> 6 years"
 msgstr ""
 
-#: inc/config.class.php:272
-msgid "Level of categories to show"
+#: src/Alert.php:3208
+msgid "A network alert can impact you and will avoid creating a ticket"
+msgstr "Verkon hälytys saattaa estää tiketin luomisen"
+
+#: templates/report_widget_title.html.twig:34
+msgid "Add"
 msgstr ""
 
-#: inc/customswidget.class.php:47 reports/reports_custom.class.php:62
-msgid "Custom Widgets"
+#: templates/configtranslation_list.html.twig:33
+msgid "Add a new translation"
 msgstr ""
 
-#: inc/dashboard.class.php:52 inc/datatable.class.php:53 inc/html.class.php:50
-#: inc/menu.class.php:1194 inc/module.class.php:56 reports/change.class.php:38
-#: reports/planning.class.php:40 reports/problem.class.php:37
-#: reports/project.class.php:37 reports/projecttask.class.php:37
-msgid "Dashboard"
-msgstr "Raportointinäkymä"
-
-#: inc/dashboard.class.php:118 inc/menu.class.php:103
-msgid "GLPI admin grid"
-msgstr "GLPI -ylläpitäjän ruudukko"
-
-#: inc/dashboard.class.php:119
-msgid "Inventory admin grid"
-msgstr "Inventaario -ylläpitäjän ruudukko"
-
-#: inc/dashboard.class.php:120
-msgid "Helpdesk supervisor grid"
-msgstr "Helpdesk -valvojan ruudukko"
-
-#: inc/dashboard.class.php:121
-msgid "Incident supervisor grid"
-msgstr "Häiriötilanteiden -valvojan ruudukko"
-
-#: inc/dashboard.class.php:122
-msgid "Request supervisor grid"
-msgstr "Pyyntöjen -valvojan ruudukko"
-
-#: inc/dashboard.class.php:123
-msgid "Helpdesk technician grid"
-msgstr "Helpdesk -asentajan ruudukko"
-
-#: inc/datatable.class.php:222
-msgid "No column defined"
-msgstr "Saraketta ei ole määritelty"
-
-#: inc/groupprofile.class.php:56
-msgid "Default dashboard group"
+#: templates/menu_edit_toolbar.html.twig:41
+msgid "Add widgets"
 msgstr ""
 
-#: inc/groupprofile.class.php:66
-msgid "Use profile group"
+#: src/Reports/Reports_Bar.php:158
+msgid "Age of tickets"
 msgstr ""
 
-#: inc/groupprofile.class.php:68
-msgid "Default groups"
+#: src/Reports/Reports_Funnel.php:76
+msgid "Age pyramid"
 msgstr ""
 
-#: inc/helper.class.php:853
-msgid "Year"
-msgstr "Vuosi"
-
-#: inc/helper.class.php:863
-msgid "Month"
-msgstr "Kuukausi"
-
-#: inc/helper.class.php:1224
-msgid "Not a valid SQL SELECT query"
-msgstr "Ei kelvollinen SQL SELECT -kysely"
-
-#: inc/itilalert.class.php:51 inc/itilalert.class.php:54
-#: reports/alert.class.php:2185 reports/alert.class.php:2188
-msgid "Create a new alert"
-msgstr "Luo uusi hälytys"
-
-#: inc/itilalert.class.php:79 reports/alert.class.php:2213
-msgid "Linked reminder"
-msgstr "Linkitetty muistutus"
-
-#: inc/itilalert.class.php:116 reports/alert.class.php:123
-#: reports/alert.class.php:2114 reports/alert.class.php:2117
-#: reports/alert.class.php:2246
+#: src/Alert.php:3047 templates/alert_form.html.twig:31
+#: templates/itilalert_item.html.twig:63
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Hälytys"
 msgstr[1] "Hälytykset"
 
-#: inc/itilalert.class.php:131 reports/alert.class.php:2128
-#: reports/alert.class.php:2261
-msgid "No impact"
-msgstr "Ei vaikutusta"
-
-#: inc/itilalert.class.php:136 reports/alert.class.php:2133
-#: reports/alert.class.php:2266
-msgid "Alert level"
-msgstr "Hälytystaso"
-
-#: inc/itilalert.class.php:144 reports/alert.class.php:2141
-#: reports/alert.class.php:2274
-msgid "Linked with a ticket category"
-msgstr ""
-
-#: inc/menu.class.php:102
-msgid "My view"
-msgstr "Oma näkymä"
-
-#: inc/menu.class.php:407
-msgid "Edit mode"
-msgstr "Muokkaustila"
-
-#: inc/menu.class.php:409
-msgid "Global"
-msgstr "Yleinen"
-
-#: inc/menu.class.php:416 inc/menu.class.php:419
-msgid "Load widgets"
-msgstr ""
-
-#: inc/menu.class.php:437
-msgid "Add a widget"
-msgstr "Lisää widget"
-
-#: inc/menu.class.php:446 inc/menu.class.php:447
-msgid "Load a predefined grid"
-msgstr "Lataa ennalta määritelty ruudukko"
-
-#: inc/menu.class.php:460 inc/menu.class.php:462
-msgid "Save grid"
-msgstr "Tallenna ruudukko"
-
-#: inc/menu.class.php:469 inc/menu.class.php:471
-msgid "Save default grid"
-msgstr "Tallenna oletusruudukoksi"
-
-#: inc/menu.class.php:478 inc/menu.class.php:480
-msgid "Clear grid"
-msgstr "Tyhjennä ruudukko"
-
-#: inc/menu.class.php:487 inc/menu.class.php:489 inc/menu.class.php:568
-#: inc/menu.class.php:570
-msgid "Permit drag / resize widgets"
-msgstr "Salli raahaus / koon muuttaminen widgeteille"
-
-#: inc/menu.class.php:495 inc/menu.class.php:497 inc/menu.class.php:576
-#: inc/menu.class.php:578
-msgid "Block drag / resize widgets"
-msgstr "Estä raahaus / koon muuttaminen widgeteille"
-
-#: inc/menu.class.php:504 inc/menu.class.php:506
-msgid "Close edit mode"
-msgstr "Sulje muokkaustila"
-
-#: inc/menu.class.php:521 inc/menu.class.php:523 inc/menu.class.php:626
-#: inc/menu.class.php:628
-msgid "See menu"
-msgstr ""
-
-#: inc/menu.class.php:533
-msgid "Success"
-msgstr "Onnistui"
-
-#: inc/menu.class.php:534
-msgid "The widget was added to dashboard. Save the dashboard."
-msgstr ""
-
-#: inc/menu.class.php:541
-msgid "Error"
-msgstr "Virhe"
-
-#: inc/menu.class.php:542
-msgid "Please reload your page."
-msgstr "Lataa sivu uudelleen."
-
-#: inc/menu.class.php:559 inc/menu.class.php:561
-msgid "Switch to edit mode"
-msgstr "Vaihda muokkaustilaan"
-
-#: inc/menu.class.php:583 inc/menu.class.php:585
-msgid "Save positions"
-msgstr "Tallenna sijainnit"
-
-#: inc/menu.class.php:591 inc/menu.class.php:593
-msgid "Custom and save default grid"
-msgstr "Mukauta ja tallenna oletus ruudukko"
-
-#: inc/menu.class.php:602 inc/menu.class.php:603
-msgid "Fullscreen"
-msgstr "Koko näyttö"
-
-#: inc/menu.class.php:609 inc/menu.class.php:611
-msgid "Hide menu"
-msgstr ""
-
-#: inc/menu.class.php:1151
-msgid "No data available in table"
-msgstr "Taulukossa ei ole tietoja saatavilla"
-
-#: inc/menu.class.php:1152
-msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Näytetään _START_ to _END_ of _TOTAL_ entries"
-
-#: inc/menu.class.php:1153
-msgid "Showing 0 to 0 of 0 entries"
-msgstr "Näytetään 0 - 0 yhteensä 0 merkinnästä"
-
-#: inc/menu.class.php:1154
-msgid "(filtered from _MAX_ total entries)"
-msgstr "(suodatettu _MAX_ kokonaismäärästä)"
-
-#: inc/menu.class.php:1161
-msgid "No matching records found"
-msgstr "Vastaavia tietoja ei löytynyt"
-
-#: inc/menu.class.php:1169
-msgid ": activate to sort column ascending"
-msgstr ": aktivoi lajitellaksesi sarake nousevaksi"
-
-#: inc/menu.class.php:1170
-msgid ": activate to sort column descending"
-msgstr ": aktivoi lajitellaksesi sarake laskevaksi"
-
-#: inc/menu.class.php:1176
-msgid "1 row selected"
-msgstr "1 rivi valittu"
-
-#: inc/menu.class.php:1180 inc/menu.class.php:1193
-msgid "Close"
-msgstr "Sulje"
-
-#: inc/menu.class.php:1181
-msgid "Maximize"
-msgstr "Suurenna"
-
-#: inc/menu.class.php:1182
-msgid "Minimize"
-msgstr "Pienennä"
-
-#: inc/menu.class.php:1183
-msgid "Refresh"
-msgstr "Päivitä"
-
-#: inc/menu.class.php:1185
-msgid "Column visibility"
-msgstr ""
-
-#: inc/menu.class.php:1187
-#, php-format
-msgid "Show %d elements"
-msgstr ""
-
-#: inc/menu.class.php:1188 inc/widget.class.php:395
-msgid "Show all"
-msgstr ""
-
-#: inc/menu.class.php:1195
-msgid "Dashboard saved"
-msgstr "Raportointinäkymä tallennettu"
-
-#: inc/menu.class.php:1196
-msgid "Dashboard not saved"
-msgstr "Raportointinäkymää ei tallennettu"
-
-#: inc/menu.class.php:1197
-msgid "Data received for"
-msgstr "Saadut tiedot"
-
-#: inc/menu.class.php:1198
-msgid "No data received for"
-msgstr "Tietoja ei saatu"
-
-#: inc/menu.class.php:1199
-msgid "Updating all widgets"
-msgstr "Päivitetään kaikki widgetit"
-
-#: inc/menu.class.php:1200
-msgid "Widget added on Dashboard"
-msgstr "Widget lisätty raportointinäkymään"
-
-#: inc/menu.class.php:1325
-msgid "Warning"
-msgstr "Varoitus"
-
-#: inc/menu.class.php:1326
-msgid "No widgets founded, please add widgets"
-msgstr "Widgetejä ei löytynyt, lisää widgetejä"
-
-#: inc/menu.class.php:1351
-msgid "Save grid to see widget"
-msgstr "Tallenna ruudukko nähdäksesi widgetin"
-
-#: inc/menu.class.php:1359
-msgid "Delete widget"
-msgstr "Poista widget"
-
-#: inc/menu.class.php:1361
-msgid "Refresh widget"
-msgstr "Päivitä widget"
-
-#: inc/module.class.php:154 inc/module.class.php:304
-msgid "notice"
-msgstr "ilmoitus"
-
-#: inc/module.class.php:154 inc/module.class.php:311
-msgid "warning"
-msgstr "varoitus"
-
-#: inc/module.class.php:154 inc/module.class.php:318
-msgid "error"
-msgstr "virhe"
-
-#: inc/piechart.class.php:59
-msgid "You can't have more than one serie for a pie chart"
-msgstr "Sinulla ei voi olla enempää kuin yksi sarja ympyräkaaviossa"
-
-#: inc/preference.class.php:96
-msgid "Automatic refreshing of the widgets that can be refreshed"
-msgstr "Automaattinen näytönpäivitys sitä tukeville widgeteille"
-
-#: inc/preference.class.php:102
-msgid "Refresh every "
-msgstr "Päivitä joka"
-
-#: inc/preference.class.php:106
-msgid "minute(s)"
-msgstr "minuutti"
-
-#: inc/preference.class.php:118
-msgid "My prefered groups for widget"
-msgstr ""
-
-#: inc/preference.class.php:152
-msgid "My requester prefered groups for widget"
-msgstr ""
-
-#: inc/preference.class.php:186
-msgid "My prefered entity for widget"
-msgstr "Haluamani yksikkö widgetille"
-
-#: inc/preference.class.php:195 inc/preference.class.php:197
-#: inc/preference.class.php:198
-msgid "Palette color"
-msgstr ""
-
-#: inc/preferenceuserblacklist.class.php:56
-msgid "From which plugins you want to display the widgets?"
-msgstr "Mistä laajennuksista haluat näyttää widgetit?"
-
-#: inc/profileauthorizedwidget.class.php:80
-msgid "Authorized widgets"
-msgstr ""
-
-#: inc/profileauthorizedwidget.class.php:92
-msgid "Authorize/Unauthorize all"
-msgstr "Valtuuta kaikkiin/Poista valtuutus kaikista"
-
-#: inc/profile.class.php:45
-msgid "Rights management"
-msgstr "Oikeuksien hallinta"
-
-#: inc/profile.class.php:148
-msgid "Full"
-msgstr "Täysi"
-
-#: inc/profile.class.php:148
-msgid "Custom"
-msgstr "Mukautettu"
-
-#: inc/profile.class.php:150
-msgid "Dashboard Access"
-msgstr "Raportointinäkymään pääsy"
-
-#: inc/profile.class.php:162
-msgid "Configuration Access"
-msgstr "Asetuksiin pääsy"
-
-#: inc/profile.class.php:170 inc/profile.class.php:264
-msgid "See edit mode"
-msgstr ""
-
-#: inc/profile.class.php:181 inc/profile.class.php:251
-msgid "Setup stock widget"
-msgstr ""
-
-#: inc/profile.class.php:256
-msgid "See the dashboard"
-msgstr "Katso raportointinäkymää"
-
-#: inc/profile.class.php:260
-msgid "See the configuration"
-msgstr "Katso asetukset"
-
-#: inc/servicecatalog.class.php:63 inc/servicecatalog.class.php:70
-msgid "Dashboard access"
-msgstr "Raportointinäkymään pääsy"
-
-#: inc/stockwidget.class.php:38
-msgid "Stock widget"
-msgid_plural "Stock widgets"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/stockwidget.class.php:50
-msgid "Cannot create alert without a type"
-msgstr ""
-
-#: inc/userwidget.class.php:65
-msgid "user_widget management"
-msgstr "user_widget hallinta"
-
-#: inc/widget.class.php:41
-msgid "Widget management"
-msgstr "Widgetin hallinta"
-
-#: inc/widget.class.php:391
-msgid "5 rows"
-msgstr ""
-
-#: inc/widget.class.php:392
-msgid "10 rows"
-msgstr ""
-
-#: inc/widget.class.php:393
-msgid "25 rows"
-msgstr ""
-
-#: inc/widget.class.php:394
-msgid "50 rows"
-msgstr ""
-
-#: inc/widget.class.php:589 reports/alert.class.php:1913
-#: reports/alert.class.php:2083
-msgid "No problem detected"
-msgstr "Ongelmaa ei havaittu"
-
-#: inc/widget.class.php:632 reports/alert.class.php:1697
-msgid "No scheduled maintenance"
-msgstr "Ajoittamaton ylläpitotoimi"
-
-#: inc/widget.class.php:677 reports/alert.class.php:1790
-msgid "No informations founded"
-msgstr "Tietoja ei löytynyt"
-
-#: inc/widget.class.php:702 reports/alert.class.php:134
-#: reports/alert.class.php:694
-msgid "Your equipments"
-msgstr ""
-
-#: inc/widget.class.php:825
-msgid "No equipments founded"
-msgstr ""
-
-#: reports/alert.class.php:62
+#: src/Alert.php:93
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] "Hälytys raportointinäkymä"
 msgstr[1] "Hälytysten raportointinäkymä"
 
-#: reports/alert.class.php:127 reports/alert.class.php:1113
-msgid "Incidents alerts"
-msgstr "Tapaus hälytykset "
-
-#: reports/alert.class.php:128 reports/alert.class.php:1589
-msgid "SLA Incidents alerts"
-msgstr "SLA tapausten hälytykset"
-
-#: reports/alert.class.php:129 reports/alert.class.php:259
-msgid "GLPI Status"
-msgstr "GLPI:n tila"
-
-#: reports/alert.class.php:130 reports/alert.class.php:447
-msgid "User ticket alerts"
-msgstr "Käyttäjätikettien hälytykset"
-
-#: reports/alert.class.php:131 reports/alert.class.php:493
-msgid "Automatic actions in error"
-msgstr "Automaattiset toiminnot virhetilanteessa"
-
-#: reports/alert.class.php:132 reports/alert.class.php:535
-msgid "Not imported mails in collectors"
-msgstr "Ei tuotuja sähköpostiviestejä viestinkeräimissä"
-
-#: reports/alert.class.php:133 reports/alert.class.php:683
-msgid "Inventory stock alerts"
-msgstr ""
-
-#: reports/alert.class.php:135 reports/alert.class.php:1592
-msgid "SLA Requests alerts"
-msgstr ""
-
-#: reports/alert.class.php:136 reports/alert.class.php:1116
-msgid "Requests alerts"
-msgstr ""
-
-#: reports/alert.class.php:260
-msgid "Check if GLPI have no problem"
-msgstr "Tarkista, onko GLPI:llä mitään ongelmia"
-
-#: reports/alert.class.php:287 reports/ticket.class.php:327
-#: reports/ticket.class.php:651
-msgid "ID and priority"
-msgstr ""
-
-#: reports/alert.class.php:393
-msgid "New document"
-msgstr "Uusi asiakirja"
-
-#: reports/alert.class.php:448
-msgid "Display tickets where last modification is a user action"
-msgstr "Näytä tiketit, joissa viimeisin muutos on käyttäjän toimi"
-
-#: reports/alert.class.php:536
-msgid "Display of mails which are not imported"
-msgstr "Näytä sähköpostiviestit, joita ei ole tuotu"
-
-#: reports/alert.class.php:674
-msgid "No alerts are setup"
-msgstr ""
-
-#: reports/alert.class.php:684
-msgid "Display alerts for inventory stocks"
-msgstr ""
-
-#: reports/alert.class.php:885 reports/alert.class.php:894
-msgid "New incidents"
-msgstr "Uudet häriötilanteet"
-
-#: reports/alert.class.php:887 reports/alert.class.php:896
-msgid "New requests"
-msgstr ""
-
-#: reports/alert.class.php:956 reports/alert.class.php:966
-msgid "Opened incidents without assigned technicians"
-msgstr ""
-
-#: reports/alert.class.php:958 reports/alert.class.php:968
-msgid "Opened requests without assigned technicians"
-msgstr ""
-
-#: reports/alert.class.php:1029 reports/alert.class.php:1037
-msgid "Incidents with very high or major priority"
-msgstr "Häiriöt, joilla on erittäin suuri tai tärkeä prioriteetti"
-
-#: reports/alert.class.php:1031 reports/alert.class.php:1039
-msgid "Requests with very high or major priority"
-msgstr ""
-
-#: reports/alert.class.php:1075 reports/alert.class.php:1079
-msgid "Problems with very high or major priority"
-msgstr "Ongelmia, joilla on erittäin suuri tai tärkeä prioriteetti"
-
-#: reports/alert.class.php:1114
-msgid "Display alerts for incidents and problems"
-msgstr ""
-
-#: reports/alert.class.php:1117
-msgid "Display alerts for requests"
-msgstr ""
-
-#: reports/alert.class.php:1343
-msgid "Incidents where time to own will be exceeded"
-msgstr "Tapaukset, joissa omistusaika ylitetään"
-
-#: reports/alert.class.php:1347
-msgid "Requests where time to own will be exceeded"
-msgstr ""
-
-#: reports/alert.class.php:1415
-msgid "Incidents where time to resolve will be exceeded"
-msgstr "Tapaukset, joissa ratkaisuaika ylitetään"
-
-#: reports/alert.class.php:1419
-msgid "Requests where time to resolve will be exceeded"
-msgstr ""
-
-#: reports/alert.class.php:1487
-msgid "Incidents where time to own is exceeded"
-msgstr "Tapaukset, joissa omistusaika on ylittynyt"
-
-#: reports/alert.class.php:1491
-msgid "Requests where time to own is exceeded"
-msgstr ""
-
-#: reports/alert.class.php:1560
-msgid "Incidents where time to resolve is exceeded"
-msgstr "Tapaukset, joissa ratkaisuaika on ylittynyt"
-
-#: reports/alert.class.php:1564
-msgid "Requests where time to resolve is exceeded"
-msgstr ""
-
-#: reports/alert.class.php:1590
-msgid "Display alerts for SLA of Incidents tickets"
-msgstr ""
-
-#: reports/alert.class.php:1593
-msgid "Display alerts for SLA of Requests tickets"
-msgstr ""
-
-#: reports/alert.class.php:1605
-msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see "
-"more"
-msgstr ""
-"Suunniteltu ja aikataulutettu ylläpitotehtävä. Kirjaudu sisään nähdäksesi "
-"lisää"
-
-#: reports/alert.class.php:2147
-msgid "All categories"
-msgstr ""
-
-#: reports/alert.class.php:2320
-msgid "A network alert can impact you and will avoid creating a ticket"
-msgstr "Verkon hälytys saattaa estää tiketin luomisen"
-
-#: reports/alert.class.php:2357
-msgid "Problem with GLPI"
-msgstr "Ongelma GLPI:n kanssa"
-
-#: reports/alert.class.php:2362
-msgid "GLPI is OK"
-msgstr "GLPI on kunnossa"
-
-#: reports/alert.class.php:2367
+#: src/Alert.php:3271
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
 
-#: reports/alert.class.php:2384
-msgid "Curl PHP package not installed"
-msgstr "Curl PHP-pakettia ei ole asennettu"
+#: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
+msgid "Alert level"
+msgstr "Hälytystaso"
 
-#: reports/change.class.php:52 reports/change.class.php:58
-#: reports/change.class.php:119 reports/change.class.php:245
-#: reports/change.class.php:296
-msgid "Changes to be processed"
-msgstr "Käsiteltävät muutokset"
+#: templates/stockwidget_form.html.twig:58
+msgid "Alert threshold"
+msgstr ""
 
-#: reports/change.class.php:53 reports/change.class.php:59
-#: reports/change.class.php:117 reports/change.class.php:227
-#: reports/change.class.php:280
-msgid "Changes on pending status"
-msgstr "Muutokset vireillä olevassa tilassa"
+#: src/Dashboard.php:152
+msgid "All bar charts"
+msgstr ""
 
-#: reports/change.class.php:54 reports/change.class.php:307
+#: src/Alert.php:3048
+msgid "All categories"
+msgstr ""
+
+#: src/Dashboard.php:155
+msgid "All indicators"
+msgstr ""
+
+#: src/Dashboard.php:153
+msgid "All line charts"
+msgstr ""
+
+#: src/Dashboard.php:151
+msgid "All pie charts"
+msgstr ""
+
+#: src/Dashboard.php:154
+msgid "All table charts"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:101
+msgid "All unpublished articles"
+msgstr ""
+
+#: src/Reports/Change.php:83 src/Reports/Change.php:418
 msgid "Applied changes"
 msgstr ""
 
-#: reports/change.class.php:64 reports/change.class.php:522
-msgid "Change followup"
-msgstr "Vaihda seuranta"
+#: templates/profileauthorizedwidget_form.html.twig:37
+msgid "Authorize/Unauthorize all"
+msgstr "Valtuuta kaikkiin/Poista valtuutus kaikista"
 
-#: reports/knowbaseitem.class.php:127
-msgid "Publication date"
-msgstr "Julkaisupäivämäärä"
-
-#: reports/knowbaseitem.class.php:129
-msgid "Modification date"
-msgstr "Muokkauspäivämäärä"
-
-#: reports/project.class.php:51 reports/project.class.php:55
-#: reports/project.class.php:94 reports/project.class.php:176
-#: reports/project.class.php:195
-msgid "projects to be processed"
-msgstr "käsiteltävät projektit"
-
-#: reports/projecttask.class.php:51 reports/projecttask.class.php:55
-#: reports/projecttask.class.php:95 reports/projecttask.class.php:172
-#: reports/projecttask.class.php:192
-msgid "projects tasks to be processed"
-msgstr "käsiteltävät projektitehtävät"
-
-#: reports/reports_bar.class.php:61
-msgid "Bar charts"
+#: templates/profileauthorizedwidget_form.html.twig:31
+msgid "Authorized widgets"
 msgstr ""
 
-#: reports/reports_bar.class.php:62 reports/reports_bar.class.php:157
-#: reports/reports_line.class.php:419 reports/reports_line.class.php:670
-#: reports/reports_line.class.php:946
-msgid "Opened tickets backlog"
-msgstr "Avattujen tikettien kertymä"
+#: src/Alert.php:188
+msgid "Automatic actions in error"
+msgstr "Automaattiset toiminnot virhetilanteessa"
 
-#: reports/reports_bar.class.php:63 reports/reports_bar.class.php:255
-msgid "Process time by technicians by month"
-msgstr "Käsittelyaika asentajittain kuukaudessa"
+#: templates/preferences.html.twig:29
+msgid "Automatic refreshing of the widgets that can be refreshed"
+msgstr "Automaattinen näytönpäivitys sitä tukeville widgeteille"
 
-#: reports/reports_bar.class.php:64 reports/reports_bar.class.php:352
-msgid "Top ten ticket categories by type of ticket"
-msgstr "Top 10 tikettiluokkaa tikettityypin perusteella"
+#: templates/menu_widgets_offcanvas.html.twig:33
+msgid "Availables widgets"
+msgstr ""
 
-#: reports/reports_bar.class.php:65 reports/reports_bar.class.php:439
-msgid "Number of tickets affected by technicians by month"
-msgstr "Tikettien määrä kuukaudessa, joihin asentajat ovat vaikuttaneet "
+#: src/Reports/Reports_Bar.php:1803
+msgid "Average Satisfaction"
+msgstr ""
 
-#: reports/reports_bar.class.php:66 reports/reports_bar.class.php:544
+#: src/Reports/Reports_Bar.php:145
 msgid "Average real duration of treatment of the ticket"
 msgstr "Tikettien käsittelyn keskimääräinen todellinen kesto"
 
-#: reports/reports_bar.class.php:67 reports/reports_bar.class.php:658
-msgid "Top ten technicians (by tickets number)"
-msgstr "Top 10 asentajat (tikettien määrä)"
-
-#: reports/reports_bar.class.php:68 reports/reports_bar.class.php:791
-#: reports/reports_bar.class.php:795
-msgid "Age of tickets"
+#: src/Reports/Reports_Line.php:120
+msgid "Backlog tickets by week"
 msgstr ""
 
-#: reports/reports_bar.class.php:69 reports/reports_bar.class.php:884
-#: reports/reports_pie.class.php:63 reports/reports_pie.class.php:151
-msgid "Number of opened tickets by priority"
-msgstr "Avattujen tikettien lukumäärä prioriteetin mukaan"
-
-#: reports/reports_bar.class.php:70 reports/reports_bar.class.php:1021
-msgid "Stock of tickets by status"
+#: src/Widget.php:245
+msgid "Bar charts"
 msgstr ""
 
-#: reports/reports_bar.class.php:71 reports/reports_bar.class.php:1147
-msgid "Number of opened ticket and average satisfaction per trimester"
+#: src/Menu.php:741 src/Menu.php:805
+msgid "Block drag / resize widgets"
+msgstr "Estä raahaus / koon muuttaminen widgeteille"
+
+#: templates/config_form.html.twig:88
+msgid "Can take many time if you have many tickets"
 msgstr ""
 
-#: reports/reports_bar.class.php:158
-msgid "Display of opened tickets by month"
-msgstr "Näytä avattujen tikettien määrä kuukaudessa"
+#: src/StockWidget.php:68
+msgid "Cannot create alert without a type"
+msgstr ""
 
-#: reports/reports_bar.class.php:163 reports/reports_bar.class.php:359
-#: reports/reports_bar.class.php:664 reports/reports_line.class.php:190
-msgid "Tickets number"
-msgstr "Tikettien määrä"
+#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:102
+#: src/Criterias/Other.php:273 src/Criterias/Other.php:495
+msgid "Category"
+msgstr ""
 
-#: reports/reports_bar.class.php:257
-msgid "Sum of ticket tasks duration by technicians"
-msgstr "Tikettitehtävien kokonaiskesto asentajittain"
+#: src/Reports/Change.php:88 src/Reports/Change.php:663
+#: src/Reports/Change.php:669
+msgid "Change followup"
+msgstr "Vaihda seuranta"
 
-#: reports/reports_bar.class.php:354
+#: src/Reports/Change.php:78 src/Reports/Change.php:101
+#: src/Reports/Change.php:161 src/Reports/Change.php:304
+#: src/Reports/Change.php:375
+msgid "Changes on pending status"
+msgstr "Muutokset vireillä olevassa tilassa"
+
+#: src/Reports/Change.php:73 src/Reports/Change.php:96
+#: src/Reports/Change.php:163 src/Reports/Change.php:327
+#: src/Reports/Change.php:401
+msgid "Changes to be processed"
+msgstr "Käsiteltävät muutokset"
+
+#: src/Alert.php:185 src/Alert.php:494
+msgid "Check if GLPI have no problem"
+msgstr "Tarkista, onko GLPI:llä mitään ongelmia"
+
+#: src/Criterias/MultipleLocation.php:115
+msgid "Child locations"
+msgstr ""
+
+#: src/Widget.php:185 templates/widget_form.html.twig:37
+msgid "Class"
+msgstr ""
+
+#: src/Menu.php:732
+msgid "Clear grid"
+msgstr "Tyhjennä ruudukko"
+
+#: src/Menu.php:1147 src/Menu.php:1160
+#: templates/menu_widgets_offcanvas.html.twig:35
+msgid "Close"
+msgstr "Sulje"
+
+#: templates/menu_edit_toolbar.html.twig:75
+msgid "Close edit mode"
+msgstr "Sulje muokkaustila"
+
+#: src/Reports/Reports_Line.php:621 src/Reports/Reports_Line.php:1265
+#: src/Reports/Reports_Pie.php:1081 src/Reports/Reports_Pie.php:1084
+msgid "Closed tickets"
+msgstr "Suljetut tiketit"
+
+#: src/Menu.php:1152
+msgid "Column visibility"
+msgstr ""
+
+#: templates/itilalert_item.html.twig:54 templates/alert_item.html.twig:54
+msgid "Comment"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2833
+msgid "Computers number"
+msgstr ""
+
+#: src/Profile.php:182
+msgid "Configuration Access"
+msgstr "Asetuksiin pääsy"
+
+#: src/Reports/Contract.php:159
+msgid "Contract followup"
+msgstr ""
+
+#: src/Reports/Contract.php:69
+msgid "Contracts status"
+msgstr ""
+
+#: src/ItilAlert.php:74 src/Alert.php:3144
+#: templates/itilalert_item.html.twig:36 templates/alert_item.html.twig:36
+msgid "Create a new alert"
+msgstr "Luo uusi hälytys"
+
+#: src/Alert.php:3291
+msgid "Curl PHP package not installed"
+msgstr "Curl PHP-pakettia ei ole asennettu"
+
+#: src/Preference.php:241
+msgid "Current year"
+msgstr ""
+
+#: templates/profile.html.twig:39
+msgid "Custom"
+msgstr "Mukautettu"
+
+#: src/Customswidget.php:59
+msgid "Custom Widgets"
+msgstr ""
+
+#: src/Menu.php:820
+msgid "Custom and save profile grid"
+msgstr ""
+
+#: src/Reports/Planning.php:52 src/Reports/Problem.php:57
+#: src/Reports/ProjectTask.php:56 src/Reports/Change.php:57
+#: src/Reports/Project.php:52 src/Chart.php:60 src/Datatable.php:58
+#: src/Module.php:66 src/Html.php:57 src/Dashboard.php:73 src/Menu.php:1161
+msgid "Dashboard"
+msgstr "Raportointinäkymä"
+
+#: src/Profile.php:171
+msgid "Dashboard Access"
+msgstr "Raportointinäkymään pääsy"
+
+#: src/Servicecatalog.php:92 src/Servicecatalog.php:100
+msgid "Dashboard access"
+msgstr "Raportointinäkymään pääsy"
+
+#: src/Menu.php:1163
+msgid "Dashboard not saved"
+msgstr "Raportointinäkymää ei tallennettu"
+
+#: src/Menu.php:1162
+msgid "Dashboard saved"
+msgstr "Raportointinäkymä tallennettu"
+
+#: src/Menu.php:1164
+msgid "Data received for"
+msgstr "Saadut tiedot"
+
+#: src/Criterias/Other.php:412
+msgid "Day"
+msgstr ""
+
+#: templates/groupprofile_form.html.twig:32
+msgid "Default dashboard group"
+msgstr ""
+
+#: templates/groupprofile_form.html.twig:38
+msgid "Default groups"
+msgstr ""
+
+#: src/Menu.php:1329
+msgid "Delete widget"
+msgstr "Poista widget"
+
+#: templates/criteria_display_data.html.twig:30
+msgid "Display"
+msgstr ""
+
+#: src/Reports/Reports_Map.php:71
+msgid "Display Tickets by location (Latitude / Longitude)"
+msgstr "Näytä tiketit sijainnin mukaan (leveysaste/pituusaste)"
+
+#: src/Alert.php:221 src/Alert.php:2217
+msgid "Display alerts for SLA of Incidents tickets"
+msgstr ""
+
+#: src/Alert.php:231 src/Alert.php:2220
+msgid "Display alerts for SLA of Requests tickets"
+msgstr ""
+
+#: src/Alert.php:216 src/Alert.php:1604
+msgid "Display alerts for incidents and problems"
+msgstr ""
+
+#: src/Alert.php:203
+msgid "Display alerts for inventory stocks"
+msgstr ""
+
+#: src/Alert.php:236 src/Alert.php:1607
+msgid "Display alerts for requests"
+msgstr ""
+
+#: src/Alert.php:190
+msgid "Display automatic actions in error"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:95
+msgid "Display if you have duplicates into inventory"
+msgstr "Näytä, jos inventaariossa on kaksoiskappaleita"
+
+#: src/Reports/Reports_Bar.php:137
 msgid "Display of Top ten ticket categories by type of ticket"
 msgstr ""
 
-#: reports/reports_bar.class.php:440
-msgid "Sum of ticket affected by technicians"
-msgstr "Tikettien yhteismäärä, joihin asentajat ovat vaikuttaneet"
-
-#: reports/reports_bar.class.php:545
+#: src/Reports/Reports_Bar.php:148
 msgid ""
 "Display of average real duration of treatment of tickets (actiontime of "
 "tasks)"
@@ -861,225 +394,1247 @@ msgstr ""
 "Näytä tikettien käsittelyn keskimääräinen todellinen kesto (tehtävien "
 "suoritusaika)"
 
-#: reports/reports_bar.class.php:550
-msgid "Tasks duration (minutes)"
-msgstr "Tehtävien kesto (minuutit)"
+#: src/Alert.php:195
+msgid "Display of mails which are not imported"
+msgstr "Näytä sähköpostiviestit, joita ei ole tuotu"
 
-#: reports/reports_bar.class.php:659
+#: src/Reports/Reports_Bar.php:155
 msgid "Display of number of tickets by technicians"
 msgstr "Näytä tikettien määrä asentajittain"
 
-#: reports/reports_bar.class.php:1079
-msgid "Trimester 1"
-msgstr ""
+#: src/Reports/Reports_Bar.php:127
+msgid "Display of opened tickets by month"
+msgstr "Näytä avattujen tikettien määrä kuukaudessa"
 
-#: reports/reports_bar.class.php:1097
-msgid "Trimester 2"
-msgstr ""
-
-#: reports/reports_bar.class.php:1113
-msgid "Trimester 3"
-msgstr ""
-
-#: reports/reports_bar.class.php:1129
-msgid "Trimester 4"
-msgstr ""
-
-#: reports/reports_bar.class.php:1161 reports/reports_line.class.php:417
-#: reports/reports_line.class.php:668 reports/reports_line.class.php:943
-#: reports/reports_pie.class.php:725
-msgid "Opened tickets"
-msgstr "Avatut tiketit"
-
-#: reports/reports_bar.class.php:1162
-msgid "Average Satisfaction"
-msgstr ""
-
-#: reports/reports_line.class.php:60
-msgid "Line charts"
-msgstr ""
-
-#: reports/reports_line.class.php:61
-msgid "Tickets stock by month"
-msgstr "Tikettikertymä kuukaudessa"
-
-#: reports/reports_line.class.php:62 reports/reports_line.class.php:413
-msgid "Number of opened and closed tickets by month"
-msgstr "Avattujen ja suljettujen tikettien määrä kuukaudessa"
-
-#: reports/reports_line.class.php:63 reports/reports_line.class.php:664
-msgid "Number of opened and resolved / closed tickets by month"
-msgstr ""
-
-#: reports/reports_line.class.php:64
-msgid "Number of opened, closed, unplanned tickets by month"
-msgstr ""
-
-#: reports/reports_line.class.php:180
-msgid "Tickets stock"
-msgstr "Tikettikertymä"
-
-#: reports/reports_line.class.php:181
-msgid "Sum of not solved tickets by month"
-msgstr "Ratkaisemattomien tikettien määrä kuukaudessa"
-
-#: reports/reports_line.class.php:418 reports/reports_line.class.php:669
-#: reports/reports_line.class.php:944 reports/reports_pie.class.php:742
-msgid "Closed tickets"
-msgstr "Suljetut tiketit"
-
-#: reports/reports_line.class.php:939
-msgid "Number of opened, closed  and unplanned tickets by month"
-msgstr ""
-
-#: reports/reports_line.class.php:945 reports/reports_pie.class.php:761
-msgid "Not planned"
-msgstr ""
-
-#: reports/reports_map.class.php:60
-msgid "Map"
-msgstr ""
-
-#: reports/reports_map.class.php:61 reports/reports_map.class.php:109
-msgid "OpenStreetMap - Opened tickets by location"
-msgstr "OpenStreetMap - Avatut tiketit sijainnin mukaan"
-
-#: reports/reports_map.class.php:110
-msgid "Display Tickets by location (Latitude / Longitude)"
-msgstr "Näytä tiketit sijainnin mukaan (leveysaste/pituusaste)"
-
-#: reports/reports_pie.class.php:62
-msgid "Pie charts"
-msgstr ""
-
-#: reports/reports_pie.class.php:64 reports/reports_pie.class.php:260
-msgid "Top ten ticket requesters by month"
-msgstr "Top 10 tikettien toimeksiantajaa kuukaudessa"
-
-#: reports/reports_pie.class.php:65 reports/reports_pie.class.php:341
-msgid "TTR Compliance"
-msgstr "Ratkaisuajan noudattaminen"
-
-#: reports/reports_pie.class.php:66 reports/reports_pie.class.php:424
-msgid "TTO Compliance"
-msgstr "Vasteajan noudattaminen"
-
-#: reports/reports_pie.class.php:67 reports/reports_pie.class.php:522
-msgid "Number of opened incidents by category"
-msgstr "Avattujen häiriötilanteiden määrä kategorioittain"
-
-#: reports/reports_pie.class.php:68 reports/reports_pie.class.php:632
-msgid "Number of opened requests by category"
-msgstr "Avattujen palvelupyyntöjen määrä kategorioittain"
-
-#: reports/reports_pie.class.php:69 reports/reports_pie.class.php:766
-msgid "Number of opened, closed and unplanned tickets by month"
-msgstr ""
-
-#: reports/reports_pie.class.php:70 reports/reports_pie.class.php:856
-msgid "Percent of use of solution types"
-msgstr "Ratkaisutyyppien osuus prosentteina"
-
-#: reports/reports_pie.class.php:71 reports/reports_pie.class.php:947
-msgid "Top ten of opened tickets by requester groups"
-msgstr ""
-
-#: reports/reports_pie.class.php:72 reports/reports_pie.class.php:1035
-msgid "Global satisfaction level"
-msgstr "Yleisen tyytyväisyyden taso"
-
-#: reports/reports_pie.class.php:73 reports/reports_pie.class.php:1138
-msgid "Top ten of opened tickets by location"
-msgstr ""
-
-#: reports/reports_pie.class.php:74 reports/reports_pie.class.php:1238
-msgid "Number of use of request sources"
-msgstr ""
-
-#: reports/reports_pie.class.php:75 reports/reports_pie.class.php:1333
-msgid "Number of tickets per location per period"
-msgstr ""
-
-#: reports/reports_pie.class.php:343
-msgid "Display tickets where time to resolve is respected (percent)"
-msgstr ""
-
-#: reports/reports_pie.class.php:348
-msgid "Respected TTR"
-msgstr "Ratkaisuaikaa noudatettu"
-
-#: reports/reports_pie.class.php:348
-msgid "Not respected TTR"
-msgstr "Ratkaisuaikaa ei noudatettu"
-
-#: reports/reports_pie.class.php:426
-msgid "Display tickets where time to own is respected (percent)"
-msgstr ""
-
-#: reports/reports_pie.class.php:431
-msgid "Respected TTO"
-msgstr "Vasteaikaa noudatettu"
-
-#: reports/reports_pie.class.php:431
-msgid "Not respected TTO"
-msgstr "Vasteaikaa ei noudatettu"
-
-#: reports/reports_pie.class.php:857
-msgid "Display percent of solution types for tickets"
-msgstr "Näytä ratkaisujen tyypit tiketeille prosentteina"
-
-#: reports/reports_pie.class.php:1040
-msgid "Satisfy percent"
-msgstr "Tyytyväisyysprosentti"
-
-#: reports/reports_pie.class.php:1040
-msgid "Not satisfy percent"
-msgstr "Tyytymättömyysprosentti"
-
-#: reports/reports_pie.class.php:1239
+#: src/Reports/Reports_Pie.php:175
 msgid "Display percent of request sources for closed tickets"
 msgstr ""
 
-#: reports/reports_table.class.php:60
-msgid "Tables"
+#: src/Reports/Reports_Pie.php:155
+msgid "Display percent of solution types for tickets"
+msgstr "Näytä ratkaisujen tyypit tiketeille prosentteina"
+
+#: src/Alert.php:226
+msgid "Display tickets where last modification is a user action"
+msgstr "Näytä tiketit, joissa viimeisin muutos on käyttäjän toimi"
+
+#: src/Reports/Reports_Pie.php:135
+msgid "Display tickets where time to own is respected (percent)"
 msgstr ""
 
-#: reports/reports_table.class.php:60 reports/reports_table.class.php:117
+#: src/Reports/Reports_Pie.php:130
+msgid "Display tickets where time to resolve is respected (percent)"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:103
+msgid "Display unpublished articles of Knowbase"
+msgstr ""
+
+#: src/Alert.php:208
+msgid "Display your equipments"
+msgstr ""
+
+#: src/Menu.php:715
+msgid "Edit mode"
+msgstr "Muokkaustila"
+
+#: templates/config_form.html.twig:32
+msgid "Enable the possibility to display Dashboard in full screen"
+msgstr "Ota käyttöön mahdollisuus avata raportointinäkymä koko näytöllä"
+
+#: templates/criteria_filter_date.html.twig:36
+#: templates/criteria_period_range.html.twig:30
+msgid "End"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:108
+msgid "End month"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:108
+msgid "End year"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:203
+msgid "Evolution of TTO respect"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:208
+msgid "Evolution of TTR respect"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:190
+msgid "Evolution of solution types by year"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:198
+msgid "Evolution of ticket satisfaction by year"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:185
+msgid "Evolution of tickets request sources types by year"
+msgstr ""
+
+#: src/Menu.php:824
+msgid "Export to PDF"
+msgstr ""
+
+#: src/CheckSchema.php:151
+msgid "Failed to check the sanity of the tables!"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:66
+#: templates/configtranslation_form.html.twig:46
+msgid "Field"
+msgstr ""
+
+#: templates/criteria_filter_date.html.twig:30
+msgid "Filter date"
+msgstr ""
+
+#: src/Widget.php:117
+msgid "Filters"
+msgstr ""
+
+#: src/Widgetlist.php:525
+msgid "Find a widget"
+msgstr ""
+
+#: templates/preferenceuserblacklist_form.html.twig:32
+msgid "From which plugins you want to display the widgets?"
+msgstr "Mistä laajennuksista haluat näyttää widgetit?"
+
+#: templates/profile.html.twig:38
+msgid "Full"
+msgstr "Täysi"
+
+#: src/Menu.php:828
+msgid "Fullscreen"
+msgstr "Koko näyttö"
+
+#: src/Alert.php:183 src/Alert.php:493
+msgid "GLPI Status"
+msgstr "GLPI:n tila"
+
+#: src/Dashboard.php:145 src/Menu.php:129
+msgid "GLPI admin grid"
+msgstr "GLPI -ylläpitäjän ruudukko"
+
+#: src/Alert.php:3264
+msgid "GLPI is OK"
+msgstr "GLPI on kunnossa"
+
+#: src/Menu.php:1754
+msgid "Generating PDF..."
+msgstr ""
+
+#: src/Menu.php:717
+msgid "Global"
+msgstr "Yleinen"
+
+#: templates/menu_global_filter_bar.html.twig:31
+msgid "Global filter"
+msgstr ""
+
+#: src/Alert.php:244 src/Alert.php:3971
+msgid "Global indicators"
+msgstr ""
+
+#: src/Alert.php:249 src/Alert.php:3972
+msgid "Global indicators by week"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:163
+msgid "Global satisfaction level"
+msgstr "Yleisen tyytyväisyyden taso"
+
+#: src/Dashboard.php:147
+msgid "Helpdesk supervisor grid"
+msgstr "Helpdesk -valvojan ruudukko"
+
+#: src/Dashboard.php:150
+msgid "Helpdesk technician grid"
+msgstr "Helpdesk -asentajan ruudukko"
+
+#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:946 src/Alert.php:541
+msgid "ID and priority"
+msgstr ""
+
+#: templates/stockwidget_form.html.twig:56
+msgid "Icon"
+msgstr ""
+
+#: templates/config_form.html.twig:48
+msgid "Impact colors for alerts"
+msgstr ""
+
+#: src/Dashboard.php:148
+msgid "Incident supervisor grid"
+msgstr "Häiriötilanteiden -valvojan ruudukko"
+
+#: src/Customswidget.php:168 src/Customswidget.php:169
+msgid "Incidents"
+msgstr ""
+
+#: src/Alert.php:214 src/Alert.php:1603
+msgid "Incidents alerts"
+msgstr "Tapaus hälytykset "
+
+#: src/Alert.php:3784 src/Alert.php:4001
+msgid "Incidents in progress"
+msgstr ""
+
+#: src/Alert.php:2141
+msgid "Incidents where time to own is exceeded"
+msgstr "Tapaukset, joissa omistusaika on ylittynyt"
+
+#: src/Alert.php:2010
+msgid "Incidents where time to own will be exceeded"
+msgstr "Tapaukset, joissa omistusaika ylitetään"
+
+#: src/Alert.php:2207
+msgid "Incidents where time to resolve is exceeded"
+msgstr "Tapaukset, joissa ratkaisuaika on ylittynyt"
+
+#: src/Alert.php:2075
+msgid "Incidents where time to resolve will be exceeded"
+msgstr "Tapaukset, joissa ratkaisuaika ylitetään"
+
+#: src/Alert.php:1545
+msgid "Incidents with very high or major priority"
+msgstr "Häiriöt, joilla on erittäin suuri tai tärkeä prioriteetti"
+
+#: src/Widget.php:239
+msgid "Indicators"
+msgstr ""
+
+#: src/Config.php:398 src/Config.php:586 src/ItilAlert.php:120
+#: src/Alert.php:178 src/Alert.php:3083
+msgid "Information"
+msgid_plural "Informations"
+msgstr[0] "Tieto"
+msgstr[1] "Tiedot"
+
+#: src/Reports/Reports_Table.php:110
 msgid "Internal annuary"
 msgstr "Sisäiset tiedot"
 
-#: reports/reports_table.class.php:63
-msgid "Number of opened tickets by technician and by status"
+#: src/Widget.php:176 templates/widget_form.html.twig:32
+msgid "Internal name"
 msgstr ""
 
-#: reports/reports_table.class.php:64 reports/reports_table.class.php:666
-msgid "Number of opened tickets by group and by status"
+#: src/Dashboard.php:146
+msgid "Inventory admin grid"
+msgstr "Inventaario -ylläpitäjän ruudukko"
+
+#: src/Alert.php:201
+msgid "Inventory stock alerts"
 msgstr ""
 
-#: reports/reports_table.class.php:118
-msgid "Search users of your organisation"
-msgstr "Etsi organisaatiosi käyttäjiä"
-
-#: reports/reports_table.class.php:206
-msgid "Display if you have duplicates into inventory"
-msgstr "Näytä, jos inventaariossa on kaksoiskappaleita"
-
-#: reports/reports_table.class.php:438
-msgid "Number of tickets open by technician and by status"
+#: templates/stockwidget_form.html.twig:51
+msgid "Item state"
 msgstr ""
 
-#: reports/reports_table.class.php:441
-msgid "Technicians"
+#: templates/stockwidget_form.html.twig:35
+msgid "Item type"
 msgstr ""
 
-#: reports/ticket.class.php:53
-msgid "Your rejected tickets"
+#: templates/configtranslation_list.html.twig:65
+#: templates/configtranslation_form.html.twig:32
+msgid "Language"
 msgstr ""
 
-#: reports/ticket.class.php:63 reports/ticket.class.php:1149
+#: src/Criterias/Other.php:246 src/Criterias/Other.php:435
+msgid "Last month"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:215
+msgid "Last synchronization of computers by month"
+msgstr ""
+
+#: src/Criterias/Other.php:252
+msgid "Last year"
+msgstr ""
+
+#: templates/config_form.html.twig:64
+msgid "Level of categories to show"
+msgstr ""
+
+#: src/Widget.php:247
+msgid "Line charts"
+msgstr ""
+
+#: templates/itilalert_item.html.twig:47 templates/alert_item.html.twig:47
+msgid "Linked reminder"
+msgstr "Linkitetty muistutus"
+
+#: templates/alert_form.html.twig:42 templates/itilalert_item.html.twig:74
+msgid "Linked with a ticket category"
+msgstr ""
+
+#: templates/configtranslation_list.html.twig:59
+msgid "List of translations"
+msgstr ""
+
+#: templates/menu_edit_toolbar.html.twig:54
+#: templates/menu_edit_toolbar.html.twig:55
+msgid "Load a predefined grid"
+msgstr "Lataa ennalta määritelty ruudukko"
+
+#: src/Criterias/MultipleLocation.php:65
+msgid "Location"
+msgid_plural "Locations"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Widget.php:249
+msgid "Map"
+msgstr ""
+
+#: src/Menu.php:1148
+msgid "Maximize"
+msgstr "Suurenna"
+
+#: src/Menu.php:1149
+msgid "Minimize"
+msgstr "Pienennä"
+
+#: src/Reports/KnowbaseItem.php:172
+msgid "Modification date"
+msgstr "Muokkauspäivämäärä"
+
+#: src/Criterias/Month.php:55 src/Criterias/Month.php:70
+#: src/Criterias/Other.php:264 src/Criterias/Other.php:414
+#: src/Criterias/Other.php:436 templates/criteria_other_month.html.twig:33
+#: templates/criteria_period_month.html.twig:29
+msgid "Month"
+msgstr "Kuukausi"
+
+#: src/Reports/Reports_Line.php:125
+msgid "Monthly tickets in progress"
+msgstr ""
+
+#: src/Config.php:67 src/Preference.php:85 src/Menu.php:114 src/Menu.php:1755
+#: setup.php:203 templates/menu_action_toolbar.html.twig:32
+msgid "My Dashboard"
+msgstr "Oma raportointinäkymä"
+
+#: templates/preferences.html.twig:61
+msgid "My favorite category for widgets"
+msgstr ""
+
+#: templates/preferences.html.twig:56
+msgid "My prefered entity for widget"
+msgstr "Haluamani yksikkö widgetille"
+
+#: templates/preferences.html.twig:45
+msgid "My prefered groups for widget"
+msgstr ""
+
+#: templates/preferences.html.twig:66
+msgid "My prefered type for widget"
+msgstr ""
+
+#: templates/preferences.html.twig:71
+msgid "My prefered year for widget"
+msgstr ""
+
+#: templates/preferences.html.twig:51
+msgid "My requester prefered groups for widget"
+msgstr ""
+
+#: src/Menu.php:128
+msgid "My view"
+msgstr "Oma näkymä"
+
+#: templates/stockwidget_form.html.twig:32
+#: templates/itilalert_item.html.twig:50 templates/alert_item.html.twig:50
+msgid "Name"
+msgstr ""
+
+#: src/Config.php:396 src/Config.php:584 src/ItilAlert.php:118
+#: src/Alert.php:168 src/Alert.php:3174
+msgid "Network alert"
+msgid_plural "Network alerts"
+msgstr[0] "Verkon hälytys"
+msgstr[1] "Verkon hälytykset"
+
+#: src/Alert.php:651
+msgid "New document"
+msgstr "Uusi asiakirja"
+
+#: src/Alert.php:1421
+msgid "New incidents"
+msgstr "Uudet häriötilanteet"
+
+#: src/Alert.php:1422
+msgid "New requests"
+msgstr ""
+
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1604 src/Alert.php:3618
+#: src/Alert.php:3992
 msgid "New tickets"
 msgstr "Uudet tiketit"
 
-#: scripts/clean_stock_tickets.php:85 scripts/insert_stock_tickets.php:56
+#: templates/alert_stock_tiles.html.twig:32
+msgid "No alerts are setup"
+msgstr ""
+
+#: src/Datatable.php:236
+msgid "No column defined"
+msgstr "Saraketta ei ole määritelty"
+
+#: src/Widget.php:821 src/Chart.php:186 src/Menu.php:1330
+msgid "No data available"
+msgstr "Tietoja ei ole saatavilla"
+
+#: src/Menu.php:1118
+msgid "No data available in table"
+msgstr "Taulukossa ei ole tietoja saatavilla"
+
+#: src/Chart.php:168
+msgid "No data is given to the widget"
+msgstr "Mitään tietoa ei anneta widgetille"
+
+#: src/Menu.php:1165
+msgid "No data received for"
+msgstr "Tietoja ei saatu"
+
+#: templates/widget_equipments.html.twig:38
+msgid "No equipments founded"
+msgstr ""
+
+#: src/ItilAlert.php:123 src/Alert.php:3086
+msgid "No impact"
+msgstr "Ei vaikutusta"
+
+#: src/Alert.php:2631 src/Widget.php:965
+msgid "No informations founded"
+msgstr "Tietoja ei löytynyt"
+
+#: src/Menu.php:1128
+msgid "No matching records found"
+msgstr "Vastaavia tietoja ei löytynyt"
+
+#: src/Alert.php:2770 src/Alert.php:3029 src/Widget.php:902
+msgid "No problem detected"
+msgstr "Ongelmaa ei havaittu"
+
+#: templates/graph_header.html.twig:38
+msgid "No results found"
+msgstr ""
+
+#: src/Alert.php:2442 src/Widget.php:933
+msgid "No scheduled maintenance"
+msgstr "Ajoittamaton ylläpitotoimi"
+
+#: templates/configtranslation_list.html.twig:42
+msgid "No translation has been added yet"
+msgstr ""
+
+#: src/Widgetlist.php:416
+msgid "No widgets available"
+msgstr ""
+
+#: src/Menu.php:1320 templates/menu_grid.html.twig:31
+msgid "No widgets founded, please add widgets"
+msgstr "Widgetejä ei löytynyt, lisää widgetejä"
+
+#: src/Helper.php:323
+msgid "Not a valid SQL SELECT query"
+msgstr "Ei kelvollinen SQL SELECT -kysely"
+
+#: src/Chart.php:192 src/Datatable.php:129
+msgid "Not an array"
+msgstr "Ei taulukko"
+
+#: src/Alert.php:193
+msgid "Not imported mails in collectors"
+msgstr "Ei tuotuja sähköpostiviestejä viestinkeräimissä"
+
+#: src/Reports/Reports_Line.php:1266 src/Reports/Reports_Pie.php:1117
+#: src/Reports/Reports_Pie.php:1120
+msgid "Not planned"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1257
+msgid "Not resolved tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2941 src/Reports/Reports_Pie.php:672
+#: src/Reports/Reports_Pie.php:688
+msgid "Not respected TTO"
+msgstr "Vasteaikaa ei noudatettu"
+
+#: src/Reports/Reports_Bar.php:3045 src/Reports/Reports_Pie.php:531
+#: src/Reports/Reports_Pie.php:549
+msgid "Not respected TTR"
+msgstr "Ratkaisuaikaa ei noudatettu"
+
+#: src/Reports/Reports_Bar.php:2741
+msgid "Not satisfy number"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:1491 src/Reports/Reports_Pie.php:1505
+msgid "Not satisfy percent"
+msgstr "Tyytymättömyysprosentti"
+
+#: src/Reports/Reports_Line.php:122
+msgid "Number of in progress (not new and pending) tickets by week"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:128
+msgid "Number of open tickets in the month still in progress for each month"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:85 src/Reports/Reports_Line.php:615
+msgid "Number of opened and closed tickets by month"
+msgstr "Avattujen ja suljettujen tikettien määrä kuukaudessa"
+
+#: src/Reports/Reports_Line.php:90 src/Reports/Reports_Line.php:892
+msgid "Number of opened and resolved / closed tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:138
+msgid "Number of opened incidents by category"
+msgstr "Avattujen häiriötilanteiden määrä kategorioittain"
+
+#: src/Reports/Reports_Pie.php:143
+msgid "Number of opened requests by category"
+msgstr "Avattujen palvelupyyntöjen määrä kategorioittain"
+
+#: src/Reports/Reports_Bar.php:173
+msgid "Number of opened ticket and average satisfaction per trimester"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:85 src/Reports/Reports_Table.php:1020
+msgid "Number of opened tickets by group and by status"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:163 src/Reports/Reports_Pie.php:118
+msgid "Number of opened tickets by priority"
+msgstr "Avattujen tikettien lukumäärä prioriteetin mukaan"
+
+#: src/Reports/Reports_Table.php:80
+msgid "Number of opened tickets by technician and by status"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:1259
+msgid "Number of opened, closed  and unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:148
+msgid "Number of opened, closed and unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:95
+msgid "Number of opened, closed, unplanned tickets by month"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2727
+msgid "Number of surveys answered"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:140
+msgid "Number of tickets affected by technicians by month"
+msgstr "Tikettien määrä kuukaudessa, joihin asentajat ovat vaikuttaneet "
+
+#: src/Reports/Reports_Line.php:100
+msgid "Number of tickets created each months"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:105
+msgid "Number of tickets created each week"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:115
+msgid "Number of tickets linked with problems"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:709
+msgid "Number of tickets open by technician and by status"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:178
+msgid "Number of tickets per location per period"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:133
+msgid "Number of tickets with more than one solution"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:110
+msgid "Number of tickets with validation refusal"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:173
+msgid "Number of use of request sources"
+msgstr ""
+
+#: src/Reports/Reports_Map.php:69
+msgid "OpenStreetMap - Opened tickets by location"
+msgstr "OpenStreetMap - Avatut tiketit sijainnin mukaan"
+
+#: src/Alert.php:1483
+msgid "Opened incidents without assigned technicians"
+msgstr ""
+
+#: src/Alert.php:1484
+msgid "Opened requests without assigned technicians"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1802 src/Reports/Reports_Line.php:620
+#: src/Reports/Reports_Line.php:897 src/Reports/Reports_Line.php:1264
+#: src/Reports/Reports_Pie.php:1052 src/Reports/Reports_Pie.php:1055
+msgid "Opened tickets"
+msgstr "Avatut tiketit"
+
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:622
+#: src/Reports/Reports_Line.php:899 src/Reports/Reports_Line.php:1267
+msgid "Opened tickets backlog"
+msgstr "Avattujen tikettien kertymä"
+
+#: src/Menu.php:1756
+msgid "PDF export failed. Please try again."
+msgstr ""
+
+#: templates/preferences.html.twig:76
+msgid "Palette color"
+msgstr ""
+
+#: src/Alert.php:3719 src/Alert.php:3998
+msgid "Pending tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2953
+msgid "Percent - Respected TTO"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:3057
+msgid "Percent - Respected TTR"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:153
+msgid "Percent of use of solution types"
+msgstr "Ratkaisutyyppien osuus prosentteina"
+
+#: src/Criterias/DisplayData.php:79 src/Criterias/FilterDate.php:73
+msgid "Period"
+msgstr ""
+
+#: src/Menu.php:736 src/Menu.php:815
+msgid "Permit drag / resize widgets"
+msgstr "Salli raahaus / koon muuttaminen widgeteille"
+
+#: src/Reports/RSSFeed.php:133
+msgid "Personal RSS feed"
+msgid_plural "Personal RSS feeds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Widget.php:243
+msgid "Pie charts"
+msgstr ""
+
+#: front/config.php:47
+msgid "Please activate the plugin"
+msgstr ""
+
+#: public/scripts/insert_stock_ticketindicators.php:72
+#: public/scripts/clean_stock_tickets.php:152
+#: public/scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr "Liitännäinen poistettu käytöstä"
+
+#: src/Config.php:62
+msgid "Plugin setup"
+msgstr ""
+
+#: src/Preference.php:241
+msgid "Previous year"
+msgstr ""
+
+#: src/Reports/Problem.php:83 src/Reports/Problem.php:638
+#: src/Reports/Problem.php:644
+msgid "Problem followup"
+msgstr ""
+
+#: src/Alert.php:3258
+msgid "Problem with GLPI"
+msgstr "Ongelma GLPI:n kanssa"
+
+#: src/Alert.php:1585
+msgid "Problems with very high or major priority"
+msgstr "Ongelmia, joilla on erittäin suuri tai tärkeä prioriteetti"
+
+#: src/Reports/Reports_Bar.php:130
+msgid "Process time by technicians by month"
+msgstr "Käsittelyaika asentajittain kuukaudessa"
+
+#: templates/menu_edit_toolbar.html.twig:64
+msgid "Profile"
+msgstr ""
+
+#: src/Reports/ProjectTask.php:72 src/Reports/ProjectTask.php:80
+#: src/Reports/ProjectTask.php:231 src/Reports/ProjectTask.php:272
+msgid "Projects tasks to be processed"
+msgstr ""
+
+#: src/Reports/Project.php:68 src/Reports/Project.php:76
+#: src/Reports/Project.php:123 src/Reports/Project.php:225
+#: src/Reports/Project.php:250
+msgid "Projects to be processed"
+msgstr ""
+
+#: templates/alert_form.html.twig:46 templates/itilalert_item.html.twig:78
+msgid "Public"
+msgstr ""
+
+#: src/Reports/RSSFeed.php:173
+msgid "Public RSS feed"
+msgid_plural "Public RSS feeds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Reports/KnowbaseItem.php:170
+msgid "Publication date"
+msgstr "Julkaisupäivämäärä"
+
+#: src/Config.php:366
+msgctxt "button"
+msgid "Reconstruct global backlog"
+msgstr ""
+
+#: src/Config.php:370
+msgctxt "button"
+msgid "Reconstruct global indicators per week"
+msgstr ""
+
+#: src/Menu.php:1150
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: templates/preferences.html.twig:34
+msgid "Refresh every "
+msgstr "Päivitä joka"
+
+#: src/Menu.php:1331
+msgid "Refresh widget"
+msgstr "Päivitä widget"
+
+#: src/Reports/Reports_Map.php:406
+msgid "Reload"
+msgstr ""
+
+#: templates/config_form.html.twig:43 templates/preferences.html.twig:39
+msgid "Replace central interface"
+msgstr "Korvaa pää-käyttöliittymä"
+
+#: src/Dashboard.php:149
+msgid "Request supervisor grid"
+msgstr "Pyyntöjen -valvojan ruudukko"
+
+#: src/Customswidget.php:177 src/Customswidget.php:178
+msgid "Requests"
+msgstr ""
+
+#: src/Alert.php:234 src/Alert.php:1606
+msgid "Requests alerts"
+msgstr ""
+
+#: src/Alert.php:3849 src/Alert.php:4004
+msgid "Requests in progress"
+msgstr ""
+
+#: src/Alert.php:2142
+msgid "Requests where time to own is exceeded"
+msgstr ""
+
+#: src/Alert.php:2011
+msgid "Requests where time to own will be exceeded"
+msgstr ""
+
+#: src/Alert.php:2208
+msgid "Requests where time to resolve is exceeded"
+msgstr ""
+
+#: src/Alert.php:2076
+msgid "Requests where time to resolve will be exceeded"
+msgstr ""
+
+#: src/Alert.php:1546
+msgid "Requests with very high or major priority"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:898
+msgid "Resolved / closed tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2947 src/Reports/Reports_Pie.php:677
+#: src/Reports/Reports_Pie.php:688
+msgid "Respected TTO"
+msgstr "Vasteaikaa noudatettu"
+
+#: src/Reports/Reports_Bar.php:3051 src/Reports/Reports_Pie.php:536
+#: src/Reports/Reports_Pie.php:548
+msgid "Respected TTR"
+msgstr "Ratkaisuaikaa noudatettu"
+
+#: src/Reports/Reports_Bar.php:178
+msgid "Responsiveness over 12 rolling months"
+msgstr ""
+
+#: src/Profile.php:57
+msgid "Rights management"
+msgstr "Oikeuksien hallinta"
+
+#: src/Alert.php:219 src/Alert.php:2216
+msgid "SLA Incidents alerts"
+msgstr "SLA tapausten hälytykset"
+
+#: src/Alert.php:229 src/Alert.php:2219
+msgid "SLA Requests alerts"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:165
+msgid "Satisfaction average"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2735
+msgid "Satisfy number"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:1486 src/Reports/Reports_Pie.php:1505
+msgid "Satisfy percent"
+msgstr "Tyytyväisyysprosentti"
+
+#: src/Menu.php:723 src/Menu.php:728 src/Menu.php:802
+msgid "Save grid"
+msgstr "Tallenna ruudukko"
+
+#: src/Menu.php:1308
+msgid "Save grid to see widget"
+msgstr "Tallenna ruudukko nähdäksesi widgetin"
+
+#: src/Config.php:397 src/Config.php:585 src/ItilAlert.php:119
+#: src/Alert.php:173 src/Alert.php:3082
+msgid "Scheduled maintenance"
+msgid_plural "Scheduled maintenances"
+msgstr[0] "Ajoitettu ylläpitotoimi"
+msgstr[1] "Ajoitetut ylläpitotoimet"
+
+#: src/CheckSchema.php:55
+msgid "Schema check"
+msgstr ""
+
+#: src/Reports/Reports_Table.php:112
+msgid "Search users of your organisation"
+msgstr "Etsi organisaatiosi käyttäjiä"
+
+#: src/Profile.php:190 src/Profile.php:304
+msgid "See edit mode"
+msgstr ""
+
+#: src/Alert.php:180
+msgid "See informations block"
+msgstr ""
+
+#: src/Alert.php:170
+msgid "See network alert block"
+msgstr ""
+
+#: src/Alert.php:175
+msgid "See scheduled maintenances information block"
+msgstr ""
+
+#: src/Profile.php:300
+msgid "See the configuration"
+msgstr "Katso asetukset"
+
+#: src/Profile.php:296
+msgid "See the dashboard"
+msgstr "Katso raportointinäkymää"
+
+#: src/Profile.php:205 src/Profile.php:292
+msgid "Setup stock widget"
+msgstr ""
+
+#: src/Menu.php:1154
+#, php-format
+msgid "Show %d elements"
+msgstr ""
+
+#: src/Reports/Ticket.php:1594 src/Widget.php:655 src/Menu.php:1155
+msgid "Show all"
+msgstr ""
+
+#: src/Menu.php:1120
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Näytetään 0 - 0 yhteensä 0 merkinnästä"
+
+#: src/Menu.php:1119
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Näytetään _START_ to _END_ of _TOTAL_ entries"
+
+#: src/Reports/Reports_Bar.php:193
+msgid "Solve delay and take into account of tickets"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2509
+msgid "Solve delay average (hour)"
+msgstr ""
+
+#: templates/criteria_filter_date.html.twig:34
+#: templates/criteria_period_range.html.twig:28
+msgid "Start"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:142
+msgid "Start end"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:107
+msgid "Start month"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:107
+msgid "Start year"
+msgstr ""
+
+#: templates/criteria_other_status.html.twig:31
+msgid "Status"
+msgid_plural "Statuses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Reports/Reports_Bar.php:168
+msgid "Stock of tickets by status"
+msgstr ""
+
+#: src/StockWidget.php:54
+msgid "Stock widget"
+msgid_plural "Stock widgets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Menu.php:1307
+msgid "Success"
+msgstr "Onnistui"
+
+#: src/Reports/Reports_Line.php:82
+msgid "Sum of not solved tickets by month"
+msgstr "Ratkaisemattomien tikettien määrä kuukaudessa"
+
+#: src/Reports/Reports_Bar.php:142
+msgid "Sum of ticket affected by technicians"
+msgstr "Tikettien yhteismäärä, joihin asentajat ovat vaikuttaneet"
+
+#: src/Reports/Reports_Bar.php:132
+msgid "Sum of ticket tasks duration by technicians"
+msgstr "Tikettitehtävien kokonaiskesto asentajittain"
+
+#: src/Reports/Reports_Bar.php:2152
+msgid "Sum of tickets solved in less than 24 hours"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2161
+msgid "Sum of tickets solved in less than a week"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2170
+msgid "Sum of tickets solved in more than a week"
+msgstr ""
+
+#: src/Menu.php:810
+msgid "Switch to edit mode"
+msgstr "Vaihda muokkaustilaan"
+
+#: src/Reports/Reports_Pie.php:133
+msgid "TTO Compliance"
+msgstr "Vasteajan noudattaminen"
+
+#: src/Reports/Reports_Pie.php:128
+msgid "TTR Compliance"
+msgstr "Ratkaisuajan noudattaminen"
+
+#: src/Widget.php:241
+msgid "Tables"
+msgstr ""
+
+#: src/Criterias/Other.php:536
+msgid "Tag"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:2510
+msgid "Take into account average (hour)"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:799
+msgid "Tasks duration (minutes)"
+msgstr "Tehtävien kesto (minuutit)"
+
+#: src/Criterias/Other.php:222 src/Criterias/Other.php:373
+msgid "Technician"
+msgid_plural "Technicians"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Reports/Reports_Table.php:712
+msgid "Technicians"
+msgstr ""
+
+#: src/CheckSchema.php:169
+msgid "The plugin schema is good"
+msgstr ""
+
+#: src/Alert.php:2234 src/Alert.php:2936
+msgid ""
+"There is at least on planned scheduled maintenance. Please log on to see more"
+msgstr ""
+"Suunniteltu ja aikataulutettu ylläpitotehtävä. Kirjaudu sisään nähdäksesi "
+"lisää"
+
+#: src/Widget.php:439
+msgid "This widget doesn't exist anymore"
+msgstr ""
+
+#: src/Alert.php:3947
+msgid "Ticket closed"
+msgstr ""
+
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1399
+#: src/Reports/Ticket.php:1416
+msgid "Ticket followup"
+msgstr ""
+
+#: src/Alert.php:4012
+msgid "Tickets closed"
+msgstr ""
+
+#: src/Alert.php:3672 src/Alert.php:3995
+msgid "Tickets late"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:305 src/Reports/Reports_Bar.php:561
+#: src/Reports/Reports_Bar.php:949 src/Reports/Reports_Bar.php:1365
+#: src/Reports/Reports_Line.php:318 src/Reports/Reports_Line.php:1417
+#: src/Reports/Reports_Line.php:1495 src/Reports/Reports_Line.php:1629
+#: src/Reports/Reports_Line.php:1762 src/Reports/Reports_Line.php:1865
+#: src/Reports/Reports_Line.php:2001 src/Reports/Reports_Line.php:2147
+msgid "Tickets number"
+msgstr "Tikettien määrä"
+
+#: src/Reports/Reports_Bar.php:183
+msgid "Tickets request sources evolution"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:188
+msgid "Tickets solution types evolution"
+msgstr ""
+
+#: src/Alert.php:3898 src/Alert.php:4007
+msgid "Tickets solved"
+msgstr ""
+
+#: src/Reports/Reports_Line.php:80
+msgid "Tickets stock by month"
+msgstr "Tikettikertymä kuukaudessa"
+
+#: src/Criterias/Other.php:245 src/Criterias/Other.php:251
+#: src/Criterias/Other.php:257 src/Criterias/Other.php:263
+#: src/Criterias/Other.php:418 src/Criterias/Other.php:473
+msgid "Time display"
+msgstr ""
+
+#: src/Config.php:251 templates/config_form.html.twig:69
+msgid "Title of alerts widget"
+msgstr ""
+
+#: src/Config.php:269 templates/config_form.html.twig:79
+msgid "Title of informations widget"
+msgstr ""
+
+#: src/Config.php:260 templates/config_form.html.twig:74
+msgid "Title of scheduled maintenances widget"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:183
+msgid "Top ten of opened tickets by appliance"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:168
+msgid "Top ten of opened tickets by location"
+msgstr ""
+
+#: src/Reports/Reports_Pie.php:158
+msgid "Top ten of opened tickets by requester groups"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:153
+msgid "Top ten technicians (by tickets number)"
+msgstr "Top 10 asentajat (tikettien määrä)"
+
+#: src/Reports/Reports_Bar.php:135
+msgid "Top ten ticket categories by type of ticket"
+msgstr "Top 10 tikettiluokkaa tikettityypin perusteella"
+
+#: src/Reports/Reports_Pie.php:123
+msgid "Top ten ticket requesters by month"
+msgstr "Top 10 tikettien toimeksiantajaa kuukaudessa"
+
+#: src/Reports/Reports_Bar.php:1558
+msgid "Trimester 1"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1618
+msgid "Trimester 2"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1678
+msgid "Trimester 3"
+msgstr ""
+
+#: src/Reports/Reports_Bar.php:1739
+msgid "Trimester 4"
+msgstr ""
+
+#: templates/alert_form.html.twig:34 templates/stockwidget_form.html.twig:49
+#: templates/itilalert_item.html.twig:66
+msgid "Type"
+msgstr ""
+
+#: src/Menu.php:1166
+msgid "Updating all widgets"
+msgstr "Päivitetään kaikki widgetit"
+
+#: templates/groupprofile_form.html.twig:36
+msgid "Use profile group"
+msgstr ""
+
+#: src/Alert.php:224
+msgid "User ticket alerts"
+msgstr "Käyttäjätikettien hälytykset"
+
+#: templates/configtranslation_list.html.twig:67
+#: templates/configtranslation_form.html.twig:55
+msgid "Value"
+msgstr ""
+
+#: src/Menu.php:1319 templates/menu_grid.html.twig:30
+msgid "Warning"
+msgstr "Varoitus"
+
+#: src/Criterias/Week.php:51 src/Criterias/Week.php:64
+#: src/Criterias/Other.php:413
+msgid "Week"
+msgstr ""
+
+#: src/Widget.php:73
+msgid "Widget"
+msgstr ""
+
+#: src/Menu.php:1167
+msgid "Widget added on Dashboard"
+msgstr "Widget lisätty raportointinäkymään"
+
+#: src/Reports/Reports_Funnel.php:342
+msgid "Without buy date"
+msgstr ""
+
+#: src/Criterias/DisplayData.php:71 src/Criterias/Year.php:69
+#: src/Criterias/Year.php:85 src/Criterias/FilterDate.php:70 src/Menu.php:930
+#: templates/criteria_filter_date.html.twig:41
+#: templates/criteria_display_data.html.twig:37
+#: templates/criteria_period_year.html.twig:28
+msgid "Year"
+msgstr "Vuosi"
+
+#: src/Criterias/Other.php:258 src/Criterias/Other.php:433
+msgid "Year to date"
+msgstr ""
+
+#: src/Alert.php:206 templates/widget_equipments.html.twig:31
+msgid "Your equipments"
+msgstr ""
+
+#: src/Reports/Ticket.php:89
+msgid "Your rejected tickets"
+msgstr ""
+
+#: src/Reports/Ticket.php:99
+msgid "Your satisfaction surveys"
+msgstr ""
+
+#: src/Reports/Ticket.php:107 src/Reports/Ticket.php:726
+msgid "Your tickets to validate"
+msgstr ""
+
+#: src/Criterias/FilterDate.php:86
+msgid "begin and end date"
+msgstr ""
+
+#: src/Module.php:175 src/Module.php:386
+msgid "error"
+msgstr "virhe"
+
+#: templates/preferences.html.twig:35
+msgid "minute(s)"
+msgstr "minuutti"
+
+#: src/Module.php:173 src/Module.php:370
+msgid "notice"
+msgstr "ilmoitus"
+
+#: src/Module.php:174 src/Module.php:378
+msgid "warning"
+msgstr "varoitus"
+
+#: src/Criterias/DisplayData.php:141 src/Criterias/Other.php:434
+#: src/Criterias/FilterDate.php:85
+msgid "year"
+msgstr ""
+
+#~ msgid "Grid cleared"
+#~ msgstr "Ruudukko tyhjennetty"
+
+#~ msgid "Display widgets from plugins"
+#~ msgstr "Näytä widgetit liitännäisistä"
+
+#~ msgid "Google API Key"
+#~ msgstr "Google API-avain"
+
+#~ msgid "Add a widget"
+#~ msgstr "Lisää widget"
+
+#~ msgid "Save default grid"
+#~ msgstr "Tallenna oletusruudukoksi"
+
+#~ msgid "Error"
+#~ msgstr "Virhe"
+
+#~ msgid "Please reload your page."
+#~ msgstr "Lataa sivu uudelleen."
+
+#~ msgid "Save positions"
+#~ msgstr "Tallenna sijainnit"
+
+#~ msgid "Custom and save default grid"
+#~ msgstr "Mukauta ja tallenna oletus ruudukko"
+
+#~ msgid "You can't have more than one serie for a pie chart"
+#~ msgstr "Sinulla ei voi olla enempää kuin yksi sarja ympyräkaaviossa"
+
+#~ msgid "user_widget management"
+#~ msgstr "user_widget hallinta"
+
+#~ msgid "Widget management"
+#~ msgstr "Widgetin hallinta"
+
+#~ msgid "projects to be processed"
+#~ msgstr "käsiteltävät projektit"
+
+#~ msgid "projects tasks to be processed"
+#~ msgstr "käsiteltävät projektitehtävät"
+
+#~ msgid "Tickets stock"
+#~ msgstr "Tikettikertymä"
