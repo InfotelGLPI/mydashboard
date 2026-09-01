@@ -34,6 +34,14 @@ use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
 use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use GlpiPlugin\Ocsinventoryng\Dashboard;
 
+global $CFG_GLPI;
+
+// The response is a bare URL consumed by window.open() on the JS side, never HTML.
+// Serving it as text/plain (like the sibling endpoints serve application/json) keeps
+// it out of any HTML parsing context, whatever a future link builder returns.
+header('Content-Type: text/plain; charset=UTF-8');
+Html::header_nocache();
+
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 //Case PluginMydashboardReports_Table32 / PluginMydashboardReports_Table33
@@ -44,10 +52,6 @@ if (isset($_POST['widget'])) {
 }
 
 $link = '';
-
-if (isset($_POST["selected_id"]) && $_POST["selected_id"] == "") {
-    $link = '';
-}
 
 $widget = $_POST["params"]["widget"] ?? '';
 
@@ -76,6 +80,18 @@ if ($widget === "PluginOcsinventoryngDashboard1") {
             break;
         }
     }
+}
+
+// Every consumer feeds this response straight to window.open() (see the Charts and
+// Reports_Table script blocks), so the URL itself is the sink: a "javascript:" or
+// "data:" link would execute, and a protocol-relative "//host" one would be an open
+// redirect. Link builders all return $CFG_GLPI['root_doc'] . '/front/...' URLs, so
+// anything that is not a path under the GLPI root is dropped -- including the links
+// produced by the third-party OCS Inventory NG branch above.
+$root = $CFG_GLPI['root_doc'] ?? '';
+if ($link !== ''
+    && (str_starts_with($link, '//') || !str_starts_with($link, $root . '/'))) {
+    $link = '';
 }
 
 echo $link;

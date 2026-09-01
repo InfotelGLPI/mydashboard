@@ -115,6 +115,33 @@ class Entity
     }
 
     /**
+     * Validate an attacker controlled entity id against the session.
+     *
+     * Widget parameters come from $_POST['params'] (see ajax/refreshWidget.php), so a
+     * requested entity is never trustworthy: it is only honoured when it belongs to
+     * $_SESSION['glpiactiveentities']. Anything else fails closed on -1, which yields
+     * an impossible criterion rather than an unrestricted query.
+     *
+     * @param mixed $requested Raw value read from the request parameters
+     *
+     * @return int|string The validated entity id, or '' when no entity was explicitly
+     *                    requested -- the caller then applies its own default.
+     */
+    public static function getAllowedEntity($requested)
+    {
+        if (is_array($requested)) {
+            $requested = reset($requested);
+        }
+        if ($requested === '' || $requested === null || $requested === false || (int) $requested === -1) {
+            return '';
+        }
+
+        $allowed = array_map('intval', $_SESSION['glpiactiveentities'] ?? []);
+
+        return in_array((int) $requested, $allowed, true) ? (int) $requested : -1;
+    }
+
+    /**
      * Build the entity restriction of a widget query.
      *
      * $params is filled from $_POST['params'] by ajax/refreshWidget.php, so both
@@ -131,20 +158,17 @@ class Entity
     {
         $field = $table . "." . self::$criteria_name;
 
-        $requested = $params[self::$criteria_name] ?? '';
-        if (is_array($requested)) {
-            $requested = reset($requested);
-        }
-        if ($requested === '' || $requested === null || (int) $requested === -1) {
-            $requested = $_SESSION['glpiactive_entity'] ?? 0;
+        $requested = self::getAllowedEntity($params[self::$criteria_name] ?? '');
+        if ($requested === '') {
+            $requested = (int) ($_SESSION['glpiactive_entity'] ?? 0);
         }
 
         $recursive = isset($params['is_recursive_entities'])
                      && (int) $params['is_recursive_entities'] === 1;
 
-        $entities = $recursive
-            ? getSonsOf('glpi_entities', (int) $requested)
-            : [(int) $requested];
+        $entities = ($requested === -1)
+            ? []
+            : ($recursive ? getSonsOf('glpi_entities', $requested) : [$requested]);
 
         // Entities the session may actually read. Fails closed: an empty
         // intersection yields an impossible id rather than no criterion at all,

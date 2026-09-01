@@ -80,10 +80,13 @@ class ITILCategory
     {
 
         if (isset($opt['entities_id'])) {
+            // $opt mirrors the widget parameters posted to ajax/refreshWidget.php and
+            // getEntitiesRestrictCriteria() trusts its $value argument as is, so the
+            // requested entity is validated against the session first.
             $restrict = getEntitiesRestrictCriteria(
                 'glpi_entities',
                 '',
-                $opt['entities_id'],
+                Entity::getAllowedEntity($opt['entities_id']),
                 $opt['is_recursive_entities'] ?? false,
             );
         } else {

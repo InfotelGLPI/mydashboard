@@ -480,16 +480,17 @@ class Other
         //ITILCATEGORY LVL1
         if (in_array("itilcategorielvl1", $criterias)) {
             $dbu = new DbUtils();
-            if (isset($_POST["params"]['entities_id'])) {
-                $restrict = $dbu->getEntitiesRestrictCriteria(
-                    'glpi_entities',
-                    '',
-                    $_POST["params"]['entities_id'],
-                    $_POST["params"]['sons'],
-                );
-            } else {
-                $restrict = $dbu->getEntitiesRestrictCriteria('glpi_entities', '', $opt['entities_id'], $opt['sons']);
-            }
+            // entities_id and sons come from $_POST['params'] (ajax/refreshWidget.php) and
+            // getEntitiesRestrictCriteria() trusts its $value argument as is, so the
+            // requested entity is validated against the session first.
+            $source    = isset($_POST["params"]['entities_id']) ? $_POST["params"] : $opt;
+            $recursive = !empty($source['sons']);
+            $restrict  = $dbu->getEntitiesRestrictCriteria(
+                'glpi_entities',
+                '',
+                Entity::getAllowedEntity($source['entities_id'] ?? ''),
+                $recursive,
+            );
 
             $form = self::renderField(
                 __('Category', 'mydashboard'),
@@ -507,21 +508,16 @@ class Other
 
         if (in_array("tag", $criterias)) {
             $dbu = new DbUtils();
-            if (isset($_POST["params"]['entities_id'])) {
-                $restrict = $dbu->getEntitiesRestrictCriteria(
-                    'glpi_plugin_tag_tags',
-                    '',
-                    $_POST["params"]['entities_id'],
-                    $_POST["params"]['is_recursive_entities'],
-                );
-            } else {
-                $restrict = $dbu->getEntitiesRestrictCriteria(
-                    'glpi_plugin_tag_tags',
-                    '',
-                    $opt['entities_id'],
-                    $opt['is_recursive_entities'],
-                );
-            }
+            // Same untrusted source, and here the restriction really reaches SQL through
+            // find(): validate the requested entity before handing it over.
+            $source    = isset($_POST["params"]['entities_id']) ? $_POST["params"] : $opt;
+            $recursive = !empty($source['is_recursive_entities']);
+            $restrict  = $dbu->getEntitiesRestrictCriteria(
+                'glpi_plugin_tag_tags',
+                '',
+                Entity::getAllowedEntity($source['entities_id'] ?? ''),
+                $recursive,
+            );
 
             $tags = [];
             $tag = new PluginTagTag();
