@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 11:51+0000\n"
+"POT-Creation-Date: 2026-09-01 13:17+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -212,8 +212,8 @@ msgstr "Peut prendre beaucoup de temps si vous avez beaucoup de tickets"
 msgid "Cannot create alert without a type"
 msgstr "Impossible de créer une alterne sans préciser le type"
 
-#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:102
-#: src/Criterias/Other.php:273 src/Criterias/Other.php:495
+#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:105
+#: src/Criterias/Other.php:273 src/Criterias/Other.php:496
 msgid "Category"
 msgstr "Catégorie"
 
@@ -1403,7 +1403,7 @@ msgstr "Respect des TTR"
 msgid "Tables"
 msgstr "Tableaux"
 
-#: src/Criterias/Other.php:536
+#: src/Criterias/Other.php:532
 msgid "Tag"
 msgstr "Tag"
 

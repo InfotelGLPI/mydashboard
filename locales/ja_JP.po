@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 11:51+0000\n"
+"POT-Creation-Date: 2026-09-01 13:17+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -204,8 +204,8 @@ msgstr "多数のチケットがあると多くの時間を費やします"
 msgid "Cannot create alert without a type"
 msgstr "警告を作成する際は型を指定してください"
 
-#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:102
-#: src/Criterias/Other.php:273 src/Criterias/Other.php:495
+#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:105
+#: src/Criterias/Other.php:273 src/Criterias/Other.php:496
 msgid "Category"
 msgstr "カテゴリー"
 
@@ -1373,7 +1373,7 @@ msgstr "TTR ( 解決目標時間 ) コンプライアンス"
 msgid "Tables"
 msgstr "表"
 
-#: src/Criterias/Other.php:536
+#: src/Criterias/Other.php:532
 msgid "Tag"
 msgstr "タグ"
 

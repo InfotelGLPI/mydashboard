@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 11:51+0000\n"
+"POT-Creation-Date: 2026-09-01 13:17+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Diego Nobre <diego@koruma.com.br>, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/infotelGLPI/"
@@ -213,8 +213,8 @@ msgstr "Pode levar muito tempo se você tiver muitos chamados"
 msgid "Cannot create alert without a type"
 msgstr "Não é possível criar alerta sem tipo"
 
-#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:102
-#: src/Criterias/Other.php:273 src/Criterias/Other.php:495
+#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:105
+#: src/Criterias/Other.php:273 src/Criterias/Other.php:496
 msgid "Category"
 msgstr "Categoria"
 
@@ -1398,7 +1398,7 @@ msgstr ""
 msgid "Tables"
 msgstr "Tabelas"
 
-#: src/Criterias/Other.php:536
+#: src/Criterias/Other.php:532
 msgid "Tag"
 msgstr "Etiqueta"
 
