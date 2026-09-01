@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Alban Lesellier <alban.lesellier@infotel.com>, 2021
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -15,14 +15,12 @@ msgstr ""
 "POT-Creation-Date: 2026-09-01 07:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
-"teams/65490/fr_FR/)\n"
-"Language: fr_FR\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/65490/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/Menu.php:1121
 msgid "(filtered from _MAX_ total entries)"
@@ -117,8 +115,8 @@ msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
 msgstr ""
-"L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède "
-"la limite)"
+"L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède"
+" la limite)"
 
 #: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
 msgid "Alert level"
@@ -354,7 +352,7 @@ msgstr "Supprimer un widget"
 
 #: templates/checkschema_result.html.twig:85
 msgid "Destructive queries"
-msgstr ""
+msgstr "Requêtes destructives"
 
 #: templates/criteria_display_data.html.twig:30
 msgid "Display"
@@ -838,7 +836,7 @@ msgstr "Pas de problème détecté"
 
 #: templates/checkschema_result.html.twig:90
 msgid "No query could be suggested for this difference."
-msgstr ""
+msgstr "Aucune explication ne peut être fournie pour cette différence."
 
 #: templates/graph_header.html.twig:38
 msgid "No results found"
@@ -1125,7 +1123,7 @@ msgstr "Date de publication"
 
 #: templates/checkschema_result.html.twig:51
 msgid "Queries to run"
-msgstr ""
+msgstr "Requêtes à exécuter"
 
 #: src/Config.php:366
 msgctxt "button"
@@ -1353,7 +1351,7 @@ msgstr "Succès"
 
 #: templates/checkschema_result.html.twig:80
 msgid "Suggested queries"
-msgstr ""
+msgstr "Requêtes suggérées"
 
 #: src/Reports/Reports_Line.php:82
 msgid "Sum of not solved tickets by month"
@@ -1424,6 +1422,10 @@ msgid ""
 "expected schema: data will be lost. Check that they are not used by another "
 "plugin or by a custom development before running them."
 msgstr ""
+"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas"
+" partie du schéma attendu : des données seront perdues. Avant de les "
+"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par"
+" un développement personnalisé."
 
 #: templates/checkschema_result.html.twig:42
 msgid "The plugin schema is good"
@@ -1435,13 +1437,18 @@ msgid ""
 "Review them, back up your database, then run them manually: they are never "
 "run by the plugin."
 msgstr ""
+"Les requêtes ci-dessous ne sont que des suggestions basées sur les "
+"différences constatées. Veuillez les examiner, sauvegarder votre base de "
+"données, puis les exécuter manuellement : elles ne sont jamais exécutées par"
+" l’extension."
 
 #: src/Alert.php:2234 src/Alert.php:2936
 msgid ""
-"There is at least on planned scheduled maintenance. Please log on to see more"
+"There is at least on planned scheduled maintenance. Please log on to see "
+"more"
 msgstr ""
-"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier "
-"pour plus de détails"
+"Il y a au moins une maintenance planifiée prévue. Merci de vous authentifier"
+" pour plus de détails"
 
 #: src/Widget.php:439
 msgid "This widget doesn't exist anymore"
