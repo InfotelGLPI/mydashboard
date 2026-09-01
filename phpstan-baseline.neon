@@ -391,12 +391,6 @@ parameters:
 			path: src/CheckSchema.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/CheckSchema.php
-
-		-
 			message: '#^Access to property \$fields on an unknown class GlpiPlugin\\Mydashboard\\type\.$#'
 			identifier: class.notFound
 			count: 1
