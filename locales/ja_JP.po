@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:17+0000\n"
+"POT-Creation-Date: 2026-09-01 14:56+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -200,7 +200,7 @@ msgstr "ウィジェットのドラッグ・サイズ変更を不許可"
 msgid "Can take many time if you have many tickets"
 msgstr "多数のチケットがあると多くの時間を費やします"
 
-#: src/StockWidget.php:68
+#: src/StockWidget.php:69 src/StockWidget.php:76 src/StockWidget.php:106
 msgid "Cannot create alert without a type"
 msgstr "警告を作成する際は型を指定してください"
 
