@@ -112,6 +112,10 @@ class Criteria
             Year::$criteria_name,
         ];
 
+        // Most restrictive default: with no interface in session, only expose the
+        // criterion every interface shares.
+        $criterias = [Type::$criteria_name];
+
         if (isset($_SESSION['glpiactiveprofile']['interface'])
             && Session::getCurrentInterface() == 'central') {
             $criterias = $default_criterias_list;
@@ -373,7 +377,94 @@ class Criteria
             }
         }
 
+        // Fail closed on the entity scope.
+        //
+        // The restriction above only runs when Entity::$criteria_name belongs to
+        // $params['criterias'], but that same list also drives the filters rendered by
+        // getForm(). Outside the central interface, getDefaultCriterias() therefore
+        // drops entities_id to hide the entity selector from self-service, which used
+        // to drop the restriction along with it: a helpdesk user could aggregate the
+        // tickets of every entity. Any widget family that simply forgets to declare
+        // the criterion was exposed the same way.
+        //
+        // So whenever no entity clause reached the WHERE, apply the session
+        // restriction here.
+        if (self::queryUsesTable($query, $table)
+            && !self::hasEntityRestriction($query['WHERE'] ?? [], $table)) {
+            $query['WHERE'] = ($query['WHERE'] ?? []) + getEntitiesRestrictCriteria($table);
+        }
+
         return $query;
+    }
+
+    /**
+     * Is the table holding entities_id actually queried?
+     *
+     * addCriteriasForQuery() defaults to 'glpi_tickets', yet a few widgets start from
+     * another table without joining the tickets (see Urgo and the timelineticket plugin
+     * table). Adding a glpi_tickets.entities_id condition there would build invalid SQL,
+     * so the fallback restriction is only applied when the table really appears in the
+     * FROM or in a join.
+     *
+     * @param array  $query
+     * @param string $table
+     *
+     * @return bool
+     */
+    private static function queryUsesTable($query, $table)
+    {
+        if (isset($query['FROM'])) {
+            if (is_string($query['FROM']) && $query['FROM'] === $table) {
+                return true;
+            }
+            if (is_array($query['FROM']) && in_array($table, $query['FROM'], true)) {
+                return true;
+            }
+        }
+
+        foreach (['JOIN', 'LEFT JOIN', 'INNER JOIN', 'RIGHT JOIN'] as $join_type) {
+            if (isset($query[$join_type])
+                && is_array($query[$join_type])
+                && array_key_exists($table, $query[$join_type])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Does the WHERE already carry an entity condition on that table?
+     *
+     * Two shapes coexist. Entity::getQueryCriteria() writes a flat
+     * "<table>.entities_id" key, while getEntitiesRestrictCriteria() -- which several
+     * widgets call on their own -- nests the very same key under a random integer key
+     * to avoid collisions. Both must be recognised, otherwise the fallback would stack
+     * a redundant second restriction on top of an existing one.
+     *
+     * @param array  $where
+     * @param string $table
+     *
+     * @return bool
+     */
+    private static function hasEntityRestriction($where, $table)
+    {
+        $field = $table . '.' . Entity::$criteria_name;
+
+        if (!is_array($where)) {
+            return false;
+        }
+        if (array_key_exists($field, $where)) {
+            return true;
+        }
+
+        foreach ($where as $value) {
+            if (is_array($value) && self::hasEntityRestriction($value, $table)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function defineLeftjoinByCriteria($params, $table = 'glpi_tickets')

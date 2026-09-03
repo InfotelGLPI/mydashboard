@@ -36,6 +36,7 @@ use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Plugin;
+use Profile;
 use ProfileRight;
 
 /**
@@ -176,7 +177,18 @@ class ProfileAuthorizedWidget extends CommonDBTM
     public function save($post)
     {
         if (isset($post['id']) && isset($post['update'])) {
-            $profiles_id = $post['id'];
+            // Validate the posted target at the sink, like front/menu.php does for
+            // profiles_id: the value is written straight into
+            // glpi_plugin_mydashboard_profileauthorizedwidgets rows, so a
+            // non-numeric or unknown id would only create orphan authorizations.
+            $profiles_id = (int) $post['id'];
+            if ($profiles_id <= 0) {
+                return;
+            }
+            $profile = new Profile();
+            if (!$profile->getFromDB($profiles_id)) {
+                return;
+            }
             unset($post['id']);
             unset($post['update']);
         } else {

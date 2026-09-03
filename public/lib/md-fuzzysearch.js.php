@@ -171,10 +171,23 @@ $(function() {
        var target = '_blank';
 
       // append new results
+      // Build each entry with the DOM API instead of an HTML string: the widget
+      // title can be a Customswidget name typed by a `plugin_mydashboard_config`
+      // admin and stored verbatim, and jQuery `.append(string)` parses its argument
+      // as HTML. The JSON_HEX_* flags used by ajax/fuzzysearch.php only keep the raw
+      // response inert in an HTML context; JSON.parse() restores `<`, `>`, `"`, `'`
+      // and `&` unchanged, so the escaping has to happen at this sink. `.text()` and
+      // the attribute map both go through the DOM, never the HTML parser.
       results.map(function(el) {
-          var finaltitle = el.item.title;
-         $("#md-fuzzysearch .results")
-            .append("<li class='plugin_mydashboard_menuDashboardListItem list-group-item list-group-item-action d-flex align-items-center gap-2' role='button' tabindex='0' data-widgetid='"+el.item.widgetid+"'><i class='"+el.item.icon+" fa-fw'></i><span>"+finaltitle+"</span></li>");
+         var $item = $("<li>", {
+            "class": "plugin_mydashboard_menuDashboardListItem list-group-item list-group-item-action d-flex align-items-center gap-2",
+            "role": "button",
+            "tabindex": "0",
+            "data-widgetid": el.item.widgetid
+         });
+         $("<i>", {"class": el.item.icon + " fa-fw"}).appendTo($item);
+         $("<span>").text(el.item.title).appendTo($item);
+         $("#md-fuzzysearch .results").append($item);
       });
 
       selectFirst();
