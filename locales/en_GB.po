@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:17+0000\n"
+"POT-Creation-Date: 2026-09-01 14:56+0000\n"
 "PO-Revision-Date: 2020-07-20 14:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -199,7 +199,7 @@ msgstr "Block drag / resize widgets"
 msgid "Can take many time if you have many tickets"
 msgstr ""
 
-#: src/StockWidget.php:68
+#: src/StockWidget.php:69 src/StockWidget.php:76 src/StockWidget.php:106
 msgid "Cannot create alert without a type"
 msgstr "Cannot create alert without a type"
 

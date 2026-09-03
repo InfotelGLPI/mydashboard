@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:17+0000\n"
+"POT-Creation-Date: 2026-09-01 14:56+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2024\n"
 "Language-Team: English (United States) (https://app.transifex.com/"
@@ -204,7 +204,7 @@ msgstr "Block dragging / resize widgets"
 msgid "Can take many time if you have many tickets"
 msgstr "Can take some time if you have many tickets"
 
-#: src/StockWidget.php:68
+#: src/StockWidget.php:69 src/StockWidget.php:76 src/StockWidget.php:106
 msgid "Cannot create alert without a type"
 msgstr "Cannot create alert without a type"
 

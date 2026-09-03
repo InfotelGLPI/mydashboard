@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:17+0000\n"
+"POT-Creation-Date: 2026-09-01 14:56+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Tiago Graça, 2022\n"
 "Language-Team: French (Canada) (https://www.transifex.com/infotelGLPI/"
@@ -206,7 +206,7 @@ msgstr "Bloquer le déplacement / redimensionnement des widgets"
 msgid "Can take many time if you have many tickets"
 msgstr ""
 
-#: src/StockWidget.php:68
+#: src/StockWidget.php:69 src/StockWidget.php:76 src/StockWidget.php:106
 msgid "Cannot create alert without a type"
 msgstr "Impossible de créer une alerte sans préciser le type"
 
