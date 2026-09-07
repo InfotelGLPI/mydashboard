@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-define('PLUGIN_MYDASHBOARD_VERSION', '2.3.7');
+define('PLUGIN_MYDASHBOARD_VERSION', '2.3.8');
 
 global $CFG_GLPI;
 
