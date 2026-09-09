@@ -79,16 +79,12 @@ function plugin_init_mydashboard()
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/echarts/echarts.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/echarts/theme/azul.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/fuse.js';
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/md-fuzzysearch.js.php';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/diacritics.js';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/md-fuzzysearch.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/mydashboard.js';
     }
 
-    if (Session::getCurrentInterface() == 'central'
-        && isset($_SERVER['REQUEST_URI'])
-        && strpos($_SERVER['REQUEST_URI'], 'mydashboard') == true) {
-        //        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'] = ["scripts/mydashboard_load_scripts.js.php"];
-    }
     $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
 
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['mydashboard'] = [Profile::class, 'initProfile'];
@@ -166,11 +162,11 @@ function plugin_init_mydashboard()
                 if (Session::getCurrentInterface() == 'central') {
                     if (Preference::getReplaceCentral()
                         && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js.php';
+                        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js';
                     } elseif (Config::getReplaceCentralConf()
                                && Preference::getReplaceCentral()
                                && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-                        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js.php';
+                        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js';
                     }
                 }
 

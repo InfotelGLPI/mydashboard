@@ -548,7 +548,7 @@ HTML;
                 // The hex flags only keep the *raw response* from being read as HTML (matching the JSON
                 // hardening of the sibling endpoints); they are NOT an escaping of the value: JSON.parse()
                 // restores `<`, `>`, `"`, `'` and `&` unchanged. The client must escape at its own sink
-                // (md-fuzzysearch.js.php builds the result nodes with .text()).
+                // (md-fuzzysearch.js builds the result nodes with .text()).
                 return json_encode($graphs, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
                 break;
         }
