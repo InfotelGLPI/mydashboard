@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 07:31+0000\n"
+"POT-Creation-Date: 2026-09-09 08:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,7 +341,7 @@ msgstr ""
 msgid "Default groups"
 msgstr ""
 
-#: src/Menu.php:1329
+#: src/Menu.php:1330
 msgid "Delete widget"
 msgstr ""
 
@@ -525,7 +525,7 @@ msgstr ""
 msgid "GLPI is OK"
 msgstr ""
 
-#: src/Menu.php:1754
+#: src/Menu.php:1755
 msgid "Generating PDF..."
 msgstr ""
 
@@ -719,7 +719,7 @@ msgstr ""
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:203 src/Menu.php:114 src/Menu.php:1755 src/Preference.php:85
+#: setup.php:199 src/Menu.php:114 src/Menu.php:1756 src/Preference.php:85
 #: src/Config.php:67 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr ""
@@ -789,7 +789,7 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Menu.php:1330 src/Chart.php:186 src/Widget.php:821
+#: src/Menu.php:1331 src/Chart.php:186 src/Widget.php:821
 msgid "No data available"
 msgstr ""
 
@@ -845,7 +845,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr ""
 
-#: src/Menu.php:1320 templates/menu_grid.html.twig:31
+#: src/Menu.php:1321 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
@@ -1003,7 +1003,7 @@ msgstr ""
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Menu.php:1756
+#: src/Menu.php:1757
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid "Refresh every "
 msgstr ""
 
-#: src/Menu.php:1331
+#: src/Menu.php:1332
 msgid "Refresh widget"
 msgstr ""
 
@@ -1225,7 +1225,7 @@ msgstr ""
 msgid "Save grid"
 msgstr ""
 
-#: src/Menu.php:1308
+#: src/Menu.php:1309
 msgid "Save grid to see widget"
 msgstr ""
 
@@ -1330,7 +1330,7 @@ msgid_plural "Stock widgets"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:1307
+#: src/Menu.php:1308
 msgid "Success"
 msgstr ""
 
@@ -1553,7 +1553,7 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1319 templates/menu_grid.html.twig:30
+#: src/Menu.php:1320 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr ""
 

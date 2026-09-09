@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 07:31+0000\n"
+"POT-Creation-Date: 2026-09-09 08:28+0000\n"
 "PO-Revision-Date: 2020-07-20 14:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -343,7 +343,7 @@ msgstr "Default dashboard group"
 msgid "Default groups"
 msgstr "Default groups"
 
-#: src/Menu.php:1329
+#: src/Menu.php:1330
 msgid "Delete widget"
 msgstr "Delete widget"
 
@@ -529,7 +529,7 @@ msgstr "GLPI admin grid"
 msgid "GLPI is OK"
 msgstr "GLPI is OK"
 
-#: src/Menu.php:1754
+#: src/Menu.php:1755
 msgid "Generating PDF..."
 msgstr ""
 
@@ -723,7 +723,7 @@ msgstr "Month"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:203 src/Menu.php:114 src/Menu.php:1755 src/Preference.php:85
+#: setup.php:199 src/Menu.php:114 src/Menu.php:1756 src/Preference.php:85
 #: src/Config.php:67 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "My Dashboard"
@@ -793,7 +793,7 @@ msgstr "No alerts are setup"
 msgid "No column defined"
 msgstr "No column defined"
 
-#: src/Menu.php:1330 src/Chart.php:186 src/Widget.php:821
+#: src/Menu.php:1331 src/Chart.php:186 src/Widget.php:821
 msgid "No data available"
 msgstr "No data available"
 
@@ -849,7 +849,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr ""
 
-#: src/Menu.php:1320 templates/menu_grid.html.twig:31
+#: src/Menu.php:1321 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr "No widgets founded, please add widgets"
 
@@ -1007,7 +1007,7 @@ msgstr "Opened tickets"
 msgid "Opened tickets backlog"
 msgstr "Opened tickets backlog"
 
-#: src/Menu.php:1756
+#: src/Menu.php:1757
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1135,7 +1135,7 @@ msgstr "Refresh"
 msgid "Refresh every "
 msgstr "Refresh every "
 
-#: src/Menu.php:1331
+#: src/Menu.php:1332
 msgid "Refresh widget"
 msgstr "Refresh widget"
 
@@ -1229,7 +1229,7 @@ msgstr "Satisfy percent"
 msgid "Save grid"
 msgstr "Save grid"
 
-#: src/Menu.php:1308
+#: src/Menu.php:1309
 msgid "Save grid to see widget"
 msgstr "Save grid to see widget"
 
@@ -1334,7 +1334,7 @@ msgid_plural "Stock widgets"
 msgstr[0] "Stock widget"
 msgstr[1] "Stock widgets"
 
-#: src/Menu.php:1307
+#: src/Menu.php:1308
 msgid "Success"
 msgstr "Success"
 
@@ -1558,7 +1558,7 @@ msgstr "User ticket alerts"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1319 templates/menu_grid.html.twig:30
+#: src/Menu.php:1320 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr "Warning"
 
