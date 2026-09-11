@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 08:28+0000\n"
+"POT-Creation-Date: 2026-09-11 13:11+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/infotelGLPI/"
@@ -122,7 +122,7 @@ msgstr "Hälytystaso"
 msgid "Alert threshold"
 msgstr ""
 
-#: src/Dashboard.php:152
+#: src/Dashboard.php:148
 msgid "All bar charts"
 msgstr ""
 
@@ -130,19 +130,19 @@ msgstr ""
 msgid "All categories"
 msgstr ""
 
-#: src/Dashboard.php:155
+#: src/Dashboard.php:151
 msgid "All indicators"
 msgstr ""
 
-#: src/Dashboard.php:153
+#: src/Dashboard.php:149
 msgid "All line charts"
 msgstr ""
 
-#: src/Dashboard.php:151
+#: src/Dashboard.php:147
 msgid "All pie charts"
 msgstr ""
 
-#: src/Dashboard.php:154
+#: src/Dashboard.php:150
 msgid "All table charts"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgstr ""
 msgid "Computers number"
 msgstr ""
 
-#: src/Profile.php:182
+#: src/Profile.php:178
 msgid "Configuration Access"
 msgstr "Asetuksiin pääsy"
 
@@ -299,7 +299,7 @@ msgstr ""
 msgid "Custom"
 msgstr "Mukautettu"
 
-#: src/Customswidget.php:59
+#: src/Customswidget.php:55
 msgid "Custom Widgets"
 msgstr ""
 
@@ -310,15 +310,15 @@ msgstr ""
 #: src/Menu.php:1161 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
 #: src/Reports/Problem.php:57 src/Reports/Project.php:52
 #: src/Reports/Planning.php:52 src/Reports/ProjectTask.php:56
-#: src/Reports/Change.php:57 src/Html.php:57 src/Dashboard.php:73
+#: src/Reports/Change.php:57 src/Html.php:57 src/Dashboard.php:69
 msgid "Dashboard"
 msgstr "Raportointinäkymä"
 
-#: src/Profile.php:171
+#: src/Profile.php:167
 msgid "Dashboard Access"
 msgstr "Raportointinäkymään pääsy"
 
-#: src/Servicecatalog.php:92 src/Servicecatalog.php:100
+#: src/Servicecatalog.php:88 src/Servicecatalog.php:96
 msgid "Dashboard access"
 msgstr "Raportointinäkymään pääsy"
 
@@ -524,7 +524,7 @@ msgstr "Koko näyttö"
 msgid "GLPI Status"
 msgstr "GLPI:n tila"
 
-#: src/Menu.php:129 src/Dashboard.php:145
+#: src/Menu.php:129 src/Dashboard.php:141
 msgid "GLPI admin grid"
 msgstr "GLPI -ylläpitäjän ruudukko"
 
@@ -556,11 +556,11 @@ msgstr ""
 msgid "Global satisfaction level"
 msgstr "Yleisen tyytyväisyyden taso"
 
-#: src/Dashboard.php:147
+#: src/Dashboard.php:143
 msgid "Helpdesk supervisor grid"
 msgstr "Helpdesk -valvojan ruudukko"
 
-#: src/Dashboard.php:150
+#: src/Dashboard.php:146
 msgid "Helpdesk technician grid"
 msgstr "Helpdesk -asentajan ruudukko"
 
@@ -576,11 +576,11 @@ msgstr ""
 msgid "Impact colors for alerts"
 msgstr ""
 
-#: src/Dashboard.php:148
+#: src/Dashboard.php:144
 msgid "Incident supervisor grid"
 msgstr "Häiriötilanteiden -valvojan ruudukko"
 
-#: src/Customswidget.php:168 src/Customswidget.php:169
+#: src/Customswidget.php:164 src/Customswidget.php:165
 msgid "Incidents"
 msgstr ""
 
@@ -616,7 +616,7 @@ msgstr "Häiriöt, joilla on erittäin suuri tai tärkeä prioriteetti"
 msgid "Indicators"
 msgstr ""
 
-#: src/ItilAlert.php:120 src/Config.php:398 src/Config.php:586
+#: src/ItilAlert.php:120 src/Config.php:394 src/Config.php:582
 #: src/Alert.php:178 src/Alert.php:3083
 msgid "Information"
 msgid_plural "Informations"
@@ -631,7 +631,7 @@ msgstr "Sisäiset tiedot"
 msgid "Internal name"
 msgstr ""
 
-#: src/Dashboard.php:146
+#: src/Dashboard.php:142
 msgid "Inventory admin grid"
 msgstr "Inventaario -ylläpitäjän ruudukko"
 
@@ -727,7 +727,7 @@ msgid "Monthly tickets in progress"
 msgstr ""
 
 #: setup.php:199 src/Menu.php:114 src/Menu.php:1756 src/Preference.php:85
-#: src/Config.php:67 templates/menu_action_toolbar.html.twig:32
+#: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Oma raportointinäkymä"
 
@@ -764,7 +764,7 @@ msgstr "Oma näkymä"
 msgid "Name"
 msgstr ""
 
-#: src/ItilAlert.php:118 src/Config.php:396 src/Config.php:584
+#: src/ItilAlert.php:118 src/Config.php:392 src/Config.php:580
 #: src/Alert.php:168 src/Alert.php:3174
 msgid "Network alert"
 msgid_plural "Network alerts"
@@ -1062,7 +1062,7 @@ msgstr ""
 msgid "Plugin disabled"
 msgstr "Liitännäinen poistettu käytöstä"
 
-#: src/Config.php:62
+#: src/Config.php:58
 msgid "Plugin setup"
 msgstr ""
 
@@ -1120,12 +1120,12 @@ msgstr "Julkaisupäivämäärä"
 msgid "Queries to run"
 msgstr ""
 
-#: src/Config.php:366
+#: src/Config.php:362
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr ""
 
-#: src/Config.php:370
+#: src/Config.php:366
 msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
@@ -1150,11 +1150,11 @@ msgstr ""
 msgid "Replace central interface"
 msgstr "Korvaa pää-käyttöliittymä"
 
-#: src/Dashboard.php:149
+#: src/Dashboard.php:145
 msgid "Request supervisor grid"
 msgstr "Pyyntöjen -valvojan ruudukko"
 
-#: src/Customswidget.php:177 src/Customswidget.php:178
+#: src/Customswidget.php:173 src/Customswidget.php:174
 msgid "Requests"
 msgstr ""
 
@@ -1204,7 +1204,7 @@ msgstr "Ratkaisuaikaa noudatettu"
 msgid "Responsiveness over 12 rolling months"
 msgstr ""
 
-#: src/Profile.php:57
+#: src/Profile.php:53
 msgid "Rights management"
 msgstr "Oikeuksien hallinta"
 
@@ -1236,7 +1236,7 @@ msgstr "Tallenna ruudukko"
 msgid "Save grid to see widget"
 msgstr "Tallenna ruudukko nähdäksesi widgetin"
 
-#: src/ItilAlert.php:119 src/Config.php:397 src/Config.php:585
+#: src/ItilAlert.php:119 src/Config.php:393 src/Config.php:581
 #: src/Alert.php:173 src/Alert.php:3082
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
@@ -1251,7 +1251,7 @@ msgstr ""
 msgid "Search users of your organisation"
 msgstr "Etsi organisaatiosi käyttäjiä"
 
-#: src/Profile.php:190 src/Profile.php:304
+#: src/Profile.php:186 src/Profile.php:300
 msgid "See edit mode"
 msgstr ""
 
@@ -1267,15 +1267,15 @@ msgstr ""
 msgid "See scheduled maintenances information block"
 msgstr ""
 
-#: src/Profile.php:300
+#: src/Profile.php:296
 msgid "See the configuration"
 msgstr "Katso asetukset"
 
-#: src/Profile.php:296
+#: src/Profile.php:292
 msgid "See the dashboard"
 msgstr "Katso raportointinäkymää"
 
-#: src/Profile.php:205 src/Profile.php:292
+#: src/Profile.php:201 src/Profile.php:288
 msgid "Setup stock widget"
 msgstr ""
 
@@ -1484,15 +1484,15 @@ msgstr "Tikettikertymä kuukaudessa"
 msgid "Time display"
 msgstr ""
 
-#: src/Config.php:251 templates/config_form.html.twig:69
+#: src/Config.php:247 templates/config_form.html.twig:69
 msgid "Title of alerts widget"
 msgstr ""
 
-#: src/Config.php:269 templates/config_form.html.twig:79
+#: src/Config.php:265 templates/config_form.html.twig:79
 msgid "Title of informations widget"
 msgstr ""
 
-#: src/Config.php:260 templates/config_form.html.twig:74
+#: src/Config.php:256 templates/config_form.html.twig:74
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
