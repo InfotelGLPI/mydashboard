@@ -34,10 +34,6 @@ use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * This class extends GLPI class event to add the functions to display widgets on Dashboard
  */

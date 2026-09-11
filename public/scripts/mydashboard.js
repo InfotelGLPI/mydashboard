@@ -53,37 +53,124 @@ const observer = new MutationObserver(() => {
         const inst = echarts.getInstanceByDom(el);
         if (inst) charts.push(inst);
     });
-    
+
     charts.forEach(chart => {
         const opt = chart.getOption();
 
-        if (opt.toolbox?.[0]?.feature?.dataView) {
-            opt.toolbox[0].feature.dataView.optionToContent = function (opt) {
+        const dataView = opt.toolbox?.[0]?.feature?.dataView;
 
-                var axisData = opt.xAxis[0].data;
-                var series = opt.series;
+        // Déjà traité lors d'une précédente mutation : inutile de refaire un setOption
+        if (!dataView || typeof dataView.optionToContent === 'function') {
+            return;
+        }
 
-                var table =
-                    '<table class="table table-hover" style="width:100%;text-align:center"><tbody><tr>'
-                    + '<td>  </td>';
-                for (var i = 0, l = series.length; i < l; i++) {
-                    table += '<td>' + series[i].name + '</td>'
-                }
-                table += '</tr>';
-                for (var j = 0, l = axisData.length; j < l; j++) {
-                    table += '<tr>' + '<td>' + axisData[j] + '</td>';
-                    for (var i = 0, m = series.length; i < m; i++) {
-                        table += '<td>' + series[i].data[j] + '</td>'
-                    }
-                    table += '</tr>';
-                }
+        dataView.optionToContent = function (opt) {
 
-                table += '</tbody></table>';
-                return table;
+            const escapeHtml = function (value) {
+                return String(value === null || value === undefined ? '' : value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
             };
 
-            chart.setOption(opt);
-        }
+            const toArray = function (value) {
+                if (Array.isArray(value)) {
+                    return value;
+                }
+                return (value === null || value === undefined) ? [] : [value];
+            };
+
+            // Un point peut valoir 12, {value: 12, name: 'Libellé'} ou ['Libellé', 12]
+            const itemValue = function (item) {
+                if (item === null || item === undefined) {
+                    return '';
+                }
+                if (Array.isArray(item)) {
+                    return item.length ? item[item.length - 1] : '';
+                }
+                if (typeof item === 'object') {
+                    return item.value === undefined ? '' : item.value;
+                }
+                return item;
+            };
+
+            const itemName = function (item) {
+                if (item && typeof item === 'object' && !Array.isArray(item) && item.name !== undefined) {
+                    return item.name;
+                }
+                return null;
+            };
+
+            // Une catégorie d'axe peut être 'Libellé' ou {value: 'Libellé'}
+            const categoryLabel = function (category) {
+                if (category && typeof category === 'object' && !Array.isArray(category)) {
+                    return category.value === undefined ? '' : category.value;
+                }
+                return category;
+            };
+
+            const series = toArray(opt.series);
+
+            // Axe des catégories : xAxis (barres/courbes verticales) ou yAxis (barres horizontales)
+            let axisData = null;
+            toArray(opt.xAxis).concat(toArray(opt.yAxis)).some(function (axis) {
+                if (axis && Array.isArray(axis.data) && axis.data.length) {
+                    axisData = axis.data;
+                    return true;
+                }
+                return false;
+            });
+
+            // Sans axe de catégories (camembert, entonnoir, jauge...), les libellés
+            // sont portés par les points de données eux-mêmes.
+            if (axisData === null) {
+                axisData = [];
+                series.forEach(function (serie) {
+                    toArray(serie.data).forEach(function (item, index) {
+                        const name = itemName(item);
+                        const label = (name === null) ? index : name;
+                        if (axisData.indexOf(label) === -1) {
+                            axisData.push(label);
+                        }
+                    });
+                });
+            }
+
+            // Le point correspondant à une ligne : par position, sinon par libellé
+            const findItem = function (serie, rowIndex, label) {
+                const data = toArray(serie.data);
+                const direct = data[rowIndex];
+                const directName = itemName(direct);
+                if (directName === null || String(directName) === String(label)) {
+                    return direct;
+                }
+                return data.find(function (item) {
+                    return String(itemName(item)) === String(label);
+                });
+            };
+
+            let table = '<table class="table table-hover" style="width:100%;text-align:center"><tbody><tr>'
+                + '<td>  </td>';
+            series.forEach(function (serie) {
+                table += '<td>' + escapeHtml(serie.name) + '</td>';
+            });
+            table += '</tr>';
+
+            axisData.forEach(function (category, rowIndex) {
+                const label = categoryLabel(category);
+                table += '<tr>' + '<td>' + escapeHtml(label) + '</td>';
+                series.forEach(function (serie) {
+                    table += '<td>' + escapeHtml(itemValue(findItem(serie, rowIndex, label))) + '</td>';
+                });
+                table += '</tr>';
+            });
+
+            table += '</tbody></table>';
+            return table;
+        };
+
+        chart.setOption(opt);
     });
 });
 

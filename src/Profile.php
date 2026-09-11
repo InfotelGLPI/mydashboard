@@ -35,10 +35,6 @@ use Glpi\Application\View\TemplateRenderer;
 use ProfileRight;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * This class handles the access rights on Dashboard by glpi_profiles
  * Administration->Profiles-> .. Dashboard

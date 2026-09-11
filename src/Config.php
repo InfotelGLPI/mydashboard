@@ -39,10 +39,6 @@ use ITILCategory;
 use Migration;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * This class handles the general configuration of mydashboard
  *

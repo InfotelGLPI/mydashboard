@@ -40,10 +40,6 @@ use GlpiPlugin\Ocsinventoryng\Dashboard as OCSDashboard;
 use Migration;
 use Plugin;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Dashboard
  */
