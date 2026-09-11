@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 07:31+0000\n"
+"POT-Creation-Date: 2026-09-09 08:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -350,7 +350,7 @@ msgstr "Grupo de paneles predeterminado"
 msgid "Default groups"
 msgstr "Grupos predeterminados"
 
-#: src/Menu.php:1329
+#: src/Menu.php:1330
 msgid "Delete widget"
 msgstr "Eliminar widget"
 
@@ -535,7 +535,7 @@ msgstr "Cuadrícula de administración GLPI"
 msgid "GLPI is OK"
 msgstr "GLPI está OK"
 
-#: src/Menu.php:1754
+#: src/Menu.php:1755
 msgid "Generating PDF..."
 msgstr ""
 
@@ -731,7 +731,7 @@ msgstr "Mes"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:203 src/Menu.php:114 src/Menu.php:1755 src/Preference.php:85
+#: setup.php:199 src/Menu.php:114 src/Menu.php:1756 src/Preference.php:85
 #: src/Config.php:67 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Mi Panel"
@@ -802,7 +802,7 @@ msgstr "No se han configurado alertas"
 msgid "No column defined"
 msgstr "No se ha definido ninguna columna"
 
-#: src/Menu.php:1330 src/Chart.php:186 src/Widget.php:821
+#: src/Menu.php:1331 src/Chart.php:186 src/Widget.php:821
 msgid "No data available"
 msgstr "No hay datos disponibles"
 
@@ -858,7 +858,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr "No hay widgets disponibles"
 
-#: src/Menu.php:1320 templates/menu_grid.html.twig:31
+#: src/Menu.php:1321 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr "No se encontraron widgets, por favor agregue widgets"
 
@@ -1016,7 +1016,7 @@ msgstr ""
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Menu.php:1756
+#: src/Menu.php:1757
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1146,7 +1146,7 @@ msgstr "Actualizar"
 msgid "Refresh every "
 msgstr "Actualizar cada "
 
-#: src/Menu.php:1331
+#: src/Menu.php:1332
 msgid "Refresh widget"
 msgstr "Actualizar widget"
 
@@ -1240,7 +1240,7 @@ msgstr ""
 msgid "Save grid"
 msgstr "Guarda la cuadrícula"
 
-#: src/Menu.php:1308
+#: src/Menu.php:1309
 msgid "Save grid to see widget"
 msgstr "Guardar cuadrícula para ver el widget"
 
@@ -1348,7 +1348,7 @@ msgstr[0] "Widgets de stock"
 msgstr[1] "Widgets de stock"
 msgstr[2] "Widgets de stock"
 
-#: src/Menu.php:1307
+#: src/Menu.php:1308
 msgid "Success"
 msgstr "Éxito"
 
@@ -1574,7 +1574,7 @@ msgstr "Alertas de Casos de Usuario"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1319 templates/menu_grid.html.twig:30
+#: src/Menu.php:1320 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr "Advertencia"
 

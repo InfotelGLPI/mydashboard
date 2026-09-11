@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 07:31+0000\n"
+"POT-Creation-Date: 2026-09-09 08:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -344,7 +344,7 @@ msgstr "標準ダッシュボードグループ"
 msgid "Default groups"
 msgstr "標準グループ"
 
-#: src/Menu.php:1329
+#: src/Menu.php:1330
 msgid "Delete widget"
 msgstr "ウィジェットの削除"
 
@@ -528,7 +528,7 @@ msgstr "GLPI 管理グリッド"
 msgid "GLPI is OK"
 msgstr "GLPI は OK"
 
-#: src/Menu.php:1754
+#: src/Menu.php:1755
 msgid "Generating PDF..."
 msgstr "PDF を生成しています..."
 
@@ -720,7 +720,7 @@ msgstr "月"
 msgid "Monthly tickets in progress"
 msgstr "月別対応中チケット数"
 
-#: setup.php:203 src/Menu.php:114 src/Menu.php:1755 src/Preference.php:85
+#: setup.php:199 src/Menu.php:114 src/Menu.php:1756 src/Preference.php:85
 #: src/Config.php:67 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "マイ ダッシュボード"
@@ -789,7 +789,7 @@ msgstr "警告を設定していません"
 msgid "No column defined"
 msgstr "列の定義がありません"
 
-#: src/Menu.php:1330 src/Chart.php:186 src/Widget.php:821
+#: src/Menu.php:1331 src/Chart.php:186 src/Widget.php:821
 msgid "No data available"
 msgstr "データがありません"
 
@@ -845,7 +845,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr "有効なウィジェットはありません"
 
-#: src/Menu.php:1320 templates/menu_grid.html.twig:31
+#: src/Menu.php:1321 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr "ウィジェットが見つかりません。追加してください"
 
@@ -1003,7 +1003,7 @@ msgstr "未処理チケット"
 msgid "Opened tickets backlog"
 msgstr "未処理チケットのバックログ"
 
-#: src/Menu.php:1756
+#: src/Menu.php:1757
 msgid "PDF export failed. Please try again."
 msgstr "PDF エクスポートに失敗。再試行してください。"
 
@@ -1129,7 +1129,7 @@ msgstr "再読み込み"
 msgid "Refresh every "
 msgstr "更新間隔"
 
-#: src/Menu.php:1331
+#: src/Menu.php:1332
 msgid "Refresh widget"
 msgstr "ウィジェットの再読み込み"
 
@@ -1223,7 +1223,7 @@ msgstr "満足率"
 msgid "Save grid"
 msgstr "グリッドを保存"
 
-#: src/Menu.php:1308
+#: src/Menu.php:1309
 msgid "Save grid to see widget"
 msgstr "ウィジェット表示のためにグリッドを保存"
 
@@ -1325,7 +1325,7 @@ msgid "Stock widget"
 msgid_plural "Stock widgets"
 msgstr[0] "在庫ウィジェット"
 
-#: src/Menu.php:1307
+#: src/Menu.php:1308
 msgid "Success"
 msgstr "OK"
 
@@ -1547,7 +1547,7 @@ msgstr "ユーザーチケット警告"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1319 templates/menu_grid.html.twig:30
+#: src/Menu.php:1320 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr "警告"
 
