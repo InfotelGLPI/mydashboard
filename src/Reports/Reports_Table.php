@@ -567,7 +567,7 @@ class Reports_Table extends CommonGLPI
                         'WHERE' => [
                             $is_deleted,
                         ],
-                        'GROUPBY' => 'userid, statusname',
+                        'GROUPBY' => ['userid', 'statusname'],
                         'ORDERBY' => 'statusname',
                     ];
 
@@ -884,7 +884,7 @@ class Reports_Table extends CommonGLPI
                         'WHERE' => [
                             $is_deleted,
                         ],
-                        'GROUPBY' => 'groups_id, statusname',
+                        'GROUPBY' => ['groups_id', 'statusname'],
                         'ORDERBY' => 'statusname',
                     ];
 
