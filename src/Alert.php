@@ -3208,7 +3208,7 @@ class Alert extends CommonDBTM
                 'A network alert can impact you and will avoid creating a ticket',
                 'mydashboard',
             ) . "</small></div>";
-            $display .= "<div id=\"display-sc\">";
+            $display .= "<div id=\"display-sc\" class='card'>";
             $alerts = new self();
             $display .= $alerts->getAlertList(0);
             $display .= "</div>";
