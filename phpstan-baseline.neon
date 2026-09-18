@@ -1302,11 +1302,6 @@ parameters:
 			count: 1
 			path: src/Reports/Reports_Bar.php
 
-		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Bar\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Reports/Reports_Bar.php
 
 		-
 			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
@@ -1488,11 +1483,6 @@ parameters:
 			count: 3
 			path: src/Reports/Reports_Line.php
 
-		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Line\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Reports/Reports_Line.php
 
 		-
 			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
@@ -1585,7 +1575,7 @@ parameters:
 			path: src/Reports/Reports_Map.php
 
 		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Map\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Map\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: src/Reports/Reports_Map.php
@@ -1614,11 +1604,6 @@ parameters:
 			count: 1
 			path: src/Reports/Reports_Pie.php
 
-		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Pie\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Reports/Reports_Pie.php
 
 		-
 			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
@@ -1649,12 +1634,6 @@ parameters:
 			identifier: variable.undefined
 			count: 2
 			path: src/Reports/Reports_Pie.php
-
-		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Table\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Reports/Reports_Table.php
 
 		-
 			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'

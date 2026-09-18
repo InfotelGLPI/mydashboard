@@ -65,6 +65,14 @@ use Toolbox;
  */
 class Alert extends CommonDBTM
 {
+    // Managing an alert is a plugin-configuration action — the ticker it feeds is shown to
+    // every user, including on the login page — so the class is bound to the right its entry
+    // points already require. Declaring it is what makes can()/check() usable at all:
+    // CommonGLPI's can* methods all answer false while $rightname is empty. The profile
+    // checkbox grants CREATE + UPDATE + PURGE (Profile.php), the three levels needed, and
+    // not READ, so canView() keeps answering false exactly as before.
+    public static $rightname = 'plugin_mydashboard_config';
+
     public static $types = [
         'Reminder',
         'Problem',
@@ -342,7 +350,11 @@ class Alert extends CommonDBTM
 
         $criteria = [
             'SELECT' => [
-                'COUNT' => 'glpi_reminders.id AS cpt',
+                // DISTINCT because the visibility joins applied below multiply the rows of a
+                // reminder targeting several entities, groups or profiles; the four list
+                // builders collapse them with a GROUPBY, which a bare COUNT cannot use
+                // without returning one row per reminder instead of the total.
+                'COUNT DISTINCT' => 'glpi_reminders.id AS cpt',
             ],
             'FROM' => 'glpi_reminders',
             'LEFT JOIN' => [
@@ -360,12 +372,12 @@ class Alert extends CommonDBTM
         ];
 
         if ($public == 0) {
-
-            $left_reminder = Reminder::getVisibilityCriteriaCommonJoin(true);
-            if (is_array($left_reminder)) {
-                $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + $left_reminder;
-            }
-
+            // Both halves of the core visibility criteria, joins AND where: only the joins
+            // used to be taken, and a LEFT JOIN on its own filters nothing, so the badge
+            // counted every reminder of the instance instead of the ones targeting the
+            // session. The $public == 1 branch below is the anonymous ticker and stays as
+            // it is: it deliberately selects on is_public rather than on visibility.
+            $criteria = Reminder::applyVisibilityCriteria($criteria);
 
             if (count($itilcategories_id) > 0) {
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
@@ -565,7 +577,8 @@ class Alert extends CommonDBTM
                                 $users_requesters[$u['users_id']] = $u['users_id'];
 
                                 if ($k) {
-                                    $userdata .= getUserName($k);
+                                    // HTML rendered Datatable cell, free text of the account.
+                                    $userdata .= htmlspecialchars((string) getUserName($k), ENT_QUOTES, 'UTF-8');
                                 }
 
                                 if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
@@ -614,7 +627,7 @@ class Alert extends CommonDBTM
                                     foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
                                         $k = $u['users_id'];
                                         if ($k) {
-                                            $techdata .= getUserName($k);
+                                            $techdata .= htmlspecialchars((string) getUserName($k), ENT_QUOTES, 'UTF-8');
                                         }
 
                                         if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
@@ -628,7 +641,11 @@ class Alert extends CommonDBTM
                                     foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
                                         $k = $u['groups_id'];
                                         if ($k) {
-                                            $techdata .= Dropdown::getDropdownName("glpi_groups", $k);
+                                            $techdata .= htmlspecialchars(
+                                                (string) Dropdown::getDropdownName("glpi_groups", $k),
+                                                ENT_QUOTES,
+                                                'UTF-8',
+                                            );
                                         }
 
                                         if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
@@ -2396,7 +2413,11 @@ class Alert extends CommonDBTM
             'ORDERBY' => 'glpi_reminders.name',
         ];
 
-        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+        // Both halves of the core visibility criteria, joins AND where: only the joins used
+        // to be taken, and a LEFT JOIN on its own filters nothing, so the maintenance ticker
+        // listed every reminder of the instance — name, text and attached documents included
+        // once the row id reached ajax/showalert.php.
+        $criteria = Reminder::applyVisibilityCriteria($criteria);
 
         if (count($itilcategories_id) > 0) {
             $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
@@ -2455,10 +2476,11 @@ class Alert extends CommonDBTM
         // another entity/profile.
         //
         // Core \Reminder::getVisibilityCriteria() supplies BOTH the joins and the matching
-        // WHERE clause -- the plugin's own Reports\Reminder only exposes the joins. Only
-        // those joins used to be applied here, and a LEFT JOIN on its own filters nothing,
-        // so the check passed for every reminder. The core helper also degrades safely:
-        // with no session it restricts on a falsy users_id and matches no row at all.
+        // WHERE clause, and Reports\Reminder::applyVisibilityCriteria() now merges them so
+        // they cannot be taken apart again. Only the joins used to be applied here, and a
+        // LEFT JOIN on its own filters nothing, so the check passed for every reminder. The
+        // core helper also degrades safely: with no session it restricts on a falsy users_id
+        // and matches no row at all.
         $id = (int) $id;
 
         $config = new Config();
@@ -2468,31 +2490,26 @@ class Alert extends CommonDBTM
 
         if ($alert->getFromDBByCrit(['reminders_id' => $id])) {
             $now = date('Y-m-d H:i:s');
-            $visibility = \Reminder::getVisibilityCriteria(true);
-            $visibility_check = [
-                'SELECT'    => 'glpi_reminders.id',
-                'FROM'      => 'glpi_reminders',
-                'LEFT JOIN' => $visibility['LEFT JOIN'] ?? [],
-                'WHERE'     => array_merge(
+            $visibility_check = Reminder::applyVisibilityCriteria([
+                'SELECT'  => 'glpi_reminders.id',
+                'FROM'    => 'glpi_reminders',
+                'WHERE'   => [
+                    'glpi_reminders.id' => $id,
                     [
-                        'glpi_reminders.id' => $id,
-                        [
-                            'OR' => [
-                                ['glpi_reminders.begin_view_date' => null],
-                                ['glpi_reminders.begin_view_date' => ['<', $now]],
-                            ],
-                        ],
-                        [
-                            'OR' => [
-                                ['glpi_reminders.end_view_date' => null],
-                                ['glpi_reminders.end_view_date' => ['>', $now]],
-                            ],
+                        'OR' => [
+                            ['glpi_reminders.begin_view_date' => null],
+                            ['glpi_reminders.begin_view_date' => ['<', $now]],
                         ],
                     ],
-                    isset($visibility['WHERE']) ? [$visibility['WHERE']] : [],
-                ),
-                'GROUPBY'   => 'glpi_reminders.id',
-            ];
+                    [
+                        'OR' => [
+                            ['glpi_reminders.end_view_date' => null],
+                            ['glpi_reminders.end_view_date' => ['>', $now]],
+                        ],
+                    ],
+                ],
+                'GROUPBY' => 'glpi_reminders.id',
+            ]);
             if (count($DB->request($visibility_check)) === 0) {
                 return;
             }
@@ -2583,7 +2600,10 @@ class Alert extends CommonDBTM
             'ORDERBY' => 'glpi_reminders.name',
         ];
 
-        $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+        // Both halves of the core visibility criteria, joins AND where: only the joins used
+        // to be taken, and a LEFT JOIN on its own filters nothing, so the information ticker
+        // listed every reminder of the instance.
+        $criteria = Reminder::applyVisibilityCriteria($criteria);
 
         if (count($itilcategories_id) > 0) {
             $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
@@ -2715,7 +2735,11 @@ class Alert extends CommonDBTM
         ];
 
         if ($public == 0) {
-            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+            // Both halves of the core visibility criteria, joins AND where: only the joins
+            // used to be taken, and a LEFT JOIN on its own filters nothing, so the alert
+            // ticker listed every reminder of the instance. The $public == 1 branch is the
+            // anonymous ticker and keeps selecting on is_public instead.
+            $criteria = Reminder::applyVisibilityCriteria($criteria);
 
             if (count($itilcategories_id) > 0) {
                 $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.itilcategories_id' => $itilcategories_id];
@@ -2858,7 +2882,11 @@ class Alert extends CommonDBTM
         ];
 
         if ($public == 0) {
-            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + Reminder::getVisibilityCriteriaCommonJoin(true);
+            // Both halves of the core visibility criteria, joins AND where: only the joins
+            // used to be taken, and a LEFT JOIN on its own filters nothing, so the summary
+            // exposed the name, text and dates of every reminder of the instance. The
+            // $public == 1 branch is the anonymous ticker and keeps selecting on is_public.
+            $criteria = Reminder::applyVisibilityCriteria($criteria);
         } else {
             $criteria['WHERE'] = $criteria['WHERE'] + ['glpi_plugin_mydashboard_alerts.is_public' => 1];
         }
@@ -3248,7 +3276,11 @@ class Alert extends CommonDBTM
             ];
             $params['wrapper_class'] = 'center';
             if (isset($CFG_GLPI["maintenance_text"]) && !empty($CFG_GLPI["maintenance_text"])) {
-                $params['maintenance_text'] = nl2br($CFG_GLPI["maintenance_text"]);
+                // Raw text: the template applies Twig's nl2br filter, which escapes the value
+                // before turning the newlines into <br />. Calling nl2br() here instead forced
+                // the template to render the value with |raw, i.e. to open a full HTML sink on a
+                // configuration field for the sole purpose of keeping its line breaks.
+                $params['maintenance_text'] = $CFG_GLPI["maintenance_text"];
             }
             $message = "";
         } elseif (preg_match('/PROBLEM/is', $message)) {

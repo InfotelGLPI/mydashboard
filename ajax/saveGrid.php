@@ -57,9 +57,15 @@ if (is_array($raw_nodes)) {
 $data      = json_encode($safe_grid);
 $dashboard = new Dashboard();
 
-// Cast the incoming profile id to an integer (consistent with clearGrid.php)
-// to avoid storing non-numeric identifiers in the dashboard preference rows.
+// Cast the incoming profile id to an integer (consistent with clearGrid.php) to avoid
+// storing non-numeric identifiers in the dashboard preference rows, then confront it with
+// the profiles this session may actually manage: it used to be written as posted, so a row
+// could be attached to a profile the user does not hold — or to none at all. Fall back on
+// the active profile rather than refusing, the value being a routing hint.
 $profile = (int) ($_POST['profiles_id'] ?? 0);
+if (!Dashboard::canManageProfile($profile)) {
+    $profile = (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
+}
 $options = ["users_id" => Session::getLoginUserID(), "profiles_id" => $profile];
 $id      = Dashboard::checkIfPreferenceExists($options);
 

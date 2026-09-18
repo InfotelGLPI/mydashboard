@@ -36,17 +36,25 @@ Session::checkRight("plugin_mydashboard_config", UPDATE);
 
 $alert = new Alert();
 
+// The page guard above carries the global profile bitmask only. check() re-reads the row
+// being written — it raises NotFoundHttpException on an id matching nothing, where update()
+// and delete() used to answer false silently — and confronts the exact level each branch
+// needs, so the entry point can no longer perform a purge with a right that only covers
+// updates. This is the control ajax/createalert.php already receives.
 if (isset($_POST['update'])) {
     if (isset($_POST['id'])) {
         if ($_POST['id'] == -1) {
             unset($_POST['id']);
+            $alert->check(-1, CREATE, $_POST);
             $alert->add($_POST);
         } else {
+            $alert->check($_POST['id'], UPDATE, $_POST);
             $alert->update($_POST);
         }
     }
 } elseif (isset($_POST['delete'])) {
     if (isset($_POST['id'])) {
+        $alert->check($_POST['id'], PURGE, $_POST);
         $alert->delete($_POST, true);
     }
 }

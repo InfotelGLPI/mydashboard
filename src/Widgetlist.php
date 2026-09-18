@@ -129,7 +129,11 @@ class Widgetlist
                             && in_array($profile_interface, $item->interfaces)) {
                             $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
                         } else {
-                            unset($widgets[$plugin]);
+                            // Dropping the whole plugin because one of its classes is
+                            // restricted to another interface removed the widgets of every
+                            // sibling class too. The branch was unreachable while the caller
+                            // hard-coded "central"; it is not anymore.
+                            unset($widgets[$plugin][$pluginclass]);
                         }
                     } elseif (!isset($item->interfaces)) {
                         $widgets[$plugin][$pluginclass] = $item->getWidgetsForItem();
@@ -311,10 +315,7 @@ class Widgetlist
      */
     public static function loadWidgetsListForFuzzy($widgetlist)
     {
-        if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
-            $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
-        }
-        $widgetslist = $_SESSION['glpi_plugin_mydashboard_widget_list'];
+        $widgetslist = Widget::getCachedWidgetList();
         $gslist      = [];
         foreach ($widgetslist as $gs => $widgetclasses) {
             $gslist[$widgetclasses['id']] = $gs;

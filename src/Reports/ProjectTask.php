@@ -33,6 +33,7 @@ use GlpiPlugin\Mydashboard\Helper;
 use CommonGLPI;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Menu;
@@ -415,7 +416,9 @@ class ProjectTask extends CommonGLPI
             $projecttasksFields = $projecttask->fields;
             if (isset($projecttasksFields["users_id"])) {
                 if ($projecttasksFields["users_id"] > 0) {
-                    $userdata = getUserName($projecttasksFields["users_id"]);
+                    // HTML rendered Datatable cell: the manager name is free text of the user
+                    // account.
+                    $userdata = htmlspecialchars((string) getUserName($projecttasksFields["users_id"]), ENT_QUOTES, 'UTF-8');
                     $name = "<div class='b center'>" . $userdata;
                     $output[$colnum] .= $name . "</div>";
                 }
@@ -424,7 +427,11 @@ class ProjectTask extends CommonGLPI
             if (isset($projecttasksFields["groups_id"])
                 && $projecttasksFields["groups_id"] != 0
             ) {
-                $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $projecttasksFields["groups_id"]);
+                $output[$colnum] .= htmlspecialchars(
+                    (string) Dropdown::getDropdownName("glpi_groups", $projecttasksFields["groups_id"]),
+                    ENT_QUOTES,
+                    'UTF-8',
+                );
             }
 
             $colnum++;
@@ -443,7 +450,9 @@ class ProjectTask extends CommonGLPI
                 __('%1$s %2$s'),
                 $link,
                 Html::showToolTip(
-                    $projecttask->fields['content'],
+                    // showToolTip() inserts its body as HTML: it is a sink, not an escaping
+                    // point. Sanitize the rich text first, as src/Reports/Reminder.php does.
+                    RichText::getEnhancedHtml($projecttask->fields['content']),
                     [
                         'applyto' => 'projecttask' . $projecttask->fields["id"] . $rand,
                         'display' => false,

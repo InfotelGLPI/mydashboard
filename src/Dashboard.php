@@ -32,6 +32,8 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
+use Profile;
+use Session;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
 use GlpiPlugin\Mydashboard\Reports\Reports_Line;
 use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
@@ -75,6 +77,45 @@ class Dashboard extends CommonDBTM
      *
      * @return int
      */
+    /**
+     * Whether the current session may manage the dashboard layout of a given profile.
+     *
+     * profiles_id travels as a client-side routing hint: front/menu.php stores it in the
+     * session, ajax/state_save.php reads it back and ajax/saveGrid.php takes it straight
+     * from the payload. It was validated once, on the way in, and trusted afterwards — and
+     * the config right let any integer through, including one naming no profile at all or a
+     * profile the session may not administer. Replay the rule wherever the value is used
+     * instead of where it was collected.
+     *
+     * @param int $profiles_id
+     *
+     * @return bool
+     */
+    public static function canManageProfile(int $profiles_id): bool
+    {
+        if ($profiles_id <= 0) {
+            return false;
+        }
+
+        // A profile the user actually holds: arranging its own layout needs nothing more.
+        if (isset($_SESSION['glpiprofiles'][$profiles_id])) {
+            return true;
+        }
+
+        // Global dashboard editing reaches the other profiles, but only the ones the active
+        // profile may administer — the very scope the core uses to build a profile list.
+        if (!Session::haveRight('plugin_mydashboard_config', CREATE)) {
+            return false;
+        }
+
+        $dbu = new DbUtils();
+
+        return $dbu->countElementsInTable(
+            'glpi_profiles',
+            ['id' => $profiles_id] + Profile::getUnderActiveProfileRestrictCriteria(),
+        ) > 0;
+    }
+
     public static function checkIfPreferenceExists($options)
     {
         return self::checkPreferenceValue('id', $options);

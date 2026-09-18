@@ -38,7 +38,7 @@
 
 {% if maintenance_text is not empty %}
     <div class="md-status">
-        {# already passed through nl2br() by the controller #}
-        <p>{{ maintenance_text|raw }}</p>
+        {# nl2br escapes the value before inserting the <br /> tags, so no |raw is needed. #}
+        <p>{{ maintenance_text|nl2br }}</p>
     </div>
 {% endif %}

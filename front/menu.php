@@ -28,6 +28,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Servicecatalog\Main;
 
@@ -43,13 +44,12 @@ if (Session::getCurrentInterface() == 'central') {
 }
 
 if (isset($_POST["profiles_id"])) {
-    // Anti-IDOR: only accept a profile actually granted to the user (present in
-    // $_SESSION['glpiprofiles']). Config-right holders may switch to any profile
-    // for global dashboard editing (consistent with saveGrid/state_save). A forged
-    // profiles_id is ignored so it cannot load another profile's dashboard layout.
+    // Anti-IDOR: only accept a profile actually granted to the user, or — for global
+    // dashboard editing — one the active profile may administer. Config-right holders used
+    // to be waved through on any integer, which is what the write points then trusted. A
+    // forged profiles_id is ignored so it cannot load another profile's dashboard layout.
     $requested_profile = (int) $_POST["profiles_id"];
-    if (isset($_SESSION['glpiprofiles'][$requested_profile])
-        || Session::haveRight("plugin_mydashboard_config", CREATE)) {
+    if (Dashboard::canManageProfile($requested_profile)) {
         $_SESSION['plugin_mydashboard_profiles_id'] = $requested_profile;
     }
 }

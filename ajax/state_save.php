@@ -119,8 +119,15 @@ if (!isset($_POST)) {
 
         $edit = Preference::checkEditMode(Session::getLoginUserID());
         if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-            $idUser    = 0;
-            $idProfile = $_SESSION['plugin_mydashboard_profiles_id'] ?? $idProfile;
+            $idUser = 0;
+
+            // The session only remembers which profile front/menu.php was asked to display;
+            // replay the rule here rather than trusting that hint, so the global row cannot
+            // be attached to a profile this session may not administer.
+            $requested_profile = (int) ($_SESSION['plugin_mydashboard_profiles_id'] ?? 0);
+            if (Dashboard::canManageProfile($requested_profile)) {
+                $idProfile = $requested_profile;
+            }
         }
 
         if ($dashboard->getFromDBByCrit(['users_id'    => $idUser,

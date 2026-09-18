@@ -218,6 +218,13 @@ class Reports_Bar extends CommonDBTM
                 ],
             ],
         ];
+
+        // Every HELPDESK widget of this class aggregates glpi_tickets without any actor
+        // clause. Widget "44" counts computers and is not concerned.
+        if (!Criteria::canReadTickets()) {
+            unset($widgets[Menu::$HELPDESK]);
+        }
+
         return $widgets;
     }
 
@@ -225,12 +232,20 @@ class Reports_Bar extends CommonDBTM
      * @param       $widgetId
      * @param array $opt
      *
-     * @return Html
+     * @return Html|false
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
         global $DB, $CFG_GLPI;
+
+        // The declaration is cached in the session and ajax/refreshWidget.php serves any
+        // widget id the cache holds, so the right is checked again at the content, as case
+        // "5" of Reports_Table does. Widget "44" is the inventory one.
+        if ($widgetId !== $this->getType() . "44" && !Criteria::canReadTickets()) {
+            return false;
+        }
+
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
         $dbu = new DbUtils();
 
@@ -1571,6 +1586,12 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    // Widget 38 declares no criterion at all, so it used to issue its eight
+                    // queries straight on glpi_tickets: the entity fallback added in
+                    // addCriteriasForQuery() only engages on the queries that go through it,
+                    // and a helpdesk user got the volumes and the satisfaction averages of
+                    // every entity of the instance. Route them all through it.
+                    $query_openedTicketT1 = Criteria::addCriteriasForQuery($query_openedTicketT1, $params);
                     $iteratorT1 = $DB->request($query_openedTicketT1);
                     foreach ($iteratorT1 as $dataT1) {
                         $opened_tickets_data['data'][] = round($dataT1['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
@@ -1601,6 +1622,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_satisfactionT1 = Criteria::addCriteriasForQuery($query_satisfactionT1, $params);
                     $iteratorsatisfactionT1 = $DB->request($query_satisfactionT1);
                     foreach ($iteratorsatisfactionT1 as $data_satisfactionT1) {
 
@@ -1630,6 +1652,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_openedTicketT2 = Criteria::addCriteriasForQuery($query_openedTicketT2, $params);
                     $iteratorT2 = $DB->request($query_openedTicketT2);
                     foreach ($iteratorT2 as $dataT2) {
                         $opened_tickets_data['data'][] = round($dataT2['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
@@ -1663,6 +1686,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_satisfactionT2 = Criteria::addCriteriasForQuery($query_satisfactionT2, $params);
                     $iteratorsatisfactionT2 = $DB->request($query_satisfactionT2);
                     foreach ($iteratorsatisfactionT2 as $data_satisfactionT2) {
                         $satisfaction_data['data'][] = round($data_satisfactionT2['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);
@@ -1690,6 +1714,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_openedTicketT3 = Criteria::addCriteriasForQuery($query_openedTicketT3, $params);
                     $iteratorT3 = $DB->request($query_openedTicketT3);
                     foreach ($iteratorT3 as $dataT3) {
                         $opened_tickets_data['data'][] = round($dataT3['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
@@ -1724,6 +1749,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_satisfactionT3 = Criteria::addCriteriasForQuery($query_satisfactionT3, $params);
                     $iteratorsatisfactionT3 = $DB->request($query_satisfactionT3);
                     foreach ($iteratorsatisfactionT3 as $data_satisfactionT3) {
                         $satisfaction_data['data'][] = round($data_satisfactionT3['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);
@@ -1751,6 +1777,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_openedTicketT4 = Criteria::addCriteriasForQuery($query_openedTicketT4, $params);
                     $iteratorT4 = $DB->request($query_openedTicketT4);
                     foreach ($iteratorT4 as $dataT4) {
                         $opened_tickets_data['data'][] = round($dataT4['opened_tickets'] ?? 0, 2, PHP_ROUND_HALF_UP);
@@ -1779,6 +1806,7 @@ class Reports_Bar extends CommonDBTM
                             ],
                         ],
                     ];
+                    $query_satisfactionT4 = Criteria::addCriteriasForQuery($query_satisfactionT4, $params);
                     $iteratorsatisfactionT4 = $DB->request($query_satisfactionT4);
                     foreach ($iteratorsatisfactionT4 as $data_satisfactionT4) {
                         $satisfaction_data['data'][] = round($data_satisfactionT4['satisfaction'] ?? 0, 2, PHP_ROUND_HALF_UP);

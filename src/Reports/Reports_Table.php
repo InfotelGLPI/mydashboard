@@ -73,8 +73,12 @@ class Reports_Table extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-        $widgets = [
-            Menu::$HELPDESK => [
+        $widgets = [];
+
+        // Both tables count opened tickets per technician or per group over the whole
+        // entity, with no actor clause: that is a ticket read.
+        if (Criteria::canReadTickets()) {
+            $widgets[Menu::$HELPDESK] = [
 
                 $this->getType() . "32" => [
                     "title" => __("Number of opened tickets by technician and by status", "mydashboard"),
@@ -86,16 +90,44 @@ class Reports_Table extends CommonGLPI
                     "type" => Widget::$TABLE,
                     "comment" => "",
                 ],
-            ],
-            Menu::$INVENTORY => [
+            ];
+        }
+
+        // The directory lists the login, the name, both phone numbers and the mobile of
+        // every user of the visible entities — a ready-made inventory of valid logins. That
+        // is a User read, and this widget was the one left ungated next to "5" and "14".
+        if (Session::haveRight(\User::$rightname, READ)) {
+            $widgets[Menu::$USERS] = [
+
+                $this->getType() . "3" => [
+                    "title" => __("Internal annuary", "mydashboard"),
+                    "type" => Widget::$TABLE,
+                    "comment" => __("Search users of your organisation", "mydashboard"),
+                ],
+            ];
+        }
+
+        // Field unicity rules are configuration objects — FieldUnicity::$rightname is
+        // 'config' — yet the widget listed every active rule with its itemtype and its
+        // watched fields to any profile that added it to its dashboard.
+        if (Session::haveRight(FieldUnicity::$rightname, READ)) {
+            $widgets[Menu::$INVENTORY] = [
 
                 $this->getType() . "5" => [
                     "title" => __("Fields unicity"),
                     "type" => Widget::$TABLE,
                     "comment" => __("Display if you have duplicates into inventory", "mydashboard"),
                 ],
-            ],
-            Menu::$TOOLS => [
+            ];
+        }
+
+        // An unpublished article is precisely one that is bound to no entity, no profile,
+        // no group and no user, so KnowbaseItem::getVisibilityCriteria() hides it from
+        // everybody and this widget was the only path that exposed its subject, its author
+        // and its category. Declare it for the profiles that hold a right on the knowledge
+        // base; getWidgetContentForItem() narrows the rows themselves.
+        if (Session::haveRight(\KnowbaseItem::$rightname, READ)) {
+            $widgets[Menu::$TOOLS] = [
 
                 $this->getType() . "14" => [
                     "title" => __("All unpublished articles", "mydashboard"),
@@ -103,16 +135,8 @@ class Reports_Table extends CommonGLPI
                     "comment" => __("Display unpublished articles of Knowbase", "mydashboard"),
                 ],
 
-            ],
-            Menu::$USERS => [
-
-                $this->getType() . "3" => [
-                    "title" => __("Internal annuary", "mydashboard"),
-                    "type" => Widget::$TABLE,
-                    "comment" => __("Search users of your organisation", "mydashboard"),
-                ],
-            ],
-        ];
+            ];
+        }
 
         return $widgets;
     }
@@ -158,7 +182,7 @@ class Reports_Table extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return Datatable
+     * @return Datatable|false
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -176,6 +200,13 @@ class Reports_Table extends CommonGLPI
 
         switch ($widgetId) {
             case $this->getType() . "3":
+
+                // The widget list is cached in $_SESSION, so an entry declared under a
+                // previous profile survives a profile switch and can still be refreshed
+                // through ajax/refreshWidget.php: check the right again at the content.
+                if (!Session::haveRight(\User::$rightname, READ)) {
+                    return false;
+                }
 
                 $criteria = [
                     'SELECT' => ['firstname',
@@ -224,12 +255,17 @@ class Reports_Table extends CommonGLPI
                             && (!empty($data['phone'])
                             || !empty($data['phone2'])
                                 || !empty($data['mobile']))) {
-                            $rows[$i]['firstname'] = $data['firstname'];
-                            $rows[$i]['realname'] = $data['realname'];
-                            $rows[$i]['name'] = $data['name'];
-                            $rows[$i]['phone'] = $data['phone'];
-                            $rows[$i]['phone2'] = $data['phone2'];
-                            $rows[$i]['mobile'] = $data['mobile'];
+                            // Datatable writes each cell as HTML (the report widgets need it
+                            // for the getLink() anchors they carry), so a plain text column
+                            // has to be escaped here. Every field below is free text the user
+                            // sets on its own account, which made the directory a stored XSS
+                            // reaching all of its colleagues.
+                            $rows[$i]['firstname'] = htmlspecialchars((string) $data['firstname'], ENT_QUOTES, 'UTF-8');
+                            $rows[$i]['realname'] = htmlspecialchars((string) $data['realname'], ENT_QUOTES, 'UTF-8');
+                            $rows[$i]['name'] = htmlspecialchars((string) $data['name'], ENT_QUOTES, 'UTF-8');
+                            $rows[$i]['phone'] = htmlspecialchars((string) $data['phone'], ENT_QUOTES, 'UTF-8');
+                            $rows[$i]['phone2'] = htmlspecialchars((string) $data['phone2'], ENT_QUOTES, 'UTF-8');
+                            $rows[$i]['mobile'] = htmlspecialchars((string) $data['mobile'], ENT_QUOTES, 'UTF-8');
                             $i++;
                         }
                     }
@@ -253,6 +289,13 @@ class Reports_Table extends CommonGLPI
                 return $widget;
 
             case $this->getType() . "5":
+
+                // The widget list is cached in $_SESSION, so an entry declared under a
+                // previous profile survives a profile switch and can still be refreshed
+                // through ajax/refreshWidget.php: check the right again at the content.
+                if (!Session::haveRight(FieldUnicity::$rightname, READ)) {
+                    return false;
+                }
 
                 $criteria = [
                     'SELECT' => 'id',
@@ -280,7 +323,7 @@ class Reports_Table extends CommonGLPI
                         if (!$item = getItemForItemtype($unicity->fields['itemtype'])) {
                             continue;
                         }
-                        $datas[$i]["name"] = $unicity->fields["name"];
+                        $datas[$i]["name"] = htmlspecialchars((string) $unicity->fields["name"], ENT_QUOTES, 'UTF-8');
 
                         $fields = [];
                         $where_fields = [];
@@ -349,6 +392,12 @@ class Reports_Table extends CommonGLPI
 
             case $this->getType() . "14":
 
+                // Same reason as widget 5: re-check at the content, the declaration alone
+                // does not survive a profile change.
+                if (!Session::haveRight(\KnowbaseItem::$rightname, READ)) {
+                    return false;
+                }
+
                 $criteria = [
                     'SELECT' => ['glpi_knowbaseitems.*',
                         'glpi_knowbaseitemcategories.completename AS category'],
@@ -401,6 +450,12 @@ class Reports_Table extends CommonGLPI
 
                 ];
 
+                // Nobody may see these articles through the knowledge base itself, so the
+                // widget has to stand in for the visibility criteria it cannot apply: a
+                // profile that does not administer the base only gets its own drafts back.
+                if (!\KnowbaseItem::canUpdate()) {
+                    $criteria['WHERE']['glpi_knowbaseitems.users_id'] = Session::getLoginUserID();
+                }
 
                 $iterator = $DB->request($criteria);
 
@@ -415,8 +470,11 @@ class Reports_Table extends CommonGLPI
                         $knowbaseitem->getFromDB($data['id']);
 
                         $datas[$i]["name"] = $knowbaseitem->getLink();
-                        $datas[$i]["users"] = getUserName($data["users_id"]);
-                        $datas[$i]["category"] = $data["category"];
+                        // Plain text cells of an HTML rendered table: the author name is free
+                        // text of the user account and the category is the completename of a
+                        // dropdown, both stored raw.
+                        $datas[$i]["users"] = htmlspecialchars((string) getUserName($data["users_id"]), ENT_QUOTES, 'UTF-8');
+                        $datas[$i]["category"] = htmlspecialchars((string) $data["category"], ENT_QUOTES, 'UTF-8');
 
                         $i++;
                     }
@@ -442,6 +500,14 @@ class Reports_Table extends CommonGLPI
 
 
             case $this->getType() . "32":
+
+                // The widget list is cached in $_SESSION, so an entry declared under a
+                // previous profile survives a profile switch and can still be refreshed
+                // through ajax/refreshWidget.php: check the right again at the content.
+                if (!Criteria::canReadTickets()) {
+                    return false;
+                }
+
                 $name = 'NumberOfTicketsByTechnicianAndStatus';
 
                 $criterias = Criteria::getDefaultCriterias();
@@ -505,7 +571,18 @@ class Reports_Table extends CommonGLPI
                     'GROUPBY' => ['glpi_groups_users.users_id'],
                 ];
 
-                //                $query_technicians = Criteria::addCriteriasForQuery($query_technicians, $params);
+                // The roster was built with no entity boundary at all — the scoping call was
+                // left commented out — so the widget named every technician of every entity,
+                // and the ticket counts of the entities the session may not read leaked with
+                // them. addCriteriasForQuery() cannot help here: it scopes glpi_tickets, a
+                // table this query does not join. Scope the assignable group instead, the
+                // idiom Helper::getGroupsForUser() already uses. array_merge(), not "+": the
+                // WHERE below opens on an integer key and getEntitiesRestrictCriteria() may
+                // answer with an integer-keyed deny clause.
+                $query_technicians['WHERE'] = array_merge(
+                    $query_technicians['WHERE'],
+                    getEntitiesRestrictCriteria('glpi_groups', '', '', true),
+                );
                 // GROUP
                 if (isset($technician_group)
                     && $technician_group != 0
@@ -660,7 +737,9 @@ class Reports_Table extends CommonGLPI
                         $nbWaitingTickets = "";
                         $hasMoreTicket = 0;
                         $userId = $data['users_id'];
-                        $username = getUserName($userId);
+                        // First column of an HTML rendered table, and the name is free text
+                        // of the user account.
+                        $username = htmlspecialchars((string) getUserName($userId), ENT_QUOTES, 'UTF-8');
                         $temp[$i] = [0 => $username];
                         $j = 1;
                         foreach ($statusList as $status) {
@@ -774,6 +853,12 @@ class Reports_Table extends CommonGLPI
                 break;
 
             case $this->getType() . "33":
+
+                // Same as case "32": the declaration is cached, the content is not.
+                if (!Criteria::canReadTickets()) {
+                    return false;
+                }
+
                 $name = 'NumberOfTicketsByGroupAndStatus';
 
                 $criterias = Criteria::getDefaultCriterias();
@@ -814,6 +899,12 @@ class Reports_Table extends CommonGLPI
                         'is_assign' => 1,
                     ],
                 ];
+                // Same hole as the technician roster: every assignable group of the instance
+                // was listed, with its ticket counts, whatever the entities of the session.
+                $criteria['WHERE'] = array_merge(
+                    $criteria['WHERE'],
+                    getEntitiesRestrictCriteria('glpi_groups', '', '', true),
+                );
 
                 if (count($technician_group) > 0) {
 
@@ -975,7 +1066,9 @@ class Reports_Table extends CommonGLPI
                         $nbWaitingTickets = "";
                         $hasMoreTicket = 0;
                         $groupId = $data['id'];
-                        $groupname = $data['name'];
+                        // First column of an HTML rendered table, and a group name is free
+                        // text stored raw.
+                        $groupname = htmlspecialchars((string) $data['name'], ENT_QUOTES, 'UTF-8');
                         $temp[$i] = [0 => $groupname];
                         $j = 1;
                         foreach ($statusList as $status) {

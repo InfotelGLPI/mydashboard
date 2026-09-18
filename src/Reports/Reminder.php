@@ -269,6 +269,48 @@ class Reminder extends CommonGLPI
         return $widget;
     }
 
+    /**
+     * Merge both halves of the core reminder visibility criteria into a query.
+     *
+     * \Reminder::getVisibilityCriteria() answers with a 'LEFT JOIN' block and the 'WHERE'
+     * block that goes with it, and the two are indissociable: the joins on their own only
+     * add nullable columns and filter nothing at all. The alert builders used to take the
+     * joins only, through getVisibilityCriteriaCommonJoin(), so every reminder of the
+     * instance was listed whatever entity, group, profile or user it targets. Route every
+     * builder through here so the two halves can no longer be separated.
+     *
+     * The core helper degrades safely on its own: without the READ right on reminders it
+     * restricts on the session user id alone, and with no session at all on a falsy one.
+     * The entity axis of a reminder is its targeting table glpi_entities_reminders, which
+     * the WHERE block already restricts — glpi_reminders.entities_id only records where the
+     * reminder was written, and the core never filters on it either.
+     *
+     * @param array $criteria Query criteria reading FROM glpi_reminders.
+     *
+     * @return array
+     */
+    public static function applyVisibilityCriteria(array $criteria): array
+    {
+        $visibility = \Reminder::getVisibilityCriteria(true);
+
+        // Join keys are table names, so the union operator keeps the join the caller has
+        // already declared when both name the same table — the outcome wanted here.
+        $criteria['LEFT JOIN'] = ($criteria['LEFT JOIN'] ?? []) + ($visibility['LEFT JOIN'] ?? []);
+
+        // array_merge() and not "+": these WHERE blocks open on integer keys, which the union
+        // operator would silently drop instead of AND-ing them. The visibility block travels
+        // wrapped in an array of its own so its top-level 'OR' stays a single AND-ed group.
+        if (isset($visibility['WHERE'])) {
+            $criteria['WHERE'] = array_merge($criteria['WHERE'] ?? [], [$visibility['WHERE']]);
+        }
+
+        return $criteria;
+    }
+
+    /**
+     * @deprecated Use applyVisibilityCriteria() instead: these joins filter nothing on their
+     *             own and must never be applied without the matching WHERE block.
+     */
     public static function getVisibilityCriteriaCommonJoin(bool $forceall = false)
     {
 

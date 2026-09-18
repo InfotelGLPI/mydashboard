@@ -189,6 +189,14 @@ class ProfileAuthorizedWidget extends CommonDBTM
             if (!$profile->getFromDB($profiles_id)) {
                 return;
             }
+            // Existing is not the same as administrable: front/profileauthorizedwidget.form.php
+            // only requires a global Config UPDATE right, which carries no notion of entity
+            // or profile hierarchy. Without this, a delegated administrator could rewrite the
+            // authorized widgets of a profile outside its scope — removing the ones its users
+            // depend on, or enabling ones its own administrator had disabled.
+            if (!Dashboard::canManageProfile($profiles_id)) {
+                return;
+            }
             unset($post['id']);
             unset($post['update']);
         } else {

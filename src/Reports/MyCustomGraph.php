@@ -72,6 +72,12 @@ class MyCustomGraph extends CommonGLPI
     {
         global $LANG;
 
+        // The single widget of this class counts created and closed tickets, with no actor
+        // clause.
+        if (!Criteria::canReadTickets()) {
+            return [];
+        }
+
         $widgets = [
             Menu::$HELPDESK => [
                 $this->getType() . "1000" => [
@@ -112,6 +118,13 @@ class MyCustomGraph extends CommonGLPI
     public function getWidgetContentForItem($widgetId, $opt = []): MydashboardHtml|false
     {
         global $DB;
+
+        // Checked again at the content: the declaration is cached in the session and
+        // ajax/refreshWidget.php serves any widget id that cache holds.
+        if (!Criteria::canReadTickets()) {
+            return false;
+        }
+
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 
         $preference = new MydashboardPreference();

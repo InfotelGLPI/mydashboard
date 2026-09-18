@@ -54,7 +54,7 @@
 
 .slidepanel .contents {
     clear: both;
-    background: white;
+    background: var(--tblr-bg-surface, white);
 }
 
 .layout_lefttab .slidepanel .new_form_tabs .ui-tabs-nav,
@@ -79,7 +79,7 @@
     right: 0;
     border-left: 1px solid #ccc;
     z-index: 9999;
-    background: white;
+    background: var(--tblr-bg-surface, white);
 }
 
 .slidepanel.onright .close {
@@ -104,7 +104,7 @@
     cursor: not-allowed;
     pointer-events: none;
     color: #c0c0c0 !important;
-    background-color: #ffffff;
+    background-color: var(--tblr-bg-surface, #ffffff);
 }
 
 .addItemTD {
@@ -174,9 +174,9 @@
 .weather_block {
     text-align: center;
     margin: 0 auto;
-    color: #000;
+    color: var(--tblr-body-color, #000);
     font-size: 12px;
-    background-color: #FFF;
+    background-color: var(--tblr-bg-surface, #FFF);
     /*width: 80%;*/
 }
 
@@ -190,14 +190,14 @@
     /*text-align: left;*/
     padding-bottom: 10px;
     margin-bottom: 10px;
-    color: #000;
+    color: var(--tblr-body-color, #000);
     font-size: 12px;
     border-radius: 5px 10px 0 5px;
     border: 1px solid #e6e6e6;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
-    background-color: #FFF;
+    background-color: var(--tblr-bg-surface, #FFF);
     min-width: 300px;
 }
 
@@ -284,7 +284,7 @@ div#tabcontent{
 .cadre_edit {
     /*border: none !important;*/
     /*box-shadow: none;*/
-    background-color: white;
+    background-color: var(--tblr-bg-surface, white);
     margin-bottom: 2px;
     margin-top: 2px;
     margin-right: 2px;
@@ -427,7 +427,7 @@ div#tabcontent{
     -moz-border-radius: 5px;
     border-radius: 5px;
     font-size: 12px;
-    background-color: #FFF;
+    background-color: var(--tblr-bg-surface, #FFF);
     padding: 10px;
     z-index: 1001 !important;
 }
@@ -437,7 +437,7 @@ div#tabcontent{
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    background-color: #FFF;
+    background-color: var(--tblr-bg-surface, #FFF);
     padding: 10px;
     z-index: 1001 !important;
 }
@@ -522,14 +522,23 @@ div#tabcontent{
 
 /* Barre d'actions mode édition */
 .md-edit-toolbar {
-    background-color: var(--bs-tertiary-bg, #f8f9fa);
+    background-color: var(--tblr-bg-surface-tertiary, var(--tblr-bg-surface, #f8f9fa));
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
+/* Barre de filtre global : .bg-light de Bootstrap tombe sur --tblr-light, qui est une
+   couleur claire de premier plan dans les palettes sombres. */
+#md-global-filter-bar {
+    background-color: var(--tblr-bg-surface-tertiary, var(--tblr-bg-surface, #f8f9fa));
+}
+
 /* Offcanvas widget catalogue */
 #md-widget-offcanvas {
+    /* Tabler, which GLPI 11 builds on, reads the --tblr- prefix; the --bs- one alone
+       never took effect, so the panel kept Tabler's default width. */
+    --tblr-offcanvas-width: 360px;
     --bs-offcanvas-width: 360px;
 }
 
@@ -556,7 +565,7 @@ div#tabcontent{
 
 .plugin_mydashboard_fullscreen_view {
     overflow-y: auto;
-    background-color: white;
+    background-color: var(--tblr-bg-surface, white);
 }
 
 .plugin_mydashboard_header_info_logbox {
@@ -567,7 +576,7 @@ div#tabcontent{
     z-index: 992;
     /*    top: 195px;*/
     top: 25px;
-    background-color: white;
+    background-color: var(--tblr-bg-surface, white);
     border: lightgrey 1px solid;
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
@@ -709,7 +718,7 @@ svg:hover {
 }
 
 .flotr-datagrid-container {
-    background-color: white;
+    background-color: var(--tblr-bg-surface, white);
 }
 
 .flotr-tab {
@@ -794,7 +803,7 @@ div.dt-button-background {
 
 .fullscreen_view {
     overflow-y: auto;
-    background-color: white;
+    background-color: var(--tblr-bg-surface, white);
     width: 100%;
 }
 
@@ -807,7 +816,7 @@ div.dt-button-background {
 .pmd-card-list {
     padding-top: 8px;
     padding-bottom: 8px;
-    background-color: #fff;
+    background-color: var(--tblr-bg-surface, #fff);
 }
 
 .pmd-list .list-group-item {
@@ -995,7 +1004,7 @@ div.dt-button-background {
 }
 
 .ind-widget-new {
-    background: #FFF;
+    background: var(--tblr-bg-surface, #FFF);
     padding-top: 15px;
     padding-left: 30px;
     padding-right: 30px;
@@ -1067,7 +1076,7 @@ div.dt-button-background {
 /* 9.3 */
 /*  If used tabs
 .ui-tabs {
-   background: #FFF repeat-x top left;
+   background: var(--tblr-bg-surface, #FFF) repeat-x top left;
    box-shadow: 0px 1px 1px #7F7979;
    width: 100% !important;
 }
@@ -1119,7 +1128,7 @@ div.dt-button-background {
 
 .md-grid-stack-item-content {
     /*border: 1px dashed lightgray;*/
-    border: 1px solid #e6e6e6;
+    border: 1px solid var(--tblr-border-color, #e6e6e6);
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -1321,5 +1330,5 @@ a#showMyDashboardLateralMenuLink {
 }
 
 .grid-stack>.grid-stack-item>.grid-stack-item-content {
-    background: white;
+    background: var(--tblr-bg-surface, white);
 }

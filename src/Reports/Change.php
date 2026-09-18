@@ -34,6 +34,7 @@ use CommonITILActor;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryFunction;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
@@ -509,11 +510,15 @@ class Change extends CommonGLPI
             ) {
                 foreach ($userrequesters as $d) {
                     if ($d["users_id"] > 0) {
-                        $userdata = getUserName($d["users_id"]);
+                        // This column is composed as HTML and handed to Datatable, which
+                        // writes it to the DOM as HTML: the requester name is free text of
+                        // the user account and the fallback address is typed by the requester
+                        // itself on an anonymous ticket.
+                        $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
                         $name = "<div class='b center'>" . $userdata;
                         $output[$colnum] .= $name . "</div>";
                     } else {
-                        $output[$colnum] .= $d['alternative_email'] . "&nbsp;";
+                        $output[$colnum] .= htmlspecialchars((string) $d['alternative_email'], ENT_QUOTES, 'UTF-8') . "&nbsp;";
                     }
                     //$output[$colnum] .=  "<br>";
                 }
@@ -523,7 +528,11 @@ class Change extends CommonGLPI
                 && count($grouprequester)
             ) {
                 foreach ($grouprequester as $d) {
-                    $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
+                    $output[$colnum] .= htmlspecialchars(
+                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
+                        ENT_QUOTES,
+                        'UTF-8',
+                    );
                 }
             }
 
@@ -543,7 +552,9 @@ class Change extends CommonGLPI
                 __('%1$s %2$s'),
                 $link,
                 Html::showToolTip(
-                    $change->fields['content'],
+                    // showToolTip() inserts its body as HTML: it is a sink, not an escaping
+                    // point. Sanitize the rich text first, as src/Reports/Reminder.php does.
+                    RichText::getEnhancedHtml($change->fields['content']),
                     [
                         'applyto' => 'change' . $change->fields["id"] . $rand,
                         'display' => false,

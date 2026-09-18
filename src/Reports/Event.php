@@ -66,7 +66,12 @@ class Event extends \Glpi\Event
     public function getWidgetsForItem()
     {
         $widgets = [];
-        if (Session::haveRight("logs", READ)) {
+        // The widget renders glpi_events, whose rightname is 'system_logs' (see the parent
+        // \Glpi\Event). It was gated on 'logs', the right of glpi_logs — a different bit of
+        // a different profile field, granted to many more profiles: the system journal was
+        // readable by anyone holding the history right. self::$rightname is inherited from
+        // the very class being displayed, so the two can no longer drift apart.
+        if (Session::haveRight(self::$rightname, READ)) {
             $widgets = [
                 Menu::$SYSTEM => [
                     "eventwidgetglobal" => [
@@ -88,7 +93,7 @@ class Event extends \Glpi\Event
      */
     public function getWidgetContentForItem($widgetId)
     {
-        if (Session::haveRight("logs", READ)) {
+        if (Session::haveRight(self::$rightname, READ)) {
             switch ($widgetId) {
                 //                case "eventwidgetpersonal":
                 //                    return Event::showForUser($_SESSION['glpiname']);

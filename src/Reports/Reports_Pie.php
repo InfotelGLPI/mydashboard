@@ -112,6 +112,11 @@ class Reports_Pie extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
+        // Every widget of this class aggregates glpi_tickets with no actor clause.
+        if (!Criteria::canReadTickets()) {
+            return [];
+        }
+
         $widgets = [
             Menu::$HELPDESK => [
                 $this->getType() . "2" => [
@@ -195,12 +200,18 @@ class Reports_Pie extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return MydashboardHtml
+     * @return MydashboardHtml|false
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
         global $DB;
+
+        // Checked again at the content: the declaration is cached in the session and
+        // ajax/refreshWidget.php serves any widget id that cache holds.
+        if (!Criteria::canReadTickets()) {
+            return false;
+        }
 
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 

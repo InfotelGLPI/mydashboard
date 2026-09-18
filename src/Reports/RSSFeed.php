@@ -33,6 +33,7 @@ use CommonGLPI;
 use Entity_RSSFeed;
 use Glpi\DBAL\QueryExpression;
 use Glpi\RichText\RichText;
+use Glpi\Toolbox\URL;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
@@ -215,21 +216,27 @@ class RSSFeed extends CommonGLPI
             usort($items, ['SimplePie', 'sort_items']);
             foreach ($items as $item) {
                 $output['body'][$count][0] = \Html::convDateTime($item->get_date('Y-m-d H:i:s'));
-                $link = $item->feed->get_permalink();
+                // Everything below is served by the remote feed, which keeps publishing new
+                // content long after an administrator validated the URL. Titles are escaped and
+                // permalinks go through URL::sanitizeURL() so a javascript: scheme cannot reach
+                // the href, which is the contract the core applies to these very SimplePie calls
+                // in src/RSSFeed.php. The body of the entry was already sanitized below.
+                $link = URL::sanitizeURL($item->feed->get_permalink());
                 if (empty($link)) {
-                    $output['body'][$count][1] = $item->feed->get_title();
+                    $output['body'][$count][1] = htmlescape($item->feed->get_title());
                 } else {
-                    $output['body'][$count][1] = "<a target=\"_blank'\" href=\"$link\">" . $item->feed->get_title(
-                    ) . '</a>';
+                    $output['body'][$count][1] = '<a target="_blank" rel="noopener noreferrer" href="'
+                        . htmlescape($link) . '">' . htmlescape($item->feed->get_title()) . '</a>';
                 }
-                $link = $item->get_permalink();
+                $link = URL::sanitizeURL($item->get_permalink());
                 $rand = mt_rand();
                 $output['body'][$count][1] .= "<div id=\"rssitem$rand\" class=\"pointer rss\">";
-                if (!is_null($link)) {
-                    $output['body'][$count][1] .= "<a target=\"_blank\" href=\"$link\">";
+                if (!empty($link)) {
+                    $output['body'][$count][1] .= '<a target="_blank" rel="noopener noreferrer" href="'
+                        . htmlescape($link) . '">';
                 }
-                $output['body'][$count][1] .= $item->get_title();
-                if (!is_null($link)) {
+                $output['body'][$count][1] .= htmlescape($item->get_title());
+                if (!empty($link)) {
                     $output['body'][$count][1] .= "</a>";
                 }
                 $output['body'][$count][1] .= "</div>";

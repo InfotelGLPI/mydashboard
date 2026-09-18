@@ -51,8 +51,15 @@ if (isset($dashboardWidgets->fields['id'])) {
     $edit = Preference::checkEditMode(Session::getLoginUserID());
     if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
         $idUser    = 0;
-        // Cast the incoming profile id to int (consistent with saveGrid/clearGrid).
-        $idProfile = (int) ($_GET['profiles_id'] ?? 0);
+        // Cast the incoming profile id to int (consistent with saveGrid/clearGrid), then
+        // confront it with the profiles this session may actually manage: it used to be read as
+        // posted, so the saved DataTables state of a profile outside the administrable scope —
+        // persisted search filters and column layout — could be loaded from its id alone. Fall
+        // back on the active profile rather than refusing, as saveGrid.php does.
+        $requested_profile = (int) ($_GET['profiles_id'] ?? 0);
+        $idProfile = Dashboard::canManageProfile($requested_profile)
+            ? $requested_profile
+            : (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
     }
     if ($idProfile > 0) {
         if ($dashboard->getFromDBByCrit(['users_id' => $idUser, 'profiles_id' => $idProfile])) {

@@ -139,14 +139,18 @@ class Menu extends CommonGLPI
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+        $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? (int) $_SESSION['glpiactiveprofile']['id'] : -1;
         $predefined_grid = 0;
 
-        if (isset($_POST["profiles_id"])) {
-            $profile = $_POST["profiles_id"];
+        // This tab is reached through ajax/common.tabs.php, which replays neither the cast
+        // nor the ownership rule front/menu.php applies before storing the value: the raw
+        // string used to travel to loadDashboard(), and from there to the dashboard row
+        // lookup, so another profile's layout was served from its id alone.
+        if (isset($_POST["profiles_id"]) && Dashboard::canManageProfile((int) $_POST["profiles_id"])) {
+            $profile = (int) $_POST["profiles_id"];
         }
         if (isset($_POST["predefined_grid"])) {
-            $predefined_grid = $_POST["predefined_grid"];
+            $predefined_grid = (int) $_POST["predefined_grid"];
         }
         $self = new self();
 
@@ -1278,10 +1282,7 @@ class Menu extends CommonGLPI
         if (!empty($grid)
             && ($datagrid = json_decode($grid, true)) == !null) {
 
-            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
-                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
-            }
-            $widgets = $_SESSION['glpi_plugin_mydashboard_widget_list'];
+            $widgets = Widget::getCachedWidgetList();
 
             foreach ($datagrid as $k => $v) {
                 if (isset($v["id"]) && isset($widgets[$v["id"]])) {
@@ -1375,10 +1376,7 @@ class Menu extends CommonGLPI
 
         // Toolbar d'édition ou popup d'actions selon le mode
         if ($edit > 0) {
-            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
-                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
-            }
-            $oc_widgets = $_SESSION['glpi_plugin_mydashboard_widget_list'];
+            $oc_widgets = Widget::getCachedWidgetList();
             $oc_gslist  = [];
             foreach ($oc_widgets as $gs => $widgetclasses) {
                 $oc_gslist[$widgetclasses['id']] = $gs;

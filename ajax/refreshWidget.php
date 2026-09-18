@@ -32,10 +32,7 @@ use GlpiPlugin\Mydashboard\Widget;
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
 
-if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
-    $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
-}
-$widgets = $_SESSION['glpi_plugin_mydashboard_widget_list'];
+$widgets = Widget::getCachedWidgetList();
 $wid = new Widget();
 
 if (isset($_POST['gsid']) && isset($_POST['id'])) {

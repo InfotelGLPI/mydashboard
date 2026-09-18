@@ -1064,7 +1064,9 @@ class Ticket extends CommonGLPI
             ) {
                 foreach ($userrequesters as $d) {
                     if ($d["users_id"] > 0) {
-                        $userdata = getUserName($d["users_id"]);
+                        // HTML rendered Datatable cell: the requester name is free text of the
+                        // user account.
+                        $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
                         $name = "<div class='b center'>" . $userdata;
                         //                        $name     = sprintf(
                         //                            __('%1$s %2$s'),
@@ -1078,7 +1080,7 @@ class Ticket extends CommonGLPI
 
                         $output[$colnum] .= $name . "</div>";
                     } else {
-                        $output[$colnum] .= $d['alternative_email'] . "&nbsp;";
+                        $output[$colnum] .= htmlspecialchars((string) $d['alternative_email'], ENT_QUOTES, 'UTF-8') . "&nbsp;";
                     }
 
                     $output[$colnum] .= "<br>";
@@ -1089,7 +1091,11 @@ class Ticket extends CommonGLPI
                 && count($grouprequester)
             ) {
                 foreach ($grouprequester as $d) {
-                    $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]) . "<br>";
+                    $output[$colnum] .= htmlspecialchars(
+                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
+                        ENT_QUOTES,
+                        'UTF-8',
+                    ) . "<br>";
                 }
             }
 
@@ -1097,12 +1103,15 @@ class Ticket extends CommonGLPI
             $output[$colnum] = '';
             if (!empty($job->hardwaredatas)) {
                 foreach ($job->hardwaredatas as $hardwaredatas) {
+                    // HTML rendered Datatable cell. getTypeName() is a stored label since GLPI 11
+                    // introduced custom assets, and getNameID() is the raw asset name, so both are
+                    // escaped; getLink() is already markup and stays as it is.
                     if ($hardwaredatas->canView()) {
-                        $output[$colnum] .= $hardwaredatas->getTypeName() . " - ";
+                        $output[$colnum] .= htmlescape($hardwaredatas->getTypeName()) . " - ";
                         $output[$colnum] .= "<span class='b'>" . $hardwaredatas->getLink() . "</span><br/>";
                     } elseif ($hardwaredatas) {
-                        $output[$colnum] .= $hardwaredatas->getTypeName() . " - ";
-                        $output[$colnum] .= "<span class='b'>" . $hardwaredatas->getNameID() . "</span><br/>";
+                        $output[$colnum] .= htmlescape($hardwaredatas->getTypeName()) . " - ";
+                        $output[$colnum] .= "<span class='b'>" . htmlescape($hardwaredatas->getNameID()) . "</span><br/>";
                     }
                 }
             } else {
@@ -1111,7 +1120,8 @@ class Ticket extends CommonGLPI
 
             $colnum++;
 
-            $link .= "<span class='b'>" . $job->getNameID() . "</span></a>";
+            // HTML rendered Datatable cell: getNameID() returns the raw ticket title.
+            $link .= "<span class='b'>" . htmlescape($job->getNameID()) . "</span></a>";
             $link = sprintf(
                 __('%1$s (%2$s)'),
                 $link,
@@ -1174,7 +1184,8 @@ class Ticket extends CommonGLPI
                 } else {
                     $pos = strlen($haystack);
                 }
-                $output[$colnum] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
+                // HTML rendered Datatable cell: the completename of a category is free text.
+                $output[$colnum] = "<span class='b'>" . htmlescape(substr($haystack, 0, $pos)) . "</span>";
             } else {
                 $output[$colnum] = "<span></span>";
             }
@@ -1219,13 +1230,18 @@ class Ticket extends CommonGLPI
                 $tab_name = "ProblemTask";
             }
 
-            $bgcolor = $_SESSION["glpipriority_" . $item_link->fields["priority"]];
+            // HTML rendered Datatable cells, as in the core showVeryShortTask(): the priority
+            // colour lands in a style attribute and the ticket or problem title is free text
+            // typed by the requester, so both are escaped before reaching the widget. This
+            // method had been missed by the earlier hardening passes that covered its sibling
+            // showVeryShort(), leaving stored script executing in every technician's dashboard.
+            $bgcolor = htmlescape($_SESSION["glpipriority_" . $item_link->fields["priority"]]);
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>"
                 . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</div>";
 
             $colnum++;
-            $output[$colnum] = $item_link->fields['name'];
+            $output[$colnum] = htmlescape($item_link->fields['name']);
             $colnum++;
             //echo "<td>";
             $link = "<a id='" . strtolower(
@@ -1237,7 +1253,14 @@ class Ticket extends CommonGLPI
 
             $colnum++;
 
-            $content = $job->fields['content'];
+            // The task content is rich text stored raw. The core renders it through
+            // Html::resume_text(RichText::getTextFromHtml(...)) in CommonITILTask: the markup is
+            // stripped, the result truncated and then escaped. Reuse that contract rather than
+            // concatenating the field into a cell DataTables renders as HTML.
+            $content = \Html::resume_text(
+                RichText::getTextFromHtml($job->fields['content'], false, true),
+                50,
+            );
             $link .= "<span class='b'>" . $content . "</span></a>";
 
             $output[$colnum] = $link;
@@ -1252,7 +1275,8 @@ class Ticket extends CommonGLPI
 
             //Priority
             $colnum++;
-            $bgcolor = $_SESSION["glpipriority_" . $item_link->fields["priority"]];
+            // Lands in a style attribute of an HTML rendered Datatable cell.
+            $bgcolor = htmlescape($_SESSION["glpipriority_" . $item_link->fields["priority"]]);
 
             $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>
                                 <span>" . \Ticket::getPriorityName($item_link->fields["priority"]) . "</span>
@@ -1280,7 +1304,8 @@ class Ticket extends CommonGLPI
             } else {
                 $pos = strlen($haystack);
             }
-            $output[$colnum] = "<span class='b'>" . substr($haystack, 0, $pos) . "</span>";
+            // HTML rendered Datatable cell: the completename of a category is free text.
+            $output[$colnum] = "<span class='b'>" . htmlescape(substr($haystack, 0, $pos)) . "</span>";
         }
         return $output;
     }
@@ -1671,7 +1696,8 @@ class Ticket extends CommonGLPI
         $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
 
         if ($job->getFromDB($id)) {
-            $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
+            // Lands in a style attribute of an HTML rendered Datatable cell.
+            $bgcolor = htmlescape($_SESSION["glpipriority_" . $job->fields["priority"]]);
 
             // ID
             $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
@@ -1729,7 +1755,10 @@ class Ticket extends CommonGLPI
             // Entity
             if (count($_SESSION["glpiactiveentities"]) > 1) {
                 $colnum++;
-                $output[$colnum] = Dropdown::getDropdownName('glpi_entities', $job->fields['entities_id']);
+                // HTML rendered Datatable cell: an entity name is free text of the entity record.
+                $output[$colnum] = htmlescape(
+                    (string) Dropdown::getDropdownName('glpi_entities', $job->fields['entities_id']),
+                );
             }
 
             // Priority
@@ -1744,7 +1773,9 @@ class Ticket extends CommonGLPI
                 && count($userrequesters)
             ) {
                 foreach ($userrequesters as $d) {
-                    $userdata = getUserName($d["users_id"]);
+                    // HTML rendered Datatable cell: the requester name is free text of the
+                    // user account.
+                    $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
                     $fourth_col .= "<span class='b'>" . $userdata . "</span>";
                     $fourth_col .= "<br>";
                 }
@@ -1754,7 +1785,11 @@ class Ticket extends CommonGLPI
                 && count($grouprequester)
             ) {
                 foreach ($grouprequester as $d) {
-                    $fourth_col .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
+                    $fourth_col .= htmlspecialchars(
+                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
+                        ENT_QUOTES,
+                        'UTF-8',
+                    );
                     $fourth_col .= "<br>";
                 }
             }
@@ -1772,12 +1807,15 @@ class Ticket extends CommonGLPI
                     if ($item->getFromDB($job->fields["items_id"])) {
                         $is_deleted = $item->isDeleted();
 
-                        $sixth_col .= $item->getTypeName();
+                        // Same contract as showVeryShort(): getTypeName() is a stored label for a
+                        // custom asset and getNameID() the raw asset name, while getLink() is
+                        // already markup.
+                        $sixth_col .= htmlescape($item->getTypeName());
                         $sixth_col .= "<br><span class='b'>";
                         if ($item->canView()) {
                             $sixth_col .= $item->getLink(['linkoption' => $output_type == Search::HTML_OUTPUT]);
                         } else {
-                            $sixth_col .= $item->getNameID();
+                            $sixth_col .= htmlescape($item->getNameID());
                         }
                         $sixth_col .= "</span>";
                     }
@@ -1790,7 +1828,9 @@ class Ticket extends CommonGLPI
             $output[$colnum] = $sixth_col;
 
             // Name ticket
-            $eigth_column = "<span class='b'>" . $job->fields["name"] . "</span>&nbsp;";
+            // HTML rendered Datatable cell: the title is free text typed by the requester. This
+            // list is the "New tickets" widget, fed by showCentralNewList().
+            $eigth_column = "<span class='b'>" . htmlescape($job->fields["name"]) . "</span>&nbsp;";
 
             // Add link
             if ($job->canViewItem()) {
@@ -1827,7 +1867,10 @@ class Ticket extends CommonGLPI
                     __('%1$s %2$s'),
                     $eigth_column,
                     \Html::showToolTip(
-                        $job->fields['content'],
+                        // showToolTip() inserts its body as HTML: it is a sink, not an escaping
+                        // point. Sanitize the rich text first, as src/Reports/Reminder.php and the
+                        // core both do.
+                        RichText::getEnhancedHtml($job->fields['content']),
                         [
                             'display' => false,
                             'applyto' => "ticket" . $job->fields["id"]

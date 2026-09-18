@@ -27,8 +27,10 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Mydashboard\Groupprofile;
 use GlpiPlugin\Mydashboard\Config;
+use GlpiPlugin\Mydashboard\Dashboard;
 
 Session::checkRight(Config::$rightname, UPDATE);
 
@@ -38,17 +40,33 @@ if (isset($_POST["addGroup"])) {
         Html::back();
     } else {
         $group->check(-1, CREATE, $_POST);
-        if (isset($_POST["groups_id"])) {
-            $_POST["groups_id"] = json_encode($_POST["groups_id"]);
+
+        // check() validates the creation of a Groupprofile row; it says nothing about the
+        // profile that row points at. profiles_id was then used exactly as posted, both to
+        // read and write the Groupprofile row and — the part that matters — to create or
+        // update a core glpi_profilerights line. This is the only entry point of the plugin
+        // that writes into a rights table of the core, and the global Config UPDATE right
+        // gating it carries no notion of entity or profile hierarchy. Confront the posted id
+        // with the profiles this session may actually administer, as ajax/saveGrid.php and
+        // ajax/state_save.php already do.
+        $profiles_id = (int) ($_POST['profiles_id'] ?? 0);
+        if (!Dashboard::canManageProfile($profiles_id)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if (isset($_POST["groups_id"]) && is_array($_POST["groups_id"])) {
+            // The column stores a JSON list read back with json_decode() and used as group
+            // ids: normalise it so nothing but ids can be persisted there.
+            $_POST["groups_id"] = json_encode(array_values(array_map('intval', $_POST["groups_id"])));
         } else {
             $_POST["groups_id"] = "[]";
         }
-        if ($group->getFromDBByCrit(['profiles_id' => $_POST['profiles_id']])) {
+        if ($group->getFromDBByCrit(['profiles_id' => $profiles_id])) {
             $group->update(['id'   => $group->fields['id'],
                 'groups_id'   => $_POST['groups_id']]);
         } else {
             $group->add(['groups_id'   => $_POST['groups_id'],
-                'profiles_id' => $_POST['profiles_id']]);
+                'profiles_id' => $profiles_id]);
         }
 
         if (isset($_POST["use_group_profile"])) {
@@ -56,12 +74,12 @@ if (isset($_POST["addGroup"])) {
             // so an arbitrary string / bitmask cannot land raw in glpi_profilerights.
             $use_group_profile = !empty($_POST["use_group_profile"]) ? 1 : 0;
             $profile = new ProfileRight();
-            if ($profile->getFromDBByCrit(['profiles_id' => $_POST['profiles_id'],
+            if ($profile->getFromDBByCrit(['profiles_id' => $profiles_id,
                 'name'        => 'plugin_mydashboard_groupprofile'])) {
                 $profile->update(['id'     => $profile->fields['id'],
                     'rights' => $use_group_profile]);
             } else {
-                $profile->add(['profiles_id' => $_POST['profiles_id'],
+                $profile->add(['profiles_id' => $profiles_id,
                     'name'        => 'plugin_mydashboard_groupprofile',
                     'rights'      => $use_group_profile]);
             }

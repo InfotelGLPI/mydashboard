@@ -31,6 +31,7 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use Dropdown;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
@@ -314,7 +315,9 @@ class Project extends CommonGLPI
             $projectsFields = $project->fields;
             if (isset($projectsFields["users_id"])) {
                 if ($projectsFields["users_id"] > 0) {
-                    $userdata = getUserName($projectsFields["users_id"]);
+                    // HTML rendered Datatable cell: the manager name is free text of the user
+                    // account.
+                    $userdata = htmlspecialchars((string) getUserName($projectsFields["users_id"]), ENT_QUOTES, 'UTF-8');
                     $name = "<div class='b center'>" . $userdata;
                     $output[$colnum] .= $name . "</div>";
                 }
@@ -323,7 +326,11 @@ class Project extends CommonGLPI
             if (isset($projectsFields["groups_id"])
                 && $projectsFields["groups_id"] != 0
             ) {
-                $output[$colnum] .= Dropdown::getDropdownName("glpi_groups", $projectsFields["groups_id"]);
+                $output[$colnum] .= htmlspecialchars(
+                    (string) Dropdown::getDropdownName("glpi_groups", $projectsFields["groups_id"]),
+                    ENT_QUOTES,
+                    'UTF-8',
+                );
             }
 
             $colnum++;
@@ -342,7 +349,9 @@ class Project extends CommonGLPI
                 __('%1$s %2$s'),
                 $link,
                 \Html::showToolTip(
-                    $project->fields['content'],
+                    // showToolTip() inserts its body as HTML: it is a sink, not an escaping
+                    // point. Sanitize the rich text first, as src/Reports/Reminder.php does.
+                    RichText::getEnhancedHtml($project->fields['content']),
                     [
                         'applyto' => 'project' . $project->fields["id"] . $rand,
                         'display' => false,

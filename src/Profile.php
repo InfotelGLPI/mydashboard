@@ -270,6 +270,13 @@ class Profile extends \Profile
             unset($_SESSION["glpi_plugin_mydashboard_activating"]);
         }
         unset($_SESSION["glpi_plugin_mydashboard_allwidgets"]);
+        // Widgetlist::getList() prunes the list with ProfileAuthorizedWidget, so it belongs
+        // to a profile. Only 'allwidgets' was dropped here, and the other invalidation point
+        // (setup.php) is conditioned on a version change: after a profile switch the list
+        // authorized to the previous profile kept being served by Menu::showDashboard() and
+        // accepted by ajax/refreshWidget.php. Widget::getCachedWidgetList() now keys the
+        // cache per profile and interface as well, so a forgotten unset cannot leak again.
+        unset($_SESSION["glpi_plugin_mydashboard_widget_list"]);
         //      $widgetclasse = new Widget();
         //      $ckey         = 'md_cache_' . md5($widgetclasse->getTable()).Session::getLoginUserID();
         //      $GLPI_CACHE->delete($ckey);

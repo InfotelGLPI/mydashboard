@@ -374,11 +374,38 @@ class Widget extends CommonDBTM
         }
     }
 
+    /**
+     * The widget list of the active profile, memoized in the session.
+     *
+     * The list depends on the profile — getList() prunes it with ProfileAuthorizedWidget —
+     * and on the interface, but it used to be cached under a single flat session key that
+     * four call sites read and repopulated only when it was absent. Keying it removes the
+     * whole class of leak rather than relying on every invalidation point being remembered.
+     *
+     * @return array
+     */
+    public static function getCachedWidgetList(): array
+    {
+        $profiles_id = (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
+        $interface   = Session::getCurrentInterface() ?: 'central';
+        $key         = $profiles_id . '_' . $interface;
+
+        if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'][$key])) {
+            $_SESSION['glpi_plugin_mydashboard_widget_list'][$key] = self::getCompleteWidgetList();
+        }
+
+        return $_SESSION['glpi_plugin_mydashboard_widget_list'][$key];
+    }
+
     public static function getCompleteWidgetList($preload = false, $withslashes = false)
     {
 
         //Load widgets
-        $widgetlist = Widgetlist::getList(true, -1, "central", $preload);
+        // Widgetlist::getList() filters on the interface a widget class declares in
+        // $interfaces; the constant "central" made that filter meaningless for a session in
+        // the simplified interface, which this plugin does feed through
+        // Hooks::HELPDESK_MENU_ENTRY.
+        $widgetlist = Widgetlist::getList(true, -1, Session::getCurrentInterface() ?: 'central', $preload);
         $i          = 1;
         $self       = new self();
         $widgets    = [];

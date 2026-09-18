@@ -97,6 +97,25 @@ class Criteria
     public const OCSINVENTORYNG_IMPORTDATE = 10002;
 
     /**
+     * Whether the session may read tickets beyond the ones it is an actor of.
+     *
+     * addCriteriasForQuery() bounds the entity of every widget query, never the actors, so a
+     * profile holding nothing but Ticket::READMY still saw the workload, the delays, the
+     * categories and the technician names of the whole entity as soon as it added a
+     * statistics widget. src/Reports/Ticket.php refuses its own lists on exactly this test;
+     * the statistics widgets are the same data, aggregated.
+     *
+     * @return bool
+     */
+    public static function canReadTickets(): bool
+    {
+        return Session::haveRightsOr(
+            \Ticket::$rightname,
+            [CREATE, \Ticket::READALL, \Ticket::READASSIGN],
+        );
+    }
+
+    /**
      * @param $params
      *
      * @return mixed
@@ -389,9 +408,15 @@ class Criteria
         //
         // So whenever no entity clause reached the WHERE, apply the session
         // restriction here.
+        //
+        // array_merge(), not "+": getEntitiesRestrictCriteria() answers with a single
+        // integer-keyed QueryExpression('false') when the session has no readable entity,
+        // and the union operator keeps the left operand on a key collision, so that deny
+        // clause was silently dropped by every caller whose WHERE already held an
+        // integer-keyed sub-condition. array_merge() appends it instead.
         if (self::queryUsesTable($query, $table)
             && !self::hasEntityRestriction($query['WHERE'] ?? [], $table)) {
-            $query['WHERE'] = ($query['WHERE'] ?? []) + getEntitiesRestrictCriteria($table);
+            $query['WHERE'] = array_merge($query['WHERE'] ?? [], getEntitiesRestrictCriteria($table));
         }
 
         return $query;
