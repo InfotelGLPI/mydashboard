@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Mydashboard\Tests;
 
+use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Reports\Change;
 use GlpiPlugin\Mydashboard\Reports\Contract;
 use GlpiPlugin\Mydashboard\Reports\Event;
@@ -89,9 +90,17 @@ class WidgetlistTest extends TestCase
     }
 
     /**
-     * Classes dont getWidgetsForItem() est purement statique (pas d'appel DB/Session).
-     * Confirmé par exécution CI : les autres classes appellent Session::isSlave()
-     * ou $DB->request() et nécessitent un test d'intégration avec base de données.
+     * Classes dont getWidgetsForItem() construit sa liste sans interroger la base.
+     *
+     * Ces classes filtrent désormais leurs widgets sur des droits : Criteria::canReadTickets()
+     * pour les widgets d'assistance, Session::haveRight() pour les autres. Les deux passent
+     * par Session::haveRight(), qui lit $DB->isSlave() avant de consulter le profil — donc
+     * une erreur fatale hors base. Le test les exécute via Session::callAsSystem(), qui
+     * désactive ces vérifications en amont de tout accès à $DB : la liste complète est
+     * alors déclarée, ce que cette suite vérifie.
+     *
+     * Les autres classes appellent $DB->request() dans getWidgetsForItem() même sans
+     * contrôle de droit, et relèvent d'un test d'intégration avec base de données.
      *
      * @return array<string, array{class-string}>
      */
@@ -147,7 +156,7 @@ class WidgetlistTest extends TestCase
     public function testGetWidgetsForItemReturnsNonEmptyArray(string $classname): void
     {
         $instance = new $classname();
-        $widgets  = $instance->getWidgetsForItem();
+        $widgets  = \Session::callAsSystem(static fn() => $instance->getWidgetsForItem());
 
         $this->assertIsArray(
             $widgets,
@@ -157,5 +166,50 @@ class WidgetlistTest extends TestCase
             $widgets,
             "$classname::getWidgetsForItem() ne doit pas retourner un tableau vide",
         );
+    }
+
+    /**
+     * Les widgets d'assistance agrègent glpi_tickets sans aucune clause d'acteur. Un profil
+     * qui ne détient que Ticket::READMY ne doit donc pas se les voir proposer : c'est le
+     * filtrage porté par Criteria::canReadTickets(), que rien ne couvrait jusqu'ici.
+     */
+    public function testHelpdeskWidgetsAreHiddenWithoutTicketRead(): void
+    {
+        $db_backup      = $GLOBALS['DB'] ?? null;
+        $session_backup = $_SESSION ?? [];
+
+        // Ici les droits sont bien évalués, donc Session::haveRight() lit $DB->isSlave().
+        // Une instance non connectée suffit : isSlave() ne lit que la propriété $slave,
+        // false par défaut. Toute requête réelle échouerait, ce qui est le comportement
+        // voulu dans une suite unitaire.
+        $GLOBALS['DB'] = new class extends \DBmysql {
+            public function __construct() {}
+        };
+        $_SESSION['glpiactiveprofile'] = [\Ticket::$rightname => \Ticket::READMY];
+
+        try {
+            // Ces trois classes ne déclarent que des widgets de tickets.
+            foreach ([Reports_Line::class, Reports_Pie::class, Reports_Map::class] as $classname) {
+                $instance = new $classname();
+
+                $this->assertSame(
+                    [],
+                    $instance->getWidgetsForItem(),
+                    "$classname ne doit déclarer aucun widget sans droit de lecture des tickets",
+                );
+            }
+
+            // Reports_Bar garde son widget d'inventaire, qui compte des ordinateurs.
+            $bar = new Reports_Bar();
+
+            $this->assertArrayNotHasKey(
+                Menu::$HELPDESK,
+                $bar->getWidgetsForItem(),
+                "Reports_Bar ne doit déclarer aucun widget d'assistance sans droit de lecture des tickets",
+            );
+        } finally {
+            $GLOBALS['DB'] = $db_backup;
+            $_SESSION      = $session_backup;
+        }
     }
 }
