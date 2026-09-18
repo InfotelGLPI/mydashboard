@@ -270,6 +270,25 @@ class Preference extends CommonDBTM
         $blacklist->showUserForm(Session::getLoginUserID());
     }
 
+    public function prepareInputForAdd($input)
+    {
+        return $this->prepareInputForUpdate($input);
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // The palette is read back by getPalette() and interpolated into the inline script that
+        // initialises every ECharts instance, so only a theme that actually ships with the
+        // plugin may be stored: getPalettes() is the source of truth the form itself uses, and
+        // anything else falls back to the default (empty) theme instead of being persisted.
+        if (isset($input['color_palette'])
+            && !array_key_exists($input['color_palette'], $this->getPalettes())) {
+            $input['color_palette'] = '';
+        }
+
+        return $input;
+    }
+
     public function getPalettes()
     {
         $themes_files = scandir(Plugin::getPhpDir("mydashboard") . "/public/lib/echarts/theme");
@@ -330,7 +349,17 @@ class Preference extends CommonDBTM
      */
     public static function getPalette($users_id)
     {
-        return self::checkPreferenceValue('color_palette', $users_id);
+        $palette = self::checkPreferenceValue('color_palette', $users_id);
+
+        // The value is interpolated into the inline script that initialises the ECharts
+        // instances, so it is confronted with the themes really shipped by the plugin at read
+        // time too, and not only in prepareInputForUpdate(): rows written before that validation
+        // existed, or by any other write path, can then no longer leave the JS string literal.
+        if (!array_key_exists($palette, (new self())->getPalettes())) {
+            return '';
+        }
+
+        return $palette;
     }
 
     public static function install(Migration $migration)

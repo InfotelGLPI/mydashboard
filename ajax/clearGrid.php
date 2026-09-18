@@ -36,6 +36,16 @@ $dashboard = new Dashboard();
 $profile   = (int) ($_POST['profiles_id'] ?? ($_SESSION['glpiactiveprofile']['id'] ?? -1));
 $edit_mode = (int) ($_POST['edit_mode'] ?? 0);
 
+// The posted profile decides which grid row is deleted, so it is confronted with the profiles
+// this session may actually manage, exactly as saveGrid.php, state_save.php, state_load.php and
+// front/menu.php already do. The "plugin_mydashboard_config" right below is global: it answers
+// "may administer dashboards", not "may administer THIS profile". The check is placed before
+// $options so it also covers the personal branch, where a foreign profiles_id could be used to
+// probe which preference rows exist. The call comes from a UI button, hence the silent fallback.
+if (!Dashboard::canManageProfile($profile)) {
+    $profile = (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
+}
+
 if ($edit_mode == 2 && Session::haveRight("plugin_mydashboard_config", CREATE)) {
     // Global edit mode: clear the profile-wide grid (users_id = 0)
     $options = ["users_id" => 0, "profiles_id" => $profile];

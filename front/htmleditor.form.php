@@ -42,6 +42,11 @@ if (isset($_POST['update'])) {
     $_POST["content"] = RichText::getSafeHtml(
         html_entity_decode($_POST["content"]),
     );
+    // checkRight() above guards the page, check() guards the row: the posted id used to reach
+    // update() without the object ever being loaded, so neither its existence nor its rights
+    // were confronted, and no history entry was produced. stockwidget.form.php and
+    // alert.form.php of this same plugin already apply the pattern.
+    $customsWidget->check($_POST['id'] ?? -1, UPDATE, $_POST);
     $customsWidget->update($_POST);
 
     Html::back();

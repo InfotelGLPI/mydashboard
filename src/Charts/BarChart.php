@@ -62,10 +62,10 @@ abstract class BarChart extends Chart
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
         $json_criterias = self::encodeForScript($graph_criterias);
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $graph          = \Html::scriptBlock("
 
-          var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+          var canvas$name = echarts.init(document.getElementById('$name'), $theme);
           window.onresize = function() {
             canvas$name.resize();
           };
@@ -230,10 +230,10 @@ abstract class BarChart extends Chart
         $legends = self::hardenJson($graph_datas['legends'] ?? "");
         $yaxis = self::hardenJson($graph_datas['yaxis']);
         $json_criterias = self::encodeForScript($graph_criterias);
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $graph          = \Html::scriptBlock("
 
-          var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+          var canvas$name = echarts.init(document.getElementById('$name'), $theme);
           window.onresize = function() {
             canvas$name.resize();
           };
@@ -391,10 +391,10 @@ abstract class BarChart extends Chart
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
         $json_criterias = self::encodeForScript($graph_criterias);
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $graph          = \Html::scriptBlock("
 
-          var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+          var canvas$name = echarts.init(document.getElementById('$name'), $theme);
           window.onresize = function() {
             canvas$name.resize();
           };
@@ -556,10 +556,10 @@ abstract class BarChart extends Chart
         $url     = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
 
         $json_criterias = self::encodeForScript($graph_criterias);
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $graph          = \Html::scriptBlock("
 
-              var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+              var canvas$name = echarts.init(document.getElementById('$name'), $theme);
               window.onresize = function() {
                 canvas$name.resize();
               };

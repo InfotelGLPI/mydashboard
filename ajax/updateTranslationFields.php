@@ -27,7 +27,6 @@
  * --------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\ConfigTranslation;
 
 $AJAX_INCLUDE = 1;
@@ -38,12 +37,14 @@ Html::header_nocache();
 Session::checkRight("plugin_mydashboard_config", UPDATE);
 
 if (isset($_POST['itemtype']) && isset($_POST['language'])) {
-    $allowed_types = [Config::class, ConfigTranslation::class];
-    if (!in_array($_POST['itemtype'], $allowed_types, true)) {
+    // The allow list and the instantiation are both kept here, at the sink: the list says which
+    // itemtypes the plugin translates, getItemForItemtype() refuses anything that is not a
+    // loadable GLPI class instead of instantiating a dynamic string.
+    if (!in_array($_POST['itemtype'], ConfigTranslation::getAllowedItemtypes(), true)
+        || !$item = getItemForItemtype($_POST['itemtype'])) {
         http_response_code(400);
         exit;
     }
-    $item = new $_POST['itemtype']();
     $item->getFromDB($_POST['items_id']);
     ConfigTranslation::dropdownFields($item, $_POST['language']);
 }

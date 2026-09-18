@@ -64,8 +64,11 @@ $(function() {
             }
             fuzzy_started = true;
 
-            // retrieve current menu data (once)
-            $.getJSON(root_my_doc+'/ajax/fuzzysearch.php', {
+            // retrieve current menu data (once). Posted rather than sent as a GET so that the
+            // endpoint is covered by the CSRF validation, which GLPI only applies to non-GET
+            // methods: the core ajaxSend() handler adds the X-Glpi-Csrf-Token header to every
+            // jQuery POST, so no token has to be carried here.
+            $.post(root_my_doc+'/ajax/fuzzysearch.php', {
                 'action': 'getList',
             }, function(data) {
                 // Exclure les widgets déjà présents dans la grille
@@ -80,7 +83,7 @@ $(function() {
                         startFuzzy();
                     }
                 }, 100);
-            });
+            }, 'json');
 
             // general key matches
             $(document).on('keyup', function(key) {

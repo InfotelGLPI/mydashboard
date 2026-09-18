@@ -74,6 +74,20 @@ class ConfigTranslation extends CommonDBChild
     }
 
     /**
+     * Itemtypes this class may be attached to.
+     *
+     * The polymorphic parent of a translation comes from the request, so both write paths of
+     * the plugin — front/configtranslation.form.php and ajax/updateTranslationFields.php —
+     * confront the posted itemtype with this single definition of the allowed domain.
+     *
+     * @return string[]
+     */
+    public static function getAllowedItemtypes(): array
+    {
+        return [Config::class, self::class];
+    }
+
+    /**
      * Get the standard massive actions which are forbidden
      *
      * @since version 0.84

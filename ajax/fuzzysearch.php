@@ -35,4 +35,10 @@ Html::header_nocache();
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
 
-echo Widgetlist::fuzzySearch($_REQUEST['action']);
+// Read the action from $_POST and not from $_REQUEST: the GET form of this endpoint is never
+// used by the plugin and is not covered by the CSRF validation, which GLPI only applies to
+// non-GET methods. The default also removes the "Undefined array key" notice raised on a call
+// without parameter, which polluted the JSON response in debug mode.
+$action = (string) ($_POST['action'] ?? '');
+
+echo Widgetlist::fuzzySearch($action);

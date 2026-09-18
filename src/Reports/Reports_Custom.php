@@ -86,7 +86,7 @@ class Reports_Custom extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return string
+     * @return Html|string|false
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
@@ -95,10 +95,26 @@ class Reports_Custom extends CommonGLPI
                 {
                     // It's a custom widget
                     if (strpos($widgetId, "cw")) {
-                        // Last letter of widgetId is customWidget index in database
-                        $id = intval(substr($widgetId, -1));
+                        // The database id is the whole numeric suffix that follows the "cw"
+                        // marker, not the last character: reading a single character resolved
+                        // "cw12" to record 2, so the authorization filters (ProfileAuthorizedWidget
+                        // and PreferenceUserBlacklist) applied to the full key while another
+                        // record was served.
+                        if (!preg_match('/cw(\d+)$/', $widgetId, $matches)) {
+                            return false;
+                        }
+                        $id = (int) $matches[1];
+
+                        // Refuse anything that does not round-trip to the requested key, so the
+                        // content served is always the one the authorization was checked on.
+                        if ($this->getType() . "cw" . $id !== $widgetId) {
+                            return false;
+                        }
 
                         $content = Customswidget::getCustomWidget($id);
+                        if (!is_array($content)) {
+                            return false;
+                        }
 
                         $widget = new Html(true);
 

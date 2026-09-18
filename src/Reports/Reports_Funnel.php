@@ -69,6 +69,13 @@ class Reports_Funnel extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
+        // The only widget of this class aggregates glpi_computers, so it is bound to the
+        // core right of the itemtype it reads, as every other report class does for its own
+        // (Criteria::canReadTickets(), 'contract', 'reminder_public'...).
+        if (!Session::haveRight(\Computer::$rightname, READ)) {
+            return [];
+        }
+
         $widgets = [
             Menu::$INVENTORY
                 => [
@@ -124,12 +131,20 @@ class Reports_Funnel extends CommonGLPI
      * @param       $widgetId
      * @param array $opt
      *
-     * @return Html
+     * @return Html|false
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
         global $DB;
+
+        // The widget list is cached in the session and ajax/refreshWidget.php serves any id
+        // that cache holds, so the right is checked again at the content and not only at the
+        // declaration.
+        if (!Session::haveRight(\Computer::$rightname, READ)) {
+            return false;
+        }
+
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 
         $preference = new MydashboardPreference();

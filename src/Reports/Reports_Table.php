@@ -647,6 +647,17 @@ class Reports_Table extends CommonGLPI
                         'GROUPBY' => ['userid', 'statusname'],
                         'ORDERBY' => 'statusname',
                     ];
+                    // The counts of this subquery are merged into the very rows the main count
+                    // query builds, and that one is scoped (see $query_counts below), so the
+                    // "pending" columns used to aggregate the whole instance while the columns
+                    // next to them only showed the entities of the session. array_merge(), not
+                    // "+": the WHERE opens on an integer key and getEntitiesRestrictCriteria()
+                    // may answer with an integer-keyed QueryExpression('false') deny clause,
+                    // which the union operator would silently drop on the key collision.
+                    $query_moretickets_by_technician_by_status['WHERE'] = array_merge(
+                        $query_moretickets_by_technician_by_status['WHERE'],
+                        getEntitiesRestrictCriteria('glpi_tickets'),
+                    );
 
                     $query_moreticket_type = [
                         'SELECT' => [
@@ -978,6 +989,14 @@ class Reports_Table extends CommonGLPI
                         'GROUPBY' => ['groups_id', 'statusname'],
                         'ORDERBY' => 'statusname',
                     ];
+                    // Same asymmetry as the technician widget: the main count query of this
+                    // widget goes through Criteria::addCriteriasForQuery() (see below) while
+                    // this subquery queried every entity, and both results end up in the same
+                    // displayed row. array_merge() for the same reason as there.
+                    $query_moretickets_by_group_by_status['WHERE'] = array_merge(
+                        $query_moretickets_by_group_by_status['WHERE'],
+                        getEntitiesRestrictCriteria('glpi_tickets'),
+                    );
 
                     $query_moreticket_type = [
                         'SELECT' => [

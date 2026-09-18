@@ -169,19 +169,19 @@ parameters:
 			path: src/Alert.php
 
 		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: src/Alert.php
 
 		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but returns GlpiPlugin\\Mydashboard\\Datatable\.$#'
 			identifier: return.type
 			count: 3
 			path: src/Alert.php
 
 		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but returns GlpiPlugin\\Mydashboard\\PluginMydashboardHtml\.$#'
+			message: '#^Method GlpiPlugin\\Mydashboard\\Alert\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but returns GlpiPlugin\\Mydashboard\\PluginMydashboardHtml\.$#'
 			identifier: return.type
 			count: 2
 			path: src/Alert.php
@@ -1418,14 +1418,8 @@ parameters:
 			path: src/Reports/Reports_Bar.php
 
 		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:getWidgetContentForItem\(\) should return string but return statement is missing\.$#'
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|string\|false but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: src/Reports/Reports_Custom.php
-
-		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Custom\:\:getWidgetContentForItem\(\) should return string but returns GlpiPlugin\\Mydashboard\\Html\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Reports/Reports_Custom.php
 
@@ -1442,7 +1436,7 @@ parameters:
 			path: src/Reports/Reports_Custom.php
 
 		-
-			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Funnel\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html but return statement is missing\.$#'
+			message: '#^Method GlpiPlugin\\Mydashboard\\Reports\\Reports_Funnel\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Html\|false but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: src/Reports/Reports_Funnel.php

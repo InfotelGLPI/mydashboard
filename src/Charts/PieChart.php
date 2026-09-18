@@ -59,12 +59,12 @@ class PieChart extends Chart
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = \Html::scriptBlock("
           var id$name = $ids;
-          var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+          var canvas$name = echarts.init(document.getElementById('$name'), $theme);
           window.onresize = function() {
             canvas$name.resize();
           };
@@ -221,13 +221,13 @@ class PieChart extends Chart
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = \Html::scriptBlock("
 
           var id$name = $ids;
-          var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+          var canvas$name = echarts.init(document.getElementById('$name'), $theme);
           window.onresize = function() {
             canvas$name.resize();
           };
@@ -382,12 +382,12 @@ class PieChart extends Chart
         $title          = $graph_datas['title'] ?? "";
         $comment        = $graph_datas['comment'] ?? "";
         $url            = $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-        $theme          = MydashboardPreference::getPalette(Session::getLoginUserID());
+        $theme          = self::encodeForScript(MydashboardPreference::getPalette(Session::getLoginUserID()));
         $json_criterias = self::encodeForScript($graph_criterias);
 
         $graph = \Html::scriptBlock("
             var id$name = $ids;
-          var canvas$name = echarts.init(document.getElementById('$name'), '$theme');
+          var canvas$name = echarts.init(document.getElementById('$name'), $theme);
           window.onresize = function() {
             canvas$name.resize();
           };

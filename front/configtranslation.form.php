@@ -27,16 +27,31 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Mydashboard\ConfigTranslation;
 
 Session::checkRight("plugin_mydashboard_config", UPDATE);
 
 $translation = new ConfigTranslation();
+
+// The parent of a translation is polymorphic and comes from the request, so the posted itemtype
+// is confronted with the domain the plugin really translates before anything is written. The
+// check() calls below then guard the row itself: checkRight() above only guards the page, and
+// the three branches used to pass $_POST straight to add()/update()/delete() without the object
+// ever being loaded. check(-1, CREATE) needs the input to resolve that polymorphic parent.
+if (isset($_POST['itemtype'])
+    && !in_array($_POST['itemtype'], ConfigTranslation::getAllowedItemtypes(), true)) {
+    throw new BadRequestHttpException();
+}
+
 if (isset($_POST['add'])) {
+    $translation->check(-1, CREATE, $_POST);
     $translation->add($_POST);
 } elseif (isset($_POST['update'])) {
+    $translation->check($_POST['id'] ?? -1, UPDATE, $_POST);
     $translation->update($_POST);
 } elseif (isset($_POST['purge'])) {
+    $translation->check($_POST['id'] ?? -1, PURGE);
     $translation->delete($_POST, 1);
 }
 Html::back();

@@ -1325,9 +1325,13 @@ class Menu extends CommonGLPI
             $grid = '[]';
         }
 
-        $datajson = json_encode($datajson);
+        // All four arrays below are interpolated into the inline <script> of this page, so
+        // they are encoded with the same HTML-hardening flags as every other script-bound
+        // JSON of the plugin (Chart::hardenJson(), ajax/refreshWidget.php, the grid a few
+        // lines below): a value holding </script> can never leave the script context.
+        $datajson = json_encode($datajson, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 
-        $allwidgetjson = json_encode($allwidgetjson);
+        $allwidgetjson = json_encode($allwidgetjson, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         $msg_delete    = __('Delete widget', 'mydashboard');
         $msg_error     = __('No data available', 'mydashboard');
         $msg_refresh   = __('Refresh widget', 'mydashboard');
@@ -1343,8 +1347,14 @@ class Menu extends CommonGLPI
             $delete_button = 'true';
         }
 
-        $all_displayed_widgets    = json_encode($displayed_widgets);
-        $all_displayed_widgets_id = json_encode($displayed_widgets_id);
+        $all_displayed_widgets    = json_encode(
+            $displayed_widgets,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
+        $all_displayed_widgets_id = json_encode(
+            $displayed_widgets_id,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
 
         // [S1] Re-encode the grid layout instead of interpolating the raw stored
         // string into the inline <script> below. The `grid` column is persisted

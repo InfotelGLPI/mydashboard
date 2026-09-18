@@ -261,6 +261,18 @@ class Alert extends CommonDBTM
             ],
         ];
 
+        // Widgets "6" (GLPI status) and "8" (automatic actions in error) expose the internal
+        // state of the instance — services, database replicas, LDAP, mail collectors, cron
+        // tasks and installed plugins — which the core binds to the "config" right
+        // (CronTask::$rightname, status.php IP allow list). Menu::$SYSTEM is only a display
+        // section and grants nothing, so the right is checked here.
+        if (!Session::haveRight(\Config::$rightname, READ)) {
+            unset(
+                $widgets[Menu::$SYSTEM][$this->getType() . "6"],
+                $widgets[Menu::$SYSTEM][$this->getType() . "8"],
+            );
+        }
+
         return $widgets;
     }
 
@@ -406,7 +418,7 @@ class Alert extends CommonDBTM
      *
      * @param array $opt
      *
-     * @return MydashboardHtml
+     * @return MydashboardHtml|false
      * @throws \GlpitestSQLError
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
@@ -478,10 +490,20 @@ class Alert extends CommonDBTM
                 break;
 
             case $this->getType() . "6":
+                // The widget declaration is cached in the session and ajax/refreshWidget.php
+                // serves any widget id that cache holds, so the "config" right is checked
+                // again here and not only at the declaration.
+                if (!Session::haveRight(\Config::$rightname, READ)) {
+                    return false;
+                }
 
                 $widget = new MydashboardHtml();
                 $url = $CFG_GLPI['url_base'] . "/status.php?format=json";
-                $contents = StatusChecker::getServiceStatus($_REQUEST['service'] ?? null, true, false);
+                // The widget always renders the global status table, which is read from the
+                // "glpi" key below: a single service status does not carry that key. The
+                // request parameter is therefore not forwarded to the checker at all, which
+                // also removes an unvalidated user input from the service selection.
+                $contents = StatusChecker::getServiceStatus(null, true);
                 $table = self::handleShellcommandResult($contents['glpi']['status'], $url);
 
 
@@ -738,6 +760,11 @@ class Alert extends CommonDBTM
                 return $widget;
 
             case $this->getType() . "8":
+                // Same reason as case "6": the cached declaration is not an authorization,
+                // and glpi_crontasks is bound to the "config" right in the core.
+                if (!Session::haveRight(\Config::$rightname, READ)) {
+                    return false;
+                }
 
                 $criteria = [
                     'SELECT' => '*',
