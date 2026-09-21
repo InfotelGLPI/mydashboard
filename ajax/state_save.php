@@ -42,7 +42,9 @@ if (!isset($_POST)) {
         'message' => __('Required argument missing!'),
     ];
 } elseif (!empty($_POST)) {
-    $gsIdName = $_POST['gsId'];
+    // The widget name drives the row looked up below: read it defensively rather than
+    // assuming the client sent it, and stop straight away when it is missing.
+    $gsIdName = (string) ($_POST['gsId'] ?? '');
     unset($_POST['gsId']);
 
     // Whitelist the DataTables state before persisting it: keep only the keys the
@@ -102,7 +104,9 @@ if (!isset($_POST)) {
     }
 
     $dashboardWidgets = new Widget();
-    $dashboardWidgets->getFromDBByCrit(['name' => $gsIdName]);
+    if ($gsIdName !== '') {
+        $dashboardWidgets->getFromDBByCrit(['name' => $gsIdName]);
+    }
 
     if (isset($dashboardWidgets->fields['id'])) {
         $gsId    = "gs" . $dashboardWidgets->fields['id'];

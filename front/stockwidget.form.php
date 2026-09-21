@@ -46,13 +46,16 @@ if (Plugin::isPluginActive("mydashboard")) {
 
     } elseif (isset($_POST["purge"])) {
 
-        $config->check($_POST['id'], PURGE);
+        // The identifier is client supplied and optional: read it defensively so check()
+        // refuses a missing row instead of raising a warning.
+        $config->check((int) ($_POST['id'] ?? 0), PURGE);
         $config->delete($_POST, 1);
         $config->redirectToList();
 
     } elseif (isset($_POST["update"])) {
 
-        $config->check($_POST['id'], UPDATE);
+        // Same defensive read as the purge branch above.
+        $config->check((int) ($_POST['id'] ?? 0), UPDATE);
         $config->update($_POST);
         Html::back();
 

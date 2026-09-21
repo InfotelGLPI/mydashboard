@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Mydashboard\Alert;
 use GlpiPlugin\Mydashboard\ItilAlert;
 
@@ -42,10 +43,14 @@ if (isset($_POST['itemtype'])) {
     $class = $_POST['itemtype'];
     $allowed_types = array_merge([\GlpiPlugin\Eventsmanager\Event::class, 'Problem', 'Change'], Alert::getTypes());
     if (!in_array($class, $allowed_types, true)) {
-        http_response_code(400);
-        exit;
+        throw new BadRequestHttpException();
     }
-    $item = new $class();
+    // The Eventsmanager class of the allow list only exists when that plugin is installed:
+    // getItemForItemtype() returns false instead of fataling on an unknown class name.
+    $item = getItemForItemtype($class);
+    if (!$item) {
+        throw new BadRequestHttpException();
+    }
     if ($class == \GlpiPlugin\Eventsmanager\Event::class) {
         if (isset($_POST['items_id'])) {
             // Enforce access control on the source item (global right + entity) before

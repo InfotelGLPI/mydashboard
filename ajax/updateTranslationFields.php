@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Mydashboard\ConfigTranslation;
 
 $AJAX_INCLUDE = 1;
@@ -42,9 +44,14 @@ if (isset($_POST['itemtype']) && isset($_POST['language'])) {
     // loadable GLPI class instead of instantiating a dynamic string.
     if (!in_array($_POST['itemtype'], ConfigTranslation::getAllowedItemtypes(), true)
         || !$item = getItemForItemtype($_POST['itemtype'])) {
-        http_response_code(400);
-        exit;
+        throw new BadRequestHttpException();
     }
-    $item->getFromDB($_POST['items_id']);
+    // The row identifier is client supplied: refuse when it does not exist rather than
+    // building the dropdown of an empty object. Both allowed itemtypes (core Config and the
+    // plugin translations) are global, so the plugin_mydashboard_config UPDATE right checked
+    // above is the whole perimeter here.
+    if (!$item->getFromDB((int) ($_POST['items_id'] ?? 0))) {
+        throw new NotFoundHttpException();
+    }
     ConfigTranslation::dropdownFields($item, $_POST['language']);
 }

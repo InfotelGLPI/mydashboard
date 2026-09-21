@@ -1028,7 +1028,9 @@ class Reports_Pie extends CommonGLPI
 
                 $default = Criteria::manageCriterias($params);
 
-                $year = $opt['year'] ?? $default['year'];
+                // Client supplied year interpolated into the date boundary below: cast it here as
+                // well, the central Widget::sanitizeWidgetParams() is not the only barrier.
+                $year = (int) ($opt['year'] ?? $default['year']);
                 $month = $opt['month'] ?? $default['month'];
                 $month = sprintf('%02d', $month);
 
@@ -1440,7 +1442,7 @@ class Reports_Pie extends CommonGLPI
 
                 $default = Criteria::manageCriterias($params);
 
-                $year = $opt['year'] ?? $default['year'];
+                $year = (int) ($opt['year'] ?? $default['year']);
                 //                $month = $opt['month'] ?? $default['month'];
                 //                $month = sprintf('%02d', $month);
 

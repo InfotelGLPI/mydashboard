@@ -1,0 +1,25 @@
+{
+  "name": "glpi-plugin-mydashboard",
+  "version": "2.3.8",
+  "private": true,
+  "description": "Version pinning of the third-party bundles vendored under public/lib/, so that npm audit and Dependabot can see them. The plugin has no JavaScript build step: installing this manifest produces no artefact the plugin uses. See public/lib/VERSIONS.md, including the libraries listed there that cannot be pinned here.",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "audit": "npm audit --omit=dev"
+  },
+  "dependencies": {
+    "circles.js": "0.0.6",
+    "countup.js": "1.9.3",
+    "datatables.net": "2.3.7",
+    "datatables.net-buttons": "3.2.6",
+    "datatables.net-colreorder": "2.1.2",
+    "echarts": "6.1.0",
+    "fuse.js": "6.6.2",
+    "gridstack": "11.0.1",
+    "html2canvas": "1.4.1",
+    "jquery-ui": "1.14.2",
+    "jspdf": "4.2.1",
+    "jszip": "3.10.1",
+    "pdfmake": "0.2.7"
+  }
+}

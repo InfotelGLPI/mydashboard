@@ -185,7 +185,6 @@ function plugin_init_mydashboard()
             $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['mydashboard'] = ['Reminder' => [Alert::class,
                 'purgeAlerts']];
         }
-        $PLUGIN_HOOKS[Hooks::POST_INIT]['mydashboard'] = 'plugin_mydashboard_postinit';
     }
 }
 

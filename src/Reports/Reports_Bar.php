@@ -516,12 +516,15 @@ class Reports_Bar extends CommonDBTM
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $date_criteria = [];
-                $year = $opt['year'] ?? $default['filter_date'];
+                // The year is fully client controlled and used to build a date boundary, so it is
+                // forced to an integer here as well: the central sanitization done by
+                // Widget::sanitizeWidgetParams() must not be the only barrier.
+                $year = (int) ($opt['year'] ?? $default['filter_date']);
 
                 if ($year) {
                     $date_criteria = [
                         ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
-                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]],
+                        ['glpi_tickets.date' => ['<', ($year + 1) . "-01-01 00:00:00"]],
                     ];
                 }
                 if (isset($opt['filter_date'])
@@ -529,10 +532,13 @@ class Reports_Bar extends CommonDBTM
                     && isset($opt['begin'])
                     && isset($opt['end'])) {
                     $begin = $opt['begin'];
-                    $end = $opt['end'];
+                    // The upper boundary is computed in PHP and passed as a plain value, which the
+                    // query builder quotes, instead of being interpolated into a DATE_ADD()
+                    // expression inserted verbatim in the SQL.
+                    $end = strtotime((string) $opt['end'] . ' +1 day');
                     $date_criteria = [
                         ['glpi_tickets.date' => ['>=', "$begin"]],
-                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$end', INTERVAL 1 DAY)")]],
+                        ['glpi_tickets.date' => ['<', date('Y-m-d H:i:s', $end ?: time())]],
                     ];
                 }
 
@@ -907,12 +913,15 @@ class Reports_Bar extends CommonDBTM
                 $limit = $opt['limit'] ?? $default['limit'];
 
                 $date_criteria = [];
-                $year = $opt['year'] ?? $default['filter_date'];
+                // The year is fully client controlled and used to build a date boundary, so it is
+                // forced to an integer here as well: the central sanitization done by
+                // Widget::sanitizeWidgetParams() must not be the only barrier.
+                $year = (int) ($opt['year'] ?? $default['filter_date']);
 
                 if ($year) {
                     $date_criteria = [
                         ['glpi_tickets.date' => ['>=', "$year-01-01 00:00:00"]],
-                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$year-01-01', INTERVAL 1 YEAR)")]],
+                        ['glpi_tickets.date' => ['<', ($year + 1) . "-01-01 00:00:00"]],
                     ];
                 }
                 if (isset($opt['filter_date'])
@@ -920,10 +929,13 @@ class Reports_Bar extends CommonDBTM
                     && isset($opt['begin'])
                     && isset($opt['end'])) {
                     $begin = $opt['begin'];
-                    $end = $opt['end'];
+                    // The upper boundary is computed in PHP and passed as a plain value, which the
+                    // query builder quotes, instead of being interpolated into a DATE_ADD()
+                    // expression inserted verbatim in the SQL.
+                    $end = strtotime((string) $opt['end'] . ' +1 day');
                     $date_criteria = [
                         ['glpi_tickets.date' => ['>=', "$begin"]],
-                        ['glpi_tickets.date' => ['<', new QueryExpression("DATE_ADD('$end', INTERVAL 1 DAY)")]],
+                        ['glpi_tickets.date' => ['<', date('Y-m-d H:i:s', $end ?: time())]],
                     ];
                 }
 

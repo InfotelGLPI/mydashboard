@@ -238,7 +238,10 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = $opt["year"] ?? $default["year"];
+                // The year comes from the widget parameters and is interpolated into the date
+                // boundaries below: cast it here too, Widget::sanitizeWidgetParams() must not be
+                // the only barrier (same idiom as Criterias\Year::getQueryCriteria()).
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
                 $previousyear = $currentyear - 1;
 
                 $criteria = [
@@ -448,7 +451,7 @@ class Reports_Line extends CommonGLPI
                 }
                 if (isset($opt["display_data"]) && $opt['display_data'] == "YEAR") {
                     if (isset($opt["year"]) && $opt["year"] > 0) {
-                        $currentyear = $opt["year"];
+                        $currentyear = (int) $opt["year"];
                     }
 
                     $date_crit_ticket = [
@@ -733,7 +736,7 @@ class Reports_Line extends CommonGLPI
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
-                $currentyear = $opt["year"] ?? $default["year"];
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
 
                 $criteria = [
                     'SELECT' => [
@@ -1007,10 +1010,10 @@ class Reports_Line extends CommonGLPI
 
                 $technicians_groups_id = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
 
-                $currentyear = $opt["year"] ?? $default["year"];
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
 
                 if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
+                    $currentyear = (int) $opt["year"];
                 }
 
                 //                $query_stockTickets
@@ -1364,7 +1367,7 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = $opt["year"] ?? $default["year"];
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
                 $now = date("Y-m-d");
 
                 $previousyear = $currentyear - 1;
@@ -1567,7 +1570,7 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = $opt["year"] ?? $default["year"];
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
                 $now = date("Y-m-d");
 
                 $previousyear = $currentyear - 1;
@@ -1703,7 +1706,7 @@ class Reports_Line extends CommonGLPI
                 $currentyear = $default["year"];
                 $now = date("Y-m-d");
                 if (isset($opt["year"]) && $opt["year"] > 0) {
-                    $currentyear = $opt["year"];
+                    $currentyear = (int) $opt["year"];
                 }
                 $previousyear = $currentyear - 1;
                 $tabdates = [];
@@ -1832,7 +1835,7 @@ class Reports_Line extends CommonGLPI
 
                 $technician_groups_ids = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
                 $type = $opt['type'] ?? $default['type'];
-                $currentyear = $opt["year"] ?? $default["year"];
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
 
                 $year = intval(date('Y', time()) - 1);
 
@@ -2072,7 +2075,7 @@ class Reports_Line extends CommonGLPI
                 $is_deleted = ['glpi_tickets.is_deleted' => 0];
 
                 $currentmonth = date("m");
-                $currentyear = $opt["year"] ?? $default["year"];
+                $currentyear = (int) ($opt["year"] ?? $default["year"]);
                 $now = date("Y-m-d");
 
                 $previousyear = $currentyear - 1;
@@ -2223,7 +2226,7 @@ class Reports_Line extends CommonGLPI
 
         //        $year = intval(date('Y', time()) - 1);
 
-        $year = $opt["year"] ?? $default["year"];
+        $year = (int) ($opt["year"] ?? $default["year"]);
         $currentyear = date("Y");
 
         if ($year < intval($currentyear)) {

@@ -96,7 +96,15 @@ class Alert extends CommonDBTM
         //          || $item->getType() == Release::class) {
         //         return _n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard');
         //      }*
+        // The tab renders the alert configuration form of the item, and both of its write
+        // paths — front/alert.form.php:35 and ajax/createalert.php:33 — require UPDATE on this
+        // right. The type filter only replays the canView() of the parent (Reminder, Problem,
+        // Change), never the one of the alert, so the tab used to be announced to every user
+        // of the central interface. UPDATE and not READ: the profile checkbox grants
+        // CREATE + UPDATE + PURGE (Profile.php:143) and never READ, so a READ test would hide
+        // the tab from the administrators it is meant for.
         if (Session::getCurrentInterface() == 'central'
+            && Session::haveRight(self::$rightname, UPDATE)
             && in_array($item->getType(), self::getTypes())) {
             return self::createTabEntry(_n('Alert Dashboard', 'Alerts Dashboard', 2, 'mydashboard'));
         }
@@ -145,6 +153,11 @@ class Alert extends CommonDBTM
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+        // CommonGLPI::displayStandardTab() checks no right on a plugin tab, and
+        // ajax/common.tabs.php reaches this method without ever calling getTabNameForItem():
+        // the guard placed on the declaration is not replayed here.
+        Session::checkRight(self::$rightname, UPDATE);
+
         $alert = new self();
         $itil_alert = new ItilAlert();
         switch ($item->getType()) {
@@ -805,9 +818,16 @@ class Alert extends CommonDBTM
                     foreach ($iterator as $data) {
                         $datas[$i]["lastrun"] = \Html::convDateTime($data['lastrun']);
 
-                        $name = $data["name"];
+                        // The cron task name lands in an HTML column of the datatable, and a
+                        // plugin is free to register a task under any name: escape it here, as
+                        // the other columns of this file already do.
+                        $name = htmlspecialchars((string) $data["name"], ENT_QUOTES, 'UTF-8');
                         if ($isplug = isPluginItemType($data["itemtype"])) {
-                            $name = sprintf(__('%1$s - %2$s'), $isplug["plugin"], $name);
+                            $name = sprintf(
+                                __('%1$s - %2$s'),
+                                htmlspecialchars((string) $isplug["plugin"], ENT_QUOTES, 'UTF-8'),
+                                $name,
+                            );
                         }
 
                         $datas[$i]["name"] = $name;

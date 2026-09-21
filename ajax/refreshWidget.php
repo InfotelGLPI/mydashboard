@@ -48,7 +48,9 @@ if (isset($_POST['gsid']) && isset($_POST['id'])) {
         echo $widget;
     }
 } else {
-    $gsid = $_POST['gsid'];
+    // Same defensive read as the branch above: the widget key is client supplied and
+    // optional, an unset value must not raise a warning before the lookup below.
+    $gsid = $_POST['gsid'] ?? '';
     $data = [];
     if (isset($widgets[$gsid])) {
         $opt      = [];

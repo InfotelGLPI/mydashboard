@@ -51,6 +51,10 @@ class ItilAlert extends CommonDBTM
      */
     public function showForItem($item)
     {
+        // Same boundary as Alert::displayTabContentForItem(), replayed here because this
+        // method emits the configuration form and its creation button on its own.
+        Session::checkRight(Alert::$rightname, UPDATE);
+
         $items_id = $item->getID();
         $item->getFromDB($items_id);
         $itemtype = $item->getType();

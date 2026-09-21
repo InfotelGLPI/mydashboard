@@ -40,6 +40,11 @@
  *   - Twig : "{#"  ... " # <line>" ... " #}"
  * Both file types are derived from the SAME raw header, mirroring glpi/tools
  * (which uses a single header file for every language).
+ *
+ * Third-party code is never touched: vendored directories are excluded, only the
+ * php and twig extensions are considered, and a leading comment block is rewritten
+ * only when it already carries this plugin's own banner. A file opening on someone
+ * else's licence notice is reported and left untouched.
  */
 
 $plugin_dir  = $argv[1] ?? null;
@@ -59,6 +64,22 @@ if (!is_file($header_file)) {
 // Raw licence text, one entry per line, stripped of trailing CR/LF noise.
 $raw_lines = explode("\n", rtrim(file_get_contents($header_file), "\r\n"));
 $raw_lines = array_map(static fn(string $l): string => rtrim($l, "\r"), $raw_lines);
+
+// Identifying line of this plugin's banner: the first meaningful line of the raw
+// header, i.e. the first one that is neither empty nor a rule of dashes. It is what
+// tells this plugin's own header apart from an upstream licence notice further down.
+$marker = '';
+foreach ($raw_lines as $raw_line) {
+    $candidate = trim($raw_line, " \t-");
+    if ($candidate !== '') {
+        $marker = $candidate;
+        break;
+    }
+}
+if ($marker === '') {
+    fprintf(STDERR, "Error: cannot derive a marker from the header file: %s\n", $header_file);
+    exit(1);
+}
 
 /**
  * Wrap the raw licence text into a comment block for the given language,
@@ -138,7 +159,7 @@ usort($files, fn($a, $b) => strcmp($a['rel'], $b['rel']));
 // ---------------------------------------------------------------------------
 // Process each file
 // ---------------------------------------------------------------------------
-$counts = ['updated' => 0, 'added' => 0, 'ok' => 0, 'skipped' => 0];
+$counts = ['updated' => 0, 'added' => 0, 'ok' => 0, 'skipped' => 0, 'foreign' => 0];
 
 foreach ($files as ['abs' => $path, 'rel' => $rel, 'ext' => $ext]) {
     $def     = $types[$ext];
@@ -171,6 +192,20 @@ foreach ($files as ['abs' => $path, 'rel' => $rel, 'ext' => $ext]) {
             $counts['skipped']++;
             continue;
         }
+        $block = substr($trimmed, 0, $end_pos + strlen($def['comment_end']));
+
+        // Only ever replace this plugin's own banner. A leading comment carrying
+        // anything else is an upstream licence notice, and overwriting it erases the
+        // provenance and the real licence of third-party code -- which is exactly how
+        // the libraries shipped under public/ once ended up attributed to the plugin.
+        // The directory exclusions above are the first line of defence; this test is
+        // the second one, and it holds wherever the file happens to live.
+        if (!str_contains($block, $marker)) {
+            echo "[SKIP  ] Foreign header preserved: $rel\n";
+            $counts['foreign']++;
+            continue;
+        }
+
         $rest       = substr($trimmed, $end_pos + strlen($def['comment_end']));
         $had_header = true;
     } else {
@@ -212,6 +247,7 @@ printf("Updated   : %d\n", $counts['updated']);
 printf("Added     : %d\n", $counts['added']);
 printf("Already OK: %d\n", $counts['ok']);
 printf("Skipped   : %d\n", $counts['skipped']);
+printf("Foreign   : %d\n", $counts['foreign']);
 
 if ($dry_run) {
     echo "\n[DRY-RUN] No files were written.\n";

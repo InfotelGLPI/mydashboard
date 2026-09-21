@@ -56,6 +56,7 @@ if (Plugin::isPluginActive("mydashboard")) {
         $record->cronMydashboardInfotelUpdateStockTicketIndicator("all");
         Html::back();
     } elseif (isset($_POST['update'])) {
+        $config->check((int) ($_POST['id'] ?? 1), UPDATE, $_POST);
         $config->update($_POST);
     }
 

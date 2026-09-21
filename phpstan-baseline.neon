@@ -7,24 +7,6 @@ parameters:
 			path: ajax/createalert.php
 
 		-
-			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
-			identifier: glpi.forbidDynamicInstantiation
-			count: 1
-			path: ajax/createalert.php
-
-		-
-			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
-			count: 1
-			path: ajax/createalert.php
-
-		-
-			message: '#^You should not use the `http_response_code` function to change the response code\. Due to a PHP bug, it may not provide the expected result \(see https\://bugs\.php\.net/bug\.php\?id\=81451\)\.$#'
-			identifier: glpi.forbidHttpResponseCode
-			count: 1
-			path: ajax/createalert.php
-
-		-
 			message: '#^Parameter \#2 \$selected of static method GlpiPlugin\\Mydashboard\\Criterias\\Month\:\:monthDropdown\(\) expects null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -47,18 +29,6 @@ parameters:
 			identifier: isset.variable
 			count: 1
 			path: ajax/state_save.php
-
-		-
-			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
-			count: 1
-			path: ajax/updateTranslationFields.php
-
-		-
-			message: '#^You should not use the `http_response_code` function to change the response code\. Due to a PHP bug, it may not provide the expected result \(see https\://bugs\.php\.net/bug\.php\?id\=81451\)\.$#'
-			identifier: glpi.forbidHttpResponseCode
-			count: 1
-			path: ajax/updateTranslationFields.php
 
 		-
 			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'

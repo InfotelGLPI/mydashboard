@@ -117,27 +117,6 @@ function plugin_mydashboard_uninstall()
     return true;
 }
 
-function plugin_mydashboard_postinit()
-{
-    global $PLUGIN_HOOKS;
-
-    $plugin = 'mydashboard';
-    foreach (['add_css', 'add_javascript'] as $type) {
-        foreach ($PLUGIN_HOOKS[$type][$plugin] as $data) {
-            if (!empty($PLUGIN_HOOKS[$type])) {
-                foreach ($PLUGIN_HOOKS[$type] as $key => $plugins_data) {
-                    if (is_array($plugins_data) && $key != $plugin) {
-                        foreach ($plugins_data as $key2 => $values) {
-                            if ($values == $data) {
-                                unset($PLUGIN_HOOKS[$type][$key][$key2]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 function plugin_mydashboard_display_login()
 {
