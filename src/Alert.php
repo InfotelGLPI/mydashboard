@@ -45,7 +45,6 @@ use Glpi\DBAL\QueryFunction;
 use Glpi\DBAL\QuerySubQuery;
 use Glpi\RichText\RichText;
 use Glpi\System\Status\StatusChecker;
-use GLPIKey;
 use GlpiPlugin\Eventsmanager\Event;
 use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Reports\Reminder;
@@ -274,15 +273,19 @@ class Alert extends CommonDBTM
             ],
         ];
 
-        // Widgets "6" (GLPI status) and "8" (automatic actions in error) expose the internal
-        // state of the instance — services, database replicas, LDAP, mail collectors, cron
-        // tasks and installed plugins — which the core binds to the "config" right
-        // (CronTask::$rightname, status.php IP allow list). Menu::$SYSTEM is only a display
-        // section and grants nothing, so the right is checked here.
+        // Widgets "6" (GLPI status), "8" (automatic actions in error) and "9" (mails the
+        // collectors rejected) expose the internal state of the instance — services,
+        // database replicas, LDAP, mail collectors, cron tasks, installed plugins and the
+        // sender addresses of every rejected message — which the core binds to the "config"
+        // right (CronTask::$rightname, NotImportedEmail::$rightname, status.php IP allow
+        // list). Menu::$SYSTEM is only a display section and grants nothing, so the right is
+        // checked here. Widget "9" was left out of this list while its two neighbours were
+        // removed, so it kept being offered to any holder of plugin_mydashboard.
         if (!Session::haveRight(\Config::$rightname, READ)) {
             unset(
                 $widgets[Menu::$SYSTEM][$this->getType() . "6"],
                 $widgets[Menu::$SYSTEM][$this->getType() . "8"],
+                $widgets[Menu::$SYSTEM][$this->getType() . "9"],
             );
         }
 
@@ -862,12 +865,21 @@ class Alert extends CommonDBTM
 
                 return $widget;
 
-
             case $this->getType() . "9":
+                // Same reason as case "6" and "8": the cached declaration is not an
+                // authorization, and glpi_notimportedemails is bound to the "config" right in
+                // the core (NotImportedEmail::$rightname). Without this, holding
+                // plugin_mydashboard READ was enough to ask ajax/refreshWidget.php for this
+                // widget id and read every rejected mail of every entity.
+                if (!Session::haveRight(\Config::$rightname, READ)) {
+                    return false;
+                }
 
                 $criteria = [
                     'SELECT' => ['date', 'from', 'reason', 'mailcollectors_id'],
                     'FROM' => 'glpi_notimportedemails',
+                    // The table is entity bound in the core; the widget listed it globally.
+                    'WHERE' => getEntitiesRestrictCriteria('glpi_notimportedemails'),
                     'ORDERBY' => 'date ASC',
                 ];
 
@@ -886,13 +898,22 @@ class Alert extends CommonDBTM
                     foreach ($iterator as $data) {
                         $datas[$i]["date"] = \Html::convDateTime($data['date']);
 
-                        $datas[$i]["from"] = $data['from'];
+                        // Datatable writes every cell as HTML, and this column is the From
+                        // header of the collected message: it is written by whoever sent the
+                        // mail, typically someone outside the organisation, and read back by
+                        // the high privilege profiles that follow the collectors.
+                        $datas[$i]["from"] = htmlspecialchars((string) $data['from'], ENT_QUOTES, 'UTF-8');
 
                         $datas[$i]["reason"] = NotImportedEmail::getReason($data['reason']);
 
                         $mail = new MailCollector();
                         $mail->getFromDB($data['mailcollectors_id']);
-                        $datas[$i]["mailcollectors_id"] = $mail->getName();
+                        // Same sink: getName() returns the stored name, unescaped since GLPI 10.
+                        $datas[$i]["mailcollectors_id"] = htmlspecialchars(
+                            (string) $mail->getName(),
+                            ENT_QUOTES,
+                            'UTF-8',
+                        );
 
                         $i++;
                     }
@@ -3355,103 +3376,6 @@ class Alert extends CommonDBTM
         }
 
         return TemplateRenderer::getInstance()->render('@mydashboard/alert_status_banner.html.twig', $params);
-    }
-
-    /**
-     * @param $options
-     *
-     * @return mixed|string
-     */
-    public static function cURLData($options)
-    {
-        global $CFG_GLPI;
-
-        if (!function_exists('curl_init')) {
-            return __('Curl PHP package not installed', 'mydashboard') . "\n";
-        }
-        $timeout = 15;
-        $proxy_host = $CFG_GLPI["proxy_name"] . ":" . $CFG_GLPI["proxy_port"]; // host:port
-        $proxy_ident = $CFG_GLPI["proxy_user"] . ":"
-            . (new GLPIKey())->decrypt($CFG_GLPI["proxy_passwd"]); // username:password
-
-        $url = $options["url"];
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        //      curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, GLPI_TMP_DIR . "/mydashboard_cookiefile");
-        curl_setopt($ch, CURLOPT_COOKIEJAR, GLPI_TMP_DIR . "/mydashboard_cookiefile");
-
-        //Do we have post field to send?
-        if (!empty($options["post"])) {
-            //curl_setopt($ch, CURLOPT_POST,true);
-            $post = '';
-            foreach ($options['post'] as $key => $value) {
-                $post .= $key . '=' . $value . '&';
-            }
-            rtrim($post, '&');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:application/x-www-form-urlencoded"]);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTREDIR, 2);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        }
-
-        //if (!$options["download"]) {
-        //curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        //}
-
-        // Activation de l'utilisation d'un serveur proxy
-        if (!empty($CFG_GLPI["proxy_name"])) {
-            //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
-
-            // Définition de l'adresse du proxy
-            curl_setopt($ch, CURLOPT_PROXY, $proxy_host);
-
-            // Définition des identifiants si le proxy requiert une identification
-            if ($proxy_ident) {
-                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy_ident);
-            }
-        }
-        //if ($options["download"]) {
-        //   $fp = fopen($options["file"], "w");
-        //   curl_setopt($ch, CURLOPT_FILE, $fp);
-        //   curl_exec($ch);
-        //} else {
-        $data = curl_exec($ch);
-        //}
-
-        if (//!$options["download"] &&
-            !$data
-        ) {
-            curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch); // make sure we closeany current curl sessions
-            //die($http_code.' Unable to connect to server. Please come back later.');
-        } else {
-            curl_close($ch);
-        }
-
-        //if ($options["download"]) {
-        //fclose($fp);
-        //}
-        if (//!$options["download"] &&
-            $data
-        ) {
-            return $data;
-        } else {
-            return false;
-        }
     }
 
     public static function displayIndicator($id, $type, $params = [], $iswidget = false)

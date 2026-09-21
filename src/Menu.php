@@ -655,7 +655,14 @@ class Menu extends CommonGLPI
      */
     public function getWidgetsList($widgetlist, $gslist, $used): string
     {
-        $usedJson = json_encode(array_values($used));
+        // Interpolated raw into the inline <script> below as a JS array literal, so it gets
+        // the same HTML-hardening flags as every other script-bound JSON of the plugin.
+        // json_encode() never escapes the structural quotes -- only the ones inside keys
+        // and values -- so the literal stays valid while a stored </script> goes inert.
+        $usedJson = json_encode(
+            array_values($used),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
         $wl  = \Html::scriptBlock("
             if (typeof window.md_used_widgets === 'undefined') {
                 window.md_used_widgets = $usedJson;
@@ -892,12 +899,16 @@ class Menu extends CommonGLPI
             'display' => false,
         ]);
 
-        $init_js = json_encode([
-            'entities_id'           => $entity_default,
-            'technicians_groups_id' => $group_default,
-            'type'                  => $type_default ?: null,
-            'year'                  => $year_default,
-        ]);
+        // Same contract as $usedJson above: raw object literal in an inline <script>.
+        $init_js = json_encode(
+            [
+                'entities_id'           => $entity_default,
+                'technicians_groups_id' => $group_default,
+                'type'                  => $type_default ?: null,
+                'year'                  => $year_default,
+            ],
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
 
         $change_js = \Html::scriptBlock("
             window.mdGlobalFilters = {$init_js};

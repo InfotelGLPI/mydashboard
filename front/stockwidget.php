@@ -31,22 +31,23 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\StockWidget;
 
-Html::header(Menu::getTypeName(2), '', "tools", Menu::class, 'pluginmydashboardstockwidget');
-
-if (Plugin::isPluginActive("mydashboard")) {
-
-    $config = new StockWidget();
-    $config->checkGlobal(READ);
-
-    if ($config->canView()) {
-
-        Search::show(StockWidget::class);
-
-    } else {
-        throw new AccessDeniedHttpException();
-    }
-} else {
+// Every refusal below is raised before a single byte of the page is emitted: an
+// AccessDeniedHttpException thrown after Html::header() would land in the middle of
+// an already-started document, leaving the menu and the page frame of the plugin
+// visible behind the error to a visitor who has no right on it.
+if (!Plugin::isPluginActive("mydashboard")) {
     throw new AccessDeniedHttpException();
 }
+
+$config = new StockWidget();
+$config->checkGlobal(READ);
+
+if (!$config->canView()) {
+    throw new AccessDeniedHttpException();
+}
+
+Html::header(Menu::getTypeName(2), '', "tools", Menu::class, 'pluginmydashboardstockwidget');
+
+Search::show(StockWidget::class);
 
 Html::footer();

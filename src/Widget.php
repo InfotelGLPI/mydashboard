@@ -496,36 +496,165 @@ class Widget extends CommonDBTM
 
 
     /**
-     * Normalize the client-controlled widget parameters that end up interpolated
-     * into raw SQL by the report classes (date filters). Numeric year/month are
-     * cast to integers and free-form begin/end dates are reformatted to a canonical
-     * datetime, neutralizing any SQL injection payload while preserving behaviour.
-     * Array-valued year/month (multi-value criteria) are left untouched.
+     * Parameter names a widget may receive, mapped to the shape they are coerced to.
      *
-     * @param array $opt
+     * The list is the union of GlpiPlugin\Mydashboard\Criteria::$criterias_list -- the
+     * criteria bar is the only thing that posts these -- of the date-range fields the
+     * FilterDate and DisplayData criteria add, and of the few flags the widgets carry
+     * alongside. Widgets shipped by other plugins extend it through getAllowedParams().
+     *
+     * Shapes:
+     *  - id       : integer, or a list of integers (multi-valued dropdown)
+     *  - bool     : 0 or 1
+     *  - datetime : canonical 'Y-m-d H:i:s', or null when unparseable
+     *  - word     : [A-Za-z0-9_-] only, 64 characters at most
+     *  - wordlist : a list of words
+     */
+    private const ALLOWED_PARAMS = [
+        // Criteria::$criterias_list
+        'entities_id'              => 'id',
+        'is_recursive_entities'    => 'bool',
+        'type'                     => 'id',
+        'locations_id'             => 'id',
+        'multiple_locations_id'    => 'id',
+        'is_recursive_locations'   => 'bool',
+        'status'                   => 'id',
+        'priority'                 => 'id',
+        'technicians_groups_id'    => 'id',
+        'is_recursive_technicians' => 'bool',
+        'requesters_groups_id'     => 'id',
+        'is_recursive_requesters'  => 'bool',
+        'technicians_id'           => 'id',
+        'multiple_technicians_id'  => 'id',
+        'itilcategories_id'        => 'id',
+        'itilcategorielvl1'        => 'id',
+        'computertypes_id'         => 'id',
+        'users_id'                 => 'id',
+        'year'                     => 'id',
+        'month'                    => 'id',
+        'week'                     => 'id',
+        'limit'                    => 'id',
+        'multiple_time'            => 'bool',
+        'multiple_year_time'       => 'bool',
+        'display_data'             => 'word',
+        'filter_date'              => 'word',
+        // Date range of the FilterDate and DisplayData criteria
+        'begin'       => 'datetime',
+        'end'         => 'datetime',
+        'start_year'  => 'id',
+        'start_month' => 'id',
+        'end_year'    => 'id',
+        'end_month'   => 'id',
+        'month_year'  => 'word',
+        // Flags the widgets carry next to their criteria
+        'criterias'    => 'wordlist',
+        'is_widget'    => 'bool',
+        'is_usedbycra' => 'bool',
+        'export'       => 'bool',
+        'tag'          => 'word',
+    ];
+
+    /**
+     * Close the client-controlled widget parameters over an explicit allow-list.
+     *
+     * $opt reaches the report classes untouched and several of them interpolate it into
+     * raw SQL -- Criterias\Year and Criterias\Month build a QueryExpression out of the
+     * year and month, Reports_Bar and Reports_Line compute boundaries from the period
+     * fields -- so the set of keys, and the type of each of them, is decided here rather
+     * than left to whatever the caller posted. Every key outside the allow-list is
+     * dropped: the output of this method is closed, and a widget needing more must say
+     * so through getAllowedParams() instead of relying on the parameters flowing through.
+     *
+     * @param array       $opt       parameters as posted
+     * @param string|null $classname widget class about to receive them, for its own extras
      *
      * @return array
      */
-    public static function sanitizeWidgetParams($opt)
+    public static function sanitizeWidgetParams($opt, $classname = null)
     {
         if (!is_array($opt)) {
-            return $opt;
+            return [];
         }
 
-        foreach (['year', 'month', 'start_year', 'start_month', 'end_year', 'end_month'] as $key) {
-            if (isset($opt[$key]) && !is_array($opt[$key]) && $opt[$key] !== '') {
-                $opt[$key] = (int) $opt[$key];
+        $allowed = self::ALLOWED_PARAMS;
+
+        // Extension point for widgets declared by other plugins: getAllowedParams()
+        // returns the same ['name' => shape] map, and may only add to the list.
+        if (
+            is_string($classname)
+            && class_exists($classname)
+            && method_exists($classname, 'getAllowedParams')
+        ) {
+            $extra = $classname::getAllowedParams();
+            if (is_array($extra)) {
+                foreach ($extra as $name => $shape) {
+                    if (is_string($name) && is_string($shape)) {
+                        $allowed[$name] = $shape;
+                    }
+                }
             }
         }
 
-        foreach (['begin', 'end'] as $key) {
-            if (isset($opt[$key]) && is_string($opt[$key]) && $opt[$key] !== '') {
-                $timestamp = strtotime($opt[$key]);
-                $opt[$key] = ($timestamp !== false) ? date('Y-m-d H:i:s', $timestamp) : null;
+        $sanitized = [];
+        foreach ($allowed as $name => $shape) {
+            if (!array_key_exists($name, $opt)) {
+                continue;
             }
+            $sanitized[$name] = self::castWidgetParam($opt[$name], $shape);
         }
 
-        return $opt;
+        return $sanitized;
+    }
+
+    /**
+     * Coerce a single widget parameter to one of the shapes of ALLOWED_PARAMS.
+     *
+     * @param mixed  $value
+     * @param string $shape
+     *
+     * @return mixed
+     */
+    private static function castWidgetParam($value, string $shape)
+    {
+        if (is_array($value)) {
+            if ($shape === 'wordlist') {
+                $shape = 'word';
+            }
+            $list = [];
+            foreach ($value as $item) {
+                if (is_scalar($item)) {
+                    $list[] = self::castWidgetParam($item, $shape);
+                }
+            }
+            return $list;
+        }
+
+        if (!is_scalar($value)) {
+            return null;
+        }
+
+        switch ($shape) {
+            case 'bool':
+                return (int) (bool) $value;
+
+            case 'datetime':
+                $value = (string) $value;
+                if ($value === '') {
+                    return null;
+                }
+                $timestamp = strtotime($value);
+                return ($timestamp !== false) ? date('Y-m-d H:i:s', $timestamp) : null;
+
+            case 'word':
+            case 'wordlist':
+                return substr(preg_replace('/[^A-Za-z0-9_-]/', '', (string) $value), 0, 64);
+
+            case 'id':
+            default:
+                // An empty selection must stay empty rather than become 0, which several
+                // criteria read as a real identifier.
+                return ($value === '') ? '' : (int) $value;
+        }
     }
 
     /**
@@ -544,7 +673,8 @@ class Widget extends CommonDBTM
         // stored grid on initial render). Several report classes interpolate these date
         // filters into raw SQL (QueryExpression / raw WHERE strings), so they must be
         // normalized here to prevent SQL injection with only the plugin READ right.
-        $opt = self::sanitizeWidgetParams($opt);
+        // The widget class is handed over so it can declare parameters of its own.
+        $opt = self::sanitizeWidgetParams($opt, $classname);
 
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);

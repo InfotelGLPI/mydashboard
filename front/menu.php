@@ -32,6 +32,16 @@ use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Servicecatalog\Main;
 
+// Settled before a single byte of the page is emitted and before any posted value is
+// looked at, exactly as front/stockwidget.php does. The refusal used to be raised once
+// the menu and the title of the plugin had already been sent, so a visitor holding no
+// right on it still learned the feature exists and got the error inside an already
+// started document; and the two session keys written below were positioned by a request
+// that ends in a refusal.
+if (!Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
+    throw new AccessDeniedHttpException();
+}
+
 if (Session::getCurrentInterface() == 'central') {
     Html::header(Menu::getTypeName(1), '', "tools", Menu::class);
 } else {
@@ -59,22 +69,18 @@ if (isset($_POST["predefined_grid"])) {
     $_SESSION['plugin_mydashboard_predefined_grid'] = (int) $_POST["predefined_grid"];
 }
 
-if (Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
-    $profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
-    $predefined_grid = 0;
+$profile         = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+$predefined_grid = 0;
 
-    // Use the validated profile stored above (never the raw POST value).
-    if (isset($_POST["profiles_id"]) && isset($_SESSION['plugin_mydashboard_profiles_id'])) {
-        $profile = (int) $_SESSION['plugin_mydashboard_profiles_id'];
-    }
-    if (isset($_POST["predefined_grid"])) {
-        $predefined_grid = (int) $_POST["predefined_grid"];
-    }
-    $dashboard = new Menu();
-    $dashboard->loadDashboard($profile, $predefined_grid);
-} else {
-    throw new AccessDeniedHttpException();
+// Use the validated profile stored above (never the raw POST value).
+if (isset($_POST["profiles_id"]) && isset($_SESSION['plugin_mydashboard_profiles_id'])) {
+    $profile = (int) $_SESSION['plugin_mydashboard_profiles_id'];
 }
+if (isset($_POST["predefined_grid"])) {
+    $predefined_grid = (int) $_POST["predefined_grid"];
+}
+$dashboard = new Menu();
+$dashboard->loadDashboard($profile, $predefined_grid);
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {

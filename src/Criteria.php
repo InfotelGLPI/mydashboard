@@ -105,13 +105,22 @@ class Criteria
      * statistics widget. src/Reports/Ticket.php refuses its own lists on exactly this test;
      * the statistics widgets are the same data, aggregated.
      *
+     * CREATE used to be accepted here, which let a plain requester through: a self service
+     * profile carries CREATE and READMY, and READMY only ever reaches its own tickets. Being
+     * allowed to file a request is not being allowed to read aggregates over everyone else's,
+     * so only the two rights that actually widen reading past the current actor are kept.
+     * READGROUP is deliberately left out as well: these queries are bounded by entity, not by
+     * group, so granting it would hand the whole entity to a group member just the same.
+     * Indicators meant for requesters belong in dedicated widgets whose queries restrict the
+     * requester, the way Alert::getWidgetContentForItem() does for its own ticket list.
+     *
      * @return bool
      */
     public static function canReadTickets(): bool
     {
         return Session::haveRightsOr(
             \Ticket::$rightname,
-            [CREATE, \Ticket::READALL, \Ticket::READASSIGN],
+            [\Ticket::READALL, \Ticket::READASSIGN],
         );
     }
 

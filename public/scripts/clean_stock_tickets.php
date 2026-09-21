@@ -27,128 +27,26 @@
  * --------------------------------------------------------------------------
  */
 
-use Glpi\DBAL\QueryExpression;
-
-// This maintenance script performs an unbounded scan of glpi_tickets and forges a
-// cron session; it is designed to be run from the command line (see run.php).
-// Because it lives under public/ (web-routed by GLPI 11), refuse any web request
-// to close a denial-of-service vector reachable without authentication.
+// Backward compatibility forwarder.
+//
+// Up to 2.3.8 this CLI script lived here, under public/. The GLPI 11 router both
+// serves and executes a plugin's public/ tree -- public/scripts/x.php answers on
+// /plugins/mydashboard/scripts/x.php -- so maintenance scripts have been moved one
+// level up, to <plugin>/scripts/, out of the web root. System crons configured
+// against the old path keep working through this forwarder.
+//
+// It is inert over HTTP: the CLI check below runs before anything is required.
+// Update the crontab to <plugin>/scripts/clean_stock_tickets.php and this file can go away.
 if (PHP_SAPI !== 'cli') {
-    die('This script can only be run from the command line.');
+    http_response_code(404);
+    exit;
 }
 
-ini_set("memory_limit", "-1");
-ini_set("max_execution_time", "0");
+fwrite(
+    STDERR,
+    'mydashboard: scripts/' . basename(__FILE__) . ' has moved out of public/.'
+    . ' Point the cron at ' . realpath(__DIR__ . '/../../scripts') . DIRECTORY_SEPARATOR
+    . basename(__FILE__) . ' instead.' . PHP_EOL,
+);
 
-// Can't run on MySQL replicate
-$USEDBREPLICATE = 0;
-$DBCONNECTION_REQUIRED = 1;
-
-chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
-
-// __DIR__ is the script's absolute directory regardless of the cwd or of how the
-// script path was passed (relative or absolute), unlike $_SERVER['SCRIPT_FILENAME']
-// which stays relative after the chdir() above and would make realpath() return false.
-define("GLPI_DIR_ROOT", realpath(__DIR__ . "/../../../.."));
-require_once GLPI_DIR_ROOT . '/vendor/autoload.php';
-$kernel = new \Glpi\Kernel\Kernel($options['env'] ?? null);
-// Boot the kernel so the DB connection ($DB), $CFG_GLPI and the GLPI_* constants
-// are initialized; without it $DB stays null and any query fatals.
-$kernel->boot();
-
-global $DB;
-
-$_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'mydashboard';
-
-// Chech Memory_limit - sometine cli limit (php-cli.ini) != module limit (php.ini)
-$mem = Toolbox::getMemoryLimit();
-if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
-    die("PHP memory_limit = " . $mem . " - " . "A minimum of 64Mio is commonly required for GLPI.'\n\n");
-}
-
-//Check if plugin is installed
-if (Plugin::isPluginActive("mydashboard")) {
-
-    $currentmonth = date("m");
-    $currentyear  = date("Y");
-    $previousyear = $currentyear - 1;
-
-    $query        = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m') as month,
-                     DATE_FORMAT(`glpi_tickets`.`date`, '%b %Y') as monthname, `glpi_tickets`.`entities_id` "
-                    . "FROM `glpi_tickets` "
-                    . "WHERE `glpi_tickets`.`is_deleted`= 0 "
-                    . "AND (`glpi_tickets`.`date` >= '$previousyear-$currentmonth-01 00:00:00') "
-                    . "AND (`glpi_tickets`.`date` < '$currentyear-$currentmonth-01 00:00:00') "
-                    . "GROUP BY DATE_FORMAT(`glpi_tickets`.`date`, '%Y-%m'), `glpi_tickets`.`entities_id`";
-
-    $is_deleted = ['glpi_tickets.is_deleted' => 0];
-    $criteria = [
-        'SELECT' => [
-            new QueryExpression(
-                "DATE_FORMAT(" . $DB->quoteName("date") . ", '%Y-%m') AS month",
-            ),
-            new QueryExpression(
-                "DATE_FORMAT(" . $DB->quoteName("date") . ", '%b %Y') AS monthname",
-            ),
-            'glpi_tickets.entities_id',
-        ],
-        'DISTINCT'        => true,
-        'FROM' => 'glpi_tickets',
-        'WHERE' => [
-            $is_deleted,
-            [
-                ['date' => ['>=', "$previousyear-$currentmonth-01 00:00:00"]],
-                ['date' => ['<', "$currentyear-$currentmonth-01 00:00:00"]],
-            ],
-        ],
-        'GROUPBY' => ['month', 'entities_id'],
-    ];
-
-    $iterator = $DB->request($criteria);
-
-    foreach ($iterator as $data) {
-
-        list($year, $month) = explode('-', $data['month']);
-        $nbdays      = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $entities_id = $data["entities_id"];
-
-        $criteria = [
-            'SELECT' => [
-                'COUNT' => 'id AS count',
-            ],
-            'FROM' => 'glpi_tickets',
-            'WHERE' => [
-                $is_deleted,
-                'entities_id' => $entities_id,
-                ['OR'         =>
-                    [
-                        ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                        ['status' => \Ticket::getNotSolvedStatusArray()],
-                    ],
-                    [
-                        ['date' => ['<=', "$year-$month-$nbdays 23:59:59"]],
-                        ['solvedate' => ['>', new QueryExpression("ADDDATE('$year-$month-$nbdays 00:00:00' , INTERVAL 1 DAY)")]],
-                    ],
-                ],
-            ],
-        ];
-        $iterator = $DB->request($criteria);
-        foreach ($iterator as $data2) {
-            $countTicket = $data2['count'];
-        }
-        if ($countTicket > 0) {
-
-            $DB->insert(
-                'glpi_plugin_mydashboard_stocktickets',
-                ['id' => null,
-                    'date' => "$year-$month-$nbdays",
-                    'nbstocktickets' => $countTicket,
-                    'entities_id' => $entities_id,
-                ],
-            );
-        }
-    }
-} else {
-    echo __('Plugin disabled', 'mydashboard');
-    exit(1);
-}
+require __DIR__ . '/../../scripts/clean_stock_tickets.php';

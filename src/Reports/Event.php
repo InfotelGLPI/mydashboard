@@ -222,7 +222,10 @@ class Event extends \Glpi\Event
             } else {
                 $type = getSingular($data['type']);
                 if ($item = getItemForItemtype($type)) {
-                    $itemtype = $item->getTypeName(1);
+                    // Escaped here rather than with the cell below, which would turn the
+                    // "&nbsp;" default above into a literal entity: getTypeName() is the only
+                    // branch carrying data, and a custom asset definition names itself.
+                    $itemtype = htmlspecialchars((string) $item->getTypeName(1), ENT_QUOTES, 'UTF-8');
                 }
             }
 
@@ -230,7 +233,12 @@ class Event extends \Glpi\Event
             $output['body'][$i][1] = self::displayItemLogID($data['type'], $data['items_id']);
             $output['body'][$i][2] = \Html::convDateTime($data['date']);
             $output['body'][$i][3] = $logService[$data['service']] ?? "";
-            $output['body'][$i][4] = $data['message'];
+            // Datatable writes every cell as HTML (see Reports_Table::getWidgetContentForItem()),
+            // so this column had to be escaped here: glpi_events.message is filled by the core
+            // with the login name posted on the sign-in form (Auth::addToLogin()), which makes
+            // it anonymously injectable, and it lands in a session holding system_logs. The
+            // core escapes the same column in its own listing (Glpi\Event::showList()).
+            $output['body'][$i][4] = htmlspecialchars((string) $data['message'], ENT_QUOTES, 'UTF-8');
 
             $i++;
         }
