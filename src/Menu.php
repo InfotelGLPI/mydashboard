@@ -399,7 +399,6 @@ class Menu extends CommonGLPI
     //
     //        echo $this->getscripts();
     //
-    //        //        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
     //        if ($edit > 0) {
     //            //force loading new widgets
     //            self::installWidgets();
@@ -1192,15 +1191,8 @@ class Menu extends CommonGLPI
      */
     public function loadDashboard($active_profile = -1, $predefined_grid = 0)
     {
-        global $CFG_GLPI;
-
-        //        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/style_bootstrap_new.css");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.js");
-        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-ui/jquery-ui.min.css");
-        //
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/js/gridstack-all.js");
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/css/gridstack-extra.css");
-        //       echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR."/lib/gridstack/src/gridstack.jQueryUI.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuse.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/diacritics.js");
@@ -1209,11 +1201,13 @@ class Menu extends CommonGLPI
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.js");
 
-        //        \Html::requireJs('charts');
+        // Chart engine of the core rather than a copy of our own. The scripts of a plugin
+        // are emitted after those of the core in page_footer.html.twig, so a second bundle
+        // shipped here would take over window.echarts for the dashboards and the
+        // statistics of the core too. Themes stay with the plugin, the core ships none,
+        // and they are plain registerTheme() calls both branches of ECharts accept.
         $theme = MydashboardPreference::getPalette(Session::getLoginUserID());
-        //TODO v11
-        //        echo \Html::script($CFG_GLPI['root_doc']."/lib/echarts.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/echarts.js");
+        echo \Html::script('lib/echarts.js');
         if (!empty($theme)) {
             echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/theme/$theme.js");
         }
@@ -1221,7 +1215,9 @@ class Menu extends CommonGLPI
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jspdf.umd.js");
 
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
-        //        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fileSaver.min.js");
+        // Circles is not called by this plugin: the widgets other plugins contribute to
+        // the grid are, servicecatalog rendering indicator_circles_script.js.twig into it.
+        // A library loaded here serves the whole page, widgets included.
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/circles/circles.min.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/countUp.min.js");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/countUp-jquery.js");

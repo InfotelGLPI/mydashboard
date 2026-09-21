@@ -674,19 +674,6 @@ div#tabcontent{
     /*height :100% !important;*/
 }
 
-.ui-sortable-helper {
-    box-shadow: 10px 10px 9px -3px rgba(0, 0, 0, 0.3);
-}
-
-.ui-sortable-placeholder {
-    border: 1px dotted black;
-    visibility: visible !important;
-    height: 300px !important;
-    border-radius: 4px 4px;
-    background-color: rgb(240, 240, 240) !important;
-    margin: 3px 10px 0px 0px !important;
-}
-
 .scaledContent {
     height: 0px;
     width: 0px;
@@ -1104,10 +1091,6 @@ div.dt-button-background {
 /*   !*margin-left: 10px;*!*/
 /*   !*margin-right: 5px;*!*/
 /*}*/
-
-.ui-state-disabled {
-    opacity: 1 !important;
-}
 
 /*.md-grid-stack {*/
 /*   !*background: #FFF;*!*/

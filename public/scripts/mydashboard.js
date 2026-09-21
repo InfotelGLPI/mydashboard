@@ -174,4 +174,10 @@ const observer = new MutationObserver(() => {
     });
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
+// The chart engine is only loaded by Menu::loadDashboard(), on the dashboard page
+// itself: this file reaches every page of the central interface through ADD_JAVASCRIPT,
+// where arming the observer would walk the whole DOM on each mutation just to call an
+// echarts that is not there.
+if (typeof echarts !== 'undefined') {
+    observer.observe(document.body, { childList: true, subtree: true });
+}

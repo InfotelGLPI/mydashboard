@@ -76,8 +76,11 @@ function plugin_init_mydashboard()
         "css/jquery.newsTicker.css",
     ];
     if (Session::getCurrentInterface() == 'central') {
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/echarts/echarts.js';
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/echarts/theme/azul.js';
+        // ECharts is deliberately absent here. The charts are only ever drawn by
+        // Menu::loadDashboard(), which loads the engine of the core and the theme the
+        // user actually picked; registering a bundle on every page of the central
+        // interface instead put a second copy of ECharts on top of the one of the core,
+        // and pinned every profile to the single theme named on this line.
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/fuse.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/diacritics.js';
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/md-fuzzysearch.js';

@@ -17,7 +17,6 @@
     "fuse.js": "6.6.2",
     "gridstack": "11.0.1",
     "html2canvas": "1.4.1",
-    "jquery-ui": "1.14.2",
     "jspdf": "4.2.1",
     "jszip": "3.10.1",
     "pdfmake": "0.2.7"
