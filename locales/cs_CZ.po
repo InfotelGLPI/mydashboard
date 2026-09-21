@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 08:29+0000\n"
+"POT-Creation-Date: 2026-09-21 10:28+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2019\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/infotelGLPI/"
@@ -24,11 +24,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: src/Menu.php:1125
+#: src/Menu.php:1124
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtrováno z _MAX_ celkem položek)"
 
-#: src/Menu.php:1147
+#: src/Menu.php:1146
 msgid "1 row selected"
 msgstr "Vybrán jeden řádek"
 
@@ -56,11 +56,11 @@ msgstr "5 řádků"
 msgid "50 rows"
 msgstr "50 řádků"
 
-#: src/Menu.php:1140
+#: src/Menu.php:1139
 msgid ": activate to sort column ascending"
 msgstr ": aktivujte pro seřazení sloupce vzestupně"
 
-#: src/Menu.php:1141
+#: src/Menu.php:1140
 msgid ": activate to sort column descending"
 msgstr ": aktivujte pro seřazení sloupce sestupně"
 
@@ -201,7 +201,7 @@ msgstr ""
 msgid "Bar charts"
 msgstr "Sloupcové grafy"
 
-#: src/Menu.php:745 src/Menu.php:809
+#: src/Menu.php:744 src/Menu.php:808
 msgid "Block drag / resize widgets"
 msgstr "Znemožnit přemisťování a změnu velikosti miniaplikací"
 
@@ -247,11 +247,11 @@ msgstr ""
 msgid "Class"
 msgstr ""
 
-#: src/Menu.php:736
+#: src/Menu.php:735
 msgid "Clear grid"
 msgstr "Vyčistit mřížku"
 
-#: src/Menu.php:1151 src/Menu.php:1164
+#: src/Menu.php:1150 src/Menu.php:1163
 #: templates/menu_widgets_offcanvas.html.twig:35
 msgid "Close"
 msgstr "Zavřít"
@@ -265,7 +265,7 @@ msgstr "Ukončit režim úprav"
 msgid "Closed tickets"
 msgstr "Uzavřené požadavky"
 
-#: src/Menu.php:1156
+#: src/Menu.php:1155
 msgid "Column visibility"
 msgstr "Viditelnost sloupce"
 
@@ -310,11 +310,11 @@ msgstr "Uživatelem určené"
 msgid "Custom Widgets"
 msgstr "Uživatelsky určené ovládací prvky"
 
-#: src/Menu.php:824
+#: src/Menu.php:823
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Menu.php:1165 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
+#: src/Menu.php:1164 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
 #: src/Reports/Problem.php:58 src/Reports/Project.php:53
 #: src/Reports/Planning.php:52 src/Reports/ProjectTask.php:57
 #: src/Reports/Change.php:58 src/Html.php:57 src/Dashboard.php:71
@@ -329,15 +329,15 @@ msgstr "Přístup k nástěnce"
 msgid "Dashboard access"
 msgstr "Přístup k nástěnce"
 
-#: src/Menu.php:1167
+#: src/Menu.php:1166
 msgid "Dashboard not saved"
 msgstr "Nástěnka nebyla uložena"
 
-#: src/Menu.php:1166
+#: src/Menu.php:1165
 msgid "Dashboard saved"
 msgstr "Nástěnka uložena"
 
-#: src/Menu.php:1168
+#: src/Menu.php:1167
 msgid "Data received for"
 msgstr "Obdržena data pro"
 
@@ -353,7 +353,7 @@ msgstr "Výchozí skupina nástěnky"
 msgid "Default groups"
 msgstr "Výchozí skupiny"
 
-#: src/Menu.php:1335
+#: src/Menu.php:1331
 msgid "Delete widget"
 msgstr "Smazat miniaplikaci"
 
@@ -449,7 +449,7 @@ msgstr ""
 msgid "Display your equipments"
 msgstr ""
 
-#: src/Menu.php:719
+#: src/Menu.php:718
 msgid "Edit mode"
 msgstr "Režim úprav"
 
@@ -490,7 +490,7 @@ msgstr ""
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: src/Menu.php:828
+#: src/Menu.php:827
 msgid "Export to PDF"
 msgstr ""
 
@@ -523,7 +523,7 @@ msgstr "Ze kterých zásuvných modulů chcete zobrazovat miniaplikace?"
 msgid "Full"
 msgstr "Plné"
 
-#: src/Menu.php:832
+#: src/Menu.php:831
 msgid "Fullscreen"
 msgstr "Na celou obrazovku"
 
@@ -539,11 +539,11 @@ msgstr "Správa GLPI"
 msgid "GLPI is OK"
 msgstr "GLPI je v pořádku"
 
-#: src/Menu.php:1763
+#: src/Menu.php:1759
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:721
+#: src/Menu.php:720
 msgid "Global"
 msgstr "Globální"
 
@@ -710,11 +710,11 @@ msgstr[3] ""
 msgid "Map"
 msgstr "Mapa"
 
-#: src/Menu.php:1152
+#: src/Menu.php:1151
 msgid "Maximize"
 msgstr "Maximalizovat"
 
-#: src/Menu.php:1153
+#: src/Menu.php:1152
 msgid "Minimize"
 msgstr "Minimalizovat"
 
@@ -737,7 +737,7 @@ msgstr "Měsíc"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:198 src/Menu.php:114 src/Menu.php:1764 src/Preference.php:85
+#: setup.php:201 src/Menu.php:114 src/Menu.php:1760 src/Preference.php:85
 #: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Nástěnka"
@@ -809,11 +809,11 @@ msgstr "Nejsou nastavené žádné výstrahy"
 msgid "No column defined"
 msgstr "Není určen žádný sloupec"
 
-#: src/Menu.php:1336 src/Chart.php:186 src/Widget.php:848
+#: src/Menu.php:1332 src/Chart.php:186 src/Widget.php:848
 msgid "No data available"
 msgstr "Nejsou k dispozici žádná data"
 
-#: src/Menu.php:1122
+#: src/Menu.php:1121
 msgid "No data available in table"
 msgstr "V tabulce nejsou k dispozici žádná data"
 
@@ -821,7 +821,7 @@ msgstr "V tabulce nejsou k dispozici žádná data"
 msgid "No data is given to the widget"
 msgstr "Ovládacímu prvku nebyla dodána žádná data"
 
-#: src/Menu.php:1169
+#: src/Menu.php:1168
 msgid "No data received for"
 msgstr "Neobdržena žádná data pro"
 
@@ -837,7 +837,7 @@ msgstr "Bez dopadu"
 msgid "No informations founded"
 msgstr "Nebyly nalezeny žádné informace"
 
-#: src/Menu.php:1132
+#: src/Menu.php:1131
 msgid "No matching records found"
 msgstr "Nenalezeny žádné odpovídající záznamy"
 
@@ -865,7 +865,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr ""
 
-#: src/Menu.php:1322 templates/menu_grid.html.twig:31
+#: src/Menu.php:1318 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr "Nebyly nalezeny žádné miniaplikace, přidejte nějaké"
 
@@ -1023,7 +1023,7 @@ msgstr "Otevřené požadavky"
 msgid "Opened tickets backlog"
 msgstr "Seznam nahromaděných otevřených požadavků"
 
-#: src/Menu.php:1765
+#: src/Menu.php:1761
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1051,7 +1051,7 @@ msgstr "Procento využitý typů řešení"
 msgid "Period"
 msgstr ""
 
-#: src/Menu.php:740 src/Menu.php:819
+#: src/Menu.php:739 src/Menu.php:818
 msgid "Permit drag / resize widgets"
 msgstr "Umožnit přemisťování a změnu velikosti miniaplikací"
 
@@ -1147,7 +1147,7 @@ msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
 
-#: src/Menu.php:1154
+#: src/Menu.php:1153
 msgid "Refresh"
 msgstr "Načíst znovu"
 
@@ -1155,7 +1155,7 @@ msgstr "Načíst znovu"
 msgid "Refresh every "
 msgstr "Znovu načíst každých"
 
-#: src/Menu.php:1337
+#: src/Menu.php:1333
 msgid "Refresh widget"
 msgstr "Znovu načíst miniaplikaci"
 
@@ -1245,11 +1245,11 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr "Procento spokojenosti"
 
-#: src/Menu.php:727 src/Menu.php:732 src/Menu.php:806
+#: src/Menu.php:726 src/Menu.php:731 src/Menu.php:805
 msgid "Save grid"
 msgstr "Uložit mřížku"
 
-#: src/Menu.php:1310
+#: src/Menu.php:1306
 msgid "Save grid to see widget"
 msgstr "Pro zobrazení miniaplikace uložte mřížku"
 
@@ -1298,20 +1298,20 @@ msgstr "Zobrazit nástěnku"
 msgid "Setup stock widget"
 msgstr "Nastavit ovládací prvek zásob"
 
-#: src/Menu.php:1158
+#: src/Menu.php:1157
 #, php-format
 msgid "Show %d elements"
 msgstr "Zobrazit %d prvků"
 
-#: src/Menu.php:1159 src/Reports/Ticket.php:1619 src/Widget.php:682
+#: src/Menu.php:1158 src/Reports/Ticket.php:1619 src/Widget.php:682
 msgid "Show all"
 msgstr "Zobrazit vše"
 
-#: src/Menu.php:1124
+#: src/Menu.php:1123
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Zobrazuje se 0 až 0 z 0 položek"
 
-#: src/Menu.php:1123
+#: src/Menu.php:1122
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Zobrazení _START_ po _END_ z _TOTAL_ položek"
 
@@ -1360,7 +1360,7 @@ msgstr[1] "Ovládací prvky zásob"
 msgstr[2] "Ovládacích prvků zásob"
 msgstr[3] "Ovládací prvky zásob"
 
-#: src/Menu.php:1309
+#: src/Menu.php:1305
 msgid "Success"
 msgstr "Úspěch"
 
@@ -1392,7 +1392,7 @@ msgstr ""
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Menu.php:814
+#: src/Menu.php:813
 msgid "Switch to edit mode"
 msgstr "Přepnout do režimu úprav"
 
@@ -1569,7 +1569,7 @@ msgstr ""
 msgid "Unknown table"
 msgstr ""
 
-#: src/Menu.php:1170
+#: src/Menu.php:1169
 msgid "Updating all widgets"
 msgstr "Aktualizují se všechny miniaplikace"
 
@@ -1586,7 +1586,7 @@ msgstr "Upozornění na požadavky uživatelů"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1321 templates/menu_grid.html.twig:30
+#: src/Menu.php:1317 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr "Varování"
 
@@ -1599,7 +1599,7 @@ msgstr ""
 msgid "Widget"
 msgstr ""
 
-#: src/Menu.php:1171
+#: src/Menu.php:1170
 msgid "Widget added on Dashboard"
 msgstr "Miniaplikace přidána na nástěnku"
 
@@ -1607,7 +1607,7 @@ msgstr "Miniaplikace přidána na nástěnku"
 msgid "Without buy date"
 msgstr ""
 
-#: src/Menu.php:934 src/Criterias/FilterDate.php:70
+#: src/Menu.php:933 src/Criterias/FilterDate.php:70
 #: src/Criterias/DisplayData.php:71 src/Criterias/Year.php:69
 #: src/Criterias/Year.php:85 templates/criteria_display_data.html.twig:37
 #: templates/criteria_filter_date.html.twig:41

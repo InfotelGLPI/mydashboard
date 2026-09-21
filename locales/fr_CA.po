@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 08:29+0000\n"
+"POT-Creation-Date: 2026-09-21 10:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Tiago Graça, 2022\n"
 "Language-Team: French (Canada) (https://www.transifex.com/infotelGLPI/"
@@ -23,11 +23,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/Menu.php:1125
+#: src/Menu.php:1124
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtré depuis un total de _MAX_ entrées)"
 
-#: src/Menu.php:1147
+#: src/Menu.php:1146
 msgid "1 row selected"
 msgstr "1 ligne sélectionnée"
 
@@ -55,11 +55,11 @@ msgstr "5 lignes"
 msgid "50 rows"
 msgstr "50 lignes"
 
-#: src/Menu.php:1140
+#: src/Menu.php:1139
 msgid ": activate to sort column ascending"
 msgstr ": activer pour trier par ordre croissant"
 
-#: src/Menu.php:1141
+#: src/Menu.php:1140
 msgid ": activate to sort column descending"
 msgstr ": activer pour trier par ordre décroissant"
 
@@ -198,7 +198,7 @@ msgstr ""
 msgid "Bar charts"
 msgstr "Diagramme à barres"
 
-#: src/Menu.php:745 src/Menu.php:809
+#: src/Menu.php:744 src/Menu.php:808
 msgid "Block drag / resize widgets"
 msgstr "Bloquer le déplacement / redimensionnement des widgets"
 
@@ -244,11 +244,11 @@ msgstr "Lieux enfant"
 msgid "Class"
 msgstr ""
 
-#: src/Menu.php:736
+#: src/Menu.php:735
 msgid "Clear grid"
 msgstr "Réinitialiser la grille"
 
-#: src/Menu.php:1151 src/Menu.php:1164
+#: src/Menu.php:1150 src/Menu.php:1163
 #: templates/menu_widgets_offcanvas.html.twig:35
 msgid "Close"
 msgstr "Fermer"
@@ -262,7 +262,7 @@ msgstr "Fermer le mode édition"
 msgid "Closed tickets"
 msgstr "Tickets clos"
 
-#: src/Menu.php:1156
+#: src/Menu.php:1155
 msgid "Column visibility"
 msgstr "Visibilité de la colonne"
 
@@ -307,11 +307,11 @@ msgstr "Personnalisé"
 msgid "Custom Widgets"
 msgstr "Widgets personnalisés"
 
-#: src/Menu.php:824
+#: src/Menu.php:823
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Menu.php:1165 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
+#: src/Menu.php:1164 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
 #: src/Reports/Problem.php:58 src/Reports/Project.php:53
 #: src/Reports/Planning.php:52 src/Reports/ProjectTask.php:57
 #: src/Reports/Change.php:58 src/Html.php:57 src/Dashboard.php:71
@@ -326,15 +326,15 @@ msgstr "Accès au Tableau de bord"
 msgid "Dashboard access"
 msgstr "Accès au Tableau de bord"
 
-#: src/Menu.php:1167
+#: src/Menu.php:1166
 msgid "Dashboard not saved"
 msgstr "Tableau de bord non sauvegardé"
 
-#: src/Menu.php:1166
+#: src/Menu.php:1165
 msgid "Dashboard saved"
 msgstr "Tableau de bord sauvegardé"
 
-#: src/Menu.php:1168
+#: src/Menu.php:1167
 msgid "Data received for"
 msgstr "Données reçues pour"
 
@@ -350,7 +350,7 @@ msgstr "Tableau de bord de groupe par défaut"
 msgid "Default groups"
 msgstr "Groupes par défaut"
 
-#: src/Menu.php:1335
+#: src/Menu.php:1331
 msgid "Delete widget"
 msgstr "Supprimer un widget"
 
@@ -450,7 +450,7 @@ msgstr "afficher les articles non publiés de la base de connaissance"
 msgid "Display your equipments"
 msgstr "Affiche vos équipements"
 
-#: src/Menu.php:719
+#: src/Menu.php:718
 msgid "Edit mode"
 msgstr "Mode édition"
 
@@ -491,7 +491,7 @@ msgstr ""
 msgid "Evolution of tickets request sources types by year"
 msgstr "Evolution des sources de demande de tickets par année"
 
-#: src/Menu.php:828
+#: src/Menu.php:827
 msgid "Export to PDF"
 msgstr ""
 
@@ -524,7 +524,7 @@ msgstr "De quels plugins souhaitez vous afficher les widgets?"
 msgid "Full"
 msgstr "Complet"
 
-#: src/Menu.php:832
+#: src/Menu.php:831
 msgid "Fullscreen"
 msgstr "Plein écran"
 
@@ -540,11 +540,11 @@ msgstr "Grille administrateur GLPI"
 msgid "GLPI is OK"
 msgstr "GLPI est OK"
 
-#: src/Menu.php:1763
+#: src/Menu.php:1759
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:721
+#: src/Menu.php:720
 msgid "Global"
 msgstr "Global"
 
@@ -707,11 +707,11 @@ msgstr[1] ""
 msgid "Map"
 msgstr "Carte"
 
-#: src/Menu.php:1152
+#: src/Menu.php:1151
 msgid "Maximize"
 msgstr "Agrandir"
 
-#: src/Menu.php:1153
+#: src/Menu.php:1152
 msgid "Minimize"
 msgstr "Réduire"
 
@@ -734,7 +734,7 @@ msgstr "Mois"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:198 src/Menu.php:114 src/Menu.php:1764 src/Preference.php:85
+#: setup.php:201 src/Menu.php:114 src/Menu.php:1760 src/Preference.php:85
 #: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Mon Tableau de bord"
@@ -804,11 +804,11 @@ msgstr "Aucune alerte n'est configurée"
 msgid "No column defined"
 msgstr "Pas de colonne définie"
 
-#: src/Menu.php:1336 src/Chart.php:186 src/Widget.php:848
+#: src/Menu.php:1332 src/Chart.php:186 src/Widget.php:848
 msgid "No data available"
 msgstr "Pas de données disponibles"
 
-#: src/Menu.php:1122
+#: src/Menu.php:1121
 msgid "No data available in table"
 msgstr "Pas de données disponibles"
 
@@ -816,7 +816,7 @@ msgstr "Pas de données disponibles"
 msgid "No data is given to the widget"
 msgstr "Les données du widget n’ont pas été initialisées"
 
-#: src/Menu.php:1169
+#: src/Menu.php:1168
 msgid "No data received for"
 msgstr "Pas de données reçues pour"
 
@@ -832,7 +832,7 @@ msgstr "Pas d'impact"
 msgid "No informations founded"
 msgstr "Pas d'informations trouvées"
 
-#: src/Menu.php:1132
+#: src/Menu.php:1131
 msgid "No matching records found"
 msgstr "Pas de résultats trouvés"
 
@@ -860,7 +860,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr "Pas de widgets disponibles"
 
-#: src/Menu.php:1322 templates/menu_grid.html.twig:31
+#: src/Menu.php:1318 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr "Pas de widgets trouvés, merci d'en ajouter"
 
@@ -1018,7 +1018,7 @@ msgstr "Tickets ouverts"
 msgid "Opened tickets backlog"
 msgstr "Travail en retard des tickets en cours"
 
-#: src/Menu.php:1765
+#: src/Menu.php:1761
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgstr "Pourcentage d’utilisation des types de solution"
 msgid "Period"
 msgstr ""
 
-#: src/Menu.php:740 src/Menu.php:819
+#: src/Menu.php:739 src/Menu.php:818
 msgid "Permit drag / resize widgets"
 msgstr "Permettre le déplacement / redimensionnement des widgets"
 
@@ -1138,7 +1138,7 @@ msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
 
-#: src/Menu.php:1154
+#: src/Menu.php:1153
 msgid "Refresh"
 msgstr "Rafraichir"
 
@@ -1146,7 +1146,7 @@ msgstr "Rafraichir"
 msgid "Refresh every "
 msgstr "Rafraîchir toutes les "
 
-#: src/Menu.php:1337
+#: src/Menu.php:1333
 msgid "Refresh widget"
 msgstr "Rafraîchir le widget"
 
@@ -1236,11 +1236,11 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr "Pourcentage de satisfaction"
 
-#: src/Menu.php:727 src/Menu.php:732 src/Menu.php:806
+#: src/Menu.php:726 src/Menu.php:731 src/Menu.php:805
 msgid "Save grid"
 msgstr "Sauvegarder la grille"
 
-#: src/Menu.php:1310
+#: src/Menu.php:1306
 msgid "Save grid to see widget"
 msgstr "Sauver le dashboard pour voir le widget"
 
@@ -1287,20 +1287,20 @@ msgstr "Voir le Tableau de bord"
 msgid "Setup stock widget"
 msgstr "Configuration du widget de stock "
 
-#: src/Menu.php:1158
+#: src/Menu.php:1157
 #, php-format
 msgid "Show %d elements"
 msgstr "Voir %d éléments"
 
-#: src/Menu.php:1159 src/Reports/Ticket.php:1619 src/Widget.php:682
+#: src/Menu.php:1158 src/Reports/Ticket.php:1619 src/Widget.php:682
 msgid "Show all"
 msgstr "Voir tout"
 
-#: src/Menu.php:1124
+#: src/Menu.php:1123
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Afficher de 0 à 0 de 0 entrées"
 
-#: src/Menu.php:1123
+#: src/Menu.php:1122
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Affichage de _START_ à _END_ de _TOTAL_ entrées"
 
@@ -1345,7 +1345,7 @@ msgid_plural "Stock widgets"
 msgstr[0] "Widget des stocks"
 msgstr[1] "Widgets des stocks"
 
-#: src/Menu.php:1309
+#: src/Menu.php:1305
 msgid "Success"
 msgstr "Succès"
 
@@ -1377,7 +1377,7 @@ msgstr ""
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Menu.php:814
+#: src/Menu.php:813
 msgid "Switch to edit mode"
 msgstr "Basculer vers le mode édition"
 
@@ -1553,7 +1553,7 @@ msgstr ""
 msgid "Unknown table"
 msgstr ""
 
-#: src/Menu.php:1170
+#: src/Menu.php:1169
 msgid "Updating all widgets"
 msgstr "Mise à jour de tous les widgets"
 
@@ -1570,7 +1570,7 @@ msgstr "Alertes des tickets de l'utilisateur"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1321 templates/menu_grid.html.twig:30
+#: src/Menu.php:1317 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr "Attention"
 
@@ -1583,7 +1583,7 @@ msgstr "Semaine"
 msgid "Widget"
 msgstr ""
 
-#: src/Menu.php:1171
+#: src/Menu.php:1170
 msgid "Widget added on Dashboard"
 msgstr "Widget ajouté au Tableau de bord"
 
@@ -1591,7 +1591,7 @@ msgstr "Widget ajouté au Tableau de bord"
 msgid "Without buy date"
 msgstr ""
 
-#: src/Menu.php:934 src/Criterias/FilterDate.php:70
+#: src/Menu.php:933 src/Criterias/FilterDate.php:70
 #: src/Criterias/DisplayData.php:71 src/Criterias/Year.php:69
 #: src/Criterias/Year.php:85 templates/criteria_display_data.html.twig:37
 #: templates/criteria_filter_date.html.twig:41
