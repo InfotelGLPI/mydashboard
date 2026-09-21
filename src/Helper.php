@@ -187,33 +187,6 @@ class Helper
 
 
     /**
-     * Extract the content of the HTML script tag in an array 2D (line, column),
-     * Useful for datatables
-     *
-     * @param array 2D $arrayToEval
-     *
-     * @return array of string (each string is a script line)
-     */
-    public static function extractScriptsFromArray($arrayToEval)
-    {
-        $scripts = [];
-        if (is_array($arrayToEval)) {
-            if (!is_array($arrayToEval)) {
-                return $scripts;
-            }
-            foreach ($arrayToEval as $array) {
-                if (!is_array($array)) {
-                    break;
-                }
-                foreach ($array as $arrayLine) {
-                    $scripts = array_merge($scripts, self::extractScriptsFromString($arrayLine));
-                }
-            }
-        }
-        return $scripts;
-    }
-
-    /**
      * Get an array of scripts found in a string
      *
      * @param string $stringToEval , a HTML string with potentially script tags

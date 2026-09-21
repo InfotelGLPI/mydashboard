@@ -742,11 +742,13 @@ class Alert extends CommonDBTM
                                     } else {
                                         $pos = strlen($haystack);
                                     }
-                                    $datas[$i]["category"] = "<span class='b'>" . substr(
+                                    // HTML rendered Datatable cell: the completename of a
+                                    // category is free text, and GLPI 10+ stores it unescaped.
+                                    $datas[$i]["category"] = "<span class='b'>" . htmlescape(substr(
                                         $haystack,
                                         0,
                                         $pos,
-                                    ) . "</span>";
+                                    )) . "</span>";
                                 } else {
                                     $datas[$i]["category"] = "<span></span>";
                                 }

@@ -124,7 +124,12 @@ class Datatable extends Module
                 $line = array_values($line);
             }
             $this->tabDatas = array_values($_tabDatas);
-            $this->setWidgetScripts(Helper::extractScriptsFromArray($this->tabDatas));
+            // The bodies of any <script> tag found in the cells used to be moved to the
+            // widget scripts and re-emitted verbatim through Html::scriptBlock(), which
+            // bypassed the sanitizer Widget::loadWidget() applies to the cells themselves:
+            // a stored payload was hidden from the table yet still executed. Widgets that
+            // need JavaScript declare it explicitly, either with setWidgetScripts() or
+            // through setWidgetHtmlContent(), never from the data.
         } else {
             $this->debugError(__("Not an array", 'mydashboard'));
         }

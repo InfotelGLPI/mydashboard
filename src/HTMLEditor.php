@@ -33,6 +33,7 @@ use CommonDBTM;
 use CommonGLPI;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
+use Session;
 use Toolbox;
 
 class HTMLEditor extends CommonDBTM
@@ -42,7 +43,10 @@ class HTMLEditor extends CommonDBTM
 
     public static $types = [Customswidget::class];
 
-    public static $rightname = 'plugin_mydashboard';
+    // The tab is attached to Customswidget, which is gated by
+    // 'plugin_mydashboard_config': declaring the weaker 'plugin_mydashboard' here let a
+    // plain dashboard user reach the editor through the tab.
+    public static $rightname = 'plugin_mydashboard_config';
 
     public function rawSearchOptions()
     {
@@ -105,6 +109,10 @@ class HTMLEditor extends CommonDBTM
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+        // CommonGLPI::displayStandardTab() checks no right on a plugin tab, and
+        // ajax/common.tabs.php reaches this method without ever calling getTabNameForItem():
+        // the guard placed on the declaration is not replayed here.
+        Session::checkRight(self::$rightname, UPDATE);
 
         $field = new self();
 
