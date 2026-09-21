@@ -1,6 +1,6 @@
 {
   "name": "glpi-plugin-mydashboard",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "private": true,
   "description": "Version pinning of the third-party bundles vendored under public/lib/, so that npm audit and Dependabot can see them. The plugin has no JavaScript build step: installing this manifest produces no artefact the plugin uses. See public/lib/VERSIONS.md, including the libraries listed there that cannot be pinned here.",
   "license": "GPL-3.0-or-later",
