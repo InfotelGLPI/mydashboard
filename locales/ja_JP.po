@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 13:33+0000\n"
+"POT-Creation-Date: 2026-09-21 08:29+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -70,7 +70,7 @@ msgstr "2 年未満"
 msgid "> 6 years"
 msgstr "6 年経過"
 
-#: src/Alert.php:3263
+#: src/Alert.php:3283
 msgid "A network alert can impact you and will avoid creating a ticket"
 msgstr ""
 "ネットワーク警告は影響を与える可能性があり、チケットの作成を回避できます"
@@ -95,18 +95,18 @@ msgstr "チケットの経過時間"
 msgid "Age pyramid"
 msgstr "期間ピラミッド"
 
-#: src/Alert.php:3102 templates/itilalert_item.html.twig:63
+#: src/Alert.php:3122 templates/itilalert_item.html.twig:63
 #: templates/alert_form.html.twig:31
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "警告"
 
-#: src/Alert.php:101
+#: src/Alert.php:109
 msgid "Alert Dashboard"
 msgid_plural "Alerts Dashboard"
 msgstr[0] "警告ダッシュボード"
 
-#: src/Alert.php:3330
+#: src/Alert.php:3350
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
@@ -124,7 +124,7 @@ msgstr ""
 msgid "All bar charts"
 msgstr "すべての棒グラフ"
 
-#: src/Alert.php:3103
+#: src/Alert.php:3123
 msgid "All categories"
 msgstr "すべてのカテゴリー"
 
@@ -164,7 +164,7 @@ msgstr "すべてを認証・非認証"
 msgid "Authorized widgets"
 msgstr "認証済みウィジェット"
 
-#: src/Alert.php:196
+#: src/Alert.php:209
 msgid "Automatic actions in error"
 msgstr "エラー時の自動実行処理"
 
@@ -176,7 +176,7 @@ msgstr "ウィジェットの自動再読み込み"
 msgid "Availables widgets"
 msgstr "利用できるウィジェット"
 
-#: src/Reports/Reports_Bar.php:1839
+#: src/Reports/Reports_Bar.php:1851
 msgid "Average Satisfaction"
 msgstr "平均満足度"
 
@@ -226,7 +226,7 @@ msgstr "保留状態の変更"
 msgid "Changes to be processed"
 msgstr "要対応の変更"
 
-#: src/Alert.php:193 src/Alert.php:528
+#: src/Alert.php:206 src/Alert.php:541
 msgid "Check if GLPI have no problem"
 msgstr "GLPI に問題がないかチェック"
 
@@ -251,8 +251,8 @@ msgstr "閉じる"
 msgid "Close edit mode"
 msgstr "編集モードを終了"
 
-#: src/Reports/Reports_Pie.php:1092 src/Reports/Reports_Pie.php:1095
-#: src/Reports/Reports_Line.php:634 src/Reports/Reports_Line.php:1278
+#: src/Reports/Reports_Pie.php:1094 src/Reports/Reports_Pie.php:1097
+#: src/Reports/Reports_Line.php:637 src/Reports/Reports_Line.php:1281
 msgid "Closed tickets"
 msgstr "終了チケット"
 
@@ -264,7 +264,7 @@ msgstr "列の表示状態"
 msgid "Comment"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2869
+#: src/Reports/Reports_Bar.php:2881
 msgid "Computers number"
 msgstr "コンピューター数"
 
@@ -280,12 +280,12 @@ msgstr "契約のフォロー"
 msgid "Contracts status"
 msgstr "契約状態"
 
-#: src/ItilAlert.php:74 src/Alert.php:3199
+#: src/ItilAlert.php:78 src/Alert.php:3219
 #: templates/itilalert_item.html.twig:36 templates/alert_item.html.twig:36
 msgid "Create a new alert"
 msgstr "新しい警告の作成"
 
-#: src/Alert.php:3350
+#: src/Alert.php:3370
 msgid "Curl PHP package not installed"
 msgstr "Curl PHP パッケージをインストールしていません"
 
@@ -360,27 +360,27 @@ msgstr "表示"
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr "場所 ( 緯度・経度 ) ごとのチケット表示"
 
-#: src/Alert.php:229 src/Alert.php:2261
+#: src/Alert.php:242 src/Alert.php:2281
 msgid "Display alerts for SLA of Incidents tickets"
 msgstr "SLA インシデントのチケットについて警告を表示"
 
-#: src/Alert.php:239 src/Alert.php:2264
+#: src/Alert.php:252 src/Alert.php:2284
 msgid "Display alerts for SLA of Requests tickets"
 msgstr "SLA 要求のチケットについて警告を表示"
 
-#: src/Alert.php:224 src/Alert.php:1648
+#: src/Alert.php:237 src/Alert.php:1668
 msgid "Display alerts for incidents and problems"
 msgstr "インシデントと問題の警告を表示"
 
-#: src/Alert.php:211
+#: src/Alert.php:224
 msgid "Display alerts for inventory stocks"
 msgstr "情報資産の在庫の警告を表示"
 
-#: src/Alert.php:244 src/Alert.php:1651
+#: src/Alert.php:257 src/Alert.php:1671
 msgid "Display alerts for requests"
 msgstr "要求の警告を表示"
 
-#: src/Alert.php:198
+#: src/Alert.php:211
 msgid "Display automatic actions in error"
 msgstr "エラー時の自動実行処理を表示"
 
@@ -398,7 +398,7 @@ msgid ""
 "tasks)"
 msgstr "チケットの実対応時間 ( タスクの稼働時間 ) の平均値の表示"
 
-#: src/Alert.php:203
+#: src/Alert.php:216
 msgid "Display of mails which are not imported"
 msgstr "インポートしていないメールを表示"
 
@@ -418,7 +418,7 @@ msgstr "終了チケットの要求元の割合を表示"
 msgid "Display percent of solution types for tickets"
 msgstr "チケットの解決型の割合を表示"
 
-#: src/Alert.php:234
+#: src/Alert.php:247
 msgid "Display tickets where last modification is a user action"
 msgstr "最終更新がユーザー操作であるチケットを表示"
 
@@ -434,7 +434,7 @@ msgstr "チケットの解決目標期間 ( % ) を表示"
 msgid "Display unpublished articles of Knowbase"
 msgstr "未公開ナレッジベースの表示"
 
-#: src/Alert.php:216
+#: src/Alert.php:229
 msgid "Display your equipments"
 msgstr "あなたの機器を表示"
 
@@ -516,7 +516,7 @@ msgstr "すべて"
 msgid "Fullscreen"
 msgstr "全画面"
 
-#: src/Alert.php:191 src/Alert.php:527
+#: src/Alert.php:204 src/Alert.php:540
 msgid "GLPI Status"
 msgstr "GLPI 状態"
 
@@ -524,7 +524,7 @@ msgstr "GLPI 状態"
 msgid "GLPI admin grid"
 msgstr "GLPI 管理グリッド"
 
-#: src/Alert.php:3323
+#: src/Alert.php:3343
 msgid "GLPI is OK"
 msgstr "GLPI は OK"
 
@@ -540,11 +540,11 @@ msgstr "全体"
 msgid "Global filter"
 msgstr "全体フィルター"
 
-#: src/Alert.php:252 src/Alert.php:4030
+#: src/Alert.php:265 src/Alert.php:4050
 msgid "Global indicators"
 msgstr "全体インジケーター"
 
-#: src/Alert.php:257 src/Alert.php:4031
+#: src/Alert.php:270 src/Alert.php:4051
 msgid "Global indicators by week"
 msgstr "週ごとの全体インジケーター"
 
@@ -560,7 +560,7 @@ msgstr "ユーザーサポート助言者グリッド"
 msgid "Helpdesk technician grid"
 msgstr "ユーザーサポート技術者グリッド"
 
-#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:946 src/Alert.php:575
+#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:946 src/Alert.php:588
 msgid "ID and priority"
 msgstr "ID と優先度"
 
@@ -580,31 +580,31 @@ msgstr "インシデント助言者グリッド"
 msgid "Incidents"
 msgstr "インシデント"
 
-#: src/Alert.php:222 src/Alert.php:1647
+#: src/Alert.php:235 src/Alert.php:1667
 msgid "Incidents alerts"
 msgstr "インシデント警告"
 
-#: src/Alert.php:3843 src/Alert.php:4060
+#: src/Alert.php:3863 src/Alert.php:4080
 msgid "Incidents in progress"
 msgstr "対応中のインシデント"
 
-#: src/Alert.php:2185
+#: src/Alert.php:2205
 msgid "Incidents where time to own is exceeded"
 msgstr "割当までの時間を超過したインシデント"
 
-#: src/Alert.php:2054
+#: src/Alert.php:2074
 msgid "Incidents where time to own will be exceeded"
 msgstr "割当までの時間を超過しそうなインシデント"
 
-#: src/Alert.php:2251
+#: src/Alert.php:2271
 msgid "Incidents where time to resolve is exceeded"
 msgstr "解決までの時間を超過したインシデント"
 
-#: src/Alert.php:2119
+#: src/Alert.php:2139
 msgid "Incidents where time to resolve will be exceeded"
 msgstr "解決までの時間を超過しそうなインシデント"
 
-#: src/Alert.php:1589
+#: src/Alert.php:1609
 msgid "Incidents with very high or major priority"
 msgstr "重要度が「最高」または「重要」のインシデント"
 
@@ -612,8 +612,8 @@ msgstr "重要度が「最高」または「重要」のインシデント"
 msgid "Indicators"
 msgstr "インジケーター"
 
-#: src/ItilAlert.php:120 src/Config.php:394 src/Config.php:582
-#: src/Alert.php:186 src/Alert.php:3138
+#: src/ItilAlert.php:124 src/Config.php:394 src/Config.php:582
+#: src/Alert.php:199 src/Alert.php:3158
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] "お知らせ"
@@ -630,7 +630,7 @@ msgstr "内部名"
 msgid "Inventory admin grid"
 msgstr "情報資産管理グリッド"
 
-#: src/Alert.php:209
+#: src/Alert.php:222
 msgid "Inventory stock alerts"
 msgstr "情報資産の在庫警告"
 
@@ -720,7 +720,7 @@ msgstr "月"
 msgid "Monthly tickets in progress"
 msgstr "月別対応中チケット数"
 
-#: setup.php:199 src/Menu.php:114 src/Menu.php:1764 src/Preference.php:85
+#: setup.php:198 src/Menu.php:114 src/Menu.php:1764 src/Preference.php:85
 #: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "マイ ダッシュボード"
@@ -758,26 +758,26 @@ msgstr "マイ ビュー"
 msgid "Name"
 msgstr ""
 
-#: src/ItilAlert.php:118 src/Config.php:392 src/Config.php:580
-#: src/Alert.php:176 src/Alert.php:3229
+#: src/ItilAlert.php:122 src/Config.php:392 src/Config.php:580
+#: src/Alert.php:189 src/Alert.php:3249
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] "ネットワーク アラート"
 
-#: src/Alert.php:690
+#: src/Alert.php:703
 msgid "New document"
 msgstr "新しいドキュメント"
 
-#: src/Alert.php:1465
+#: src/Alert.php:1485
 msgid "New incidents"
 msgstr "新しいインシデント"
 
-#: src/Alert.php:1466
+#: src/Alert.php:1486
 msgid "New requests"
 msgstr "新しいリクエスト"
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1629 src/Alert.php:3677
-#: src/Alert.php:4051
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1629 src/Alert.php:3697
+#: src/Alert.php:4071
 msgid "New tickets"
 msgstr "新しいチケット"
 
@@ -809,11 +809,11 @@ msgstr "受信データなし : "
 msgid "No equipments founded"
 msgstr "機器は見つかりませんでした"
 
-#: src/ItilAlert.php:123 src/Alert.php:3141
+#: src/ItilAlert.php:127 src/Alert.php:3161
 msgid "No impact"
 msgstr "影響なし"
 
-#: src/Widget.php:992 src/Alert.php:2678
+#: src/Widget.php:992 src/Alert.php:2698
 msgid "No informations founded"
 msgstr "情報はありません"
 
@@ -821,7 +821,7 @@ msgstr "情報はありません"
 msgid "No matching records found"
 msgstr "一致する記録が見つかりません"
 
-#: src/Widget.php:929 src/Alert.php:2821 src/Alert.php:3084
+#: src/Widget.php:929 src/Alert.php:2841 src/Alert.php:3104
 msgid "No problem detected"
 msgstr "問題ありません"
 
@@ -833,7 +833,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:960 src/Alert.php:2490
+#: src/Widget.php:960 src/Alert.php:2510
 msgid "No scheduled maintenance"
 msgstr "メンテナンス スケジュールなし"
 
@@ -857,34 +857,34 @@ msgstr "有効な SQL SELECT クエリーではありません"
 msgid "Not an array"
 msgstr "配列ではない"
 
-#: src/Alert.php:201
+#: src/Alert.php:214
 msgid "Not imported mails in collectors"
 msgstr "未インポートのコレクターメール"
 
-#: src/Reports/Reports_Pie.php:1128 src/Reports/Reports_Pie.php:1131
-#: src/Reports/Reports_Line.php:1279
+#: src/Reports/Reports_Pie.php:1130 src/Reports/Reports_Pie.php:1133
+#: src/Reports/Reports_Line.php:1282
 msgid "Not planned"
 msgstr "未計画"
 
-#: src/Reports/Reports_Bar.php:1280
+#: src/Reports/Reports_Bar.php:1292
 msgid "Not resolved tickets"
 msgstr "解決チケットなし"
 
-#: src/Reports/Reports_Bar.php:2977 src/Reports/Reports_Pie.php:683
+#: src/Reports/Reports_Bar.php:2989 src/Reports/Reports_Pie.php:683
 #: src/Reports/Reports_Pie.php:699
 msgid "Not respected TTO"
 msgstr "開始時間遅延"
 
-#: src/Reports/Reports_Bar.php:3081 src/Reports/Reports_Pie.php:542
+#: src/Reports/Reports_Bar.php:3093 src/Reports/Reports_Pie.php:542
 #: src/Reports/Reports_Pie.php:560
 msgid "Not respected TTR"
 msgstr "解決時間遅延"
 
-#: src/Reports/Reports_Bar.php:2777
+#: src/Reports/Reports_Bar.php:2789
 msgid "Not satisfy number"
 msgstr "不満数"
 
-#: src/Reports/Reports_Pie.php:1502 src/Reports/Reports_Pie.php:1516
+#: src/Reports/Reports_Pie.php:1504 src/Reports/Reports_Pie.php:1518
 msgid "Not satisfy percent"
 msgstr "不満割合"
 
@@ -896,11 +896,11 @@ msgstr "週ごとの対応中（新規でも保留でもない）チケット数
 msgid "Number of open tickets in the month still in progress for each month"
 msgstr "月ごとの対応中チケット数"
 
-#: src/Reports/Reports_Line.php:91 src/Reports/Reports_Line.php:628
+#: src/Reports/Reports_Line.php:91 src/Reports/Reports_Line.php:631
 msgid "Number of opened and closed tickets by month"
 msgstr "月ごとの対応中・終了チケット数"
 
-#: src/Reports/Reports_Line.php:96 src/Reports/Reports_Line.php:905
+#: src/Reports/Reports_Line.php:96 src/Reports/Reports_Line.php:908
 msgid "Number of opened and resolved / closed tickets by month"
 msgstr "月ごとの対応中および解決・終了チケット数"
 
@@ -928,7 +928,7 @@ msgstr "優先度別未処理チケット数"
 msgid "Number of opened tickets by technician and by status"
 msgstr "状態別・技術者別の対応中チケット数"
 
-#: src/Reports/Reports_Line.php:1272
+#: src/Reports/Reports_Line.php:1275
 msgid "Number of opened, closed  and unplanned tickets by month"
 msgstr "月別対応中、終了、未計画チケット数"
 
@@ -940,7 +940,7 @@ msgstr "月別対応中、終了、未計画チケット数"
 msgid "Number of opened, closed, unplanned tickets by month"
 msgstr "月別対応中、終了、未計画チケット数"
 
-#: src/Reports/Reports_Bar.php:2763
+#: src/Reports/Reports_Bar.php:2775
 msgid "Number of surveys answered"
 msgstr "回答アンケート数"
 
@@ -984,22 +984,22 @@ msgstr "要求元利用数"
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr "OpenStreetMap - 場所別対応中チケット"
 
-#: src/Alert.php:1527
+#: src/Alert.php:1547
 msgid "Opened incidents without assigned technicians"
 msgstr "技術者が割り当てられていない進行中のチケット"
 
-#: src/Alert.php:1528
+#: src/Alert.php:1548
 msgid "Opened requests without assigned technicians"
 msgstr "技術者が割り当てられていない進行中の要求"
 
-#: src/Reports/Reports_Bar.php:1838 src/Reports/Reports_Pie.php:1063
-#: src/Reports/Reports_Pie.php:1066 src/Reports/Reports_Line.php:633
-#: src/Reports/Reports_Line.php:910 src/Reports/Reports_Line.php:1277
+#: src/Reports/Reports_Bar.php:1850 src/Reports/Reports_Pie.php:1065
+#: src/Reports/Reports_Pie.php:1068 src/Reports/Reports_Line.php:636
+#: src/Reports/Reports_Line.php:913 src/Reports/Reports_Line.php:1280
 msgid "Opened tickets"
 msgstr "未処理チケット"
 
-#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:635
-#: src/Reports/Reports_Line.php:912 src/Reports/Reports_Line.php:1280
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:638
+#: src/Reports/Reports_Line.php:915 src/Reports/Reports_Line.php:1283
 msgid "Opened tickets backlog"
 msgstr "未処理チケットのバックログ"
 
@@ -1011,15 +1011,15 @@ msgstr "PDF エクスポートに失敗。再試行してください。"
 msgid "Palette color"
 msgstr "パレット色"
 
-#: src/Alert.php:3778 src/Alert.php:4057
+#: src/Alert.php:3798 src/Alert.php:4077
 msgid "Pending tickets"
 msgstr "保留チケット"
 
-#: src/Reports/Reports_Bar.php:2989
+#: src/Reports/Reports_Bar.php:3001
 msgid "Percent - Respected TTO"
 msgstr "開始時間遵守率"
 
-#: src/Reports/Reports_Bar.php:3093
+#: src/Reports/Reports_Bar.php:3105
 msgid "Percent - Respected TTR"
 msgstr "解決時間遵守率"
 
@@ -1067,11 +1067,11 @@ msgstr "前年"
 msgid "Problem followup"
 msgstr "問題のフォロー"
 
-#: src/Alert.php:3317
+#: src/Alert.php:3337
 msgid "Problem with GLPI"
 msgstr "GLPI についての問題"
 
-#: src/Alert.php:1629
+#: src/Alert.php:1649
 msgid "Problems with very high or major priority"
 msgstr "重要度が「最高」または「重要」の問題"
 
@@ -1149,44 +1149,44 @@ msgstr "要求助言者グリッド"
 msgid "Requests"
 msgstr "要求"
 
-#: src/Alert.php:242 src/Alert.php:1650
+#: src/Alert.php:255 src/Alert.php:1670
 msgid "Requests alerts"
 msgstr "要求警告"
 
-#: src/Alert.php:3908 src/Alert.php:4063
+#: src/Alert.php:3928 src/Alert.php:4083
 msgid "Requests in progress"
 msgstr "対応中の要求"
 
-#: src/Alert.php:2186
+#: src/Alert.php:2206
 msgid "Requests where time to own is exceeded"
 msgstr "割当までの時間を超過した要求"
 
-#: src/Alert.php:2055
+#: src/Alert.php:2075
 msgid "Requests where time to own will be exceeded"
 msgstr "割当までの時間を超過しそうな要求"
 
-#: src/Alert.php:2252
+#: src/Alert.php:2272
 msgid "Requests where time to resolve is exceeded"
 msgstr "解決までの時間を超過した要求"
 
-#: src/Alert.php:2120
+#: src/Alert.php:2140
 msgid "Requests where time to resolve will be exceeded"
 msgstr "解決までの時間を超過しそうな要求"
 
-#: src/Alert.php:1590
+#: src/Alert.php:1610
 msgid "Requests with very high or major priority"
 msgstr "重要度が「最高」または「重要」の要求"
 
-#: src/Reports/Reports_Line.php:911
+#: src/Reports/Reports_Line.php:914
 msgid "Resolved / closed tickets"
 msgstr "解決・終了チケット数"
 
-#: src/Reports/Reports_Bar.php:2983 src/Reports/Reports_Pie.php:688
+#: src/Reports/Reports_Bar.php:2995 src/Reports/Reports_Pie.php:688
 #: src/Reports/Reports_Pie.php:699
 msgid "Respected TTO"
 msgstr "開始時間遵守"
 
-#: src/Reports/Reports_Bar.php:3087 src/Reports/Reports_Pie.php:547
+#: src/Reports/Reports_Bar.php:3099 src/Reports/Reports_Pie.php:547
 #: src/Reports/Reports_Pie.php:559
 msgid "Respected TTR"
 msgstr "解決時間遵守"
@@ -1199,11 +1199,11 @@ msgstr "過去 12 カ月間の反応率"
 msgid "Rights management"
 msgstr "権限管理"
 
-#: src/Alert.php:227 src/Alert.php:2260
+#: src/Alert.php:240 src/Alert.php:2280
 msgid "SLA Incidents alerts"
 msgstr "SLA インシデント警告"
 
-#: src/Alert.php:237 src/Alert.php:2263
+#: src/Alert.php:250 src/Alert.php:2283
 msgid "SLA Requests alerts"
 msgstr "SLA 要求警告"
 
@@ -1211,11 +1211,11 @@ msgstr "SLA 要求警告"
 msgid "Satisfaction average"
 msgstr "平均満足度"
 
-#: src/Reports/Reports_Bar.php:2771
+#: src/Reports/Reports_Bar.php:2783
 msgid "Satisfy number"
 msgstr "満足数"
 
-#: src/Reports/Reports_Pie.php:1497 src/Reports/Reports_Pie.php:1516
+#: src/Reports/Reports_Pie.php:1499 src/Reports/Reports_Pie.php:1518
 msgid "Satisfy percent"
 msgstr "満足率"
 
@@ -1227,8 +1227,8 @@ msgstr "グリッドを保存"
 msgid "Save grid to see widget"
 msgstr "ウィジェット表示のためにグリッドを保存"
 
-#: src/ItilAlert.php:119 src/Config.php:393 src/Config.php:581
-#: src/Alert.php:181 src/Alert.php:3137
+#: src/ItilAlert.php:123 src/Config.php:393 src/Config.php:581
+#: src/Alert.php:194 src/Alert.php:3157
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] "メンテナンス計画"
@@ -1245,15 +1245,15 @@ msgstr "自分の組織内のユーザーを検索"
 msgid "See edit mode"
 msgstr "編集モードを表示"
 
-#: src/Alert.php:188
+#: src/Alert.php:201
 msgid "See informations block"
 msgstr "情報ブロックを確認"
 
-#: src/Alert.php:178
+#: src/Alert.php:191
 msgid "See network alert block"
 msgstr "ネットワーク警告ブロックを確認"
 
-#: src/Alert.php:183
+#: src/Alert.php:196
 msgid "See scheduled maintenances information block"
 msgstr "メンテナンススケジュール情報ブロックを確認"
 
@@ -1290,7 +1290,7 @@ msgstr "_START_ ～ _END_ ( 全 _TOTAL_ 件 )"
 msgid "Solve delay and take into account of tickets"
 msgstr "チケットの遅延を解決し考慮する"
 
-#: src/Reports/Reports_Bar.php:2545
+#: src/Reports/Reports_Bar.php:2557
 msgid "Solve delay average (hour)"
 msgstr "平均遅延時間 ( 時間 )"
 
@@ -1345,15 +1345,15 @@ msgstr "技術者別総対応チケット数"
 msgid "Sum of ticket tasks duration by technicians"
 msgstr "技術者別総チケットタスク数"
 
-#: src/Reports/Reports_Bar.php:2188
+#: src/Reports/Reports_Bar.php:2200
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr "24 時間以内に解決したチケット総数"
 
-#: src/Reports/Reports_Bar.php:2197
+#: src/Reports/Reports_Bar.php:2209
 msgid "Sum of tickets solved in less than a week"
 msgstr "1 週間以内に解決したチケット総数"
 
-#: src/Reports/Reports_Bar.php:2206
+#: src/Reports/Reports_Bar.php:2218
 msgid "Sum of tickets solved in more than a week"
 msgstr "解決に 1 週間以上要したチケット総数"
 
@@ -1377,11 +1377,11 @@ msgstr "表"
 msgid "Tag"
 msgstr "タグ"
 
-#: src/Reports/Reports_Bar.php:2546
+#: src/Reports/Reports_Bar.php:2558
 msgid "Take into account average (hour)"
 msgstr "平均チケット開始時間 ( 時間 )"
 
-#: src/Reports/Reports_Bar.php:822
+#: src/Reports/Reports_Bar.php:828
 msgid "Tasks duration (minutes)"
 msgstr "タスク期間 ( 分 )"
 
@@ -1412,7 +1412,7 @@ msgid ""
 "run by the plugin."
 msgstr ""
 
-#: src/Alert.php:2278 src/Alert.php:2991
+#: src/Alert.php:2298 src/Alert.php:3011
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr "メンテナンススケジュールがあります。詳細はログインして確認を"
@@ -1421,7 +1421,7 @@ msgstr "メンテナンススケジュールがあります。詳細はログイ
 msgid "This widget doesn't exist anymore"
 msgstr "このウィジェットはすでに存在しません"
 
-#: src/Alert.php:4006
+#: src/Alert.php:4026
 msgid "Ticket closed"
 msgstr "終了チケット"
 
@@ -1430,20 +1430,20 @@ msgstr "終了チケット"
 msgid "Ticket followup"
 msgstr "チケットの回答"
 
-#: src/Alert.php:4071
+#: src/Alert.php:4091
 msgid "Tickets closed"
 msgstr "終了チケット"
 
-#: src/Alert.php:3731 src/Alert.php:4054
+#: src/Alert.php:3751 src/Alert.php:4074
 msgid "Tickets late"
 msgstr "遅延チケット"
 
-#: src/Reports/Reports_Bar.php:328 src/Reports/Reports_Bar.php:584
-#: src/Reports/Reports_Bar.php:972 src/Reports/Reports_Bar.php:1388
-#: src/Reports/Reports_Line.php:331 src/Reports/Reports_Line.php:1430
-#: src/Reports/Reports_Line.php:1508 src/Reports/Reports_Line.php:1642
-#: src/Reports/Reports_Line.php:1775 src/Reports/Reports_Line.php:1878
-#: src/Reports/Reports_Line.php:2014 src/Reports/Reports_Line.php:2160
+#: src/Reports/Reports_Bar.php:328 src/Reports/Reports_Bar.php:590
+#: src/Reports/Reports_Bar.php:984 src/Reports/Reports_Bar.php:1400
+#: src/Reports/Reports_Line.php:334 src/Reports/Reports_Line.php:1433
+#: src/Reports/Reports_Line.php:1511 src/Reports/Reports_Line.php:1645
+#: src/Reports/Reports_Line.php:1778 src/Reports/Reports_Line.php:1881
+#: src/Reports/Reports_Line.php:2017 src/Reports/Reports_Line.php:2163
 msgid "Tickets number"
 msgstr "チケット数"
 
@@ -1455,7 +1455,7 @@ msgstr "チケット要求ルートの推移"
 msgid "Tickets solution types evolution"
 msgstr "チケットの解決型の推移"
 
-#: src/Alert.php:3957 src/Alert.php:4066
+#: src/Alert.php:3977 src/Alert.php:4086
 msgid "Tickets solved"
 msgstr "解決チケット"
 
@@ -1505,19 +1505,19 @@ msgstr "チケット型別チケットカテゴリートップ 10"
 msgid "Top ten ticket requesters by month"
 msgstr "月別要求者トップ 10"
 
-#: src/Reports/Reports_Bar.php:1581
+#: src/Reports/Reports_Bar.php:1593
 msgid "Trimester 1"
 msgstr "☆★★★"
 
-#: src/Reports/Reports_Bar.php:1648
+#: src/Reports/Reports_Bar.php:1660
 msgid "Trimester 2"
 msgstr "☆☆★★"
 
-#: src/Reports/Reports_Bar.php:1710
+#: src/Reports/Reports_Bar.php:1722
 msgid "Trimester 3"
 msgstr "☆☆☆★"
 
-#: src/Reports/Reports_Bar.php:1773
+#: src/Reports/Reports_Bar.php:1785
 msgid "Trimester 4"
 msgstr "☆☆☆☆"
 
@@ -1538,7 +1538,7 @@ msgstr "すべてのウィジェットを更新しています"
 msgid "Use profile group"
 msgstr "プロファイルグループを利用"
 
-#: src/Alert.php:232
+#: src/Alert.php:245
 msgid "User ticket alerts"
 msgstr "ユーザーチケット警告"
 
@@ -1580,7 +1580,7 @@ msgstr "年"
 msgid "Year to date"
 msgstr "今年度"
 
-#: src/Alert.php:214 templates/widget_equipments.html.twig:31
+#: src/Alert.php:227 templates/widget_equipments.html.twig:31
 msgid "Your equipments"
 msgstr "あなたの機器"
 
