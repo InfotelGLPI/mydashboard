@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 08:29+0000\n"
+"POT-Creation-Date: 2026-09-21 10:28+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: fhuang1984 <168546@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/infotelGLPI/"
@@ -24,11 +24,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/Menu.php:1125
+#: src/Menu.php:1124
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: src/Menu.php:1147
+#: src/Menu.php:1146
 msgid "1 row selected"
 msgstr "选中 1 行"
 
@@ -56,11 +56,11 @@ msgstr "5 条"
 msgid "50 rows"
 msgstr "50 条"
 
-#: src/Menu.php:1140
+#: src/Menu.php:1139
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: src/Menu.php:1141
+#: src/Menu.php:1140
 msgid ": activate to sort column descending"
 msgstr ""
 
@@ -193,7 +193,7 @@ msgstr ""
 msgid "Bar charts"
 msgstr "条形图"
 
-#: src/Menu.php:745 src/Menu.php:809
+#: src/Menu.php:744 src/Menu.php:808
 msgid "Block drag / resize widgets"
 msgstr ""
 
@@ -239,11 +239,11 @@ msgstr ""
 msgid "Class"
 msgstr ""
 
-#: src/Menu.php:736
+#: src/Menu.php:735
 msgid "Clear grid"
 msgstr ""
 
-#: src/Menu.php:1151 src/Menu.php:1164
+#: src/Menu.php:1150 src/Menu.php:1163
 #: templates/menu_widgets_offcanvas.html.twig:35
 msgid "Close"
 msgstr "关闭"
@@ -257,7 +257,7 @@ msgstr "退出编辑模式"
 msgid "Closed tickets"
 msgstr "已关闭工单"
 
-#: src/Menu.php:1156
+#: src/Menu.php:1155
 msgid "Column visibility"
 msgstr ""
 
@@ -302,11 +302,11 @@ msgstr ""
 msgid "Custom Widgets"
 msgstr ""
 
-#: src/Menu.php:824
+#: src/Menu.php:823
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Menu.php:1165 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
+#: src/Menu.php:1164 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
 #: src/Reports/Problem.php:58 src/Reports/Project.php:53
 #: src/Reports/Planning.php:52 src/Reports/ProjectTask.php:57
 #: src/Reports/Change.php:58 src/Html.php:57 src/Dashboard.php:71
@@ -321,15 +321,15 @@ msgstr "面板访问权限"
 msgid "Dashboard access"
 msgstr "面板访问权限"
 
-#: src/Menu.php:1167
+#: src/Menu.php:1166
 msgid "Dashboard not saved"
 msgstr "不保存面板"
 
-#: src/Menu.php:1166
+#: src/Menu.php:1165
 msgid "Dashboard saved"
 msgstr "保存面板"
 
-#: src/Menu.php:1168
+#: src/Menu.php:1167
 msgid "Data received for"
 msgstr ""
 
@@ -345,7 +345,7 @@ msgstr "默认面板组"
 msgid "Default groups"
 msgstr "默认分组"
 
-#: src/Menu.php:1335
+#: src/Menu.php:1331
 msgid "Delete widget"
 msgstr "删除部件"
 
@@ -439,7 +439,7 @@ msgstr ""
 msgid "Display your equipments"
 msgstr ""
 
-#: src/Menu.php:719
+#: src/Menu.php:718
 msgid "Edit mode"
 msgstr "编辑模式"
 
@@ -480,7 +480,7 @@ msgstr ""
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: src/Menu.php:828
+#: src/Menu.php:827
 msgid "Export to PDF"
 msgstr ""
 
@@ -513,7 +513,7 @@ msgstr ""
 msgid "Full"
 msgstr ""
 
-#: src/Menu.php:832
+#: src/Menu.php:831
 msgid "Fullscreen"
 msgstr "全屏"
 
@@ -529,11 +529,11 @@ msgstr ""
 msgid "GLPI is OK"
 msgstr "GLPI 正常"
 
-#: src/Menu.php:1763
+#: src/Menu.php:1759
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:721
+#: src/Menu.php:720
 msgid "Global"
 msgstr "全局"
 
@@ -694,11 +694,11 @@ msgstr[0] ""
 msgid "Map"
 msgstr "地图"
 
-#: src/Menu.php:1152
+#: src/Menu.php:1151
 msgid "Maximize"
 msgstr "最大化"
 
-#: src/Menu.php:1153
+#: src/Menu.php:1152
 msgid "Minimize"
 msgstr "最小化"
 
@@ -721,7 +721,7 @@ msgstr "月"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:198 src/Menu.php:114 src/Menu.php:1764 src/Preference.php:85
+#: setup.php:201 src/Menu.php:114 src/Menu.php:1760 src/Preference.php:85
 #: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "我的面板"
@@ -790,11 +790,11 @@ msgstr "未设置告警"
 msgid "No column defined"
 msgstr "未定义列"
 
-#: src/Menu.php:1336 src/Chart.php:186 src/Widget.php:848
+#: src/Menu.php:1332 src/Chart.php:186 src/Widget.php:848
 msgid "No data available"
 msgstr "无可用数据"
 
-#: src/Menu.php:1122
+#: src/Menu.php:1121
 msgid "No data available in table"
 msgstr "表中没有可用数据"
 
@@ -802,7 +802,7 @@ msgstr "表中没有可用数据"
 msgid "No data is given to the widget"
 msgstr ""
 
-#: src/Menu.php:1169
+#: src/Menu.php:1168
 msgid "No data received for"
 msgstr ""
 
@@ -818,7 +818,7 @@ msgstr ""
 msgid "No informations founded"
 msgstr ""
 
-#: src/Menu.php:1132
+#: src/Menu.php:1131
 msgid "No matching records found"
 msgstr ""
 
@@ -846,7 +846,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr ""
 
-#: src/Menu.php:1322 templates/menu_grid.html.twig:31
+#: src/Menu.php:1318 templates/menu_grid.html.twig:31
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
@@ -1004,7 +1004,7 @@ msgstr "已打开工单"
 msgid "Opened tickets backlog"
 msgstr "积压工单"
 
-#: src/Menu.php:1765
+#: src/Menu.php:1761
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1032,7 +1032,7 @@ msgstr "解决方案类型比例"
 msgid "Period"
 msgstr ""
 
-#: src/Menu.php:740 src/Menu.php:819
+#: src/Menu.php:739 src/Menu.php:818
 msgid "Permit drag / resize widgets"
 msgstr ""
 
@@ -1122,7 +1122,7 @@ msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
 
-#: src/Menu.php:1154
+#: src/Menu.php:1153
 msgid "Refresh"
 msgstr "刷新"
 
@@ -1130,7 +1130,7 @@ msgstr "刷新"
 msgid "Refresh every "
 msgstr "刷新间隔"
 
-#: src/Menu.php:1337
+#: src/Menu.php:1333
 msgid "Refresh widget"
 msgstr "刷新部件"
 
@@ -1220,11 +1220,11 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr ""
 
-#: src/Menu.php:727 src/Menu.php:732 src/Menu.php:806
+#: src/Menu.php:726 src/Menu.php:731 src/Menu.php:805
 msgid "Save grid"
 msgstr ""
 
-#: src/Menu.php:1310
+#: src/Menu.php:1306
 msgid "Save grid to see widget"
 msgstr ""
 
@@ -1270,20 +1270,20 @@ msgstr "查看面板"
 msgid "Setup stock widget"
 msgstr ""
 
-#: src/Menu.php:1158
+#: src/Menu.php:1157
 #, php-format
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Menu.php:1159 src/Reports/Ticket.php:1619 src/Widget.php:682
+#: src/Menu.php:1158 src/Reports/Ticket.php:1619 src/Widget.php:682
 msgid "Show all"
 msgstr "显示全部"
 
-#: src/Menu.php:1124
+#: src/Menu.php:1123
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: src/Menu.php:1123
+#: src/Menu.php:1122
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
@@ -1326,7 +1326,7 @@ msgid "Stock widget"
 msgid_plural "Stock widgets"
 msgstr[0] ""
 
-#: src/Menu.php:1309
+#: src/Menu.php:1305
 msgid "Success"
 msgstr "成功"
 
@@ -1358,7 +1358,7 @@ msgstr ""
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Menu.php:814
+#: src/Menu.php:813
 msgid "Switch to edit mode"
 msgstr "切换到编辑模式"
 
@@ -1531,7 +1531,7 @@ msgstr ""
 msgid "Unknown table"
 msgstr ""
 
-#: src/Menu.php:1170
+#: src/Menu.php:1169
 msgid "Updating all widgets"
 msgstr "更新所有部件"
 
@@ -1548,7 +1548,7 @@ msgstr "用户工单告警"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1321 templates/menu_grid.html.twig:30
+#: src/Menu.php:1317 templates/menu_grid.html.twig:30
 msgid "Warning"
 msgstr "警告"
 
@@ -1561,7 +1561,7 @@ msgstr ""
 msgid "Widget"
 msgstr ""
 
-#: src/Menu.php:1171
+#: src/Menu.php:1170
 msgid "Widget added on Dashboard"
 msgstr ""
 
@@ -1569,7 +1569,7 @@ msgstr ""
 msgid "Without buy date"
 msgstr ""
 
-#: src/Menu.php:934 src/Criterias/FilterDate.php:70
+#: src/Menu.php:933 src/Criterias/FilterDate.php:70
 #: src/Criterias/DisplayData.php:71 src/Criterias/Year.php:69
 #: src/Criterias/Year.php:85 templates/criteria_display_data.html.twig:37
 #: templates/criteria_filter_date.html.twig:41
