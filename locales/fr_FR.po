@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 13:56+0000\n"
+"POT-Creation-Date: 2026-09-22 14:36+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -97,8 +97,8 @@ msgstr "Age des tickets"
 msgid "Age pyramid"
 msgstr "Pyramide des ages"
 
-#: src/Alert.php:3145 templates/itilalert_item.html.twig:63
-#: templates/alert_form.html.twig:31
+#: src/Alert.php:3145 templates/alert_form.html.twig:31
+#: templates/itilalert_item.html.twig:63
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Alerte"
@@ -120,7 +120,7 @@ msgstr ""
 "L'alerte n'est pas configurée correctement ou n'est pas joignable (ou excède "
 "la limite)"
 
-#: templates/itilalert_item.html.twig:70 templates/alert_form.html.twig:38
+#: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
 msgid "Alert level"
 msgstr "Niveau d'alerte"
 
@@ -212,8 +212,8 @@ msgstr "Peut prendre beaucoup de temps si vous avez beaucoup de tickets"
 msgid "Cannot create alert without a type"
 msgstr "Impossible de créer une alterne sans préciser le type"
 
-#: src/Criterias/Other.php:273 src/Criterias/Other.php:496
-#: src/Criterias/ITILCategory.php:71 src/Criterias/ITILCategory.php:105
+#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:112
+#: src/Criterias/Other.php:268 src/Criterias/Other.php:493
 msgid "Category"
 msgstr "Catégorie"
 
@@ -259,8 +259,8 @@ msgstr "Fermer"
 msgid "Close edit mode"
 msgstr "Fermer le mode édition"
 
-#: src/Reports/Reports_Pie.php:1094 src/Reports/Reports_Pie.php:1097
 #: src/Reports/Reports_Line.php:637 src/Reports/Reports_Line.php:1281
+#: src/Reports/Reports_Pie.php:1094 src/Reports/Reports_Pie.php:1097
 msgid "Closed tickets"
 msgstr "Tickets clos"
 
@@ -309,10 +309,10 @@ msgstr "Widgets personnalisés"
 msgid "Custom and save profile grid"
 msgstr "Configurer et sauver le dashboard du profil"
 
-#: src/Menu.php:1175 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
-#: src/Reports/Problem.php:58 src/Reports/Project.php:53
-#: src/Reports/Planning.php:52 src/Reports/ProjectTask.php:57
-#: src/Reports/Change.php:58 src/Html.php:57 src/Dashboard.php:71
+#: src/Module.php:66 src/Html.php:57 src/Chart.php:60 src/Datatable.php:58
+#: src/Reports/Change.php:58 src/Reports/ProjectTask.php:57
+#: src/Reports/Planning.php:52 src/Reports/Project.php:53
+#: src/Reports/Problem.php:58 src/Dashboard.php:71 src/Menu.php:1175
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -336,7 +336,7 @@ msgstr "Dashboard sauvegardé"
 msgid "Data received for"
 msgstr "Données reçues pour"
 
-#: src/Criterias/Other.php:412
+#: src/Criterias/Other.php:409
 msgid "Day"
 msgstr "Jour"
 
@@ -455,16 +455,16 @@ msgstr "Mode édition"
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr "Autoriser l'affichage du Dashboard en plein écran"
 
-#: templates/criteria_filter_date.html.twig:36
 #: templates/criteria_period_range.html.twig:30
+#: templates/criteria_filter_date.html.twig:36
 msgid "End"
 msgstr "Fin"
 
-#: src/Criterias/DisplayData.php:108
+#: src/Criterias/DisplayData.php:119
 msgid "End month"
 msgstr "Mois de fin"
 
-#: src/Criterias/DisplayData.php:108
+#: src/Criterias/DisplayData.php:119
 msgid "End year"
 msgstr "Année de fin"
 
@@ -496,8 +496,8 @@ msgstr "Export PDF"
 msgid "Failed to check the sanity of the tables!"
 msgstr "Échec de la vérification de l'intégrité des tables !"
 
-#: templates/configtranslation_form.html.twig:46
 #: templates/configtranslation_list.html.twig:66
+#: templates/configtranslation_form.html.twig:46
 msgid "Field"
 msgstr "Champs"
 
@@ -529,7 +529,7 @@ msgstr "Plein écran"
 msgid "GLPI Status"
 msgstr "Statut de GLPI"
 
-#: src/Menu.php:129 src/Dashboard.php:182
+#: src/Dashboard.php:182 src/Menu.php:129
 msgid "GLPI admin grid"
 msgstr "Administrateur GLPI"
 
@@ -653,12 +653,12 @@ msgstr "Statut de l'élément"
 msgid "Item type"
 msgstr "Type d'élément"
 
-#: templates/configtranslation_form.html.twig:32
 #: templates/configtranslation_list.html.twig:65
+#: templates/configtranslation_form.html.twig:32
 msgid "Language"
 msgstr "Langue"
 
-#: src/Criterias/Other.php:246 src/Criterias/Other.php:435
+#: src/Criterias/Other.php:253 src/Criterias/Other.php:432
 msgid "Last month"
 msgstr "Dernier mois"
 
@@ -666,7 +666,7 @@ msgstr "Dernier mois"
 msgid "Last synchronization of computers by month"
 msgstr "Dernière synchronisation des ordinateurs par mois"
 
-#: src/Criterias/Other.php:252
+#: src/Criterias/Other.php:254
 msgid "Last year"
 msgstr "Année dernière"
 
@@ -682,7 +682,7 @@ msgstr "Graphiques en ligne"
 msgid "Linked reminder"
 msgstr "Note liée"
 
-#: templates/itilalert_item.html.twig:74 templates/alert_form.html.twig:42
+#: templates/alert_form.html.twig:42 templates/itilalert_item.html.twig:74
 msgid "Linked with a ticket category"
 msgstr "Liée à une catégorie de ticket"
 
@@ -694,13 +694,6 @@ msgstr "Liste des traductions"
 #: templates/menu_edit_toolbar.html.twig:55
 msgid "Load a predefined grid"
 msgstr "Charger une vue prédéfinie"
-
-#: src/Criterias/MultipleLocation.php:65
-msgid "Location"
-msgid_plural "Locations"
-msgstr[0] "Lieu"
-msgstr[1] "Lieux"
-msgstr[2] "Lieux"
 
 #: src/Widget.php:249
 msgid "Map"
@@ -722,9 +715,9 @@ msgstr "Table manquante"
 msgid "Modification date"
 msgstr "Date de modification"
 
-#: src/Criterias/Other.php:264 src/Criterias/Other.php:414
-#: src/Criterias/Other.php:436 src/Criterias/Month.php:55
-#: src/Criterias/Month.php:70 templates/criteria_period_month.html.twig:29
+#: src/Criterias/Month.php:60 src/Criterias/Month.php:77
+#: src/Criterias/Other.php:256 src/Criterias/Other.php:411
+#: src/Criterias/Other.php:433 templates/criteria_period_month.html.twig:29
 #: templates/criteria_other_month.html.twig:33
 msgid "Month"
 msgstr "Mois"
@@ -733,8 +726,8 @@ msgstr "Mois"
 msgid "Monthly tickets in progress"
 msgstr "Tickets en cours par mois"
 
-#: setup.php:201 src/Menu.php:114 src/Menu.php:1771 src/Preference.php:85
-#: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
+#: setup.php:201 src/Preference.php:85 src/Config.php:63 src/Menu.php:114
+#: src/Menu.php:1771 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Dashboard"
 
@@ -804,7 +797,7 @@ msgstr "Aucunes alertes configurées"
 msgid "No column defined"
 msgstr "Pas de colonne définie"
 
-#: src/Menu.php:1343 src/Chart.php:186 src/Widget.php:978
+#: src/Chart.php:186 src/Widget.php:978 src/Menu.php:1343
 msgid "No data available"
 msgstr "Pas de données disponibles"
 
@@ -868,7 +861,7 @@ msgstr "Pas de widgets trouvés, merci d'en ajouter"
 msgid "Not a valid SQL SELECT query"
 msgstr "Requête SQL SELECT non valide"
 
-#: src/Datatable.php:134 src/Chart.php:192
+#: src/Chart.php:192 src/Datatable.php:134
 msgid "Not an array"
 msgstr "Pas un tableau"
 
@@ -876,8 +869,8 @@ msgstr "Pas un tableau"
 msgid "Not imported mails in collectors"
 msgstr "Courriels non importés dans les collecteurs"
 
-#: src/Reports/Reports_Pie.php:1130 src/Reports/Reports_Pie.php:1133
-#: src/Reports/Reports_Line.php:1282
+#: src/Reports/Reports_Line.php:1282 src/Reports/Reports_Pie.php:1130
+#: src/Reports/Reports_Pie.php:1133
 msgid "Not planned"
 msgstr "Non planifié"
 
@@ -1008,14 +1001,14 @@ msgstr "Incidents ouverts sans techniciens assignés"
 msgid "Opened requests without assigned technicians"
 msgstr "Demandes ouvertes sans techniciens assignés"
 
-#: src/Reports/Reports_Bar.php:1850 src/Reports/Reports_Pie.php:1065
-#: src/Reports/Reports_Pie.php:1068 src/Reports/Reports_Line.php:636
-#: src/Reports/Reports_Line.php:913 src/Reports/Reports_Line.php:1280
+#: src/Reports/Reports_Line.php:636 src/Reports/Reports_Line.php:913
+#: src/Reports/Reports_Line.php:1280 src/Reports/Reports_Bar.php:1850
+#: src/Reports/Reports_Pie.php:1065 src/Reports/Reports_Pie.php:1068
 msgid "Opened tickets"
 msgstr "Tickets ouverts"
 
-#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:638
-#: src/Reports/Reports_Line.php:915 src/Reports/Reports_Line.php:1283
+#: src/Reports/Reports_Line.php:638 src/Reports/Reports_Line.php:915
+#: src/Reports/Reports_Line.php:1283 src/Reports/Reports_Bar.php:125
 msgid "Opened tickets backlog"
 msgstr "Backlog des tickets ouverts"
 
@@ -1043,7 +1036,7 @@ msgstr "Pourcentage - TTR respectées"
 msgid "Percent of use of solution types"
 msgstr "Pourcentage d'utilisation des types de solutions"
 
-#: src/Criterias/FilterDate.php:73 src/Criterias/DisplayData.php:79
+#: src/Criterias/DisplayData.php:86 src/Criterias/FilterDate.php:81
 msgid "Period"
 msgstr "Période"
 
@@ -1067,7 +1060,7 @@ msgid "Please activate the plugin"
 msgstr "Merci d'activer le plugin"
 
 #: scripts/insert_stock_ticketindicators.php:72
-#: scripts/insert_stock_tickets.php:72 scripts/clean_stock_tickets.php:152
+#: scripts/clean_stock_tickets.php:152 scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr "Plugin désactivé"
 
@@ -1111,7 +1104,7 @@ msgstr "Tâches de projets en cours"
 msgid "Projects to be processed"
 msgstr "Projets en cours"
 
-#: templates/itilalert_item.html.twig:78 templates/alert_form.html.twig:46
+#: templates/alert_form.html.twig:46 templates/itilalert_item.html.twig:78
 msgid "Public"
 msgstr "Public"
 
@@ -1156,7 +1149,7 @@ msgstr "Rafraîchir le widget"
 msgid "Reload"
 msgstr "Recharger"
 
-#: templates/config_form.html.twig:43 templates/preferences.html.twig:39
+#: templates/preferences.html.twig:39 templates/config_form.html.twig:43
 msgid "Replace central interface"
 msgstr "Remplacer l'interface centrale"
 
@@ -1295,7 +1288,7 @@ msgstr "Configuration du widget de stock"
 msgid "Show %d elements"
 msgstr "Voir %d éléments"
 
-#: src/Menu.php:1169 src/Reports/Ticket.php:1619 src/Widget.php:812
+#: src/Reports/Ticket.php:1619 src/Widget.php:812 src/Menu.php:1169
 msgid "Show all"
 msgstr "Voir tout"
 
@@ -1315,20 +1308,20 @@ msgstr "Délais de résolution et de prise en charge des tickets"
 msgid "Solve delay average (hour)"
 msgstr "Délai de résolution moyen (en heures)"
 
-#: templates/criteria_filter_date.html.twig:34
 #: templates/criteria_period_range.html.twig:28
+#: templates/criteria_filter_date.html.twig:34
 msgid "Start"
 msgstr "Début"
 
-#: src/Criterias/DisplayData.php:142
+#: src/Criterias/DisplayData.php:153
 msgid "Start end"
 msgstr "Début - fin"
 
-#: src/Criterias/DisplayData.php:107
+#: src/Criterias/DisplayData.php:118
 msgid "Start month"
 msgstr "Mois de début"
 
-#: src/Criterias/DisplayData.php:107
+#: src/Criterias/DisplayData.php:118
 msgid "Start year"
 msgstr "Année de début"
 
@@ -1398,7 +1391,7 @@ msgstr "Respect des TTR"
 msgid "Tables"
 msgstr "Tableaux"
 
-#: src/Criterias/Other.php:532
+#: src/Criterias/Other.php:529
 msgid "Tag"
 msgstr "Tag"
 
@@ -1410,7 +1403,7 @@ msgstr "Délai de prise en charge moyen (en heures)"
 msgid "Tasks duration (minutes)"
 msgstr "Durée des tâches (en minutes)"
 
-#: src/Criterias/Other.php:222 src/Criterias/Other.php:373
+#: src/Criterias/Other.php:232 src/Criterias/Other.php:370
 msgid "Technician"
 msgid_plural "Technicians"
 msgstr[0] "Technicien"
@@ -1475,12 +1468,12 @@ msgstr "Tickets clos"
 msgid "Tickets late"
 msgstr "Tickets en retard"
 
-#: src/Reports/Reports_Bar.php:328 src/Reports/Reports_Bar.php:590
-#: src/Reports/Reports_Bar.php:984 src/Reports/Reports_Bar.php:1400
 #: src/Reports/Reports_Line.php:334 src/Reports/Reports_Line.php:1433
 #: src/Reports/Reports_Line.php:1511 src/Reports/Reports_Line.php:1645
 #: src/Reports/Reports_Line.php:1778 src/Reports/Reports_Line.php:1881
 #: src/Reports/Reports_Line.php:2017 src/Reports/Reports_Line.php:2163
+#: src/Reports/Reports_Bar.php:328 src/Reports/Reports_Bar.php:590
+#: src/Reports/Reports_Bar.php:984 src/Reports/Reports_Bar.php:1400
 msgid "Tickets number"
 msgstr "Nombre de tickets"
 
@@ -1500,9 +1493,8 @@ msgstr "Tickets résolus"
 msgid "Tickets stock by month"
 msgstr "Stock de tickets par mois"
 
-#: src/Criterias/Other.php:245 src/Criterias/Other.php:251
-#: src/Criterias/Other.php:257 src/Criterias/Other.php:263
-#: src/Criterias/Other.php:418 src/Criterias/Other.php:473
+#: src/Criterias/Other.php:260 src/Criterias/Other.php:415
+#: src/Criterias/Other.php:470
 msgid "Time display"
 msgstr "Affichage du temps"
 
@@ -1558,8 +1550,8 @@ msgstr "Trimestre 3"
 msgid "Trimester 4"
 msgstr "Trimestre 4"
 
-#: templates/stockwidget_form.html.twig:49
-#: templates/itilalert_item.html.twig:66 templates/alert_form.html.twig:34
+#: templates/stockwidget_form.html.twig:49 templates/alert_form.html.twig:34
+#: templates/itilalert_item.html.twig:66
 msgid "Type"
 msgstr "Type"
 
@@ -1579,8 +1571,8 @@ msgstr "Utiliser le groupe du profil"
 msgid "User ticket alerts"
 msgstr "Alertes utilisateurs sur les tickets"
 
-#: templates/configtranslation_form.html.twig:55
 #: templates/configtranslation_list.html.twig:67
+#: templates/configtranslation_form.html.twig:55
 msgid "Value"
 msgstr "Valeur"
 
@@ -1588,8 +1580,8 @@ msgstr "Valeur"
 msgid "Warning"
 msgstr "Attention"
 
-#: src/Criterias/Other.php:413 src/Criterias/Week.php:51
-#: src/Criterias/Week.php:64
+#: src/Criterias/Other.php:410 src/Criterias/Week.php:56
+#: src/Criterias/Week.php:72
 msgid "Week"
 msgstr "Semaine"
 
@@ -1605,15 +1597,15 @@ msgstr "Widget ajouté au Dashboard"
 msgid "Without buy date"
 msgstr "Sans date d'achat"
 
-#: src/Menu.php:944 src/Criterias/FilterDate.php:70
-#: src/Criterias/DisplayData.php:71 src/Criterias/Year.php:69
-#: src/Criterias/Year.php:85 templates/criteria_display_data.html.twig:37
-#: templates/criteria_filter_date.html.twig:41
+#: src/Criterias/DisplayData.php:75 src/Criterias/Year.php:73
+#: src/Criterias/Year.php:91 src/Criterias/FilterDate.php:75 src/Menu.php:944
 #: templates/criteria_period_year.html.twig:28
+#: templates/criteria_display_data.html.twig:37
+#: templates/criteria_filter_date.html.twig:41
 msgid "Year"
 msgstr "Année"
 
-#: src/Criterias/Other.php:258 src/Criterias/Other.php:433
+#: src/Criterias/Other.php:255 src/Criterias/Other.php:430
 msgid "Year to date"
 msgstr "Année jusqu'à aujourd'hui"
 
@@ -1633,7 +1625,7 @@ msgstr "Vos enquêtes de satisfaction"
 msgid "Your tickets to validate"
 msgstr "Vos tickets à valider"
 
-#: src/Criterias/FilterDate.php:86
+#: src/Criterias/FilterDate.php:98
 msgid "begin and end date"
 msgstr "Date de début et fin"
 
@@ -1653,7 +1645,13 @@ msgstr "information"
 msgid "warning"
 msgstr "avertissement"
 
-#: src/Criterias/Other.php:434 src/Criterias/FilterDate.php:85
-#: src/Criterias/DisplayData.php:141
+#: src/Criterias/DisplayData.php:152 src/Criterias/FilterDate.php:97
+#: src/Criterias/Other.php:431
 msgid "year"
 msgstr "année"
+
+#~ msgid "Location"
+#~ msgid_plural "Locations"
+#~ msgstr[0] "Lieu"
+#~ msgstr[1] "Lieux"
+#~ msgstr[2] "Lieux"
