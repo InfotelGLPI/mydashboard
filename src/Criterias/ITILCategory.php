@@ -63,17 +63,24 @@ class ITILCategory
         return $itilcategories_id;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name] != 0) {
-            $form = "&nbsp;/&nbsp;" . __("Category", 'mydashboard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                'glpi_itilcategories',
-                $opt[self::$criteria_name],
-            );
+            return [[
+                'label'  => __("Category", 'mydashboard'),
+                'values' => [(string) Dropdown::getDropdownName(
+                    'glpi_itilcategories',
+                    $opt[self::$criteria_name],
+                )],
+            ]];
         }
-        return $form;
+
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

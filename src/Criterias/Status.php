@@ -53,14 +53,21 @@ class Status
         return $status;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name] != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Status') . "&nbsp;:&nbsp;" . Ticket::getStatus($opt[self::$criteria_name]);
+            return [[
+                'label'  => __('Status'),
+                'values' => [(string) Ticket::getStatus($opt[self::$criteria_name])],
+            ]];
         }
-        return $form;
+
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

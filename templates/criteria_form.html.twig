@@ -25,11 +25,19 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Summary line of the active criteria; clicking it toggles the panel below. #}
+{# Summary line of the active criteria; clicking it toggles the panel below.
+ # Every label and value below is stored raw by GLPI, so they are printed as data and
+ # escaped by Twig: the separators are the only markup this line carries. #}
 <div id="plugin_mydashboard_add_criteria{{ rand }}" style="margin-bottom: 15px;">
     <i class="ti ti-adjustments"></i>
     <span style="font-size: 12px;font-family: verdana,serif;color: #CCC;font-weight: bold;">
-        {{ summary_html|raw }}
+        {%- for criterion in summary -%}
+            {%- if not loop.first %}&nbsp;/{% endif -%}
+            &nbsp;{{ criterion.label }}&nbsp;:&nbsp;
+            {%- for value in criterion.values -%}
+                {{ value }}{% if not loop.last %}&nbsp;-&nbsp;{% endif %}
+            {%- endfor -%}
+        {%- endfor -%}
     </span>
 </div>
 {{ toggle_script_html|raw }}

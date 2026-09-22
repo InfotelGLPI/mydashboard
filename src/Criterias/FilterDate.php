@@ -62,18 +62,30 @@ class FilterDate
         return $year;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
+        $summary = [];
         if ($opt[self::$criteria_name] && preg_match('/^\d{4}$/', $opt[self::$criteria_name])) {
-            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+            $summary[] = [
+                'label'  => __('Year', 'mydashboard'),
+                'values' => [(string) $opt[self::$criteria_name]],
+            ];
         }
         if (isset($opt['begin']) && isset($opt['end'])) {
-            $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard') .
-                "&nbsp;:&nbsp;" . Html::convDateTime($opt['begin']) . " / " . Html::convDateTime($opt['end']);
+            $summary[] = [
+                'label'  => __('Period', 'mydashboard'),
+                'values' => [
+                    Html::convDateTime($opt['begin']) . " / " . Html::convDateTime($opt['end']),
+                ],
+            ];
         }
-        return $form;
+
+        return $summary;
     }
 
     public static function getDisplayForm($default, $opt, $count)

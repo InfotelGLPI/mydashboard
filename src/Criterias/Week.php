@@ -44,13 +44,21 @@ class Week
         return intval(date('W', time())) - 1;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-        $form = "";
         if (isset($opt[self::$criteria_name]) && $opt[self::$criteria_name] > 0) {
-            $form .= "&nbsp;/&nbsp;" . __('Week', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+            return [[
+                'label'  => __('Week', 'mydashboard'),
+                'values' => [(string) $opt[self::$criteria_name]],
+            ]];
         }
-        return $form;
+
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

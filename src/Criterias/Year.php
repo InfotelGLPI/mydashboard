@@ -61,15 +61,21 @@ class Year
         return $year;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name]) {
-            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+            return [[
+                'label'  => __('Year', 'mydashboard'),
+                'values' => [(string) $opt[self::$criteria_name]],
+            ]];
         }
 
-        return $form;
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

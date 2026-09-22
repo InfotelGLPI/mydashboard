@@ -49,17 +49,24 @@ class Location
         return $locations_id;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name] != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Location') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                'glpi_locations',
-                $opt[self::$criteria_name],
-            );
+            return [[
+                'label'  => __('Location'),
+                'values' => [(string) Dropdown::getDropdownName(
+                    'glpi_locations',
+                    $opt[self::$criteria_name],
+                )],
+            ]];
         }
-        return $form;
+
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

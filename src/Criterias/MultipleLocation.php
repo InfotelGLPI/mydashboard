@@ -49,32 +49,32 @@ class MultipleLocation
         return $multiple_locations_id;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
+        $multiple_locations_id = is_array(
+            $opt[self::$criteria_name] ?? null,
+        ) ? $opt[self::$criteria_name] : [];
 
-        $form = "";
-        if (isset($opt[self::$criteria_name])) {
-            $multiple_locations_id = is_array(
-                $opt[self::$criteria_name],
-            ) ? $opt[self::$criteria_name] : [];
+        $multiple_locations_id = array_filter($multiple_locations_id);
 
-            $multiple_locations_id = array_filter($multiple_locations_id);
-
-            if (count($multiple_locations_id) > 0) {
-                $form .= "&nbsp;/&nbsp;" . _n(
-                    'Location',
-                    'Locations',
-                    count($multiple_locations_id),
-                ) . "&nbsp;:&nbsp;";
-                foreach ($multiple_locations_id as $k => $v) {
-                    $form .= Dropdown::getDropdownName('glpi_locations', $v);
-                    if (count($multiple_locations_id) > 1) {
-                        $form .= "&nbsp;-&nbsp;";
-                    }
-                }
-            }
+        if (count($multiple_locations_id) === 0) {
+            return [];
         }
-        return $form;
+
+        $values = [];
+        foreach ($multiple_locations_id as $location_id) {
+            $values[] = (string) Dropdown::getDropdownName('glpi_locations', $location_id);
+        }
+
+        return [[
+            'label'  => _n('Location', 'Locations', count($multiple_locations_id)),
+            'values' => $values,
+        ]];
     }
 
     public static function getDisplayForm($default, $opt, $count)

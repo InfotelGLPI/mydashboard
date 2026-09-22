@@ -66,30 +66,32 @@ class RequesterGroup
 
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
         $requesters_groups_id = is_array(
             $opt[self::$criteria_name],
         ) ? $opt[self::$criteria_name] : [];
 
         $requesters_groups_id = array_filter($requesters_groups_id);
 
-        $form = "";
-
-        if (is_array($requesters_groups_id)
-            && count($requesters_groups_id) > 0) {
-
-            $form = "&nbsp;/&nbsp;" . __('Requester group') . "&nbsp;:&nbsp;";
-            foreach ($requesters_groups_id as $k => $v) {
-                $form .= Dropdown::getDropdownName('glpi_groups', $v);
-                if (count($requesters_groups_id) > 1) {
-                    $form .= "&nbsp;-&nbsp;";
-                }
-            }
+        if (count($requesters_groups_id) === 0) {
+            return [];
         }
 
-        return $form;
+        $values = [];
+        foreach ($requesters_groups_id as $group_id) {
+            $values[] = (string) Dropdown::getDropdownName('glpi_groups', $group_id);
+        }
+
+        return [[
+            'label'  => __('Requester group'),
+            'values' => $values,
+        ]];
     }
 
     public static function getDisplayForm($default, $opt, $count)

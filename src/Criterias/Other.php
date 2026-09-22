@@ -205,9 +205,14 @@ class Other
         //        $crit['opt'] = $opt;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-        $form = "";
+        $summary = [];
 
         // TECHNICIAN MULTIPLE
         if (isset($opt['multiple_technicians_id'])) {
@@ -218,65 +223,57 @@ class Other
             $opt['multiple_technicians_id'] = array_filter($opt['multiple_technicians_id']);
 
             if (count($opt['multiple_technicians_id']) > 0) {
-                $form .= "&nbsp;/&nbsp;" . _n(
-                    'Technician',
-                    'Technicians',
-                    count($opt['multiple_technicians_id']),
-                    'mydashboard',
-                ) . "&nbsp;:&nbsp;";
-                foreach ($opt['multiple_technicians_id'] as $k => $v) {
-                    $form .= getUserName($v);
-                    if (count($opt['multiple_technicians_id']) > 1) {
-                        $form .= "&nbsp;-&nbsp;";
-                    }
+                $values = [];
+                foreach ($opt['multiple_technicians_id'] as $users_id) {
+                    $values[] = (string) getUserName($users_id);
                 }
+                $summary[] = [
+                    'label' => _n(
+                        'Technician',
+                        'Technicians',
+                        count($opt['multiple_technicians_id']),
+                        'mydashboard',
+                    ),
+                    'values' => $values,
+                ];
             }
         }
 
         if (isset($opt['tag']) && $opt['tag'] > 0) {
-            $form .= "&nbsp;/&nbsp;" . PluginTagTag::getTypeName() . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                'glpi_plugin_tag_tags',
-                $opt['tag'],
-            );
+            $summary[] = [
+                'label'  => PluginTagTag::getTypeName(),
+                'values' => [(string) Dropdown::getDropdownName(
+                    'glpi_plugin_tag_tags',
+                    $opt['tag'],
+                )],
+            ];
         }
         if (isset($opt['multiple_year_time'])) {
-            switch ($opt['multiple_year_time']) {
-                case "LASTMONTH":
-                    $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                        "Last month",
-                        'mydashboard',
-                    );
-                    break;
-                case "LASTYEAR":
-                    $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                        "Last year",
-                        'mydashboard',
-                    );
-                    break;
-                case "YEARTODATE":
-                    $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                        "Year to date",
-                        'mydashboard',
-                    );
-                    break;
-                case "MONTH":
-                    $form .= "&nbsp;/&nbsp;" . __('Time display', 'mydashboard') . "&nbsp;/&nbsp;" . __(
-                        "Month",
-                        'mydashboard',
-                    );
-                    break;
+            $times = [
+                "LASTMONTH"  => __("Last month", 'mydashboard'),
+                "LASTYEAR"   => __("Last year", 'mydashboard'),
+                "YEARTODATE" => __("Year to date", 'mydashboard'),
+                "MONTH"      => __("Month", 'mydashboard'),
+            ];
+            if (isset($times[$opt['multiple_year_time']])) {
+                $summary[] = [
+                    'label'  => __('Time display', 'mydashboard'),
+                    'values' => [$times[$opt['multiple_year_time']]],
+                ];
             }
         }
 
-
         if (isset($opt['itilcategorielvl1']) && $opt['itilcategorielvl1'] > 0) {
-            $form .= "&nbsp;/&nbsp;" . __("Category", 'mydashboard') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName(
-                'glpi_itilcategories',
-                $opt['itilcategorielvl1'],
-            );
+            $summary[] = [
+                'label'  => __("Category", 'mydashboard'),
+                'values' => [(string) Dropdown::getDropdownName(
+                    'glpi_itilcategories',
+                    $opt['itilcategorielvl1'],
+                )],
+            ];
         }
 
-        return $form;
+        return $summary;
     }
 
     /**

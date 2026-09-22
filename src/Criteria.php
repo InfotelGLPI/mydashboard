@@ -748,11 +748,17 @@ class Criteria
         $formId = uniqid('form');
         $count = count($criterias);
 
-        $summary_html = '';
+        // The summary line is built as structured data rather than as a markup fragment:
+        // every value it carries is a label of the database (an entity, a group, a location,
+        // an ITIL category, a user or an asset type name), all of them stored raw by GLPI 11,
+        // and the line used to be concatenated by each criterion and rendered with |raw. The
+        // template escapes each value on its own now, so a criterion added later is covered
+        // by default instead of having to remember an escape of its own.
+        $summary = [];
         $fields_html = '';
         foreach (self::getUsedCriterias() as $criteria => $class) {
             if (isset($opt[$criteria])) {
-                $summary_html .= $class::getDisplayValue($opt);
+                $summary = array_merge($summary, $class::getDisplayValue($opt));
             }
             if (in_array($criteria, $criterias)) {
                 $fields_html .= $class::getDisplayForm($default, $opt, $count);
@@ -771,7 +777,7 @@ class Criteria
             'form_id' => $formId,
             'on_submit' => (bool) $onsubmit,
             'refresh_js' => $refresh_js,
-            'summary_html' => $summary_html,
+            'summary' => $summary,
             'fields_html' => $fields_html,
             'submit_html' => \Html::submit(_x('button', 'Send'), [
                 'name' => 'submit',

@@ -46,16 +46,23 @@ class Month
         return intval(date('m', time()) - 1);
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name]) {
             $monthsarray = Toolbox::getMonthsOfYearArray();
-            $form .= "&nbsp;/&nbsp;" . __('Month', 'mydashboard') . "&nbsp;:&nbsp;" . $monthsarray[$opt[self::$criteria_name]];
+
+            return [[
+                'label'  => __('Month', 'mydashboard'),
+                'values' => [(string) $monthsarray[$opt[self::$criteria_name]]],
+            ]];
         }
 
-        return $form;
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

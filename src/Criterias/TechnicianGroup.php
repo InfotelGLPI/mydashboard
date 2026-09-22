@@ -66,30 +66,32 @@ class TechnicianGroup
 
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
         $technicians_groups_id = is_array(
             $opt[self::$criteria_name],
         ) ? $opt[self::$criteria_name] : [];
 
         $technicians_groups_id = array_filter($technicians_groups_id);
 
-        $form = "";
-
-        if (is_array($technicians_groups_id)
-            && count($technicians_groups_id) > 0) {
-
-            $form = "&nbsp;/&nbsp;" . __('Technician group') . "&nbsp;:&nbsp;";
-            foreach ($technicians_groups_id as $k => $v) {
-                $form .= Dropdown::getDropdownName('glpi_groups', $v);
-                if (count($technicians_groups_id) > 1) {
-                    $form .= "&nbsp;-&nbsp;";
-                }
-            }
+        if (count($technicians_groups_id) === 0) {
+            return [];
         }
 
-        return $form;
+        $values = [];
+        foreach ($technicians_groups_id as $group_id) {
+            $values[] = (string) Dropdown::getDropdownName('glpi_groups', $group_id);
+        }
+
+        return [[
+            'label'  => __('Technician group'),
+            'values' => $values,
+        ]];
     }
 
     public static function getDisplayForm($default, $opt, $count)

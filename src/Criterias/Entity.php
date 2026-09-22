@@ -60,17 +60,24 @@ class Entity
         return $entities_id;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-        $form = "";
         $entity = new \Entity();
-        if (isset($opt[self::$criteria_name]) && $opt[self::$criteria_name] > -1) {
-            if ($entity->getFromDB($opt[self::$criteria_name])) {
-                $form = "&nbsp;" . __('Entity') . "&nbsp;:&nbsp;" . $entity->getField('name');
-            }
+        if (isset($opt[self::$criteria_name])
+            && $opt[self::$criteria_name] > -1
+            && $entity->getFromDB($opt[self::$criteria_name])) {
+            return [[
+                'label'  => __('Entity'),
+                'values' => [(string) $entity->getField('name')],
+            ]];
         }
 
-        return $form;
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

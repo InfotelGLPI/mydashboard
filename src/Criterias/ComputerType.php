@@ -50,16 +50,24 @@ class ComputerType
         return $computertypes_id;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name] != 0) {
             $type = new \ComputerType();
             $type->getFromDB($opt[self::$criteria_name]);
-            $form = "&nbsp;/&nbsp;" . __('Type') . "&nbsp;:&nbsp;" . $type->getName();
+
+            return [[
+                'label'  => __('Type'),
+                'values' => [(string) $type->getName()],
+            ]];
         }
-        return $form;
+
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

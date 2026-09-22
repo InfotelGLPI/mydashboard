@@ -48,15 +48,21 @@ class Technician
         return $technicians_id;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name] != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Technician') . "&nbsp;:&nbsp;" . getUserName($opt[self::$criteria_name]);
+            return [[
+                'label'  => __('Technician'),
+                'values' => [(string) getUserName($opt[self::$criteria_name])],
+            ]];
         }
 
-        return $form;
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

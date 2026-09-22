@@ -47,14 +47,21 @@ class Limit
         return $limit;
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-        $form = "";
         if ($opt[self::$criteria_name] != 0) {
-            $form = "&nbsp;/&nbsp;" . __('Number of results') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+            return [[
+                'label'  => __('Number of results'),
+                'values' => [(string) $opt[self::$criteria_name]],
+            ]];
         }
-        return $form;
+
+        return [];
     }
 
     public static function getDisplayForm($default, $opt, $count)

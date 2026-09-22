@@ -62,13 +62,19 @@ class DisplayData
 
     }
 
-    public static function getDisplayValue($opt)
+    /**
+     * @param array $opt
+     *
+     * @return array<int, array{label: string, values: array<int, string>}>
+     */
+    public static function getDisplayValue($opt): array
     {
-
-
-        $form = "";
+        $summary = [];
         if ($opt[self::$criteria_name] && preg_match('/^\d{4}$/', $opt[self::$criteria_name])) {
-            $form .= "&nbsp;/&nbsp;" . __('Year', 'mydashboard') . "&nbsp;:&nbsp;" . $opt[self::$criteria_name];
+            $summary[] = [
+                'label'  => __('Year', 'mydashboard'),
+                'values' => [(string) $opt[self::$criteria_name]],
+            ];
         }
         if (isset($opt['start_year'])
             && isset($opt['start_month'])
@@ -76,10 +82,15 @@ class DisplayData
                     && isset($opt['end_month'])) {
             $start_month = sprintf('%02d', $opt['start_month']);
             $end_month = sprintf('%02d', $opt['end_month']);
-            $form .= "&nbsp;/&nbsp;" . __('Period', 'mydashboard')
-                . "&nbsp;:&nbsp;" . $opt['start_year'] . "-" . $start_month . " / " . $opt['end_year'] . "-" . $end_month;
+            $summary[] = [
+                'label'  => __('Period', 'mydashboard'),
+                'values' => [
+                    $opt['start_year'] . "-" . $start_month . " / " . $opt['end_year'] . "-" . $end_month,
+                ],
+            ];
         }
-        return $form;
+
+        return $summary;
     }
 
     /**
