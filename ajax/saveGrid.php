@@ -28,6 +28,7 @@
  */
 
 use GlpiPlugin\Mydashboard\Dashboard;
+use GlpiPlugin\Mydashboard\Preference;
 use GlpiPlugin\Mydashboard\Widget;
 
 Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
@@ -75,7 +76,12 @@ if (isset($_POST['users_id'])
         "profiles_id" => $profile];
     $id                   = Dashboard::checkIfPreferenceExists($options);
     $input['profiles_id'] = $profile;
-    if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
+    // Global (profile default) grid: CREATE and the global edit mode, like the other
+    // global edition endpoints (state_save.php, clearGrid.php, editGrid.php).
+    if (
+        Session::haveRight("plugin_mydashboard_config", CREATE)
+        && Preference::checkEditMode(Session::getLoginUserID()) == 2
+    ) {
         if ($id) {
             $input['id']   = $id;
             $input["grid"] = $data;

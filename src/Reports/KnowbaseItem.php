@@ -160,9 +160,12 @@ class KnowbaseItem extends CommonGLPI
                 $date = $row["date_mod"];
             }
             $tab[] = [
-                "<a href=\"" .
-                $CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . $row["id"] . "\">" .
-                \Html::resume_text($row["name"], 80) . "</a>",
+                // The cell is rendered raw: truncate first, then escape the stored name.
+                sprintf(
+                    '<a href="%s">%s</a>',
+                    htmlescape($CFG_GLPI["root_doc"] . "/front/knowbaseitem.form.php?id=" . (int) $row["id"]),
+                    htmlescape(\Html::resume_text($row["name"], 80)),
+                ),
                 \Html::convDateTime($date),
             ];
         }
