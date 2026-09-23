@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 14:36+0000\n"
+"POT-Creation-Date: 2026-09-23 12:13+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -95,8 +95,8 @@ msgstr "チケットの経過時間"
 msgid "Age pyramid"
 msgstr "期間ピラミッド"
 
-#: src/Alert.php:3145 templates/alert_form.html.twig:31
-#: templates/itilalert_item.html.twig:63
+#: src/Alert.php:3145 templates/itilalert_item.html.twig:63
+#: templates/alert_form.html.twig:31
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "警告"
@@ -112,7 +112,7 @@ msgid ""
 "timeout)"
 msgstr "アラートを適切に設定していないか、到達不能（またはタイムアウト）です。"
 
-#: templates/alert_form.html.twig:38 templates/itilalert_item.html.twig:70
+#: templates/itilalert_item.html.twig:70 templates/alert_form.html.twig:38
 msgid "Alert level"
 msgstr "警告レベル"
 
@@ -204,8 +204,8 @@ msgstr "多数のチケットがあると多くの時間を費やします"
 msgid "Cannot create alert without a type"
 msgstr "警告を作成する際は型を指定してください"
 
-#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:112
 #: src/Criterias/Other.php:268 src/Criterias/Other.php:493
+#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:112
 msgid "Category"
 msgstr "カテゴリー"
 
@@ -251,8 +251,8 @@ msgstr "閉じる"
 msgid "Close edit mode"
 msgstr "編集モードを終了"
 
-#: src/Reports/Reports_Line.php:637 src/Reports/Reports_Line.php:1281
 #: src/Reports/Reports_Pie.php:1094 src/Reports/Reports_Pie.php:1097
+#: src/Reports/Reports_Line.php:637 src/Reports/Reports_Line.php:1281
 msgid "Closed tickets"
 msgstr "終了チケット"
 
@@ -301,10 +301,10 @@ msgstr "カスタム ウィジェット"
 msgid "Custom and save profile grid"
 msgstr "プロファイル グリッドのカスタマイズと保存"
 
-#: src/Module.php:66 src/Html.php:57 src/Chart.php:60 src/Datatable.php:58
-#: src/Reports/Change.php:58 src/Reports/ProjectTask.php:57
-#: src/Reports/Planning.php:52 src/Reports/Project.php:53
-#: src/Reports/Problem.php:58 src/Dashboard.php:71 src/Menu.php:1175
+#: src/Menu.php:1175 src/Datatable.php:58 src/Chart.php:60 src/Module.php:66
+#: src/Reports/Problem.php:58 src/Reports/Project.php:53
+#: src/Reports/Planning.php:52 src/Reports/ProjectTask.php:57
+#: src/Reports/Change.php:58 src/Html.php:57 src/Dashboard.php:71
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
@@ -442,8 +442,8 @@ msgstr "編集モード"
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr "ダッシュボードを全画面で表示する権限を有効に"
 
-#: templates/criteria_period_range.html.twig:30
 #: templates/criteria_filter_date.html.twig:36
+#: templates/criteria_period_range.html.twig:30
 msgid "End"
 msgstr ""
 
@@ -483,8 +483,8 @@ msgstr "PDF 出力"
 msgid "Failed to check the sanity of the tables!"
 msgstr "テーブルの整合性チェックで失敗！"
 
-#: templates/configtranslation_list.html.twig:66
 #: templates/configtranslation_form.html.twig:46
+#: templates/configtranslation_list.html.twig:66
 msgid "Field"
 msgstr ""
 
@@ -516,7 +516,7 @@ msgstr "全画面"
 msgid "GLPI Status"
 msgstr "GLPI 状態"
 
-#: src/Dashboard.php:182 src/Menu.php:129
+#: src/Menu.php:129 src/Dashboard.php:182
 msgid "GLPI admin grid"
 msgstr "GLPI 管理グリッド"
 
@@ -638,8 +638,8 @@ msgstr ""
 msgid "Item type"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:65
 #: templates/configtranslation_form.html.twig:32
+#: templates/configtranslation_list.html.twig:65
 msgid "Language"
 msgstr ""
 
@@ -667,7 +667,7 @@ msgstr "折れ線グラフ"
 msgid "Linked reminder"
 msgstr "リンク付通知"
 
-#: templates/alert_form.html.twig:42 templates/itilalert_item.html.twig:74
+#: templates/itilalert_item.html.twig:74 templates/alert_form.html.twig:42
 msgid "Linked with a ticket category"
 msgstr "チケットカテゴリーとのリンク"
 
@@ -696,13 +696,13 @@ msgstr "最小化"
 msgid "Missing table"
 msgstr ""
 
-#: src/Reports/KnowbaseItem.php:172
+#: src/Reports/KnowbaseItem.php:175
 msgid "Modification date"
 msgstr "変更日時"
 
-#: src/Criterias/Month.php:60 src/Criterias/Month.php:77
 #: src/Criterias/Other.php:256 src/Criterias/Other.php:411
-#: src/Criterias/Other.php:433 templates/criteria_period_month.html.twig:29
+#: src/Criterias/Other.php:433 src/Criterias/Month.php:60
+#: src/Criterias/Month.php:77 templates/criteria_period_month.html.twig:29
 #: templates/criteria_other_month.html.twig:33
 msgid "Month"
 msgstr "月"
@@ -711,8 +711,8 @@ msgstr "月"
 msgid "Monthly tickets in progress"
 msgstr "月別対応中チケット数"
 
-#: setup.php:201 src/Preference.php:85 src/Config.php:63 src/Menu.php:114
-#: src/Menu.php:1771 templates/menu_action_toolbar.html.twig:32
+#: setup.php:201 src/Menu.php:114 src/Menu.php:1771 src/Preference.php:85
+#: src/Config.php:63 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "マイ ダッシュボード"
 
@@ -780,7 +780,7 @@ msgstr "警告を設定していません"
 msgid "No column defined"
 msgstr "列の定義がありません"
 
-#: src/Chart.php:186 src/Widget.php:978 src/Menu.php:1343
+#: src/Menu.php:1343 src/Chart.php:186 src/Widget.php:978
 msgid "No data available"
 msgstr "データがありません"
 
@@ -844,7 +844,7 @@ msgstr "ウィジェットが見つかりません。追加してください"
 msgid "Not a valid SQL SELECT query"
 msgstr "有効な SQL SELECT クエリーではありません"
 
-#: src/Chart.php:192 src/Datatable.php:134
+#: src/Datatable.php:134 src/Chart.php:192
 msgid "Not an array"
 msgstr "配列ではない"
 
@@ -852,8 +852,8 @@ msgstr "配列ではない"
 msgid "Not imported mails in collectors"
 msgstr "未インポートのコレクターメール"
 
-#: src/Reports/Reports_Line.php:1282 src/Reports/Reports_Pie.php:1130
-#: src/Reports/Reports_Pie.php:1133
+#: src/Reports/Reports_Pie.php:1130 src/Reports/Reports_Pie.php:1133
+#: src/Reports/Reports_Line.php:1282
 msgid "Not planned"
 msgstr "未計画"
 
@@ -983,14 +983,14 @@ msgstr "技術者が割り当てられていない進行中のチケット"
 msgid "Opened requests without assigned technicians"
 msgstr "技術者が割り当てられていない進行中の要求"
 
-#: src/Reports/Reports_Line.php:636 src/Reports/Reports_Line.php:913
-#: src/Reports/Reports_Line.php:1280 src/Reports/Reports_Bar.php:1850
-#: src/Reports/Reports_Pie.php:1065 src/Reports/Reports_Pie.php:1068
+#: src/Reports/Reports_Bar.php:1850 src/Reports/Reports_Pie.php:1065
+#: src/Reports/Reports_Pie.php:1068 src/Reports/Reports_Line.php:636
+#: src/Reports/Reports_Line.php:913 src/Reports/Reports_Line.php:1280
 msgid "Opened tickets"
 msgstr "未処理チケット"
 
-#: src/Reports/Reports_Line.php:638 src/Reports/Reports_Line.php:915
-#: src/Reports/Reports_Line.php:1283 src/Reports/Reports_Bar.php:125
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:638
+#: src/Reports/Reports_Line.php:915 src/Reports/Reports_Line.php:1283
 msgid "Opened tickets backlog"
 msgstr "未処理チケットのバックログ"
 
@@ -1018,7 +1018,7 @@ msgstr "解決時間遵守率"
 msgid "Percent of use of solution types"
 msgstr "解決型の利用率"
 
-#: src/Criterias/DisplayData.php:86 src/Criterias/FilterDate.php:81
+#: src/Criterias/FilterDate.php:81 src/Criterias/DisplayData.php:86
 msgid "Period"
 msgstr "期間"
 
@@ -1040,7 +1040,7 @@ msgid "Please activate the plugin"
 msgstr "プラグインを有効にしてください"
 
 #: scripts/insert_stock_ticketindicators.php:72
-#: scripts/clean_stock_tickets.php:152 scripts/insert_stock_tickets.php:72
+#: scripts/insert_stock_tickets.php:72 scripts/clean_stock_tickets.php:152
 msgid "Plugin disabled"
 msgstr "プラグインを無効にしました"
 
@@ -1084,7 +1084,7 @@ msgstr "要対応プロジェクトタスク"
 msgid "Projects to be processed"
 msgstr "対応中プロジェクト"
 
-#: templates/alert_form.html.twig:46 templates/itilalert_item.html.twig:78
+#: templates/itilalert_item.html.twig:78 templates/alert_form.html.twig:46
 msgid "Public"
 msgstr ""
 
@@ -1093,7 +1093,7 @@ msgid "Public RSS feed"
 msgid_plural "Public RSS feeds"
 msgstr[0] ""
 
-#: src/Reports/KnowbaseItem.php:170
+#: src/Reports/KnowbaseItem.php:173
 msgid "Publication date"
 msgstr "発行日"
 
@@ -1127,7 +1127,7 @@ msgstr "ウィジェットの再読み込み"
 msgid "Reload"
 msgstr ""
 
-#: templates/preferences.html.twig:39 templates/config_form.html.twig:43
+#: templates/config_form.html.twig:43 templates/preferences.html.twig:39
 msgid "Replace central interface"
 msgstr "センター インターフェースを置き換える"
 
@@ -1264,7 +1264,7 @@ msgstr "在庫ウィジェットの設定"
 msgid "Show %d elements"
 msgstr "%d 件の要素を表示"
 
-#: src/Reports/Ticket.php:1619 src/Widget.php:812 src/Menu.php:1169
+#: src/Menu.php:1169 src/Reports/Ticket.php:1619 src/Widget.php:812
 msgid "Show all"
 msgstr "すべて表示"
 
@@ -1284,8 +1284,8 @@ msgstr "チケットの遅延を解決し考慮する"
 msgid "Solve delay average (hour)"
 msgstr "平均遅延時間 ( 時間 )"
 
-#: templates/criteria_period_range.html.twig:28
 #: templates/criteria_filter_date.html.twig:34
+#: templates/criteria_period_range.html.twig:28
 msgid "Start"
 msgstr ""
 
@@ -1428,12 +1428,12 @@ msgstr "終了チケット"
 msgid "Tickets late"
 msgstr "遅延チケット"
 
+#: src/Reports/Reports_Bar.php:328 src/Reports/Reports_Bar.php:590
+#: src/Reports/Reports_Bar.php:984 src/Reports/Reports_Bar.php:1400
 #: src/Reports/Reports_Line.php:334 src/Reports/Reports_Line.php:1433
 #: src/Reports/Reports_Line.php:1511 src/Reports/Reports_Line.php:1645
 #: src/Reports/Reports_Line.php:1778 src/Reports/Reports_Line.php:1881
 #: src/Reports/Reports_Line.php:2017 src/Reports/Reports_Line.php:2163
-#: src/Reports/Reports_Bar.php:328 src/Reports/Reports_Bar.php:590
-#: src/Reports/Reports_Bar.php:984 src/Reports/Reports_Bar.php:1400
 msgid "Tickets number"
 msgstr "チケット数"
 
@@ -1510,8 +1510,8 @@ msgstr "☆☆☆★"
 msgid "Trimester 4"
 msgstr "☆☆☆☆"
 
-#: templates/stockwidget_form.html.twig:49 templates/alert_form.html.twig:34
-#: templates/itilalert_item.html.twig:66
+#: templates/stockwidget_form.html.twig:49
+#: templates/itilalert_item.html.twig:66 templates/alert_form.html.twig:34
 msgid "Type"
 msgstr ""
 
@@ -1531,8 +1531,8 @@ msgstr "プロファイルグループを利用"
 msgid "User ticket alerts"
 msgstr "ユーザーチケット警告"
 
-#: templates/configtranslation_list.html.twig:67
 #: templates/configtranslation_form.html.twig:55
+#: templates/configtranslation_list.html.twig:67
 msgid "Value"
 msgstr ""
 
@@ -1557,11 +1557,11 @@ msgstr "ウィジェットをダッシュボードに追加しました"
 msgid "Without buy date"
 msgstr "購入日なし"
 
+#: src/Menu.php:944 src/Criterias/FilterDate.php:75
 #: src/Criterias/DisplayData.php:75 src/Criterias/Year.php:73
-#: src/Criterias/Year.php:91 src/Criterias/FilterDate.php:75 src/Menu.php:944
-#: templates/criteria_period_year.html.twig:28
-#: templates/criteria_display_data.html.twig:37
+#: src/Criterias/Year.php:91 templates/criteria_display_data.html.twig:37
 #: templates/criteria_filter_date.html.twig:41
+#: templates/criteria_period_year.html.twig:28
 msgid "Year"
 msgstr "年"
 
@@ -1605,8 +1605,8 @@ msgstr "通知"
 msgid "warning"
 msgstr "警告"
 
-#: src/Criterias/DisplayData.php:152 src/Criterias/FilterDate.php:97
-#: src/Criterias/Other.php:431
+#: src/Criterias/Other.php:431 src/Criterias/FilterDate.php:97
+#: src/Criterias/DisplayData.php:152
 msgid "year"
 msgstr "年"
 
