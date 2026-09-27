@@ -32,13 +32,17 @@
         </tr>
         <tr class="tab_bg_1">
             <td class="center">
-                <button type="submit" class="submit btn btn-primary" id="{{ create_button.id }}">
+                <button type="button" class="submit btn btn-primary" data-md-create-alert
+                        data-url="{{ create_button.url }}"
+                        data-itemtype="{{ create_button.itemtype }}"
+                        data-items-id="{{ create_button.items_id }}"
+                        data-confirm="{{ __('Create a new alert', 'mydashboard') }}">
                     {{- __('Create a new alert', 'mydashboard') -}}
                 </button>
             </td>
         </tr>
     </table>
-    {{ create_button.script_html|raw }}
+    <script type="module" src="{{ create_button.script_url }}"></script>
 {% endif %}
 
 {% if reminder is not null %}
@@ -48,6 +52,7 @@
         </tr>
         <tr class="tab_bg_2">
             <td>{{ __('Name') }}</td>
+            {# Reminder::getLink() escapes the name #}
             <td>{{ reminder.link_html|raw }}</td>
         </tr>
         <tr class="tab_bg_2">
@@ -57,5 +62,6 @@
         </tr>
     </table>
 
+    {# rendered by alert_form.html.twig (auto-escaped, no raw fragment) #}
     {{ alert_form_html|raw }}
 {% endif %}

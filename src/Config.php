@@ -408,16 +408,31 @@ class Config extends CommonDBTM
     }
 
     /**
-     * Returns the translation of the field
+     * Returns the translation of the field, HTML-escaped
      *
-     * @param type  $item
-     * @param type  $field
+     * @param Config $item
+     * @param string $field
      *
-     * @return type
-     * @global type $DB
-     *
+     * @return string
      */
     public static function displayField($item, $field)
+    {
+        // These configuration titles are rendered as raw HTML by every caller
+        // (including the alert banner shown to anonymous users on the login page).
+        // GLPI 11 stores the values raw, so escape them here at the single point of
+        // use to close a stored-XSS path without touching each display site.
+        return htmlspecialchars(self::getTranslatedField($item, $field), ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
+     * Unescaped counterpart of displayField(), for Twig templates that escape on output.
+     *
+     * @param Config $item
+     * @param string $field
+     *
+     * @return string
+     */
+    public static function getTranslatedField($item, $field): string
     {
         global $DB;
 
@@ -431,16 +446,10 @@ class Config extends CommonDBTM
                 'language' => $_SESSION['glpilanguage'],
             ]]);
 
-        // These configuration titles are rendered as raw HTML by every caller
-        // (including the alert banner shown to anonymous users on the login page).
-        // GLPI 11 stores the values raw, so escape them here at the single point of
-        // use to close a stored-XSS path without touching each display site.
-        if (count($iterator)) {
-            foreach ($iterator as $data) {
-                return htmlspecialchars($data['value'], ENT_QUOTES, 'UTF-8');
-            }
+        foreach ($iterator as $data) {
+            return (string) $data['value'];
         }
-        return htmlspecialchars($item->fields[$field] ?? '', ENT_QUOTES, 'UTF-8');
+        return (string) ($item->fields[$field] ?? '');
     }
 
     /**

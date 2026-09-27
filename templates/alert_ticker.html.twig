@@ -31,11 +31,13 @@
     <ul id="{{ prefix }}">
         {% if items|length %}
             {% for item in items %}
-                {# name_html carries the already-escaped label, plus an icon for alerts #}
-                <li style="{{ item.style }}" data-{{ data_attr }}="{{ item.id }}">{{ item.name_html|raw }}</li>
+                <li style="{{ item.style }}" data-{{ data_attr }}="{{ item.id }}">
+                    {%- if item.icon_class is defined %}<i class="{{ item.icon_class }}"></i>{% endif -%}
+                    {{ item.name }}
+                </li>
             {% endfor %}
         {% else %}
-            <li>{{ empty_title_html|raw }}</li>
+            <li>{{ empty_title }}</li>
         {% endif %}
     </ul>
 
@@ -50,8 +52,10 @@
             <div class="col">
                 <div class="infos-text">
                     {%- if items|length -%}
+                        {% if first_color %}<span style="color:{{ first_color }}">{% endif %}
                         {# already sanitized with RichText::getSafeHtml() #}
                         {{ first_description|raw }}
+                        {% if first_color %}</span>{% endif %}
                     {%- else -%}
                         {{ empty_label }}
                     {%- endif -%}

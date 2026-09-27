@@ -25,8 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
-{# prelude_html carries the DataTables initialisation emitted before the frame #}
-{{ prelude_html|raw }}
+{% macro fragment(item) %}
+    {#- raw: html fragments went through RichText::getSafeHtml() in Widget::getDisplayFragment() -#}
+    {%- if item.html %}{{ item.value|raw }}{% else %}{{ item.value }}{% endif -%}
+{% endmacro %}
 
 <div id="{{ widget_id }}">
     <div class="bt-row">
@@ -34,8 +36,8 @@
             {% if show_title %}
                 <div class="display-4" style="margin: 15px;">
                     <h4>
-                        {# title and tooltip are built by the widget itself #}
-                        {{ title_html|raw }}
+                        {{ _self.fragment(title) }}
+                        {#- raw: Html::showToolTip() of the core, the comment is escaped by the core -#}
                         {%- if tooltip_html %}&nbsp;{{ tooltip_html|raw }}{% endif -%}
                     </h4>
                 </div>
@@ -43,32 +45,33 @@
             {% endif %}
 
             <div id="display-sc">
+                {# raw: Helper::getGraphHeader(), rendered by graph_header.html.twig (lot 5) #}
                 {{ header_html|raw }}
 
                 {% if table is not null %}
-                    <table id="{{ table.id }}" class="display tab_cadre" cellspacing="0" width="100%">
+                    <table id="{{ table.id }}" class="display tab_cadre" cellspacing="0" width="100%"
+                           data-md-datatable="{{ table.config|json_encode }}">
                         <thead>
                             <tr>
-                                {% for column in table.columns %}<th>{{ column|raw }}</th>{% endfor %}
+                                {% for column in table.columns %}<th>{{ _self.fragment(column) }}</th>{% endfor %}
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                {% for column in table.columns %}<th>{{ column|raw }}</th>{% endfor %}
+                                {% for column in table.columns %}<th>{{ _self.fragment(column) }}</th>{% endfor %}
                             </tr>
                         </tfoot>
                         <tbody>
                             {% for row in table.rows %}
                                 <tr>
-                                    {# cells already run through RichText::getSafeHtml() when
-                                       they carry markup #}
-                                    {% for cell in row %}<td>{{ cell|raw }}</td>{% endfor %}
+                                    {% for cell in row %}<td>{{ _self.fragment(cell) }}</td>{% endfor %}
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    {{ table.content_html|raw }}
-                {% elseif html_content is not empty %}
+                {% endif %}
+                {% if html_content is not empty %}
+                    {# raw: free content of the widget, reduced widget by widget in lots 2 to 5 #}
                     {{ html_content|raw }}
                 {% endif %}
             </div>
@@ -76,5 +79,8 @@
     </div>
 </div>
 
+{# raw: Html::scriptBlock() of the widget scripts, replaced by modules in lot 5 #}
 {{ scripts_html|raw }}
-{{ debug_html|raw }}
+{% if load_time is not null %}
+    <div>{{ 'Load widget %s : %s'|format(widget_id, load_time) }}</div>
+{% endif %}

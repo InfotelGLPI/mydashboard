@@ -25,35 +25,41 @@
  # --------------------------------------------------------------------------
  #}
 
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
 <form action="{{ form_action }}" method="post">
-    <table class="tab_cadre_fixe">
-        <tr>
-            <th colspan="2">{{ _n('Alert', 'Alerts', 2, 'mydashboard') }}</th>
-        </tr>
-        <tr class="tab_bg_2">
-            <td>{{ __('Type') }}</td>
-            <td>{{ type_html|raw }}</td>
-        </tr>
-        <tr class="tab_bg_2">
-            <td>{{ __('Alert level', 'mydashboard') }}</td>
-            <td>{{ impact_html|raw }}</td>
-        </tr>
-        <tr class="tab_bg_2">
-            <td>{{ __('Linked with a ticket category', 'mydashboard') }}</td>
-            <td>{{ category_html|raw }}</td>
-        </tr>
-        <tr class="tab_bg_2">
-            <td>{{ __('Public') }}</td>
-            <td>{{ public_html|raw }}</td>
-        </tr>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">{{ _n('Alert', 'Alerts', 2, 'mydashboard') }}</h3>
+        </div>
+        <div class="card-body row">
+            {{ fields.dropdownArrayField('type', type, types, __('Type')) }}
+            {{ fields.dropdownArrayField('impact', impact, impacts, __('Alert level', 'mydashboard')) }}
+            {{ fields.dropdownField(
+                'ITILCategory',
+                'itilcategories_id',
+                itilcategories_id,
+                __('Linked with a ticket category', 'mydashboard'),
+                category_options
+            ) }}
+            {{ fields.dropdownYesNo('is_public', is_public, __('Public')) }}
+        </div>
         {% if can_edit %}
-            <tr class="tab_bg_1 center">
-                <td colspan="2">
-                    {{ submit_html|raw }}
-                    {{ hidden_html|raw }}
-                </td>
-            </tr>
+            <div class="card-footer text-center">
+                <button type="submit" name="update" value="1" class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i>
+                    <span>{{ _x('button', 'Save') }}</span>
+                </button>
+                {% if can_delete %}
+                    <button type="submit" name="delete" value="1" class="btn btn-outline-danger">
+                        <i class="ti ti-trash"></i>
+                        <span>{{ _x('button', 'Delete permanently') }}</span>
+                    </button>
+                {% endif %}
+            </div>
         {% endif %}
-    </table>
-    {# closes the <form> above and carries the CSRF token #}
-    {{ close_form_html|raw }}
+    </div>
+    {{ fields.hiddenField('id', id) }}
+    {{ fields.hiddenField('reminders_id', reminders_id) }}
+    {{ fields.hiddenField('_glpi_csrf_token', csrf_token()) }}
+</form>

@@ -741,163 +741,6 @@ class Widget extends CommonDBTM
                     //               $json  = Helper::safeJson($json);
                     $datas = json_decode($jsondata, true);
 
-                    if ($type == "table") {
-                        $opt = $widget->getOptions();
-
-                        //                        $order = json_encode([[0, 'asc']]);
-
-                        $order = json_encode([]);
-                        if (isset($opt['bSort'])) {
-                            $order = json_encode([$opt['bSort']]);
-                        }
-                        $defs = json_encode([]);
-                        if (isset($opt['bDef'])) {
-                            $defs = json_encode($opt['bDef']);
-                        }
-
-                        $dateformat = "D";
-                        $mask       = 'MM-DD-YYYY';
-                        if (isset($opt['bDate'])) {
-                            $dateformat = $opt['bDate'][0];
-                        }
-
-                        if ($dateformat == "DHS") {
-                            if (!isset($_SESSION["glpidate_format"])) {
-                                $_SESSION["glpidate_format"] = 0;
-                            }
-                            $format = $_SESSION["glpidate_format"];
-                            switch ($format) {
-                                case 1: // DD-MM-YYYY
-                                    $mask = 'DD-MM-YYYY HH:mm:SS';
-                                    break;
-                                case 2: // MM-DD-YYYY
-                                    $mask = 'MM-DD-YYYY HH:mm:SS';
-                                    break;
-                            }
-                        } elseif ($dateformat == "DH") {
-                            if (!isset($_SESSION["glpidate_format"])) {
-                                $_SESSION["glpidate_format"] = 0;
-                            }
-                            $format = $_SESSION["glpidate_format"];
-                            switch ($format) {
-                                case 1: // DD-MM-YYYY
-                                    $mask = 'DD-MM-YYYY HH:mm';
-                                    break;
-                                case 2: // MM-DD-YYYY
-                                    $mask = 'MM-DD-YYYY HH:mm';
-                                    break;
-                            }
-                        } elseif ($dateformat == "D") {
-                            if (!isset($_SESSION["glpidate_format"])) {
-                                $_SESSION["glpidate_format"] = 0;
-                            }
-                            $format = $_SESSION["glpidate_format"];
-                            switch ($format) {
-                                case 1: // DD-MM-YYYY
-                                    $mask = 'DD-MM-YYYY';
-                                    break;
-                                case 2: // MM-DD-YYYY
-                                    $mask = 'MM-DD-YYYY';
-                                    break;
-                            }
-                        }
-                        $rand      = mt_rand();
-                        $languages = json_encode($menu->getJsLanguages("datatables"));
-                        //                  $display_count_on_home = intval($_SESSION['glpidisplay_count_on_home']);
-
-                        $lengthMenulangs = [__('5 rows', 'mydashboard'),
-                            __('10 rows', 'mydashboard'),
-                            __('25 rows', 'mydashboard'),
-                            __('50 rows', 'mydashboard'),
-                            __('Show all', 'mydashboard'),
-                        ];
-                        $lengthMenulangs = json_encode($lengthMenulangs);
-                        $root_doc        = PLUGIN_MYDASHBOARD_WEBDIR;
-
-                        $widgetdisplay   = "<script type='text/javascript'>
-               //         setTimeout(function () {
-//                           $.fn.dataTable.moment('$mask');
-                           $('#$widgetindex$rand').dataTable(
-                               {
-                                stateSave: true,
-                                'stateSaveParams': function (settings, data) {
-                                  data.gsId = '$widgetindex';
-                                  if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
-                                   data.profiles_id = document.getElementsByName('profiles_id')[0].value;
-                                 }
-                                },
-                                'stateSaveCallback': function (settings, data) {
-                                    // Send an Ajax request to the server with the state object
-
-                                    $.ajax({
-                                       'url': '$root_doc/ajax/state_save.php',
-                                       'data': data,
-                                       'dataType': 'json',
-                                       'type': 'POST',
-                                       'success': function(response) {},
-                                       'error': function(response) {}
-                                    });
-                               },
-                               'stateLoadCallback': function (settings, callback) {
-                                 profiles_id='';
-                                 if (typeof document.getElementsByName('profiles_id')[0] !== 'undefined') {
-                                   profiles_id = document.getElementsByName('profiles_id')[0].value;
-                                 }
-                                $.ajax({
-                                    url: '$root_doc/ajax/state_load.php?gsId={$widgetindex}&profiles_id='+profiles_id,
-                                    dataType: 'json',
-                                    success: function (json) {
-                                      // state_load.php returns null when no grid state has been
-                                      // saved yet (fresh widget/profile); guard before touching it.
-                                      if (json === null) {
-                                        callback(null);
-                                        return;
-                                      }
-                                      //JSON parse the saved filter and set the time equal to now.
-                                      json.time = +new Date();
-                                      callback(json);
-                                    },
-                                    error: function () {
-                                        callback(null);
-                                    }
-                                })
-                               },
-                               'order': $order,
-                               'colReorder': true,
-                               'columnDefs' :$defs,
-                               rowReorder: {
-                                 selector: 'td:nth-child(2)'
-                               },
-                               responsive: true,
-                              'language': $languages,
-                              dom: 'Bfrtip',
-                              select: true,
-                              lengthMenu: [
-                                   [ 5, 10, 25, 50, -1 ],
-                                   $lengthMenulangs
-                               ],
-                              buttons: [
-                                 'colvis',
-                                 'pageLength',
-                                 {
-                                  extend: 'collection',
-                                  text: 'Export',
-                                  buttons: [
-                                      'copy',
-                                      'excel',
-                                      'csv',
-                                      'pdf',
-                                      'print',
-                                  ]
-                              }
-                          ]
-                       }
-                       );
-
-                       </script>";
-                    } else {
-                        $widgetdisplay = "";
-                    }
                     $tooltip_html = '';
                     if ($widget->getTitleVisibility() && $comment != "") {
                         $tooltip_html = \Html::showToolTip($comment, [
@@ -905,18 +748,6 @@ class Widget extends CommonDBTM
                             'display' => false,
                         ]);
                     }
-
-                    // Any markup-bearing header or cell goes through the sanitizer the plugin
-                    // already uses for custom content: it preserves safe formatting
-                    // (class/style/links) while stripping <script> and event handlers, closing
-                    // the stored-XSS path opened by raw values such as a ticket title.
-                    // Plain values are emitted untouched to avoid <p> wrapping.
-                    $sanitize = static function ($value) {
-                        $value = (string) $value;
-                        return str_contains($value, '<')
-                            ? RichText::getSafeHtml($value)
-                            : $value;
-                    };
 
                     $table = null;
                     $html_content = '';
@@ -929,24 +760,25 @@ class Widget extends CommonDBTM
 
                         $columns = [];
                         foreach ($datas['aoColumns'] as $th) {
-                            $columns[] = $sanitize($th['sTitle']);
+                            $columns[] = self::getDisplayFragment($th['sTitle']);
                         }
 
                         $rows = [];
                         foreach ($data as $v) {
                             $row = [];
                             for ($i = 0; $i < $nb; $i++) {
-                                $row[] = $sanitize($v[$i]);
+                                $row[] = self::getDisplayFragment($v[$i]);
                             }
                             $rows[] = $row;
                         }
 
                         $table = [
-                            'id' => $widgetindex . $rand,
+                            'id' => $widgetindex . mt_rand(),
                             'columns' => $columns,
                             'rows' => $rows,
-                            'content_html' => $widget->getWidgetHtmlContent(),
+                            'config' => self::getDatatableConfig($widget, $widgetindex, $menu),
                         ];
+                        $html_content = $widget->getWidgetHtmlContent();
                     } elseif ($type == "html") {
                         $html_content = $datas;
                     }
@@ -956,23 +788,22 @@ class Widget extends CommonDBTM
                         $scripts_html .= \Html::scriptBlock($script);
                     }
 
-                    $debug_html = '';
+                    $load_time = null;
                     if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-                        $debug_html = "Load widget " . $widgetindex . " : " . $loadwidget . "<br>";
+                        $load_time = $loadwidget;
                     }
 
                     return TemplateRenderer::getInstance()->render('@mydashboard/widget_frame.html.twig', [
-                        'prelude_html' => $widgetdisplay,
                         'widget_id' => $widgetindex,
                         'feature_class' => $class,
                         'show_title' => $widget->getTitleVisibility(),
-                        'title_html' => $title,
+                        'title' => self::getDisplayFragment($title),
                         'tooltip_html' => $tooltip_html,
                         'header_html' => $widget->getWidgetHeader(),
                         'table' => $table,
                         'html_content' => $html_content,
                         'scripts_html' => $scripts_html,
-                        'debug_html' => $debug_html,
+                        'load_time' => $load_time,
                     ]);
                 } else {
                     $widgetdisplay = $widgetindex . " : " . __('No data available', 'mydashboard');
@@ -980,6 +811,60 @@ class Widget extends CommonDBTM
                 }
             }
         }
+    }
+
+    /**
+     * Type a title or a table cell for widget_frame.html.twig.
+     *
+     * Plain values are handed over as text and escaped by Twig. Values carrying markup
+     * (report links, status badges) are sanitized: formatting and links are kept,
+     * scripts and event handlers are stripped. The template only prints the sanitized
+     * branch raw, so a value can no longer reach the page unescaped by mistake.
+     *
+     * @param mixed $value
+     *
+     * @return array{html: bool, value: string}
+     */
+    private static function getDisplayFragment($value): array
+    {
+        $value = (string) $value;
+        if (str_contains($value, '<')) {
+            return ['html' => true, 'value' => RichText::getSafeHtml($value)];
+        }
+        // Several producers pre-escape their text (Config::displayField(), custom widget
+        // names), decode it once so Twig does not escape it a second time.
+        return ['html' => false, 'value' => html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8')];
+    }
+
+    /**
+     * DataTables configuration of a table widget, read by public/scripts/widget-datatable.js.
+     *
+     * @param Module $widget
+     * @param string $widgetindex
+     * @param Menu   $menu
+     *
+     * @return array
+     */
+    private static function getDatatableConfig($widget, $widgetindex, Menu $menu): array
+    {
+        $opt = $widget->getOptions();
+
+        return [
+            'gsId' => $widgetindex,
+            'saveUrl' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/state_save.php',
+            'loadUrl' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/state_load.php',
+            'order' => isset($opt['bSort']) ? [$opt['bSort']] : [],
+            'columnDefs' => $opt['bDef'] ?? [],
+            'language' => $menu->getJsLanguages('datatables'),
+            'lengthMenuLabels' => [
+                __('5 rows', 'mydashboard'),
+                __('10 rows', 'mydashboard'),
+                __('25 rows', 'mydashboard'),
+                __('50 rows', 'mydashboard'),
+                __('Show all', 'mydashboard'),
+            ],
+            'exportLabel' => __('Export'),
+        ];
     }
 
     /**

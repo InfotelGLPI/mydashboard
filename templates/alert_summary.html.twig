@@ -1,0 +1,67 @@
+{#
+ # -------------------------------------------------------------------------
+ # mydashboard plugin for GLPI
+ # Copyright (C) 2016-2026 by the mydashboard Development Team.
+ #
+ # https://github.com/InfotelGLPI/mydashboard
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of mydashboard.
+ #
+ # mydashboard is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # mydashboard is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mydashboard. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Weather block of the network alerts, also rendered on the login page for anonymous
+   visitors (DISPLAY_LOGIN hook): every value is escaped here. #}
+{% if css_url %}
+    <link rel="stylesheet" type="text/css" href="{{ css_url }}" media="all">
+{% endif %}
+
+{% if weather is not null %}
+    <div class="card-header mb-4">
+        <h2 class="mx-auto">{{ weather.title }}</h2>
+    </div>
+    <div class="mb-3">
+        <i style="color:{{ weather.color }}" class="fas {{ weather.icon_class }} fa-alert-4"></i>
+    </div>
+    <div class="mb-4 weather_msg">
+        {% for item in weather.items %}
+            <div>
+                <span style="background-color : {{ item.color }}" class="alert_impact"></span>
+                <span style="color : {{ item.color }}">
+                    {%- if item.url is not null -%}
+                        <a href="{{ item.url }}">{{ item.name }}</a>
+                    {%- else -%}
+                        {{ item.name }}
+                    {%- endif -%}
+                </span>
+            </div>
+        {% else %}
+            <div class="center">
+                <br><br>
+                <h3><span class="alert-color">{{ __('No problem detected', 'mydashboard') }}</span></h3>
+            </div>
+        {% endfor %}
+        <br>
+    </div>
+{% endif %}
+
+{% if show_maintenance %}
+    <div class="red bt-col-xs-11 alert-title-div red ">
+        {{ __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard') }}
+    </div>
+{% endif %}

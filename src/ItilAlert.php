@@ -30,13 +30,10 @@
 namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
-use CommonITILObject;
 use DBConnection;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Alert;
-use ITILCategory;
 use Migration;
 use Reminder;
 use Session;
@@ -66,30 +63,18 @@ class ItilAlert extends CommonDBTM
 
         $create_button = null;
         if ($reminders_id == 0) {
-            $button_id = 'mydashboard_create_alert_' . mt_rand();
-            // The handler is bound by id rather than through an inline onclick, so the
-            // itemtype and the confirmation label never reach an HTML attribute.
+            // Handled by public/scripts/alert-item.js from the data-* attributes.
             $create_button = [
-                'id' => $button_id,
                 'menu_name' => Menu::getTypeName(2),
-                'script_html' => \Html::scriptBlock(
-                    '$(function () {'
-                    . '$("#' . $button_id . '").on("click", function () {'
-                    . 'if (!confirm(' . json_encode(__('Create a new alert', 'mydashboard')) . ')) { return; }'
-                    . '$.ajax({'
-                    . 'url: ' . json_encode(PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php') . ','
-                    . 'type: "POST",'
-                    . 'data: { itemtype: ' . json_encode($itemtype) . ', items_id: ' . (int) $items_id . ' },'
-                    . 'success: function () { window.location.reload(); }'
-                    . '});'
-                    . '});'
-                    . '});',
-                ),
+                'url' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php',
+                'itemtype' => $itemtype,
+                'items_id' => (int) $items_id,
+                'script_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/scripts/alert-item.js',
             ];
         }
 
         $reminder_data = null;
-        $alert_data = null;
+        $alert_form_html = '';
         if ($reminders_id > 0) {
             $reminder->getFromDB($reminders_id);
             $reminder_data = [
@@ -103,68 +88,18 @@ class ItilAlert extends CommonDBTM
 
             $alert = new Alert();
             $alert->getFromDBByCrit(['reminders_id' => $reminders_id]);
-
-            if (isset($alert->fields['id'])) {
-                $id                = $alert->fields['id'];
-                $impact            = $alert->fields['impact'];
-                $itilcategories_id = $alert->fields['itilcategories_id'];
-                $type              = $alert->fields['type'];
-                $is_public         = $alert->fields['is_public'];
-            } else {
-                $id                = -1;
-                $type              = 0;
-                $impact            = 0;
-                $itilcategories_id = 0;
-                $is_public         = 0;
-            }
-
-            $types = [
-                0 => _n('Network alert', 'Network alerts', 1, 'mydashboard'),
-                1 => _n('Scheduled maintenance', 'Scheduled maintenances', 1, 'mydashboard'),
-                2 => _n('Information', 'Informations', 1, 'mydashboard'),
-            ];
-
-            $impacts = [0 => __("No impact", "mydashboard")];
-            for ($i = 1; $i <= 5; $i++) {
-                $impacts[$i] = CommonITILObject::getImpactName($i);
-            }
-
-            $can_edit = Session::haveRight("reminder_public", UPDATE);
-            $alert_data = [
-                'form_action' => $alert->getFormURL(),
-                'type_html' => Dropdown::showFromArray('type', $types, ['value' => $type,
-                    'display' => false,
-                ]),
-                'impact_html' => Dropdown::showFromArray('impact', $impacts, ['value' => $impact,
-                    'display' => false,
-                ]),
-                'category_html' => ITILCategory::dropdown([
-                    'name' => 'itilcategories_id',
-                    'value' => $itilcategories_id,
-                    'entity' => $_SESSION['glpiactiveentities'],
-                    'display' => false,
-                ]),
-                'public_html' => Dropdown::showYesNo('is_public', $is_public, -1, ['display' => false]),
-                'can_edit' => $can_edit,
-                'hidden_html' => \Html::hidden("id", ['value' => $id])
-                    . \Html::hidden("reminders_id", ['value' => $reminders_id]),
-                'submit_html' => \Html::submit(
-                    $id > 0 ? _sx('button', 'Update') : _sx('button', 'Add'),
-                    ['name' => 'update', 'class' => 'btn btn-primary'],
-                ),
-                'delete_html' => $id > 0
-                    ? \Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete',
-                        'class' => 'btn btn-primary',
-                    ])
-                    : '',
-                'close_form_html' => \Html::closeForm(false),
-            ];
+            $alert_form_html = $alert->getAlertFormHtml(
+                $reminders_id,
+                _n('Network alert', 'Network alerts', 1, 'mydashboard'),
+                [],
+                true,
+            );
         }
 
-        echo TemplateRenderer::getInstance()->render('@mydashboard/itilalert_item.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/alert_item.html.twig', [
             'create_button' => $create_button,
             'reminder' => $reminder_data,
-            'alert' => $alert_data,
+            'alert_form_html' => $alert_form_html,
         ]);
 
         if ($reminders_id > 0) {

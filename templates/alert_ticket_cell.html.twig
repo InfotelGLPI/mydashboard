@@ -25,17 +25,23 @@
  # --------------------------------------------------------------------------
  #}
 
-{# header_html is built by Helper::getGraphHeader() #}
-{{ header_html|raw }}
-
-<div id="indicators" class="tickets-ind" style="text-align: center;">
-    {% for cell in cells %}
-        <div class="{{ cell.class }}">
-            <a target="_blank" style="{{ cell.link.style }}" title="{{ cell.link.title }}" href="{{ cell.link.url }}">
-                <span class="ind-link">{{ cell.link.count }}</span>
-            </a>
-            <br><br>
-            {{ cell.label }}
-        </div>
+{# Cells of the "tickets updated by requesters" Datatable (Alert widget 7). The Datatable
+   API takes one HTML string per cell, so each cell is rendered on its own through this
+   template, by kind; every value is escaped here. #}
+{% if kind == 'ticket_name' %}
+    <div class="center" style="background-color:{{ bgcolor }}; padding: 10px;">
+        <a style="{{ text_color }}" href="{{ url }}" target="_blank">{{ __('%1$s: %2$s')|format(__('ID'), id) }}</a>
+    </div>
+{% elseif kind == 'ticket_id' %}
+    <a href="{{ url }}" target="_blank">{{ id }}</a>
+{% elseif kind == 'names' %}
+    {% for name in names %}
+        {{ name }}{% if not loop.last %}<br>{% endif %}
     {% endfor %}
-</div>
+{% elseif kind == 'priority' %}
+    <div class="center" style="background-color:{{ bgcolor }}; padding: 10px;{{ text_color }}">
+        <span class="b">{{ priority }} - {{ priority_name }}</span>
+    </div>
+{% elseif kind == 'category' %}
+    <span class="b">{{ category }}</span>
+{% endif %}

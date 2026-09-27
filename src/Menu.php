@@ -1211,6 +1211,7 @@ class Menu extends CommonGLPI
 
         echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");
         echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.js");
+        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/widget-datatable.js", ['type' => 'module']);
 
         // Chart engine of the core rather than a copy of our own. The scripts of a plugin
         // are emitted after those of the core in page_footer.html.twig, so a second bundle

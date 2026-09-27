@@ -608,20 +608,11 @@ class Alert extends CommonDBTM
                         $ticket->getFromDB($data['tickets_id']);
 
                         $users_requesters = [];
-                        $userdata = '';
-                        if ($ticket->countUsers(CommonITILActor::REQUESTER)) {
-                            foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
-                                $k = $u['users_id'];
-                                $users_requesters[$u['users_id']] = $u['users_id'];
-
-                                if ($k) {
-                                    // HTML rendered Datatable cell, free text of the account.
-                                    $userdata .= htmlspecialchars((string) getUserName($k), ENT_QUOTES, 'UTF-8');
-                                }
-
-                                if ($ticket->countUsers(CommonITILActor::REQUESTER) > 1) {
-                                    $userdata .= "<br>";
-                                }
+                        $requester_names = [];
+                        foreach ($ticket->getUsers(CommonITILActor::REQUESTER) as $u) {
+                            $users_requesters[$u['users_id']] = $u['users_id'];
+                            if ($u['users_id']) {
+                                $requester_names[] = (string) getUserName($u['users_id']);
                             }
                         }
                         if (in_array($ticket->fields['users_id_lastupdater'], $users_requesters)) {
@@ -646,52 +637,37 @@ class Alert extends CommonDBTM
                                 if ($bgcolor == '#000000') {
                                     $textColor = "color:white!important;";
                                 }
-                                $name_ticket = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>";
-                                $name_ticket .= "<a style='$textColor' href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
-                                $name_ticket .= sprintf(__('%1$s: %2$s'), __('ID'), $data['tickets_id']);
-                                $name_ticket .= "</a>";
-                                $name_ticket .= "</div>";
+                                $ticket_url = $link_ticket . "?id=" . (int) $data['tickets_id'];
 
-                                $datas[$i]["tickets_id"] = $name_ticket;
+                                $datas[$i]["tickets_id"] = self::getTicketCellHtml('ticket_name', [
+                                    'bgcolor' => $bgcolor,
+                                    'text_color' => $textColor,
+                                    'url' => $ticket_url,
+                                    'id' => $data['tickets_id'],
+                                ]);
 
-                                $datas[$i]["users_id"] = $userdata;
+                                $datas[$i]["users_id"] = self::getTicketCellHtml('names', [
+                                    'names' => $requester_names,
+                                ]);
 
                                 $datas[$i]["status"] = \Ticket::getStatus($data['status']);
 
                                 $datas[$i]["date_mod"] = \Html::convDateTime($data['date_mod']);
 
-                                $techdata = '';
-                                if ($ticket->countUsers(CommonITILActor::ASSIGN)) {
-                                    foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
-                                        $k = $u['users_id'];
-                                        if ($k) {
-                                            $techdata .= htmlspecialchars((string) getUserName($k), ENT_QUOTES, 'UTF-8');
-                                        }
-
-                                        if ($ticket->countUsers(CommonITILActor::ASSIGN) > 1) {
-                                            $techdata .= "<br>";
-                                        }
-                                    }
-                                    $techdata .= "<br>";
-                                }
-
-                                if ($ticket->countGroups(CommonITILActor::ASSIGN)) {
-                                    foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
-                                        $k = $u['groups_id'];
-                                        if ($k) {
-                                            $techdata .= htmlspecialchars(
-                                                (string) Dropdown::getDropdownName("glpi_groups", $k),
-                                                ENT_QUOTES,
-                                                'UTF-8',
-                                            );
-                                        }
-
-                                        if ($ticket->countGroups(CommonITILActor::ASSIGN) > 1) {
-                                            $techdata .= "<br>";
-                                        }
+                                $assigned_names = [];
+                                foreach ($ticket->getUsers(CommonITILActor::ASSIGN) as $u) {
+                                    if ($u['users_id']) {
+                                        $assigned_names[] = (string) getUserName($u['users_id']);
                                     }
                                 }
-                                $datas[$i]["techs_id"] = $techdata;
+                                foreach ($ticket->getGroups(CommonITILActor::ASSIGN) as $u) {
+                                    if ($u['groups_id']) {
+                                        $assigned_names[] = (string) Dropdown::getDropdownName("glpi_groups", $u['groups_id']);
+                                    }
+                                }
+                                $datas[$i]["techs_id"] = self::getTicketCellHtml('names', [
+                                    'names' => $assigned_names,
+                                ]);
 
                                 $action = "";
 
@@ -709,18 +685,17 @@ class Alert extends CommonDBTM
                                 $datas[$i]["action"] = $action;
 
 
-                                $ticketId = "<a href='" . $link_ticket . "?id=" . $data['tickets_id'] . "' target='_blank'>";
-                                $ticketId .= $data['tickets_id'];
-                                $ticketId .= "</a>";
-                                $datas[$i]["id"] = $ticketId;
+                                $datas[$i]["id"] = self::getTicketCellHtml('ticket_id', [
+                                    'url' => $ticket_url,
+                                    'id' => $data['tickets_id'],
+                                ]);
 
-                                // Priorities
-                                $priority = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>";
-                                $priority .= "<span class='b'>" . $ticket->fields["priority"] . " - " . \Ticket::getPriorityName(
-                                    $ticket->fields["priority"],
-                                ) . "</span>";
-                                $priority .= "</div>";
-                                $datas[$i]["priority"] = $priority;
+                                $datas[$i]["priority"] = self::getTicketCellHtml('priority', [
+                                    'bgcolor' => $bgcolor,
+                                    'text_color' => $textColor,
+                                    'priority' => $ticket->fields["priority"],
+                                    'priority_name' => \Ticket::getPriorityName($ticket->fields["priority"]),
+                                ]);
 
                                 // Categories
                                 $config = new Config();
@@ -742,15 +717,13 @@ class Alert extends CommonDBTM
                                     } else {
                                         $pos = strlen($haystack);
                                     }
-                                    // HTML rendered Datatable cell: the completename of a
-                                    // category is free text, and GLPI 10+ stores it unescaped.
-                                    $datas[$i]["category"] = "<span class='b'>" . htmlescape(substr(
-                                        $haystack,
-                                        0,
-                                        $pos,
-                                    )) . "</span>";
+                                    // The completename of a category is free text, stored
+                                    // unescaped: the cell template escapes it.
+                                    $datas[$i]["category"] = self::getTicketCellHtml('category', [
+                                        'category' => substr($haystack, 0, $pos),
+                                    ]);
                                 } else {
-                                    $datas[$i]["category"] = "<span></span>";
+                                    $datas[$i]["category"] = "";
                                 }
 
 
@@ -2310,34 +2283,37 @@ class Alert extends CommonDBTM
     }
 
     /**
-     * @param bool $public
-     *
-     * @return string
-     */
-    public static function getMaintenanceMessage($public = false)
-    {
-        if (self::countForAlerts($public, 1) > 0) {
-            echo "<div class='red'>";
-            echo __('There is at least on planned scheduled maintenance. Please log on to see more', 'mydashboard');
-            echo "</div>";
-        }
-    }
-
-    /**
-     * @return string
-     */
-    /**
      * Render the news-ticker shared by the alert, maintenance and information widgets.
      *
      * @param string $prefix            id prefix of the ticker (nt_alert, nt_maint, nt_info)
      * @param string $data_attr         suffix of the per-item data attribute
-     * @param array  $items             [['id' => int, 'style' => string, 'name_html' => string]]
+     * @param array  $items             [['id' => int, 'style' => string, 'name' => string, 'icon_class' => ?string]]
      * @param string $first_description sanitized text of the first item
      * @param string $title_field       Config field holding the widget title, for the empty state
      * @param string $empty_label       message shown when there is nothing to display
+     * @param string $first_color       CSS color wrapping the first description, if any
      *
      * @return string
      */
+    /**
+     * Render one cell of the "tickets updated by requesters" Datatable.
+     *
+     * The Datatable API takes an HTML string per cell: the markup comes from
+     * alert_ticket_cell.html.twig, which escapes every value.
+     *
+     * @param string $kind      ticket_name, ticket_id, names, priority or category
+     * @param array  $variables values of the cell
+     *
+     * @return string
+     */
+    private static function getTicketCellHtml($kind, $variables)
+    {
+        return trim(TemplateRenderer::getInstance()->render(
+            '@mydashboard/alert_ticket_cell.html.twig',
+            ['kind' => $kind] + $variables,
+        ));
+    }
+
     /**
      * Render a row of counter tiles, shared by the ticket-alert and SLA-alert widgets.
      *
@@ -2360,7 +2336,7 @@ class Alert extends CommonDBTM
         ]);
     }
 
-    private static function getTickerHtml($prefix, $data_attr, $items, $first_description, $title_field, $empty_label)
+    private static function getTickerHtml($prefix, $data_attr, $items, $first_description, $title_field, $empty_label, $first_color = '')
     {
         $ticker_script_html = '';
         if (count($items) > 1) {
@@ -2388,11 +2364,11 @@ class Alert extends CommonDBTM
                 });");
         }
 
-        $empty_title_html = '';
+        $empty_title = '';
         if ($items === []) {
             $config = new Config();
             $config->getFromDB(1);
-            $empty_title_html = Config::displayField($config, $title_field);
+            $empty_title = Config::getTranslatedField($config, $title_field);
         }
 
         return TemplateRenderer::getInstance()->render('@mydashboard/alert_ticker.html.twig', [
@@ -2400,7 +2376,8 @@ class Alert extends CommonDBTM
             'data_attr' => $data_attr,
             'items' => $items,
             'first_description' => $first_description,
-            'empty_title_html' => $empty_title_html,
+            'first_color' => $first_color,
+            'empty_title' => $empty_title,
             'empty_label' => $empty_label,
             'ticker_script_html' => $ticker_script_html,
         ]);
@@ -2411,7 +2388,6 @@ class Alert extends CommonDBTM
         global $DB;
 
         $now = date('Y-m-d H:i:s');
-        $wl = "";
 
         //        $restrict_user = '1';
         //        // Only personal on central so do not keep it
@@ -2514,17 +2490,12 @@ class Alert extends CommonDBTM
             $items[] = [
                 'id' => $row["id"],
                 'style' => 'text-align:center;color:orange',
-                // Reminder names are stored raw (GLPI 10+): escape at the source so the
-                // value stays safe wherever it is later emitted into the widget HTML.
-                'name_html' => htmlspecialchars(
-                    (string) ReminderTranslation::getTranslatedValue($note, 'name'),
-                    ENT_QUOTES,
-                    'UTF-8',
-                ),
+                // Reminder names are stored raw: alert_ticker.html.twig escapes them.
+                'name' => (string) ReminderTranslation::getTranslatedValue($note, 'name'),
             ];
         }
 
-        return $wl . self::getTickerHtml(
+        return self::getTickerHtml(
             'nt_maint',
             'maint',
             $items,
@@ -2609,7 +2580,7 @@ class Alert extends CommonDBTM
                 $document_links[] = $doc->getDownloadLink();
             }
 
-            echo TemplateRenderer::getInstance()->render('@mydashboard/alert_ticker_description.html.twig', [
+            TemplateRenderer::getInstance()->display('@mydashboard/alert_ticker_description.html.twig', [
                 'color' => $color,
                 // The reminder text is rich HTML: sanitize it the same way getAlertList()
                 // does for the first item. htmlspecialchars() was used here instead, which
@@ -2630,7 +2601,6 @@ class Alert extends CommonDBTM
         global $DB;
 
         $now = date('Y-m-d H:i:s');
-        $wl = "";
 
         $visibility_criteria = [
             [
@@ -2702,17 +2672,12 @@ class Alert extends CommonDBTM
             $items[] = [
                 'id' => $row["id"],
                 'style' => 'text-align:center;',
-                // Reminder names are stored raw (GLPI 10+): escape at the source so the
-                // value stays safe wherever it is later emitted into the widget HTML.
-                'name_html' => htmlspecialchars(
-                    (string) ReminderTranslation::getTranslatedValue($note, 'name'),
-                    ENT_QUOTES,
-                    'UTF-8',
-                ),
+                // Reminder names are stored raw: alert_ticker.html.twig escapes them.
+                'name' => (string) ReminderTranslation::getTranslatedValue($note, 'name'),
             ];
         }
 
-        return $wl . self::getTickerHtml(
+        return self::getTickerHtml(
             'nt_info',
             'info',
             $items,
@@ -2736,8 +2701,6 @@ class Alert extends CommonDBTM
         $config = new Config();
         $config->getFromDB(1);
         $now = date('Y-m-d H:i:s');
-
-        $wl = "";
 
         //        $query = "SELECT `glpi_reminders`.`id`,
         //                       `glpi_reminders`.`name`,
@@ -2824,6 +2787,7 @@ class Alert extends CommonDBTM
 
         $items = [];
         $firstdescription = "";
+        $first_color = '';
         foreach ($iterator as $row) {
             $note = new \Reminder();
             $note->getFromDB($row["id"]);
@@ -2833,35 +2797,31 @@ class Alert extends CommonDBTM
             $impact_color = $config->getField('impact_' . $row['impact']);
 
             if ($items === []) {
-                // Reminder text is rich HTML stored raw: sanitize before wrapping it in
-                // the trusted span carrying the impact color.
-                $firstdescription = "<span style='color:" . $impact_color . "'>"
-                    . RichText::getSafeHtml(ReminderTranslation::getTranslatedValue($note, 'text'))
-                    . "</span>";
+                // Reminder text is rich HTML stored raw: sanitize it, the template wraps it
+                // in the span carrying the impact color.
+                $firstdescription = RichText::getSafeHtml(
+                    ReminderTranslation::getTranslatedValue($note, 'text'),
+                );
+                $first_color = $impact_color;
             }
 
-            $class = "plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1);
             $items[] = [
                 'id' => $row["id"],
                 'style' => "text-align: center;color:" . $impact_color,
-                // Reminder names are stored raw (GLPI 10+): escape before appending to
-                // the trusted icon markup.
-                'name_html' => "<i class='fas " . $class . "'></i>"
-                    . htmlspecialchars(
-                        (string) ReminderTranslation::getTranslatedValue($note, 'name'),
-                        ENT_QUOTES,
-                        'UTF-8',
-                    ),
+                'icon_class' => "fas plugin_mydashboard_fa-thermometer-" . ($row['impact'] - 1),
+                // Reminder names are stored raw: alert_ticker.html.twig escapes them.
+                'name' => (string) ReminderTranslation::getTranslatedValue($note, 'name'),
             ];
         }
 
-        return $wl . self::getTickerHtml(
+        return self::getTickerHtml(
             'nt_alert',
             'alert',
             $items,
             $firstdescription,
             'title_alerts_widget',
             __("No problem detected", "mydashboard"),
+            $first_color,
         );
     }
 
@@ -2877,8 +2837,6 @@ class Alert extends CommonDBTM
         global $DB;
 
         $now = date('Y-m-d H:i:s');
-
-        $wl = "";
 
         //        $query = "SELECT `glpi_reminders`.`id`,
         //                       `glpi_reminders`.`name`,
@@ -2966,170 +2924,73 @@ class Alert extends CommonDBTM
         $nb = count($iterator);
 
         $nb_maintenance = self::countForAlerts($public, 1);
-        if ($nb || $nb_maintenance > 0) {
-            $wl .= \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/mydashboard.css");
 
-            //            $css_file = PLUGIN_MYDASHBOARD_WEBDIR . "/css/info.css";
-            //            if (file_exists($css_file) && $public == 1) {
-            //                $wl .= Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/info.css");
-            //                $wl .= "<div id='info_img'>&nbsp;</div>";
-            //                $wl .= "<div class='bt-row info_weather_public_block'>";
-            //            } else {
-            //                $wl .= "<div class='bt-row'>";
-            //            }
-            //            $min = 160 + $nb * 20;
-            //            if ($nb > 0 && $nb_maintenance > 0) {
-            //                $min = $min + 60;
-            //            }
-            //
-            //            $min = $min . 'px';
-            //            $wl  .= "<script type='text/javascript'>
-            //            $(document).ready( function() {
-            //                $('#form-login').css('min-height', '$min');
-            //            });
-            //            </script>";
-            //
-            //            if ($nb > 1 || ($nb > 0 && $nb_maintenance > 0)) {
-            //                $wl .= "<script type='text/javascript'>
-            //            $(document).ready( function() {
-            //                $('#form-login').css('margin-top', '60px');
-            //            });
-            //            </script>";
-            //            }
-            foreach ($iterator as $row) {
-                if ($row['impact'] == 1) {
-                    $f1[] = $row;
-                    $list[] = $row;
-                } elseif ($row['impact'] == 2) {
-                    $f2[] = $row;
-                    $list[] = $row;
-                } elseif ($row['impact'] == 3) {
-                    $f3[] = $row;
-                    $list[] = $row;
-                } elseif ($row['impact'] == 4) {
-                    $f4[] = $row;
-                    $list[] = $row;
-                } elseif ($row['impact'] == 5) {
-                    $f5[] = $row;
-                    $list[] = $row;
-                }
+        // The weather icon follows the highest impact among the displayed alerts. A
+        // row with an impact out of 1-5 is listed nowhere, as before.
+        $list = [];
+        $max_impact = 0;
+        foreach ($iterator as $row) {
+            if ($row['impact'] >= 1 && $row['impact'] <= 5) {
+                $list[] = $row;
+                $max_impact = max($max_impact, (int) $row['impact']);
             }
-
-            if (!empty($f5)) {
-                $wl .= $this->displayContent('5', $list, $public);
-            } elseif (!empty($f4)) {
-                $wl .= $this->displayContent('4', $list, $public);
-            } elseif (!empty($f3)) {
-                $wl .= $this->displayContent('3', $list, $public);
-            } elseif (!empty($f2)) {
-                $wl .= $this->displayContent('2', $list, $public);
-            } elseif (!empty($f1)) {
-                $wl .= $this->displayContent('1', $list, $public);
-            }
-
-            //maintenance message
-            if ($nb_maintenance > 0) {
-                $wl .= "<div class='red bt-col-xs-11 alert-title-div red '>";
-                $wl .= __(
-                    'There is at least on planned scheduled maintenance. Please log on to see more',
-                    'mydashboard',
-                );
-                $wl .= "</div>";
-            }
-            //            $wl .= "</div>";
         }
 
-        if (!$nb && ($public == 0 || $force == 1)) {
-            $wl .= $this->displayContent('1', [], 0);
+        $weather = null;
+        if ($max_impact > 0) {
+            $weather = $this->getWeatherData($max_impact, $list);
+        } elseif (!$nb && ($public == 0 || $force == 1)) {
+            $weather = $this->getWeatherData(1, []);
         }
 
-        //        $css_file = PLUGIN_MYDASHBOARD_WEBDIR . "/css/hideinfo.css";
-        //        if (file_exists($css_file)
-        //            && !$nb
-        //            && $nb_maintenance == 0
-        //            && $public == 1) {
-        //            $wl .= Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/css/hideinfo.css");
-        //        }
-        return $wl;
+        $show_maintenance = $nb_maintenance > 0;
+        if ($weather === null && !$show_maintenance) {
+            return '';
+        }
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/alert_summary.html.twig', [
+            // The login page does not load the ADD_CSS hook of the plugin.
+            'css_url' => ($nb || $show_maintenance)
+                ? PLUGIN_MYDASHBOARD_WEBDIR . '/css/mydashboard.css?v=' . PLUGIN_MYDASHBOARD_VERSION
+                : '',
+            'weather' => $weather,
+            'show_maintenance' => $show_maintenance,
+        ]);
     }
 
     /**
-     * @param       $impact
-     * @param array $list
-     * @param int $public
+     * Data of the weather block: title, icon matching the impact and list of alerts.
      *
-     * @return string
+     * @param int   $impact
+     * @param array $list   reminder rows carrying id, name and impact
+     *
+     * @return array
      */
-    private function displayContent($impact, $list = [], $public = 0)
+    private function getWeatherData($impact, $list)
     {
-        $div = "";
         $config = new Config();
         $config->getFromDB(1);
 
-        $class = "plugin_mydashboard_fa-thermometer-" . ($impact - 1);
-        // impact_* colors are stored raw; escape before emitting into the style attribute.
-        $style = "color:" . htmlspecialchars((string) $config->getField('impact_' . $impact), ENT_QUOTES, 'UTF-8');
-
-        $div .= "<div class='card-header mb-4'>";
-        $div .= "<h2 class='mx-auto'>" . Config::displayField($config, 'title_alerts_widget') . "</h2></div>";
-        $div .= "<div class=\"mb-3\">";
-        $div .= "<i style='$style' class='fas $class fa-alert-4'></i>";
-        $div .= "</div>";
-        $div .= "<div class=\"mb-4 weather_msg\">";
-        $div .= $this->getMessage($list, $public);
-        $div .= "</div>";
-
-        return $div;
-    }
-
-    /**
-     * @param $list
-     * @param $public
-     *
-     * @return string
-     */
-    private function getMessage($list, $public)
-    {
-        $l = "";
-        $config = new Config();
-        $config->getFromDB(1);
-        if (!empty($list)) {
-            foreach ($list as $listitem) {
-                // impact_* colors are stored raw; escape before emitting into style attributes.
-                $configColor = htmlspecialchars((string) $config->getField("impact_" . $listitem['impact']), ENT_QUOTES, 'UTF-8');
-                //            $class     = (Html::convDate(date("Y-m-d")) == Html::convDate($listitem['date'])) ? 'alert_new' : '';
-                //            $class     = ' alert_impact' . $listitem['impact'];
-                $style = "background-color : " . $configColor;
-                //            $classfont = ' alert_fontimpact' . $listitem['impact'];
-                $styleFont = 'color : ' . $configColor;
-                $rand = mt_rand();
-                // Reminder names are stored raw (GLPI 10+): escape before echo. This
-                // is rendered to anonymous visitors on the login page via the
-                // DISPLAY_LOGIN hook, so an unescaped name is a stored XSS sink.
-                $safe_name = htmlspecialchars($listitem['name'], ENT_QUOTES, 'UTF-8');
-                $name = (Session::haveRight("reminder_public", READ))
-                    ? "<a  href='" . \Reminder::getFormURL(
-                    ) . "?id=" . (int) $listitem['id'] . "'>" . $safe_name . "</a>"
-                    : $safe_name;
-
-                $l .= "<div id='alert$rand'>";
-                $l .= "<span style='$style' class='alert_impact'></span>";
-                //            if (isset($listitem['begin_view_date'])
-                //                && isset($listitem['end_view_date'])
-                //            ) {
-                //               $l .= "<span class='alert_date'>" . Html::convDateTime($listitem['begin_view_date']) . " - " . Html::convDateTime($listitem['end_view_date']) . "</span><br>";
-                //            }
-                $l .= "<span style='$styleFont'>" . $name . "</span>";
-                $l .= "</div>";
-            }
-        } else {
-            $l .= "<div class='center'><br><br><h3><span class ='alert-color'>";
-            $l .= __("No problem detected", "mydashboard");
-            $l .= "</span></h3></div>";
+        $items = [];
+        foreach ($list as $listitem) {
+            $items[] = [
+                // Reminder names are stored raw: the template escapes them. This block
+                // is shown to anonymous visitors on the login page (DISPLAY_LOGIN hook).
+                'name' => (string) $listitem['name'],
+                'url' => Session::haveRight("reminder_public", READ)
+                    ? \Reminder::getFormURLWithID((int) $listitem['id'])
+                    : null,
+                // impact_* colors are stored raw; the template escapes them.
+                'color' => (string) $config->getField("impact_" . $listitem['impact']),
+            ];
         }
-        $l .= "<br>";
 
-        return $l;
+        return [
+            'title' => Config::getTranslatedField($config, 'title_alerts_widget'),
+            'icon_class' => "plugin_mydashboard_fa-thermometer-" . ($impact - 1),
+            'color' => (string) $config->getField('impact_' . $impact),
+            'items' => $items,
+        ];
     }
 
     /**
@@ -3150,16 +3011,17 @@ class Alert extends CommonDBTM
     /**
      * Build the alert form attached to a reminder.
      *
-     * Shared by showReminderForm() and showForItem(), which used to carry two nearly
-     * identical copies of it.
+     * Shared by showReminderForm(), showForItem() and ItilAlert::showForItem(), which
+     * used to carry nearly identical copies of it.
      *
      * @param int    $reminders_id
      * @param string $first_type_name label of type 0, the only wording that differs
      * @param array  $category_toadd  extra entries prepended to the category dropdown
+     * @param bool   $with_delete     show the purge button once the alert exists
      *
      * @return string
      */
-    private function getAlertFormHtml($reminders_id, $first_type_name, $category_toadd = [])
+    public function getAlertFormHtml($reminders_id, $first_type_name, $category_toadd = [], $with_delete = false)
     {
         if (isset($this->fields['id'])) {
             $id = $this->fields['id'];
@@ -3187,10 +3049,7 @@ class Alert extends CommonDBTM
         }
 
         $category_options = [
-            'name' => 'itilcategories_id',
-            'value' => $itilcategories_id,
             'entity' => $_SESSION['glpiactiveentities'],
-            'display' => false,
         ];
         if ($category_toadd !== []) {
             $category_options['toadd'] = $category_toadd;
@@ -3198,21 +3057,17 @@ class Alert extends CommonDBTM
 
         return TemplateRenderer::getInstance()->render('@mydashboard/alert_form.html.twig', [
             'form_action' => $this->getFormURL(),
-            'type_html' => Dropdown::showFromArray('type', $types, ['value' => $type,
-                'display' => false,
-            ]),
-            'impact_html' => Dropdown::showFromArray('impact', $impacts, ['value' => $impact,
-                'display' => false,
-            ]),
-            'category_html' => ITILCategory::dropdown($category_options),
-            'public_html' => Dropdown::showYesNo('is_public', $is_public, -1, ['display' => false]),
+            'id' => $id,
+            'reminders_id' => $reminders_id,
+            'type' => $type,
+            'types' => $types,
+            'impact' => $impact,
+            'impacts' => $impacts,
+            'itilcategories_id' => $itilcategories_id,
+            'category_options' => $category_options,
+            'is_public' => $is_public,
             'can_edit' => Session::haveRight("reminder_public", UPDATE),
-            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
-                'class' => 'btn btn-primary',
-            ]),
-            'hidden_html' => \Html::hidden("id", ['value' => $id])
-                . \Html::hidden("reminders_id", ['value' => $reminders_id]),
-            'close_form_html' => \Html::closeForm(false),
+            'can_delete' => $with_delete && $id > 0,
         ]);
     }
 
@@ -3230,25 +3085,13 @@ class Alert extends CommonDBTM
 
         $create_button = null;
         if (!$has_reminder) {
-            $button_id = 'mydashboard_create_alert_' . mt_rand();
-            // The handler is bound by id rather than through an inline onclick, so the
-            // itemtype and the confirmation label never reach an HTML attribute.
+            // Handled by public/scripts/alert-item.js from the data-* attributes.
             $create_button = [
-                'id' => $button_id,
                 'menu_name' => Menu::getTypeName(2),
-                'script_html' => \Html::scriptBlock(
-                    '$(function () {'
-                    . '$("#' . $button_id . '").on("click", function () {'
-                    . 'if (!confirm(' . json_encode(__('Create a new alert', 'mydashboard')) . ')) { return; }'
-                    . '$.ajax({'
-                    . 'url: ' . json_encode(PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php') . ','
-                    . 'type: "POST",'
-                    . 'data: { itemtype: ' . json_encode($itemtype) . ', items_id: ' . (int) $items_id . ' },'
-                    . 'success: function () { window.location.reload(); }'
-                    . '});'
-                    . '});'
-                    . '});',
-                ),
+                'url' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/createalert.php',
+                'itemtype' => $itemtype,
+                'items_id' => (int) $items_id,
+                'script_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/scripts/alert-item.js',
             ];
         }
 
@@ -3273,7 +3116,7 @@ class Alert extends CommonDBTM
             );
         }
 
-        echo TemplateRenderer::getInstance()->render('@mydashboard/alert_item.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/alert_item.html.twig', [
             'create_button' => $create_button,
             'reminder' => $reminder_data,
             'alert_form_html' => $alert_form_html,
@@ -3284,39 +3127,6 @@ class Alert extends CommonDBTM
         }
     }
 
-
-    /**
-     * @param $class
-     *
-     * @return bool|string
-     */
-    public static function getWidgetMydashboardAlert($class)
-    {
-        if (Alert::countForAlerts(0, 0) > 0) {
-            $display = "<div class=\"bt-feature $class \">";
-            $display .= "<h3>";
-            $display .= "<div class='alert alert-danger ' role='alert'>";
-            $config = new Config();
-            $config->getFromDB(1);
-            $display .= Config::displayField($config, 'title_alerts_widget');
-            $display .= "</div>";
-            $display .= "</h3>";
-            $display .= "<div align='left' style='margin: 5px;'><small style='font-size: 11px;'>";
-            $display .= __(
-                'A network alert can impact you and will avoid creating a ticket',
-                'mydashboard',
-            ) . "</small></div>";
-            $display .= "<div id=\"display-sc\" class='card'>";
-            $alerts = new self();
-            $display .= $alerts->getAlertList(0);
-            $display .= "</div>";
-            $display .= "</div>";
-
-            return $display;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * @param $message
@@ -3583,16 +3393,11 @@ class Alert extends CommonDBTM
         }
 
 
+        // The <a> of each counter is built by alert_indicators_table.html.twig /
+        // alert_indicators_widget.html.twig from the url, title, count and style below.
         $size = "";
-        $span = "";
         if ($iswidget == true) {
             $size = "font-size:18px";
-            $span = "ind-link";
-        }
-
-        $target = "";
-        if ($iswidget == true) {
-            $target = "target = '_blank'";
         }
 
         // Reset criterias
@@ -3620,10 +3425,12 @@ class Alert extends CommonDBTM
         }
 
 
-        $href_new = "<a $target style='color:#D9534F !important;$size' title='" . __('New tickets', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_new, '&amp;') . "' ><span class='$span'>"
-            . $total_new . "</span></a>";
+        $href_new = [
+            'title' => __('New tickets', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_new, '&'),
+            'count' => $total_new,
+            'style' => 'color:#D9534F !important;' . $size,
+        ];
 
         //$href_due
         // Reset criterias
@@ -3674,10 +3481,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             'link' => 'AND',
         ];
 
-        $href_due = "<a $target style='$size' title='" . __('Tickets late', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_due, '&amp;') . "' ><span class='$span'>"
-            . $total_due . "</span></a>";
+        $href_due = [
+            'title' => __('Tickets late', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_due, '&'),
+            'count' => $total_due,
+            'style' => $size,
+        ];
 
         //$href_pend
         // Reset criterias
@@ -3721,10 +3530,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             ];
         }
 
-        $href_pend = "<a $target style='$size' title='" . __('Pending tickets', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_pend, '&amp;') . "' ><span class='$span'>"
-            . $total_pend . "</span></a>";
+        $href_pend = [
+            'title' => __('Pending tickets', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_pend, '&'),
+            'count' => $total_pend,
+            'style' => $size,
+        ];
 
         //$href_incpro
         // Reset criterias
@@ -3786,10 +3597,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
         }
 
-        $href_incpro = "<a $target style='$size' title='" . __('Incidents in progress', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_incpro, '&amp;') . "' ><span class='$span'>"
-            . $total_incpro . "</span></a>";
+        $href_incpro = [
+            'title' => __('Incidents in progress', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_incpro, '&'),
+            'count' => $total_incpro,
+            'style' => $size,
+        ];
 
         //$href_dempro
         // Reset criterias
@@ -3851,10 +3664,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
         }
 
-        $href_dempro = "<a $target style='$size' title='" . __('Requests in progress', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_dempro, '&amp;') . "' ><span class='$span'>"
-            . $total_dempro . "</span></a>";
+        $href_dempro = [
+            'title' => __('Requests in progress', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_dempro, '&'),
+            'count' => $total_dempro,
+            'style' => $size,
+        ];
 
         ///resolved
         $options_resolved['reset'][] = 'reset';
@@ -3900,10 +3715,12 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
         }
 
-        $href_resolved = "<a $target style='$size' title='" . __('Tickets solved', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_resolved, '&amp;') . "' ><span class='$span'>"
-            . $total_resolved . "</span></a>";
+        $href_resolved = [
+            'title' => __('Tickets solved', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_resolved, '&'),
+            'count' => $total_resolved,
+            'style' => $size,
+        ];
 
         ///closed
         $options_closed['reset'][] = 'reset';
@@ -3949,20 +3766,22 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             }
         }
 
-        $href_closed = "<a $target style='$size' title='" . __('Ticket closed', 'mydashboard') . "' \
-href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
-            . Toolbox::append_params($options_closed, '&amp;') . "' ><span class='$span'>"
-            . $total_closed . "</span></a>";
+        $href_closed = [
+            'title' => __('Ticket closed', 'mydashboard'),
+            'url' => $CFG_GLPI["root_doc"] . '/front/ticket.php?' . Toolbox::append_params($options_closed, '&'),
+            'count' => $total_closed,
+            'style' => $size,
+        ];
 
 
         if ($iswidget == false) {
-            echo TemplateRenderer::getInstance()->render('@mydashboard/alert_indicators_table.html.twig', [
+            TemplateRenderer::getInstance()->display('@mydashboard/alert_indicators_table.html.twig', [
                 'cells' => [
-                    ['class' => 'ind-new', 'link_html' => $href_new],
-                    ['class' => 'ind-late', 'link_html' => $href_due],
-                    ['class' => 'ind-pending', 'link_html' => $href_pend],
-                    ['class' => 'ind-process', 'link_html' => $href_incpro],
-                    ['class' => 'dem-process', 'link_html' => $href_dempro],
+                    ['class' => 'ind-new', 'link' => $href_new],
+                    ['class' => 'ind-late', 'link' => $href_due],
+                    ['class' => 'ind-pending', 'link' => $href_pend],
+                    ['class' => 'ind-process', 'link' => $href_incpro],
+                    ['class' => 'dem-process', 'link' => $href_dempro],
                 ],
             ]);
         } else {
@@ -3993,27 +3812,27 @@ href='" . $CFG_GLPI["root_doc"] . '/front/ticket.php?'
             // $seeown is initialised to false at the top of this method and never
             // reassigned, so they could not be reached.
             $cells = [
-                ['class' => 'nb ind-widget-new', 'link_html' => $href_new,
+                ['class' => 'nb ind-widget-new', 'link' => $href_new,
                     'label' => __('New tickets', 'mydashboard'),
                 ],
-                ['class' => 'nb ind-widget-late', 'link_html' => $href_due,
+                ['class' => 'nb ind-widget-late', 'link' => $href_due,
                     'label' => __('Tickets late', 'mydashboard'),
                 ],
-                ['class' => 'nb ind-widget-pending', 'link_html' => $href_pend,
+                ['class' => 'nb ind-widget-pending', 'link' => $href_pend,
                     'label' => __('Pending tickets', 'mydashboard'),
                 ],
-                ['class' => 'nb ind-widget-process', 'link_html' => $href_incpro,
+                ['class' => 'nb ind-widget-process', 'link' => $href_incpro,
                     'label' => __('Incidents in progress', 'mydashboard'),
                 ],
-                ['class' => 'nb dem-widget-process', 'link_html' => $href_dempro,
+                ['class' => 'nb dem-widget-process', 'link' => $href_dempro,
                     'label' => __('Requests in progress', 'mydashboard'),
                 ],
-                ['class' => 'nb ind-widget-solved', 'link_html' => $href_resolved,
+                ['class' => 'nb ind-widget-solved', 'link' => $href_resolved,
                     'label' => __('Tickets solved', 'mydashboard'),
                 ],
             ];
             if ($type == "week") {
-                $cells[] = ['class' => 'nb ind-widget-closed', 'link_html' => $href_closed,
+                $cells[] = ['class' => 'nb ind-widget-closed', 'link' => $href_closed,
                     'label' => __('Tickets closed', 'mydashboard'),
                 ];
             }
