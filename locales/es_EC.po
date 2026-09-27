@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 14:38+0000\n"
+"POT-Creation-Date: 2026-09-27 15:44+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -36,7 +36,7 @@ msgstr "(filtrado de _MAX_ entradas totales)"
 msgid "1 row selected"
 msgstr "1 fila seleccionada"
 
-#: src/Widget.php:861
+#: src/Widget.php:992
 msgid "10 rows"
 msgstr "10 filas"
 
@@ -44,7 +44,7 @@ msgstr "10 filas"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:862
+#: src/Widget.php:993
 msgid "25 rows"
 msgstr "25 filas"
 
@@ -52,11 +52,11 @@ msgstr "25 filas"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:860
+#: src/Widget.php:991
 msgid "5 rows"
 msgstr "5 filas"
 
-#: src/Widget.php:863
+#: src/Widget.php:994
 msgid "50 rows"
 msgstr "50 filas"
 
@@ -76,7 +76,7 @@ msgstr ""
 msgid "> 6 years"
 msgstr ""
 
-#: templates/report_widget_title.html.twig:34
+#: templates/widget_frame.html.twig:96
 msgid "Add"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgstr ""
 msgid "Alert level"
 msgstr "Nivel de alerta"
 
-#: templates/stockwidget_form.html.twig:58
+#: templates/stockwidget_form.html.twig:115
 msgid "Alert threshold"
 msgstr ""
 
@@ -158,7 +158,7 @@ msgstr ""
 msgid "Altered table"
 msgstr ""
 
-#: src/Reports/Change.php:84 src/Reports/Change.php:419
+#: src/Reports/Change.php:84 src/Reports/Change.php:407
 msgid "Applied changes"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgstr "Widgets autorizados"
 msgid "Automatic actions in error"
 msgstr "Acciones automáticas en error"
 
-#: templates/preferences.html.twig:29
+#: templates/preferences.html.twig:37
 msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr "Actualización automática de los widgets que se pueden actualizar"
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "Backlog tickets by week"
 msgstr ""
 
-#: src/Widget.php:245
+#: src/Widget.php:246
 msgid "Bar charts"
 msgstr "Gráficos de barras"
 
@@ -202,11 +202,11 @@ msgstr "Gráficos de barras"
 msgid "Block drag / resize widgets"
 msgstr "Bloquear arrastrar / redimensionar widgets"
 
-#: templates/config_form.html.twig:88
+#: templates/config_form.html.twig:93
 msgid "Can take many time if you have many tickets"
 msgstr "Puede llevar mucho tiempo si tiene muchos casos"
 
-#: src/StockWidget.php:70 src/StockWidget.php:77 src/StockWidget.php:107
+#: src/StockWidget.php:68 src/StockWidget.php:75 src/StockWidget.php:105
 msgid "Cannot create alert without a type"
 msgstr "No se puede crear una alerta sin tipo"
 
@@ -215,20 +215,20 @@ msgstr "No se puede crear una alerta sin tipo"
 msgid "Category"
 msgstr "Categoria"
 
-#: src/Reports/Change.php:89 src/Reports/Change.php:674
-#: src/Reports/Change.php:680
+#: src/Reports/Change.php:89 src/Reports/Change.php:587
+#: src/Reports/Change.php:598
 msgid "Change followup"
 msgstr ""
 
 #: src/Reports/Change.php:79 src/Reports/Change.php:102
-#: src/Reports/Change.php:162 src/Reports/Change.php:305
-#: src/Reports/Change.php:376
+#: src/Reports/Change.php:162 src/Reports/Change.php:302
+#: src/Reports/Change.php:369
 msgid "Changes on pending status"
 msgstr ""
 
 #: src/Reports/Change.php:74 src/Reports/Change.php:97
-#: src/Reports/Change.php:164 src/Reports/Change.php:328
-#: src/Reports/Change.php:402
+#: src/Reports/Change.php:164 src/Reports/Change.php:324
+#: src/Reports/Change.php:391
 msgid "Changes to be processed"
 msgstr ""
 
@@ -240,7 +240,7 @@ msgstr "Compruebe si GLPI no tiene problemas"
 msgid "Child locations"
 msgstr "Ubicaciones secundarias"
 
-#: src/Widget.php:185 templates/widget_form.html.twig:37
+#: src/Widget.php:186 templates/widget_form.html.twig:37
 msgid "Class"
 msgstr ""
 
@@ -290,7 +290,7 @@ msgstr ""
 msgid "Create a new alert"
 msgstr "Crear una nueva alerta"
 
-#: src/Preference.php:241
+#: templates/preferences.html.twig:115
 msgid "Current year"
 msgstr ""
 
@@ -306,10 +306,10 @@ msgstr "Widgets personalizados"
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Module.php:66 src/Html.php:57 src/Chart.php:60 src/Datatable.php:58
+#: src/Module.php:67 src/Html.php:57 src/Chart.php:63 src/Datatable.php:58
 #: src/Reports/Change.php:58 src/Reports/ProjectTask.php:57
 #: src/Reports/Planning.php:52 src/Reports/Project.php:53
-#: src/Reports/Problem.php:58 src/Dashboard.php:71 src/Menu.php:596
+#: src/Reports/Problem.php:57 src/Dashboard.php:71 src/Menu.php:596
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -449,7 +449,7 @@ msgstr "Muestre sus equipos"
 msgid "Edit mode"
 msgstr "Modo edición"
 
-#: templates/config_form.html.twig:32
+#: templates/config_form.html.twig:35
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr "Habilitar la posibilidad de mostrar el Panel en pantalla completa"
 
@@ -503,7 +503,7 @@ msgstr ""
 msgid "Filter date"
 msgstr "Filtrar fecha"
 
-#: src/Widget.php:117
+#: src/Widget.php:118
 msgid "Filters"
 msgstr ""
 
@@ -571,15 +571,15 @@ msgstr "Cuadrícula del Técnico de Asistencia"
 msgid "ID"
 msgstr ""
 
-#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:946 src/Alert.php:591
+#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:949 src/Alert.php:591
 msgid "ID and priority"
 msgstr "ID y prioridad"
 
-#: templates/stockwidget_form.html.twig:56
+#: templates/stockwidget_form.html.twig:108
 msgid "Icon"
 msgstr ""
 
-#: templates/config_form.html.twig:48
+#: templates/config_form.html.twig:54
 msgid "Impact colors for alerts"
 msgstr "Colores de impacto para alertas"
 
@@ -619,11 +619,11 @@ msgstr "Incidentes en los que se excederá el tiempo para resolver"
 msgid "Incidents with very high or major priority"
 msgstr "Incidentes con prioridad muy alta o mayor"
 
-#: src/Widget.php:239
+#: src/Widget.php:240
 msgid "Indicators"
 msgstr "Indicadores"
 
-#: src/Config.php:394 src/Config.php:591 src/Alert.php:198 src/Alert.php:3043
+#: src/Config.php:321 src/Config.php:518 src/Alert.php:198 src/Alert.php:3043
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] "Información"
@@ -634,7 +634,7 @@ msgstr[2] "Información"
 msgid "Internal annuary"
 msgstr ""
 
-#: src/Widget.php:176 templates/widget_form.html.twig:32
+#: src/Widget.php:177 templates/widget_form.html.twig:32
 msgid "Internal name"
 msgstr ""
 
@@ -646,11 +646,12 @@ msgstr "Cuadrícula de administración de Inventario"
 msgid "Inventory stock alerts"
 msgstr "Alertas de stock de inventario"
 
-#: templates/stockwidget_form.html.twig:51
+#: templates/stockwidget_form.html.twig:103
 msgid "Item state"
 msgstr ""
 
-#: templates/stockwidget_form.html.twig:35
+#: templates/stockwidget_form.html.twig:45
+#: templates/stockwidget_form.html.twig:53
 msgid "Item type"
 msgstr ""
 
@@ -671,11 +672,11 @@ msgstr ""
 msgid "Last year"
 msgstr "Ultimo año"
 
-#: templates/config_form.html.twig:64
+#: templates/config_form.html.twig:50
 msgid "Level of categories to show"
 msgstr "Nivel de categorías a mostrar"
 
-#: src/Widget.php:247
+#: src/Widget.php:248
 msgid "Line charts"
 msgstr "Gráficos lineales"
 
@@ -696,7 +697,7 @@ msgstr ""
 msgid "Load a predefined grid"
 msgstr "Cargar una cuadrícula predefinida"
 
-#: src/Widget.php:249
+#: src/Widget.php:250
 msgid "Map"
 msgstr "Mapa"
 
@@ -727,32 +728,32 @@ msgstr "Mes"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:200 src/Preference.php:85 src/Config.php:63 src/Menu.php:108
+#: setup.php:202 src/Preference.php:85 src/Config.php:61 src/Menu.php:108
 #: src/Menu.php:706 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Mi Panel"
 
-#: templates/preferences.html.twig:61
+#: templates/preferences.html.twig:97
 msgid "My favorite category for widgets"
 msgstr "Mi categoría favorita para widgets"
 
-#: templates/preferences.html.twig:56
+#: templates/preferences.html.twig:86
 msgid "My prefered entity for widget"
 msgstr "Mi entidad preferida para el widget"
 
-#: templates/preferences.html.twig:45
+#: templates/preferences.html.twig:61
 msgid "My prefered groups for widget"
 msgstr "Mis grupos preferidos para widget"
 
-#: templates/preferences.html.twig:66
+#: templates/preferences.html.twig:108
 msgid "My prefered type for widget"
 msgstr "Mi tipo preferido para widget"
 
-#: templates/preferences.html.twig:71
+#: templates/preferences.html.twig:116
 msgid "My prefered year for widget"
 msgstr ""
 
-#: templates/preferences.html.twig:51
+#: templates/preferences.html.twig:74
 msgid "My requester prefered groups for widget"
 msgstr "Mis grupos solicitantes preferidos para el widget"
 
@@ -760,11 +761,11 @@ msgstr "Mis grupos solicitantes preferidos para el widget"
 msgid "My view"
 msgstr "Mi vista"
 
-#: templates/stockwidget_form.html.twig:32 templates/alert_item.html.twig:54
+#: templates/stockwidget_form.html.twig:37 templates/alert_item.html.twig:54
 msgid "Name"
 msgstr ""
 
-#: src/ItilAlert.php:93 src/Config.php:392 src/Config.php:589 src/Alert.php:188
+#: src/ItilAlert.php:93 src/Config.php:319 src/Config.php:516 src/Alert.php:188
 #: src/Alert.php:3115
 msgid "Network alert"
 msgid_plural "Network alerts"
@@ -784,7 +785,7 @@ msgstr "Nuevos incidentes"
 msgid "New requests"
 msgstr "Nuevas solicitudes"
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1629 src/Alert.php:3429
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1509 src/Alert.php:3429
 #: src/Alert.php:3816
 msgid "New tickets"
 msgstr "Nuevos Casos"
@@ -797,7 +798,7 @@ msgstr "No se han configurado alertas"
 msgid "No column defined"
 msgstr "No se ha definido ninguna columna"
 
-#: src/Chart.php:186 src/Widget.php:809 src/Menu.php:704
+#: src/Chart.php:209 src/Widget.php:811 src/Menu.php:704
 msgid "No data available"
 msgstr "No hay datos disponibles"
 
@@ -805,7 +806,7 @@ msgstr "No hay datos disponibles"
 msgid "No data available in table"
 msgstr "No hay datos disponibles en la tabla"
 
-#: src/Chart.php:168
+#: src/Chart.php:191
 msgid "No data is given to the widget"
 msgstr "El widget no recibe ningún dato"
 
@@ -821,7 +822,7 @@ msgstr "No se encontraron equipos"
 msgid "No impact"
 msgstr "Sin impacto"
 
-#: src/Widget.php:1007 src/Alert.php:2686
+#: src/Widget.php:1138 src/Alert.php:2686
 msgid "No informations founded"
 msgstr "No se encontró información"
 
@@ -829,7 +830,7 @@ msgstr "No se encontró información"
 msgid "No matching records found"
 msgstr "No se encontraron registros coincidentes"
 
-#: src/Widget.php:944 src/Alert.php:2823 templates/alert_summary.html.twig:56
+#: src/Widget.php:1075 src/Alert.php:2823 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "No se ha detectado ningún problema"
 
@@ -841,7 +842,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:975 src/Alert.php:2504
+#: src/Widget.php:1106 src/Alert.php:2504
 msgid "No scheduled maintenance"
 msgstr "Sin mantenimiento programado"
 
@@ -853,15 +854,15 @@ msgstr ""
 msgid "No widgets available"
 msgstr "No hay widgets disponibles"
 
-#: templates/menu_grid.html.twig:81
+#: templates/menu_grid.html.twig:82
 msgid "No widgets founded, please add widgets"
 msgstr "No se encontraron widgets, por favor agregue widgets"
 
-#: src/Helper.php:296
+#: src/Helper.php:338
 msgid "Not a valid SQL SELECT query"
 msgstr "No es una consulta SQL SELECT válida"
 
-#: src/Chart.php:192 src/Datatable.php:134
+#: src/Chart.php:215 src/Datatable.php:134
 msgid "Not an array"
 msgstr "No es una matriz"
 
@@ -924,7 +925,7 @@ msgstr ""
 msgid "Number of opened ticket and average satisfaction per trimester"
 msgstr ""
 
-#: src/Reports/Reports_Table.php:89 src/Reports/Reports_Table.php:1132
+#: src/Reports/Reports_Table.php:89 src/Reports/Reports_Table.php:1075
 msgid "Number of opened tickets by group and by status"
 msgstr "Número de casos abiertos por grupo y estado"
 
@@ -968,7 +969,7 @@ msgstr ""
 msgid "Number of tickets linked with problems"
 msgstr ""
 
-#: src/Reports/Reports_Table.php:799
+#: src/Reports/Reports_Table.php:787
 msgid "Number of tickets open by technician and by status"
 msgstr ""
 
@@ -1015,7 +1016,7 @@ msgstr ""
 msgid "PDF export failed. Please try again."
 msgstr ""
 
-#: templates/preferences.html.twig:76
+#: templates/preferences.html.twig:124
 msgid "Palette color"
 msgstr "Color de paleta"
 
@@ -1043,14 +1044,7 @@ msgstr ""
 msgid "Permit drag / resize widgets"
 msgstr "Permitir arrastrar / redimensionar widgets"
 
-#: src/Reports/RSSFeed.php:134
-msgid "Personal RSS feed"
-msgid_plural "Personal RSS feeds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: src/Widget.php:243
+#: src/Widget.php:244
 msgid "Pie charts"
 msgstr "Gráficos circulares"
 
@@ -1063,16 +1057,16 @@ msgstr "Por favor, active el complemento"
 msgid "Plugin disabled"
 msgstr ""
 
-#: src/Config.php:58
+#: src/Config.php:56
 msgid "Plugin setup"
 msgstr "Configuración del complemento"
 
-#: src/Preference.php:241
+#: templates/preferences.html.twig:115
 msgid "Previous year"
 msgstr ""
 
-#: src/Reports/Problem.php:84 src/Reports/Problem.php:649
-#: src/Reports/Problem.php:655
+#: src/Reports/Problem.php:83 src/Reports/Problem.php:566
+#: src/Reports/Problem.php:577
 msgid "Problem followup"
 msgstr ""
 
@@ -1093,26 +1087,19 @@ msgid "Profile"
 msgstr ""
 
 #: src/Reports/ProjectTask.php:73 src/Reports/ProjectTask.php:81
-#: src/Reports/ProjectTask.php:232 src/Reports/ProjectTask.php:273
+#: src/Reports/ProjectTask.php:195
 msgid "Projects tasks to be processed"
 msgstr ""
 
 #: src/Reports/Project.php:69 src/Reports/Project.php:77
-#: src/Reports/Project.php:124 src/Reports/Project.php:226
-#: src/Reports/Project.php:251
+#: src/Reports/Project.php:124 src/Reports/Project.php:223
+#: src/Reports/Project.php:247
 msgid "Projects to be processed"
 msgstr ""
 
 #: templates/alert_form.html.twig:45
 msgid "Public"
 msgstr ""
-
-#: src/Reports/RSSFeed.php:174
-msgid "Public RSS feed"
-msgid_plural "Public RSS feeds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
 
 #: src/Reports/KnowbaseItem.php:173
 msgid "Publication date"
@@ -1122,12 +1109,12 @@ msgstr ""
 msgid "Queries to run"
 msgstr ""
 
-#: src/Config.php:362
+#: templates/config_form.html.twig:87
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr "Reconstruir el retraso global"
 
-#: src/Config.php:366
+#: templates/config_form.html.twig:90
 msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr "Reconstruir los indicadores globales por semana"
@@ -1136,7 +1123,7 @@ msgstr "Reconstruir los indicadores globales por semana"
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: templates/preferences.html.twig:34
+#: templates/preferences.html.twig:45
 msgid "Refresh every "
 msgstr "Actualizar cada "
 
@@ -1148,7 +1135,7 @@ msgstr "Actualizar widget"
 msgid "Reload"
 msgstr ""
 
-#: templates/preferences.html.twig:39 templates/config_form.html.twig:43
+#: templates/preferences.html.twig:52 templates/config_form.html.twig:42
 msgid "Replace central interface"
 msgstr "Sustituir la interfaz central"
 
@@ -1239,7 +1226,7 @@ msgstr ""
 msgid "Save grid"
 msgstr "Guarda la cuadrícula"
 
-#: src/Config.php:393 src/Config.php:590 src/Alert.php:193 src/Alert.php:3042
+#: src/Config.php:320 src/Config.php:517 src/Alert.php:193 src/Alert.php:3042
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] "Mantenimiento programado"
@@ -1287,7 +1274,7 @@ msgstr "Configurar widget de stock"
 msgid "Show %d elements"
 msgstr "Mostrar %d  elementos"
 
-#: src/Reports/Ticket.php:1619 src/Widget.php:864 src/Menu.php:590
+#: src/Widget.php:995 src/Menu.php:590
 msgid "Show all"
 msgstr "Ver todo"
 
@@ -1335,7 +1322,7 @@ msgstr[2] ""
 msgid "Stock of tickets by status"
 msgstr ""
 
-#: src/StockWidget.php:55
+#: src/StockWidget.php:53
 msgid "Stock widget"
 msgid_plural "Stock widgets"
 msgstr[0] "Widgets de stock"
@@ -1382,7 +1369,7 @@ msgstr ""
 msgid "TTR Compliance"
 msgstr ""
 
-#: src/Widget.php:241
+#: src/Widget.php:242
 msgid "Tables"
 msgstr "Tablas"
 
@@ -1405,7 +1392,7 @@ msgstr[0] "Técnico"
 msgstr[1] "Técnicos"
 msgstr[2] "Técnicos"
 
-#: src/Reports/Reports_Table.php:802
+#: src/Reports/Reports_Table.php:790
 msgid "Technicians"
 msgstr ""
 
@@ -1434,7 +1421,7 @@ msgstr ""
 "Hay al menos un mantenimiento programado planificado. Por favor inicie "
 "sesión para ver más"
 
-#: src/Widget.php:466
+#: src/Widget.php:467
 msgid "This widget doesn't exist anymore"
 msgstr "Este widget ya no existe"
 
@@ -1442,8 +1429,8 @@ msgstr "Este widget ya no existe"
 msgid "Ticket closed"
 msgstr "Caso cerrado"
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1424
-#: src/Reports/Ticket.php:1441
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1318
+#: src/Reports/Ticket.php:1324
 msgid "Ticket followup"
 msgstr ""
 
@@ -1485,15 +1472,15 @@ msgstr ""
 msgid "Time display"
 msgstr "Visualización de la hora"
 
-#: src/Config.php:247 templates/config_form.html.twig:69
+#: src/Config.php:245 templates/config_form.html.twig:67
 msgid "Title of alerts widget"
 msgstr "Título del widget de alertas"
 
-#: src/Config.php:265 templates/config_form.html.twig:79
+#: src/Config.php:263 templates/config_form.html.twig:81
 msgid "Title of informations widget"
 msgstr "Título del widget de información"
 
-#: src/Config.php:256 templates/config_form.html.twig:74
+#: src/Config.php:254 templates/config_form.html.twig:74
 msgid "Title of scheduled maintenances widget"
 msgstr "Título del widget de mantenimiento programado"
 
@@ -1537,7 +1524,7 @@ msgstr ""
 msgid "Trimester 4"
 msgstr ""
 
-#: templates/stockwidget_form.html.twig:49 templates/alert_form.html.twig:36
+#: templates/stockwidget_form.html.twig:86 templates/alert_form.html.twig:36
 msgid "Type"
 msgstr ""
 
@@ -1562,7 +1549,7 @@ msgstr "Alertas de Casos de Usuario"
 msgid "Value"
 msgstr ""
 
-#: templates/menu_grid.html.twig:80
+#: templates/menu_grid.html.twig:81
 msgid "Warning"
 msgstr "Advertencia"
 
@@ -1571,7 +1558,7 @@ msgstr "Advertencia"
 msgid "Week"
 msgstr "Semana"
 
-#: src/Widget.php:73
+#: src/Widget.php:74
 msgid "Widget"
 msgstr ""
 
@@ -1615,19 +1602,19 @@ msgstr ""
 msgid "begin and end date"
 msgstr "fecha de inicio y fin"
 
-#: src/Module.php:175 src/Module.php:386
+#: src/Module.php:211 src/Module.php:422
 msgid "error"
 msgstr "error"
 
-#: templates/preferences.html.twig:35
+#: templates/preferences.html.twig:46
 msgid "minute(s)"
 msgstr "minuto(s)"
 
-#: src/Module.php:173 src/Module.php:370
+#: src/Module.php:209 src/Module.php:406
 msgid "notice"
 msgstr "aviso"
 
-#: src/Module.php:174 src/Module.php:378
+#: src/Module.php:210 src/Module.php:414
 msgid "warning"
 msgstr "advertencia"
 
