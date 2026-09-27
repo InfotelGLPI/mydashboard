@@ -25,16 +25,62 @@
  # --------------------------------------------------------------------------
  #}
 
-{% if show_warning %}
-    <div class="alert alert-warning" id="warning-alert">
-        <strong>{{ __('Warning', 'mydashboard') }}!</strong>
-        {{ __('No widgets founded, please add widgets', 'mydashboard') }}
-    </div>
+{#
+ # Dashboard page: libraries, toolbar (edit or view mode), widget offcanvas, global
+ # filters and the GridStack grid. The grid is driven by scripts/mydashboard-grid.js,
+ # configured through the data-md-grid-config attribute.
+ #}
+
+{% set lib_dir = '/plugins/mydashboard/lib/' %}
+{% set asset_options = {'version': plugin_version} %}
+
+<link rel="stylesheet" href="{{ css_path(lib_dir ~ 'gridstack/css/gridstack-extra.css', asset_options) }}">
+<link rel="stylesheet" href="{{ css_path(lib_dir ~ 'datatables/datatables.min.css', asset_options) }}">
+
+<script src="{{ js_path(lib_dir ~ 'gridstack/js/gridstack-all.js', asset_options) }}"></script>
+{% if load_search_libs %}
+    {# Registered through ADD_JAVASCRIPT in the central interface only #}
+    <script src="{{ js_path(lib_dir ~ 'fuse.js', asset_options) }}"></script>
+    <script src="{{ js_path(lib_dir ~ 'diacritics.js', asset_options) }}"></script>
+    <script src="{{ js_path(lib_dir ~ 'md-fuzzysearch.js', asset_options) }}"></script>
 {% endif %}
+<script src="{{ js_path(lib_dir ~ 'datatables/datatables.min.js', asset_options) }}"></script>
 
-{# GridStack fills this container; grid_script_html carries its initialisation #}
-<div id="mygrid{{ rand }}" class="mygrid">
-    {{ grid_script_html|raw }}
+{# Chart engine of the core rather than a copy of our own: a second bundle would take
+   over window.echarts for the dashboards and statistics of the core too. Themes stay
+   with the plugin, the core ships none. #}
+<script src="{{ js_path('lib/echarts.js') }}"></script>
+{% if theme is not empty %}
+    <script src="{{ js_path(lib_dir ~ 'echarts/theme/' ~ theme ~ '.js', asset_options) }}"></script>
+{% endif %}
+<script src="{{ js_path(lib_dir ~ 'html2canvas.min.js', asset_options) }}"></script>
+<script src="{{ js_path(lib_dir ~ 'jspdf.umd.js', asset_options) }}"></script>
+
+{# Circles is not called by this plugin: the widgets other plugins contribute to the grid
+   are (servicecatalog renders indicator_circles_script.js.twig into it). #}
+<script src="{{ js_path(lib_dir ~ 'circles/circles.min.js', asset_options) }}"></script>
+<script src="{{ js_path(lib_dir ~ 'countUp.min.js', asset_options) }}"></script>
+<script src="{{ js_path(lib_dir ~ 'countUp-jquery.js', asset_options) }}"></script>
+
+<script type="module" src="{{ js_path('/plugins/mydashboard/scripts/widget-datatable.js', asset_options) }}"></script>
+<script type="module" src="{{ js_path('/plugins/mydashboard/scripts/mydashboard-grid.js', asset_options) }}"></script>
+
+<div class="plugin_mydashboard_dashboard">
+    {% if edit_toolbar is not null %}
+        {{ include('@mydashboard/menu_widgets_offcanvas.html.twig', offcanvas) }}
+        {{ include('@mydashboard/menu_edit_toolbar.html.twig', edit_toolbar) }}
+    {% else %}
+        {{ include('@mydashboard/menu_action_toolbar.html.twig', {'actions': view_actions}) }}
+    {% endif %}
+
+    {{ include('@mydashboard/menu_global_filter_bar.html.twig', {'filters': filters}) }}
+
+    {% if show_warning %}
+        <div class="alert alert-warning" id="warning-alert">
+            <strong>{{ __('Warning', 'mydashboard') }}!</strong>
+            {{ __('No widgets founded, please add widgets', 'mydashboard') }}
+        </div>
+    {% endif %}
+
+    <div id="mygrid{{ rand }}" class="mygrid" data-md-grid-config="{{ grid_config|json_encode }}"></div>
 </div>
-
-{{ export_script_html|raw }}

@@ -27,16 +27,15 @@
 
 <div id="md-global-filter-bar"
      class="d-flex flex-wrap align-items-center gap-2 p-2 mb-2 border-bottom rounded-1">
-    <span class="badge bg-outline-secondary">
+    <span class="badge bg-secondary-lt">
         <i class="ti ti-filter me-1"></i>{{ __('Global filter', 'mydashboard') }}
     </span>
 
     {% for filter in filters %}
         <div class="d-flex align-items-center gap-1">
             <label class="form-label mb-0 text-muted small me-1">{{ filter.label }}</label>
+            {# raw: dropdown markup built by the core (Entity::dropdown(), Dropdown::showFromArray()) #}
             {{ filter.input_html|raw }}
         </div>
     {% endfor %}
-
-    {{ change_script_html|raw }}
 </div>

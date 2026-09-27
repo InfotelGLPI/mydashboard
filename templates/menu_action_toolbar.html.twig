@@ -25,19 +25,19 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Viewing-mode toolbar. Each action is a plain anchor picked up by the dashboard JS
-   through its id; "ms_auto" pushes the action to the right of the bar. #}
+{# Viewing-mode toolbar. Each action is handled by mydashboard-grid.js through its
+   data-md-action attribute; "ms_auto" pushes the action to the right of the bar. #}
 <div class="md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2">
-    <span class="badge bg-outline-secondary">
+    <span class="badge bg-secondary-lt">
         <i class="ti ti-layout-dashboard me-1"></i>{{ __('My Dashboard', 'mydashboard') }}
     </span>
 
     <div class="vr mx-1"></div>
 
     {% for action in actions %}
-        <a id="{{ action.id }}" role="button" style="padding: 5px;"
+        <button type="button" data-md-action="{{ action.id }}" style="padding: 5px;"
            class="btn {{ action.class }} btn-sm{{ action.ms_auto is defined and action.ms_auto ? ' ms-auto' : '' }}">
             <i class="{{ action.icon }} me-1"></i>{{ action.label }}
-        </a>
+        </button>
     {% endfor %}
 </div>

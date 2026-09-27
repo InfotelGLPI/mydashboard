@@ -34,6 +34,7 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use DropdownVisibility;
 use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Session;
@@ -193,13 +194,35 @@ class StockWidget extends CommonDBTM
 
         $states_dropdown_html = '';
         if ($options['item']) {
-            $state = new State();
+            global $DB;
+
+            // GLPI 11 moved the per-itemtype visibility of a status from the
+            // glpi_states.is_visible_* columns to glpi_dropdownvisibilities.
             $dbu = new DbUtils();
-            $field = 'is_visible_' . strtolower($options['item']);
-            $condition = [$field => 1]
-                + $dbu->getEntitiesRestrictCriteria('glpi_states', 'entities_id', $this->fields['entities_id'], true);
+            $criteria = [
+                'SELECT' => [State::getTable() . '.id', State::getTable() . '.name'],
+                'FROM' => State::getTable(),
+                'INNER JOIN' => [
+                    DropdownVisibility::getTable() => [
+                        'ON' => [
+                            DropdownVisibility::getTable() => 'items_id',
+                            State::getTable() => 'id',
+                            [
+                                'AND' => [
+                                    DropdownVisibility::getTable() . '.itemtype' => State::class,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'WHERE' => [
+                    DropdownVisibility::getTable() . '.visible_itemtype' => $options['item'],
+                    DropdownVisibility::getTable() . '.is_visible' => 1,
+                ] + $dbu->getEntitiesRestrictCriteria(State::getTable(), 'entities_id', $this->fields['entities_id'], true),
+                'ORDER' => State::getTable() . '.name',
+            ];
             $states = [];
-            foreach ($state->find($condition) as $v) {
+            foreach ($DB->request($criteria) as $v) {
                 $states[$v['id']] = $v['name'];
             }
             $states_dropdown_html = Dropdown::showFromArray('states', $states, [

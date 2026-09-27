@@ -25,8 +25,6 @@
  # --------------------------------------------------------------------------
  #}
 
-{{ script_html|raw }}
-
 <div class="offcanvas offcanvas-end" tabindex="-1" id="md-widget-offcanvas"
      aria-labelledby="md-wd-oc-label">
     <div class="offcanvas-header border-bottom">
@@ -35,7 +33,7 @@
                 aria-label="{{ __('Close') }}"></button>
     </div>
     <div class="offcanvas-body p-2">
-        {# fuzzy search box, then the accordion built by Widgetlist #}
+        {# raw: fuzzy search box, then the accordion, both built by Widgetlist, which escapes the labels #}
         {{ search_html|raw }}
         <div class="mt-2">
             {{ list_html|raw }}

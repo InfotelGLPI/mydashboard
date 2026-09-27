@@ -34,19 +34,13 @@ use DbUtils;
 use Dropdown;
 use Entity;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Group;
 use GlpiPlugin\Mydashboard\Criterias\Year;
-use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
-use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
-use GlpiPlugin\Mydashboard\Reports\Reports_Funnel;
-use GlpiPlugin\Mydashboard\Reports\Reports_Line;
-use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
-use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use Plugin;
 use Profile;
 use Session;
 use Ticket;
-use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Preference as MydashboardPreference;
 
 /**
@@ -249,476 +243,38 @@ class Menu extends CommonGLPI
     }
 
     /**
-     * Show dashboard
+     * Data of the offcanvas listing the widgets that can be added to the grid.
      *
-     * @param int $users_id
-     * @param int $active_profile
+     * The click on an entry is handled by public/scripts/mydashboard-grid.js.
      *
-     * @return FALSE if the user haven't the right to see Dashboard
-     * @internal param type $user_id
+     * @param array    $used gsids already placed on the grid
+     *
+     * @return array{search_html: string, list_html: string}
      */
-    public function showMenu($rand, $users_id = -1, $active_profile = -1, $predefined_grid = 0)
+    private function getWidgetsOffcanvasData(int $active_profile, array $used): array
     {
-        //We check the wanted interface (this param is later transmitted to UserWidget to get the dashboard for the user in this interface)
-        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-
-        // validation des droits
-        if (!Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
-            return false;
+        $gslist = [];
+        foreach (Widget::getCachedWidgetList() as $gs => $widgetclasses) {
+            $gslist[$widgetclasses['id']] = $gs;
         }
-        // checking if no users_id is specified
-        $this->users_id = Session::getLoginUserID();
-        if ($users_id != -1) {
-            $this->users_id = $users_id;
-        }
-
-        //Now the mydashboard
-        $this->showDashboard($rand, $active_profile, $predefined_grid);
-    }
-
-    /**
-     * Dropdown profiles which have rights under the active one
-     *
-     * @param $options array of possible options:
-     *    - name : string / name of the select (default is profiles_id)
-     *    - value : integer / preselected value (default 0)
-     *
-     **/
-    public static function dropdownProfiles($options = [])
-    {
-        global $DB;
-
-        $p['name']  = 'profiles_id';
-        $p['value'] = '';
-        $p['rand']  = mt_rand();
-        $profiles   = [];
-        if (is_array($options) && count($options)) {
-            foreach ($options as $key => $val) {
-                $p[$key] = $val;
-            }
-        }
-        $iterator = $DB->request(
-            ['SELECT'    => [
-                'glpi_profiles.name',
-                'glpi_profiles.id',
-            ],
-                'FROM'      => Profile::getTable(),
-                'LEFT JOIN' => [
-                    'glpi_profilerights' => [
-                        'FKEY' => [
-                            'glpi_profilerights' => 'profiles_id',
-                            'glpi_profiles'      => 'id',
-                        ],
-                    ],
-                ],
-                'WHERE'     => [Profile::getUnderActiveProfileRestrictCriteria(),
-                    'glpi_profilerights.name'   => 'plugin_mydashboard',
-                    'glpi_profilerights.rights' => ['>', 0],
-                ],
-                'ORDER'     => 'glpi_profilerights.name',
-            ],
-        );
-
-        //New rule -> get the next free ranking
-        foreach ($iterator as $data) {
-            $profiles[$data['id']] = $data['name'];
-        }
-
-        $options = [];
-        foreach ($profiles as $id => $name) {
-            $options[] = [
-                'id' => (int) $id,
-                'name' => $name,
-                'selected' => $id == $p['value'],
-            ];
-        }
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/menu_profiles_dropdown.html.twig', [
-            'name' => $p['name'],
-            'empty_value' => Dropdown::EMPTY_VALUE,
-            'profiles' => $options,
-            // Delegated handler on the data attribute, replacing the inline onChange
-            'submit_script_html' => self::getSubmitOnChangeScript(),
-        ]);
-        //
-        //      Dropdown::showFromArray($p['name'], $profiles,
-        //                              ['value'               => $p['value'],
-        //                               'rand'                => $p['rand'],
-        //                               'display_emptychoice' => true,
-        //                               'on_change'           => 'this.form.submit()']);
-    }
-
-    /**
-     * This method shows the widget list (in the left part) AND the mydashboard
-     *
-     * @param int $selected_profile
-     */
-    private function showDashboard($rand, $selected_profile = -1, $predefined_grid = 0)
-    {
-        //If we want to display the widget list menu, we have to 'echo' it, else we also need to call it because it initialises $this->widgets (link between classnames and widgetId s)
-        //      $_SESSION['plugin_mydashboard_editmode'] = false;
-        //      $edit = MydashboardPreference::checkEditMode(Session::getLoginUserID());
-        //      if ($edit > 0) {
-        //         echo $this->getWidgetsList($selected_profile, $edit);
-        //      }
-
-        //Now we have a widget list menu, but, it does nothing, we have to bind
-        //list item click with the adding on the mydashboard, and we need to display
-        //this div contains the header and the content (basically the ul used by sDashboard)
-
-        //Automatic refreshing of the widgets (that wants to be refreshed -> see Module::toggleRefresh() )
-        $refresh_script_html = '';
-        if (self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh']) {
-            //We need some javascript, here are scripts (script which have to be dynamically called)
-            $refreshIntervalMs = 60000 * self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh_delay'];
-            //this js function call itself every $refreshIntervalMs ms, each execution result in the refreshing of all refreshable widgets
-
-            $refresh_script_html = \Html::scriptBlock('
-            function refreshAll() {
-                 $(\'.refresh-icon\').trigger(\'click\');
-             };
-            function automaticRefreshAll(delay) {
-                 setInterval(function () {
-                     refreshAll();
-                 }, delay);
-             }
-            ')
-            . \Html::scriptBlock('
-               automaticRefreshAll(' . $refreshIntervalMs . ');
-         ');
-        }
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/menu_dashboard.html.twig', [
-            'refresh_script_html' => $refresh_script_html,
-        ]);
-    }
-
-    //    public function displayEditMode($rand, $edit = 0, $selected_profile = -1, $predefined_grid = 0)
-    //    {
-    //        $drag = MydashboardPreference::checkDragMode(Session::getLoginUserID());
-    //
-    //        echo $this->getscripts();
-    //
-    //        if ($edit > 0) {
-    //            //force loading new widgets
-    //            self::installWidgets();
-    //        }
-    //
-    //        if ($edit > 0) {
-    //            /**** Loading widgets****/
-    //            if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'])) {
-    //                $_SESSION['glpi_plugin_mydashboard_widget_list'] = Widget::getCompleteWidgetList();
-    //            }
-    //            $widgetslist = $_SESSION['glpi_plugin_mydashboard_widget_list'];
-    //
-    //            $gslist      = [];
-    //            foreach ($widgetslist as $gs => $widgetclasses) {
-    //                $gslist[$widgetclasses['id']] = $gs;
-    //            }
-    //            $grid = [];
-    //            $used = [];
-    //
-    //            $dashboard = new Dashboard();
-    //
-    //            if ($edit == 2) {
-    //                $options = ["users_id"    => 0,
-    //                    "profiles_id" => $selected_profile];
-    //                $id      = Dashboard::checkIfPreferenceExists($options);
-    //                if ($dashboard->getFromDB($id)) {
-    //                    $grid = stripslashes($dashboard->fields['grid']);
-    //                }
-    //            }
-    //            if ($edit == 1) {
-    //                $option_users = ["users_id"    => Session::getLoginUserID(),
-    //                    "profiles_id" => $selected_profile];
-    //                $id           = Dashboard::checkIfPreferenceExists($option_users);
-    //                if ($dashboard->getFromDB($id)) {
-    //                    $grid = stripslashes($dashboard->fields['grid']);
-    //                }
-    //            }
-    //
-    //            if (!empty($grid) && ($datagrid = json_decode($grid, true)) == !null) {
-    //                foreach ($datagrid as $k => $v) {
-    //                    $used[] = $v["id"];
-    //                }
-    //            }
-    //
-    //            $widgetlist = Widgetlist::getList(true, $selected_profile);
-    //            /**** End Loading widgets****/
-    //
-    //            // Offcanvas catalogue de widgets (hors sidebar, pour que Bootstrap le positionne correctement)
-    //            echo $this->getWidgetsList($widgetlist, $gslist, $used);
-    //
-    //            echo "<div class='left'>";
-    //
-    //            echo "<form method='post'
-    //                     action='" . $this->getSearchURL() . "' onsubmit='return true;'>";
-    //
-    //            echo "<table class='tab_cadre_fixe' width='100%'>";
-    //
-    //            echo "<tr><td class='center' style='padding: 8px;'>";
-    //            echo "<button type='button' class='btn btn-primary w-100 plugin_mydashboard_add_button'"
-    //                . " data-bs-toggle='offcanvas' data-bs-target='#md-widget-offcanvas'"
-    //                . " aria-controls='md-widget-offcanvas'>";
-    //            echo "<i class='ti ti-plus me-1'></i>&nbsp;" . __('Add widgets', 'mydashboard');
-    //            echo "</button>";
-    //            echo "</td></tr>";
-    //
-    //            echo "<tr><th style='background-color: #e3e3e3;padding: 10px;'>";
-    //            echo __('Edit mode', 'mydashboard');
-    //            if ($edit == 2) {
-    //                echo " (" . __('Global', 'mydashboard') . ")";
-    //            }
-    //            echo "</th>";
-    //            echo "</tr>";
-    //
-    //            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-    //                echo "<tr>";
-    //                echo "<td class='center'>";
-    //                echo "<span class='editmode_test'>" . __('Profile') . "</span>&nbsp;";
-    //                echo "<br><br>";
-    //                self::dropdownProfiles(['value' => $selected_profile]);
-    //                echo "</td>";
-    //                echo "<tr>";
-    //            } else {
-    //                echo \Html::hidden("profiles_id", ['value' => $_SESSION['glpiactiveprofile']['id']]);
-    //            }
-    //
-    //            echo "<tr class='plugin_mydashboard_trWidget'>";
-    //            echo "<td class='center' style='border: 0;'>";
-    //
-    //            echo "<br><span class='editmode_test'>" . __('Load a predefined grid', 'mydashboard') . "</span>&nbsp;";
-    //            echo "<br><br>";
-    //            $elements = Dashboard::getPredefinedDashboardName();
-    //            echo "<select name='predefined_grid' onChange='this.form.submit()'>";
-    //            echo "<option>" . Dropdown::EMPTY_VALUE . "</option>";
-    //            foreach ($elements as $id => $name) {
-    //                echo "<option value='$id'>$name</option>";
-    //            }
-    //            echo "</select><br>";
-    //            //         Dropdown::showFromArray("predefined_grid", $elements, [
-    //            //            'value'               => $predefined_grid,
-    //            //            'width'               => '170px',
-    //            //            'display_emptychoice' => true,
-    //            //            'on_change'           => 'this.form.submit()']);
-    //            //
-    //            echo "<br>";
-    //
-    //            if (!Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-    //                $edit = 1;
-    //            }
-    //
-    //            if ($edit == 1) {
-    //                echo "<a id='save-grid' class='submit btn btn-success'>";
-    //                echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Save grid', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //            if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
-    //                echo "<a id='save-default-grid' class='submit btn btn-success'>";
-    //                echo "<i class='ti ti-layout-grid pointer btn-mydashboard' title='" . __('Save default grid', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Save default grid', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //
-    //            echo "<a id='clear-grid' class='submit btn btn-danger'>";
-    //            echo "<i class='ti ti-brand-windows pointer btn-mydashboard' title='" . __('Clear grid', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //            echo "&nbsp;" . __('Clear grid', 'mydashboard');
-    //            echo "</a>";
-    //            echo "<br><br>";
-    //
-    //            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-    //                echo "<a id='drag-grid' class='submit btn btn-danger'>";
-    //                echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-    //                echo "<a id='undrag-grid' class='submit btn btn-success'>";
-    //                echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Block drag / resize widgets', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //
-    //            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-    //            if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
-    //                && $edit < 1
-    //                && $interface == 1) {
-    //                echo "<a id='header_fullscreen' class='submit btn btn-info'>";
-    //                echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __("Fullscreen", "mydashboard");
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //            echo "<a id='close-edit' class='submit btn btn-success'>";
-    //            echo "<i class='ti ti-circle-x pointer btn-mydashboard' title='" . __("Close edit mode", "mydashboard") . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //            echo "&nbsp;" . __("Close edit mode", "mydashboard");
-    //            echo "</a>";
-    //
-    //            echo "</td>";
-    //            echo "</tr>";
-    //
-    //            echo "</table>";
-    //            \Html::closeForm();
-    //            echo "</div>";
-    //
-    //            echo "<div class='alert alert-success' id='success-alert'>
-    //                <strong>" . __('Success', 'mydashboard') . "</strong> -
-    //                " . __('The widget was added to dashboard. Save the dashboard.', 'mydashboard') . "
-    //            </div>";
-    //            echo \Html::scriptBlock('
-    //               $("#success-alert").hide();
-    //         ');
-    //
-    //            echo "<div class='bt-alert bt-alert-error' id='error-alert'>
-    //                <strong>" . __('Error', 'mydashboard') . "</strong>
-    //                " . __('Please reload your page.', 'mydashboard') . "
-    //            </div>";
-    //            echo \Html::scriptBlock('
-    //               $("#error-alert").hide();
-    //         ');
-    //        } else {
-    //            echo "<div class='center'>";
-    //            echo "<br>";
-    //
-    //            if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-    //                echo "<a id='save-grid' class='submit btn btn-success'>";
-    //                echo "<i class='ti ti-device-floppy pointer btn-mydashboard' title='" . __('Save grid', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Save grid', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //
-    //                echo "<a id='undrag-grid' class='submit btn btn-success'>";
-    //                echo "<i class='ti ti-lock-open pointer btn-mydashboard' title='" . __('Block drag / resize widgets', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Block drag / resize widgets', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //
-    //            if (Session::haveRight("plugin_mydashboard_edit", 6)) {
-    //                echo "<a id='edit-grid' class='submit btn btn-danger'>";
-    //                echo "<i class='ti ti-edit pointer btn-mydashboard' title='" . __('Switch to edit mode', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Switch to edit mode', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //
-    //            if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
-    //                echo "<a id='drag-grid' class='submit btn btn-danger'>";
-    //                echo "<i class='ti ti-lock pointer btn-mydashboard' title='" . __('Permit drag / resize widgets', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Permit drag / resize widgets', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //
-    //            if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
-    //                echo "<a id='edit-default-grid' class='submit btn btn-danger'>";
-    //                echo "<i class='ti ti-adjustments pointer btn-mydashboard' title='" . __('Custom and save profile grid', 'mydashboard') . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __('Custom and save profile grid', 'mydashboard');
-    //                echo "</a>";
-    //                echo "<br><br>";
-    //            }
-    //
-    //            $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-    //            if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen']
-    //                && $edit < 1
-    //                && $interface == 1) {
-    //                echo "<a id='header_fullscreen' class='submit btn btn-info'>";
-    //                echo "<i class='ti ti-maximize pointer btn-mydashboard' title='" . __("Fullscreen", "mydashboard") . "'
-    //                           data-hasqtip='0' aria-hidden='true'></i>";
-    //                echo "&nbsp;" . __("Fullscreen", "mydashboard");
-    //                echo "</a>";
-    //            }
-    //        }
-    //        echo "<div id='ajax_loader' class=\"ajax_loader hidden\">";
-    //        echo "</div>";
-    //    }
-
-    /**
-     * Génère l'offcanvas Bootstrap contenant la liste des widgets disponibles.
-     */
-    public function getWidgetsList($widgetlist, $gslist, $used): string
-    {
-        // Interpolated raw into the inline <script> below as a JS array literal, so it gets
-        // the same HTML-hardening flags as every other script-bound JSON of the plugin.
-        // json_encode() never escapes the structural quotes -- only the ones inside keys
-        // and values -- so the literal stays valid while a stored </script> goes inert.
-        $usedJson = json_encode(
-            array_values($used),
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
-        );
-        $wl  = \Html::scriptBlock("
-            if (typeof window.md_used_widgets === 'undefined') {
-                window.md_used_widgets = $usedJson;
-            }
-            $(document).ready(function () {
-                $(document).on('click', '.plugin_mydashboard_menuDashboardListItem', function () {
-                    const \$btn    = $(this);
-                    const widgetId = \$btn.attr('data-widgetid');
-                    if (addNewWidget(widgetId) === true) {
-                        // Masquer ce bouton dans l'accordéon et dans la recherche floue
-                        $('[data-widgetid=\"' + widgetId + '\"]').hide();
-                        // Mémoriser ce widget comme déjà placé pour la recherche floue
-                        if (!window.md_used_widgets.includes(widgetId)) {
-                            window.md_used_widgets.push(widgetId);
-                        }
-                        const ocEl = document.getElementById('md-widget-offcanvas');
-                        if (ocEl) {
-                            bootstrap.Offcanvas.getOrCreateInstance(ocEl).hide();
-                        }
-                    }
-                });
-            });
-        ");
+        $widgetlist = Widgetlist::getList(true, $active_profile);
 
         // loadWidgetsListForMenu() appends to its third argument by reference
         $list_html = '';
         Widgetlist::loadWidgetsListForMenu($widgetlist, $used, $list_html, $gslist);
 
-        return TemplateRenderer::getInstance()->render('@mydashboard/menu_widgets_offcanvas.html.twig', [
-            'script_html' => $wl,
+        return [
             'search_html' => Widgetlist::fuzzySearch('getHtml'),
             'list_html' => $list_html,
-        ]);
+        ];
     }
 
     /**
-     * Barre d'actions horizontale en mode édition, affichée au-dessus de la grille.
-     */
-    /**
-     * Delegated handler replacing the inline onChange="this.form.submit()" of the selects.
+     * Data of the toolbar displayed above the grid in edit mode.
      *
-     * The event is namespaced and rebound with off(), so emitting this block more than
-     * once on a page cannot submit the form twice.
-     *
-     * @return string
+     * @return array<string, mixed>
      */
-    public static function getSubmitOnChangeScript()
-    {
-        return \Html::scriptBlock(
-            '$(document).off("change.mdsubmit").on("change.mdsubmit", "select[data-md-submit-on-change]", function () {'
-            . 'this.form.submit();'
-            . '});',
-        );
-    }
-
-    private function getEditToolbar(int $edit, int $selected_profile, int $drag): string
+    private function getEditToolbarData(int $edit, int $selected_profile, int $drag): array
     {
         global $DB;
 
@@ -785,23 +341,23 @@ class Menu extends CommonGLPI
 
         $predefined_grids = Dashboard::getPredefinedDashboardName();
 
-        return TemplateRenderer::getInstance()->render('@mydashboard/menu_edit_toolbar.html.twig', [
+        return [
             'form_action' => $this->getSearchURL(),
-            'csrf_token' => \Session::getNewCSRFToken(),
             'badge' => $badge,
             'actions' => $actions,
             'predefined_grids' => is_array($predefined_grids) ? $predefined_grids : [],
             'profiles' => $profiles,
             'empty_value' => Dropdown::EMPTY_VALUE,
             'current_profile_id' => (int) $_SESSION['glpiactiveprofile']['id'],
-            'submit_script_html' => self::getSubmitOnChangeScript(),
-        ]);
+        ];
     }
 
     /**
-     * Barre d'actions horizontale pour le mode visualisation (hors édition).
+     * Actions of the toolbar displayed above the grid out of edit mode.
+     *
+     * @return array<int, array<string, mixed>>
      */
-    private function getActionModal(int $drag): string
+    private function getViewToolbarActions(int $drag): array
     {
         $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
         $can_edit = Session::haveRight("plugin_mydashboard_edit", 6);
@@ -830,25 +386,25 @@ class Menu extends CommonGLPI
                 'icon' => 'ti ti-adjustments', 'label' => __('Custom and save profile grid', 'mydashboard'),
             ];
         }
-        $actions[] = ['id' => 'exportByHTML', 'class' => 'btn-outline-secondary', 'ms_auto' => true,
+        $actions[] = ['id' => 'export-pdf', 'class' => 'btn-outline-secondary', 'ms_auto' => true,
             'icon' => 'ti ti-file-type-pdf', 'label' => __("Export to PDF", "mydashboard"),
         ];
         if (self::$_PLUGIN_MYDASHBOARD_CFG['enable_fullscreen'] && $interface === 1) {
-            $actions[] = ['id' => 'header_fullscreen', 'class' => 'btn-info',
+            $actions[] = ['id' => 'fullscreen', 'class' => 'btn-info',
                 'icon' => 'ti ti-maximize', 'label' => __("Fullscreen", "mydashboard"),
             ];
         }
 
-        return TemplateRenderer::getInstance()->render('@mydashboard/menu_action_toolbar.html.twig', [
-            'actions' => $actions,
-        ]);
+        return $actions;
     }
 
     /**
-     * Barre de filtres globaux affichée sous la toolbar, pré-remplie depuis les préférences utilisateur.
-     * Tout changement déclenche un rafraîchissement de tous les widgets visibles.
+     * Global filters displayed under the toolbar, preset from the user preferences.
+     * Any change refreshes every widget of the grid (see mydashboard-grid.js).
+     *
+     * @return array{filters: array<int, array{label: string, input_html: string}>, initial: array<string, mixed>}
      */
-    private function getGlobalFilterBar(): string
+    private function getGlobalFilterBarData(): array
     {
         $pref = new MydashboardPreference();
         if (!$pref->getFromDB(Session::getLoginUserID())) {
@@ -899,41 +455,6 @@ class Menu extends CommonGLPI
             'display' => false,
         ]);
 
-        // Same contract as $usedJson above: raw object literal in an inline <script>.
-        $init_js = json_encode(
-            [
-                'entities_id'           => $entity_default,
-                'technicians_groups_id' => $group_default,
-                'type'                  => $type_default ?: null,
-                'year'                  => $year_default,
-            ],
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
-        );
-
-        $change_js = \Html::scriptBlock("
-            window.mdGlobalFilters = {$init_js};
-
-            $(document).on('change', '#md-global-filter-bar select', function () {
-                var filters = {};
-                $('#md-global-filter-bar select').each(function () {
-                    var rawName = \$(this).attr('name');
-                    if (!rawName) return;
-                    var key = rawName.replace(/^md_gf_/, '').replace(/\[\]\$/, '');
-                    var val = \$(this).val();
-                    if (val === null || val === '' || (Array.isArray(val) && val.length === 0)) return;
-                    if (key === 'type' && parseInt(val) === 0) return;
-                    filters[key] = val;
-                });
-                window.mdGlobalFilters = filters;
-
-                if (Array.isArray(window.mdDisplayedWidgetIds)) {
-                    window.mdDisplayedWidgetIds.forEach(function (gsid) {
-                        refreshWidget(gsid);
-                    });
-                }
-            });
-        ");
-
         $filters = [
             ['label' => __('Entity'), 'input_html' => $entity_dd],
         ];
@@ -943,56 +464,15 @@ class Menu extends CommonGLPI
         $filters[] = ['label' => __('Type'), 'input_html' => $type_dd];
         $filters[] = ['label' => __('Year', 'mydashboard'), 'input_html' => $year_dd];
 
-        return TemplateRenderer::getInstance()->render('@mydashboard/menu_global_filter_bar.html.twig', [
+        return [
             'filters' => $filters,
-            'change_script_html' => $change_js,
-        ]);
-    }
-
-    /**
-     * @return string
-     */
-    public function getscripts()
-    {
-        // Framework wrapper instead of a hand-written <script> tag
-        $wl = \Html::scriptBlock("
-            $(document).ready(function () {
-
-//                 $('#load-widgets').click(function () {
-//                    launchloadWidgets();
-//                });
-                 $('#clear-grid').click(function () {
-                    launchClearGrid();
-                });
-                 $('#header_fullscreen').click(function () {
-                    launchFullscreen();
-                });
-                 $('#edit-grid').click(function () {
-                    launchEditMode();
-                });
-                 $('#edit-default-grid').click(function () {
-                    launchEditDefaultMode();
-                });
-                 $('#close-edit').click(function () {
-                    launchCloseEditMode();
-                });
-                 $('#save-grid').click(function () {
-                    launchSaveGrid();
-                });
-                 $('#save-default-grid').click(function () {
-                    launchSaveDefaultGrid();
-                });
-                 $('#drag-grid').click(function () {
-                    launchDragGrid();
-                });
-                 $('#undrag-grid').click(function () {
-                    launchUndragGrid();
-                });
-            });
-
-        ");
-
-        return $wl;
+            'initial' => [
+                'entities_id'           => $entity_default,
+                'technicians_groups_id' => $group_default,
+                'type'                  => $type_default ?: null,
+                'year'                  => $year_default,
+            ],
+        ];
     }
 
     /**
@@ -1026,54 +506,6 @@ class Menu extends CommonGLPI
     }
 
     /**
-     * Stores every widgets in Database (see Widget)
-     */
-    //    private function initDBWidgets()
-    //    {
-    //        $widgetDB    = new Widget();
-    //        $dbu         = new DbUtils();
-    //        $widgetsinDB = $dbu->getAllDataFromTable(Widget::getTable());
-    //
-    //        $widgetsnames = [];
-    //        foreach ($widgetsinDB as $widget) {
-    //            $widgetsnames[$widget['name']] = $widget['id'];
-    //        }
-    //
-    //        foreach ($this->widgets as $classname => $classwidgets) {
-    //            foreach ($classwidgets as $widgetId => $view) {
-    //                if (!isset($widgetsnames[$widgetId])) {
-    //                    $widgetDB->saveWidget($widgetId);
-    //                }
-    //            }
-    //        }
-    //    }
-
-    /**
-     * Get an array of widgetNames as ["id1","id2"] for a specifid users_id
-     *
-     * @param int $id user id
-     *
-     * @return array of string
-     */
-    //    private function getDashboardForUser($id)
-    //    {
-    //        $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-    //        $user_widget     = new UserWidget($id, $interface);
-    //        return $user_widget->getWidgets();
-    //    }
-
-    //   /**
-    //    * Get the widget index on dash, to add it in the correct order
-    //    *
-    //    * @param type $name
-    //    *
-    //    * @return int if $name is in self::dash, FALSE otherwise
-    //    */
-    //   private function getIndexOnDash($name) {
-    //      return array_search($name, $this->dashboard);
-    //   }
-
-    /**
      * Get all plugin names of plugin hooked with mydashboard
      * @return array of string
      * @global $PLUGIN_HOOKS
@@ -1101,17 +533,6 @@ class Menu extends CommonGLPI
         $infos = Plugin::getInfo($plugin_name);
         return isset($infos['name']) ? $infos['name'] : $plugin_name;
     }
-
-    /**
-     * Display an information in the top left corner of the mydashboard
-     *
-     * @param $text
-     */
-    //    private function displayInfo($text) {
-    //        if(is_string($text)) {
-    //            $this->infos .= $text;
-    //        }
-    //    }
 
     /**
      * Get all languages for a specific library
@@ -1185,192 +606,50 @@ class Menu extends CommonGLPI
     }
 
     /**
-     * Log $msg only when DEBUG_MODE is set
+     * Display the dashboard: toolbar, widget offcanvas, global filters and grid.
+     *
+     * Everything is rendered by menu_grid.html.twig; the grid itself is driven by
+     * public/scripts/mydashboard-grid.js from the configuration passed in a data attribute.
      *
      * @param int $active_profile
-     */
-    //   private function debug($msg) {
-    //      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-    //         Toolbox::logDebug($msg);
-    //      }
-    //   }
-
-    /***********************/
-
-    /**
-     * @param int $active_profile
+     * @param int $predefined_grid
+     *
+     * @return void
      */
     public function loadDashboard($active_profile = -1, $predefined_grid = 0)
     {
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/js/gridstack-all.js");
-        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/gridstack/css/gridstack-extra.css");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-fullscreen-plugin/jquery.fullscreen-min.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/fuse.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/diacritics.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/md-fuzzysearch.js");
-
-        echo \Html::css(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.css");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/datatables/datatables.min.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/scripts/widget-datatable.js", ['type' => 'module']);
-
-        // Chart engine of the core rather than a copy of our own. The scripts of a plugin
-        // are emitted after those of the core in page_footer.html.twig, so a second bundle
-        // shipped here would take over window.echarts for the dashboards and the
-        // statistics of the core too. Themes stay with the plugin, the core ships none,
-        // and they are plain registerTheme() calls both branches of ECharts accept.
-        $theme = MydashboardPreference::getPalette(Session::getLoginUserID());
-        echo \Html::script('lib/echarts.js');
-        if (!empty($theme)) {
-            echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/echarts/theme/$theme.js");
+        // Union of the rule of front/menu.php (READ, UPDATE) and of the former showMenu()
+        // (CREATE, READ): the "My view" tab reaches this method through
+        // ajax/common.tabs.php, which does not replay the page guard.
+        if (!Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE, CREATE])) {
+            throw new AccessDeniedHttpException();
         }
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/html2canvas.min.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jspdf.umd.js");
-
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js");
-        // Circles is not called by this plugin: the widgets other plugins contribute to
-        // the grid are, servicecatalog rendering indicator_circles_script.js.twig into it.
-        // A library loaded here serves the whole page, widgets included.
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/circles/circles.min.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/countUp.min.js");
-        echo \Html::script(PLUGIN_MYDASHBOARD_WEBDIR . "/lib/countUp-jquery.js");
-
-        $rand           = mt_rand();
         $this->users_id = Session::getLoginUserID();
-        $this->showMenu($rand, $this->users_id, $active_profile, $predefined_grid);
+        $active_profile = (int) $active_profile;
 
-        //        $this->initDBWidgets();
-        $grid = [];
+        $edit = MydashboardPreference::checkEditMode($this->users_id);
+        $drag = MydashboardPreference::checkDragMode($this->users_id);
 
-        //        $list = $this->getDashboardForUser($this->users_id);
-        //        $data = [];
-        //        if (count($list) > 0) {
-        //            foreach ($list as $k => $v) {
-        //                $id = Widget::getGsID($v);
-        //                if ($id) {
-        //                    $data[] = ["id" => $id, "x" => 6, "y" => 6, "width" => 4, "height" => 6];
-        //                }
-        //            }
-        //            $grid = json_encode($data);
-        //        }
-        //LOAD WIDGETS
-        $edit = MydashboardPreference::checkEditMode(Session::getLoginUserID());
-        $drag = MydashboardPreference::checkDragMode(Session::getLoginUserID());
-        //WITHOUTH PREFS
+        $grid          = '';
         $dashboard     = new Dashboard();
-        $options_users = ["users_id" => Session::getLoginUserID(), "profiles_id" => $active_profile];
-        $id_user       = Dashboard::checkIfPreferenceExists($options_users);
+        $id_user       = Dashboard::checkIfPreferenceExists(["users_id" => $this->users_id, "profiles_id" => $active_profile]);
 
+        // Default grid of the profile when the user has none, or when it is being edited
         if ($id_user == 0 || $edit == 2) {
-            $options = ["users_id" => 0, "profiles_id" => $active_profile];
-            $id      = Dashboard::checkIfPreferenceExists($options);
+            $id = Dashboard::checkIfPreferenceExists(["users_id" => 0, "profiles_id" => $active_profile]);
             if ($dashboard->getFromDB($id)) {
                 $grid = stripslashes($dashboard->fields['grid']);
             }
         }
-        //WITH PREFS
-        if ($edit != 2) {
-            if ($dashboard->getFromDB($id_user)) {
-                $grid = stripslashes($dashboard->fields['grid']);
-            }
+        if ($edit != 2 && $dashboard->getFromDB($id_user)) {
+            $grid = stripslashes($dashboard->fields['grid']);
         }
-        //LOAD PREDEFINED GRID
         if ($predefined_grid > 0) {
             $grid = Dashboard::loadPredefinedDashboard($predefined_grid);
         }
-        $datagrid             = [];
-        $datajson             = [];
-        $widgets              = [];
-        $displayed_widgets    = [];
-        $displayed_widgets_id = [];
-        $warning_no_widgets   = '';
 
-        //FOR ADD NEW WIDGET
-        $allwidgetjson = [];
-
-        if (!empty($grid)
-            && ($datagrid = json_decode($grid, true)) == !null) {
-
-            $widgets = Widget::getCachedWidgetList();
-
-            foreach ($datagrid as $k => $v) {
-                if (isset($v["id"]) && isset($widgets[$v["id"]])) {
-                    $id_class = $widgets[$v["id"]]["id"];
-
-                    $widget_id = Widget::removeBackslashes($id_class);
-                    $datajson[$v["id"]] = "<div id='{$widget_id}' class='md-widget-loading text-center p-3'></div>";
-
-                    $widget_name = Widget::removeBackslashes($id_class);
-                    $displayed_widgets[]    = $widget_name;
-                    $displayed_widgets_id[] = $v["id"];
-                }
-            }
-
-            if ($edit > 0) {
-                if (isset($_SESSION["glpi_plugin_mydashboard_allwidgets"])
-                    && count($_SESSION["glpi_plugin_mydashboard_allwidgets"]) > 0) {
-                    $allwidgetjson = $_SESSION["glpi_plugin_mydashboard_allwidgets"];
-                } else {
-
-                    foreach ($widgets as $k => $val) {
-                        $allwidgetjson[$k] = [
-                            "<div class='alert alert-success' id='success-alert'>
-                            <strong>" . __('Success', 'mydashboard') . "</strong> -
-                            " . __('Save grid to see widget', 'mydashboard') . "
-                        </div>",
-                        ];
-                        //NOT LOAD ALL WIDGETS FOR PERF
-                        //               $allwidgetjson[$k] = Widget::getWidget($k, [], $widgets);
-                    }
-                }
-            }
-
-        } else {
-            $warning_no_widgets = "<div class='alert alert-warning' id='warning-alert'>"
-                . "<strong>" . __('Warning', 'mydashboard') . "!</strong> "
-                . __('No widgets founded, please add widgets', 'mydashboard')
-                . "</div>";
-
-            $grid = '[]';
-        }
-
-        // All four arrays below are interpolated into the inline <script> of this page, so
-        // they are encoded with the same HTML-hardening flags as every other script-bound
-        // JSON of the plugin (Chart::hardenJson(), ajax/refreshWidget.php, the grid a few
-        // lines below): a value holding </script> can never leave the script context.
-        $datajson = json_encode($datajson, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-
-        $allwidgetjson = json_encode($allwidgetjson, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-        $msg_delete    = __('Delete widget', 'mydashboard');
-        $msg_error     = __('No data available', 'mydashboard');
-        $msg_refresh   = __('Refresh widget', 'mydashboard');
-        $disableResize = 'true';
-        $disableDrag   = 'true';
-        $delete_button = 'false';
-
-        if ($drag > 0) {
-            $disableResize = 'false';
-            $disableDrag   = 'false';
-        }
-        if ($edit > 0) {
-            $delete_button = 'true';
-        }
-
-        $all_displayed_widgets    = json_encode(
-            $displayed_widgets,
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
-        );
-        $all_displayed_widgets_id = json_encode(
-            $displayed_widgets_id,
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
-        );
-
-        // [S1] Re-encode the grid layout instead of interpolating the raw stored
-        // string into the inline <script> below. The `grid` column is persisted
-        // from client input by ajax/saveGrid.php, so emitting it verbatim
-        // (`var items = $grid;`) would let a crafted payload break out of the
-        // script context (stored XSS), the same way state_save.php was hardened.
-        // Decode, keep only the geometry keys the loader actually reads, and
-        // re-encode with the HTML-hardening flags.
+        // The `grid` column is persisted from client input by ajax/saveGrid.php: keep only
+        // the geometry keys the grid reads, cast, so nothing else reaches the page.
         $grid_nodes = json_decode((string) $grid, true);
         $grid_safe  = [];
         if (is_array($grid_nodes)) {
@@ -1387,470 +666,66 @@ class Menu extends CommonGLPI
                 ];
             }
         }
-        $grid_json = json_encode(
-            $grid_safe,
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
-        );
 
-        // Toolbar d'édition ou popup d'actions selon le mode
-        if ($edit > 0) {
-            $oc_widgets = Widget::getCachedWidgetList();
-            $oc_gslist  = [];
-            foreach ($oc_widgets as $gs => $widgetclasses) {
-                $oc_gslist[$widgetclasses['id']] = $gs;
-            }
-            $oc_widgetlist = Widgetlist::getList(true, $active_profile);
-
-            echo $this->getWidgetsList($oc_widgetlist, $oc_gslist, $displayed_widgets_id);
-            echo $this->getEditToolbar($edit, $active_profile, $drag);
-        } else {
-            echo $this->getActionModal($drag);
-        }
-        echo $this->getscripts();
-        echo $this->getGlobalFilterBar();
-        echo \Html::scriptBlock("window.mdDisplayedWidgetIds = {$all_displayed_widgets_id};");
-
-        // The two GridStack script blocks below are captured rather than rewritten: they
-        // are large inline JS bodies, and buffering them keeps the migration to markup.
-        ob_start();
-
-        echo "<script type='text/javascript'>
-        $(function () {
-            GridStack.renderCB = function(el, w) {
-              el.innerHTML = w.content;
-            };
-            var options = {
-                 cellHeight: 41,
-                 disableResize: $disableResize,
-                 disableDrag: $disableDrag,
-                 margin: 2,
-                 sizeToContent: false,
-                 disableOneColumnMode: false,
-                 resizable: {
-                    handles: 'e, se, s, sw, w'
-                }
-            };
-            let grid = GridStack.init(options, 'mygrid$rand');
-            new function () {
-                this.loadGrid = function () {
-                    grid.removeAll();
-                    var items = $grid_json;
-                     items.forEach(function(node)  {
-                         var nodeid = node.id;
-
-                         var widgetArray = $datajson;
-                         var widget = widgetArray['' + nodeid + ''];
-                         if ( widget !== undefined ) {
-                            widget = widgetArray['' + nodeid + ''];
-                         } else {
-                             widget = '$msg_error';
-                         }
-//                         var opt = optArray['' + nodeid + ''];
-//                         if ( opt !== undefined ) {
-//                            options = optArray['' + nodeid + ''];
-//                            if ( options != null ) {
-//                               refreshopt = optArray['' + nodeid + '']['enableRefresh'];
-//                            } else {
-//                                refreshopt = false;
-//                            }
-//                         } else {
-//                             refreshopt = false;
-//                         }
-                         var delbutton = '';
-                         var refreshbutton = '';
-
-                         if ($delete_button == 1) {
-                            var delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + node.id + '\');\"><i class=\"ti ti-circle-x md-close\"></i></button>';
-                         }
-//                         if (refreshopt == 1) {
-                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + node.id + '\');\"><i class=\"ti ti-refresh\"></i></button>';
-//                         } else {
-//                            var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon-disabled pull-right\"><i class=\"ti ti-refresh\"></i></button>';
-//                         }
-                         if ( nodeid !== undefined ) {
-//                         var el = '<div class=\"grid-stack-item\"><div class=\"grid-stack-item-content md-grid-stack-item-content\" id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + widget + '</div></div>';
-var el = '<div id=\"gridcontent' + nodeid + '\">' + refreshbutton + delbutton + widget + '</div>';
-                         grid.addWidget({
-                                                   x: node.x,
-                                                   y: node.y,
-                                                   w: node.w,
-                                                   h: node.h,
-                                                   id: node.id,
-                                                   content: el
-                                                }
-                                             );
-                         refreshWidget(node.id);
-                            }
-                    }, this);
-                    return false;
-                }.bind(this);
-
-                this.loadGrid();
-
-            };
-            deleteWidget = function(value) {
-                widget = 'div[gs-id='+ value + ']';
-                grid.removeWidget(widget);
-                // Restore the widget button in the offcanvas
-                $('[data-widgetid=\"' + value + '\"]').show();
-                var idx = window.md_used_widgets ? window.md_used_widgets.indexOf(value) : -1;
-                if (idx !== -1) {
-                    window.md_used_widgets.splice(idx, 1);
+        // gsid => id of the element the widget HTML replaces
+        $widget_dom_ids = [];
+        if (count($grid_safe) > 0) {
+            $widgets = Widget::getCachedWidgetList();
+            foreach ($grid_safe as $node) {
+                if (isset($widgets[$node['id']])) {
+                    $widget_dom_ids[$node['id']] = Widget::removeBackslashes($widgets[$node['id']]['id']);
                 }
             }
-
-            addNewWidget = function(value) {
-                if (value != 0){
-                        var widgetOptionsObject = Object.assign({}, window.mdGlobalFilters || {});
-                        $.ajax({
-                            url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
-                            type: 'POST',
-                            data: {gsid: value, params: widgetOptionsObject},
-                            dataType: 'json',
-                            success: function(data) {
-                                var wid = data.id;
-                                var delbutton = '';
-                                var refreshbutton = '<button title=\"$msg_refresh\" class=\"md-button refresh-icon pull-right\" onclick=\"refreshWidget(\'' + value + '\');\"><i class=\"ti ti-refresh\"></i></button>';
-                                if ($delete_button == true) {
-                                    delbutton = '<button title=\"$msg_delete\" class=\"md-button pull-left\" onclick=\"deleteWidget(\'' + value + '\');\"><i class=\"ti ti-circle-x md-close\"></i></button>';
-                                }
-                                var el = '<div id=\"gridcontent' + value + '\">' + refreshbutton + delbutton + '<div id=\"' + wid + '\"></div></div>';
-                                grid.addWidget({
-                                    x: 0,
-                                    y: 0,
-                                    w: 4,
-                                    h: 12,
-                                    id: value,
-                                    content: el,
-                                    sizeToContent: false
-                                });
-                                $('div[id=' + wid + ']').replaceWith(data.widget);
-                            }
-                        });
-                        return true;
-                     }
-            }
-            // 3.1 full method saving the grid options + children (which is recursive for nested grids)
-            launchSaveGrid = function() {
-                delete serializedFull;
-                serializedData = grid.save(false);
-                var sData = JSON.stringify(serializedData);
-                var profiles_id = -1;
-                $('#ajax_loader').show();
-                $.ajax({
-                   url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
-                   type: 'POST',
-                   data:{data:sData,profiles_id:$active_profile},
-                   success:function(data) {
-                          $('#ajax_loader').hide();
-                          window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                       }
-                   });
-            }
-
-            launchSaveDefaultGrid = function() {
-                delete serializedFull;
-                serializedData = grid.save(false);
-                var sData = JSON.stringify(serializedData);
-                var users_id = 0;
-                var profiles_id = -1;
-                $('#ajax_loader').show();
-                $.ajax({
-                      url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/saveGrid.php',
-                      type: 'POST',
-                      data:{data:sData,users_id:users_id,profiles_id:$active_profile},
-                      success:function(data) {
-                         $('#ajax_loader').hide();
-                         var redirectUrl = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                         var form = $('<form action=\"' + redirectUrl + '\" method=\"post\">' +
-                         '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\"></input>' +
-                         '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data +'\"></input>'+
-                        '</form>');
-                         $('body').append(form);
-                         $(form).submit();
-                      }
-                   });
-            }
-        });
-
-    </script>";
-        echo "<script type='text/javascript'>
-//        function launchloadWidgets() {
-//           var modal = $('<div>').dialog({ modal: true });
-//            modal.dialog('widget').hide();
-//            $('#ajax_loader').show();
-//            $.ajax({
-//              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/loadWidgets.php',
-//                 type: 'POST',
-//                 complete: function () {
-//                          //back to normal!
-//                          $('#ajax_loader').hide();
-//                          modal.dialog('close');
-//                          window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-//                      }
-//                 });
-//        }
-        function launchClearGrid() {
-           $('#ajax_loader').show();
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/clearGrid.php',
-                 type: 'POST',
-                 data: {profiles_id: $active_profile, edit_mode: $edit},
-                 success:function(data) {
-                        $('#ajax_loader').hide();
-                        var form = $('<form action=\"" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php\" method=\"post\">' +
-                           '<input type=\"hidden\" name=\"profiles_id\" value=\"$active_profile\">' +
-                           '<input type=\"hidden\" name=\"_glpi_csrf_token\" value=\"' + data + '\">' +
-                           '</form>');
-                        $('body').append(form);
-                        form.submit();
-                     }
-                 });
         }
-        function launchFullscreen() {
-           $('#mygrid$rand').toggleFullScreen();
-           $('#mygrid$rand').toggleClass('fullscreen_view');
-        }
-        function launchEditMode() {
-          $('#ajax_loader').show();
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/editGrid.php',
-                 type: 'POST',
-                 data:{edit_mode:1},
-                 success:function(data) {
-                        $('#ajax_loader').hide();
-                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                    }
-                 });
-        }
-        function launchEditDefaultMode() {
-          $('#ajax_loader').show();
-                  $.ajax({
-                    url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/editGrid.php',
-                       type: 'POST',
-                       data:{edit_mode:2},
-                       success:function(data) {
-                              $('#ajax_loader').hide();
-                              window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                          }
-                       });
-        }
-        function launchCloseEditMode() {
-           $('#ajax_loader').show();
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/editGrid.php',
-                 type: 'POST',
-                 data:{edit_mode:0},
-                 success:function(data) {
-                        $('#ajax_loader').hide();
-                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                    }
-                 });
-        }
-        function launchDragGrid() {
-           $('#ajax_loader').show();
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/dragGrid.php',
-                 type: 'POST',
-                 data:{drag_mode:1},
-                 success:function(data) {
-                        $('#ajax_loader').hide();
-                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                    }
-                 });
-        }
-        function launchUndragGrid() {
-           $('#ajax_loader').show();
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/dragGrid.php',
-                 type: 'POST',
-                 data:{drag_mode:0},
-                 success:function(data) {
-                        $('#ajax_loader').hide();
-                        window.location.href = '" . PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php';
-                    }
-                 });
-        }
+        $used_widgets = array_keys($widget_dom_ids);
 
-        function refreshWidget (id) {
-            var widgetOptionsObject = Object.assign({}, window.mdGlobalFilters || {});
-            $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
-              type: 'POST',
-              data:{gsid:id, params:widgetOptionsObject},
-              dataType: 'json',
-              success:function(data) {
-                  var wid = data.id;
-                  var wdata = data.widget;
-                  var widget = $('div[id='+ wid + ']');
-                  widget.replaceWith(wdata);
-              }
-           });
-             return false;
-        };
-        function refreshWidgetByForm (id, gsid, formId) {
-           var widgetOptions = $('#' + formId).serializeArray();
-           var widgetOptionsObject = {};
-           $.each(widgetOptions,
-              function (i, v) {
-                 var name = v.name;
-                 // Remove [] in the name do issue with ajax
-                 var index = v.name.indexOf('[]');
-                 if( index != -1 ){
-                    name = v.name.substring(0, index);
-                 }
-                 // Key already exist
-                 if(name in widgetOptionsObject){
-                    if(widgetOptionsObject[name] instanceof Array){
-                       widgetOptionsObject[name].push(v.value);
-                    }else{
-                       var tempArray = [];
-                       tempArray.push(widgetOptionsObject[name]);
-                       tempArray.push(v.value);
-                       widgetOptionsObject[name] = tempArray;
-                    }
-                 }else{
-                    widgetOptionsObject[name] = v.value;
-                 }
-              }
-           );
-           widgetOptionsObject = Object.assign({}, window.mdGlobalFilters || {}, widgetOptionsObject);
-           var widget = $('div[id='+ id + ']');
-           $.ajax({
-              url: '" . PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/refreshWidget.php',
-              type: 'POST',
-              data:{
-                  gsid:gsid,
-                  params:widgetOptionsObject,
-                  id:id
-              },
-              success:function(data) {
-                  widget.replaceWith(data);
-              }
-           });
-           return false;
-        };
+        $filter_bar = $this->getGlobalFilterBarData();
+        $theme      = MydashboardPreference::getPalette($this->users_id);
+        $menu_url   = PLUGIN_MYDASHBOARD_WEBDIR . '/front/menu.php';
+        $ajax_url   = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/';
 
-//         function downloadGraph(id) {
-////             if (!isChartRendered) return; // return if chart not rendered
-//                html2canvas(document.getElementById(id), {
-//                 onrendered: function(canvas) {
-//                     var link = document.createElement('a');
-//                    link.href = canvas.toDataURL('image/png');
-//
-//                    if (!HTMLCanvasElement.prototype.toBlob) {
-//                     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-//                       value: function (callback, type, quality) {
-//                         var canvas = this;
-//                         setTimeout(function() {
-//                           var binStr = atob( canvas.toDataURL(type, quality).split(',')[1] ),
-//                           len = binStr.length,
-//                           arr = new Uint8Array(len);
-//
-//                           for (var i = 0; i < len; i++ ) {
-//                              arr[i] = binStr.charCodeAt(i);
-//                           }
-//
-//                           callback( new Blob( [arr], {type: type || 'image/png'} ) );
-//                         });
-//                       }
-//                    });
-//                  }
-//
-//                  canvas.toBlob(function(blob){
-//                   link.href = URL.createObjectURL(blob);
-//                   saveAs(blob, 'myChart.png');
-//                 },'image/png');
-//              }
-//            })
-//         }
-    </script>";
+        $grid_config = [
+            'grid'          => $grid_safe,
+            'widgets'       => (object) $widget_dom_ids,
+            'dragMode'      => $drag > 0,
+            'editMode'      => (int) $edit,
+            'activeProfile' => $active_profile,
+            'urls'          => [
+                'refreshWidget' => $ajax_url . 'refreshWidget.php',
+                'saveGrid'      => $ajax_url . 'saveGrid.php',
+                'clearGrid'     => $ajax_url . 'clearGrid.php',
+                'editGrid'      => $ajax_url . 'editGrid.php',
+                'dragGrid'      => $ajax_url . 'dragGrid.php',
+                'menu'          => $menu_url,
+            ],
+            'labels'        => [
+                'refresh'       => __('Refresh widget', 'mydashboard'),
+                'delete'        => __('Delete widget', 'mydashboard'),
+                'error'         => __('No data available', 'mydashboard'),
+                'pdfGenerating' => __('Generating PDF...', 'mydashboard'),
+                'pdfTitle'      => __('My Dashboard', 'mydashboard'),
+                'pdfError'      => __('PDF export failed. Please try again.', 'mydashboard'),
+            ],
+            'usedWidgets'   => $used_widgets,
+            'globalFilters' => $filter_bar['initial'],
+            'autoRefreshMs' => self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh']
+                ? 60000 * (int) self::$_PLUGIN_MYDASHBOARD_CFG['automatic_refresh_delay']
+                : 0,
+        ];
 
-        $grid_script_html = ob_get_clean();
-
-        $js_label_generating = json_encode(__('Generating PDF...', 'mydashboard'));
-        $js_label_title      = json_encode(__('My Dashboard', 'mydashboard'));
-        $js_label_error      = json_encode(__('PDF export failed. Please try again.', 'mydashboard'));
-
-        ob_start();
-        echo "<script type='text/javascript'>
-        (function () {
-            const btnExport = document.getElementById('exportByHTML');
-            if (!btnExport) return;
-
-            btnExport.addEventListener('click', async () => {
-                const grid = document.getElementById('mygrid$rand');
-                if (!grid) return;
-
-                // Overlay de chargement
-                const overlay = document.createElement('div');
-                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px;';
-                const spinner = document.createElement('div');
-                spinner.className = 'spinner-border text-light';
-                spinner.style.cssText = 'width:3rem;height:3rem;';
-                spinner.setAttribute('role', 'status');
-                const lbl = document.createElement('div');
-                lbl.className = 'text-white fw-semibold';
-                lbl.textContent = $js_label_generating;
-                overlay.appendChild(spinner);
-                overlay.appendChild(lbl);
-                document.body.appendChild(overlay);
-
-                try {
-                    const dpr    = window.devicePixelRatio || 1;
-                    const canvas = await html2canvas(grid, {
-                        scale          : dpr,
-                        useCORS        : true,
-                        logging        : false,
-                        backgroundColor: '#ffffff',
-                        scrollX        : 0,
-                        scrollY        : 0,
-                    });
-
-                    const headerH = 28;
-                    const imgW    = canvas.width  / dpr;
-                    const imgH    = canvas.height / dpr;
-
-                    const pdf = new jspdf.jsPDF({
-                        orientation: imgW >= imgH ? 'l' : 'p',
-                        unit       : 'px',
-                        format     : [imgW, imgH + headerH],
-                        hotfixes   : ['px_scaling'],
-                    });
-
-                    // En-tête : titre centré + date à droite
-                    pdf.setFontSize(11);
-                    pdf.setFont('helvetica', 'bold');
-                    pdf.setTextColor(40, 40, 40);
-                    pdf.text($js_label_title, imgW / 2, 18, { align: 'center' });
-                    pdf.setFontSize(8);
-                    pdf.setFont('helvetica', 'normal');
-                    pdf.setTextColor(130, 130, 130);
-                    pdf.text(new Date().toLocaleDateString(), imgW - 6, 18, { align: 'right' });
-                    pdf.setDrawColor(200, 200, 200);
-                    pdf.setLineWidth(0.5);
-                    pdf.line(6, headerH - 4, imgW - 6, headerH - 4);
-
-                    // Image du dashboard
-                    pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, headerH, imgW, imgH);
-
-                    pdf.save('dashboard_' + new Date().toISOString().slice(0, 10) + '.pdf');
-                } catch (err) {
-                    console.error('PDF export failed:', err);
-                    alert($js_label_error);
-                } finally {
-                    overlay.remove();
-                }
-            });
-        }());
-        </script>";
-        $export_script_html = ob_get_clean();
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/menu_grid.html.twig', [
-            'rand' => $rand,
-            'show_warning' => !empty($warning_no_widgets),
-            'grid_script_html' => $grid_script_html,
-            'export_script_html' => $export_script_html,
+        TemplateRenderer::getInstance()->display('@mydashboard/menu_grid.html.twig', [
+            'rand'           => mt_rand(),
+            'plugin_version' => PLUGIN_MYDASHBOARD_VERSION,
+            // setup.php already registers them in the central interface
+            'load_search_libs' => Session::getCurrentInterface() !== 'central',
+            'theme'          => $theme,
+            'edit_mode'      => (int) $edit,
+            'offcanvas'      => $edit > 0 ? $this->getWidgetsOffcanvasData($active_profile, $used_widgets) : null,
+            'edit_toolbar'   => $edit > 0 ? $this->getEditToolbarData((int) $edit, $active_profile, (int) $drag) : null,
+            'view_actions'   => $edit > 0 ? [] : $this->getViewToolbarActions((int) $drag),
+            'filters'        => $filter_bar['filters'],
+            'show_warning'   => count($grid_safe) === 0,
+            'grid_config'    => $grid_config,
         ]);
     }
 }

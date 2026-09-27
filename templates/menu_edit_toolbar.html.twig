@@ -26,7 +26,7 @@
  #}
 
 <form method="post" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
     <div class="md-edit-toolbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border rounded-2">
         <span class="badge bg-warning text-dark" style="padding: 5px;">
@@ -42,9 +42,9 @@
         </button>
 
         {% for action in actions %}
-            <a id="{{ action.id }}" role="button" style="padding: 5px;" class="btn {{ action.class }} btn-sm">
+            <button type="button" data-md-action="{{ action.id }}" style="padding: 5px;" class="btn {{ action.class }} btn-sm">
                 <i class="{{ action.icon }} me-1"></i>{{ action.label }}
-            </a>
+            </button>
         {% endfor %}
 
         <div class="vr mx-1"></div>
@@ -71,10 +71,8 @@
             <input type="hidden" name="profiles_id" value="{{ current_profile_id }}">
         {% endif %}
 
-        <a id="close-edit" role="button" style="padding: 5px;" class="btn btn-outline-danger btn-sm ms-auto">
+        <button type="button" data-md-action="close-edit" style="padding: 5px;" class="btn btn-outline-danger btn-sm ms-auto">
             <i class="ti ti-x me-1"></i>{{ __('Close edit mode', 'mydashboard') }}
-        </a>
+        </button>
     </div>
 </form>
-
-{{ submit_script_html|raw }}
