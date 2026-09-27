@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:06+0000\n"
+"POT-Creation-Date: 2026-09-27 14:38+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Diego Nobre <diego@koruma.com.br>, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/infotelGLPI/"
@@ -31,11 +31,11 @@ msgstr ""
 msgid "%1$s: %2$s"
 msgstr ""
 
-#: src/Menu.php:1135
+#: src/Menu.php:556
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtrados de _MAX_ registros totais)"
 
-#: src/Menu.php:1157
+#: src/Menu.php:578
 msgid "1 row selected"
 msgstr "1 linha selecionada"
 
@@ -63,11 +63,11 @@ msgstr "5 linhas"
 msgid "50 rows"
 msgstr "50 linhas"
 
-#: src/Menu.php:1150
+#: src/Menu.php:571
 msgid ": activate to sort column ascending"
 msgstr ": ativar para ordenar coluna ascendente"
 
-#: src/Menu.php:1151
+#: src/Menu.php:572
 msgid ": activate to sort column descending"
 msgstr ": ativar para ordenar coluna descendente"
 
@@ -181,7 +181,7 @@ msgstr "Ações automáticas em erro"
 msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr "Atualização automática dos componentes que podem ser atualizados"
 
-#: templates/menu_widgets_offcanvas.html.twig:33
+#: templates/menu_widgets_offcanvas.html.twig:31
 msgid "Availables widgets"
 msgstr "Widgets disponíveis"
 
@@ -201,7 +201,7 @@ msgstr ""
 msgid "Bar charts"
 msgstr "Gráficos de barra"
 
-#: src/Menu.php:751 src/Menu.php:815
+#: src/Menu.php:307 src/Menu.php:371
 msgid "Block drag / resize widgets"
 msgstr "Bloquear arrastar/redimensionar widgets"
 
@@ -209,7 +209,7 @@ msgstr "Bloquear arrastar/redimensionar widgets"
 msgid "Can take many time if you have many tickets"
 msgstr "Pode levar muito tempo se você tiver muitos chamados"
 
-#: src/StockWidget.php:69 src/StockWidget.php:76 src/StockWidget.php:106
+#: src/StockWidget.php:70 src/StockWidget.php:77 src/StockWidget.php:107
 msgid "Cannot create alert without a type"
 msgstr "Não é possível criar alerta sem tipo"
 
@@ -247,12 +247,12 @@ msgstr "Localizações Filhas"
 msgid "Class"
 msgstr ""
 
-#: src/Menu.php:742
+#: src/Menu.php:298
 msgid "Clear grid"
 msgstr "Limpar grade"
 
-#: src/Menu.php:1161 src/Menu.php:1174
-#: templates/menu_widgets_offcanvas.html.twig:35
+#: src/Menu.php:582 src/Menu.php:595
+#: templates/menu_widgets_offcanvas.html.twig:33
 msgid "Close"
 msgstr "Fechar"
 
@@ -265,7 +265,7 @@ msgstr "Fechar o modo de edição"
 msgid "Closed tickets"
 msgstr ""
 
-#: src/Menu.php:1166
+#: src/Menu.php:587
 msgid "Column visibility"
 msgstr "Visibilidade da coluna "
 
@@ -305,14 +305,14 @@ msgstr "Personalizados"
 msgid "Custom Widgets"
 msgstr "Widgets Personalizados"
 
-#: src/Menu.php:830
+#: src/Menu.php:386
 msgid "Custom and save profile grid"
 msgstr ""
 
 #: src/Module.php:66 src/Html.php:57 src/Chart.php:60 src/Datatable.php:58
 #: src/Reports/Change.php:58 src/Reports/ProjectTask.php:57
 #: src/Reports/Planning.php:52 src/Reports/Project.php:53
-#: src/Reports/Problem.php:58 src/Dashboard.php:71 src/Menu.php:1175
+#: src/Reports/Problem.php:58 src/Dashboard.php:71 src/Menu.php:596
 msgid "Dashboard"
 msgstr "Painel"
 
@@ -324,15 +324,15 @@ msgstr "Acesso ao Painel"
 msgid "Dashboard access"
 msgstr "Acesso ao Painel"
 
-#: src/Menu.php:1177
+#: src/Menu.php:598
 msgid "Dashboard not saved"
 msgstr "Painel não salvo"
 
-#: src/Menu.php:1176
+#: src/Menu.php:597
 msgid "Dashboard saved"
 msgstr "Painel salvo"
 
-#: src/Menu.php:1178
+#: src/Menu.php:599
 msgid "Data received for"
 msgstr "Dados recebidos para"
 
@@ -353,7 +353,7 @@ msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
 
-#: src/Menu.php:1343
+#: src/Menu.php:703
 msgid "Delete widget"
 msgstr "Excluir widget"
 
@@ -447,7 +447,7 @@ msgstr ""
 msgid "Display your equipments"
 msgstr "Exiba seus equipamentos"
 
-#: src/Menu.php:725
+#: src/Menu.php:281
 msgid "Edit mode"
 msgstr "Modo de edição"
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Evolution of tickets request sources types by year"
 msgstr ""
 
-#: src/Menu.php:834
+#: src/Menu.php:390
 msgid "Export to PDF"
 msgstr "Exportar para PDF"
 
@@ -521,7 +521,7 @@ msgstr "A partir de quais plugins você deseja exibir os widgets?"
 msgid "Full"
 msgstr "Completo"
 
-#: src/Menu.php:838
+#: src/Menu.php:394
 msgid "Fullscreen"
 msgstr "Tela cheia"
 
@@ -529,7 +529,7 @@ msgstr "Tela cheia"
 msgid "GLPI Status"
 msgstr "Status GLPI"
 
-#: src/Dashboard.php:182 src/Menu.php:129
+#: src/Dashboard.php:182 src/Menu.php:123
 msgid "GLPI admin grid"
 msgstr "Grade do GLPI para administrador"
 
@@ -537,11 +537,11 @@ msgstr "Grade do GLPI para administrador"
 msgid "GLPI is OK"
 msgstr "GLPI está OK"
 
-#: src/Menu.php:1771
+#: src/Menu.php:705
 msgid "Generating PDF..."
 msgstr ""
 
-#: src/Menu.php:727
+#: src/Menu.php:283
 msgid "Global"
 msgstr "Global"
 
@@ -702,11 +702,11 @@ msgstr "Carregar uma grade predefinida"
 msgid "Map"
 msgstr "Map"
 
-#: src/Menu.php:1162
+#: src/Menu.php:583
 msgid "Maximize"
 msgstr "Maximizar "
 
-#: src/Menu.php:1163
+#: src/Menu.php:584
 msgid "Minimize"
 msgstr "Minimizar"
 
@@ -729,8 +729,8 @@ msgstr "Mês"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:201 src/Preference.php:85 src/Config.php:63 src/Menu.php:114
-#: src/Menu.php:1772 templates/menu_action_toolbar.html.twig:32
+#: setup.php:200 src/Preference.php:85 src/Config.php:63 src/Menu.php:108
+#: src/Menu.php:706 templates/menu_action_toolbar.html.twig:32
 msgid "My Dashboard"
 msgstr "Meu Painel"
 
@@ -758,7 +758,7 @@ msgstr ""
 msgid "My requester prefered groups for widget"
 msgstr "Meu solicitante preferiu grupos para widget"
 
-#: src/Menu.php:128
+#: src/Menu.php:122
 msgid "My view"
 msgstr "Minha visualização"
 
@@ -799,11 +799,11 @@ msgstr "Nenhum alerta é configurado"
 msgid "No column defined"
 msgstr "Nenhuma coluna definida"
 
-#: src/Chart.php:186 src/Widget.php:809 src/Menu.php:1344
+#: src/Chart.php:186 src/Widget.php:809 src/Menu.php:704
 msgid "No data available"
 msgstr "Nenhum dado disponível"
 
-#: src/Menu.php:1132
+#: src/Menu.php:553
 msgid "No data available in table"
 msgstr "Dados não disponíveis na tabela"
 
@@ -811,7 +811,7 @@ msgstr "Dados não disponíveis na tabela"
 msgid "No data is given to the widget"
 msgstr "Nenhum dado foi fornecido ao widget"
 
-#: src/Menu.php:1179
+#: src/Menu.php:600
 msgid "No data received for"
 msgstr "Nenhum dado recebido para"
 
@@ -827,7 +827,7 @@ msgstr "Sem impacto"
 msgid "No informations founded"
 msgstr "Nenhuma informação encontrada"
 
-#: src/Menu.php:1142
+#: src/Menu.php:563
 msgid "No matching records found"
 msgstr "Nenhum registro correspondente encontrado"
 
@@ -855,7 +855,7 @@ msgstr ""
 msgid "No widgets available"
 msgstr "Nenhum widget disponível"
 
-#: src/Menu.php:1330 templates/menu_grid.html.twig:31
+#: templates/menu_grid.html.twig:81
 msgid "No widgets founded, please add widgets"
 msgstr "Nenhum widget criado, por favor, adicione widgets"
 
@@ -1013,7 +1013,7 @@ msgstr ""
 msgid "Opened tickets backlog"
 msgstr ""
 
-#: src/Menu.php:1773
+#: src/Menu.php:707
 msgid "PDF export failed. Please try again."
 msgstr ""
 
@@ -1041,7 +1041,7 @@ msgstr ""
 msgid "Period"
 msgstr ""
 
-#: src/Menu.php:746 src/Menu.php:825
+#: src/Menu.php:302 src/Menu.php:381
 msgid "Permit drag / resize widgets"
 msgstr "Permitir arrastar/redimensionar widgets"
 
@@ -1134,7 +1134,7 @@ msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr "Reconstruir indicadores globais por semana"
 
-#: src/Menu.php:1164
+#: src/Menu.php:585
 msgid "Refresh"
 msgstr "Atualizar"
 
@@ -1142,7 +1142,7 @@ msgstr "Atualizar"
 msgid "Refresh every "
 msgstr "Atualizar todo"
 
-#: src/Menu.php:1345
+#: src/Menu.php:702
 msgid "Refresh widget"
 msgstr "Atualizar widget"
 
@@ -1237,13 +1237,9 @@ msgctxt "button"
 msgid "Save"
 msgstr ""
 
-#: src/Menu.php:733 src/Menu.php:738 src/Menu.php:812
+#: src/Menu.php:289 src/Menu.php:294 src/Menu.php:368
 msgid "Save grid"
 msgstr "Salvar grade"
-
-#: src/Menu.php:1318
-msgid "Save grid to see widget"
-msgstr "Salvar grade para visualizar o widget"
 
 #: src/Config.php:393 src/Config.php:590 src/Alert.php:193 src/Alert.php:3042
 msgid "Scheduled maintenance"
@@ -1288,20 +1284,20 @@ msgstr "Ver o painel"
 msgid "Setup stock widget"
 msgstr "Widget de estoque de configuração"
 
-#: src/Menu.php:1168
+#: src/Menu.php:589
 #, php-format
 msgid "Show %d elements"
 msgstr "Exibir %d elementos"
 
-#: src/Reports/Ticket.php:1619 src/Widget.php:864 src/Menu.php:1169
+#: src/Reports/Ticket.php:1619 src/Widget.php:864 src/Menu.php:590
 msgid "Show all"
 msgstr "Mostre tudo"
 
-#: src/Menu.php:1134
+#: src/Menu.php:555
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Exibindo 0 a 0 de 0 registros "
 
-#: src/Menu.php:1133
+#: src/Menu.php:554
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Exibindo _INICIO_ a _FINAL_ de _TOTAL_ registros"
 
@@ -1341,16 +1337,12 @@ msgstr[2] ""
 msgid "Stock of tickets by status"
 msgstr ""
 
-#: src/StockWidget.php:54
+#: src/StockWidget.php:55
 msgid "Stock widget"
 msgid_plural "Stock widgets"
 msgstr[0] "Widget de estoque"
 msgstr[1] "Widgets de estoque"
 msgstr[2] "Widgets de estoque"
-
-#: src/Menu.php:1317
-msgid "Success"
-msgstr "Successo"
 
 #: templates/checkschema_result.html.twig:80
 msgid "Suggested queries"
@@ -1380,7 +1372,7 @@ msgstr ""
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
-#: src/Menu.php:820
+#: src/Menu.php:376
 msgid "Switch to edit mode"
 msgstr "Mudar para o modo de edição"
 
@@ -1554,7 +1546,7 @@ msgstr ""
 msgid "Unknown table"
 msgstr ""
 
-#: src/Menu.php:1180
+#: src/Menu.php:601
 msgid "Updating all widgets"
 msgstr "Atualizando todos os Widget"
 
@@ -1571,7 +1563,7 @@ msgstr "Alertas de chamado de usuário"
 msgid "Value"
 msgstr ""
 
-#: src/Menu.php:1329 templates/menu_grid.html.twig:30
+#: templates/menu_grid.html.twig:80
 msgid "Warning"
 msgstr "Atenção"
 
@@ -1584,7 +1576,7 @@ msgstr "Semana"
 msgid "Widget"
 msgstr ""
 
-#: src/Menu.php:1181
+#: src/Menu.php:602
 msgid "Widget added on Dashboard"
 msgstr "Widget adicionado no Painel"
 
@@ -1593,7 +1585,7 @@ msgid "Without buy date"
 msgstr ""
 
 #: src/Criterias/DisplayData.php:75 src/Criterias/Year.php:73
-#: src/Criterias/Year.php:91 src/Criterias/FilterDate.php:75 src/Menu.php:944
+#: src/Criterias/Year.php:91 src/Criterias/FilterDate.php:75 src/Menu.php:465
 #: templates/criteria_period_year.html.twig:28
 #: templates/criteria_display_data.html.twig:37
 #: templates/criteria_filter_date.html.twig:41
@@ -1644,6 +1636,12 @@ msgstr "alerta"
 #: src/Criterias/Other.php:431
 msgid "year"
 msgstr "ano"
+
+#~ msgid "Save grid to see widget"
+#~ msgstr "Salvar grade para visualizar o widget"
+
+#~ msgid "Success"
+#~ msgstr "Successo"
 
 #~ msgid "A network alert can impact you and will avoid creating a ticket"
 #~ msgstr "Um alerta de rede pode interferir e evitar a criação de um chamado"
