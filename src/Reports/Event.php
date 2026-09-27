@@ -106,56 +106,49 @@ class Event extends \Glpi\Event
     }
 
     /**
+     * Cell of the id of the item a log line is about.
+     *
      * @param $type
      * @param $items_id
      *
-     * @return string|void
+     * @return array typed cell, see Widget::getDisplayCell()
      */
     public static function displayItemLogID($type, $items_id)
     {
         global $CFG_GLPI;
-        $out = "";
+
         if (($items_id == "-1") || ($items_id == "0")) {
-            $out .= "&nbsp;";//$item;
-        } else {
-            switch ($type) {
-                case "rules":
-                    $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rule.generic.form.php?id=" .
-                        $items_id . "\">" . $items_id . "</a>";
-                    break;
-
-                case "infocom":
-                    $out .= "<a href='#' onClick=\"window.open('" . $CFG_GLPI["root_doc"] .
-                        "/front/infocom.form.php?id=" . $items_id . "','infocoms','location=infocoms,width=" .
-                        "1000,height=400,scrollbars=no')\">" . $items_id . "</a>";
-                    break;
-
-                case "devices":
-                    $out .= $items_id;
-                    break;
-
-                case "reservationitem":
-                    $out .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/reservation.php?reservationitems_id=" .
-                        $items_id . "\">" . $items_id . "</a>";
-                    break;
-
-                default:
-                    $type = getSingular($type);
-                    $url = '';
-                    if ($item = getItemForItemtype($type)) {
-                        $url = $item->getFormURL();
-                    }
-                    if (!empty($url)) {
-                        $out .= "<a href=\"" . $url . "?id=" . $items_id . "\">" . $items_id . "</a>";
-                    } else {
-                        $out .= $items_id;
-                    }
-                    break;
-            }
+            return ['kind' => 'text', 'value' => ''];
         }
-        return $out;
-    }
+        $items_id = (int) $items_id;
 
+        $url = '';
+        switch ($type) {
+            case "rules":
+                $url = $CFG_GLPI["root_doc"] . "/front/rule.generic.form.php?id=" . $items_id;
+                break;
+
+            case "infocom":
+                $url = $CFG_GLPI["root_doc"] . "/front/infocom.form.php?id=" . $items_id;
+                break;
+
+            case "devices":
+                break;
+
+            case "reservationitem":
+                $url = $CFG_GLPI["root_doc"] . "/front/reservation.php?reservationitems_id=" . $items_id;
+                break;
+
+            default:
+                $type = getSingular($type);
+                if ($item = getItemForItemtype($type)) {
+                    $url = $item->getFormURLWithID($items_id);
+                }
+                break;
+        }
+
+        return ['kind' => 'link', 'url' => $url, 'label' => $items_id];
+    }
 
     /**
      * Print a nice tab for last event from inventory section
@@ -190,21 +183,12 @@ class Event extends \Glpi\Event
             'LIMIT'    => intval($_SESSION['glpilist_limit']),
         ]);
 
-        // Number of results
-        $number = count($iterator);
-        // No Events in database
-        if ($number < 1) {
-            $output['title'] = "<br><div class='spaced'><table class='tab_cadre_fixe'>";
-            $output['title'] .= "<tr><th>" . __('No Event') . "</th></tr>";
-            $output['title'] .= "</table></div>";
-        }
         $logService["Impersonate"] = "Impersonate";
         // Output events
         $i = 0;
 
         //TRANS: %d is the number of item to display
-        $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/event.php\">" .
-            sprintf(__('Last %d events'), $_SESSION['glpilist_limit']) . "</a>";
+        $output['title'] = sprintf(__('Last %d events'), $_SESSION['glpilist_limit']);
 
         $output['header'][] = __('Source');
         $output['header'][] = __('id');
@@ -216,34 +200,30 @@ class Event extends \Glpi\Event
 
         foreach ($iterator as $data) {
 
-            $itemtype = "&nbsp;";
+            $itemtype = "";
             if (isset($logItemtype[$data['type']])) {
                 $itemtype = $logItemtype[$data['type']];
             } else {
                 $type = getSingular($data['type']);
                 if ($item = getItemForItemtype($type)) {
-                    // Escaped here rather than with the cell below, which would turn the
-                    // "&nbsp;" default above into a literal entity: getTypeName() is the only
-                    // branch carrying data, and a custom asset definition names itself.
-                    $itemtype = htmlspecialchars((string) $item->getTypeName(1), ENT_QUOTES, 'UTF-8');
+                    $itemtype = $item->getTypeName(1);
                 }
             }
 
-            $output['body'][$i][0] = $itemtype;
+            // Typed cells, escaped by widget_frame.html.twig: glpi_events.message is filled
+            // by the core with the login name posted on the sign-in form (Auth::addToLogin()),
+            // so it is anonymously injectable, and a custom asset definition names itself.
+            $output['body'][$i][0] = ['kind' => 'text', 'value' => $itemtype];
             $output['body'][$i][1] = self::displayItemLogID($data['type'], $data['items_id']);
-            $output['body'][$i][2] = \Html::convDateTime($data['date']);
-            $output['body'][$i][3] = $logService[$data['service']] ?? "";
-            // Datatable writes every cell as HTML (see Reports_Table::getWidgetContentForItem()),
-            // so this column had to be escaped here: glpi_events.message is filled by the core
-            // with the login name posted on the sign-in form (Auth::addToLogin()), which makes
-            // it anonymously injectable, and it lands in a session holding system_logs. The
-            // core escapes the same column in its own listing (Glpi\Event::showList()).
-            $output['body'][$i][4] = htmlspecialchars((string) $data['message'], ENT_QUOTES, 'UTF-8');
+            $output['body'][$i][2] = ['kind' => 'text', 'value' => \Html::convDateTime($data['date'])];
+            $output['body'][$i][3] = ['kind' => 'text', 'value' => $logService[$data['service']] ?? ""];
+            $output['body'][$i][4] = ['kind' => 'text', 'value' => $data['message']];
 
             $i++;
         }
         $widget = new Datatable();
         $widget->setWidgetTitle($output['title']);
+        $widget->setWidgetTitleLink($CFG_GLPI["root_doc"] . "/front/event.php");
         $personnal = ($user == "") ? "global" : "personnal";
         $widget->setWidgetId("eventwidget" . $personnal);
         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)

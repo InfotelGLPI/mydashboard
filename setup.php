@@ -88,6 +88,8 @@ function plugin_init_mydashboard()
     }
 
     $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
+    // Charts of the widgets, drawn on the pages of the other plugins too (servicecatalog)
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['mydashboard'][] = 'scripts/charts.js';
 
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['mydashboard'] = [Profile::class, 'initProfile'];
 

@@ -29,11 +29,9 @@
 
 namespace GlpiPlugin\Mydashboard\Reports;
 
-use GlpiPlugin\Mydashboard\Helper;
 use CommonGLPI;
-use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
-use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
+use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Html;
@@ -81,7 +79,7 @@ class Reminder extends CommonGLPI
     /**
      * @param $widgetId
      *
-     * @return MydashboardHtml
+     * @return false|Datatable
      */
     public function getWidgetContentForItem($widgetId)
     {
@@ -95,6 +93,7 @@ class Reminder extends CommonGLPI
                 }
                 break;
         }
+        return false;
     }
 
 
@@ -103,7 +102,7 @@ class Reminder extends CommonGLPI
      *
      * @param $personal boolean : display reminders created by me ? (true by default)
      *
-     * @return MydashboardHtml (display function)
+     * @return Datatable (display function)
      **/
     public static function showListForCentral($widgetId, $personal = true)
     {
@@ -143,129 +142,65 @@ class Reminder extends CommonGLPI
         }
 
         if ($personal) {
-            $title = '<a href="' . htmlescape($CFG_GLPI["root_doc"]) . '/front/reminder.php">'
-                . _sn('Personal reminder', 'Personal reminders', Session::getPluralNumber())
-                . '</a>';
+            $title = _n('Personal reminder', 'Personal reminders', Session::getPluralNumber());
         } else {
-            if (Session::getCurrentInterface() !== 'helpdesk') {
-                $title = '<a href="' . htmlescape($CFG_GLPI["root_doc"]) . '/front/reminder.php">'
-                    . _sn('Public reminder', 'Public reminders', Session::getPluralNumber())
-                    . '</a>';
-            } else {
-                $title = _sn('Public reminder', 'Public reminders', Session::getPluralNumber());
-            }
+            $title = _n('Public reminder', 'Public reminders', Session::getPluralNumber());
         }
+        $title_url = ($personal || Session::getCurrentInterface() !== 'helpdesk')
+            ? $CFG_GLPI["root_doc"] . "/front/reminder.php?reset=reset"
+            : '';
 
         $reminders = $personal ? $personal_reminders : $public_reminders;
-        $nb = count($reminders);
 
-        $widget = new MydashboardHtml();
+        $widget = new Datatable();
         $widget->setWidgetId($widgetId);
-
-        $icon = "<i class='" . \Reminder::getIcon() . "'></i>";
-        $widgetTitle = Helper::getWidgetTitleHtml(
-            $CFG_GLPI["root_doc"] . "/front/reminder.php?reset=reset",
-            $title,
+        $widget->setWidgetTitle($title);
+        $widget->setWidgetTitleLink(
+            $title_url,
+            null,
+            null,
+            \Reminder::getIcon(),
             \Reminder::canCreate() ? $CFG_GLPI["root_doc"] . "/front/reminder.form.php" : null,
         );
 
-        $widget->setWidgetTitle(
-            $icon . " " . $widgetTitle,
-        );
+        $rows = [];
+        foreach ($reminders as $data) {
+            $name = !empty($data['transname']) ? $data['transname'] : $data['name'];
+            $text = !empty($data['transtext']) ? $data['transtext'] : $data['text'];
 
-        $entries = [];
-        if ($nb) {
-            $rand = mt_rand();
-
-            foreach ($reminders as $data) {
-
-                $name = $data['name'];
-
-                if (!empty($data['transname'])) {
-                    $name = $data['transname'];
-                }
-                $link = sprintf(
-                    '<a id="content_reminder_%s" href="%s">%s</a>',
-                    htmlescape($data["id"] . $rand),
-                    htmlescape(\Reminder::getFormURLWithID($data["id"])),
-                    htmlescape($name),
-                );
-                $text = $data["text"];
-                if (!empty($data['transtext'])) {
-                    $text = $data['transtext'];
-                }
-                $tooltip = Html::showToolTip(
-                    RichText::getEnhancedHtml($text),
-                    [
-                        'applyto' => "content_reminder_" . $data["id"] . $rand,
-                        'display' => false,
-                    ],
-                );
-                $name = sprintf(__s('%1$s %2$s'), $link, $tooltip);
-
-                if ($data["is_planned"]) {
-                    $tab      = explode(" ", $data["begin"]);
-                    $date_url = $tab[0];
-                    $planning_text = sprintf(
+            $planning = ['kind' => 'text', 'value' => ''];
+            if ($data["is_planned"]) {
+                $tab = explode(" ", $data["begin"]);
+                $planning = [
+                    'kind' => 'link',
+                    'url' => sprintf('%s/front/planning.php?date=%s&type=day', $CFG_GLPI['root_doc'], $tab[0]),
+                    'icon' => 'ti ti-bell',
+                    'label' => '',
+                    'tooltip' => sprintf(
                         __('From %1$s to %2$s'),
                         Html::convDateTime($data["begin"]),
                         Html::convDateTime($data["end"]),
-                    );
-                    $planning = sprintf(
-                        '<a href="%s" class="pointer float-end" title="%s"><i class="ti ti-bell"></i><span class="sr-only">%s</span></a>',
-                        htmlescape(sprintf('%s/front/planning.php?date=%s&type=day', $CFG_GLPI['root_doc'], $date_url)),
-                        htmlescape($planning_text),
-                        __s('Planning'),
-                    );
-                } else {
-                    $planning = '';
-                }
-                $entries[] = [
-                    'itemtype' => \Reminder::class,
-                    'name' => $name,
-                    'planning' => $planning,
+                    ),
                 ];
             }
+
+            $rows[] = [
+                [
+                    'kind' => 'link',
+                    'url' => \Reminder::getFormURLWithID($data["id"]),
+                    'label' => (string) $name,
+                    'tooltip' => RichText::getTextFromHtml((string) $text, false, true),
+                ],
+                $planning,
+            ];
         }
 
-        $add_link = '';
-
-        $columns = [
-            'name' => __('Name'),
-            'planning' => '',
-        ];
-        $formatters = [
-            'name' => 'raw_html',
-            'planning' => 'raw_html',
-        ];
-        $footers = [];
-        //        if (
-        //            ($personal && \Reminder::canCreate())
-        //            || (!$personal && Session::haveRight(\Reminder::$rightname, CREATE))
-        //        ) {
-        //            $add_link = \Reminder::getFormURL();
-        //        }
-
-        $output = TemplateRenderer::getInstance()->render('@mydashboard/table.html.twig', [
-            'title' => __('Name'),
-            'add_link' => $add_link,
-            'datatable_params' => [
-                'is_tab' => true,
-                'nofilter' => true,
-                'nosort' => true,
-                'columns' => $columns,
-                'formatters' => $formatters,
-                'entries' => $entries,
-                'footers' => $footers,
-                'total_number' => count($entries),
-                'filtered_number' => count($entries),
-                'showmassiveactions' => false,
-            ],
-        ]);
-
+        $widget->setTabNames([__('Name'), __('Planning')]);
+        $widget->setTabDatas($rows);
+        $widget->setOption("bPaginate", false);
+        $widget->setOption("bFilter", false);
+        $widget->setOption("bInfo", false);
         $widget->toggleWidgetRefresh();
-        $widget->setWidgetHtmlContent($output);
-
         return $widget;
     }
 

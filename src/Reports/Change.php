@@ -31,11 +31,11 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use CommonITILActor;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryFunction;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Html;
@@ -159,9 +159,9 @@ class Change extends CommonGLPI
         //We declare our new widget
         $widget = new Datatable();
         if ($status == "waiting") {
-            $widget->setWidgetTitle(Html::makeTitle(__('Changes on pending status', 'mydashboard'), 0, 0));
+            $widget->setWidgetTitle(__('Changes on pending status', 'mydashboard'));
         } else {
-            $widget->setWidgetTitle(Html::makeTitle(__('Changes to be processed', 'mydashboard'), 0, 0));
+            $widget->setWidgetTitle(__('Changes to be processed', 'mydashboard'));
         }
         $group = ($showgroupchanges) ? "group" : "";
         $widget->setWidgetId("change" . $status . "widget" . $group);
@@ -276,7 +276,6 @@ class Change extends CommonGLPI
 
 
         if ($numrows > 0) {
-            $output['title'] = "";
             $options['reset'] = 'reset';
             $forcetab = '';
             $num = 0;
@@ -300,9 +299,8 @@ class Change extends CommonGLPI
                                 ],
                             ],
                         ]);
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Changes on pending status', 'mydashboard'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Changes on pending status', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                         break;
 
                     case "process":
@@ -323,9 +321,8 @@ class Change extends CommonGLPI
                                 ],
                             ],
                         ]);
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Changes to be processed', 'mydashboard'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Changes to be processed', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                         break;
 
                     default:
@@ -346,9 +343,8 @@ class Change extends CommonGLPI
                                 ],
                             ],
                         ]);
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Your changes in progress'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Your changes in progress');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                 }
             } else {
                 switch ($status) {
@@ -370,13 +366,8 @@ class Change extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(
-                                __('Changes on pending status', 'mydashboard'),
-                                $numrows,
-                                $numrows,
-                            ) . "</a>";
+                        $output['title'] = __('Changes on pending status', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                         break;
 
                     case "process":
@@ -397,9 +388,8 @@ class Change extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Changes to be processed', 'mydashboard'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Changes to be processed', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                         break;
 
                     case "applied":
@@ -414,9 +404,8 @@ class Change extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Applied changes', 'mydashboard'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Applied changes', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                         break;
 
                     default:
@@ -437,9 +426,8 @@ class Change extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Your changes in progress'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Your changes in progress');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/change.php?" . $options;
                 }
             }
 
@@ -458,6 +446,7 @@ class Change extends CommonGLPI
         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
         if (isset($output['title'])) {
             $widget->setWidgetTitle($output['title']);
+            $widget->setWidgetTitleLink($output['title_url'], $numrows, $numrows);
         }
         if (isset($output['header'])) {
             $widget->setTabNames($output['header']);
@@ -481,94 +470,21 @@ class Change extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        $colnum = 0;
         $output = [];
 
-        // Prints a job in short form
-        // Should be called in a <table>-segment
-        // Print links or not in case of user view
-        // Make new job object and fill it from database, if success, print it
-        $viewusers = Session::haveRight("user", READ);
-
         $change = new \Change();
-        $rand = mt_rand();
-
         if ($change->getFromDBwithData($ID, 0)) {
-            $bgcolor = $_SESSION["glpipriority_" . $change->fields["priority"]];
-            //      $rand    = mt_rand();
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                __('%1$s: %2$s'),
-                __('ID'),
-                $change->fields["id"],
-            ) . "</div>";
-            $colnum++;
-
-            $output[$colnum] = '';
-            $userrequesters = $change->getUsers(CommonITILActor::REQUESTER);
-            if (isset($userrequesters)
-                && count($userrequesters)
-            ) {
-                foreach ($userrequesters as $d) {
-                    if ($d["users_id"] > 0) {
-                        // This column is composed as HTML and handed to Datatable, which
-                        // writes it to the DOM as HTML: the requester name is free text of
-                        // the user account and the fallback address is typed by the requester
-                        // itself on an anonymous ticket.
-                        $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
-                        $name = "<div class='b center'>" . $userdata;
-                        $output[$colnum] .= $name . "</div>";
-                    } else {
-                        $output[$colnum] .= htmlspecialchars((string) $d['alternative_email'], ENT_QUOTES, 'UTF-8') . "&nbsp;";
-                    }
-                    //$output[$colnum] .=  "<br>";
-                }
-            }
-            $grouprequester = $change->getGroups(CommonITILActor::REQUESTER);
-            if (isset($grouprequester)
-                && count($grouprequester)
-            ) {
-                foreach ($grouprequester as $d) {
-                    $output[$colnum] .= htmlspecialchars(
-                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
-                        ENT_QUOTES,
-                        'UTF-8',
-                    );
-                }
-            }
-
-            $colnum++;
-            //$output[$colnum] = '';
-            $link = "<a id='change" . $change->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/change.form.php?id=" . $change->fields["id"];
+            $url = $CFG_GLPI["root_doc"] . "/front/change.form.php?id=" . $change->fields["id"];
             if ($forcetab != '') {
-                $link .= "&amp;forcetab=" . $forcetab;
+                $url .= "&forcetab=" . $forcetab;
             }
-            // echo "###########".$change->fields["name"];
-            $link .= "'>";
-            // Escape the change name (raw in DB) before echoing it into the widget.
-            $link .= "<span class='b'>" . htmlspecialchars($change->fields["name"], ENT_QUOTES, 'UTF-8') . "</span></a>";
-
-            $link = sprintf(
-                __('%1$s %2$s'),
-                $link,
-                Html::showToolTip(
-                    // showToolTip() inserts its body as HTML: it is a sink, not an escaping
-                    // point. Sanitize the rich text first, as src/Reports/Reminder.php does.
-                    RichText::getEnhancedHtml($change->fields['content']),
-                    [
-                        'applyto' => 'change' . $change->fields["id"] . $rand,
-                        'display' => false,
-                    ],
-                ),
-            );
-            //echo $link;
-            $output[$colnum] = $link;
-            $colnum++;
-            $output[$colnum] = Html::convDateTime($change->fields['solvedate']);
+            $output[] = Helper::getPriorityIdCell($change);
+            $output[] = Helper::getItilRequestersCell($change);
+            $output[] = Helper::getItemLinkCell($url, $change->fields["name"], $change->fields['content']);
+            $output[] = ['kind' => 'text', 'value' => (string) Html::convDateTime($change->fields['solvedate'])];
         }
         return $output;
     }
-
     /**
      * @param bool $foruser
      *
@@ -668,10 +584,12 @@ class Change extends CommonGLPI
 
         $widget = new MydashboardHtml();
         $widget->setWidgetId("changecountwidget");
-        $icon = "<i class='" . \Change::getIcon() . "'></i>";
-        $widget->setWidgetTitle(
-            $icon . " <a href=\"" . $CFG_GLPI["root_doc"] . "/front/change.php?reset=reset\">"
-            . __('Change followup', 'mydashboard') . "</a>",
+        $widget->setWidgetTitle(__('Change followup', 'mydashboard'));
+        $widget->setWidgetTitleLink(
+            $CFG_GLPI["root_doc"] . "/front/change.php?reset=reset",
+            null,
+            null,
+            \Change::getIcon(),
         );
 
         $twig_params = [

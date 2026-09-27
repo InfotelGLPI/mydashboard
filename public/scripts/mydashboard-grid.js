@@ -88,7 +88,7 @@ const post = (url, data) => {
 };
 
 /**
- * Widget payloads carry inline scripts (chart and counter initialisation). A range
+ * Widget payloads may carry inline scripts (counters, other plugins). A range
  * fragment keeps them runnable once inserted, unlike innerHTML.
  */
 const replaceWithWidget = (target, html) => {

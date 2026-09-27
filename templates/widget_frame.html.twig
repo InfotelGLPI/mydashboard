@@ -30,13 +30,75 @@
     {%- if item.html %}{{ item.value|raw }}{% else %}{{ item.value }}{% endif -%}
 {% endmacro %}
 
+{# Typed cell built by Widget::getDisplayCell(): only scalar values, escaped here. #}
+{% macro cell(item) %}
+    {%- if item.kind is not defined -%}
+        {{ _self.fragment(item) }}
+    {%- elseif item.kind == 'link' -%}
+        {%- if item.prefix %}{{ item.prefix }} {% endif -%}
+        {%- if item.url -%}
+            <a href="{{ item.url }}"
+               {%- if item.external %} target="_blank" rel="noopener noreferrer"{% endif %}
+               {%- if item.tooltip %} title="{{ item.tooltip }}" data-bs-toggle="tooltip"{% endif %}>
+                {%- if item.icon %}<i class="{{ item.icon }} me-1"></i>{% endif -%}
+                {%- if item.bold %}<span class="b">{{ item.label }}</span>{% else %}{{ item.label }}{% endif -%}
+            </a>
+        {%- else -%}
+            {%- if item.bold %}<span class="b">{{ item.label }}</span>{% else %}{{ item.label }}{% endif -%}
+        {%- endif -%}
+        {%- if item.suffix %} {{ item.suffix }}{% endif -%}
+    {%- elseif item.kind == 'badge' -%}
+        <div class="center p-2"
+             {%- if item.color or item.text_color %} style="
+                {%- if item.color %}background-color: {{ item.color }};{% endif -%}
+                {%- if item.text_color %}color: {{ item.text_color }} !important;{% endif -%}
+             "{% endif %}>
+            {%- if item.url -%}
+                <a href="{{ item.url }}"
+                   {%- if item.text_color %} style="color: {{ item.text_color }} !important;"{% endif %}>{{ item.label }}</a>
+            {%- else -%}
+                <span class="b">{{ item.label }}</span>
+            {%- endif -%}
+        </div>
+    {%- elseif item.kind == 'status' -%}
+        {%- if item.icon %}<i class="{{ item.icon }} me-1" title="{{ item.label }}" data-bs-toggle="tooltip"></i>{% endif -%}
+        {{ item.label }}
+        {%- if item.suffix %}<br>{{ item.suffix }}{% endif -%}
+    {%- elseif item.kind == 'lines' -%}
+        {%- for line in item.items -%}
+            <div>{{ _self.cell(line) }}</div>
+        {%- endfor -%}
+    {%- elseif item.kind == 'action' -%}
+        {# Handled by public/scripts/report-link.js #}
+        <button type="button" class="btn btn-link p-0 align-baseline"
+                data-md-report-link="{{ {url: item.url, params: item.params}|json_encode }}">
+            {{- item.label -}}
+        </button>
+    {%- else -%}
+        {%- if item.bold %}<span class="b">{{ item.value }}</span>{% else %}{{ item.value }}{% endif -%}
+    {%- endif -%}
+{% endmacro %}
+
 <div id="{{ widget_id }}">
     <div class="bt-row">
         <div class="bt-feature {{ feature_class }} " style="width: 98%;margin-left:10px">
             {% if show_title %}
                 <div class="display-4" style="margin: 15px;">
                     <h4>
-                        {{ _self.fragment(title) }}
+                        {% if title_link is not null %}
+                            {%- if title_link.icon %}<i class="{{ title_link.icon }}"></i> {% endif -%}
+                            {%- if title_link.url %}<a href="{{ title_link.url }}">{% endif -%}
+                                {{- _self.fragment(title) -}}
+                                {%- if title_link.count is not null %} <span class="primary-bg primary-fg count">{{ title_link.count }}</span>{% endif -%}
+                            {%- if title_link.url %}</a>{% endif -%}
+                            {%- if title_link.add_url %}
+                                &nbsp;<a href="{{ title_link.add_url }}">
+                                    <i class="ti ti-plus"></i><span class="sr-only">{{ __('Add') }}</span>
+                                </a>
+                            {%- endif %}
+                        {% else %}
+                            {{ _self.fragment(title) }}
+                        {% endif %}
                         {#- raw: Html::showToolTip() of the core, the comment is escaped by the core -#}
                         {%- if tooltip_html %}&nbsp;{{ tooltip_html|raw }}{% endif -%}
                     </h4>
@@ -64,7 +126,7 @@
                         <tbody>
                             {% for row in table.rows %}
                                 <tr>
-                                    {% for cell in row %}<td>{{ _self.fragment(cell) }}</td>{% endfor %}
+                                    {% for cell in row %}<td>{{ _self.cell(cell) }}</td>{% endfor %}
                                 </tr>
                             {% endfor %}
                         </tbody>

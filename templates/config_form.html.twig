@@ -25,69 +25,72 @@
  # --------------------------------------------------------------------------
  #}
 
-{# form_header_html / form_buttons_html open and close the <form> and its <table> #}
-{{ form_header_html|raw }}
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Enable the possibility to display Dashboard in full screen', 'mydashboard') }}</td>
-    <td>
-        {%- if can_create -%}
-            {{ fullscreen_html|raw }}
-        {%- else -%}
-            {{ fullscreen_label }}
-        {%- endif -%}
-    </td>
-</tr>
+{% block form_fields %}
+    {{ fields.dropdownYesNo(
+        'enable_fullscreen',
+        item.fields['enable_fullscreen'],
+        __('Enable the possibility to display Dashboard in full screen', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Replace central interface', 'mydashboard') }}</td>
-    <td>{{ replace_central_html|raw }}</td>
-</tr>
+    {{ fields.dropdownYesNo(
+        'replace_central',
+        item.fields['replace_central'],
+        __('Replace central interface', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_2">
-    <td>{{ __('Impact colors for alerts', 'mydashboard') }}</td>
-    <td colspan="3">
-        <table>
-            <tr>
-                {% for color in impact_colors %}
-                    <td>
-                        <label for="dropdown_priority_{{ color.level }}{{ rand }}">{{ color.level }}</label>&nbsp;
-                        {{ color.field_html|raw }}
-                    </td>
-                {% endfor %}
-            </tr>
-        </table>
-    </td>
-</tr>
+    {{ fields.dropdownArrayField(
+        'levelCat',
+        item.fields['levelCat'],
+        level_cats,
+        __('Level of categories to show', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Level of categories to show', 'mydashboard') }}</td>
-    <td>{{ level_cat_html|raw }}</td>
-</tr>
+    {{ fields.smallTitle(__('Impact colors for alerts', 'mydashboard')) }}
+    {% for level in 1..5 %}
+        {{ fields.colorField(
+            'impact_' ~ level,
+            item.fields['impact_' ~ level],
+            level,
+            field_options
+        ) }}
+    {% endfor %}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Title of alerts widget', 'mydashboard') }}</td>
-    <td>{{ title_alerts_html|raw }}</td>
-</tr>
+    {{ fields.textField(
+        'title_alerts_widget',
+        item.fields['title_alerts_widget'],
+        __('Title of alerts widget', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Title of scheduled maintenances widget', 'mydashboard') }}</td>
-    <td>{{ title_maintenances_html|raw }}</td>
-</tr>
+    {{ fields.textField(
+        'title_maintenances_widget',
+        item.fields['title_maintenances_widget'],
+        __('Title of scheduled maintenances widget', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Title of informations widget', 'mydashboard') }}</td>
-    <td>{{ title_informations_html|raw }}</td>
-</tr>
+    {{ fields.textField(
+        'title_informations_widget',
+        item.fields['title_informations_widget'],
+        __('Title of informations widget', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_1">
-    <td colspan="2">
-        {{ reconstruct_backlog_html|raw }}&nbsp;{{ reconstruct_indicators_html|raw }}
-        <br><br>
-        <div class="alert alert-warning d-flex">
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary me-2" name="reconstructBacklog" value="1">
+            {{ _x('button', 'Reconstruct global backlog', 'mydashboard') }}
+        </button>
+        <button type="submit" class="btn btn-primary" name="reconstructIndicators" value="1">
+            {{ _x('button', 'Reconstruct global indicators per week', 'mydashboard') }}
+        </button>
+        <div class="alert alert-warning mt-3">
             {{ __('Can take many time if you have many tickets', 'mydashboard') }}
         </div>
-    </td>
-</tr>
-
-{{ form_buttons_html|raw }}
+    </div>
+{% endblock %}

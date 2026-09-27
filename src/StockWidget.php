@@ -29,11 +29,9 @@
 
 namespace GlpiPlugin\Mydashboard;
 
-use Ajax;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
-use Dropdown;
 use DropdownVisibility;
 use Glpi\Application\View\TemplateRenderer;
 use Migration;
@@ -135,48 +133,16 @@ class StockWidget extends CommonDBTM
             $options['item'] = $this->fields["itemtype"];
         }
 
-        $rand = mt_rand();
-
-        // showFormHeader()/showFormButtons() emit the surrounding <form> and <table>
-        ob_start();
-        $this->showFormHeader($options);
-        $form_header_html = ob_get_clean();
-
         $itemtype_label = null;
-        $itemtype_hidden_html = '';
-        $itemtype_dropdown_html = '';
         if ($ID > 0) {
-            $itemtype = $this->fields["itemtype"];
             // Rows created before the itemtype was constrained may hold anything: resolve
             // the class instead of instantiating the stored string blindly.
-            if ($item = getItemForItemtype($itemtype)) {
+            if ($item = getItemForItemtype($this->fields["itemtype"])) {
                 $itemtype_label = $item->getTypeName();
-                $itemtype_hidden_html = \Html::hidden('itemtype', ['value' => $itemtype]);
             }
-        } else {
-            $params = ['itemtype' => '__VALUE__', 'fieldname' => 'types'];
-            $itemtype_dropdown_html = Dropdown::showItemTypes(
-                'itemtype',
-                $CFG_GLPI['state_types'],
-                ['value' => $this->fields["itemtype"], 'rand' => $rand, 'display' => false],
-            )
-            . Ajax::updateItemOnSelectEvent(
-                "dropdown_itemtype$rand",
-                "show_types$rand",
-                "../ajax/dropdownType.php",
-                $params,
-                false,
-            )
-            . Ajax::updateItemOnSelectEvent(
-                "dropdown_itemtype$rand",
-                "show_statuses$rand",
-                "../ajax/dropdownStatus.php",
-                $params,
-                false,
-            );
         }
 
-        $types_dropdown_html = '';
+        $types = null;
         if ($options['item']) {
             $itemtypeclass = $options['item'] . "Type";
             if ($item = getItemForItemtype($itemtypeclass)) {
@@ -184,15 +150,10 @@ class StockWidget extends CommonDBTM
                 foreach ($item->find() as $v) {
                     $types[$v['id']] = $v['name'];
                 }
-                $types_dropdown_html = Dropdown::showFromArray('types', $types, [
-                    'multiple' => true,
-                    'values' => self::getSelectedKeys($ID > 0 ? $this->fields['types'] : null),
-                    'display' => false,
-                ]);
             }
         }
 
-        $states_dropdown_html = '';
+        $states = null;
         if ($options['item']) {
             global $DB;
 
@@ -225,57 +186,21 @@ class StockWidget extends CommonDBTM
             foreach ($DB->request($criteria) as $v) {
                 $states[$v['id']] = $v['name'];
             }
-            $states_dropdown_html = Dropdown::showFromArray('states', $states, [
-                'multiple' => true,
-                'values' => self::getSelectedKeys($ID > 0 ? $this->fields['states'] : null),
-                'display' => false,
-            ]);
         }
 
-        $icon_selector_id = 'icon_' . mt_rand();
-        $icon_select_html = \Html::select(
-            'icon',
-            [$this->fields['icon'] => $this->fields['icon']],
-            [
-                'id' => $icon_selector_id,
-                'selected' => $this->fields['icon'],
-                'style' => 'width:175px;',
-            ],
-        )
-        . \Html::script('js/modules/Form/WebIconSelector.js')
-        . \Html::scriptBlock("$(
-            function() {
-            import('/js/modules/Form/WebIconSelector.js').then((m) => {
-               var icon_selector = new m.default(document.getElementById('{$icon_selector_id}'));
-               icon_selector.init();
-               });
-            }
-         );");
-
-        ob_start();
-        $this->showFormButtons($options);
-        $form_buttons_html = ob_get_clean();
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/stockwidget_form.html.twig', [
-            'form_header_html' => $form_header_html,
-            'form_buttons_html' => $form_buttons_html,
-            'rand' => $rand,
-            'is_new' => $ID <= 0,
-            'name_input_html' => \Html::input('name', ['value' => $this->fields['name'], 'size' => 40]),
+        TemplateRenderer::getInstance()->display('@mydashboard/stockwidget_form.html.twig', [
+            'item' => $this,
+            'params' => $options,
             'itemtype_label' => $itemtype_label,
-            'itemtype_hidden_html' => $itemtype_hidden_html,
-            'itemtype_dropdown_html' => $itemtype_dropdown_html,
-            'types_dropdown_html' => $types_dropdown_html,
-            'states_dropdown_html' => $states_dropdown_html,
-            'icon_select_html' => $icon_select_html,
-            'threshold_dropdown_html' => Dropdown::showNumber('alarm_threshold', [
-                'value' => $this->fields["alarm_threshold"],
-                'min' => 1,
-                'max' => 100,
-                'step' => 1,
-                'display' => false,
-            ]),
+            'itemtypes' => $CFG_GLPI['state_types'],
+            'types' => $types,
+            'selected_types' => self::getSelectedKeys($ID > 0 ? $this->fields['types'] : null),
+            'states' => $states,
+            'selected_states' => self::getSelectedKeys($ID > 0 ? $this->fields['states'] : null),
+            'ajax_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/',
         ]);
+
+        return true;
     }
 
     /**

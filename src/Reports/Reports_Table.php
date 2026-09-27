@@ -743,50 +743,38 @@ class Reports_Table extends CommonGLPI
                         }
                     }
 
-                    $i = 0;
+                    $link_params = [
+                        'widget' => self::class . "32",
+                        'entities_id' => $opt['entities_id'] ?? $default['entities_id'],
+                        'is_recursive_entities' => $opt['is_recursive_entities'] ?? $default['is_recursive_entities'],
+                    ];
+                    $has_moreticket = Plugin::isPluginActive('moreticket') && count($array) > 0;
+
                     foreach ($iterator_technicians as $data) {
-                        $nbWaitingTickets = "";
-                        $hasMoreTicket = 0;
                         $userId = $data['users_id'];
-                        // First column of an HTML rendered table, and the name is free text
-                        // of the user account.
-                        $username = htmlspecialchars((string) getUserName($userId), ENT_QUOTES, 'UTF-8');
-                        $temp[$i] = [0 => $username];
-                        $j = 1;
+                        $row_params = $link_params + ['technicians_id' => $userId];
+
+                        $counts = [];
                         foreach ($statusList as $status) {
-                            $nbtickets = $counts_cache[$userId][$status] ?? 0;
-                            $value = "";
-                            if ($nbtickets != "0") {
-                                $nbWaitingTickets = $nbtickets;
-                                $value .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $status, $hasMoreTicket)'>";
-                            }
-                            $value .= $nbtickets;
-                            if ($nbtickets != "0") {
-                                $value .= "</a>";
-                            }
-                            $temp[$i][$j] = ($nbtickets > 0) ? $value : 0;
-                            $j++;
+                            $counts[$status] = $counts_cache[$userId][$status] ?? 0;
                         }
-                        if (Plugin::isPluginActive('moreticket') && count($array) > 0) {
-                            $hasMoreTicket = 1;
-                            foreach ($moreTicketType as $key => $value) {
-                                $status = $value['name'];
-                                $statusId = $value['id'];
-                                if (isset($array[$status][$userId])) {
-                                    $val = '';
-                                    $val .= "<a href='#' onclick='" . Widget::removeBackslashes($widgetId) . "_search($userId, $statusId , $hasMoreTicket)'>";
-                                    $val .= $array[$status][$userId];
-                                    $val .= "</a>";
-                                    $temp[$i][$j] = $val;
-                                    $newNbTickets = $nbWaitingTickets - $array[$status][$userId];
-                                    $temp[$i][3] = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
-                                } else {
-                                    $temp[$i][$j] = 0;
-                                }
-                                $j++;
+                        $moreticket_counts = [];
+                        if ($has_moreticket) {
+                            foreach ($moreTicketType as $type) {
+                                $moreticket_counts[$type['id']] = (int) ($array[$type['name']][$userId] ?? 0);
                             }
+                            // Tickets waiting for a moreticket type are shown in their own column
+                            $counts[CommonITILObject::WAITING] = max(0, $counts[CommonITILObject::WAITING] - array_sum($moreticket_counts));
                         }
-                        $i++;
+
+                        $row = [['kind' => 'text', 'value' => (string) getUserName($userId)]];
+                        foreach ($counts as $status => $count) {
+                            $row[] = self::getStatusCountCell($count, $row_params + ['status' => $status, 'moreticket' => 0]);
+                        }
+                        foreach ($moreticket_counts as $type_id => $count) {
+                            $row[] = self::getStatusCountCell($count, $row_params + ['status' => $type_id, 'moreticket' => 1]);
+                        }
+                        $temp[] = $row;
                     }
                     if (Plugin::isPluginActive('moreticket')) {
                         if (isset($array) && count($array) > 0) {
@@ -826,39 +814,6 @@ class Reports_Table extends CommonGLPI
                     "nb" => $nb,
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params) . "<br>");
-                $linkURL = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-
-                $technician_group = $opt['technicians_groups_id'] ?? $default['technicians_groups_id'];
-                $entities_id = $opt['entities_id'] ?? $default['entities_id'];
-                $is_recursive_entities = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-
-                $js_group = json_encode($technician_group);
-                $js_entity = $entities_id;
-                $js_sons = $is_recursive_entities;
-
-                $widgetId = Widget::removeBackslashes($widgetId);
-                $js = "var " . $widgetId . "_search = function(_technician, _status, _hasMoreTicket){
-                  $.ajax({
-                     url: '" . $linkURL . "',
-                     type: 'POST',
-                     data:{
-                        technician_group:$js_group,
-                        entities_id:$js_entity,
-                        sons:$js_sons,
-                        technician: _technician,
-                        status: _status,
-                        moreticket: _hasMoreTicket,
-                        widget:'$widgetId'},
-                     success:function(response) {
-                        window.open(response);
-                        console.log('SUCCESS');
-                     },
-                     error:function(response){
-                        console.log('FAILED');
-                     }
-                  });
-               }";
-                $widget->appendWidgetScriptContent(\Html::scriptBlock($js));
 
                 return $widget;
                 break;
@@ -1080,50 +1035,38 @@ class Reports_Table extends CommonGLPI
                         }
                     }
 
-                    $i = 0;
+                    $link_params = [
+                        'widget' => self::class . "33",
+                        'entities_id' => $opt['entities_id'] ?? $default['entities_id'],
+                        'is_recursive_entities' => $opt['is_recursive_entities'] ?? $default['is_recursive_entities'],
+                    ];
+                    $has_moreticket = Plugin::isPluginActive('moreticket') && count($moreTicketType) > 0;
+
                     foreach ($iterator_group as $data) {
-                        $nbWaitingTickets = "";
-                        $hasMoreTicket = 0;
                         $groupId = $data['id'];
-                        // First column of an HTML rendered table, and a group name is free
-                        // text stored raw.
-                        $groupname = htmlspecialchars((string) $data['name'], ENT_QUOTES, 'UTF-8');
-                        $temp[$i] = [0 => $groupname];
-                        $j = 1;
+                        $row_params = $link_params + ['technicians_groups_id' => [$groupId]];
+
+                        $counts = [];
                         foreach ($statusList as $status) {
-                            $nbtickets = $group_counts_cache[$groupId][$status] ?? 0;
-                            $value = "";
-                            if ($nbtickets != "0") {
-                                $nbWaitingTickets = $nbtickets;
-                                $value .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $status, $hasMoreTicket)'>";
-                            }
-                            $value .= $nbtickets;
-                            if ($nbtickets != "0") {
-                                $value .= "</a>";
-                            }
-                            $temp[$i][$j] = ($nbtickets > 0) ? $value : 0;
-                            $j++;
+                            $counts[$status] = $group_counts_cache[$groupId][$status] ?? 0;
                         }
-                        if (Plugin::isPluginActive('moreticket') && count($array) > 0) {
-                            $hasMoreTicket = 1;
-                            foreach ($moreTicketType as $key => $value) {
-                                $status = $value['name'];
-                                $statusId = $value['id'];
-                                if (isset($array[$status][$groupId])) {
-                                    $val = '';
-                                    $val .= "<a href='#' onclick='" . $widgetId . "_searchgroup($groupId, $statusId , $hasMoreTicket)'>";
-                                    $val .= $array[$status][$groupId];
-                                    $val .= "</a>";
-                                    $temp[$i][$j] = $val;
-                                    $newNbTickets = $nbWaitingTickets - $array[$status][$groupId];
-                                    $temp[$i][3] = str_replace('>' . $nbWaitingTickets . '<', '>' . $newNbTickets . '<', $temp[$i][3]);
-                                } else {
-                                    $temp[$i][$j] = 0;
-                                }
-                                $j++;
+                        $moreticket_counts = [];
+                        if ($has_moreticket) {
+                            foreach ($moreTicketType as $type) {
+                                $moreticket_counts[$type['id']] = (int) ($array[$type['name']][$groupId] ?? 0);
                             }
+                            // Tickets waiting for a moreticket type are shown in their own column
+                            $counts[CommonITILObject::WAITING] = max(0, $counts[CommonITILObject::WAITING] - array_sum($moreticket_counts));
                         }
-                        $i++;
+
+                        $row = [['kind' => 'text', 'value' => (string) $data['name']]];
+                        foreach ($counts as $status => $count) {
+                            $row[] = self::getStatusCountCell($count, $row_params + ['status' => $status, 'moreticket' => 0]);
+                        }
+                        foreach ($moreticket_counts as $type_id => $count) {
+                            $row[] = self::getStatusCountCell($count, $row_params + ['status' => $type_id, 'moreticket' => 1]);
+                        }
+                        $temp[] = $row;
                     }
                 }
 
@@ -1172,43 +1115,34 @@ class Reports_Table extends CommonGLPI
                 ];
                 $widget->setWidgetHeader(Helper::getGraphHeader($params) . "<br>");
 
-                $linkURL = PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php";
-
-                $entities_id = $opt['entities_id'] ?? $default['entities_id'];
-                $is_recursive_entities = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
-
-                $js_entity = $entities_id;
-                $js_sons = $is_recursive_entities;
-                $widgetId = Widget::removeBackslashes($widgetId);
-                $js = "var " . $widgetId . "_searchgroup = function(_group, _status, _hasMoreTicket){
-                                  $.ajax({
-                                     url: '" . $linkURL . "',
-                                     type: 'POST',
-                                     data:{
-                                        entities_id:$js_entity,
-                                        sons:$js_sons,
-                                        technician_group: _group,
-                                        moreticket: _hasMoreTicket,
-                                        status: _status,
-                                        widget:'$widgetId'},
-                                     success:function(response) {
-                                        window.open(response);
-                                        console.log('SUCCESS');
-                                     },
-                                     error:function(response){
-                                        console.log('FAILED');
-                                     }
-                                  });
-                               }";
-
-                $widget->appendWidgetScriptContent(\Html::scriptBlock($js));
-
                 return $widget;
 
             default:
                 break;
         }
         return false;
+    }
+
+    /**
+     * Ticket count of widgets 32 and 33: opens the matching ticket search through ajax/launchURL.php.
+     *
+     * @param int   $count
+     * @param array $params posted to ajax/launchURL.php
+     *
+     * @return array typed cell of Widget::getDisplayCell()
+     */
+    private static function getStatusCountCell(int $count, array $params): array
+    {
+        if ($count <= 0) {
+            return ['kind' => 'text', 'value' => '0'];
+        }
+
+        return [
+            'kind' => 'action',
+            'label' => (string) $count,
+            'url' => PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php",
+            'params' => $params,
+        ];
     }
 
     public static function getLinkForWidget(string $widget, array $options): ?string

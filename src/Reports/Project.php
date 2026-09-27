@@ -31,8 +31,8 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use Dropdown;
-use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
 use Session;
@@ -121,7 +121,7 @@ class Project extends CommonGLPI
         //We declare our new widget
         $widget = new Datatable();
         if ($status == "process") {
-            $widget->setWidgetTitle(\Html::makeTitle(__('Projects to be processed', 'mydashboard'), 0, 0));
+            $widget->setWidgetTitle(__('Projects to be processed', 'mydashboard'));
         }
 
         $group = ($showgroupprojects) ? "group" : "";
@@ -197,7 +197,6 @@ class Project extends CommonGLPI
         $numrows = count($iterator);
 
         if ($numrows > 0) {
-            $output['title'] = "";
             $options['reset'] = 'reset';
             $forcetab = '';
             $num = 0;
@@ -221,9 +220,8 @@ class Project extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/project.php?"
-                           . $options . "\">"
-                            . \Html::makeTitle(__('Projects to be processed', 'mydashboard'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Projects to be processed', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/project.php?" . $options;
                         break;
                 }
             } else {
@@ -246,9 +244,8 @@ class Project extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/project.php?"
-                           . $options . "\">"
-                            . \Html::makeTitle(__('Projects to be processed', 'mydashboard'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Projects to be processed', 'mydashboard');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/project.php?" . $options;
                         break;
                 }
             }
@@ -267,6 +264,7 @@ class Project extends CommonGLPI
         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
         if (isset($output['title'])) {
             $widget->setWidgetTitle($output['title']);
+            $widget->setWidgetTitleLink($output['title_url'], $numrows, $numrows);
         }
         if (isset($output['header'])) {
             $widget->setTabNames($output['header']);
@@ -290,77 +288,26 @@ class Project extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        $colnum = 0;
         $output = [];
 
-        // Prints a job in short form
-        // Should be called in a <table>-segment
-        // Print links or not in case of user view
-        // Make new job object and fill it from database, if success, print it
-        $viewusers = Session::haveRight("user", READ);
-
         $project = new \Project();
-        $rand = mt_rand();
         if ($project->getFromDB($ID)) {
-            $bgcolor = $_SESSION["glpipriority_" . $project->fields["priority"]];
-            //      $rand    = mt_rand();
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                __('%1$s: %2$s'),
-                __('ID'),
-                $project->fields["id"],
-            ) . "</div>";
-            $colnum++;
-
-            $output[$colnum] = '';
-            $projectsFields = $project->fields;
-            if (isset($projectsFields["users_id"])) {
-                if ($projectsFields["users_id"] > 0) {
-                    // HTML rendered Datatable cell: the manager name is free text of the user
-                    // account.
-                    $userdata = htmlspecialchars((string) getUserName($projectsFields["users_id"]), ENT_QUOTES, 'UTF-8');
-                    $name = "<div class='b center'>" . $userdata;
-                    $output[$colnum] .= $name . "</div>";
-                }
-            }
-
-            if (isset($projectsFields["groups_id"])
-                && $projectsFields["groups_id"] != 0
-            ) {
-                $output[$colnum] .= htmlspecialchars(
-                    (string) Dropdown::getDropdownName("glpi_groups", $projectsFields["groups_id"]),
-                    ENT_QUOTES,
-                    'UTF-8',
-                );
-            }
-
-            $colnum++;
-
-            $link = "<a id='project" . $project->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/project.form.php?id=" . $project->fields["id"];
+            $url = $CFG_GLPI["root_doc"] . "/front/project.form.php?id=" . $project->fields["id"];
             if ($forcetab != '') {
-                $link .= "&amp;forcetab=" . $forcetab;
+                $url .= "&forcetab=" . $forcetab;
             }
 
-            $link .= "'>";
-            // Escape the project name (raw in DB) before echoing it into the widget.
-            $link .= "<span class='b'>" . htmlspecialchars($project->fields["name"], ENT_QUOTES, 'UTF-8') . "</span></a>";
+            $managers = [];
+            if (($project->fields["users_id"] ?? 0) > 0) {
+                $managers[] = ['kind' => 'text', 'value' => (string) getUserName($project->fields["users_id"]), 'bold' => true];
+            }
+            if (($project->fields["groups_id"] ?? 0) != 0) {
+                $managers[] = ['kind' => 'text', 'value' => (string) Dropdown::getDropdownName("glpi_groups", $project->fields["groups_id"])];
+            }
 
-            $link = sprintf(
-                __('%1$s %2$s'),
-                $link,
-                \Html::showToolTip(
-                    // showToolTip() inserts its body as HTML: it is a sink, not an escaping
-                    // point. Sanitize the rich text first, as src/Reports/Reminder.php does.
-                    RichText::getEnhancedHtml($project->fields['content']),
-                    [
-                        'applyto' => 'project' . $project->fields["id"] . $rand,
-                        'display' => false,
-                    ],
-                ),
-            );
-            //echo $link;
-            //$colnum++;
-            $output[$colnum] = $link;
+            $output[] = Helper::getPriorityIdCell($project);
+            $output[] = ['kind' => 'lines', 'items' => $managers];
+            $output[] = Helper::getItemLinkCell($url, $project->fields["name"], $project->fields['content']);
         }
         return $output;
     }

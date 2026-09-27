@@ -25,38 +25,98 @@
  # --------------------------------------------------------------------------
  #}
 
-{# form_header_html / form_buttons_html open and close the <form> and its <table> #}
-{{ form_header_html|raw }}
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Name') }}</td>
-    <td>{{ name_input_html|raw }}</td>
-    <td>
-        {{ __('Item type') }}
-        {%- if is_new %} <span class="red">*</span>{% endif %}
-    </td>
-    <td>
-        {% if itemtype_label is not null %}
-            {{ itemtype_label }}
-            {{ itemtype_hidden_html|raw }}
-        {% else %}
-            {{ itemtype_dropdown_html|raw }}
+{% block form_fields %}
+    {% set rand = random() %}
+
+    {{ fields.textField(
+        'name',
+        item.fields['name'],
+        __('Name'),
+        field_options
+    ) }}
+
+    {% if itemtype_label is not null %}
+        {{ fields.readOnlyField(
+            '',
+            itemtype_label,
+            __('Item type'),
+            field_options
+        ) }}
+        {{ fields.hiddenField('itemtype', item.fields['itemtype']) }}
+    {% else %}
+        {{ fields.dropdownItemTypes(
+            'itemtype',
+            item.fields['itemtype'],
+            __('Item type'),
+            field_options|merge({
+                'types': itemtypes,
+                'rand': rand,
+                'required': item.isNewItem(),
+            })
+        ) }}
+        {# The types and statuses offered depend on the chosen item type #}
+        {% for target, endpoint in {'show_types': 'dropdownType.php', 'show_statuses': 'dropdownStatus.php'} %}
+            {% do call('Ajax::updateItemOnSelectEvent', [
+                'dropdown_itemtype' ~ rand,
+                target ~ rand,
+                ajax_url ~ endpoint,
+                {'itemtype': '__VALUE__', 'fieldname': 'types'}
+            ]) %}
+        {% endfor %}
+    {% endif %}
+
+    {% set types_field %}
+        {% if types is not null %}
+            {{ fields.dropdownArrayField(
+                'types',
+                null,
+                types,
+                '',
+                field_options|merge({
+                    'multiple': true,
+                    'values': selected_types,
+                    'include_field': false,
+                })
+            ) }}
         {% endif %}
-    </td>
-</tr>
+    {% endset %}
+    {{ fields.ajaxField('show_types' ~ rand, types_field, __('Type'), field_options) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Type') }}</td>
-    <td><span id="show_types{{ rand }}">{{ types_dropdown_html|raw }}</span></td>
-    <td>{{ __('Item state') }}</td>
-    <td><span id="show_statuses{{ rand }}">{{ states_dropdown_html|raw }}</span></td>
-</tr>
+    {% set states_field %}
+        {% if states is not null %}
+            {{ fields.dropdownArrayField(
+                'states',
+                null,
+                states,
+                '',
+                field_options|merge({
+                    'multiple': true,
+                    'values': selected_states,
+                    'include_field': false,
+                })
+            ) }}
+        {% endif %}
+    {% endset %}
+    {{ fields.ajaxField('show_statuses' ~ rand, states_field, __('Item state'), field_options) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Icon') }}</td>
-    <td>{{ icon_select_html|raw }}</td>
-    <td>{{ __('Alert threshold') }}</td>
-    <td>{{ threshold_dropdown_html|raw }}</td>
-</tr>
+    {{ fields.dropdownWebIcons(
+        'icon',
+        item.fields['icon'],
+        __('Icon'),
+        field_options
+    ) }}
 
-{{ form_buttons_html|raw }}
+    {{ fields.dropdownNumberField(
+        'alarm_threshold',
+        item.fields['alarm_threshold'],
+        __('Alert threshold'),
+        field_options|merge({
+            'min': 1,
+            'max': 100,
+            'step': 1,
+        })
+    ) }}
+{% endblock %}

@@ -25,13 +25,8 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Title of a report widget: a link to the list, plus an optional "add" shortcut.
-   label_html may carry a count badge produced by Html::makeTitle(). #}
-<a href="{{ list_url }}">{{ label_html|raw }}</a>
-{%- if add_url %}
-    &nbsp;<span>
-        <a href="{{ add_url }}">
-            <i class="ti ti-plus"></i><span class="sr-only">{{ __('Add') }}</span>
-        </a>
-    </span>
-{% endif -%}
+{#
+ # Configuration of an ECharts chart built by Chart::renderChart(). The chart is drawn
+ # by public/scripts/charts.js in the element whose id is chart.name.
+ #}
+<div class="d-none" data-md-chart="{{ chart|json_encode }}"></div>

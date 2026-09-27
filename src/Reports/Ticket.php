@@ -542,9 +542,9 @@ class Ticket extends CommonGLPI
 
                     $forcetab = 'Ticket$2';
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your tickets to close'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your tickets to close');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "waiting":
@@ -567,9 +567,10 @@ class Ticket extends CommonGLPI
                     ]);
 
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Tickets on pending status'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Tickets on pending status');
+
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "process":
@@ -591,9 +592,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Tickets to be processed'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Tickets to be processed');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "observed":
@@ -615,9 +616,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your observed tickets'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your observed tickets');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "requestbyself":
@@ -642,9 +643,10 @@ class Ticket extends CommonGLPI
                     ]);
 
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your tickets in progress'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your tickets in progress');
+
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
             }
         } else {
             switch ($status) {
@@ -666,9 +668,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Tickets on pending status'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Tickets on pending status');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "process":
@@ -689,9 +691,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Tickets to be processed'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Tickets to be processed');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "tovalidate":
@@ -721,9 +723,9 @@ class Ticket extends CommonGLPI
 
                     $forcetab = 'TicketValidation$1';
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your tickets to validate', "mydashboard"), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your tickets to validate', "mydashboard");
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
 
                     break;
 
@@ -746,9 +748,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your rejected tickets'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your rejected tickets');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
 
                     break;
 
@@ -786,9 +788,9 @@ class Ticket extends CommonGLPI
 
                     $forcetab = 'Ticket$2';
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your tickets to close'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your tickets to close');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "observed":
@@ -810,9 +812,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your observed tickets'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your observed tickets');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "survey":
@@ -849,9 +851,9 @@ class Ticket extends CommonGLPI
 
                     $forcetab = 'Ticket$3';
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Satisfaction survey'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Satisfaction survey');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
                     break;
 
                 case "requestbyself":
@@ -874,9 +876,9 @@ class Ticket extends CommonGLPI
                         ],
                     ]);
 
-                    $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                        . $options . "\">"
-                        . \Html::makeTitle(__('Your tickets in progress'), $numrows, $numrows) . "</a>";
+                    $output['title'] = __('Your tickets in progress');
+
+                    $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
             }
         }
 
@@ -891,6 +893,7 @@ class Ticket extends CommonGLPI
             $group = ($showgrouptickets) ? "group" : "";
 
             $widget->setWidgetTitle($output['title']);
+            $widget->setWidgetTitleLink($output['title_url'], $numrows, $numrows);
 
             $widget->setWidgetId("ticketlist" . $status . "widget" . $group);
             //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
@@ -951,6 +954,7 @@ class Ticket extends CommonGLPI
         $output['header'][] = __('Category');
         $output['body'] = [];
         $output['title'] = "default";
+        $output['title_url'] = null;
 
         //if ($numrows > 0) {
         $options['reset'] = 'reset';
@@ -984,9 +988,8 @@ class Ticket extends CommonGLPI
                 } elseif ($itemtype == "ProblemTask") {
                     $title = __("Problem tasks to do");
                 }
-                $output['title'] = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?"
-                    . Toolbox::append_params($options, '&amp;') . "\">"
-                    . \Html::makeTitle($title, $number, $numrows) . "</a>";
+                $output['title'] = $title;
+                $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . Toolbox::append_params($options);
                 break;
         }
         if ($req !== false) {
@@ -1000,6 +1003,9 @@ class Ticket extends CommonGLPI
             $group = ($showgrouptickets) ? "group" : "";
 
             $widget->setWidgetTitle($output['title']);
+            if ($output['title_url'] !== null) {
+                $widget->setWidgetTitleLink($output['title_url'], $number, $numrows);
+            }
 
             $widget->setWidgetId("tickettasks" . $status . "widget" . $group);
             //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
@@ -1026,177 +1032,105 @@ class Ticket extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        $colnum = 0;
         $output = [];
 
-        // Prints a job in short form
-        // Should be called in a <table>-segment
-        // Print links or not in case of user view
-        // Make new job object and fill it from database, if success, print it
         $showprivate = Session::haveRight("show_full_ticket", 1);
 
         $job = new \Ticket();
-        $rand = mt_rand();
         if ($job->getFromDBwithData($ID, 0)) {
-            $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
-            $textColor = "color:black!important;";
-            if ($bgcolor == '#000000') {
-                $textColor = "color:white!important;";
-            }
-
-            $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/ticket.form.php?id=" . $job->fields["id"];
+            $url = $CFG_GLPI["root_doc"] . "/front/ticket.form.php?id=" . $job->fields["id"];
             if ($forcetab != '') {
-                $link .= "&amp;forcetab=" . $forcetab;
-            }
-            $link .= "'>";
-
-
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>"
-                . $link
-                . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</a></div>";
-
-            $colnum++;
-            $output[$colnum] = '';
-            $userrequesters = $job->getUsers(CommonITILActor::REQUESTER);
-            if (isset($userrequesters)
-                && count($userrequesters)
-            ) {
-                foreach ($userrequesters as $d) {
-                    if ($d["users_id"] > 0) {
-                        // HTML rendered Datatable cell: the requester name is free text of the
-                        // user account.
-                        $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
-                        $name = "<div class='b center'>" . $userdata;
-                        //                        $name     = sprintf(
-                        //                            __('%1$s %2$s'),
-                        //                            $name,
-                        //                            Html::showToolTip(
-                        //                                $userdata["comment"],
-                        //                                ['link'    => $userdata["link"],
-                        //                                 'display' => false]
-                        //                            )
-                        //                        );
-
-                        $output[$colnum] .= $name . "</div>";
-                    } else {
-                        $output[$colnum] .= htmlspecialchars((string) $d['alternative_email'], ENT_QUOTES, 'UTF-8') . "&nbsp;";
-                    }
-
-                    $output[$colnum] .= "<br>";
-                }
-            }
-            $grouprequester = $job->getGroups(CommonITILActor::REQUESTER);
-            if (isset($grouprequester)
-                && count($grouprequester)
-            ) {
-                foreach ($grouprequester as $d) {
-                    $output[$colnum] .= htmlspecialchars(
-                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
-                        ENT_QUOTES,
-                        'UTF-8',
-                    ) . "<br>";
-                }
+                $url .= "&forcetab=" . $forcetab;
             }
 
-            $colnum++;
-            $output[$colnum] = '';
-            if (!empty($job->hardwaredatas)) {
-                foreach ($job->hardwaredatas as $hardwaredatas) {
-                    // HTML rendered Datatable cell. getTypeName() is a stored label since GLPI 11
-                    // introduced custom assets, and getNameID() is the raw asset name, so both are
-                    // escaped; getLink() is already markup and stays as it is.
-                    if ($hardwaredatas->canView()) {
-                        $output[$colnum] .= htmlescape($hardwaredatas->getTypeName()) . " - ";
-                        $output[$colnum] .= "<span class='b'>" . $hardwaredatas->getLink() . "</span><br/>";
-                    } elseif ($hardwaredatas) {
-                        $output[$colnum] .= htmlescape($hardwaredatas->getTypeName()) . " - ";
-                        $output[$colnum] .= "<span class='b'>" . htmlescape($hardwaredatas->getNameID()) . "</span><br/>";
-                    }
-                }
-            } else {
-                $output[$colnum] .= __('General');
+            $output[] = Helper::getPriorityIdCell($job, $url);
+            $output[] = Helper::getItilRequestersCell($job);
+
+            $items = [];
+            foreach ($job->hardwaredatas as $hardwaredatas) {
+                $items[] = [
+                    'kind' => 'link',
+                    'prefix' => $hardwaredatas->getTypeName() . ' -',
+                    'url' => $hardwaredatas->canView() ? $hardwaredatas->getLinkURL() : '',
+                    'label' => $hardwaredatas->getNameID(),
+                    'bold' => true,
+                ];
             }
+            $output[] = count($items)
+                ? ['kind' => 'lines', 'items' => $items]
+                : ['kind' => 'text', 'value' => __('General')];
 
-            $colnum++;
-
-            // HTML rendered Datatable cell: getNameID() returns the raw ticket title.
-            $link .= "<span class='b'>" . htmlescape($job->getNameID()) . "</span></a>";
-            $link = sprintf(
-                __('%1$s (%2$s)'),
-                $link,
-                sprintf(
+            $output[] = Helper::getItemLinkCell(
+                $url,
+                $job->getNameID(),
+                $job->fields['content'],
+                '(' . sprintf(
                     __('%1$s - %2$s'),
                     $job->numberOfFollowups($showprivate),
                     $job->numberOfTasks($showprivate),
-                ),
+                ) . ')',
             );
-            $link = sprintf(
-                __('%1$s %2$s'),
-                $link,
-                \Html::showToolTip(
-                    nl2br(RichText::getSafeHtml($job->fields['content'])),
-                    [
-                        'applyto' => 'ticket' . $job->fields["id"] . $rand,
-                        'display' => false,
-                    ],
-                ),
-            );
-            $output[$colnum] = $link;
 
-            //Ticket ID
-            $colnum++;
-            $link = "<a id='ticket" . $job->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/ticket.form.php?id=" . $job->fields["id"];
-            if ($forcetab != '') {
-                $link .= "&amp;forcetab=" . $forcetab;
-            }
-            $link .= "'>";
-            $output[$colnum] = $link . "<span class='b'>" . $job->fields["id"] . "</span></a>";
-
-            //Priority
-            $colnum++;
-            $bgcolor = $_SESSION["glpipriority_" . $job->fields["priority"]];
-
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;$textColor'>
-                                <span class='b'>" . $job->fields["priority"] . " - " . \Ticket::getPriorityName(
+            $output[] = ['kind' => 'link', 'url' => $url, 'label' => (string) $job->fields["id"], 'bold' => true];
+            $output[] = self::getPriorityCell(
                 $job->fields["priority"],
-            ) . "</span>
-                             </div>";
-            //Categories
-            $colnum++;
-            $config = new Config();
-            $config->getFromDB(1);
-            $itilCategory = new ITILCategory();
-            if ($itilCategory->getFromDB($job->fields['itilcategories_id'])) {
-                $haystack = $itilCategory->getField('completename');
-                $needle = '>';
-                $offset = 0;
-                $allpos = [];
+                $job->fields["priority"] . " - " . \Ticket::getPriorityName($job->fields["priority"]),
+            );
+            $output[] = self::getCategoryCell($job->fields['itilcategories_id']);
 
-                while (($pos = strpos($haystack, $needle, $offset)) !== false) {
-                    $offset = $pos + 1;
-                    $allpos[] = $pos;
-                }
-
-                if (isset($allpos[$config->getField('levelCat') - 1])) {
-                    $pos = $allpos[$config->getField('levelCat') - 1];
-                } else {
-                    $pos = strlen($haystack);
-                }
-                // HTML rendered Datatable cell: the completename of a category is free text.
-                $output[$colnum] = "<span class='b'>" . htmlescape(substr($haystack, 0, $pos)) . "</span>";
-            } else {
-                $output[$colnum] = "<span></span>";
-            }
-
-            //status
-            $colnum++;
             $statusId = $job->fields["status"];
             $statusArray = \Ticket::getAllowedStatusArray($statusId);
-            $output[$colnum] = $statusArray[$statusId];
+            $output[] = ['kind' => 'text', 'value' => (string) ($statusArray[$statusId] ?? '')];
         }
         return $output;
+    }
+
+    /**
+     * Typed cell of a priority, coloured with the priority colour of the user.
+     *
+     * @param int    $priority
+     * @param string $label
+     *
+     * @return array
+     */
+    private static function getPriorityCell($priority, $label)
+    {
+        $color = $_SESSION["glpipriority_" . $priority] ?? null;
+        return [
+            'kind' => 'badge',
+            'label' => $label,
+            'color' => $color,
+            'text_color' => $color === '#000000' ? '#ffffff' : '#000000',
+        ];
+    }
+
+    /**
+     * Typed cell of an ITIL category, truncated to the level set in the plugin configuration.
+     *
+     * @param int $itilcategories_id
+     *
+     * @return array
+     */
+    private static function getCategoryCell($itilcategories_id)
+    {
+        $itilCategory = new ITILCategory();
+        if (!$itilCategory->getFromDB($itilcategories_id)) {
+            return ['kind' => 'text', 'value' => ''];
+        }
+
+        $config = new Config();
+        $config->getFromDB(1);
+
+        $haystack = $itilCategory->getField('completename');
+        $offset = 0;
+        $allpos = [];
+        while (($pos = strpos($haystack, '>', $offset)) !== false) {
+            $offset = $pos + 1;
+            $allpos[] = $pos;
+        }
+        $pos = $allpos[$config->getField('levelCat') - 1] ?? strlen($haystack);
+
+        return ['kind' => 'text', 'value' => substr($haystack, 0, $pos), 'bold' => true];
     }
 
 
@@ -1212,13 +1146,11 @@ class Ticket extends CommonGLPI
      */
     public static function showVeryShortTask($ID, $itemtype)
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        $colnum = 0;
         $output = [];
 
         $job = new $itemtype();
-        $rand = mt_rand();
         if ($job->getFromDB($ID)) {
             if ($DB->fieldExists($job->getTable(), 'tickets_id')) {
                 $item_link = new \Ticket();
@@ -1228,88 +1160,40 @@ class Ticket extends CommonGLPI
                 $item_link = new \Problem();
                 $item_link->getFromDB($job->fields['problems_id']);
                 $tab_name = "ProblemTask";
-            }
-
-            // HTML rendered Datatable cells, as in the core showVeryShortTask(): the priority
-            // colour lands in a style attribute and the ticket or problem title is free text
-            // typed by the requester, so both are escaped before reaching the widget. This
-            // method had been missed by the earlier hardening passes that covered its sibling
-            // showVeryShort(), leaving stored script executing in every technician's dashboard.
-            $bgcolor = htmlescape($_SESSION["glpipriority_" . $item_link->fields["priority"]]);
-
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>"
-                . sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]) . "</div>";
-
-            $colnum++;
-            $output[$colnum] = htmlescape($item_link->fields['name']);
-            $colnum++;
-            //echo "<td>";
-            $link = "<a id='" . strtolower(
-                $item_link->getType(),
-            ) . "ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/" . strtolower($item_link->getType()) . ".form.php?id=" . $item_link->fields["id"];
-            $link .= "&amp;forcetab=" . $tab_name . "$1";
-            $link .= "'>";
-
-            $colnum++;
-
-            // The task content is rich text stored raw. The core renders it through
-            // Html::resume_text(RichText::getTextFromHtml(...)) in CommonITILTask: the markup is
-            // stripped, the result truncated and then escaped. Reuse that contract rather than
-            // concatenating the field into a cell DataTables renders as HTML.
-            $content = \Html::resume_text(
-                RichText::getTextFromHtml($job->fields['content'], false, true),
-                50,
-            );
-            $link .= "<span class='b'>" . $content . "</span></a>";
-
-            $output[$colnum] = $link;
-
-            //Ticket ID
-            $colnum++;
-            $link = "<a id='ticket" . $item_link->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/ticket.form.php?id=" . $item_link->fields["id"];
-
-            $link .= "'>";
-            $output[$colnum] = $link . "<span class='b'>" . $item_link->fields["id"] . "</span></a>";
-
-            //Priority
-            $colnum++;
-            // Lands in a style attribute of an HTML rendered Datatable cell.
-            $bgcolor = htmlescape($_SESSION["glpipriority_" . $item_link->fields["priority"]]);
-
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;color:white'>
-                                <span>" . \Ticket::getPriorityName($item_link->fields["priority"]) . "</span>
-                             </div>";
-
-            //Categories
-            $colnum++;
-            $config = new Config();
-            $config->getFromDB(1);
-            $itilCategory = new ITILCategory();
-            $itilCategory->getFromDB($item_link->fields['itilcategories_id']);
-
-            $haystack = $itilCategory->getField('completename');
-            $needle = '>';
-            $offset = 0;
-            $allpos = [];
-
-            while (($pos = strpos($haystack, $needle, $offset)) !== false) {
-                $offset = $pos + 1;
-                $allpos[] = $pos;
-            }
-
-            if (isset($allpos[$config->getField('levelCat') - 1])) {
-                $pos = $allpos[$config->getField('levelCat') - 1];
             } else {
-                $pos = strlen($haystack);
+                return $output;
             }
-            // HTML rendered Datatable cell: the completename of a category is free text.
-            $output[$colnum] = "<span class='b'>" . htmlescape(substr($haystack, 0, $pos)) . "</span>";
+
+            $item_url = $item_link->getFormURLWithID($item_link->fields["id"]);
+
+            $output[] = [
+                'kind' => 'badge',
+                'label' => sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]),
+                'color' => $_SESSION["glpipriority_" . $item_link->fields["priority"]] ?? null,
+            ];
+            $output[] = ['kind' => 'text', 'value' => (string) $item_link->fields['name']];
+            // The task content is rich text stored raw, reduced to a short plain text as the
+            // core does in CommonITILTask.
+            $output[] = [
+                'kind' => 'link',
+                'url' => $item_url . "&forcetab=" . $tab_name . "$1",
+                'label' => \Html::resume_text(
+                    RichText::getTextFromHtml($job->fields['content'], false, true),
+                    50,
+                ),
+                'bold' => true,
+            ];
+            $output[] = ['kind' => 'link', 'url' => $item_url, 'label' => (string) $item_link->fields["id"], 'bold' => true];
+            $output[] = [
+                'kind' => 'badge',
+                'label' => \Ticket::getPriorityName($item_link->fields["priority"]),
+                'color' => $_SESSION["glpipriority_" . $item_link->fields["priority"]] ?? null,
+                'text_color' => '#ffffff',
+            ];
+            $output[] = self::getCategoryCell($item_link->fields['itilcategories_id']);
         }
         return $output;
     }
-
     /**
      * Get tickets count
      *
@@ -1421,19 +1305,12 @@ class Ticket extends CommonGLPI
         $widget = new MydashboardHtml();
         $widget->setWidgetId("ticketcountwidget");
 
-        $title = __('Ticket followup', 'mydashboard');
-        $icon = "<i class='" . \Ticket::getIcon() . "'></i>";
         $add_url = null;
         if (\Ticket::canCreate()) {
             $add_url = Session::getCurrentInterface() != "central"
                 ? $CFG_GLPI["root_doc"] . "/front/helpdesk.public.php?create_ticket=1"
                 : $CFG_GLPI["root_doc"] . "/front/ticket.form.php";
         }
-        $widgetTitle = Helper::getWidgetTitleHtml(
-            $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset",
-            $title,
-            $add_url,
-        );
 
         $twig_params = [
             'title' => [
@@ -1444,8 +1321,13 @@ class Ticket extends CommonGLPI
             'items' => [],
         ];
 
-        $widget->setWidgetTitle(
-            $icon . " " . $widgetTitle,
+        $widget->setWidgetTitle(__('Ticket followup', 'mydashboard'));
+        $widget->setWidgetTitleLink(
+            $CFG_GLPI["root_doc"] . "/front/ticket.php?reset=reset",
+            null,
+            null,
+            \Ticket::getIcon(),
+            $add_url,
         );
 
 
@@ -1615,9 +1497,7 @@ class Ticket extends CommonGLPI
 
             //TRANS: %d is the number of new tickets
             $output['title'] = sprintf(_n('%d new ticket', '%d new tickets', $number), $number);
-            $output['title'] .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options . "\">" . __(
-                'Show all',
-            ) . "</a>)";
+            $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/ticket.php?" . $options;
 
             $output['header'] = self::commonListHeader();
 
@@ -1633,6 +1513,9 @@ class Ticket extends CommonGLPI
 
         $widget = new Datatable();
         $widget->setWidgetTitle($output['title']);
+        if (isset($output['title_url'])) {
+            $widget->setWidgetTitleLink($output['title_url']);
+        }
         $widget->setWidgetId("ticketcountwidget2");
         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
         $widget->setTabNames($output['header']);
@@ -1681,207 +1564,97 @@ class Ticket extends CommonGLPI
         global $CFG_GLPI;
 
         $output = [];
-        $colnum = 0;
 
-        $rand = mt_rand();
-
-        /// TODO to be cleaned. Get datas and clean display links
-
-        // Prints a job in short form
-        // Should be called in a <table>-segment
-        // Print links or not in case of user view
-        // Make new job object and fill it from database, if success, print it
         $job = new \Ticket();
 
         $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
 
         if ($job->getFromDB($id)) {
-            // Lands in a style attribute of an HTML rendered Datatable cell.
-            $bgcolor = htmlescape($_SESSION["glpipriority_" . $job->fields["priority"]]);
-
-            // ID
-            $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"]);
-            if ($output_type == Search::HTML_OUTPUT) {
-                $class = CommonITILObject::getStatusClass($job->fields["status"]);
-                $label = CommonITILObject::getStatus($job->fields["status"]);
-                $first_col .= "<br><i class='" . $class . "'
-                                alt=\"" . $label . "\">";
-            } else {
-                $first_col = sprintf(
-                    __('%1$s - %2$s'),
-                    $first_col,
-                    \Ticket::getStatus($job->fields["status"]),
-                );
-            }
-
-            $colnum++;
-            $output[$colnum] = $first_col;
+            // ID and status
+            $output[] = [
+                'kind' => 'lines',
+                'items' => [
+                    ['kind' => 'text', 'value' => sprintf(__('%1$s: %2$s'), __('ID'), $job->fields["id"])],
+                    [
+                        'kind' => 'status',
+                        'label' => CommonITILObject::getStatus($job->fields["status"]),
+                        'icon' => CommonITILObject::getStatusClass($job->fields["status"]),
+                    ],
+                ],
+            ];
 
             // Date
-            $colnum++;
             if ($job->fields['status'] == \Ticket::CLOSED) {
-                $output[$colnum] = sprintf(
-                    __('Closed on %s'),
-                    ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['closedate']),
-                );
+                $date = sprintf(__('Closed on %s'), \Html::convDateTime($job->fields['closedate']));
             } elseif ($job->fields['status'] == \Ticket::SOLVED) {
-                $output[$colnum] = sprintf(
-                    __('Solved on %s'),
-                    ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['solvedate']),
-                );
+                $date = sprintf(__('Solved on %s'), \Html::convDateTime($job->fields['solvedate']));
             } elseif ($job->fields['begin_waiting_date']) {
-                $output[$colnum] = sprintf(
-                    __('Put on hold on %s'),
-                    ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['begin_waiting_date']),
-                );
+                $date = sprintf(__('Put on hold on %s'), \Html::convDateTime($job->fields['begin_waiting_date']));
             } elseif ($job->fields['time_to_resolve']) {
-                $output[$colnum] = sprintf(
-                    __('%1$s: %2$s'),
-                    __('Time to resolve'),
-                    ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['time_to_resolve']),
-                );
+                $date = sprintf(__('%1$s: %2$s'), __('Time to resolve'), \Html::convDateTime($job->fields['time_to_resolve']));
             } else {
-                $output[$colnum] = sprintf(
-                    __('Opened on %s'),
-                    ($output_type == Search::HTML_OUTPUT ? '<br>' : '')
-                    . \Html::convDateTime($job->fields['date']),
-                );
+                $date = sprintf(__('Opened on %s'), \Html::convDateTime($job->fields['date']));
             }
+            $output[] = ['kind' => 'text', 'value' => $date];
 
             // Entity
             if (count($_SESSION["glpiactiveentities"]) > 1) {
-                $colnum++;
-                // HTML rendered Datatable cell: an entity name is free text of the entity record.
-                $output[$colnum] = htmlescape(
-                    (string) Dropdown::getDropdownName('glpi_entities', $job->fields['entities_id']),
-                );
+                $output[] = [
+                    'kind' => 'text',
+                    'value' => (string) Dropdown::getDropdownName('glpi_entities', $job->fields['entities_id']),
+                ];
             }
 
             // Priority
-            $colnum++;
-            $output[$colnum] = "<span class='b'><div class='center' style='background-color:$bgcolor; padding: 10px;'>"
-                . \Ticket::getPriorityName($job->fields["priority"]) . "</div></span>";
+            $output[] = self::getPriorityCell(
+                $job->fields["priority"],
+                \Ticket::getPriorityName($job->fields["priority"]),
+            );
 
             // Requester
-            $fourth_col = "";
-            $userrequesters = $job->getUsers(CommonITILActor::REQUESTER);
-            if (isset($userrequesters)
-                && count($userrequesters)
-            ) {
-                foreach ($userrequesters as $d) {
-                    // HTML rendered Datatable cell: the requester name is free text of the
-                    // user account.
-                    $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
-                    $fourth_col .= "<span class='b'>" . $userdata . "</span>";
-                    $fourth_col .= "<br>";
-                }
-            }
-            $grouprequester = $job->getGroups(CommonITILActor::REQUESTER);
-            if (isset($grouprequester)
-                && count($grouprequester)
-            ) {
-                foreach ($grouprequester as $d) {
-                    $fourth_col .= htmlspecialchars(
-                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
-                        ENT_QUOTES,
-                        'UTF-8',
-                    );
-                    $fourth_col .= "<br>";
-                }
-            }
+            $output[] = Helper::getItilRequestersCell($job);
 
-            $colnum++;
-            $output[$colnum] = $fourth_col;
-
-            // Sixth Colum
-            $sixth_col = "";
-            $is_deleted = false;
+            // Associated element
+            $element = ['kind' => 'text', 'value' => ''];
             if (!empty($job->fields["itemtype"])
                 && ($job->fields["items_id"] > 0)
             ) {
-                if ($item = getItemForItemtype($job->fields["itemtype"])) {
-                    if ($item->getFromDB($job->fields["items_id"])) {
-                        $is_deleted = $item->isDeleted();
-
-                        // Same contract as showVeryShort(): getTypeName() is a stored label for a
-                        // custom asset and getNameID() the raw asset name, while getLink() is
-                        // already markup.
-                        $sixth_col .= htmlescape($item->getTypeName());
-                        $sixth_col .= "<br><span class='b'>";
-                        if ($item->canView()) {
-                            $sixth_col .= $item->getLink(['linkoption' => $output_type == Search::HTML_OUTPUT]);
-                        } else {
-                            $sixth_col .= htmlescape($item->getNameID());
-                        }
-                        $sixth_col .= "</span>";
-                    }
+                if (($item = getItemForItemtype($job->fields["itemtype"]))
+                    && $item->getFromDB($job->fields["items_id"])
+                ) {
+                    $element = [
+                        'kind' => 'lines',
+                        'items' => [
+                            ['kind' => 'text', 'value' => $item->getTypeName()],
+                            [
+                                'kind' => 'link',
+                                'url' => $item->canView() ? $item->getLinkURL() : '',
+                                'label' => $item->getNameID(),
+                                'bold' => true,
+                            ],
+                        ],
+                    ];
                 }
             } elseif (empty($job->fields["itemtype"])) {
-                $sixth_col = __('General');
+                $element = ['kind' => 'text', 'value' => __('General')];
             }
+            $output[] = $element;
 
-            $colnum++;
-            $output[$colnum] = $sixth_col;
-
-            // Name ticket
-            // HTML rendered Datatable cell: the title is free text typed by the requester. This
-            // list is the "New tickets" widget, fed by showCentralNewList().
-            $eigth_column = "<span class='b'>" . htmlescape($job->fields["name"]) . "</span>&nbsp;";
-
-            // Add link
+            // Title
             if ($job->canViewItem()) {
-                $eigth_column = "<a id='ticket" . $job->fields["id"] . "$rand' href=\"" . $CFG_GLPI["root_doc"]
-                    . "/front/ticket.form.php?id=" . $job->fields["id"] . "\">$eigth_column</a>";
-
-                if ($followups
-                    && ($output_type == Search::HTML_OUTPUT)
-                ) {
-                    $eigth_column = sprintf(
-                        __('%1$s (%2$s)'),
-                        $eigth_column,
-                        sprintf(
-                            __('%1$s - %2$s'),
-                            $job->numberOfFollowups($showprivate),
-                            $job->numberOfTasks($showprivate),
-                        ),
-                    );
-                } else {
-                    $eigth_column = sprintf(
-                        __('%1$s (%2$s)'),
-                        $eigth_column,
-                        sprintf(
-                            __('%1$s - %2$s'),
-                            $job->numberOfFollowups($showprivate),
-                            $job->numberOfTasks($showprivate),
-                        ),
-                    );
-                }
-            }
-
-            if ($output_type == Search::HTML_OUTPUT) {
-                $eigth_column = sprintf(
-                    __('%1$s %2$s'),
-                    $eigth_column,
-                    \Html::showToolTip(
-                        // showToolTip() inserts its body as HTML: it is a sink, not an escaping
-                        // point. Sanitize the rich text first, as src/Reports/Reminder.php and the
-                        // core both do.
-                        RichText::getEnhancedHtml($job->fields['content']),
-                        [
-                            'display' => false,
-                            'applyto' => "ticket" . $job->fields["id"]
-                                . $rand,
-                        ],
-                    ),
+                $output[] = Helper::getItemLinkCell(
+                    $CFG_GLPI["root_doc"] . "/front/ticket.form.php?id=" . $job->fields["id"],
+                    $job->fields["name"],
+                    $output_type == Search::HTML_OUTPUT ? $job->fields['content'] : '',
+                    '(' . sprintf(
+                        __('%1$s - %2$s'),
+                        $job->numberOfFollowups($showprivate),
+                        $job->numberOfTasks($showprivate),
+                    ) . ')',
                 );
+            } else {
+                $output[] = ['kind' => 'text', 'value' => (string) $job->fields["name"], 'bold' => true];
             }
-
-            $colnum++;
-            $output[$colnum] = $eigth_column;
         }
 
         return $output;

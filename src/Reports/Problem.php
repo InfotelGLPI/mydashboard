@@ -31,15 +31,14 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use CommonITILActor;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryFunction;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Html as MydashboardHtml;
 use GlpiPlugin\Mydashboard\Menu;
 use GlpiPlugin\Mydashboard\Widget;
-use Html;
 use Session;
 use Toolbox;
 
@@ -150,9 +149,9 @@ class Problem extends CommonGLPI
         //We declare our new widget
         $widget = new Datatable();
         if ($status == "waiting") {
-            $widget->setWidgetTitle(Html::makeTitle(__('Problems on pending status'), 0, 0));
+            $widget->setWidgetTitle(__('Problems on pending status'));
         } else {
-            $widget->setWidgetTitle(Html::makeTitle(__('Problems to be processed'), 0, 0));
+            $widget->setWidgetTitle(__('Problems to be processed'));
         }
         $group = ($showgroupproblems) ? "group" : "";
         $widget->setWidgetId("problem" . $status . "widget" . $group);
@@ -252,7 +251,6 @@ class Problem extends CommonGLPI
         $numrows = count($iterator);
 
         if ($numrows > 0) {
-            $output['title'] = "";
             $options['reset'] = 'reset';
             $forcetab = '';
             $num = 0;
@@ -277,9 +275,8 @@ class Problem extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Problems on pending status'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Problems on pending status');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options;
                         break;
 
                     case "process":
@@ -302,9 +299,8 @@ class Problem extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Problems to be processed'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Problems to be processed');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options;
                         break;
 
                     default:
@@ -328,9 +324,8 @@ class Problem extends CommonGLPI
                         ]);
 
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Your problems in progress'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Your problems in progress');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options;
                 }
             } else {
                 switch ($status) {
@@ -353,9 +348,8 @@ class Problem extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Problems on pending status'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Problems on pending status');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options;
                         break;
 
                     case "process":
@@ -377,9 +371,8 @@ class Problem extends CommonGLPI
                             ],
                         ]);
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Problems to be processed'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Problems to be processed');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options;
                         break;
 
                     default:
@@ -402,9 +395,8 @@ class Problem extends CommonGLPI
                         ]);
 
 
-                        $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?"
-                            . $options . "\">"
-                            . Html::makeTitle(__('Your problems in progress'), $numrows, $numrows) . "</a>";
+                        $output['title'] = __('Your problems in progress');
+                        $output['title_url'] = $CFG_GLPI["root_doc"] . "/front/problem.php?" . $options;
                 }
             }
 
@@ -422,6 +414,7 @@ class Problem extends CommonGLPI
         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
         if (isset($output['title'])) {
             $widget->setWidgetTitle($output['title']);
+            $widget->setWidgetTitleLink($output['title_url'], $numrows, $numrows);
         }
         if (isset($output['header'])) {
             $widget->setTabNames($output['header']);
@@ -445,93 +438,20 @@ class Problem extends CommonGLPI
     {
         global $CFG_GLPI;
 
-        $colnum = 0;
         $output = [];
 
-        // Prints a job in short form
-        // Should be called in a <table>-segment
-        // Print links or not in case of user view
-        // Make new job object and fill it from database, if success, print it
-        $viewusers = Session::haveRight("user", READ);
-
         $problem = new \Problem();
-        $rand = mt_rand();
-
         if ($problem->getFromDBwithData($ID, 0)) {
-            $bgcolor = $_SESSION["glpipriority_" . $problem->fields["priority"]];
-            //      $rand    = mt_rand();
-            $output[$colnum] = "<div class='center' style='background-color:$bgcolor; padding: 10px;'>" . sprintf(
-                __('%1$s: %2$s'),
-                __('ID'),
-                $problem->fields["id"],
-            ) . "</div>";
-            $colnum++;
-
-            $output[$colnum] = '';
-            $userrequesters = $problem->getUsers(CommonITILActor::REQUESTER);
-            if (isset($userrequesters)
-                && count($userrequesters)
-            ) {
-                foreach ($userrequesters as $d) {
-                    if ($d["users_id"] > 0) {
-                        // This column is composed as HTML and handed to Datatable, which
-                        // writes it to the DOM as HTML: the requester name is free text of
-                        // the user account and the fallback address is typed by the requester
-                        // itself on an anonymous ticket.
-                        $userdata = htmlspecialchars((string) getUserName($d["users_id"]), ENT_QUOTES, 'UTF-8');
-                        $name = "<div class='b center'>" . $userdata;
-                        $output[$colnum] .= $name . "</div>";
-                    } else {
-                        $output[$colnum] .= htmlspecialchars((string) $d['alternative_email'], ENT_QUOTES, 'UTF-8') . "&nbsp;";
-                    }
-                    //$output[$colnum] .=  "<br>";
-                }
-            }
-            $grouprequester = $problem->getGroups(CommonITILActor::REQUESTER);
-            if (isset($grouprequester)
-                && count($grouprequester)
-            ) {
-                foreach ($grouprequester as $d) {
-                    $output[$colnum] .= htmlspecialchars(
-                        (string) Dropdown::getDropdownName("glpi_groups", $d["groups_id"]),
-                        ENT_QUOTES,
-                        'UTF-8',
-                    );
-                }
-            }
-
-            $colnum++;
-            //$output[$colnum] = '';
-            $link = "<a id='problem" . $problem->fields["id"] . $rand . "' href='" . $CFG_GLPI["root_doc"]
-                . "/front/problem.form.php?id=" . $problem->fields["id"];
+            $url = $CFG_GLPI["root_doc"] . "/front/problem.form.php?id=" . $problem->fields["id"];
             if ($forcetab != '') {
-                $link .= "&amp;forcetab=" . $forcetab;
+                $url .= "&forcetab=" . $forcetab;
             }
-            // echo "###########".$problem->fields["name"];
-            $link .= "'>";
-            // Escape the problem name (raw in DB) before echoing it into the widget.
-            $link .= "<span class='b'>" . htmlspecialchars($problem->fields["name"], ENT_QUOTES, 'UTF-8') . "</span></a>";
-
-            $link = sprintf(
-                __('%1$s %2$s'),
-                $link,
-                Html::showToolTip(
-                    // showToolTip() inserts its body as HTML: it is a sink, not an escaping
-                    // point. Sanitize the rich text first, as src/Reports/Reminder.php does.
-                    RichText::getEnhancedHtml($problem->fields['content']),
-                    [
-                        'applyto' => 'problem' . $problem->fields["id"] . $rand,
-                        'display' => false,
-                    ],
-                ),
-            );
-            //echo $link;
-            //$colnum++;
-            $output[$colnum] = $link;
+            $output[] = Helper::getPriorityIdCell($problem);
+            $output[] = Helper::getItilRequestersCell($problem);
+            $output[] = Helper::getItemLinkCell($url, $problem->fields["name"], $problem->fields['content']);
         }
         return $output;
     }
-
     /**
      * @param bool $foruser
      *
@@ -643,10 +563,12 @@ class Problem extends CommonGLPI
             ],
         ]);
 
-        $icon = "<i class='" . \Problem::getIcon() . "'></i>";
-        $widget->setWidgetTitle(
-            $icon . " <a href=\"" . $CFG_GLPI["root_doc"] . "/front/problem.php?reset=reset\">"
-            . __('Problem followup', 'mydashboard') . "</a>",
+        $widget->setWidgetTitle(__('Problem followup', 'mydashboard'));
+        $widget->setWidgetTitleLink(
+            $CFG_GLPI["root_doc"] . "/front/problem.php?reset=reset",
+            null,
+            null,
+            \Problem::getIcon(),
         );
 
         $twig_params = [

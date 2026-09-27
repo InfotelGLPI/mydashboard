@@ -82,8 +82,8 @@ if ($widget === "PluginOcsinventoryngDashboard1") {
     }
 }
 
-// Every consumer feeds this response straight to window.open() (see the Charts and
-// Reports_Table script blocks), so the URL itself is the sink: a "javascript:" or
+// Every consumer feeds this response straight to window.open() (see public/scripts/launch-url.js),
+// so the URL itself is the sink: a "javascript:" or
 // "data:" link would execute, and a protocol-relative "//host" one would be an open
 // redirect. Link builders all return $CFG_GLPI['root_doc'] . '/front/...' URLs, so
 // anything that is not a path under the GLPI root is dropped -- including the links

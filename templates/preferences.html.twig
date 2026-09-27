@@ -25,54 +25,103 @@
  # --------------------------------------------------------------------------
  #}
 
-<tr class="tab_bg_1">
-    <td>{{ __("Automatic refreshing of the widgets that can be refreshed", "mydashboard") }}</td>
-    <td>{{ automatic_refresh_dd|raw }}</td>
-</tr>
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-    <td>{{ __("Refresh every ", "mydashboard") }}</td>
-    <td>{{ automatic_refresh_delay_dd|raw }} {{ __('minute(s)', "mydashboard") }}</td>
-</tr>
+{% block form_fields %}
+    {% set active_entities = session('glpiactiveentities') %}
 
-<tr class="tab_bg_1">
-    <td>{{ __("Replace central interface", "mydashboard") }}</td>
-    <td>{{ replace_central_dd|raw }}</td>
-</tr>
+    {{ fields.dropdownYesNo(
+        'automatic_refresh',
+        item.fields['automatic_refresh'],
+        __('Automatic refreshing of the widgets that can be refreshed', 'mydashboard'),
+        field_options
+    ) }}
 
-{% if is_central %}
-<tr class="tab_bg_1">
-    <td>{{ __("My prefered groups for widget", "mydashboard") }}</td>
-    <td>{{ prefered_group_dd|raw }}</td>
-</tr>
-{% endif %}
+    {{ fields.dropdownArrayField(
+        'automatic_refresh_delay',
+        item.fields['automatic_refresh_delay'],
+        {1: 1, 2: 2, 5: 5, 10: 10, 30: 30, 60: 60},
+        __('Refresh every ', 'mydashboard'),
+        field_options|merge({'add_field_html': __('minute(s)', 'mydashboard')})
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __("My requester prefered groups for widget", "mydashboard") }}</td>
-    <td>{{ requester_prefered_group_dd|raw }}</td>
-</tr>
+    {{ fields.dropdownYesNo(
+        'replace_central',
+        item.fields['replace_central'],
+        __('Replace central interface', 'mydashboard'),
+        field_options
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __("My prefered entity for widget", "mydashboard") }}</td>
-    <td>{{ prefered_entity_dd|raw }}</td>
-</tr>
+    {% if is_central %}
+        {{ fields.dropdownArrayField(
+            'prefered_group',
+            null,
+            group_choices,
+            __('My prefered groups for widget', 'mydashboard'),
+            field_options|merge({
+                'multiple': true,
+                'values': prefered_groups,
+                'display_emptychoice': true,
+            })
+        ) }}
+    {% endif %}
 
-<tr>
-    <td>{{ __('My favorite category for widgets', 'mydashboard') }}</td>
-    <td>{{ prefered_category_dd|raw }}</td>
-</tr>
+    {{ fields.dropdownArrayField(
+        'requester_prefered_group',
+        null,
+        requester_group_choices,
+        __('My requester prefered groups for widget', 'mydashboard'),
+        field_options|merge({
+            'multiple': true,
+            'values': requester_prefered_groups,
+            'display_emptychoice': true,
+        })
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __("My prefered type for widget", "mydashboard") }}</td>
-    <td>{{ prefered_type_dd|raw }}</td>
-</tr>
+    {{ fields.dropdownField(
+        entity_itemtype,
+        'prefered_entity',
+        item.fields['prefered_entity'],
+        __('My prefered entity for widget', 'mydashboard'),
+        field_options|merge({
+            'entity': active_entities,
+            'toadd': {0: empty_value},
+        })
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __("My prefered year for widget", "mydashboard") }}</td>
-    <td>{{ prefered_year_dd|raw }}</td>
-</tr>
+    {{ fields.dropdownField(
+        category_itemtype,
+        'prefered_category',
+        item.fields['prefered_category'],
+        __('My favorite category for widgets', 'mydashboard'),
+        field_options|merge({
+            'entity': active_entities,
+            'condition': category_condition,
+        })
+    ) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __("Palette color", "mydashboard") }}</td>
-    <td>{{ color_palette_html|raw }}</td>
-</tr>
+    {{ fields.dropdownArrayField(
+        'prefered_type',
+        item.fields['prefered_type'],
+        ticket_types,
+        __('My prefered type for widget', 'mydashboard'),
+        field_options
+    ) }}
+
+    {{ fields.dropdownArrayField(
+        'prefered_year',
+        item.fields['prefered_year'],
+        {0: __('Current year', 'mydashboard'), 1: __('Previous year', 'mydashboard')},
+        __('My prefered year for widget', 'mydashboard'),
+        field_options
+    ) }}
+
+    {{ fields.dropdownArrayField(
+        'color_palette',
+        item.fields['color_palette'],
+        palettes,
+        __('Palette color', 'mydashboard'),
+        field_options
+    ) }}
+{% endblock %}

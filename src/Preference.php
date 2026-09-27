@@ -147,127 +147,53 @@ class Preference extends CommonDBTM
             $this->getFromDB($user_id);
         }
 
-        $options            = ['candel' => false, 'colspan' => 1];
-        $is_central         = Session::getCurrentInterface() === 'central';
+        $options    = ['candel' => false];
+        $is_central = Session::getCurrentInterface() === 'central';
 
-        $automatic_refresh_dd = Dropdown::showYesNo(
-            'automatic_refresh',
-            $this->fields['automatic_refresh'],
-            -1,
-            ['display' => false],
-        );
+        $dbu = new DbUtils();
 
-        $automatic_refresh_delay_dd = Dropdown::showFromArray(
-            'automatic_refresh_delay',
-            [1 => 1, 2 => 2, 5 => 5, 10 => 10, 30 => 30, 60 => 60],
-            ['value' => $this->fields['automatic_refresh_delay'], 'display' => false],
-        );
-
-        $replace_central_dd = Dropdown::showYesNo(
-            'replace_central',
-            $this->fields['replace_central'],
-            -1,
-            ['display' => false],
-        );
-
-        $prefered_group_dd = '';
+        $group_choices = [];
         if ($is_central) {
-            $dbu    = new DbUtils();
-            $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
-            $pref   = json_decode($this->fields['prefered_group'], true);
-            if (!is_array($pref)) {
-                $pref = [];
+            foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]) as $group) {
+                $group_choices[$group['id']] = $group['name'];
             }
-            $temp = [];
-            foreach ($result as $item) {
-                $temp[$item['id']] = $item['name'];
-            }
-            $prefered_group_dd = Dropdown::showFromArray('prefered_group', $temp, [
-                'entity'              => $_SESSION['glpiactiveentities'],
-                'display'             => false,
-                'multiple'            => true,
-                'width'               => '200px',
-                'values'              => $pref,
-                'display_emptychoice' => true,
-            ]);
         }
-
-        $dbu    = new DbUtils();
-        $result = $dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]);
-        $pref   = json_decode($this->fields['requester_prefered_group'], true);
-        if (!is_array($pref)) {
-            $pref = [];
+        $requester_group_choices = [];
+        foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]) as $group) {
+            $requester_group_choices[$group['id']] = $group['name'];
         }
-        $temp = [];
-        foreach ($result as $item) {
-            $temp[$item['id']] = $item['name'];
-        }
-        $requester_prefered_group_dd = Dropdown::showFromArray('requester_prefered_group', $temp, [
-            'entity'              => $_SESSION['glpiactiveentities'],
-            'display'             => false,
-            'multiple'            => true,
-            'width'               => '200px',
-            'values'              => $pref,
-            'display_emptychoice' => true,
-        ]);
-
-        $prefered_entity_dd = Entity::dropdown([
-            'name'    => 'prefered_entity',
-            'value'   => $this->fields['prefered_entity'],
-            'entity'  => $_SESSION['glpiactiveentities'],
-            'display' => false,
-            'toadd'   => [0 => Dropdown::EMPTY_VALUE],
-        ]);
-
-        $prefered_category_dd = ITILCategory::dropdown([
-            'name'                => 'prefered_category',
-            'value'               => $this->fields['prefered_category'],
-            'multiple'            => false,
-            'display'             => false,
-            'width'               => '200px',
-            'entity'              => $_SESSION['glpiactiveentities'],
-            'display_emptychoice' => true,
-            'condition'           => [['OR' => ['is_request' => 1, 'is_incident' => 1]]],
-        ]);
-
-        $prefered_type_dd = Ticket::dropdownType('prefered_type', [
-            'value'   => $this->fields['prefered_type'],
-            'toadd'   => [0 => Dropdown::EMPTY_VALUE],
-            'display' => false,
-        ]);
-
-        $prefered_year_dd = Dropdown::showFromArray(
-            'prefered_year',
-            [0 => __('Current year', 'mydashboard'), 1 => __('Previous year', 'mydashboard')],
-            ['value' => $this->fields['prefered_year'], 'display' => false],
-        );
-
-        $color_palette_html = \Html::select(
-            'color_palette',
-            $this->getPalettes(),
-            ['id' => 'theme-selector', 'selected' => $this->fields['color_palette']],
-        );
-
-        $this->showFormHeader($options);
 
         TemplateRenderer::getInstance()->display('@mydashboard/preferences.html.twig', [
-            'automatic_refresh_dd'        => $automatic_refresh_dd,
-            'automatic_refresh_delay_dd'  => $automatic_refresh_delay_dd,
-            'replace_central_dd'          => $replace_central_dd,
-            'is_central'                  => $is_central,
-            'prefered_group_dd'           => $prefered_group_dd,
-            'requester_prefered_group_dd' => $requester_prefered_group_dd,
-            'prefered_entity_dd'          => $prefered_entity_dd,
-            'prefered_category_dd'        => $prefered_category_dd,
-            'prefered_type_dd'            => $prefered_type_dd,
-            'prefered_year_dd'            => $prefered_year_dd,
-            'color_palette_html'          => $color_palette_html,
+            'item'                      => $this,
+            'params'                    => $options,
+            'is_central'                => $is_central,
+            'group_choices'             => $group_choices,
+            'prefered_groups'           => self::decodeGroupList($this->fields['prefered_group']),
+            'requester_group_choices'   => $requester_group_choices,
+            'requester_prefered_groups' => self::decodeGroupList($this->fields['requester_prefered_group']),
+            'entity_itemtype'           => Entity::class,
+            'category_itemtype'         => ITILCategory::class,
+            'category_condition'        => [['OR' => ['is_request' => 1, 'is_incident' => 1]]],
+            'empty_value'               => Dropdown::EMPTY_VALUE,
+            'ticket_types'              => [0 => Dropdown::EMPTY_VALUE] + Ticket::getTypes(),
+            'palettes'                  => $this->getPalettes(),
         ]);
-
-        $this->showFormButtons($options);
 
         $blacklist = new PreferenceUserBlacklist();
         $blacklist->showUserForm(Session::getLoginUserID());
+    }
+
+    /**
+     * Group ids stored as a JSON list.
+     *
+     * @param mixed $value
+     *
+     * @return array
+     */
+    private static function decodeGroupList($value): array
+    {
+        $groups = json_decode((string) $value, true);
+        return is_array($groups) ? $groups : [];
     }
 
     public function prepareInputForAdd($input)

@@ -42,6 +42,7 @@ abstract class Module extends CommonGLPI
     private $widgetId;
     private $widgetType = "chart";
     private $widgetTitle;
+    private $widgetTitleLink = null;
     private $widgetHeader;
     private $widgetHeaderType;
     private $widgetComment;
@@ -109,6 +110,41 @@ abstract class Module extends CommonGLPI
             $this->widgetTitle = "Default Title";
         }
         return $this->widgetTitle;
+    }
+
+    /**
+     * Link decorations of the title, see setWidgetTitleLink()
+     *
+     * @return array{url: string, count: ?int, total: ?int, icon: ?string, add_url: ?string}|null
+     */
+    public function getWidgetTitleLink()
+    {
+        return $this->widgetTitleLink;
+    }
+
+    /**
+     * Turn the title into a link to the full list, rendered by widget_frame.html.twig.
+     *
+     * The title itself stays the plain label given to setWidgetTitle(), so that the widget
+     * list (getWidgetListTitle()) keeps reading it as text.
+     *
+     * @param string  $url      link of the label
+     * @param ?int    $count    number of displayed items, shown as a badge
+     * @param ?int    $total    total number of items, "count on total" when greater than count
+     * @param ?string $icon     icon class displayed before the label
+     * @param ?string $add_url  "add" shortcut, null when the user cannot create the item
+     *
+     * @return void
+     */
+    public function setWidgetTitleLink($url, $count = null, $total = null, $icon = null, $add_url = null)
+    {
+        $this->widgetTitleLink = [
+            'url' => $url,
+            'count' => $count,
+            'total' => $total,
+            'icon' => $icon,
+            'add_url' => $add_url,
+        ];
     }
 
     public function getWidgetHeader()

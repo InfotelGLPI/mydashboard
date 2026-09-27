@@ -36,6 +36,7 @@ use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use Glpi\RichText\RichText;
+use Glpi\Toolbox\URL;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Mydashboard\Reports\Reports_Bar;
 use GlpiPlugin\Mydashboard\Reports\Reports_Custom;
@@ -767,7 +768,7 @@ class Widget extends CommonDBTM
                         foreach ($data as $v) {
                             $row = [];
                             for ($i = 0; $i < $nb; $i++) {
-                                $row[] = self::getDisplayFragment($v[$i]);
+                                $row[] = self::getDisplayCell($v[$i]);
                             }
                             $rows[] = $row;
                         }
@@ -798,6 +799,7 @@ class Widget extends CommonDBTM
                         'feature_class' => $class,
                         'show_title' => $widget->getTitleVisibility(),
                         'title' => self::getDisplayFragment($title),
+                        'title_link' => self::getTitleLink($widget),
                         'tooltip_html' => $tooltip_html,
                         'header_html' => $widget->getWidgetHeader(),
                         'table' => $table,
@@ -834,6 +836,135 @@ class Widget extends CommonDBTM
         // Several producers pre-escape their text (Config::displayField(), custom widget
         // names), decode it once so Twig does not escape it a second time.
         return ['html' => false, 'value' => html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8')];
+    }
+
+    /**
+     * Type a table cell for widget_frame.html.twig.
+     *
+     * Reports describe their cells as arrays carrying a 'kind' (text, link, badge, status,
+     * lines, action) and only scalar values: the template composes the markup and escapes
+     * every value. Strings are the legacy format and go through getDisplayFragment().
+     *
+     * @param mixed $value
+     *
+     * @return array
+     */
+    private static function getDisplayCell($value): array
+    {
+        if (!is_array($value) || !isset($value['kind'])) {
+            return self::getDisplayFragment($value);
+        }
+
+        $text = static fn($v): string => is_scalar($v) ? (string) $v : '';
+
+        switch ($value['kind']) {
+            case 'link':
+                return [
+                    'kind' => 'link',
+                    // Report links point to GLPI pages, RSS items to the feed site: both are
+                    // restricted to http(s) or root relative URLs.
+                    'url' => URL::sanitizeURL($text($value['url'] ?? '')),
+                    'label' => $text($value['label'] ?? ''),
+                    'bold' => !empty($value['bold']),
+                    'external' => !empty($value['external']),
+                    'tooltip' => $text($value['tooltip'] ?? ''),
+                    'prefix' => $text($value['prefix'] ?? ''),
+                    'icon' => $text($value['icon'] ?? ''),
+                    'suffix' => $text($value['suffix'] ?? ''),
+                ];
+
+            case 'badge':
+                return [
+                    'kind' => 'badge',
+                    'label' => $text($value['label'] ?? ''),
+                    'color' => self::getCellColor($value['color'] ?? null),
+                    'text_color' => self::getCellColor($value['text_color'] ?? null),
+                    'url' => URL::sanitizeURL($text($value['url'] ?? '')),
+                ];
+
+            case 'status':
+                return [
+                    'kind' => 'status',
+                    'label' => $text($value['label'] ?? ''),
+                    'icon' => $text($value['icon'] ?? ''),
+                    'suffix' => $text($value['suffix'] ?? ''),
+                ];
+
+            case 'lines':
+                $items = [];
+                foreach ((array) ($value['items'] ?? []) as $item) {
+                    $items[] = self::getDisplayCell($item);
+                }
+                return ['kind' => 'lines', 'items' => $items];
+
+            case 'action':
+                $params = [];
+                foreach ((array) ($value['params'] ?? []) as $key => $param) {
+                    if (is_scalar($param)) {
+                        $params[$key] = $param;
+                    } elseif (is_array($param)) {
+                        $params[$key] = array_values(array_filter($param, 'is_scalar'));
+                    }
+                }
+                return [
+                    'kind' => 'action',
+                    'label' => $text($value['label'] ?? ''),
+                    'url' => URL::sanitizeURL($text($value['url'] ?? '')),
+                    'params' => $params,
+                ];
+
+            default:
+                return [
+                    'kind' => 'text',
+                    'value' => $text($value['value'] ?? ''),
+                    'bold' => !empty($value['bold']),
+                ];
+        }
+    }
+
+    /**
+     * A css colour of a cell, only accepted as an hexadecimal notation.
+     *
+     * @param mixed $color
+     *
+     * @return string|null
+     */
+    private static function getCellColor($color): ?string
+    {
+        if (is_string($color) && preg_match('/^#[0-9a-f]{3,8}$/i', $color) === 1) {
+            return $color;
+        }
+        return null;
+    }
+
+    /**
+     * Link decorations of the widget title, see Module::setWidgetTitleLink().
+     *
+     * @param Module $widget
+     *
+     * @return array|null
+     */
+    private static function getTitleLink($widget): ?array
+    {
+        $link = $widget->getWidgetTitleLink();
+        if ($link === null) {
+            return null;
+        }
+        $count = $link['count'];
+        $total = $link['total'];
+        $count_label = null;
+        if ($count !== null) {
+            $count_label = ($total !== null && $count > 0 && $count < $total)
+                ? sprintf(__('%1$d on %2$d'), $count, $total)
+                : (string) ($total ?? $count);
+        }
+
+        return [
+            'url' => URL::sanitizeURL((string) $link['url']),
+            'count' => $count_label,
+            'icon' => $link['icon'],
+            'add_url' => $link['add_url'] !== null ? URL::sanitizeURL((string) $link['add_url']) : null,
+        ];
     }
 
     /**

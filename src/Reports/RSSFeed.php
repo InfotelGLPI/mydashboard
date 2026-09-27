@@ -130,11 +130,8 @@ class RSSFeed extends CommonGLPI
                 'ORDERBY' => 'glpi_rssfeeds.name',
             ];
 
-            $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
-                'Personal RSS feed',
-                'Personal RSS feeds',
-                2,
-            ) . "</a>";
+            $titre = _n('Personal RSS feed', 'Personal RSS feeds', 2);
+            $title_url = $CFG_GLPI["root_doc"] . "/front/rssfeed.php";
         } else {
             // Show public rssfeeds / not mines : need to have access to public rssfeeds
             if (!Session::haveRight('rssfeed_public', READ)) {
@@ -169,15 +166,10 @@ class RSSFeed extends CommonGLPI
                 }
             }
 
-            if (Session::getCurrentInterface() != 'helpdesk') {
-                $titre = "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.php\">" . _n(
-                    'Public RSS feed',
-                    'Public RSS feeds',
-                    2,
-                ) . "</a>";
-            } else {
-                $titre = _n('Public RSS feed', 'Public RSS feeds', 2);
-            }
+            $titre = _n('Public RSS feed', 'Public RSS feeds', 2);
+            $title_url = Session::getCurrentInterface() != 'helpdesk'
+                ? $CFG_GLPI["root_doc"] . "/front/rssfeed.php"
+                : '';
         }
 
         $iterator = $DB->request($criteria);
@@ -198,13 +190,6 @@ class RSSFeed extends CommonGLPI
             }
         }
 
-        $output['title'] = "<span>$titre</span>";
-
-        if (\RSSFeed::canCreate()) {
-            $output['title'] .= "<span class=\"rssfeed_right\">";
-            $output['title'] .= "<a href=\"" . $CFG_GLPI["root_doc"] . "/front/rssfeed.form.php\">";
-            $output['title'] .= "<i class='ti ti-plus'></i><span class='sr-only'>" . __s('Add') . "</span></a></span>";
-        }
 
         $count = 0;
         $output['header'][0] = __('Date');
@@ -215,38 +200,29 @@ class RSSFeed extends CommonGLPI
         if (count($iterator) > 0) {
             usort($items, ['SimplePie', 'sort_items']);
             foreach ($items as $item) {
-                $output['body'][$count][0] = \Html::convDateTime($item->get_date('Y-m-d H:i:s'));
+                $output['body'][$count][0] = ['kind' => 'text', 'value' => (string) \Html::convDateTime($item->get_date('Y-m-d H:i:s'))];
                 // Everything below is served by the remote feed, which keeps publishing new
-                // content long after an administrator validated the URL. Titles are escaped and
-                // permalinks go through URL::sanitizeURL() so a javascript: scheme cannot reach
-                // the href, which is the contract the core applies to these very SimplePie calls
-                // in src/RSSFeed.php. The body of the entry was already sanitized below.
-                $link = URL::sanitizeURL($item->feed->get_permalink());
-                if (empty($link)) {
-                    $output['body'][$count][1] = htmlescape($item->feed->get_title());
-                } else {
-                    $output['body'][$count][1] = '<a target="_blank" rel="noopener noreferrer" href="'
-                        . htmlescape($link) . '">' . htmlescape($item->feed->get_title()) . '</a>';
-                }
-                $link = URL::sanitizeURL($item->get_permalink());
-                $rand = mt_rand();
-                $output['body'][$count][1] .= "<div id=\"rssitem$rand\" class=\"pointer rss\">";
-                if (!empty($link)) {
-                    $output['body'][$count][1] .= '<a target="_blank" rel="noopener noreferrer" href="'
-                        . htmlescape($link) . '">';
-                }
-                $output['body'][$count][1] .= htmlescape($item->get_title());
-                if (!empty($link)) {
-                    $output['body'][$count][1] .= "</a>";
-                }
-                $output['body'][$count][1] .= "</div>";
-                $output['body'][$count][1] .= \Html::showToolTip(
-                    RichText::getSafeHtml($item->get_content()),
-                    [
-                        'applyto' => "rssitem$rand",
-                        'display' => false,
+                // content long after an administrator validated the URL: the cells only carry
+                // text, and Widget::getDisplayCell() restricts the permalinks to http(s) URLs
+                // as the core does for these very SimplePie calls in src/RSSFeed.php.
+                $output['body'][$count][1] = [
+                    'kind' => 'lines',
+                    'items' => [
+                        [
+                            'kind' => 'link',
+                            'url' => (string) $item->feed->get_permalink(),
+                            'label' => (string) $item->feed->get_title(),
+                            'external' => true,
+                        ],
+                        [
+                            'kind' => 'link',
+                            'url' => (string) $item->get_permalink(),
+                            'label' => (string) $item->get_title(),
+                            'external' => true,
+                            'tooltip' => RichText::getTextFromHtml((string) $item->get_content(), false, true),
+                        ],
                     ],
-                );
+                ];
                 $count++;
             }
         }
@@ -256,7 +232,14 @@ class RSSFeed extends CommonGLPI
         //First we create a new Widget of Datatable kind
         $widget = new Datatable();
         //We set the widget title and the id
-        $widget->setWidgetTitle($output['title']);
+        $widget->setWidgetTitle($titre);
+        $widget->setWidgetTitleLink(
+            $title_url,
+            null,
+            null,
+            null,
+            \RSSFeed::canCreate() ? $CFG_GLPI["root_doc"] . "/front/rssfeed.form.php" : null,
+        );
         $widget->setWidgetId("rssfeed" . $publique . "widget");
         //We set the datas of the widget (which will be later automatically formatted by the method getJSonData of Datatable)
         $widget->setTabNames($output['header']);

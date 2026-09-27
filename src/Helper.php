@@ -29,8 +29,13 @@
 
 namespace GlpiPlugin\Mydashboard;
 
+use CommonDBTM;
+use CommonITILActor;
+use CommonITILObject;
 use DbUtils;
+use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Charts\HBarChart;
 use GlpiPlugin\Mydashboard\Charts\LineChart;
 use GlpiPlugin\Mydashboard\Charts\PieChart;
@@ -45,29 +50,66 @@ use Session;
 class Helper
 {
     /**
-     * @param $params
+     * Typed cell of an item ID (ITIL object, project), coloured with the priority colour of the user.
      *
-     * @return string
+     * @param CommonDBTM $item
+     * @param ?string    $url
+     *
+     * @return array
      */
-    /**
-     * Title of a report widget: a link to the list, plus an optional "add" shortcut.
-     *
-     * Reports\Ticket, Reports\Reminder and Reports\ProjectTask each carried their own
-     * copy of this markup.
-     *
-     * @param string  $list_url
-     * @param string  $label_html label, possibly wrapped in a count badge by Html::makeTitle()
-     * @param ?string $add_url    null when the user cannot create the item
-     *
-     * @return string
-     */
-    public static function getWidgetTitleHtml($list_url, $label_html, $add_url = null)
+    public static function getPriorityIdCell(CommonDBTM $item, $url = null)
     {
-        return TemplateRenderer::getInstance()->render('@mydashboard/report_widget_title.html.twig', [
-            'list_url' => $list_url,
-            'label_html' => $label_html,
-            'add_url' => $add_url,
-        ]);
+        return [
+            'kind' => 'badge',
+            'label' => sprintf(__('%1$s: %2$s'), __('ID'), $item->fields['id']),
+            'color' => $_SESSION['glpipriority_' . $item->fields['priority']] ?? null,
+            'url' => $url,
+        ];
+    }
+
+    /**
+     * Typed cell listing the requesters (users, anonymous emails, groups) of an ITIL object.
+     *
+     * @param CommonITILObject $item
+     *
+     * @return array
+     */
+    public static function getItilRequestersCell(CommonITILObject $item)
+    {
+        $lines = [];
+        foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
+            if ($d['users_id'] > 0) {
+                $lines[] = ['kind' => 'text', 'value' => (string) getUserName($d['users_id']), 'bold' => true];
+            } else {
+                $lines[] = ['kind' => 'text', 'value' => (string) $d['alternative_email']];
+            }
+        }
+        foreach ($item->getGroups(CommonITILActor::REQUESTER) as $d) {
+            $lines[] = ['kind' => 'text', 'value' => (string) Dropdown::getDropdownName('glpi_groups', $d['groups_id'])];
+        }
+        return ['kind' => 'lines', 'items' => $lines];
+    }
+
+    /**
+     * Typed cell linking to an item, its rich text content being shown as a plain text tooltip.
+     *
+     * @param string $url
+     * @param string $label
+     * @param string $content rich text
+     * @param string $suffix
+     *
+     * @return array
+     */
+    public static function getItemLinkCell($url, $label, $content = '', $suffix = '')
+    {
+        return [
+            'kind' => 'link',
+            'url' => $url,
+            'label' => (string) $label,
+            'bold' => true,
+            'tooltip' => RichText::getTextFromHtml((string) $content, false, true),
+            'suffix' => $suffix,
+        ];
     }
 
     public static function getGraphHeader($params)

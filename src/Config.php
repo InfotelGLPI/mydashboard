@@ -32,9 +32,7 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
-use Html;
 use ITILCategory;
 use Migration;
 use Session;
@@ -276,41 +274,11 @@ class Config extends CommonDBTM
      */
     public function showForm($ID, $options = [])
     {
-        $this->getFromDB("1");
-
-        //If user have no access
-        //        if(!plugin_dashboard_haveRight('config', READ)){
-        //            return false;
-        //        }
+        // Single row configuration
+        $this->initForm(1, $options);
 
         //The configuration is not deletable
-        $options['candel']  = false;
-        $options['colspan'] = 1;
-
-        //canCreate means that user can update the configuration
-        //        $canCreate = self::canCreate();
-        $canCreate = true;
-        $rand      = mt_rand();
-
-        //This array is for those who can't update, it's to display the value of a boolean parameter
-        $yesno = [__("No"), __("Yes")];
-
-        // showFormHeader()/showFormButtons() emit the surrounding <form> and <table>
-        ob_start();
-        $this->showFormHeader($options);
-        $form_header_html = ob_get_clean();
-
-        $impact_colors = [];
-        for ($level = 1; $level <= 5; $level++) {
-            $impact_colors[] = [
-                'level' => $level,
-                'field_html' => Html::showColorField('impact_' . $level, [
-                    'value' => $this->fields["impact_" . $level],
-                    'rand' => $rand,
-                    'display' => false,
-                ]),
-            ];
-        }
+        $options['candel'] = false;
 
         $itilCat = new ITILCategory();
         $levelsCat = [];
@@ -319,54 +287,13 @@ class Config extends CommonDBTM
         }
         ksort($levelsCat);
 
-        ob_start();
-        $this->showFormButtons($options);
-        $form_buttons_html = ob_get_clean();
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/config_form.html.twig', [
-            'form_header_html' => $form_header_html,
-            'form_buttons_html' => $form_buttons_html,
-            'rand' => $rand,
-            'can_create' => $canCreate,
-            'fullscreen_html' => Dropdown::showYesNo(
-                "enable_fullscreen",
-                $this->fields['enable_fullscreen'],
-                -1,
-                ['display' => false],
-            ),
-            'fullscreen_label' => $yesno[$this->fields['enable_fullscreen']],
-            'replace_central_html' => Dropdown::showYesNo(
-                "replace_central",
-                $this->fields['replace_central'],
-                -1,
-                ['display' => false],
-            ),
-            'impact_colors' => $impact_colors,
-            'level_cat_html' => Dropdown::showFromArray('levelCat', $levelsCat, [
-                'value' => $this->fields["levelCat"],
-                'display' => false,
-            ]),
-            'title_alerts_html' => Html::input('title_alerts_widget', [
-                'value' => $this->fields['title_alerts_widget'],
-                'size' => 70,
-            ]),
-            'title_maintenances_html' => Html::input('title_maintenances_widget', [
-                'value' => $this->fields['title_maintenances_widget'],
-                'size' => 70,
-            ]),
-            'title_informations_html' => Html::input('title_informations_widget', [
-                'value' => $this->fields['title_informations_widget'],
-                'size' => 70,
-            ]),
-            'reconstruct_backlog_html' => Html::submit(
-                _sx('button', 'Reconstruct global backlog', 'mydashboard'),
-                ['name' => 'reconstructBacklog', 'class' => 'btn btn-primary'],
-            ),
-            'reconstruct_indicators_html' => Html::submit(
-                _sx('button', 'Reconstruct global indicators per week', 'mydashboard'),
-                ['name' => 'reconstructIndicators', 'class' => 'btn btn-primary'],
-            ),
+        TemplateRenderer::getInstance()->display('@mydashboard/config_form.html.twig', [
+            'item' => $this,
+            'params' => $options,
+            'level_cats' => $levelsCat,
         ]);
+
+        return true;
     }
 
     /*

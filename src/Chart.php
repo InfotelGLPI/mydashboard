@@ -29,9 +29,12 @@
 
 namespace GlpiPlugin\Mydashboard;
 
+use Glpi\Application\View\TemplateRenderer;
+use Session;
+
 /**
  * Every chart classes of the mydashboard plugin inherit from this class
- * It sets basical parameters to display a chart with Flotr2
+ * It sets basical parameters to display a chart with ECharts
  */
 class Chart extends Module
 {
@@ -87,49 +90,69 @@ class Chart extends Module
     }
 
     /**
-     * JSON encoding flags that make a value safe to inline inside a <script>
-     * block: they neutralise the sequences used to break out of the script
-     * context (</script>, quotes and ampersands) by emitting \u escapes.
-     */
-    protected const SCRIPT_JSON_FLAGS = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-
-    /**
-     * Encode a raw PHP value for safe interpolation inside a <script> block.
+     * Render the configuration of an ECharts chart, drawn by public/scripts/charts.js in
+     * the element whose id is the chart name (rendered by graph_header.html.twig).
      *
-     * @param mixed $value
+     * The markup carries no script: it can be concatenated to any widget content, as the
+     * reports and the other plugins do with the value returned by the launch*Graph()
+     * methods.
+     *
+     * @param string $type            chart type, one of the types handled by charts.js
+     * @param array  $graph_datas     name, data, ids, labels, label, title, legends, yaxis
+     * @param array  $graph_criterias parameters posted back on click (url of the endpoint
+     *                                included), no click when empty
+     *
      * @return string
      */
-    protected static function encodeForScript($value): string
+    protected static function renderChart(string $type, array $graph_datas, array $graph_criterias): string
     {
-        return json_encode($value, self::SCRIPT_JSON_FLAGS);
-    }
-
-    /**
-     * Re-encode chart data that may already be a JSON string so that it is safe
-     * to inline inside a <script> block. Falls back to an empty JSON array when
-     * the input is not decodable, so raw text is never emitted into the script.
-     *
-     * @param mixed $value already-encoded JSON string or raw PHP value
-     * @return string
-     */
-    protected static function hardenJson($value): string
-    {
-        if (is_string($value)) {
-            $decoded = json_decode($value, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                return '[]';
-            }
-        } else {
-            $decoded = $value;
+        $click = null;
+        if (count($graph_criterias) > 0) {
+            $click = [
+                'url'    => $graph_criterias['url'] ?? PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/launchURL.php",
+                'params' => $graph_criterias,
+            ];
         }
 
-        return json_encode($decoded, self::SCRIPT_JSON_FLAGS);
+        $chart = [
+            'type'    => $type,
+            'name'    => self::sanitizeCanvasName($graph_datas['name'] ?? ''),
+            'data'    => self::decodeChartJson($graph_datas['data'] ?? []),
+            'ids'     => self::decodeChartJson($graph_datas['ids'] ?? []),
+            'labels'  => self::decodeChartJson($graph_datas['labels'] ?? []),
+            'legends' => self::decodeChartJson($graph_datas['legends'] ?? []),
+            'yaxis'   => self::decodeChartJson($graph_datas['yaxis'] ?? []),
+            'label'   => (string) ($graph_datas['label'] ?? ''),
+            'title'   => (string) ($graph_datas['title'] ?? ''),
+            'theme'   => Preference::getPalette(Session::getLoginUserID()),
+            'click'   => $click,
+        ];
+
+        return TemplateRenderer::getInstance()->render('@mydashboard/chart_config.html.twig', [
+            'chart' => $chart,
+        ]);
     }
 
     /**
-     * Validate a chart canvas identifier before it is interpolated into JS.
-     * Only word characters are allowed so untrusted input can never be
-     * reintroduced as a raw JS identifier.
+     * Chart data are given either as arrays or as JSON strings: anything else, or a string
+     * that does not decode, gives an empty list.
+     *
+     * @param mixed $value
+     *
+     * @return array
+     */
+    private static function decodeChartJson($value): array
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
+        return is_array($value) ? $value : [];
+    }
+
+    /**
+     * Validate a chart canvas identifier, looked up by id in charts.js.
+     * Only word characters are allowed.
      *
      * @param mixed $name
      * @return string
