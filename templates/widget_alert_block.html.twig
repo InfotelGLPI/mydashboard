@@ -34,12 +34,12 @@
 <div id="{{ gs_id }}" class="bt-row {{ addclass }}" style="{{ style }}">
     <div class="bt-feature {{ feature_class }} ">
         <{{ heading }}>
-            {# title_html comes from Config::displayField() #}
-            <div class="alert {{ alert_class }} " role="alert">{{ title_html|raw }}</div>
+            <div class="alert {{ alert_class }} " role="alert">{{ title }}</div>
         </{{ heading }}>
 
         <div id="display-sc">
             {% if list_html is not empty %}
+                {# raw: alert list of Alert::getAlertList()/getMaintenanceList()/getInformationList(), rendered by alert_ticker.html.twig #}
                 {{ list_html|raw }}
             {% else %}
                 <div class="center">

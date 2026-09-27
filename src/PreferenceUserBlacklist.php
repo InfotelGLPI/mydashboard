@@ -31,7 +31,6 @@ namespace GlpiPlugin\Mydashboard;
 
 use CommonDBTM;
 use DBConnection;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Plugin;
@@ -69,23 +68,16 @@ class PreferenceUserBlacklist extends CommonDBTM
                 }
                 $rows[] = [
                     'label' => $this->getLocalName($pluginname),
-                    'yesno_html' => Dropdown::showYesNo(
-                        "pn" . $pluginname,
-                        isset($blacklist[$pluginname]) ? 0 : 1,
-                        -1,
-                        ['display' => false],
-                    ),
+                    // "pn" prefix read back by save()
+                    'name' => "pn" . $pluginname,
+                    'value' => isset($blacklist[$pluginname]) ? 0 : 1,
                 ];
             }
 
-            echo TemplateRenderer::getInstance()->render('@mydashboard/preferenceuserblacklist_form.html.twig', [
+            TemplateRenderer::getInstance()->display('@mydashboard/preferenceuserblacklist_form.html.twig', [
                 'form_action' => PLUGIN_MYDASHBOARD_WEBDIR . '/front/preferenceuserblacklist.form.php',
                 'rows' => $rows,
-                'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
-                    'class' => 'btn btn-primary',
-                ]),
-                'hidden_html' => \Html::hidden("id", ['value' => Session::getLoginUserID()]),
-                'close_form_html' => \Html::closeForm(false),
+                'user_id' => Session::getLoginUserID(),
             ]);
         }
     }

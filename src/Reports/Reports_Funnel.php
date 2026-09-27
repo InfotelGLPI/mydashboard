@@ -70,8 +70,8 @@ class Reports_Funnel extends CommonGLPI
     public function getWidgetsForItem()
     {
         // The only widget of this class aggregates glpi_computers, so it is bound to the
-        // core right of the itemtype it reads, as every other report class does for its own
-        // (Criteria::canReadTickets(), 'contract', 'reminder_public'...).
+        // core right of the itemtype it reads, as the other report classes do for their own
+        // ('contract', 'reminder_public'...).
         if (!Session::haveRight(\Computer::$rightname, READ)) {
             return [];
         }

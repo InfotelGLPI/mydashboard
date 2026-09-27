@@ -91,12 +91,9 @@ class Type
 
         return Criteria::getFieldHtml(
             __('Type'),
-            Ticket::dropdownType(self::$criteria_name, [
-                'value' => $type,
-                'display' => false,
-                'display_emptychoice' => true,
-            ]),
             $count,
+            [Ticket::class, 'dropdownType'],
+            [self::$criteria_name, ['value' => $type, 'display_emptychoice' => true]],
         );
     }
 

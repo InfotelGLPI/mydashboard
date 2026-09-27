@@ -52,16 +52,13 @@
         </tr>
         <tr class="tab_bg_2">
             <td>{{ __('Name') }}</td>
-            {# Reminder::getLink() escapes the name #}
-            <td>{{ reminder.link_html|raw }}</td>
+            <td><a href="{{ reminder.url }}">{{ reminder.name }}</a></td>
         </tr>
         <tr class="tab_bg_2">
             <td>{{ __('Comment') }}</td>
-            {# text already run through RichText::getSafeHtml() in the controller #}
-            <td>{{ reminder.text_html|raw }}</td>
+            <td>{{ reminder.text|safe_html }}</td>
         </tr>
     </table>
 
-    {# rendered by alert_form.html.twig (auto-escaped, no raw fragment) #}
-    {{ alert_form_html|raw }}
+    {{ include('@mydashboard/alert_form.html.twig', alert_form, with_context = false) }}
 {% endif %}

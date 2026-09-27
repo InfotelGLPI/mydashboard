@@ -75,16 +75,11 @@ class ComputerType
 
         $gparams = [
             'name' => self::$criteria_name,
-            'display' => false,
             'value' => $opt[self::$criteria_name] ?? 0,
             'entity' => $_SESSION['glpiactiveentities'],
         ];
 
-        return Criteria::getFieldHtml(
-            __('Type'),
-            \ComputerType::Dropdown($gparams),
-            $count,
-        );
+        return Criteria::getFieldHtml(__('Type'), $count, [\ComputerType::class, 'dropdown'], [$gparams]);
     }
 
 

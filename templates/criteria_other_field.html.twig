@@ -29,7 +29,8 @@
    "single" when another field follows on the next line, "double" otherwise. #}
 <span class="md-widgetcrit">
     {%- if label is not empty %}{{ label }}&nbsp;{% endif -%}
-    {{ input_html|raw }}
-    {%- if extra_html is not empty %}{{ extra_html|raw }}{% endif -%}
+    {# widget: helper of the core (Dropdown::showFromArray, Html::showDateTimeField...)
+       printing its own markup #}
+    {% do call(widget, arguments) %}
 </span>
 {%- if break == 'double' %}<br><br>{% elseif break == 'single' %}<br>{% endif -%}

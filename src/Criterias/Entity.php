@@ -86,20 +86,20 @@ class Entity
         if (Session::isMultiEntitiesMode()) {
             $params = [
                 'name' => self::$criteria_name,
-                'display' => false,
                 'width' => '100px',
                 'value' => $opt[self::$criteria_name] ?? $default[self::$criteria_name],
                 'display_emptychoice' => true,
 
             ];
-            $form = Criteria::getFieldHtml(__('Entity'), \Entity::dropdown($params), $count);
+            $form = Criteria::getFieldHtml(__('Entity'), $count, [\Entity::class, 'dropdown'], [$params]);
 
             $sons = $opt['is_recursive_entities'] ?? $default['is_recursive_entities'];
             if ($sons > 0) {
                 $form .= Criteria::getFieldHtml(
                     __('Recursive'),
-                    Dropdown::showYesNo('is_recursive_entities', $sons, -1, ['display' => false]),
                     $count,
+                    [Dropdown::class, 'showYesNo'],
+                    ['is_recursive_entities', $sons],
                 );
             }
         }

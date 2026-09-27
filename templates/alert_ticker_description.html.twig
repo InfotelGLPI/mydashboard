@@ -28,11 +28,12 @@
 {# Body of a ticker item, loaded by AJAX when the carousel rotates. Must render the same
    way as the first item rendered inline by getAlertList(). #}
 {% if color %}<span style="color:{{ color }}">{% endif %}
-    {# already sanitized with RichText::getSafeHtml() #}
+    {# raw: already sanitized with RichText::getSafeHtml() #}
     {{ text_html|raw }}
 {% if color %}</span>{% endif %}
 
 {% for link in document_links %}
+    {# raw: Document::getLink() markup, the core escapes the document name #}
     {{ link|raw }}
     {%- if not loop.first %}<br>{% endif %}
 {% endfor %}

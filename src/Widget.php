@@ -135,26 +135,12 @@ class Widget extends CommonDBTM
     public function showForm($ID, array $options = [])
     {
         $this->initForm($ID, $options);
-        $rand = mt_rand();
 
-        // showFormHeader() emits the surrounding <form> and <table>
-        ob_start();
-        $this->showFormHeader($options);
-        $form_header_html = ob_get_clean();
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/widget_form.html.twig', [
-            'form_header_html' => $form_header_html,
-            'rand' => $rand,
-            'name_input_html' => \Html::input('name', [
-                'value' => $this->fields["name"],
-                'id' => "textfield_name$rand",
-                'readonly' => 'readonly',
-            ]),
-            'class_input_html' => \Html::input('class', [
-                'value' => $this->fields["class"],
-                'id' => "textfield_class$rand",
-                'readonly' => 'readonly',
-            ]),
+        // Both fields are informative (filled by the widget declaration): the form keeps no
+        // Save nor Delete button, as before.
+        TemplateRenderer::getInstance()->display('@mydashboard/widget_form.html.twig', [
+            'item' => $this,
+            'params' => $options + ['canedit' => false, 'candel' => false],
         ]);
 
         return true;
@@ -450,33 +436,6 @@ class Widget extends CommonDBTM
 
 
     /**
-     * Returns the widget with the ID
-     *
-     * @param       $id
-     * @param array $opt
-     *
-     * @return string
-     */
-    public static function getWidget($id, $widgets, $opt = [])
-    {
-        $class = "bt-col-md-11";
-        if (isset($widgets[$id])) {
-            return self::loadWidget($widgets[$id]["class"], $widgets[$id]["id"], $class, $opt);
-        }
-
-        $message = __("This widget doesn't exist anymore", 'mydashboard');
-        if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-            $message .= " - " . $id;
-        }
-        $msg = "<div class='center alert alert-warning ' role='alert'><br><br>";
-        $msg .= "<i style='font-size:3em;' class='ti ti-alert-triangle'></i>";
-        $msg .= "<br><br><span class='b'>$message</span></div>";
-
-        return $msg;
-    }
-
-
-    /**
      * @param $id
      *
      * @return bool
@@ -703,7 +662,6 @@ class Widget extends CommonDBTM
                     }
 
                     //when we get jsondata some checkings and modification can be done by the widget class
-                    //For example Datatable add some scripts to adapt the table to the template
                     $jsondata = $widget->getJSonDatas();
 
                     //Then its scripts (non evaluated, have to be evaluated client-side)
@@ -735,19 +693,13 @@ class Widget extends CommonDBTM
                     $title = $json['widgetTitle'];
 
                     $comment = $json['widgetComment'];
-                    //                    if (isset($view) && $view != -1) {
-                    //                        $title .= "<span class='plugin_mydashboard_discret'>&nbsp;-&nbsp;" . $view . "</span>";
-                    //                    }
-
                     //               $json  = Helper::safeJson($json);
                     $datas = json_decode($jsondata, true);
 
-                    $tooltip_html = '';
+                    // Rendered by Html::showToolTip() from widget_frame.html.twig
+                    $tooltip = '';
                     if ($widget->getTitleVisibility() && $comment != "") {
-                        $tooltip_html = \Html::showToolTip($comment, [
-                            'awesome-class' => 'fa-info-circle',
-                            'display' => false,
-                        ]);
+                        $tooltip = $comment;
                     }
 
                     $table = null;
@@ -800,7 +752,7 @@ class Widget extends CommonDBTM
                         'show_title' => $widget->getTitleVisibility(),
                         'title' => self::getDisplayFragment($title),
                         'title_link' => self::getTitleLink($widget),
-                        'tooltip_html' => $tooltip_html,
+                        'tooltip' => $tooltip,
                         'header_html' => $widget->getWidgetHeader(),
                         'table' => $table,
                         'html_content' => $html_content,
@@ -1044,7 +996,7 @@ class Widget extends CommonDBTM
             'style' => $style,
             'feature_class' => $feature_class,
             'alert_class' => $alert_class,
-            'title_html' => Config::displayField($config, $title_field),
+            'title' => Config::getTranslatedField($config, $title_field),
             'list_html' => $list_html,
             'empty_label' => $empty_label,
         ]);

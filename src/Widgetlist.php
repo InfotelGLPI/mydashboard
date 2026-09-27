@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Mydashboard;
 
-use Glpi\Application\View\TemplateRenderer;
 use DbUtils;
 use GlpiPlugin\Mydashboard\Reports\Change;
 use GlpiPlugin\Mydashboard\Reports\Contract;
@@ -305,13 +304,11 @@ class Widgetlist
     }
 
     /**
-     * Get the HTML list of the plugin widgets available
+     * Entries of the widget search box: icon, title and grid id of every widget.
      *
-     * @param array $used
+     * @param array $widgetlist
      *
      * @return array
-     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
-     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
      */
     public static function loadWidgetsListForFuzzy($widgetlist)
     {
@@ -352,25 +349,21 @@ class Widgetlist
         return $list;
     }
 
-
     /**
-     * Get the HTML list of the plugin widgets available
+     * Categories of the widgets that can be added to the grid, rendered by
+     * widgetlist_accordion.html.twig (two nested accordions: families, then types).
      *
-     * @param array $used
+     * @param array $widgetlist
+     * @param array $used   widgets already placed on the grid
+     * @param array $gslist widget id => grid id
      *
-     * @return string|bool
-     * @global type $PLUGIN_HOOKS , that's where you have to declare your classes that defines widgets, in
-     *    $PLUGIN_HOOKS['mydashboard'][YourPluginName]
+     * @return array
      */
-    public static function loadWidgetsListForMenu($widgetlist, $used = [], &$html = "", $gslist = [])
+    public static function getWidgetsCategoriesForMenu($widgetlist, $used = [], $gslist = [])
     {
-        $list_is_empty = true;
-
         $graphs = self::getAllWidgetsList($widgetlist);
-        $is_empty = count($graphs) === 0;
         ksort($graphs);
 
-        $accordion_id = 'md-wd-accordion';
         $categories = [];
         $cat_idx = 0;
 
@@ -408,17 +401,7 @@ class Widgetlist
             ];
         }
 
-        if (!$is_empty) {
-            $html .= TemplateRenderer::getInstance()->render('@mydashboard/widgetlist_accordion.html.twig', [
-                'accordion_id' => $accordion_id,
-                'categories' => $categories,
-            ]);
-            if ($list_is_empty) {
-                $list_is_empty = __('No widgets available', 'mydashboard');
-            }
-        }
-
-        return $list_is_empty;
+        return $categories;
     }
 
     /**
@@ -513,45 +496,28 @@ class Widgetlist
     }
 
     /**
-     * Manage events from js/fuzzysearch.js
+     * Entries of the widget search box (public/lib/md-fuzzysearch.js). The box itself
+     * is rendered by menu_widgets_offcanvas.html.twig.
      *
-     * @param string $action action to switch (should be actually 'getHtml' or 'getList')
+     * @param string $action kept for ajax/fuzzysearch.php, every action returns the list
      *
-     * @return string
+     * @return string JSON
      * @since 9.2
      *
      */
     public static function fuzzySearch($action = '')
     {
-        $title = __("Find a widget", "mydashboard");
+        $selected_profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
+        $widgetlist = self::getList(true, $selected_profile);
 
-        switch ($action) {
-            case 'getHtml':
-                $placeholder = $title;
-                $html = <<<HTML
-               <div id="md-fuzzysearch">
-                  <input type="text" class="md-home-trigger-fuzzy form-control" placeholder="{$placeholder}">
-                  <ul class="results list-group mt-2"></ul>
-               </div>
+        $graphs = self::loadWidgetsListForFuzzy($widgetlist);
 
-HTML;
-                return $html;
-
-            default:
-
-                $selected_profile = (isset($_SESSION['glpiactiveprofile']['id'])) ? $_SESSION['glpiactiveprofile']['id'] : -1;
-                $widgetlist = self::getList(true, $selected_profile);
-
-                $graphs = self::loadWidgetsListForFuzzy($widgetlist);
-
-                // return the entries to ajax call
-                // Widget labels can include a Customswidget name entered by a config admin and stored raw.
-                // The hex flags only keep the *raw response* from being read as HTML (matching the JSON
-                // hardening of the sibling endpoints); they are NOT an escaping of the value: JSON.parse()
-                // restores `<`, `>`, `"`, `'` and `&` unchanged. The client must escape at its own sink
-                // (md-fuzzysearch.js builds the result nodes with .text()).
-                return json_encode($graphs, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-                break;
-        }
+        // return the entries to ajax call
+        // Widget labels can include a Customswidget name entered by a config admin and stored raw.
+        // The hex flags only keep the *raw response* from being read as HTML (matching the JSON
+        // hardening of the sibling endpoints); they are NOT an escaping of the value: JSON.parse()
+        // restores `<`, `>`, `"`, `'` and `&` unchanged. The client must escape at its own sink
+        // (md-fuzzysearch.js builds the result nodes with .text()).
+        return json_encode($graphs, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
     }
 }

@@ -25,22 +25,43 @@
  # --------------------------------------------------------------------------
  #}
 
-{# The mode selector is not wrapped with Criteria::getFieldHtml(): the legacy markup puts
-   no separator between it and the block below, which the AJAX call refreshes in place. #}
-<span class="md-widgetcrit">{{ __('Filter date', 'mydashboard') }}&nbsp;{{ mode_html|raw }}</span>
+{#
+ # The mode selector is not wrapped with Criteria::getFieldHtml(): the legacy markup puts
+ # no separator between it and the block below, which the AJAX call refreshes in place.
+ # Html::showDateTimeField() and Dropdown::showFromArray() are the same widgets as before.
+ #}
+<span class="md-widgetcrit">{{ __('Filter date', 'mydashboard') }}&nbsp;
+    {%- do call('Dropdown::showFromArray', ['filter_date', modes, {
+        'multiple': false,
+        'width': '200px',
+        'rand': rand,
+        'value': mode,
+        'display_emptychoice': false,
+    }]) -%}
+</span>
 
 {% if begin_end %}
     <span id="filter_date_crit{{ rand }}" name="filter_date_crit{{ rand }}" class="md-widgetcrit">
-        <span class="md-widgetcrit">{{ __('Start') }}&nbsp;{{ begin_html|raw }}</span>
+        <span class="md-widgetcrit">{{ __('Start') }}&nbsp;
+            {%- do call('Html::showDateTimeField', ['begin', {'value': begin, 'maybeempty': false}]) -%}
+        </span>
         <br>
-        <span class="md-widgetcrit">{{ __('End') }}&nbsp;{{ end_html|raw }}</span>
+        <span class="md-widgetcrit">{{ __('End') }}&nbsp;
+            {%- do call('Html::showDateTimeField', ['end', {'value': end, 'maybeempty': false}]) -%}
+        </span>
     </span>
 {% else %}
     <br><br>
     <span id="filter_date_crit{{ rand }}" name="filter_date_crit{{ rand }}" class="md-widgetcrit">
-        {{ __('Year', 'mydashboard') }}&nbsp;{{ year_html|raw }}
+        {{ __('Year', 'mydashboard') }}&nbsp;
+        {%- do call('Dropdown::showFromArray', [year_name, years, {'value': year}]) -%}
     </span>
 {% endif %}
 
-{{ ajax_html|raw }}
+{% do call('Ajax::updateItemOnSelectEvent', [
+    'dropdown_filter_date' ~ rand,
+    'filter_date_crit' ~ rand,
+    ajax_url,
+    {'value': '__VALUE__'},
+]) %}
 {%- if count > 1 %}<br><br>{% endif -%}

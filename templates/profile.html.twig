@@ -25,8 +25,13 @@
  # --------------------------------------------------------------------------
  #}
 
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
+
 {% if canedit %}
-    <form method="post" action="{{ form_action }}">
+    <form method="post" action="{{ profile.getFormURL() }}">
+        {{ fields.hiddenField('id', profile.getID()) }}
+        {{ fields.csrfField() }}
 {% endif %}
 
 <table class="tab_cadre_fixehov">
@@ -41,19 +46,25 @@
     {% for row in rows %}
         <tr class="tab_bg_2">
             <td>{{ row.label }}</td>
-            <td>{{ row.full_html|raw }}</td>
-            <td>{%- if row.custom_html %}{{ row.custom_html|raw }}{% endif -%}</td>
+            <td>{{ inputs.checkbox(row.full.name, row.full.checked ? 1 : 0) }}</td>
+            <td>
+                {%- if row.custom is not null %}{{ inputs.checkbox(row.custom.name, row.custom.checked ? 1 : 0) }}{% endif -%}
+            </td>
         </tr>
     {% endfor %}
 </table>
 
-{{ rights_matrix_html|raw }}
+{% do profile.displayRightsChoiceMatrix(rights, {
+    'canedit': canedit,
+    'default_class': 'tab_bg_2',
+    'title': __('Setup stock widget', 'mydashboard'),
+}) %}
 
-{% if canedit and closeform %}
-    <div class="center">
-        {{ hidden_html|raw }}
-        {{ submit_html|raw }}
-    </div>
-    {# closes the <form> above and carries the CSRF token #}
-    {{ close_form_html|raw }}
+{% if canedit %}
+    {% if closeform %}
+        <div class="text-center">
+            {{ inputs.submit('update', _x('button', 'Save'), 1, {'class': 'btn btn-primary'}) }}
+        </div>
+    {% endif %}
+    </form>
 {% endif %}

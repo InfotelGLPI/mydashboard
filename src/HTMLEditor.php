@@ -125,51 +125,16 @@ class HTMLEditor extends CommonDBTM
     {
         $rand = mt_rand();
 
-        //        $editor_options = [
-        //            'mode'         => 'text/css',
-        //            'lineNumbers'  => true,
-        //            //         'lineWrapping' => true,
-        //            // Autocomplete with CTRL+SPACE
-        //            'extraKeys'    => [
-        //                'Ctrl-Space' => 'autocomplete',
-        //            ],
-        //
-        //            // Code folding configuration
-        //            'foldGutter'   => true,
-        //            'gutters'      => [
-        //                'CodeMirror-linenumbers',
-        //                'CodeMirror-foldgutter',
-        //            ],
-        //        ];
-        //
-        //        echo \Html::scriptBlock('
-        //              $(function() {
-        //                 var textarea = document.getElementById("custom_css_code_' . $rand . '");
-        //                 var editor = CodeMirror.fromTextArea(textarea, ' . json_encode($editor_options) . ');
-        //
-        //                 // Fix bad display of gutter (see https://github.com/codemirror/CodeMirror/issues/3098 )
-        //                 setTimeout(function () {editor.refresh();}, 10);
-        //
-        //              });
-        //           ');
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/htmleditor_form.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/htmleditor_form.html.twig', [
             'openform' => $openform,
             'closeform' => $closeform,
             'form_action' => Toolbox::getItemTypeFormURL(HTMLEditor::class),
+            'rand' => $rand,
+            'id' => $item->fields['id'],
             'name' => $item->fields['name'],
-            'textarea_html' => \Html::textarea([
-                'name' => 'content',
-                'value' => htmlspecialchars($item->fields['content']),
-                'editor_id' => 'custom_css_code_' . $rand,
-                'enable_richtext' => true,
-                'display' => false,
-            ]),
-            'hidden_html' => \Html::hidden('id', ['value' => $item->fields['id']]),
-            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
-                'class' => 'btn btn-primary',
-            ]),
-            'close_form_html' => \Html::closeForm(false),
+            // Encoded once more as before: the editor shows the stored markup, which
+            // front/htmleditor.form.php decodes then sanitizes on save.
+            'content' => htmlspecialchars($item->fields['content']),
         ]);
     }
 }

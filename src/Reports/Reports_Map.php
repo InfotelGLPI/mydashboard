@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Criteria;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
@@ -64,11 +65,6 @@ class Reports_Map extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-        // The single widget of this class plots opened tickets, with no actor clause.
-        if (!Criteria::canReadTickets()) {
-            return [];
-        }
-
         $widgets[Menu::$HELPDESK] = [
             $this->getType() . "29" => [
                 "title" => __("OpenStreetMap - Opened tickets by location", "mydashboard"),
@@ -124,12 +120,6 @@ class Reports_Map extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId, $opt = [])
     {
-        // Checked again at the content: the declaration is cached in the session and
-        // ajax/refreshWidget.php serves any widget id that cache holds.
-        if (!Criteria::canReadTickets()) {
-            return false;
-        }
-
         $isDebug = $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE;
 
         $preference = new MydashboardPreference();
@@ -266,6 +256,7 @@ class Reports_Map extends CommonGLPI
                     "nb" => 1,
                 ];
                 $graph = Helper::getGraphHeader($paramsh);
+                $map_config = null;
 
                 if ($data['data']['totalcount'] > 0) {
                     $target = $data['search']['target'];
@@ -282,9 +273,8 @@ class Reports_Map extends CommonGLPI
                             'criteria' => $criteria,
                             'metacriteria' => $data['search']['metacriteria'],
                         ],
-                        '&amp;',
                     );
-                    $parameters = "as_map=0&amp;" . $globallinkto;
+                    $parameters = "as_map=0&" . $globallinkto;
 
                     $typename = $itemtype::getTypeName(2);
 
@@ -293,152 +283,22 @@ class Reports_Map extends CommonGLPI
                     } else {
                         $fulltarget = $target . "&" . $parameters;
                     }
-                    $root_doc = PLUGIN_MYDASHBOARD_WEBDIR;
-                    $graph .= "<script>
-                var _loadMap = function(map_elt, itemtype) {
-                  L.AwesomeMarkers.Icon.prototype.options.prefix = 'fas';
-                  var _micon = 'circle';
-
-                  var stdMarker = L.AwesomeMarkers.icon({
-                     icon: _micon,
-                     markerColor: 'blue'
-                  });
-
-                  var aMarker = L.AwesomeMarkers.icon({
-                     icon: _micon,
-                     markerColor: 'cadetblue'
-                  });
-
-                  var bMarker = L.AwesomeMarkers.icon({
-                     icon: _micon,
-                     markerColor: 'purple'
-                  });
-
-                  var cMarker = L.AwesomeMarkers.icon({
-                     icon: _micon,
-                     markerColor: 'darkpurple'
-                  });
-
-                  var dMarker = L.AwesomeMarkers.icon({
-                     icon: _micon,
-                     markerColor: 'red'
-                  });
-
-                  var eMarker = L.AwesomeMarkers.icon({
-                     icon: _micon,
-                     markerColor: 'darkred'
-                  });
-
-
-                  //retrieve geojson data
-                  map_elt.spin(true);
-                  $.ajax({
-                     dataType: 'json',
-                     method: 'POST',
-                     url: '$root_doc/ajax/map.php',
-                     data: {
-                        itemtype: itemtype,
-                        params: " . json_encode($params) . "
-                     }
-                  }).done(function(data) {
-                     var _points = data.points;
-                     var _markers = L.markerClusterGroup({
-                        iconCreateFunction: function(cluster) {
-                           var childCount = cluster.getChildCount();
-
-                           var markers = cluster.getAllChildMarkers();
-                           var n = 0;
-                           for (var i = 0; i < markers.length; i++) {
-                              n += markers[i].count;
-                           }
-
-                           var c = ' marker-cluster-';
-                           if (n < 10) {
-                              c += 'small';
-                           } else if (n < 100) {
-                              c += 'medium';
-                           } else {
-                              c += 'large';
-                           }
-
-                           return new L.DivIcon({ html: '<div><span>' + n + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
-                        }
-                     });
-
-                     $.each(_points, function(index, point) {
-                        // point.title is a DB value (the location completename) and _title is
-                        // handed to bindPopup(), which Leaflet renders as HTML. The JSON_HEX_*
-                        // flags used by ajax/map.php do not survive JSON.parse(), so escaping
-                        // here is the only defence -- same treatment as the core map template.
-                        var _target     = '$fulltarget'.replace(/CURLOCATION/, point.loc_id);
-                        var _count_text = '" . sprintf(__('%1$s %2$s'), 'COUNT', $typename) . "'.replace(/COUNT/, point.count);
-                        var _title      = '<strong>' + _.escape(point.title) + '</strong><br/>'
-                                        + '<a target=\'_blank\' href=\'' + _.escape(_target) + '\'>'
-                                        + _.escape(_count_text) + '</a>';
-                        if (point.types) {
-                           $.each(point.types, function(tindex, type) {
-                              _title += '<br/>' + _.escape('" . sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE') . "'.replace(/COUNT/, type.count).replace(/TYPE/, type.name));
-                           });
-                        }
-                        var _icon = stdMarker;
-                        if (point.count < 10) {
-                           _icon = stdMarker;
-                        } else if (point.count < 100) {
-                           _icon = aMarker;
-                        } else if (point.count < 1000) {
-                           _icon = bMarker;
-                        } else if (point.count < 5000) {
-                           _icon = cMarker;
-                        } else if (point.count < 10000) {
-                           _icon = dMarker;
-                        } else {
-                           _icon = eMarker;
-                        }
-                        var _marker = L.marker([point.lat, point.lng], { icon: _icon, title: point.title });
-                        _marker.count = point.count;
-                        _marker.bindPopup(_title);
-                        _markers.addLayer(_marker);
-                     });
-
-                     map_elt.addLayer(_markers);
-                     map_elt.fitBounds(
-                        _markers.getBounds(), {
-                           padding: [50, 50],
-                           maxZoom: 12
-                        }
-                     );
-                  }).fail(function (response) {
-                     var _data = response.responseJSON;
-                     var _message = '" . __s('An error occured loading data :(') . "';
-                     if (_data.message) {
-                        _message = _data.message;
-                     }
-                     var fail_info = L.control();
-                     fail_info.onAdd = function (map) {
-                        this._div = L.DomUtil.create('div', 'fail_info');
-                        this._div.innerHTML = _message + '<br/><span id=\'reload_data\'><i class=\'ti ti-refresh\'></i> " . __s(
-                        'Reload',
-                    ) . "</span>';
-                        return this._div;
-                     };
-                     fail_info.addTo(map_elt);
-                     $('#reload_data').on('click', function() {
-                        $('.fail_info').remove();
-                        _loadMap(map_elt);
-                     });
-                  }).always(function() {
-                     //hide spinner
-                     map_elt.spin(false);
-                  });
-               };
-               $(function() {
-                       var map = initMap($('#TicketsByLocationOpenStreetMap'), 'map', '500px');
-                         _loadMap(map, 'Ticket');
-                   });
-               ";
-                    $graph .= "</script>";
+                    // Drawn by public/scripts/tickets-map.js; the labels are inserted as text
+                    $map_config = [
+                        'url' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/map.php',
+                        'itemtype' => $itemtype,
+                        'params' => $params,
+                        'target' => $fulltarget,
+                        'count_label' => sprintf(__('%1$s %2$s'), 'COUNT', $typename),
+                        'type_label' => sprintf(__('%1$s %2$s'), 'COUNT', 'TYPE'),
+                        'error_label' => __('An error occured loading data :('),
+                        'reload_label' => __('Reload'),
+                    ];
                 }
-                $graph .= "<div id=\"TicketsByLocationOpenStreetMap\" class=\"mapping\"></div>";
+                $graph .= TemplateRenderer::getInstance()->render('@mydashboard/report_map.html.twig', [
+                    'id' => 'TicketsByLocationOpenStreetMap',
+                    'config' => $map_config,
+                ]);
                 $widget->toggleWidgetRefresh();
                 $widget->setWidgetHtmlContent(
                     $graph,

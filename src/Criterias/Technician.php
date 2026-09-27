@@ -75,13 +75,8 @@ class Technician
             'comments' => 1,
             'entity' => $_SESSION["glpiactiveentities"],
             'width' => '50%',
-            'display' => false,
         ];
-        return Criteria::getFieldHtml(
-            __('Technician'),
-            User::dropdown($params),
-            $count,
-        );
+        return Criteria::getFieldHtml(__('Technician'), $count, [User::class, 'dropdown'], [$params]);
     }
 
     public static function getQueryLeftJoin($params, $table)

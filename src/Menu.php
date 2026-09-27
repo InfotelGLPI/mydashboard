@@ -249,7 +249,7 @@ class Menu extends CommonGLPI
      *
      * @param array    $used gsids already placed on the grid
      *
-     * @return array{search_html: string, list_html: string}
+     * @return array{categories: array}
      */
     private function getWidgetsOffcanvasData(int $active_profile, array $used): array
     {
@@ -259,13 +259,8 @@ class Menu extends CommonGLPI
         }
         $widgetlist = Widgetlist::getList(true, $active_profile);
 
-        // loadWidgetsListForMenu() appends to its third argument by reference
-        $list_html = '';
-        Widgetlist::loadWidgetsListForMenu($widgetlist, $used, $list_html, $gslist);
-
         return [
-            'search_html' => Widgetlist::fuzzySearch('getHtml'),
-            'list_html' => $list_html,
+            'categories' => Widgetlist::getWidgetsCategoriesForMenu($widgetlist, $used, $gslist),
         ];
     }
 
@@ -402,7 +397,7 @@ class Menu extends CommonGLPI
      * Global filters displayed under the toolbar, preset from the user preferences.
      * Any change refreshes every widget of the grid (see mydashboard-grid.js).
      *
-     * @return array{filters: array<int, array{label: string, input_html: string}>, initial: array<string, mixed>}
+     * @return array{filters: array<int, array{label: string, widget: array{0: string, 1: string}, arguments: array<int, mixed>}>, initial: array<string, mixed>}
      */
     private function getGlobalFilterBarData(): array
     {
@@ -418,12 +413,12 @@ class Menu extends CommonGLPI
         $entity_default = (int) ($fields['prefered_entity'] ?? 0) ?: (int) $_SESSION['glpiactive_entity'];
         $group_default  = json_decode($fields['prefered_group'] ?? '[]', true) ?: [];
 
-        $entity_dd = Entity::dropdown([
+        // The dropdown helpers of the core are called by menu_global_filter_bar.html.twig
+        $entity_args = [[
             'name'    => 'md_gf_entities_id',
             'value'   => $entity_default,
             'entity'  => $_SESSION['glpiactiveentities'],
-            'display' => false,
-        ]);
+        ]];
 
         $dbu         = new DbUtils();
         $groups_data = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
@@ -431,38 +426,35 @@ class Menu extends CommonGLPI
         foreach ($groups_data as $g) {
             $groups_list[$g['id']] = $g['name'];
         }
-        $techgroup_dd = Dropdown::showFromArray('md_gf_technicians_groups_id', $groups_list, [
+        $techgroup_args = ['md_gf_technicians_groups_id', $groups_list, [
             'values'              => $group_default,
             'multiple'            => true,
-            'display'             => false,
             'width'               => '200px',
             'display_emptychoice' => true,
-        ]);
+        ]];
 
-        $type_dd = Ticket::dropdownType('md_gf_type', [
+        $type_args = ['md_gf_type', [
             'value'   => $type_default,
             'toadd'   => [0 => Dropdown::EMPTY_VALUE],
-            'display' => false,
-        ]);
+        ]];
 
         $year_range = [];
         $start_year = (int) date('Y') - 10;
         for ($i = 0; $i <= 10; $i++) {
             $year_range[$start_year + $i] = $start_year + $i;
         }
-        $year_dd = Dropdown::showFromArray('md_gf_year', $year_range, [
+        $year_args = ['md_gf_year', $year_range, [
             'value'   => $year_default,
-            'display' => false,
-        ]);
+        ]];
 
         $filters = [
-            ['label' => __('Entity'), 'input_html' => $entity_dd],
+            ['label' => __('Entity'), 'widget' => [Entity::class, 'dropdown'], 'arguments' => $entity_args],
         ];
         if (!empty($groups_list)) {
-            $filters[] = ['label' => __('Technician group'), 'input_html' => $techgroup_dd];
+            $filters[] = ['label' => __('Technician group'), 'widget' => [Dropdown::class, 'showFromArray'], 'arguments' => $techgroup_args];
         }
-        $filters[] = ['label' => __('Type'), 'input_html' => $type_dd];
-        $filters[] = ['label' => __('Year', 'mydashboard'), 'input_html' => $year_dd];
+        $filters[] = ['label' => __('Type'), 'widget' => [Ticket::class, 'dropdownType'], 'arguments' => $type_args];
+        $filters[] = ['label' => __('Year', 'mydashboard'), 'widget' => [Dropdown::class, 'showFromArray'], 'arguments' => $year_args];
 
         return [
             'filters' => $filters,

@@ -70,26 +70,9 @@ class Week
 
         return Criteria::getFieldHtml(
             __('Week', 'mydashboard'),
-            self::weekDropdown(self::$criteria_name, $current_week),
             $count,
+            [Dropdown::class, 'showNumber'],
+            [self::$criteria_name, ['value' => $current_week, 'min' => 1, 'max' => 53]],
         );
-    }
-
-    /**
-     * @param string $name
-     * @param int|null $selected
-     *
-     * @return int|string
-     */
-    public static function weekDropdown($name = 'week', $selected = null)
-    {
-        $opt = [
-            'value'   => $selected,
-            'min'     => 1,
-            'max'     => 53,
-            'display' => false,
-        ];
-
-        return Dropdown::showNumber($name, $opt);
     }
 }

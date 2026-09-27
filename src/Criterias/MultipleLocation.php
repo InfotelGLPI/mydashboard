@@ -97,7 +97,6 @@ class MultipleLocation
 
         $params = [
             "name" => self::$criteria_name,
-            "display" => false,
             "multiple" => true,
             "width" => '200px',
             'values' => $multiple_locations_id ?? $default[self::$criteria_name],
@@ -108,13 +107,15 @@ class MultipleLocation
 
         return Criteria::getFieldHtml(
             _n('Location', 'Locations', 2),
-            Dropdown::showFromArray(self::$criteria_name, $temp, $params),
             $count,
+            [Dropdown::class, 'showFromArray'],
+            [self::$criteria_name, $temp, $params],
         )
         . Criteria::getFieldHtml(
             __('Child locations', 'mydashboard'),
-            Dropdown::showYesNo('is_recursive_locations', $ancestors, -1, ['display' => false]),
             $count,
+            [Dropdown::class, 'showYesNo'],
+            ['is_recursive_locations', $ancestors],
         );
     }
 

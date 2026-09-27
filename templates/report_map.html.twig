@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
-<br><br>
-{{ __('Month', 'mydashboard') }}&nbsp;
-{%- do call('Dropdown::showFromArray', [name, months, {'value': value}]) %}
+{#
+ # OpenStreetMap of the tickets by location (Reports_Map). The markers are loaded and
+ # drawn by public/scripts/tickets-map.js from the JSON configuration; without results
+ # (config is null) the map stays empty, as before.
+ #}
+<div id="{{ id }}" class="mapping"
+     {%- if config is not null %} data-md-map="{{ config|json_encode }}"{% endif %}></div>

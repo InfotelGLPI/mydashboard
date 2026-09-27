@@ -100,16 +100,13 @@ class ITILCategory
             $restrict = [];
         }
 
-        $dropdown = \ITILCategory::dropdown(
-            [
-                'name' => 'itilcategories_id',
-                'value' => $opt['itilcategories_id'] ?? $default['itilcategories_id'],
-                'display' => false,
-                'condition' => ['OR' => ['is_request' => 1, 'is_incident' => 1]],
-            ] + $restrict,
-        );
+        $params = [
+            'name' => 'itilcategories_id',
+            'value' => $opt['itilcategories_id'] ?? $default['itilcategories_id'],
+            'condition' => ['OR' => ['is_request' => 1, 'is_incident' => 1]],
+        ] + $restrict;
 
-        return Criteria::getFieldHtml(__('Category', 'mydashboard'), $dropdown, $count);
+        return Criteria::getFieldHtml(__('Category', 'mydashboard'), $count, [\ITILCategory::class, 'dropdown'], [$params]);
     }
 
     public static function getQueryCriteria($params)

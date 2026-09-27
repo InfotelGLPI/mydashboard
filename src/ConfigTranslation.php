@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Mydashboard;
 
-use Ajax;
 use CommonDBChild;
 use CommonDBTM;
 use CommonGLPI;
@@ -38,7 +37,6 @@ use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
-use Html;
 use GlpiPlugin\Mydashboard\Config;
 use Migration;
 use Session;
@@ -143,29 +141,6 @@ class ConfigTranslation extends CommonDBChild
 
         $rand    = mt_rand();
         $canedit = $item->can($item->getID(), UPDATE);
-        $container = 'mass' . __CLASS__ . $rand;
-        $view_container_id = "viewtranslationconfig" . $item->getID() . $rand;
-
-        $add_function = null;
-        $add_script_html = '';
-        if ($canedit) {
-            $add_function = 'addTranslationconfig' . $item->getID() . $rand;
-            $add_script_html = Html::scriptBlock(
-                'function ' . $add_function . '() {'
-                . Ajax::updateItemJsCode(
-                    $view_container_id,
-                    $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php",
-                    ['type' => __CLASS__,
-                        'parenttype' => get_class($item),
-                        $item->getForeignKeyField() => $item->getID(),
-                        'id' => -1,
-                    ],
-                    "",
-                    false,
-                )
-                . '};',
-            );
-        }
 
         $iterator = $DB->request([
             'FROM'   => getTableForItemType(__CLASS__),
@@ -177,74 +152,31 @@ class ConfigTranslation extends CommonDBChild
             'ORDER'  => ['language ASC'],
         ]);
 
-        $rows = [];
-        $scripts_html = '';
+        $entries = [];
         foreach ($iterator as $data) {
-            $edit_function = null;
-            $checkbox_html = '';
-            if ($canedit) {
-                $edit_function = 'viewEditTranslationconfig' . (int) $data['id'] . $rand;
-                $checkbox_html = Html::getMassiveActionCheckBox(__CLASS__, $data['id']);
-                $scripts_html .= Html::scriptBlock(
-                    'function ' . $edit_function . '() {'
-                    . Ajax::updateItemJsCode(
-                        $view_container_id,
-                        $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php",
-                        ['type' => __CLASS__,
-                            'parenttype' => get_class($item),
-                            $item->getForeignKeyField() => $item->getID(),
-                            'id' => $data['id'],
-                        ],
-                        "",
-                        false,
-                    )
-                    . '};',
-                );
-            }
-
             $searchOption = $item->getSearchOptionByField('field', $data['field']);
-            $rows[] = [
-                'edit_function' => $edit_function,
-                'checkbox_html' => $checkbox_html,
+            $entries[] = [
+                'itemtype' => __CLASS__,
+                'id' => $data['id'],
+                // Clicking a row opens its edition form (public/scripts/config-translation.js)
+                'row_class' => $canedit ? 'cursor-pointer' : '',
                 'language' => Dropdown::getLanguageName($data['language']),
-                'field' => $searchOption['name'],
+                'field' => $searchOption['name'] ?? $data['field'],
                 'value' => $data['value'],
             ];
         }
 
-        $ma_open_html = '';
-        $ma_top_html = '';
-        $ma_bottom_html = '';
-        $close_form_html = '';
-        $check_all_html = '';
-        if ($canedit && count($rows)) {
-            // No 'item' key here, as in the legacy code
-            $massiveactionparams = ['container' => $container, 'display' => false];
-            $ma_open_html = Html::getOpenMassiveActionsForm($container);
-            $ma_top_html = Html::showMassiveActions($massiveactionparams);
-            // The legacy code called getCheckAllAsCheckbox() without echoing it, so the
-            // "check all" box was simply never rendered.
-            $check_all_html = Html::getCheckAllAsCheckbox($container);
-            // Built after the rows on purpose: showMassiveActions() empties
-            // $_SESSION['glpimassiveactionselected'] when it is not the top one, and the
-            // row checkboxes read that selection to restore their checked state.
-            $massiveactionparams['ontop'] = false;
-            $ma_bottom_html = Html::showMassiveActions($massiveactionparams);
-            $close_form_html = Html::closeForm(false);
-        }
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/configtranslation_list.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/configtranslation_list.html.twig', [
             'canedit' => $canedit,
-            'view_container_id' => $view_container_id,
-            'add_function' => $add_function,
-            'add_script_html' => $add_script_html,
-            'rows' => $rows,
-            'scripts_html' => $scripts_html,
-            'ma_open_html' => $ma_open_html,
-            'ma_top_html' => $ma_top_html,
-            'ma_bottom_html' => $ma_bottom_html,
-            'close_form_html' => $close_form_html,
-            'check_all_html' => $check_all_html,
+            'rand' => $rand,
+            'type' => __CLASS__,
+            'view_url' => $CFG_GLPI['root_doc'] . '/ajax/viewsubitem.php',
+            'parenttype' => get_class($item),
+            'parent_fk' => $item->getForeignKeyField(),
+            'parent_id' => $item->getID(),
+            'entries' => $entries,
+            'container' => 'mass' . __CLASS__ . $rand,
+            'script_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/scripts/config-translation.js',
         ]);
 
         return true;
@@ -260,11 +192,11 @@ class ConfigTranslation extends CommonDBChild
      */
     public function showForm($ID = -1, $options = [])
     {
-        global $CFG_GLPI;
-
-        if (isset($options['parent']) && !empty($options['parent'])) {
-            $item = $options['parent'];
+        if (!isset($options['parent']) || !($options['parent'] instanceof CommonDBTM)) {
+            return false;
         }
+        $item = $options['parent'];
+
         if ($ID > 0) {
             $this->check($ID, UPDATE);
         } else {
@@ -274,81 +206,78 @@ class ConfigTranslation extends CommonDBChild
             // Create item
             $this->check(-1, CREATE, $options);
         }
-        // showFormHeader()/showFormButtons() emit the surrounding <form> and <table>
-        ob_start();
-        $this->showFormHeader($options);
-        $form_header_html = ob_get_clean();
-
-        $language_label = null;
-        $language_hidden_html = '';
-        $language_dropdown_html = '';
-        if ($ID > 0) {
-            $language_hidden_html = Html::hidden('language', ['value' => $this->fields['language']]);
-            $language_label = Dropdown::getLanguageName($this->fields['language']);
-        } else {
-            // The rand has to be generated here: with 'display' => false the dropdown
-            // returns its markup instead of the rand, which the AJAX observer below needs.
-            $lang_rand = mt_rand();
-            $language_dropdown_html = Dropdown::showLanguages(
-                "language",
-                ['display_none' => false,
-                    'value' => $_SESSION['glpilanguage'],
-                    'rand' => $lang_rand,
-                    'display' => false,
-                ],
-            )
-            . Ajax::updateItemOnSelectEvent(
-                "dropdown_language$lang_rand",
-                "span_fields",
-                PLUGIN_MYDASHBOARD_WEBDIR . "/ajax/updateTranslationFields.php",
-                ['language' => '__VALUE__',
-                    'itemtype' => get_class($item),
-                    'items_id' => $item->getID(),
-                ],
-                false,
-            );
-        }
 
         $field_label = null;
-        $field_hidden_html = '';
-        $field_dropdown_html = '';
         if ($ID > 0) {
-            $field_hidden_html = Html::hidden('field', ['value' => $this->fields['field']]);
             $searchOption = $item->getSearchOptionByField('field', $this->fields['field']);
-            $field_label = $searchOption['name'];
-        } else {
-            // dropdownFields() writes to the output buffer instead of returning
-            ob_start();
-            self::dropdownFields($item, $_SESSION['glpilanguage']);
-            $field_dropdown_html = ob_get_clean();
+            $field_label = $searchOption['name'] ?? $this->fields['field'];
         }
 
-        ob_start();
-        $this->showFormButtons($options);
-        $form_buttons_html = ob_get_clean();
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/configtranslation_form.html.twig', [
-            'form_header_html' => $form_header_html,
-            'form_buttons_html' => $form_buttons_html,
-            'items_hidden_html' => Html::hidden('items_id', ['value' => $item->getID()])
-                . Html::hidden('itemtype', ['value' => get_class($item)]),
-            'language_label' => $language_label,
-            'language_hidden_html' => $language_hidden_html,
-            'language_dropdown_html' => $language_dropdown_html,
+        TemplateRenderer::getInstance()->display('@mydashboard/configtranslation_form.html.twig', [
+            'item' => $this,
+            'params' => $options,
+            'parent_item' => $item,
+            'no_header' => true,
+            'language_label' => $ID > 0 ? Dropdown::getLanguageName($this->fields['language']) : null,
             'field_label' => $field_label,
-            'field_hidden_html' => $field_hidden_html,
-            'field_dropdown_html' => $field_dropdown_html,
-            'value_textarea_html' => Html::textarea([
-                'name' => 'value',
-                'value' => $this->fields["value"],
-                'cols' => 80,
-                'rows' => 3,
-                'enable_richtext' => false,
-                'display' => false,
-            ]),
+            'languages' => Dropdown::getLanguages(),
+            'field_choices' => self::getTranslatableFields($item),
+            'used_fields' => self::getUsedFields($item, $_SESSION['glpilanguage']),
+            'fields_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/updateTranslationFields.php',
         ]);
 
         return true;
+    }
+
+    /**
+     * Fields of an item that can be translated: its name, and the text or string fields
+     *
+     * @param CommonDBTM $item
+     *
+     * @return array field => label
+     */
+    private static function getTranslatableFields(CommonDBTM $item): array
+    {
+        $dbu = new DbUtils();
+        $options = [];
+        foreach ($item->rawSearchOptions() as $field) {
+            if (isset($field['field'])
+                && ($field['field'] == 'name')
+                && ($field['table'] == $dbu->getTableForItemType(get_class($item)))
+                || (isset($field['datatype'])
+                    && in_array($field['datatype'], ['text', 'string']))) {
+                $options[$field['field']] = $field['name'];
+            }
+        }
+        return $options;
+    }
+
+    /**
+     * Fields of an item already translated in a language
+     *
+     * @param CommonDBTM $item
+     * @param string     $language
+     *
+     * @return array field => field
+     */
+    private static function getUsedFields(CommonDBTM $item, $language): array
+    {
+        global $DB;
+
+        $used = [];
+        $iterator = $DB->request([
+            'SELECT' => 'field',
+            'FROM'   => self::getTable(),
+            'WHERE'  => [
+                'itemtype'  => $item->getType(),
+                'items_id'  => $item->getID(),
+                'language'  => $language,
+            ],
+        ]);
+        foreach ($iterator as $data) {
+            $used[$data['field']] = $data['field'];
+        }
+        return $used;
     }
 
     /**
@@ -362,37 +291,9 @@ class ConfigTranslation extends CommonDBChild
      **/
     public static function dropdownFields(CommonDBTM $item, $language = '', $value = '')
     {
-        global $DB;
-        $options = [];
-        foreach ($item->rawSearchOptions() as $id => $field) {
-            //Can only translate name, and fields whose datatype is text or string
-            $dbu        = new DbUtils();
-            if (isset($field['field'])
-                && ($field['field'] == 'name')
-                && ($field['table'] == $dbu->getTableForItemType(get_class($item)))
-                || (isset($field['datatype'])
-                    && in_array($field['datatype'], ['text', 'string']))) {
-                $options[$field['field']] = $field['name'];
-            }
-        }
-        $used = [];
-        if (!empty($options)) {
-            $iterator = $DB->request([
-                'SELECT' => 'field',
-                'FROM'   => self::getTable(),
-                'WHERE'  => [
-                    'itemtype'  => $item->getType(),
-                    'items_id'  => $item->getID(),
-                    'language'  => $language,
-                ],
-            ]);
-            if (count($iterator) > 0) {
-                foreach ($iterator as $data) {
-                    $used[$data['field']] = $data['field'];
-                }
-            }
-        }
-        //$used = array();
+        $options = self::getTranslatableFields($item);
+        $used = empty($options) ? [] : self::getUsedFields($item, $language);
+
         return Dropdown::showFromArray('field', $options, ['value' => $value,
             'used'  => $used]);
     }

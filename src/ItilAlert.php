@@ -32,7 +32,6 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DBConnection;
 use Glpi\Application\View\TemplateRenderer;
-use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Alert;
 use Migration;
 use Reminder;
@@ -74,21 +73,21 @@ class ItilAlert extends CommonDBTM
         }
 
         $reminder_data = null;
-        $alert_form_html = '';
+        $alert_form = null;
         if ($reminders_id > 0) {
             $reminder->getFromDB($reminders_id);
+            // The reminder text is stored raw (rich text) in GLPI 11: the template runs it
+            // through |safe_html, which keeps the allowed formatting but strips scripts and
+            // event handlers (stored XSS for any user opening this tab otherwise).
             $reminder_data = [
-                'link_html' => nl2br($reminder->getLink()),
-                // The reminder text is stored raw (rich text) in GLPI 11 and must be
-                // sanitized at render time. getSafeHtml keeps the allowed formatting but
-                // strips scripts/event handlers, closing a stored-XSS path where a
-                // reminder author's payload would execute for any user opening this tab.
-                'text_html' => RichText::getSafeHtml($reminder->fields['text']),
+                'name' => $reminder->getNameID(),
+                'url' => $reminder->getLinkURL(),
+                'text' => $reminder->fields['text'],
             ];
 
             $alert = new Alert();
             $alert->getFromDBByCrit(['reminders_id' => $reminders_id]);
-            $alert_form_html = $alert->getAlertFormHtml(
+            $alert_form = $alert->getAlertFormParams(
                 $reminders_id,
                 _n('Network alert', 'Network alerts', 1, 'mydashboard'),
                 [],
@@ -99,7 +98,7 @@ class ItilAlert extends CommonDBTM
         TemplateRenderer::getInstance()->display('@mydashboard/alert_item.html.twig', [
             'create_button' => $create_button,
             'reminder' => $reminder_data,
-            'alert_form_html' => $alert_form_html,
+            'alert_form' => $alert_form,
         ]);
 
         if ($reminders_id > 0) {

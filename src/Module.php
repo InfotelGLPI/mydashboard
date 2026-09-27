@@ -183,18 +183,10 @@ abstract class Module extends CommonGLPI
 
     /**
      * Return the array of scripts of the widget
-     * Adds some unremovable scripts executed after all
      * @return array of string
      */
     public function getWidgetScripts()
     {
-        //If the lateral menu is not displayed, we hide the remove button
-        if (!Config::getDisplayMenu()) {
-            $this->appendWidgetScripts(["$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-remove-icon').remove();"]);
-        }
-        if (!$this->widgetEnableMaximize) {
-            $this->appendWidgetScripts(["$('#" . $this->getWidgetId() . "').find('.sDashboard-circle-plus-icon').remove();"]);
-        }
         return $this->widgetScripts;
     }
 

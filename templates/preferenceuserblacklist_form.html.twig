@@ -25,7 +25,12 @@
  # --------------------------------------------------------------------------
  #}
 
-<form method="post" action="{{ form_action }}" onsubmit="return true;">
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
+
+<form method="post" action="{{ form_action }}">
+    {{ fields.hiddenField('id', user_id) }}
+    {{ fields.csrfField() }}
     <table class="tab_cadre_fixe">
         <tr class="headerRow">
             <th class="center" colspan="2">
@@ -35,15 +40,13 @@
         {% for row in rows %}
             <tr class="tab_bg_1">
                 <td>{{ row.label }}</td>
-                <td>{{ row.yesno_html|raw }}</td>
+                <td>{% do call('Dropdown::showYesNo', [row.name, row.value]) %}</td>
             </tr>
         {% endfor %}
         <tr class="tab_bg_2">
             <td class="center" colspan="2">
-                {{ submit_html|raw }}
-                {{ hidden_html|raw }}
+                {{ inputs.submit('update', _x('button', 'Save'), 1, {'class': 'btn btn-primary'}) }}
             </td>
         </tr>
     </table>
-    {# closes the <form> above and carries the CSRF token #}
-    {{ close_form_html|raw }}
+</form>

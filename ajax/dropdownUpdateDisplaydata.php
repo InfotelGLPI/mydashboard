@@ -53,19 +53,12 @@ if (isset($_POST["value"])) {
         ]);
     } elseif ($_POST['value'] == 'YEAR') {
         $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_year.html.twig', [
-            'year_html' => Year::YearDropdown(date('Y', time())),
+            'year_name' => Year::$criteria_name,
+            'years' => Year::getYearChoices(),
+            'year' => date('Y', time()),
         ]);
     } elseif ($_POST['value'] == 'BEGIN_END') {
-        $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_range.html.twig', [
-            'begin_html' => Html::showDateTimeField(
-                "begin",
-                ['value' => null, 'maybeempty' => false, 'display' => false],
-            ),
-            'end_html' => Html::showDateTimeField(
-                "end",
-                ['value' => null, 'maybeempty' => false, 'display' => false],
-            ),
-        ]);
+        $form = TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_range.html.twig');
     }
 
     echo $form;

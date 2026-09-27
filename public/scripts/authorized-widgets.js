@@ -1,5 +1,3 @@
-<?php
-
 /**
  * -------------------------------------------------------------------------
  * mydashboard plugin for GLPI
@@ -27,25 +25,23 @@
  * --------------------------------------------------------------------------
  */
 
-use Glpi\Application\View\TemplateRenderer;
-
-if (strpos($_SERVER['PHP_SELF'], "dropdownMonth.php")) {
-    header("Content-Type: text/html; charset=UTF-8");
-    Html::header_nocache();
-}
-
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
-
-// Make a select box
-if (isset($_POST["value"])) {
-    if ($_POST['value'] == "MONTH") {
-        // The current value is not posted, so the dropdown always starts empty --
-        // this was already the case before, $opt was never defined in this endpoint.
-        echo TemplateRenderer::getInstance()->render('@mydashboard/criteria_period_month.html.twig', [
-            'name' => 'month_year',
-            'months' => Toolbox::getMonthsOfYearArray(),
-            'value' => 0,
-        ]);
+// "Authorize/Unauthorize all" of the authorized widgets form: toggles every yes/no
+// select of the plugin rows (class given by data-md-toggle-all) at once.
+document.addEventListener('click', (event) => {
+    const toggle = event.target.closest('[data-md-toggle-all]');
+    if (toggle === null) {
+        return;
     }
 
-}
+    const selects = [...document.querySelectorAll(`tr.${CSS.escape(toggle.dataset.mdToggleAll)} select`)];
+    if (selects.length === 0) {
+        return;
+    }
+
+    const next = selects[0].value === '0' ? '1' : '0';
+    selects.forEach((select) => {
+        select.value = next;
+        // select2 listens to change (jQuery handlers also catch native events)
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+});

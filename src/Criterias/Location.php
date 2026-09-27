@@ -81,15 +81,10 @@ class Location
         }
         $gparams = [
             'name' => self::$criteria_name,
-            'display' => false,
             'value' => $opt[self::$criteria_name] ?? $default_location,
             'entity' => $_SESSION['glpiactiveentities'],
         ];
-        return Criteria::getFieldHtml(
-            __('Location'),
-            \Location::dropdown($gparams),
-            $count,
-        );
+        return Criteria::getFieldHtml(__('Location'), $count, [\Location::class, 'dropdown'], [$gparams]);
     }
 
     public static function getQueryCriteria($params)

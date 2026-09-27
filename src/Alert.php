@@ -946,7 +946,6 @@ class Alert extends CommonDBTM
                 $stockwidget = new StockWidget();
                 $stocks = $stockwidget->find();
                 $stock_tiles = [];
-                $script = "";
                 $types = [];
                 $states = [];
                 if (count($stocks) > 0) {
@@ -1074,16 +1073,15 @@ class Alert extends CommonDBTM
                                 // Stock-widget names are admin-set DB values; the template
                                 // escapes them in both the title attribute and the text.
                                 'name' => $data['name'],
+                                // Counted up by public/scripts/alert-widgets.js
+                                'value' => (int) $stock,
                             ];
-
-                            $script .= "$('#stock_$nb').countup($stock);";
                         }
                     }
                 }
 
                 $table .= TemplateRenderer::getInstance()->render('@mydashboard/alert_stock_tiles.html.twig', [
                     'tiles' => $stock_tiles,
-                    'countup_script_html' => \Html::scriptBlock('$(function(){' . $script . '});'),
                 ]);
                 $table .= Helper::getGraphFooter($params);
                 $widget->setWidgetHtmlContent(
@@ -2319,51 +2317,19 @@ class Alert extends CommonDBTM
      *
      * @param array $tiles each entry carries color, url (null when the counter is zero),
      *                     title, icon_class, icon_style, heading_style, id, label and the
-     *                     counter value used by the countup script
+     *                     counter value counted up by public/scripts/alert-widgets.js
      *
      * @return string
      */
     private static function getStatsTilesHtml($tiles)
     {
-        $script = '';
-        foreach ($tiles as $tile) {
-            $script .= "$('#" . $tile['id'] . "').countup(" . (int) $tile['value'] . ");";
-        }
-
         return TemplateRenderer::getInstance()->render('@mydashboard/alert_stats_tiles.html.twig', [
             'tiles' => $tiles,
-            'countup_script_html' => \Html::scriptBlock('$(function(){' . $script . '});'),
         ]);
     }
 
     private static function getTickerHtml($prefix, $data_attr, $items, $first_description, $title_field, $empty_label, $first_color = '')
     {
-        $ticker_script_html = '';
-        if (count($items) > 1) {
-            $urlalert = PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php';
-            $ticker_script_html = \Html::scriptBlock("
-                var {$prefix} = $('#{$prefix}').newsTicker({
-                    row_height: 60,
-                    max_rows: 1,
-                    speed: 300,
-                    duration: 6000,
-                    prevButton: $('#{$prefix}-prev'),
-                    nextButton: $('#{$prefix}-next'),
-                    hasMoved: function() {
-                        $('#{$prefix}-infos-container').fadeOut(200, function(){
-                            var item_id = $('#{$prefix} li:first').data('{$data_attr}');
-                            $('#{$prefix}-infos .infos-text').load('{$urlalert}?id=' + item_id);
-                            $(this).fadeIn(400);
-                        });
-                    }
-                });
-                $('#{$prefix}-infos').hover(function() {
-                    {$prefix}.newsTicker('pause');
-                }, function() {
-                    {$prefix}.newsTicker('unpause');
-                });");
-        }
-
         $empty_title = '';
         if ($items === []) {
             $config = new Config();
@@ -2379,7 +2345,8 @@ class Alert extends CommonDBTM
             'first_color' => $first_color,
             'empty_title' => $empty_title,
             'empty_label' => $empty_label,
-            'ticker_script_html' => $ticker_script_html,
+            // Loaded by public/scripts/alert-widgets.js when the ticker moves
+            'description_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/showalert.php',
         ]);
     }
 
@@ -3001,15 +2968,18 @@ class Alert extends CommonDBTM
         $reminders_id = $item->getID();
         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 
-        echo $this->getAlertFormHtml(
-            $reminders_id,
-            _n('Alert', 'Alerts', 1, 'mydashboard'),
-            [-1 => __('All categories', 'mydashboard')],
+        TemplateRenderer::getInstance()->display(
+            '@mydashboard/alert_form.html.twig',
+            $this->getAlertFormParams(
+                $reminders_id,
+                _n('Alert', 'Alerts', 1, 'mydashboard'),
+                [-1 => __('All categories', 'mydashboard')],
+            ),
         );
     }
 
     /**
-     * Build the alert form attached to a reminder.
+     * Variables of the alert form attached to a reminder (alert_form.html.twig).
      *
      * Shared by showReminderForm(), showForItem() and ItilAlert::showForItem(), which
      * used to carry nearly identical copies of it.
@@ -3019,9 +2989,9 @@ class Alert extends CommonDBTM
      * @param array  $category_toadd  extra entries prepended to the category dropdown
      * @param bool   $with_delete     show the purge button once the alert exists
      *
-     * @return string
+     * @return array
      */
-    public function getAlertFormHtml($reminders_id, $first_type_name, $category_toadd = [], $with_delete = false)
+    public function getAlertFormParams($reminders_id, $first_type_name, $category_toadd = [], $with_delete = false)
     {
         if (isset($this->fields['id'])) {
             $id = $this->fields['id'];
@@ -3055,7 +3025,7 @@ class Alert extends CommonDBTM
             $category_options['toadd'] = $category_toadd;
         }
 
-        return TemplateRenderer::getInstance()->render('@mydashboard/alert_form.html.twig', [
+        return [
             'form_action' => $this->getFormURL(),
             'id' => $id,
             'reminders_id' => $reminders_id,
@@ -3068,7 +3038,7 @@ class Alert extends CommonDBTM
             'is_public' => $is_public,
             'can_edit' => Session::haveRight("reminder_public", UPDATE),
             'can_delete' => $with_delete && $id > 0,
-        ]);
+        ];
     }
 
 
@@ -3096,21 +3066,21 @@ class Alert extends CommonDBTM
         }
 
         $reminder_data = null;
-        $alert_form_html = '';
+        $alert_form = null;
         if ($has_reminder) {
             $reminders_id = $item->fields['reminders_id'];
             $reminder->getFromDB($reminders_id);
+            // The reminder text is stored raw (rich text) in GLPI 11: the template runs it
+            // through |safe_html, which keeps the allowed formatting but strips scripts and
+            // event handlers (stored XSS for any user opening this tab otherwise).
             $reminder_data = [
-                'link_html' => nl2br($reminder->getLink()),
-                // The reminder text is stored raw (rich text) in GLPI 11 and must be
-                // sanitized at render time. getSafeHtml keeps the allowed formatting
-                // but strips scripts/event handlers, closing a stored-XSS path where a
-                // reminder author's payload would execute for any user opening this tab.
-                'text_html' => RichText::getSafeHtml($reminder->fields['text']),
+                'name' => $reminder->getNameID(),
+                'url' => $reminder->getLinkURL(),
+                'text' => $reminder->fields['text'],
             ];
 
             $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
-            $alert_form_html = $this->getAlertFormHtml(
+            $alert_form = $this->getAlertFormParams(
                 $reminders_id,
                 _n('Network alert', 'Network alerts', 1, 'mydashboard'),
             );
@@ -3119,7 +3089,7 @@ class Alert extends CommonDBTM
         TemplateRenderer::getInstance()->display('@mydashboard/alert_item.html.twig', [
             'create_button' => $create_button,
             'reminder' => $reminder_data,
-            'alert_form_html' => $alert_form_html,
+            'alert_form' => $alert_form,
         ]);
 
         if ($has_reminder) {

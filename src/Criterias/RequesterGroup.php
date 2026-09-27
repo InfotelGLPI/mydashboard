@@ -118,7 +118,6 @@ class RequesterGroup
 
         $params = [
             "name" => self::$criteria_name,
-            "display" => false,
             "multiple" => true,
             "width" => '200px',
             'values' => $requesters_groups_id ?? $default[self::$criteria_name],
@@ -128,8 +127,9 @@ class RequesterGroup
 
         return Criteria::getFieldHtml(
             __('Requester group'),
-            Dropdown::showFromArray("requesters_groups_id", $temp, $params),
             $count,
+            [Dropdown::class, 'showFromArray'],
+            ["requesters_groups_id", $temp, $params],
         );
     }
 

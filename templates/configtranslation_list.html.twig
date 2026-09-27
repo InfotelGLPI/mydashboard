@@ -25,76 +25,44 @@
  # --------------------------------------------------------------------------
  #}
 
+{#
+ # Clicking the button or a row loads the translation form in the container: handled by
+ # public/scripts/config-translation.js from the data-* attributes.
+ #}
+{% set datatable_id = 'datatable_translations' ~ rand %}
+
 {% if canedit %}
-    <div id="{{ view_container_id }}"></div>
-    {{ add_script_html|raw }}
-    <div class="center">
-        <a class="submit btn btn-primary" href="javascript:{{ add_function }}();">
+    <div id="viewtranslationconfig{{ rand }}"
+         data-md-translation-view="{{ view_url }}"
+         data-md-translation-datatable="{{ datatable_id }}"
+         data-type="{{ type }}"
+         data-parenttype="{{ parenttype }}"
+         data-parent-fk="{{ parent_fk }}"
+         data-parent-id="{{ parent_id }}"></div>
+    <div class="text-center mb-3">
+        <button type="button" class="btn btn-primary" data-md-translation-add="viewtranslationconfig{{ rand }}">
             {{- __('Add a new translation') -}}
-        </a>
+        </button>
     </div>
-    <br>
+    <script type="module" src="{{ script_url }}"></script>
 {% endif %}
 
-{% if not rows|length %}
-    <table class="tab_cadre_fixe">
-        <tr class="tab_bg_2">
-            <th class="center b">{{ __('No translation has been added yet') }}</th>
-        </tr>
-    </table>
-{% else %}
-    {# Emitted before the table: the legacy code placed one <script> per row inside a
-       <td>, where the parser hoists it out anyway. #}
-    {{ scripts_html|raw }}
-
-    {% if canedit %}
-        {{ ma_open_html|raw }}
-        {{ ma_top_html|raw }}
-    {% endif %}
-
-    <div class="center">
-        <table class="tab_cadre_fixehov">
-            <thead>
-                <tr class="tab_bg_2">
-                    <th colspan="{{ canedit ? 4 : 3 }}">{{ __('List of translations') }}</th>
-                </tr>
-                <tr>
-                    {% if canedit %}
-                        <th width="10">{{ check_all_html|raw }}</th>
-                    {% endif %}
-                    <th>{{ __('Language') }}</th>
-                    <th>{{ __('Field') }}</th>
-                    <th>{{ __('Value') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in rows %}
-                    {% set hover_style = row.edit_function ? 'cursor:pointer' : '' %}
-                    <tr class="tab_bg_1">
-                        {% if canedit %}
-                            <td class="center">{{ row.checkbox_html|raw }}</td>
-                        {% endif %}
-                        <td style="{{ hover_style }}"
-                            {%- if row.edit_function %} onclick="{{ row.edit_function }}();"{% endif %}>
-                            {{- row.language -}}
-                        </td>
-                        <td style="{{ hover_style }}"
-                            {%- if row.edit_function %} onclick="{{ row.edit_function }}();"{% endif %}>
-                            {{- row.field -}}
-                        </td>
-                        <td style="{{ hover_style }}"
-                            {%- if row.edit_function %} onclick="{{ row.edit_function }}();"{% endif %}>
-                            {{- row.value -}}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    {% if canedit %}
-        {{ ma_bottom_html|raw }}
-        {# closes the massive actions <form> above and carries the CSRF token #}
-        {{ close_form_html|raw }}
-    {% endif %}
-{% endif %}
+{{ include('components/datatable.html.twig', {
+    'datatable_id': datatable_id,
+    'is_tab': true,
+    'nofilter': true,
+    'nosort': true,
+    'columns': {
+        'language': __('Language'),
+        'field': __('Field'),
+        'value': __('Value'),
+    },
+    'entries': entries,
+    'total_number': entries|length,
+    'filtered_number': entries|length,
+    'showmassiveactions': canedit,
+    'massiveactionparams': {
+        'num_displayed': entries|length,
+        'container': container,
+    },
+}, with_context = false) }}

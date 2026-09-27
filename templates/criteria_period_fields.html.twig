@@ -25,13 +25,21 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Start/end month and year grid. Shared by Criterias\DisplayData and the AJAX endpoint
-   that refreshes this very block, so the two cannot drift apart. #}
+{#
+ # Start/end month and year grid. Shared by Criterias\DisplayData and the AJAX endpoint
+ # that refreshes this very block, so the two cannot drift apart. Each field is described
+ # by DisplayData::getPeriodFields() and rendered by the dropdown helper of the core.
+ #}
 <span id="display_data_crit{{ rand }}" name="display_data_crit{{ rand }}" class="md-widgetcrit">
     {% for field in fields %}
         <span class="md-widgetcrit">
             {%- for i in 1..(field.breaks ?? 0) %}<br>{% endfor -%}
-            {{ field.label }}&nbsp;{{ field.input_html|raw }}
+            {{ field.label }}&nbsp;
+            {%- if field.type == 'number' -%}
+                {% do call('Dropdown::showNumber', [field.name, field.options]) %}
+            {%- else -%}
+                {% do call('Dropdown::showFromArray', [field.name, field.elements, field.options]) %}
+            {%- endif -%}
         </span>
     {% endfor %}
 </span>

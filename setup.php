@@ -90,6 +90,12 @@ function plugin_init_mydashboard()
     $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'lib/jquery-advanced-news-ticker/jquery.newsTicker.min.js';
     // Charts of the widgets, drawn on the pages of the other plugins too (servicecatalog)
     $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['mydashboard'][] = 'scripts/charts.js';
+    // Criteria forms of the widgets, rendered on the pages of the other plugins too
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['mydashboard'][] = 'scripts/criteria-form.js';
+    // Counters and news tickers of the alert widgets, rendered by servicecatalog too
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['mydashboard'][] = 'scripts/alert-widgets.js';
+    // OpenStreetMap widget of the tickets by location (Reports_Map)
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['mydashboard'][] = 'scripts/tickets-map.js';
 
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['mydashboard'] = [Profile::class, 'initProfile'];
 

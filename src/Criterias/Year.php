@@ -89,30 +89,28 @@ class Year
 
         return Criteria::getFieldHtml(
             __('Year', 'mydashboard'),
-            self::YearDropdown($annee_courante),
             $count,
+            [Dropdown::class, 'showFromArray'],
+            [self::$criteria_name, self::getYearChoices(), ['value' => $annee_courante]],
         );
     }
 
     /**
-     * @param int|string $selected selected year, null for none
+     * The ten last years and the current one, as offered by the year selector.
      *
-     * @return int|string
+     * @return array<int, int>
      */
-    public static function YearDropdown($selected = null)
+    public static function getYearChoices(): array
     {
-        $year = date("Y") - 10;
+        $elements = [];
+        $year = (int) date("Y") - 10;
         for ($i = 0; $i <= 10; $i++) {
             $elements[$year] = $year;
 
             $year++;
         }
-        $opt = [
-            'value' => $selected,
-            'display' => false,
-        ];
 
-        return Dropdown::showFromArray(self::$criteria_name, $elements, $opt);
+        return $elements;
     }
 
     public static function getQueryCriteria($params)

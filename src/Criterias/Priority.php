@@ -30,7 +30,6 @@
 namespace GlpiPlugin\Mydashboard\Criterias;
 
 use CommonITILObject;
-use Dropdown;
 use GlpiPlugin\Mydashboard\Criteria;
 
 /**
@@ -82,8 +81,9 @@ class Priority
 
         return Criteria::getFieldHtml(
             __('Priority'),
-            self::priorityDropdown($current_priority),
             $count,
+            [\Ticket::class, 'dropdownPriority'],
+            [['value' => $current_priority]],
         );
     }
 
@@ -97,16 +97,5 @@ class Priority
     {
 
         return Criteria::addUrlCriteria(self::$criteria_number, 'equals', $params["params"][self::$criteria_name], 'AND');
-    }
-
-    private static function priorityDropdown(mixed $selected = null)
-    {
-
-        $opt = [
-            'value' => $selected,
-            'display' => false,
-        ];
-
-        return \Ticket::dropdownPriority($opt);
     }
 }

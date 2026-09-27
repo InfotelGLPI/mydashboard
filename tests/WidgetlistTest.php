@@ -92,10 +92,9 @@ class WidgetlistTest extends TestCase
     /**
      * Classes dont getWidgetsForItem() construit sa liste sans interroger la base.
      *
-     * Ces classes filtrent désormais leurs widgets sur des droits : Criteria::canReadTickets()
-     * pour les widgets d'assistance, Session::haveRight() pour les autres. Les deux passent
-     * par Session::haveRight(), qui lit $DB->isSlave() avant de consulter le profil — donc
-     * une erreur fatale hors base. Le test les exécute via Session::callAsSystem(), qui
+     * Ces classes filtrent certains de leurs widgets sur des droits (Session::haveRight()
+     * pour l'inventaire, les utilisateurs, les contrats…), qui lit $DB->isSlave() avant de
+     * consulter le profil — donc une erreur fatale hors base. Le test les exécute via Session::callAsSystem(), qui
      * désactive ces vérifications en amont de tout accès à $DB : la liste complète est
      * alors déclarée, ce que cette suite vérifie.
      *
@@ -169,11 +168,12 @@ class WidgetlistTest extends TestCase
     }
 
     /**
-     * Les widgets d'assistance agrègent glpi_tickets sans aucune clause d'acteur. Un profil
-     * qui ne détient que Ticket::READMY ne doit donc pas se les voir proposer : c'est le
-     * filtrage porté par Criteria::canReadTickets(), que rien ne couvrait jusqu'ici.
+     * Les widgets de statistiques de tickets ne dépendent pas d'un droit sur les tickets :
+     * l'administrateur choisit de les montrer profil par profil (ProfileAuthorizedWidget),
+     * par exemple à un superviseur de l'interface simplifiée. Un profil qui ne détient que
+     * Ticket::READMY doit donc se les voir proposer.
      */
-    public function testHelpdeskWidgetsAreHiddenWithoutTicketRead(): void
+    public function testHelpdeskWidgetsAreDeclaredWithoutTicketRead(): void
     {
         $db_backup      = $GLOBALS['DB'] ?? null;
         $session_backup = $_SESSION ?? [];
@@ -188,25 +188,15 @@ class WidgetlistTest extends TestCase
         $_SESSION['glpiactiveprofile'] = [\Ticket::$rightname => \Ticket::READMY];
 
         try {
-            // Ces trois classes ne déclarent que des widgets de tickets.
-            foreach ([Reports_Line::class, Reports_Pie::class, Reports_Map::class] as $classname) {
+            foreach ([Reports_Line::class, Reports_Pie::class, Reports_Map::class, Reports_Bar::class, Reports_Table::class] as $classname) {
                 $instance = new $classname();
 
-                $this->assertSame(
-                    [],
+                $this->assertArrayHasKey(
+                    Menu::$HELPDESK,
                     $instance->getWidgetsForItem(),
-                    "$classname ne doit déclarer aucun widget sans droit de lecture des tickets",
+                    "$classname doit déclarer ses widgets d'assistance sans droit de lecture des tickets",
                 );
             }
-
-            // Reports_Bar garde son widget d'inventaire, qui compte des ordinateurs.
-            $bar = new Reports_Bar();
-
-            $this->assertArrayNotHasKey(
-                Menu::$HELPDESK,
-                $bar->getWidgetsForItem(),
-                "Reports_Bar ne doit déclarer aucun widget d'assistance sans droit de lecture des tickets",
-            );
         } finally {
             $GLOBALS['DB'] = $db_backup;
             $_SESSION      = $session_backup;

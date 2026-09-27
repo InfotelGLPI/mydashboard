@@ -219,11 +219,8 @@ class Reports_Bar extends CommonDBTM
             ],
         ];
 
-        // Every HELPDESK widget of this class aggregates glpi_tickets without any actor
-        // clause. Widget "44" counts computers and is bound to the Computer right instead.
-        if (!Criteria::canReadTickets()) {
-            unset($widgets[Menu::$HELPDESK]);
-        }
+        // Widget "44" counts computers and is bound to the Computer right. The ticket
+        // statistics are not bound to a ticket right: see Criteria::addCriteriasForQuery().
         if (!Session::haveRight(\Computer::$rightname, READ)) {
             unset($widgets[Menu::$INVENTORY]);
         }
@@ -245,12 +242,9 @@ class Reports_Bar extends CommonDBTM
         // The declaration is cached in the session and ajax/refreshWidget.php serves any
         // widget id the cache holds, so the right is checked again at the content, as case
         // "5" of Reports_Table does. Widget "44" is the inventory one: it counts computers
-        // and is gated on the Computer right rather than exempted from any check.
-        if ($widgetId === $this->getType() . "44") {
-            if (!Session::haveRight(\Computer::$rightname, READ)) {
-                return false;
-            }
-        } elseif (!Criteria::canReadTickets()) {
+        // and is gated on the Computer right.
+        if ($widgetId === $this->getType() . "44"
+            && !Session::haveRight(\Computer::$rightname, READ)) {
             return false;
         }
 

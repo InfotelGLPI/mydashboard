@@ -75,27 +75,10 @@ class Month
         }
         return Criteria::getFieldHtml(
             __('Month', 'mydashboard'),
-            self::monthDropdown(self::$criteria_name, $mois_courant),
             $count,
+            [Dropdown::class, 'showFromArray'],
+            [self::$criteria_name, Toolbox::getMonthsOfYearArray(), ['value' => $mois_courant]],
         );
-    }
-
-    /**
-     * @param string     $name
-     * @param int|string $selected selected month, 0 or null for none
-     *
-     * @return int|string
-     */
-    public static function monthDropdown($name = "month", $selected = null)
-    {
-        $monthsarray = Toolbox::getMonthsOfYearArray();
-
-        $opt = [
-            'value' => $selected,
-            'display' => false,
-        ];
-
-        return Dropdown::showFromArray($name, $monthsarray, $opt);
     }
 
     public static function getQueryCriteria($params)

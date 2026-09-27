@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
-<span class="md-widgetcrit">{{ __('Start') }}&nbsp;{{ begin_html|raw }}</span>
+<span class="md-widgetcrit">{{ __('Start') }}&nbsp;
+    {%- do call('Html::showDateTimeField', ['begin', {'value': null, 'maybeempty': false}]) -%}
+</span>
 <br>
-<span class="md-widgetcrit">{{ __('End') }}&nbsp;{{ end_html|raw }}</span>
+<span class="md-widgetcrit">{{ __('End') }}&nbsp;
+    {%- do call('Html::showDateTimeField', ['end', {'value': null, 'maybeempty': false}]) -%}
+</span>

@@ -99,8 +99,8 @@
                         {% else %}
                             {{ _self.fragment(title) }}
                         {% endif %}
-                        {#- raw: Html::showToolTip() of the core, the comment is escaped by the core -#}
-                        {%- if tooltip_html %}&nbsp;{{ tooltip_html|raw }}{% endif -%}
+                        {#- Html::showToolTip() of the core prints its own markup and escapes the comment -#}
+                        {%- if tooltip %}&nbsp;{% do call('Html::showToolTip', [tooltip, {'awesome-class': 'fa-info-circle'}]) %}{% endif -%}
                     </h4>
                 </div>
                 <hr style="margin: 1.2rem 0;">
@@ -111,7 +111,7 @@
                 {{ header_html|raw }}
 
                 {% if table is not null %}
-                    <table id="{{ table.id }}" class="display tab_cadre" cellspacing="0" width="100%"
+                    <table id="{{ table.id }}" class="display tab_cadre tab_cadre_fixe" cellspacing="0" width="100%"
                            data-md-datatable="{{ table.config|json_encode }}">
                         <thead>
                             <tr>
@@ -141,7 +141,8 @@
     </div>
 </div>
 
-{# raw: Html::scriptBlock() of the widget scripts, replaced by modules in lot 5 #}
+{# raw: Html::scriptBlock() of the scripts other plugins declare on their widgets (setWidgetScripts(),
+   or extracted from setWidgetHtmlContent()); this plugin no longer declares any #}
 {{ scripts_html|raw }}
 {% if load_time is not null %}
     <div>{{ 'Load widget %s : %s'|format(widget_id, load_time) }}</div>

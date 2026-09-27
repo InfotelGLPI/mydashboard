@@ -34,8 +34,9 @@
     {% for filter in filters %}
         <div class="d-flex align-items-center gap-1">
             <label class="form-label mb-0 text-muted small me-1">{{ filter.label }}</label>
-            {# raw: dropdown markup built by the core (Entity::dropdown(), Dropdown::showFromArray()) #}
-            {{ filter.input_html|raw }}
+            {# widget: dropdown helper of the core (Entity::dropdown(), Dropdown::showFromArray()...),
+               printing its own markup #}
+            {% do call(filter.widget, filter.arguments) %}
         </div>
     {% endfor %}
 </div>

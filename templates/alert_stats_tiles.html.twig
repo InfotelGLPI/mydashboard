@@ -37,7 +37,7 @@
 
             <i style="color:{{ tile.color }};{{ tile.icon_style }}" class="{{ tile.icon_class }}"></i>
             <h3 style="{{ tile.heading_style }}">
-                <span class="counter count-number" id="{{ tile.id }}"></span>
+                <span class="counter count-number" id="{{ tile.id }}" data-md-countup="{{ tile.value }}"></span>
             </h3>
             <p class="count-text ">{{ tile.label }}</p>
 
@@ -46,6 +46,4 @@
             {% endif %}
         </div>
     {% endfor %}
-
-    {{ countup_script_html|raw }}
 </div>

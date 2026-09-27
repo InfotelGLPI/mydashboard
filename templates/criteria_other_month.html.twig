@@ -29,7 +29,8 @@
    AJAX call targets it by id to fill it in. #}
 <span id="month_crit{{ rand }}" name="month_crit{{ rand }}" class="md-widgetcrit">
     {%- if show_month -%}
-        <br><br>
-        {{ __('Month', 'mydashboard') }}&nbsp;{{ month_html|raw }}
+        {{ include('@mydashboard/criteria_period_month.html.twig', {'name': name, 'months': months, 'value': value}, with_context = false) }}
     {%- endif -%}
 </span>
+{# Refills the span above whenever another period is picked in the observed dropdown #}
+{% do call('Ajax::updateItemOnSelectEvent', [observed, 'month_crit' ~ rand, url, {'value': '__VALUE__'}]) %}

@@ -118,7 +118,6 @@ class TechnicianGroup
 
         $params = [
             "name" => self::$criteria_name,
-            "display" => false,
             "multiple" => true,
             "width" => '200px',
             'values' => $technicians_groups_id ?? $default[self::$criteria_name],
@@ -128,8 +127,9 @@ class TechnicianGroup
 
         $form = Criteria::getFieldHtml(
             __('Technician group'),
-            Dropdown::showFromArray(self::$criteria_name, $temp, $params),
             $count,
+            [Dropdown::class, 'showFromArray'],
+            [self::$criteria_name, $temp, $params],
         );
 
         $defaultcrit = $default['is_recursive_technicians'] ?? 0;
@@ -137,8 +137,9 @@ class TechnicianGroup
         if ($sons > 0) {
             $form .= Criteria::getFieldHtml(
                 __('Child groups'),
-                Dropdown::showYesNo('is_recursive_technicians', $sons, -1, ['display' => false]),
                 $count,
+                [Dropdown::class, 'showYesNo'],
+                ['is_recursive_technicians', $sons],
             );
         }
 

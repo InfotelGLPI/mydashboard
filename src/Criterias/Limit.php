@@ -72,13 +72,13 @@ class Limit
             'min' => 0,
             'max' => 200,
             'step' => 1,
-            'display' => false,
             'toadd' => [0 => __('All')],
         ];
         return Criteria::getFieldHtml(
             __('Number of results'),
-            Dropdown::showNumber(self::$criteria_name, $params),
             $count,
+            [Dropdown::class, 'showNumber'],
+            [self::$criteria_name, $params],
         );
     }
 

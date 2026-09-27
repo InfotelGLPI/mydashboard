@@ -25,7 +25,7 @@
  # --------------------------------------------------------------------------
  #}
 
-{# One labelled widget of a criteria filter bar. input_html is the markup returned by a
-   GLPI dropdown helper called with 'display' => false. #}
-<span class="md-widgetcrit">{{ label }}&nbsp;{{ input_html|raw }}</span>
+{# One labelled widget of a criteria filter bar: widget is the dropdown helper of the
+   core (Dropdown::showFromArray, Entity::dropdown...), which prints its own markup. #}
+<span class="md-widgetcrit">{{ label }}&nbsp;{% do call(widget, arguments) %}</span>
 {%- if count > 1 %}<br><br>{% endif -%}

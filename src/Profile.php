@@ -165,55 +165,28 @@ class Profile extends \Profile
         $rows = [
             [
                 'label' => __("Dashboard Access", "mydashboard"),
-                'full_html' => \Html::getCheckbox([
-                    'name' => '_plugin_mydashboard[6_0]',
-                    'checked' => $effective_rights["plugin_mydashboard"] > 1 ? 1 : 0,
-                ]),
-                'custom_html' => \Html::getCheckbox([
-                    'name' => '_plugin_mydashboard[1_0]',
-                    'checked' => $effective_rights["plugin_mydashboard"] == 1 ? 1 : 0,
-                ]),
+                'full' => ['name' => '_plugin_mydashboard[6_0]', 'checked' => $effective_rights["plugin_mydashboard"] > 1],
+                'custom' => ['name' => '_plugin_mydashboard[1_0]', 'checked' => $effective_rights["plugin_mydashboard"] == 1],
             ],
             [
                 'label' => __("Configuration Access", "mydashboard"),
-                'full_html' => \Html::getCheckbox([
-                    'name' => '_plugin_mydashboard_config[22_0]',
-                    'checked' => $effective_rights["plugin_mydashboard_config"],
-                ]),
-                'custom_html' => '',
+                'full' => ['name' => '_plugin_mydashboard_config[22_0]', 'checked' => (bool) $effective_rights["plugin_mydashboard_config"]],
+                'custom' => null,
             ],
             [
                 'label' => __("See edit mode", "mydashboard"),
-                'full_html' => \Html::getCheckbox([
-                    'name' => '_plugin_mydashboard_edit[6_0]',
-                    'checked' => $effective_rights["plugin_mydashboard_edit"],
-                ]),
-                'custom_html' => '',
+                'full' => ['name' => '_plugin_mydashboard_edit[6_0]', 'checked' => (bool) $effective_rights["plugin_mydashboard_edit"]],
+                'custom' => null,
             ],
         ];
 
-        // displayRightsChoiceMatrix() renders its own table through TemplateRenderer and
-        // has no "display" option, so it has to be captured.
-        ob_start();
-        $profile->displayRightsChoiceMatrix($this->getAllRights(), [
-            'canedit' => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title' => __('Setup stock widget', 'mydashboard'),
-        ]);
-        $rights_matrix_html = ob_get_clean();
-
-        echo TemplateRenderer::getInstance()->render('@mydashboard/profile.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/profile.html.twig', [
             'canedit' => $canedit,
             'closeform' => $closeform,
-            'form_action' => $profile->getFormURL(),
+            'profile' => $profile,
             'title' => sprintf(__('%1$s - %2$s'), self::getTypeName(1), $profile->fields["name"]),
             'rows' => $rows,
-            'rights_matrix_html' => $rights_matrix_html,
-            'hidden_html' => \Html::hidden('id', ['value' => $profiles_id]),
-            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
-                'class' => 'btn btn-primary',
-            ]),
-            'close_form_html' => \Html::closeForm(false),
+            'rights' => $this->getAllRights(),
         ]);
 
         Groupprofile::addGroup($profiles_id, $canedit);

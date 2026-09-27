@@ -30,7 +30,6 @@
 namespace GlpiPlugin\Mydashboard\Criterias;
 
 use Glpi\Application\View\TemplateRenderer;
-use Ajax;
 use CommonITILObject;
 use DbUtils;
 use Dropdown;
@@ -38,6 +37,7 @@ use Group_User;
 use Html;
 use PluginTagTag;
 use Ticket;
+use Toolbox;
 use User;
 
 /**
@@ -279,20 +279,22 @@ class Other
     /**
      * Render one criterion of this class.
      *
-     * @param string $label
-     * @param string $input_html
-     * @param int    $count
-     * @param string $break      trailing spacing: 'double', 'single' or 'none'
-     * @param string $extra_html appended inside the span, after the widget
+     * The widget is printed by the template, which calls the helper of the core itself.
+     *
+     * @param string                      $label
+     * @param int                         $count
+     * @param array{0: string, 1: string} $widget    static method of the core printing the widget
+     * @param array                       $arguments arguments of that method
+     * @param string                      $break     trailing spacing: 'double', 'single' or 'none'
      *
      * @return string
      */
-    private static function renderField($label, $input_html, $count, $break = 'double', $extra_html = '')
+    private static function renderField($label, $count, $widget, $arguments, $break = 'double')
     {
         return TemplateRenderer::getInstance()->render('@mydashboard/criteria_other_field.html.twig', [
             'label' => $label,
-            'input_html' => $input_html,
-            'extra_html' => $extra_html,
+            'widget' => $widget,
+            'arguments' => $arguments,
             'break' => $count > 1 ? $break : 'none',
         ]);
     }
@@ -311,11 +313,9 @@ class Other
         if (in_array("begin", $criterias)) {
             $form = self::renderField(
                 __('Start'),
-                Html::showDateTimeField(
-                    "begin",
-                    ['value' => $opt['begin'] ?? $default['begin'], 'maybeempty' => false, 'display' => false],
-                ),
                 $count,
+                [Html::class, 'showDateTimeField'],
+                ['begin', ['value' => $opt['begin'] ?? $default['begin'], 'maybeempty' => false]],
                 in_array("end", $criterias) ? 'single' : 'double',
             );
         }
@@ -324,11 +324,9 @@ class Other
         if (in_array("end", $criterias)) {
             $form = self::renderField(
                 __('End'),
-                Html::showDateTimeField(
-                    "end",
-                    ['value' => $opt['end'] ?? $default['end'], 'maybeempty' => false, 'display' => false],
-                ),
                 $count,
+                [Html::class, 'showDateTimeField'],
+                ['end', ['value' => $opt['end'] ?? $default['end'], 'maybeempty' => false]],
             );
         }
 
@@ -340,7 +338,6 @@ class Other
                 'groups_id' => 0,
                 'values' => [],
                 'multiple' => true,
-                'display' => false,
             ];
 
             $list = [];
@@ -368,12 +365,9 @@ class Other
 
             $form = self::renderField(
                 _n('Technician', 'Technicians', 2, 'mydashboard'),
-                Dropdown::showFromArray(
-                    "multiple_technicians_id",
-                    $users ?: $default['multiple_technicians_id'],
-                    $params,
-                ),
                 $count,
+                [Dropdown::class, 'showFromArray'],
+                ['multiple_technicians_id', $users ?: $default['multiple_technicians_id'], $params],
             );
         }
 
@@ -413,15 +407,15 @@ class Other
 
             $form = self::renderField(
                 __('Time display', 'mydashboard'),
-                Dropdown::showFromArray("multiple_time", $temp, [
+                $count,
+                [Dropdown::class, 'showFromArray'],
+                ['multiple_time', $temp, [
                     "name" => 'multiple_time',
-                    "display" => false,
                     "multiple" => false,
                     "width" => '200px',
                     'value' => $opt['multiple_time'] ?? $default['multiple_time'],
                     'display_emptychoice' => false,
-                ]),
-                $count,
+                ]],
             );
         }
 
@@ -434,44 +428,34 @@ class Other
             ];
 
             $rand = mt_rand();
-            $dropdown = Dropdown::showFromArray("multiple_year_time", $temp, [
-                "name" => 'multiple_year_time',
-                "display" => false,
-                "multiple" => false,
-                "width" => '200px',
-                "rand" => $rand,
-                'value' => $opt['multiple_year_time'] ?? $default['multiple_year_time'],
-                'display_emptychoice' => false,
-            ]);
+            $form = self::renderField(
+                __('Time display', 'mydashboard'),
+                $count,
+                [Dropdown::class, 'showFromArray'],
+                ['multiple_year_time', $temp, [
+                    "name" => 'multiple_year_time',
+                    "multiple" => false,
+                    "width" => '200px',
+                    "rand" => $rand,
+                    'value' => $opt['multiple_year_time'] ?? $default['multiple_year_time'],
+                    'display_emptychoice' => false,
+                ]],
+            );
 
             // The month picker lives in its own span, refreshed in place by the AJAX call
-            $month_html = TemplateRenderer::getInstance()->render(
+            // that the template binds to the period dropdown above
+            $form .= TemplateRenderer::getInstance()->render(
                 '@mydashboard/criteria_other_month.html.twig',
                 [
                     'rand' => $rand,
                     'show_month' => isset($opt['multiple_year_time']) && $opt['multiple_year_time'] == 'MONTH',
-                    'month_html' => Month::monthDropdown(
-                        "month_year",
-                        $opt['month_year'] ?? $default['multiple_year_time'],
-                    ),
+                    'name' => 'month_year',
+                    'months' => Toolbox::getMonthsOfYearArray(),
+                    'value' => $opt['month_year'] ?? $default['multiple_year_time'],
+                    'observed' => 'dropdown_multiple_year_time' . $rand,
+                    'url' => $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/dropdownMonth.php',
                 ],
             );
-
-            $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
-            $ajax_html = Ajax::updateItemOnSelectEvent(
-                'dropdown_multiple_year_time' . $rand,
-                "month_crit$rand",
-                $root . "/ajax/dropdownMonth.php",
-                ['value' => '__VALUE__'],
-                false,
-            );
-
-            $form = self::renderField(
-                __('Time display', 'mydashboard'),
-                $dropdown,
-                $count,
-                'double',
-            ) . $month_html . $ajax_html;
         }
 
         //ITILCATEGORY LVL1
@@ -491,15 +475,13 @@ class Other
 
             $form = self::renderField(
                 __('Category', 'mydashboard'),
-                \ITILCategory::dropdown(
-                    [
-                        'name' => 'itilcategorielvl1',
-                        'value' => $opt['itilcategorielvl1'] ?? $default['itilcategorielvl1'],
-                        'display' => false,
-                        'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]],
-                    ] + $restrict,
-                ),
                 $count,
+                [\ITILCategory::class, 'dropdown'],
+                [[
+                    'name' => 'itilcategorielvl1',
+                    'value' => $opt['itilcategorielvl1'] ?? $default['itilcategorielvl1'],
+                    'condition' => ['level' => 1, ['OR' => ['is_request' => 1, 'is_incident' => 1]]],
+                ] + $restrict],
             );
         }
 
@@ -527,13 +509,13 @@ class Other
 
             $form = self::renderField(
                 __('Tag', 'mydashboard'),
-                Dropdown::showFromArray("tag", $tags, [
+                $count,
+                [Dropdown::class, 'showFromArray'],
+                ['tag', $tags, [
                     'multiple' => false,
-                    'display' => false,
                     'value' => $opt['tag'] ?? $default['tag'],
                     'size' => count($tags),
-                ]),
-                $count,
+                ]],
             );
         }
 

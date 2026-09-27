@@ -25,4 +25,5 @@
  # --------------------------------------------------------------------------
  #}
 
-{{ __('Year', 'mydashboard') }}&nbsp;{{ year_html|raw }}
+{{ __('Year', 'mydashboard') }}&nbsp;
+{%- do call('Dropdown::showFromArray', [year_name, years, {'value': year}]) %}

@@ -32,10 +32,8 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Group;
-use Html;
 use Migration;
 use ProfileRight;
 
@@ -82,23 +80,12 @@ class Groupprofile extends CommonDBTM
             $groups[$group['id']] = $group['name'];
         }
 
-        echo TemplateRenderer::getInstance()->render('@mydashboard/groupprofile_form.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/groupprofile_form.html.twig', [
             'form_action' => PLUGIN_MYDASHBOARD_WEBDIR . '/front/groupprofile.form.php',
-            'hidden_html' => Html::hidden('profiles_id', ['value' => $profiles_id]),
-            'checkbox_html' => Html::getCheckbox(['name' => 'use_group_profile', 'checked' => $checked]),
-            'groups_dropdown_html' => Dropdown::showFromArray('groups_id', $groups, [
-                'name' => 'groups_id',
-                'entity' => $_SESSION['glpiactive_entity'],
-                'display' => false,
-                'multiple' => true,
-                'width' => '200px',
-                'values' => $groups_id ?: [],
-                'display_emptychoice' => true,
-            ]),
-            'submit_html' => Html::submit(_sx('button', 'Save'), ['name' => 'addGroup',
-                'class' => 'btn btn-primary',
-            ]),
-            'close_form_html' => Html::closeForm(false),
+            'profiles_id' => $profiles_id,
+            'checked' => $checked,
+            'groups' => $groups,
+            'groups_id' => $groups_id ?: [],
         ]);
     }
 

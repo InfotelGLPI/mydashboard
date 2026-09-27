@@ -26,8 +26,11 @@
  #}
 
 {# Shared news-ticker markup for the alert / maintenance / information widgets.
-   Only the id prefix, the item data attribute and the empty-state wording differ. #}
-<div id="{{ prefix }}-container">
+   Only the id prefix, the item data attribute and the empty-state wording differ.
+   With more than one item, public/scripts/alert-widgets.js rolls the list and loads
+   the description of the shown item. #}
+<div id="{{ prefix }}-container"
+     {%- if items|length > 1 %} data-md-ticker="{{ prefix }}" data-md-ticker-attr="{{ data_attr }}" data-md-ticker-url="{{ description_url }}"{% endif %}>
     <ul id="{{ prefix }}">
         {% if items|length %}
             {% for item in items %}
@@ -53,7 +56,7 @@
                 <div class="infos-text">
                     {%- if items|length -%}
                         {% if first_color %}<span style="color:{{ first_color }}">{% endif %}
-                        {# already sanitized with RichText::getSafeHtml() #}
+                        {# raw: already sanitized with RichText::getSafeHtml() #}
                         {{ first_description|raw }}
                         {% if first_color %}</span>{% endif %}
                     {%- else -%}
@@ -64,5 +67,3 @@
         </div>
     </div>
 </div>
-
-{{ ticker_script_html|raw }}

@@ -25,15 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
-{# form_header_html opens the <form> and its <table>; the caller closes them #}
-{{ form_header_html|raw }}
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-    <td><label for="textfield_name{{ rand }}">{{ __('Internal name', 'mydashboard') }}</label></td>
-    <td>{{ name_input_html|raw }}</td>
-</tr>
-
-<tr class="tab_bg_1">
-    <td><label for="textfield_class{{ rand }}">{{ __('Class', 'mydashboard') }}</label></td>
-    <td>{{ class_input_html|raw }}</td>
-</tr>
+{% block form_fields %}
+    {{ fields.readOnlyField('name', item.fields['name'], __('Internal name', 'mydashboard'), field_options) }}
+    {{ fields.readOnlyField('class', item.fields['class'], __('Class', 'mydashboard'), field_options) }}
+{% endblock %}

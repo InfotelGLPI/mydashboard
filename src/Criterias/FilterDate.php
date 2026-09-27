@@ -30,8 +30,6 @@
 namespace GlpiPlugin\Mydashboard\Criterias;
 
 use Glpi\Application\View\TemplateRenderer;
-use Ajax;
-use Dropdown;
 use GlpiPlugin\Mydashboard\Preference;
 use Html;
 use Session;
@@ -99,56 +97,26 @@ class FilterDate
         ];
 
         $rand = mt_rand();
-        $params = [
-            "name" => 'filter_date',
-            "display" => false,
-            "multiple" => false,
-            "width" => '200px',
-            "rand" => $rand,
-            'value' => $opt['filter_date'] ?? 'YEAR',
-            'display_emptychoice' => false,
-        ];
-
         $begin_end = isset($opt['filter_date']) && $opt['filter_date'] == 'BEGIN_END';
 
-        $begin_html = '';
-        $end_html = '';
-        $year_html = '';
-        if ($begin_end) {
-            $begin_html = Html::showDateTimeField(
-                "begin",
-                ['value' => $opt['begin'] ?? null, 'maybeempty' => false, 'display' => false],
-            );
-            $end_html = Html::showDateTimeField(
-                "end",
-                ['value' => $opt['end'] ?? null, 'maybeempty' => false, 'display' => false],
-            );
-        } else {
-            $annee_courante = date('Y', time());
-            if (isset($opt["year"])
-                && $opt["year"] > 0) {
-                $annee_courante = $opt["year"];
-            }
-            $year_html = Year::YearDropdown($annee_courante);
+        $annee_courante = date('Y', time());
+        if (isset($opt["year"])
+            && $opt["year"] > 0) {
+            $annee_courante = $opt["year"];
         }
-
-        $root = $CFG_GLPI['root_doc'] . '/plugins/mydashboard';
 
         return TemplateRenderer::getInstance()->render('@mydashboard/criteria_filter_date.html.twig', [
             'rand' => $rand,
             'count' => $count,
             'begin_end' => $begin_end,
-            'mode_html' => Dropdown::showFromArray("filter_date", $temp, $params),
-            'begin_html' => $begin_html,
-            'end_html' => $end_html,
-            'year_html' => $year_html,
-            'ajax_html' => Ajax::updateItemOnSelectEvent(
-                'dropdown_filter_date' . $rand,
-                "filter_date_crit$rand",
-                $root . "/ajax/dropdownUpdateDisplaydata.php",
-                ['value' => '__VALUE__'],
-                false,
-            ),
+            'modes' => $temp,
+            'mode' => $opt['filter_date'] ?? 'YEAR',
+            'begin' => $opt['begin'] ?? null,
+            'end' => $opt['end'] ?? null,
+            'year_name' => Year::$criteria_name,
+            'years' => Year::getYearChoices(),
+            'year' => $annee_courante,
+            'ajax_url' => $CFG_GLPI['root_doc'] . '/plugins/mydashboard/ajax/dropdownUpdateDisplaydata.php',
         ]);
     }
 

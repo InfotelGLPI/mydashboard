@@ -96,33 +96,15 @@ class Criteria
 
     public const OCSINVENTORYNG_IMPORTDATE = 10002;
 
-    /**
-     * Whether the session may read tickets beyond the ones it is an actor of.
-     *
-     * addCriteriasForQuery() bounds the entity of every widget query, never the actors, so a
-     * profile holding nothing but Ticket::READMY still saw the workload, the delays, the
-     * categories and the technician names of the whole entity as soon as it added a
-     * statistics widget. src/Reports/Ticket.php refuses its own lists on exactly this test;
-     * the statistics widgets are the same data, aggregated.
-     *
-     * CREATE used to be accepted here, which let a plain requester through: a self service
-     * profile carries CREATE and READMY, and READMY only ever reaches its own tickets. Being
-     * allowed to file a request is not being allowed to read aggregates over everyone else's,
-     * so only the two rights that actually widen reading past the current actor are kept.
-     * READGROUP is deliberately left out as well: these queries are bounded by entity, not by
-     * group, so granting it would hand the whole entity to a group member just the same.
-     * Indicators meant for requesters belong in dedicated widgets whose queries restrict the
-     * requester, the way Alert::getWidgetContentForItem() does for its own ticket list.
-     *
-     * @return bool
+    /*
+     * The ticket statistics widgets (Reports_Bar, Reports_Line, Reports_Map, Reports_Pie,
+     * Reports_Table 32/33, MyCustomGraph) are not bound to a ticket right. Showing them is an
+     * administrator's choice made per profile (ProfileAuthorizedWidget), typically to give
+     * a supervisor of the simplified interface the figures of the entity without the
+     * tickets themselves. What they show is aggregated and bounded by the entity scope of
+     * the session (see the fail-closed restriction of addCriteriasForQuery()); the links to
+     * the ticket lists still go through the core, which applies the ticket rights.
      */
-    public static function canReadTickets(): bool
-    {
-        return Session::haveRightsOr(
-            \Ticket::$rightname,
-            [\Ticket::READALL, \Ticket::READASSIGN],
-        );
-    }
 
     /**
      * @param $params
@@ -678,34 +660,25 @@ class Criteria
     }
 
     /**
-     * Get a form header, this form header permit to update data of the widget
-     * with parameters of this form
-     *
-     * @param int $widgetId
-     * @param       $gsid
-     * @param bool $onsubmit
-     *
-     * @param array $opt
-     *
-     * @return string , like '<form id=...>'
-     */
-    /**
      * Render one labelled widget of the criteria filter bar.
      *
-     * Every Criterias\*::getDisplayForm() used to inline this same span/spacing markup.
+     * The widget is printed by criteria_field.html.twig, which calls the dropdown helper
+     * of the core itself: its markup never travels as a string rendered with |raw.
      *
-     * @param string $label      criterion label, plain text
-     * @param string $input_html markup of a GLPI dropdown called with 'display' => false
-     * @param int    $count      number of criteria shown; above one they are stacked
+     * @param string                    $label     criterion label, plain text
+     * @param int                       $count     number of criteria shown; above one they are stacked
+     * @param array{0: string, 1: string} $widget    static method of the core printing the widget
+     * @param array                     $arguments arguments of that method
      *
      * @return string
      */
-    public static function getFieldHtml($label, $input_html, $count)
+    public static function getFieldHtml($label, $count, $widget, $arguments)
     {
         return TemplateRenderer::getInstance()->render('@mydashboard/criteria_field.html.twig', [
             'label' => $label,
-            'input_html' => $input_html,
             'count' => $count,
+            'widget' => $widget,
+            'arguments' => $arguments,
         ]);
     }
 
@@ -737,6 +710,18 @@ class Criteria
         ];
     }
 
+    /**
+     * Get a form header, this form header permit to update data of the widget
+     * with parameters of this form
+     *
+     * @param int $widgetId
+     * @param       $gsid
+     * @param bool $onsubmit
+     *
+     * @param array $opt
+     *
+     * @return string , like '<form id=...>'
+     */
     public static function getForm($widgetId, $default, $opt, $criterias, $onsubmit = false)
     {
         $gsid = Widget::getGsID($widgetId);
@@ -765,31 +750,16 @@ class Criteria
             }
         }
 
-        $refresh_js = sprintf(
-            "refreshWidgetByForm('%s','%s','%s');",
-            Widget::removeBackslashes($widgetId),
-            $gsid,
-            $formId,
-        );
-
+        // Toggling the panel and refreshing the widget are handled by
+        // public/scripts/criteria-form.js from the data-* attributes of the form.
         return TemplateRenderer::getInstance()->render('@mydashboard/criteria_form.html.twig', [
             'rand' => $rand,
             'form_id' => $formId,
+            'widget_id' => Widget::removeBackslashes($widgetId),
+            'gsid' => $gsid,
             'on_submit' => (bool) $onsubmit,
-            'refresh_js' => $refresh_js,
             'summary' => $summary,
             'fields_html' => $fields_html,
-            'submit_html' => \Html::submit(_x('button', 'Send'), [
-                'name' => 'submit',
-                'class' => 'btn btn-primary',
-            ]),
-            'toggle_script_html' => \Html::scriptBlock("
-                $(document).ready(function () {
-                    $('#plugin_mydashboard_add_criteria{$rand}').on('click', function (e) {
-                        $('#plugin_mydashboard_see_criteria{$rand}').width(300);
-                        $('#plugin_mydashboard_see_criteria{$rand}').toggle();
-                    });
-                });"),
         ]);
     }
 

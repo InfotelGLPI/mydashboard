@@ -28,6 +28,7 @@
 {# Criteria bar of a widget, and the container the chart library draws into. #}
 <div class="bt-row">
     <div class="{{ export ? 'bt-col-md-8' : 'bt-col-md-12' }} left">
+        {# raw: criteria form rendered by criteria_form.html.twig (Criteria::getForm()) #}
         {{ criteria_html|raw }}
     </div>
 

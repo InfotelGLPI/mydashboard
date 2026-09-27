@@ -25,35 +25,46 @@
  # --------------------------------------------------------------------------
  #}
 
-{# form_header_html / form_buttons_html open and close the <form> and its <table> #}
-{{ form_header_html|raw }}
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Language') }}</td>
-    <td>
-        {{ items_hidden_html|raw }}
-        {% if language_label is not null %}
-            {{ language_hidden_html|raw }}
-            {{ language_label }}
-        {% else %}
-            {{ language_dropdown_html|raw }}
-        {% endif %}
-    </td>
-    <td colspan="2">&nbsp;</td>
-</tr>
+{% block form_fields %}
+    {{ fields.hiddenField('itemtype', get_class(parent_item)) }}
+    {{ fields.hiddenField('items_id', parent_item.getID()) }}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Field') }}</td>
-    <td>
-        {% if field_label is not null %}
-            {{ field_hidden_html|raw }}
-            {{ field_label }}
-        {% else %}
-            <span id="span_fields" name="span_fields">{{ field_dropdown_html|raw }}</span>
-        {% endif %}
-    </td>
-    <td>{{ __('Value') }}</td>
-    <td>{{ value_textarea_html|raw }}</td>
-</tr>
+    {% if language_label is not null %}
+        {# Updating a translation only allows modifying its value #}
+        {{ fields.hiddenField('language', item.fields['language']) }}
+        {{ fields.readOnlyField('', language_label, __('Language'), field_options) }}
+    {% else %}
+        {{ fields.dropdownArrayField('language', session('glpilanguage'), languages, __('Language'), field_options) }}
+        {# Reloads the field list with the fields not yet translated in the chosen language #}
+        {% do call('Ajax::updateItemOnSelectEvent', [
+            'dropdown_language' ~ rand,
+            'span_fields' ~ rand,
+            fields_url,
+            {
+                'language': '__VALUE__',
+                'itemtype': get_class(parent_item),
+                'items_id': parent_item.getID(),
+            },
+        ]) %}
+    {% endif %}
 
-{{ form_buttons_html|raw }}
+    {% if field_label is not null %}
+        {{ fields.hiddenField('field', item.fields['field']) }}
+        {{ fields.readOnlyField('', field_label, __('Field'), field_options) }}
+    {% else %}
+        {% set field_dropdown %}
+            {{ fields.dropdownArrayField('field', '', field_choices, '', field_options|merge({
+                'used': used_fields,
+                'include_field': false,
+            })) }}
+        {% endset %}
+        {{ fields.ajaxField('span_fields' ~ rand, field_dropdown, __('Field'), field_options) }}
+    {% endif %}
+
+    {{ fields.textareaField('value', item.fields['value'], __('Value'), field_options|merge({
+        'rows': 3,
+    })) }}
+{% endblock %}

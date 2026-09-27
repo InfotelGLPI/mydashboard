@@ -75,23 +75,21 @@ class Reports_Table extends CommonGLPI
     {
         $widgets = [];
 
-        // Both tables count opened tickets per technician or per group over the whole
-        // entity, with no actor clause: that is a ticket read.
-        if (Criteria::canReadTickets()) {
-            $widgets[Menu::$HELPDESK] = [
+        // Ticket statistics, offered to the profiles the widgets are authorized for (see
+        // Criteria::addCriteriasForQuery()).
+        $widgets[Menu::$HELPDESK] = [
 
-                $this->getType() . "32" => [
-                    "title" => __("Number of opened tickets by technician and by status", "mydashboard"),
-                    "type" => Widget::$TABLE,
-                    "comment" => "",
-                ],
-                $this->getType() . "33" => [
-                    "title" => __("Number of opened tickets by group and by status", "mydashboard"),
-                    "type" => Widget::$TABLE,
-                    "comment" => "",
-                ],
-            ];
-        }
+            $this->getType() . "32" => [
+                "title" => __("Number of opened tickets by technician and by status", "mydashboard"),
+                "type" => Widget::$TABLE,
+                "comment" => "",
+            ],
+            $this->getType() . "33" => [
+                "title" => __("Number of opened tickets by group and by status", "mydashboard"),
+                "type" => Widget::$TABLE,
+                "comment" => "",
+            ],
+        ];
 
         // The directory lists the login, the name, both phone numbers and the mobile of
         // every user of the visible entities — a ready-made inventory of valid logins. That
@@ -501,13 +499,6 @@ class Reports_Table extends CommonGLPI
 
             case $this->getType() . "32":
 
-                // The widget list is cached in $_SESSION, so an entry declared under a
-                // previous profile survives a profile switch and can still be refreshed
-                // through ajax/refreshWidget.php: check the right again at the content.
-                if (!Criteria::canReadTickets()) {
-                    return false;
-                }
-
                 $name = 'NumberOfTicketsByTechnicianAndStatus';
 
                 $criterias = Criteria::getDefaultCriterias();
@@ -819,11 +810,6 @@ class Reports_Table extends CommonGLPI
                 break;
 
             case $this->getType() . "33":
-
-                // Same as case "32": the declaration is cached, the content is not.
-                if (!Criteria::canReadTickets()) {
-                    return false;
-                }
 
                 $name = 'NumberOfTicketsByGroupAndStatus';
 

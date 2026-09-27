@@ -32,7 +32,6 @@ namespace GlpiPlugin\Mydashboard;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Plugin;
@@ -103,23 +102,12 @@ class ProfileAuthorizedWidget extends CommonDBTM
             ];
         }
 
-        echo TemplateRenderer::getInstance()->render('@mydashboard/profileauthorizedwidget_form.html.twig', [
+        TemplateRenderer::getInstance()->display('@mydashboard/profileauthorizedwidget_form.html.twig', [
             'form_action' => PLUGIN_MYDASHBOARD_WEBDIR . '/front/profileauthorizedwidget.form.php',
+            'profiles_id' => $ID,
             'plugins' => $plugins,
-            'submit_html' => \Html::submit(_sx('button', 'Save'), ['name' => 'update',
-                'class' => 'btn btn-primary',
-            ]),
-            'hidden_html' => \Html::hidden("id", ['value' => $ID]),
-            'close_form_html' => \Html::closeForm(false),
-            // Delegated handler bound on the data attribute, replacing the inline onclick
-            // that used to carry the plugin name into an HTML attribute.
-            'toggle_script_html' => \Html::scriptBlock(
-                '$(document).on("click", "[data-md-toggle-all]", function () {'
-                . 'var $rows = $("." + $(this).data("md-toggle-all"));'
-                . 'var next = ($rows.find("select").val() === "0") ? "1" : "0";'
-                . '$rows.find("select").val(next).trigger("change");'
-                . '});',
-            ),
+            // "Authorize/Unauthorize all" of each plugin, bound on its data attribute
+            'script_url' => PLUGIN_MYDASHBOARD_WEBDIR . '/scripts/authorized-widgets.js',
         ]);
     }
 
@@ -159,12 +147,8 @@ class ProfileAuthorizedWidget extends CommonDBTM
                 'title' => $title,
                 'category' => $category,
                 'authorized' => $authorized,
-                'yesno_html' => Dropdown::showYesNo(
-                    $widgetId,
-                    $authorized ? 1 : 0,
-                    -1,
-                    ['display' => false],
-                ),
+                // Posted name read back by save()
+                'name' => $widgetId,
             ];
         }
 

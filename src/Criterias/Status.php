@@ -82,8 +82,9 @@ class Status
 
         return Criteria::getFieldHtml(
             __('Ticket') . " " . __('Status'),
-            self::statusDropdown($current_status),
             $count,
+            [Dropdown::class, 'showFromArray'],
+            [self::$criteria_name, Ticket::getAllStatusArray(), ['value' => $current_status]],
         );
     }
 
@@ -98,18 +99,4 @@ class Status
 
         return Criteria::addUrlCriteria(self::$criteria_number, 'equals', $params["params"][self::$criteria_name], 'AND');
     }
-
-    private static function statusDropdown(mixed $selected = null)
-    {
-        $opt = [
-            'value' => $selected,
-            'display' => false,
-        ];
-
-        $all_status = Ticket::getAllStatusArray();
-        $criteria_name = self::$criteria_name;
-
-        return Dropdown::showFromArray($criteria_name, $all_status, $opt);
-    }
-
 }

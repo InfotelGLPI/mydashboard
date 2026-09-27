@@ -191,9 +191,6 @@ class Datatable extends Module
      */
     public function getJSonDatas()
     {
-        //Use template coloration for datatables widget
-        $this->useTemplatesScript();
-
         //Headers
         $jsonData['aoColumns'] = $this->getTabNames();
         //If no headers is defined we must match number of element in a line and number of columns
@@ -253,15 +250,5 @@ class Datatable extends Module
             array_push($columns, "");
         }
         return $columns;
-    }
-
-    public function useTemplatesScript()
-    {
-        $scripts = [];
-        $scripts[] = "var liwidget = $('#" . $this->getWidgetId() . "');";
-        $scripts[] = "liwidget.find('table').removeClass('sDashboardTableView');";
-        $scripts[] = "liwidget.find('table').addClass('tab_cadre_fixe');";
-        $scripts[] = "liwidget.find('table').css('width','100%');";
-        $this->appendWidgetScripts($scripts);
     }
 }
