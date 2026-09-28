@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 07:37+0000\n"
+"POT-Creation-Date: 2026-09-28 08:05+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Diego Nobre <diego@koruma.com.br>, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/infotelGLPI/"
@@ -845,7 +845,7 @@ msgstr ""
 msgid "No scheduled maintenance"
 msgstr "Nenhuma Manutenção agendada"
 
-#: templates/menu_grid.html.twig:80
+#: templates/menu_grid.html.twig:76
 msgid "No widgets founded, please add widgets"
 msgstr "Nenhum widget criado, por favor, adicione widgets"
 
@@ -1540,7 +1540,7 @@ msgstr "Alertas de chamado de usuário"
 msgid "Value"
 msgstr ""
 
-#: templates/menu_grid.html.twig:79
+#: templates/menu_grid.html.twig:75
 msgid "Warning"
 msgstr "Atenção"
 

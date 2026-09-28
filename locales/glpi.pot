@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 07:37+0000\n"
+"POT-Creation-Date: 2026-09-28 08:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -831,7 +831,7 @@ msgstr ""
 msgid "No scheduled maintenance"
 msgstr ""
 
-#: templates/menu_grid.html.twig:80
+#: templates/menu_grid.html.twig:76
 msgid "No widgets founded, please add widgets"
 msgstr ""
 
@@ -1521,7 +1521,7 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: templates/menu_grid.html.twig:79
+#: templates/menu_grid.html.twig:75
 msgid "Warning"
 msgstr ""
 
