@@ -38,7 +38,12 @@ use Migration;
 
 class StockTicket extends CommonDBTM
 {
-    public function cronMydashboardInfotelUpdateStockTicket()
+    /**
+     * Store the stock of tickets of the previous month.
+     *
+     * @return string status message, displayed by the command line script
+     */
+    public function cronMydashboardInfotelUpdateStockTicket(): string
     {
         global $DB;
         $year  = date("Y");
@@ -61,11 +66,9 @@ class StockTicket extends CommonDBTM
         $iterator = $DB->request($criteria);
         foreach ($iterator as $data) {
             if ($data["count"] > 0) {
-                die("stock tickets of $year-$month is already filled");
+                return "stock tickets of $year-$month is already filled";
             }
         }
-        echo "fill table <glpi_plugin_mydashboard_stocktickets> with datas of $year-$month";
-        $nbdays     = date("t", mktime(0, 0, 0, $month, 1, $year));
 
         $is_deleted = ['glpi_tickets.is_deleted' => 0];
         //        $query      = "SELECT COUNT(*) as count,`glpi_tickets`.`entities_id` FROM `glpi_tickets`
@@ -151,6 +154,8 @@ class StockTicket extends CommonDBTM
                 );
             }
         }
+
+        return "fill table glpi_plugin_mydashboard_stocktickets with datas of $year-$month";
     }
 
 

@@ -45,7 +45,14 @@ class StockTicketIndicator extends CommonDBTM
     public const SOLVEDT           = 6;
     public const CLOSEDT           = 7;
 
-    public function cronMydashboardInfotelUpdateStockTicketIndicator($type = "week")
+    /**
+     * Store the ticket indicators of the previous week, or of the last five years with "all".
+     *
+     * @param string $type "week" or "all"
+     *
+     * @return string status message, displayed by the command line script
+     */
+    public function cronMydashboardInfotelUpdateStockTicketIndicator($type = "week"): string
     {
         global $DB;
 
@@ -90,11 +97,9 @@ class StockTicketIndicator extends CommonDBTM
             $iterator = $DB->request($criteria);
             foreach ($iterator as $data) {
                 if ($data["count"] > 0) {
-                    die("stock tickets of $year week $week is already filled");
+                    return "stock tickets of $year week $week is already filled";
                 }
             }
-            echo "fill table with datas of $year week $week";
-
             self::queryNewTickets($year, $week);
             self::queryDueTickets($year, $week);
             self::queryPendingTickets($year, $week);
@@ -102,7 +107,11 @@ class StockTicketIndicator extends CommonDBTM
             self::queryRequestTickets($year, $week);
             self::queryResolvedTickets($year, $week);
             self::queryClosedTickets($year, $week);
+
+            return "fill table glpi_plugin_mydashboard_stockticketindicators with datas of $year week $week";
         }
+
+        return "fill table glpi_plugin_mydashboard_stockticketindicators with datas of the last five years";
     }
 
 

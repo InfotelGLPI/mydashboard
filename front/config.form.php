@@ -48,12 +48,14 @@ if (Plugin::isPluginActive("mydashboard")) {
         ini_set("memory_limit", "-1");
         StockTicket::fillTableMydashboardStocktickets();
         StockTicket::fillTableMydashboardStockticketsGroup();
+        Session::addMessageAfterRedirect(__('Operation successful'));
         Html::back();
     } elseif (isset($_POST["reconstructIndicators"])) {
         ini_set("max_execution_time", "0");
         ini_set("memory_limit", "-1");
         $record = new StockTicketIndicator();
         $record->cronMydashboardInfotelUpdateStockTicketIndicator("all");
+        Session::addMessageAfterRedirect(__('Operation successful'));
         Html::back();
     } elseif (isset($_POST['update'])) {
         $config->check((int) ($_POST['id'] ?? 1), UPDATE, $_POST);

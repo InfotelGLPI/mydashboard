@@ -67,7 +67,7 @@ if (($mem > 0) && ($mem < (64 * 1024 * 1024))) {
 //Check if plugin is installed
 if (Plugin::isPluginActive("mydashboard")) {
     $record = new StockTicketIndicator();
-    $record->cronMydashboardInfotelUpdateStockTicketIndicator();
+    echo $record->cronMydashboardInfotelUpdateStockTicketIndicator() . PHP_EOL;
 } else {
     echo __('Plugin disabled', 'mydashboard');
     exit(1);
