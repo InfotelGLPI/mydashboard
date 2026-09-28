@@ -936,7 +936,10 @@ class Widget extends CommonDBTM
             'gsId' => $widgetindex,
             'saveUrl' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/state_save.php',
             'loadUrl' => PLUGIN_MYDASHBOARD_WEBDIR . '/ajax/state_load.php',
-            'order' => isset($opt['bSort']) ? [$opt['bSort']] : [],
+            // bSort is either a [column, direction] pair or false ("keep the SQL order"):
+            // a bare false in the DataTables order breaks both the cell lookup (tn/4) and
+            // the state save (e.slice is not a function).
+            'order' => isset($opt['bSort']) && is_array($opt['bSort']) ? [$opt['bSort']] : [],
             'columnDefs' => $opt['bDef'] ?? [],
             'language' => $menu->getJsLanguages('datatables'),
             'lengthMenuLabels' => [
