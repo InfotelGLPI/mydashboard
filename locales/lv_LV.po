@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 17:11+0000\n"
+"POT-Creation-Date: 2026-09-28 07:37+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Latvian (Latvia) (https://www.transifex.com/infotelGLPI/"
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Availables widgets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1845
+#: src/Reports/Reports_Bar.php:1840
 msgid "Average Satisfaction"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2875
+#: src/Reports/Reports_Bar.php:2870
 msgid "Computers number"
 msgstr ""
 
@@ -862,21 +862,21 @@ msgstr ""
 msgid "Not planned"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1286
+#: src/Reports/Reports_Bar.php:1281
 msgid "Not resolved tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2983 src/Reports/Reports_Pie.php:672
+#: src/Reports/Reports_Bar.php:2978 src/Reports/Reports_Pie.php:672
 #: src/Reports/Reports_Pie.php:688
 msgid "Not respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3087 src/Reports/Reports_Pie.php:531
+#: src/Reports/Reports_Bar.php:3082 src/Reports/Reports_Pie.php:531
 #: src/Reports/Reports_Pie.php:549
 msgid "Not respected TTR"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2783
+#: src/Reports/Reports_Bar.php:2778
 msgid "Not satisfy number"
 msgstr ""
 
@@ -936,7 +936,7 @@ msgstr ""
 msgid "Number of opened, closed, unplanned tickets by month"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2769
+#: src/Reports/Reports_Bar.php:2764
 msgid "Number of surveys answered"
 msgstr ""
 
@@ -989,7 +989,7 @@ msgid "Opened requests without assigned technicians"
 msgstr ""
 
 #: src/Reports/Reports_Line.php:624 src/Reports/Reports_Line.php:901
-#: src/Reports/Reports_Line.php:1268 src/Reports/Reports_Bar.php:1844
+#: src/Reports/Reports_Line.php:1268 src/Reports/Reports_Bar.php:1839
 #: src/Reports/Reports_Pie.php:1054 src/Reports/Reports_Pie.php:1057
 msgid "Opened tickets"
 msgstr ""
@@ -1011,11 +1011,11 @@ msgstr ""
 msgid "Pending tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2995
+#: src/Reports/Reports_Bar.php:2990
 msgid "Percent - Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3099
+#: src/Reports/Reports_Bar.php:3094
 msgid "Percent - Respected TTR"
 msgstr ""
 
@@ -1162,12 +1162,12 @@ msgstr ""
 msgid "Resolved / closed tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2989 src/Reports/Reports_Pie.php:677
+#: src/Reports/Reports_Bar.php:2984 src/Reports/Reports_Pie.php:677
 #: src/Reports/Reports_Pie.php:688
 msgid "Respected TTO"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:3093 src/Reports/Reports_Pie.php:536
+#: src/Reports/Reports_Bar.php:3088 src/Reports/Reports_Pie.php:536
 #: src/Reports/Reports_Pie.php:548
 msgid "Respected TTR"
 msgstr ""
@@ -1192,7 +1192,7 @@ msgstr ""
 msgid "Satisfaction average"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2777
+#: src/Reports/Reports_Bar.php:2772
 msgid "Satisfy number"
 msgstr ""
 
@@ -1282,7 +1282,7 @@ msgstr ""
 msgid "Solve delay and take into account of tickets"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2551
+#: src/Reports/Reports_Bar.php:2546
 msgid "Solve delay average (hour)"
 msgstr ""
 
@@ -1337,15 +1337,15 @@ msgstr ""
 msgid "Sum of ticket tasks duration by technicians"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2194
+#: src/Reports/Reports_Bar.php:2189
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2203
+#: src/Reports/Reports_Bar.php:2198
 msgid "Sum of tickets solved in less than a week"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2212
+#: src/Reports/Reports_Bar.php:2207
 msgid "Sum of tickets solved in more than a week"
 msgstr ""
 
@@ -1369,7 +1369,7 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2552
+#: src/Reports/Reports_Bar.php:2547
 msgid "Take into account average (hour)"
 msgstr ""
 
@@ -1433,7 +1433,7 @@ msgstr ""
 #: src/Reports/Reports_Line.php:1766 src/Reports/Reports_Line.php:1869
 #: src/Reports/Reports_Line.php:2005 src/Reports/Reports_Line.php:2151
 #: src/Reports/Reports_Bar.php:322 src/Reports/Reports_Bar.php:584
-#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1394
+#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1389
 msgid "Tickets number"
 msgstr ""
 
@@ -1494,19 +1494,19 @@ msgstr ""
 msgid "Top ten ticket requesters by month"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1587
+#: src/Reports/Reports_Bar.php:1582
 msgid "Trimester 1"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1654
+#: src/Reports/Reports_Bar.php:1649
 msgid "Trimester 2"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1716
+#: src/Reports/Reports_Bar.php:1711
 msgid "Trimester 3"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1779
+#: src/Reports/Reports_Bar.php:1774
 msgid "Trimester 4"
 msgstr ""
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 17:11+0000\n"
+"POT-Creation-Date: 2026-09-28 07:37+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -175,7 +175,7 @@ msgstr "ウィジェットの自動再読み込み"
 msgid "Availables widgets"
 msgstr "利用できるウィジェット"
 
-#: src/Reports/Reports_Bar.php:1845
+#: src/Reports/Reports_Bar.php:1840
 msgid "Average Satisfaction"
 msgstr "平均満足度"
 
@@ -263,7 +263,7 @@ msgstr "列の表示状態"
 msgid "Comment"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:2875
+#: src/Reports/Reports_Bar.php:2870
 msgid "Computers number"
 msgstr "コンピューター数"
 
@@ -852,21 +852,21 @@ msgstr "未インポートのコレクターメール"
 msgid "Not planned"
 msgstr "未計画"
 
-#: src/Reports/Reports_Bar.php:1286
+#: src/Reports/Reports_Bar.php:1281
 msgid "Not resolved tickets"
 msgstr "解決チケットなし"
 
-#: src/Reports/Reports_Bar.php:2983 src/Reports/Reports_Pie.php:672
+#: src/Reports/Reports_Bar.php:2978 src/Reports/Reports_Pie.php:672
 #: src/Reports/Reports_Pie.php:688
 msgid "Not respected TTO"
 msgstr "開始時間遅延"
 
-#: src/Reports/Reports_Bar.php:3087 src/Reports/Reports_Pie.php:531
+#: src/Reports/Reports_Bar.php:3082 src/Reports/Reports_Pie.php:531
 #: src/Reports/Reports_Pie.php:549
 msgid "Not respected TTR"
 msgstr "解決時間遅延"
 
-#: src/Reports/Reports_Bar.php:2783
+#: src/Reports/Reports_Bar.php:2778
 msgid "Not satisfy number"
 msgstr "不満数"
 
@@ -926,7 +926,7 @@ msgstr "月別対応中、終了、未計画チケット数"
 msgid "Number of opened, closed, unplanned tickets by month"
 msgstr "月別対応中、終了、未計画チケット数"
 
-#: src/Reports/Reports_Bar.php:2769
+#: src/Reports/Reports_Bar.php:2764
 msgid "Number of surveys answered"
 msgstr "回答アンケート数"
 
@@ -979,7 +979,7 @@ msgid "Opened requests without assigned technicians"
 msgstr "技術者が割り当てられていない進行中の要求"
 
 #: src/Reports/Reports_Line.php:624 src/Reports/Reports_Line.php:901
-#: src/Reports/Reports_Line.php:1268 src/Reports/Reports_Bar.php:1844
+#: src/Reports/Reports_Line.php:1268 src/Reports/Reports_Bar.php:1839
 #: src/Reports/Reports_Pie.php:1054 src/Reports/Reports_Pie.php:1057
 msgid "Opened tickets"
 msgstr "未処理チケット"
@@ -1001,11 +1001,11 @@ msgstr "パレット色"
 msgid "Pending tickets"
 msgstr "保留チケット"
 
-#: src/Reports/Reports_Bar.php:2995
+#: src/Reports/Reports_Bar.php:2990
 msgid "Percent - Respected TTO"
 msgstr "開始時間遵守率"
 
-#: src/Reports/Reports_Bar.php:3099
+#: src/Reports/Reports_Bar.php:3094
 msgid "Percent - Respected TTR"
 msgstr "解決時間遵守率"
 
@@ -1152,12 +1152,12 @@ msgstr "重要度が「最高」または「重要」の要求"
 msgid "Resolved / closed tickets"
 msgstr "解決・終了チケット数"
 
-#: src/Reports/Reports_Bar.php:2989 src/Reports/Reports_Pie.php:677
+#: src/Reports/Reports_Bar.php:2984 src/Reports/Reports_Pie.php:677
 #: src/Reports/Reports_Pie.php:688
 msgid "Respected TTO"
 msgstr "開始時間遵守"
 
-#: src/Reports/Reports_Bar.php:3093 src/Reports/Reports_Pie.php:536
+#: src/Reports/Reports_Bar.php:3088 src/Reports/Reports_Pie.php:536
 #: src/Reports/Reports_Pie.php:548
 msgid "Respected TTR"
 msgstr "解決時間遵守"
@@ -1182,7 +1182,7 @@ msgstr "SLA 要求警告"
 msgid "Satisfaction average"
 msgstr "平均満足度"
 
-#: src/Reports/Reports_Bar.php:2777
+#: src/Reports/Reports_Bar.php:2772
 msgid "Satisfy number"
 msgstr "満足数"
 
@@ -1270,7 +1270,7 @@ msgstr "_START_ ～ _END_ ( 全 _TOTAL_ 件 )"
 msgid "Solve delay and take into account of tickets"
 msgstr "チケットの遅延を解決し考慮する"
 
-#: src/Reports/Reports_Bar.php:2551
+#: src/Reports/Reports_Bar.php:2546
 msgid "Solve delay average (hour)"
 msgstr "平均遅延時間 ( 時間 )"
 
@@ -1321,15 +1321,15 @@ msgstr "技術者別総対応チケット数"
 msgid "Sum of ticket tasks duration by technicians"
 msgstr "技術者別総チケットタスク数"
 
-#: src/Reports/Reports_Bar.php:2194
+#: src/Reports/Reports_Bar.php:2189
 msgid "Sum of tickets solved in less than 24 hours"
 msgstr "24 時間以内に解決したチケット総数"
 
-#: src/Reports/Reports_Bar.php:2203
+#: src/Reports/Reports_Bar.php:2198
 msgid "Sum of tickets solved in less than a week"
 msgstr "1 週間以内に解決したチケット総数"
 
-#: src/Reports/Reports_Bar.php:2212
+#: src/Reports/Reports_Bar.php:2207
 msgid "Sum of tickets solved in more than a week"
 msgstr "解決に 1 週間以上要したチケット総数"
 
@@ -1353,7 +1353,7 @@ msgstr "表"
 msgid "Tag"
 msgstr "タグ"
 
-#: src/Reports/Reports_Bar.php:2552
+#: src/Reports/Reports_Bar.php:2547
 msgid "Take into account average (hour)"
 msgstr "平均チケット開始時間 ( 時間 )"
 
@@ -1415,7 +1415,7 @@ msgstr "遅延チケット"
 #: src/Reports/Reports_Line.php:1766 src/Reports/Reports_Line.php:1869
 #: src/Reports/Reports_Line.php:2005 src/Reports/Reports_Line.php:2151
 #: src/Reports/Reports_Bar.php:322 src/Reports/Reports_Bar.php:584
-#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1394
+#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1389
 msgid "Tickets number"
 msgstr "チケット数"
 
@@ -1476,19 +1476,19 @@ msgstr "チケット型別チケットカテゴリートップ 10"
 msgid "Top ten ticket requesters by month"
 msgstr "月別要求者トップ 10"
 
-#: src/Reports/Reports_Bar.php:1587
+#: src/Reports/Reports_Bar.php:1582
 msgid "Trimester 1"
 msgstr "☆★★★"
 
-#: src/Reports/Reports_Bar.php:1654
+#: src/Reports/Reports_Bar.php:1649
 msgid "Trimester 2"
 msgstr "☆☆★★"
 
-#: src/Reports/Reports_Bar.php:1716
+#: src/Reports/Reports_Bar.php:1711
 msgid "Trimester 3"
 msgstr "☆☆☆★"
 
-#: src/Reports/Reports_Bar.php:1779
+#: src/Reports/Reports_Bar.php:1774
 msgid "Trimester 4"
 msgstr "☆☆☆☆"
 
