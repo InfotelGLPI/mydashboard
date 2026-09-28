@@ -1098,7 +1098,6 @@ class Reports_Bar extends CommonDBTM
                     'SELECT' => [
                         new QueryExpression("CONCAT('< 1 Semaine') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
-                        new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin"),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_end"),
                     ],
@@ -1133,7 +1132,6 @@ class Reports_Bar extends CommonDBTM
                     'SELECT' => [
                         new QueryExpression("CONCAT('> 1 Semaine') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
-                        new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 WEEK as period_begin"),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_end"),
                     ],
@@ -1172,7 +1170,6 @@ class Reports_Bar extends CommonDBTM
                     'SELECT' => [
                         new QueryExpression("CONCAT('> 1 Mois') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
-                        new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 1 MONTH as period_begin"),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_end"),
                     ],
@@ -1210,7 +1207,6 @@ class Reports_Bar extends CommonDBTM
                     'SELECT' => [
                         new QueryExpression("CONCAT('> 3 Mois') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
-                        new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 3 MONTH as period_begin"),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end"),
                     ],
@@ -1247,7 +1243,6 @@ class Reports_Bar extends CommonDBTM
                     'SELECT' => [
                         new QueryExpression("CONCAT('> 6 Mois') Age"),
                         'COUNT' => 'glpi_tickets.id AS Total',
-                        new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($criteria_init, 'Percent')),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_begin"),
                         new QueryExpression("CURRENT_TIMESTAMP - INTERVAL 6 MONTH as period_end"),
                     ],
