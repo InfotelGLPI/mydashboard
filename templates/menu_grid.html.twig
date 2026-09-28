@@ -56,10 +56,6 @@
 <script src="{{ js_path(lib_dir ~ 'html2canvas.min.js', asset_options) }}"></script>
 <script src="{{ js_path(lib_dir ~ 'jspdf.umd.js', asset_options) }}"></script>
 
-{# Circles is not called by this plugin: the widgets other plugins contribute to the grid
-   are (servicecatalog renders indicator_circles_script.js.twig into it). #}
-<script src="{{ js_path(lib_dir ~ 'circles/circles.min.js', asset_options) }}"></script>
-
 <script type="module" src="{{ js_path('/plugins/mydashboard/scripts/widget-datatable.js', asset_options) }}"></script>
 <script type="module" src="{{ js_path('/plugins/mydashboard/scripts/mydashboard-grid.js', asset_options) }}"></script>
 <script type="module" src="{{ js_path('/plugins/mydashboard/scripts/report-link.js', asset_options) }}"></script>

@@ -22,7 +22,6 @@ in a manifest whose only purpose is security tracking is worse than the omission
 
 | Path | Library | Version | Licence | Upstream |
 | --- | --- | --- | --- | --- |
-| `circles/circles.min.js` | Circles | 0.0.6 | MIT | https://github.com/lugolabs/circles |
 | `countUp.min.js` | countUp.js | 1.9.3 | MIT | https://github.com/inorganik/countUp.js |
 | `countUp-jquery.js` | countUp.js jQuery adapter | 1.9.3 | MIT | https://github.com/inorganik/countUp.js |
 | `datatables/` | DataTables bundle: DataTables 2.3.7, Buttons 3.2.6, ColReorder 2.1.2, JSZip 3.10.1, pdfmake 0.2.7 | see components | MIT | https://datatables.net/download/ |
@@ -57,12 +56,9 @@ rendered by. The `.ui-sortable-*` and `.ui-state-disabled` rules of `css/mydashb
 went with it, together with `css/hideinfo.css`, `css/info.css` and
 `css/style_bootstrap_new.css`, which no code path loaded.
 
-`circles/` stays, even though this plugin never calls `Circles.create()` itself. The
-dashboard is a host: the widgets other plugins contribute are injected into its grid by
-AJAX, and servicecatalog renders `indicator_circles_script.js.twig` into it, which expects
-`Circles` on the page the host built. A library loaded by `Menu::loadDashboard()` serves
-the whole page, widgets included, so a search restricted to this plugin says nothing about
-whether one is needed.
+`circles/` was removed: its only consumer was the global statistics widget of
+servicecatalog, whose gauges are now ECharts ring gauges drawn by that plugin itself.
+Circles was abandoned upstream.
 
 `echarts/theme/tool/` was removed: it held the thumbnail generator upstream uses to
 build the theme gallery (a servable `thumb.html` plus six sample option files), belonged
