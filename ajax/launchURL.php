@@ -55,7 +55,8 @@ $link = '';
 
 $widget = $_POST["params"]["widget"] ?? '';
 
-if ($widget === "PluginOcsinventoryngDashboard1") {
+// ocsinventoryng is a third-party plugin that may be missing: guard the class to avoid a fatal error.
+if ($widget === "PluginOcsinventoryngDashboard1" && class_exists(Dashboard::class)) {
     $link = Dashboard::pluginOcsinventoryngDashboard1link($_POST);
 } else {
     $classes = [Reports_Bar::class, Reports_Pie::class, Reports_Line::class, Reports_Table::class, Reports_Funnel::class];

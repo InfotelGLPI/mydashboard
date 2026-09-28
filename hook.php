@@ -111,6 +111,9 @@ function plugin_mydashboard_uninstall()
     foreach (Profile::getAllRights(true) as $right) {
         $profileRight->deleteByCriteria(['name' => $right['field']]);
     }
+    // Written per profile by front/groupprofile.form.php as a plain flag, outside of
+    // getAllRights() (it is not a right of the profile matrix), so purged explicitly.
+    $profileRight->deleteByCriteria(['name' => 'plugin_mydashboard_groupprofile']);
 
     Profile::removeRightsFromSession();
 
