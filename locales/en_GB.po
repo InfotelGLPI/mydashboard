@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 08:05+0000\n"
+"POT-Creation-Date: 2026-09-28 10:34+0000\n"
 "PO-Revision-Date: 2020-07-20 14:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -31,7 +31,7 @@ msgstr "(filtered from _MAX_ total entries)"
 msgid "1 row selected"
 msgstr "1 row selected"
 
-#: src/Widget.php:944
+#: src/Widget.php:947
 msgid "10 rows"
 msgstr "10 rows"
 
@@ -39,7 +39,7 @@ msgstr "10 rows"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:945
+#: src/Widget.php:948
 msgid "25 rows"
 msgstr "25 rows"
 
@@ -47,11 +47,11 @@ msgstr "25 rows"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:943
+#: src/Widget.php:946
 msgid "5 rows"
 msgstr "5 rows"
 
-#: src/Widget.php:946
+#: src/Widget.php:949
 msgid "50 rows"
 msgstr "50 rows"
 
@@ -811,7 +811,7 @@ msgstr "No equipments founded"
 msgid "No impact"
 msgstr "No impact"
 
-#: src/Widget.php:1090 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2653
 msgid "No informations founded"
 msgstr "No informations founded"
 
@@ -819,7 +819,7 @@ msgstr "No informations founded"
 msgid "No matching records found"
 msgstr "No matching records found"
 
-#: src/Widget.php:1027 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "No problem detected"
 
@@ -831,7 +831,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1058 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2471
 msgid "No scheduled maintenance"
 msgstr "No scheduled maintenance"
 
@@ -1259,7 +1259,7 @@ msgstr "Setup stock widget"
 msgid "Show %d elements"
 msgstr "Show %d elements"
 
-#: src/Widget.php:947 src/Menu.php:582
+#: src/Widget.php:950 src/Menu.php:582
 msgid "Show all"
 msgstr "Show all"
 

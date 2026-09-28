@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 09:40+0000\n"
+"POT-Creation-Date: 2026-09-28 10:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 msgid "1 row selected"
 msgstr ""
 
-#: src/Widget.php:944
+#: src/Widget.php:947
 msgid "10 rows"
 msgstr ""
 
@@ -39,7 +39,7 @@ msgstr ""
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:945
+#: src/Widget.php:948
 msgid "25 rows"
 msgstr ""
 
@@ -47,11 +47,11 @@ msgstr ""
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:943
+#: src/Widget.php:946
 msgid "5 rows"
 msgstr ""
 
-#: src/Widget.php:946
+#: src/Widget.php:949
 msgid "50 rows"
 msgstr ""
 
@@ -807,7 +807,7 @@ msgstr ""
 msgid "No impact"
 msgstr ""
 
-#: src/Widget.php:1090 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2653
 msgid "No informations founded"
 msgstr ""
 
@@ -815,7 +815,7 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Widget.php:1027 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr ""
 
@@ -827,7 +827,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1058 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2471
 msgid "No scheduled maintenance"
 msgstr ""
 
@@ -1255,7 +1255,7 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Widget.php:947 src/Menu.php:582
+#: src/Widget.php:950 src/Menu.php:582
 msgid "Show all"
 msgstr ""
 

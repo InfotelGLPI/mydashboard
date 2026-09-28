@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 08:05+0000\n"
+"POT-Creation-Date: 2026-09-28 10:34+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2019\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/infotelGLPI/"
@@ -37,7 +37,7 @@ msgstr "(filtrováno z _MAX_ celkem položek)"
 msgid "1 row selected"
 msgstr "Vybrán jeden řádek"
 
-#: src/Widget.php:944
+#: src/Widget.php:947
 msgid "10 rows"
 msgstr "10 řádků"
 
@@ -45,7 +45,7 @@ msgstr "10 řádků"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:945
+#: src/Widget.php:948
 msgid "25 rows"
 msgstr "25 řádků"
 
@@ -53,11 +53,11 @@ msgstr "25 řádků"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:943
+#: src/Widget.php:946
 msgid "5 rows"
 msgstr "5 řádků"
 
-#: src/Widget.php:946
+#: src/Widget.php:949
 msgid "50 rows"
 msgstr "50 řádků"
 
@@ -823,7 +823,7 @@ msgstr "Nebylo nalezeno žádné vybavení"
 msgid "No impact"
 msgstr "Bez dopadu"
 
-#: src/Widget.php:1090 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2653
 msgid "No informations founded"
 msgstr "Nebyly nalezeny žádné informace"
 
@@ -831,7 +831,7 @@ msgstr "Nebyly nalezeny žádné informace"
 msgid "No matching records found"
 msgstr "Nenalezeny žádné odpovídající záznamy"
 
-#: src/Widget.php:1027 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "Nebyl zjištěn žádný problém"
 
@@ -843,7 +843,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1058 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2471
 msgid "No scheduled maintenance"
 msgstr "Žádná naplánovaná údržba"
 
@@ -1273,7 +1273,7 @@ msgstr "Nastavit ovládací prvek zásob"
 msgid "Show %d elements"
 msgstr "Zobrazit %d prvků"
 
-#: src/Widget.php:947 src/Menu.php:582
+#: src/Widget.php:950 src/Menu.php:582
 msgid "Show all"
 msgstr "Zobrazit vše"
 

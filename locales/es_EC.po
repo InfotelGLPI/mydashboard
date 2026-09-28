@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 08:05+0000\n"
+"POT-Creation-Date: 2026-09-28 10:34+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -36,7 +36,7 @@ msgstr "(filtrado de _MAX_ entradas totales)"
 msgid "1 row selected"
 msgstr "1 fila seleccionada"
 
-#: src/Widget.php:944
+#: src/Widget.php:947
 msgid "10 rows"
 msgstr "10 filas"
 
@@ -44,7 +44,7 @@ msgstr "10 filas"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:945
+#: src/Widget.php:948
 msgid "25 rows"
 msgstr "25 filas"
 
@@ -52,11 +52,11 @@ msgstr "25 filas"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:943
+#: src/Widget.php:946
 msgid "5 rows"
 msgstr "5 filas"
 
-#: src/Widget.php:946
+#: src/Widget.php:949
 msgid "50 rows"
 msgstr "50 filas"
 
@@ -819,7 +819,7 @@ msgstr "No se encontraron equipos"
 msgid "No impact"
 msgstr "Sin impacto"
 
-#: src/Widget.php:1090 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2653
 msgid "No informations founded"
 msgstr "No se encontró información"
 
@@ -827,7 +827,7 @@ msgstr "No se encontró información"
 msgid "No matching records found"
 msgstr "No se encontraron registros coincidentes"
 
-#: src/Widget.php:1027 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "No se ha detectado ningún problema"
 
@@ -839,7 +839,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1058 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2471
 msgid "No scheduled maintenance"
 msgstr "Sin mantenimiento programado"
 
@@ -1268,7 +1268,7 @@ msgstr "Configurar widget de stock"
 msgid "Show %d elements"
 msgstr "Mostrar %d  elementos"
 
-#: src/Widget.php:947 src/Menu.php:582
+#: src/Widget.php:950 src/Menu.php:582
 msgid "Show all"
 msgstr "Ver todo"
 

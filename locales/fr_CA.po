@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 08:05+0000\n"
+"POT-Creation-Date: 2026-09-28 10:34+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Tiago Graça, 2022\n"
 "Language-Team: French (Canada) (https://www.transifex.com/infotelGLPI/"
@@ -36,7 +36,7 @@ msgstr "(filtré depuis un total de _MAX_ entrées)"
 msgid "1 row selected"
 msgstr "1 ligne sélectionnée"
 
-#: src/Widget.php:944
+#: src/Widget.php:947
 msgid "10 rows"
 msgstr "10 lignes"
 
@@ -44,7 +44,7 @@ msgstr "10 lignes"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:945
+#: src/Widget.php:948
 msgid "25 rows"
 msgstr "25 lignes"
 
@@ -52,11 +52,11 @@ msgstr "25 lignes"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:943
+#: src/Widget.php:946
 msgid "5 rows"
 msgstr "5 lignes"
 
-#: src/Widget.php:946
+#: src/Widget.php:949
 msgid "50 rows"
 msgstr "50 lignes"
 
@@ -820,7 +820,7 @@ msgstr "Aucun équipement trouvé"
 msgid "No impact"
 msgstr "Pas d'impact"
 
-#: src/Widget.php:1090 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2653
 msgid "No informations founded"
 msgstr "Pas d'informations trouvées"
 
@@ -828,7 +828,7 @@ msgstr "Pas d'informations trouvées"
 msgid "No matching records found"
 msgstr "Pas de résultats trouvés"
 
-#: src/Widget.php:1027 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "Pas de problème détecté"
 
@@ -840,7 +840,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1058 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2471
 msgid "No scheduled maintenance"
 msgstr "Pas de maintenance planifiée prévue"
 
@@ -1268,7 +1268,7 @@ msgstr "Configuration du widget de stock "
 msgid "Show %d elements"
 msgstr "Voir %d éléments"
 
-#: src/Widget.php:947 src/Menu.php:582
+#: src/Widget.php:950 src/Menu.php:582
 msgid "Show all"
 msgstr "Voir tout"
 

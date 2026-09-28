@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 08:05+0000\n"
+"POT-Creation-Date: 2026-09-28 10:34+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -35,7 +35,7 @@ msgstr "( 全 _MAX_ 件からフィルター )"
 msgid "1 row selected"
 msgstr "1 行選択"
 
-#: src/Widget.php:944
+#: src/Widget.php:947
 msgid "10 rows"
 msgstr "10 行"
 
@@ -43,7 +43,7 @@ msgstr "10 行"
 msgid "2-4 years"
 msgstr "2 ～ 4 年"
 
-#: src/Widget.php:945
+#: src/Widget.php:948
 msgid "25 rows"
 msgstr "25 行"
 
@@ -51,11 +51,11 @@ msgstr "25 行"
 msgid "4-6 years"
 msgstr "4 ～ 6 年"
 
-#: src/Widget.php:943
+#: src/Widget.php:946
 msgid "5 rows"
 msgstr "5 行"
 
-#: src/Widget.php:946
+#: src/Widget.php:949
 msgid "50 rows"
 msgstr "50 行"
 
@@ -807,7 +807,7 @@ msgstr "機器は見つかりませんでした"
 msgid "No impact"
 msgstr "影響なし"
 
-#: src/Widget.php:1090 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2653
 msgid "No informations founded"
 msgstr "情報はありません"
 
@@ -815,7 +815,7 @@ msgstr "情報はありません"
 msgid "No matching records found"
 msgstr "一致する記録が見つかりません"
 
-#: src/Widget.php:1027 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "問題ありません"
 
@@ -827,7 +827,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1058 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2471
 msgid "No scheduled maintenance"
 msgstr "メンテナンス スケジュールなし"
 
@@ -1254,7 +1254,7 @@ msgstr "在庫ウィジェットの設定"
 msgid "Show %d elements"
 msgstr "%d 件の要素を表示"
 
-#: src/Widget.php:947 src/Menu.php:582
+#: src/Widget.php:950 src/Menu.php:582
 msgid "Show all"
 msgstr "すべて表示"
 
