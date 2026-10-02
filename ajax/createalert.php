@@ -56,10 +56,14 @@ if (isset($_POST['itemtype'])) {
             // copying its data and updating it: this branch updates the event, so
             // require UPDATE. can() also loads the record into $item->fields.
             if ($item->can($_POST['items_id'], UPDATE)) {
-                $reminder     = new Reminder();
-                $reminders_id = $reminder->add(['name'     => $item->fields['name'],
+                $reminder       = new Reminder();
+                $reminder_input = ['name'     => $item->fields['name'],
                     'text'     => $item->fields['comment'],
-                    'users_id' => $_SESSION['glpiID']]);
+                    'users_id' => $_SESSION['glpiID']];
+                // The alert is carried by a reminder of the caller: the core right to create
+                // one applies, whatever the plugin right
+                $reminder->check(-1, CREATE, $reminder_input);
+                $reminders_id = $reminder->add($reminder_input);
 
                 $item->update(['id'           => $_POST['items_id'],
                     'reminders_id' => $reminders_id]);
@@ -70,10 +74,12 @@ if (isset($_POST['itemtype'])) {
             // Enforce access control on the source item (global right + entity) before
             // copying its name/content into a reminder. can() also loads $item->fields.
             if ($item->can($_POST['items_id'], READ)) {
-                $reminder = new Reminder();
-                $reminders_id = $reminder->add(['name' => $item->fields['name'],
+                $reminder       = new Reminder();
+                $reminder_input = ['name' => $item->fields['name'],
                     'text' => $item->fields['content'],
-                    'users_id' => $_SESSION['glpiID']]);
+                    'users_id' => $_SESSION['glpiID']];
+                $reminder->check(-1, CREATE, $reminder_input);
+                $reminders_id = $reminder->add($reminder_input);
                 $alert = new ItilAlert();
                 $alert->add(['items_id' => $_POST['items_id'],
                     'itemtype' => $_POST['itemtype'],
@@ -87,10 +93,12 @@ if (isset($_POST['itemtype'])) {
             if ($item->can($_POST['items_id'], READ)) {
                 $name = method_exists($item, "getNameAlert") ? $item->getNameAlert() : $item->fields["name"];
                 $content = method_exists($item, "getContentAlert") ? $item->getContentAlert() : $item->fields["content"];
-                $reminder     = new Reminder();
-                $reminders_id = $reminder->add(['name'     => $name,
+                $reminder       = new Reminder();
+                $reminder_input = ['name'     => $name,
                     'text'     => $content,
-                    'users_id' => $_SESSION['glpiID']]);
+                    'users_id' => $_SESSION['glpiID']];
+                $reminder->check(-1, CREATE, $reminder_input);
+                $reminders_id = $reminder->add($reminder_input);
                 $alert        = new ItilAlert();
                 $alert->add(['items_id'  => $_POST['items_id'],
                     'itemtype'  => $_POST['itemtype'],

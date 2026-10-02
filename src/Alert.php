@@ -111,6 +111,38 @@ class Alert extends CommonDBTM
     }
 
     /**
+     * The reminder an alert broadcasts is a posted id, and a public alert shows its title to
+     * anonymous visitors of the login page: check() on the alert row vets the plugin right,
+     * not that value. Alerting is spreading the reminder, so it takes UPDATE on it, as the
+     * reminder form of the core requires to change its visibility.
+     */
+    public function prepareInputForAdd($input)
+    {
+        $reminders_id = (int) ($input['reminders_id'] ?? 0);
+        $reminder     = new \Reminder();
+        if ($reminders_id <= 0 || !$reminder->can($reminders_id, UPDATE)) {
+            Session::addMessageAfterRedirect(__('You are not allowed to do this action'), false, ERROR);
+            return false;
+        }
+
+        return parent::prepareInputForAdd($input);
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // An alert stays bound to the reminder it was created for
+        unset($input['reminders_id']);
+
+        $reminder = new \Reminder();
+        if (!$reminder->can((int) ($this->fields['reminders_id'] ?? 0), UPDATE)) {
+            Session::addMessageAfterRedirect(__('You are not allowed to do this action'), false, ERROR);
+            return false;
+        }
+
+        return parent::prepareInputForUpdate($input);
+    }
+
+    /**
      * @return string
      */
     public static function getIcon()
@@ -2522,8 +2554,14 @@ class Alert extends CommonDBTM
                 return;
             }
 
+            // Second, independent barrier: the visibility query above is the only other
+            // control on this endpoint, and a regression in it would reopen every reminder.
+            // haveVisibilityAccess() rather than can(READ): the ticker is shown to users
+            // holding no reminder right at all, which canViewItem() requires.
             $note = new \Reminder();
-            $note->getFromDB($id);
+            if (!$note->getFromDB($id) || !$note->haveVisibilityAccess()) {
+                return;
+            }
 
             $color = null;
             if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
@@ -2965,6 +3003,11 @@ class Alert extends CommonDBTM
      */
     private function showReminderForm(\Reminder $item)
     {
+        // Same rule as prepareInputForAdd(): only who may edit the reminder may alert on it
+        if (!$item->can($item->getID(), UPDATE)) {
+            return;
+        }
+
         $reminders_id = $item->getID();
         $this->getFromDBByCrit(['reminders_id' => $reminders_id]);
 

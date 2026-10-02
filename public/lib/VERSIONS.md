@@ -34,6 +34,12 @@ in a manifest whose only purpose is security tracking is worse than the omission
 | `jquery-fullscreen-plugin/` | jQuery Fullscreen Plugin | 1.1.4 | MIT | https://github.com/kayahr/jquery-fullscreen-plugin |
 | `jspdf.umd.js` | jsPDF | 4.2.1 | MIT | https://github.com/parallax/jsPDF |
 
+`dompurify` appears in `package-lock.json` as an optional dependency of jsPDF, but it is
+**not shipped**: the UMD bundle loads it at run time through `require("dompurify")` only
+for `html()` rendering, and nothing in `public/lib/` provides it. It is kept in the lock so
+that `npm audit` still reports on it; `npm audit fix` bumps it there (3.4.16 on
+2026-10-02, GHSA-p98j-92pf-mc4p).
+
 `echarts/echarts.js` was removed: the engine now comes from the core, which serves it
 at `lib/echarts.js` and is what `Menu::loadDashboard()` loads. A bundle of our own used to
 be registered on every page of the central interface, and since the scripts of a plugin
