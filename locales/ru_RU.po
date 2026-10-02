@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 10:34+0000\n"
+"POT-Creation-Date: 2026-10-02 10:15+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Anton S. <coder.root@gmail.com>, 2019\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/infotelGLPI/"
@@ -98,7 +98,7 @@ msgstr ""
 msgid "Age pyramid"
 msgstr ""
 
-#: src/Alert.php:2975 templates/alert_form.html.twig:33
+#: src/Alert.php:3018 templates/alert_form.html.twig:33
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] ""
@@ -114,7 +114,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Alert.php:3153
+#: src/Alert.php:3196
 msgid ""
 "Alert is not properly configured or is not reachable (or exceeded the "
 "timeout)"
@@ -132,7 +132,7 @@ msgstr ""
 msgid "All bar charts"
 msgstr ""
 
-#: src/Alert.php:2976
+#: src/Alert.php:3019
 msgid "All categories"
 msgstr ""
 
@@ -172,7 +172,7 @@ msgstr ""
 msgid "Authorized widgets"
 msgstr ""
 
-#: src/Alert.php:208
+#: src/Alert.php:240
 msgid "Automatic actions in error"
 msgstr "Автоматические действия по ошибке"
 
@@ -234,7 +234,7 @@ msgstr "Изменения в состоянии ожидания"
 msgid "Changes to be processed"
 msgstr "Изменения, подлежащие обработке"
 
-#: src/Alert.php:205 src/Alert.php:544
+#: src/Alert.php:237 src/Alert.php:576
 msgid "Check if GLPI have no problem"
 msgstr "Проверьте, нет ли проблем с GLPI"
 
@@ -368,27 +368,27 @@ msgstr ""
 msgid "Display Tickets by location (Latitude / Longitude)"
 msgstr ""
 
-#: src/Alert.php:241 src/Alert.php:2275
+#: src/Alert.php:273 src/Alert.php:2307
 msgid "Display alerts for SLA of Incidents tickets"
 msgstr ""
 
-#: src/Alert.php:251 src/Alert.php:2278
+#: src/Alert.php:283 src/Alert.php:2310
 msgid "Display alerts for SLA of Requests tickets"
 msgstr ""
 
-#: src/Alert.php:236 src/Alert.php:1662
+#: src/Alert.php:268 src/Alert.php:1694
 msgid "Display alerts for incidents and problems"
 msgstr ""
 
-#: src/Alert.php:223
+#: src/Alert.php:255
 msgid "Display alerts for inventory stocks"
 msgstr ""
 
-#: src/Alert.php:256 src/Alert.php:1665
+#: src/Alert.php:288 src/Alert.php:1697
 msgid "Display alerts for requests"
 msgstr ""
 
-#: src/Alert.php:210
+#: src/Alert.php:242
 msgid "Display automatic actions in error"
 msgstr ""
 
@@ -406,7 +406,7 @@ msgid ""
 "tasks)"
 msgstr ""
 
-#: src/Alert.php:215
+#: src/Alert.php:247
 msgid "Display of mails which are not imported"
 msgstr "Отображение писем, которые не импортируются"
 
@@ -426,7 +426,7 @@ msgstr ""
 msgid "Display percent of solution types for tickets"
 msgstr ""
 
-#: src/Alert.php:246
+#: src/Alert.php:278
 msgid "Display tickets where last modification is a user action"
 msgstr ""
 "Показать тикеты, в которых последнее изменение является действием "
@@ -444,7 +444,7 @@ msgstr ""
 msgid "Display unpublished articles of Knowbase"
 msgstr ""
 
-#: src/Alert.php:228
+#: src/Alert.php:260
 msgid "Display your equipments"
 msgstr ""
 
@@ -528,7 +528,7 @@ msgstr ""
 msgid "Fullscreen"
 msgstr ""
 
-#: src/Alert.php:203 src/Alert.php:543
+#: src/Alert.php:235 src/Alert.php:575
 msgid "GLPI Status"
 msgstr "GLPI Статус"
 
@@ -536,7 +536,7 @@ msgstr "GLPI Статус"
 msgid "GLPI admin grid"
 msgstr "Админ GLPI сетка"
 
-#: src/Alert.php:3146
+#: src/Alert.php:3189
 msgid "GLPI is OK"
 msgstr "GLPI в порядке"
 
@@ -552,11 +552,11 @@ msgstr "Глобально"
 msgid "Global filter"
 msgstr ""
 
-#: src/Alert.php:264 src/Alert.php:3765
+#: src/Alert.php:296 src/Alert.php:3808
 msgid "Global indicators"
 msgstr ""
 
-#: src/Alert.php:269 src/Alert.php:3766
+#: src/Alert.php:301 src/Alert.php:3809
 msgid "Global indicators by week"
 msgstr ""
 
@@ -576,7 +576,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:949 src/Alert.php:591
+#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:949 src/Alert.php:623
 msgid "ID and priority"
 msgstr "ID и приоритет"
 
@@ -596,31 +596,31 @@ msgstr ""
 msgid "Incidents"
 msgstr "Инциденты"
 
-#: src/Alert.php:234 src/Alert.php:1661
+#: src/Alert.php:266 src/Alert.php:1693
 msgid "Incidents alerts"
 msgstr "Оповещения об инцидентах"
 
-#: src/Alert.php:3571 src/Alert.php:3795
+#: src/Alert.php:3614 src/Alert.php:3838
 msgid "Incidents in progress"
 msgstr ""
 
-#: src/Alert.php:2199
+#: src/Alert.php:2231
 msgid "Incidents where time to own is exceeded"
 msgstr "Инциденты, в которых превышено время владения"
 
-#: src/Alert.php:2068
+#: src/Alert.php:2100
 msgid "Incidents where time to own will be exceeded"
 msgstr ""
 
-#: src/Alert.php:2265
+#: src/Alert.php:2297
 msgid "Incidents where time to resolve is exceeded"
 msgstr "Инциденты, в которых превышено время разрешения"
 
-#: src/Alert.php:2133
+#: src/Alert.php:2165
 msgid "Incidents where time to resolve will be exceeded"
 msgstr "Инциденты, в которых время для разрешения будет превышено"
 
-#: src/Alert.php:1603
+#: src/Alert.php:1635
 msgid "Incidents with very high or major priority"
 msgstr "Инциденты с очень высоким или главным приоритетом"
 
@@ -628,7 +628,7 @@ msgstr "Инциденты с очень высоким или главным п
 msgid "Indicators"
 msgstr ""
 
-#: src/Config.php:321 src/Config.php:518 src/Alert.php:198 src/Alert.php:3013
+#: src/Config.php:321 src/Config.php:518 src/Alert.php:230 src/Alert.php:3056
 msgid "Information"
 msgid_plural "Informations"
 msgstr[0] ""
@@ -648,7 +648,7 @@ msgstr ""
 msgid "Inventory admin grid"
 msgstr "Сетка администратора инвентаризации"
 
-#: src/Alert.php:221
+#: src/Alert.php:253
 msgid "Inventory stock alerts"
 msgstr ""
 
@@ -767,8 +767,8 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: src/ItilAlert.php:92 src/Config.php:319 src/Config.php:516 src/Alert.php:188
-#: src/Alert.php:3085
+#: src/ItilAlert.php:92 src/Config.php:319 src/Config.php:516 src/Alert.php:220
+#: src/Alert.php:3128
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] ""
@@ -776,20 +776,20 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Alert.php:682
+#: src/Alert.php:714
 msgid "New document"
 msgstr "Новый документ"
 
-#: src/Alert.php:1479
+#: src/Alert.php:1511
 msgid "New incidents"
 msgstr "Новые инциденты"
 
-#: src/Alert.php:1480
+#: src/Alert.php:1512
 msgid "New requests"
 msgstr ""
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1509 src/Alert.php:3399
-#: src/Alert.php:3786
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1509 src/Alert.php:3442
+#: src/Alert.php:3829
 msgid "New tickets"
 msgstr ""
 
@@ -821,11 +821,11 @@ msgstr ""
 msgid "No equipments founded"
 msgstr ""
 
-#: src/Alert.php:3016
+#: src/Alert.php:3059
 msgid "No impact"
 msgstr "Не влияет"
 
-#: src/Widget.php:1093 src/Alert.php:2653
+#: src/Widget.php:1093 src/Alert.php:2691
 msgid "No informations founded"
 msgstr ""
 
@@ -833,7 +833,7 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Widget.php:1030 src/Alert.php:2790 templates/alert_summary.html.twig:56
+#: src/Widget.php:1030 src/Alert.php:2828 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "Проблема не обнаружена"
 
@@ -845,7 +845,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1061 src/Alert.php:2471
+#: src/Widget.php:1061 src/Alert.php:2503
 msgid "No scheduled maintenance"
 msgstr "Не плановое обслуживание"
 
@@ -861,7 +861,7 @@ msgstr "Недопустимый запрос SQL SELECT"
 msgid "Not an array"
 msgstr ""
 
-#: src/Alert.php:213
+#: src/Alert.php:245
 msgid "Not imported mails in collectors"
 msgstr "Не импортированные письма в коллекторы"
 
@@ -988,11 +988,11 @@ msgstr ""
 msgid "OpenStreetMap - Opened tickets by location"
 msgstr "OpenStreetMap - Открытые тикеты по местоположению"
 
-#: src/Alert.php:1541
+#: src/Alert.php:1573
 msgid "Opened incidents without assigned technicians"
 msgstr ""
 
-#: src/Alert.php:1542
+#: src/Alert.php:1574
 msgid "Opened requests without assigned technicians"
 msgstr ""
 
@@ -1015,7 +1015,7 @@ msgstr ""
 msgid "Palette color"
 msgstr ""
 
-#: src/Alert.php:3504 src/Alert.php:3792
+#: src/Alert.php:3547 src/Alert.php:3835
 msgid "Pending tickets"
 msgstr ""
 
@@ -1065,11 +1065,11 @@ msgstr ""
 msgid "Problem followup"
 msgstr ""
 
-#: src/Alert.php:3140
+#: src/Alert.php:3183
 msgid "Problem with GLPI"
 msgstr "Проблема с GLPI"
 
-#: src/Alert.php:1643
+#: src/Alert.php:1675
 msgid "Problems with very high or major priority"
 msgstr "Проблемы с очень высоким или главным приоритетом"
 
@@ -1138,31 +1138,31 @@ msgstr ""
 msgid "Requests"
 msgstr "Запросы"
 
-#: src/Alert.php:254 src/Alert.php:1664
+#: src/Alert.php:286 src/Alert.php:1696
 msgid "Requests alerts"
 msgstr ""
 
-#: src/Alert.php:3638 src/Alert.php:3798
+#: src/Alert.php:3681 src/Alert.php:3841
 msgid "Requests in progress"
 msgstr ""
 
-#: src/Alert.php:2200
+#: src/Alert.php:2232
 msgid "Requests where time to own is exceeded"
 msgstr ""
 
-#: src/Alert.php:2069
+#: src/Alert.php:2101
 msgid "Requests where time to own will be exceeded"
 msgstr ""
 
-#: src/Alert.php:2266
+#: src/Alert.php:2298
 msgid "Requests where time to resolve is exceeded"
 msgstr ""
 
-#: src/Alert.php:2134
+#: src/Alert.php:2166
 msgid "Requests where time to resolve will be exceeded"
 msgstr ""
 
-#: src/Alert.php:1604
+#: src/Alert.php:1636
 msgid "Requests with very high or major priority"
 msgstr ""
 
@@ -1188,11 +1188,11 @@ msgstr ""
 msgid "Rights management"
 msgstr ""
 
-#: src/Alert.php:239 src/Alert.php:2274
+#: src/Alert.php:271 src/Alert.php:2306
 msgid "SLA Incidents alerts"
 msgstr ""
 
-#: src/Alert.php:249 src/Alert.php:2277
+#: src/Alert.php:281 src/Alert.php:2309
 msgid "SLA Requests alerts"
 msgstr ""
 
@@ -1221,7 +1221,7 @@ msgstr ""
 msgid "Save grid"
 msgstr "Сохранить сетку"
 
-#: src/Config.php:320 src/Config.php:517 src/Alert.php:193 src/Alert.php:3012
+#: src/Config.php:320 src/Config.php:517 src/Alert.php:225 src/Alert.php:3055
 msgid "Scheduled maintenance"
 msgid_plural "Scheduled maintenances"
 msgstr[0] ""
@@ -1241,15 +1241,15 @@ msgstr ""
 msgid "See edit mode"
 msgstr ""
 
-#: src/Alert.php:200
+#: src/Alert.php:232
 msgid "See informations block"
 msgstr ""
 
-#: src/Alert.php:190
+#: src/Alert.php:222
 msgid "See network alert block"
 msgstr ""
 
-#: src/Alert.php:195
+#: src/Alert.php:227
 msgid "See scheduled maintenances information block"
 msgstr ""
 
@@ -1423,7 +1423,7 @@ msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
 
-#: src/Alert.php:3740
+#: src/Alert.php:3783
 msgid "Ticket closed"
 msgstr ""
 
@@ -1432,11 +1432,11 @@ msgstr ""
 msgid "Ticket followup"
 msgstr ""
 
-#: src/Alert.php:3806
+#: src/Alert.php:3849
 msgid "Tickets closed"
 msgstr ""
 
-#: src/Alert.php:3455 src/Alert.php:3789
+#: src/Alert.php:3498 src/Alert.php:3832
 msgid "Tickets late"
 msgstr ""
 
@@ -1457,7 +1457,7 @@ msgstr ""
 msgid "Tickets solution types evolution"
 msgstr ""
 
-#: src/Alert.php:3689 src/Alert.php:3801
+#: src/Alert.php:3732 src/Alert.php:3844
 msgid "Tickets solved"
 msgstr ""
 
@@ -1538,7 +1538,7 @@ msgstr "Обновить все виджеты"
 msgid "Use profile group"
 msgstr ""
 
-#: src/Alert.php:244
+#: src/Alert.php:276
 msgid "User ticket alerts"
 msgstr "Оповещения пользователей о заявках"
 
@@ -1580,7 +1580,7 @@ msgstr "Год"
 msgid "Year to date"
 msgstr ""
 
-#: src/Alert.php:226 templates/widget_equipments.html.twig:31
+#: src/Alert.php:258 templates/widget_equipments.html.twig:31
 msgid "Your equipments"
 msgstr ""
 
