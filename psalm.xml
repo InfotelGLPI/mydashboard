@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <psalm
+    noCache="true"
     runTaintAnalysis="true"
     errorBaseline="psalm-baseline.xml"
 >
