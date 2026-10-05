@@ -361,7 +361,7 @@ class ConfigTranslation extends CommonDBChild
                 ),
             ],
             [
-                1 => 1,
+                new QueryExpression('true'),
             ],
         );
     }

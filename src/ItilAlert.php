@@ -157,7 +157,7 @@ class ItilAlert extends CommonDBTM
                     'itemtype' => 'Problem',
                 ],
                 [
-                    1 => 1,
+                    new \Glpi\DBAL\QueryExpression('true'),
                 ],
             );
         }

@@ -166,7 +166,7 @@ class StockTicket extends CommonDBTM
         ini_set("memory_limit", "-1");
         ini_set("max_execution_time", "0");
 
-        $DB->delete(self::getTable(), [1]);
+        $DB->delete(self::getTable(), [new QueryExpression('true')]);
 
         $currentmonth = date("m");
         $currentyear  = date("Y");

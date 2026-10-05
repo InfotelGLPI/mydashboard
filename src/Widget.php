@@ -1259,7 +1259,7 @@ class Widget extends CommonDBTM
                 ),
             ],
             [
-                1 => 1,
+                new QueryExpression('true'),
             ],
         );
 
@@ -1271,7 +1271,7 @@ class Widget extends CommonDBTM
                 ),
             ],
             [
-                1 => 1,
+                new QueryExpression('true'),
             ],
         );
 
