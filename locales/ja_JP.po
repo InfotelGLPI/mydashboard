@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:15+0000\n"
+"POT-Creation-Date: 2026-10-05 14:53+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/"
@@ -35,7 +35,7 @@ msgstr "( 全 _MAX_ 件からフィルター )"
 msgid "1 row selected"
 msgstr "1 行選択"
 
-#: src/Widget.php:947
+#: src/Widget.php:946
 msgid "10 rows"
 msgstr "10 行"
 
@@ -43,7 +43,7 @@ msgstr "10 行"
 msgid "2-4 years"
 msgstr "2 ～ 4 年"
 
-#: src/Widget.php:948
+#: src/Widget.php:947
 msgid "25 rows"
 msgstr "25 行"
 
@@ -51,11 +51,11 @@ msgstr "25 行"
 msgid "4-6 years"
 msgstr "4 ～ 6 年"
 
-#: src/Widget.php:946
+#: src/Widget.php:945
 msgid "5 rows"
 msgstr "5 行"
 
-#: src/Widget.php:949
+#: src/Widget.php:948
 msgid "50 rows"
 msgstr "50 行"
 
@@ -83,7 +83,7 @@ msgstr ""
 msgid "Add a new translation"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:41
+#: templates/menu_edit_toolbar.html.twig:40
 msgid "Add widgets"
 msgstr "ウィジェットを追加"
 
@@ -155,11 +155,11 @@ msgstr ""
 msgid "Applied changes"
 msgstr "実施済みの変更"
 
-#: templates/profileauthorizedwidget_form.html.twig:43
+#: templates/profileauthorizedwidget_form.html.twig:42
 msgid "Authorize/Unauthorize all"
 msgstr "すべてを認証・非認証"
 
-#: templates/profileauthorizedwidget_form.html.twig:37
+#: templates/profileauthorizedwidget_form.html.twig:36
 msgid "Authorized widgets"
 msgstr "認証済みウィジェット"
 
@@ -246,7 +246,7 @@ msgstr "グリッドを初期化"
 msgid "Close"
 msgstr "閉じる"
 
-#: templates/menu_edit_toolbar.html.twig:75
+#: templates/menu_edit_toolbar.html.twig:74
 msgid "Close edit mode"
 msgstr "編集モードを終了"
 
@@ -267,7 +267,7 @@ msgstr ""
 msgid "Computers number"
 msgstr "コンピューター数"
 
-#: src/Profile.php:172
+#: src/Profile.php:179
 msgid "Configuration Access"
 msgstr "設定へのアクセス"
 
@@ -287,7 +287,7 @@ msgstr "新しい警告の作成"
 msgid "Current year"
 msgstr "今年"
 
-#: templates/profile.html.twig:44
+#: templates/profile.html.twig:43
 msgid "Custom"
 msgstr "カスタム"
 
@@ -306,7 +306,7 @@ msgstr "プロファイル グリッドのカスタマイズと保存"
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: src/Profile.php:167
+#: src/Profile.php:174
 msgid "Dashboard Access"
 msgstr "ダッシュボードへのアクセス"
 
@@ -330,11 +330,11 @@ msgstr "受信データ : "
 msgid "Day"
 msgstr "日"
 
-#: templates/groupprofile_form.html.twig:36
+#: templates/groupprofile_form.html.twig:35
 msgid "Default dashboard group"
 msgstr "標準ダッシュボードグループ"
 
-#: templates/groupprofile_form.html.twig:42
+#: templates/groupprofile_form.html.twig:41
 msgid "Default groups"
 msgstr "標準グループ"
 
@@ -504,11 +504,11 @@ msgstr "フィルター"
 msgid "Find a widget"
 msgstr "ウィジェット検索"
 
-#: templates/preferenceuserblacklist_form.html.twig:37
+#: templates/preferenceuserblacklist_form.html.twig:36
 msgid "From which plugins you want to display the widgets?"
 msgstr "どのプラグインのウィジェットを表示しますか？"
 
-#: templates/profile.html.twig:43
+#: templates/profile.html.twig:42
 msgid "Full"
 msgstr "すべて"
 
@@ -680,8 +680,8 @@ msgstr "リンク付通知"
 msgid "Linked with a ticket category"
 msgstr "チケットカテゴリーとのリンク"
 
+#: templates/menu_edit_toolbar.html.twig:53
 #: templates/menu_edit_toolbar.html.twig:54
-#: templates/menu_edit_toolbar.html.twig:55
 msgid "Load a predefined grid"
 msgstr "定義済みのグリッド"
 
@@ -770,7 +770,7 @@ msgstr "新しいインシデント"
 msgid "New requests"
 msgstr "新しいリクエスト"
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1509 src/Alert.php:3442
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1511 src/Alert.php:3442
 #: src/Alert.php:3829
 msgid "New tickets"
 msgstr "新しいチケット"
@@ -783,7 +783,7 @@ msgstr "警告を設定していません"
 msgid "No column defined"
 msgstr "列の定義がありません"
 
-#: src/Chart.php:209 src/Widget.php:763 src/Menu.php:696
+#: src/Chart.php:209 src/Widget.php:762 src/Menu.php:696
 msgid "No data available"
 msgstr "データがありません"
 
@@ -807,7 +807,7 @@ msgstr "機器は見つかりませんでした"
 msgid "No impact"
 msgstr "影響なし"
 
-#: src/Widget.php:1093 src/Alert.php:2691
+#: src/Widget.php:1092 src/Alert.php:2691
 msgid "No informations founded"
 msgstr "情報はありません"
 
@@ -815,7 +815,7 @@ msgstr "情報はありません"
 msgid "No matching records found"
 msgstr "一致する記録が見つかりません"
 
-#: src/Widget.php:1030 src/Alert.php:2828 templates/alert_summary.html.twig:56
+#: src/Widget.php:1029 src/Alert.php:2828 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "問題ありません"
 
@@ -827,7 +827,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1061 src/Alert.php:2503
+#: src/Widget.php:1060 src/Alert.php:2503
 msgid "No scheduled maintenance"
 msgstr "メンテナンス スケジュールなし"
 
@@ -1025,7 +1025,7 @@ msgstr "ウィジェットのドラッグ・サイズ変更を許可"
 msgid "Pie charts"
 msgstr "円グラフ"
 
-#: front/config.php:47
+#: front/config.php:48
 msgid "Please activate the plugin"
 msgstr "プラグインを有効にしてください"
 
@@ -1059,7 +1059,7 @@ msgstr "重要度が「最高」または「重要」の問題"
 msgid "Process time by technicians by month"
 msgstr "月別・技術者別対応時間"
 
-#: templates/menu_edit_toolbar.html.twig:64
+#: templates/menu_edit_toolbar.html.twig:63
 msgid "Profile"
 msgstr ""
 
@@ -1166,7 +1166,7 @@ msgstr "解決時間遵守"
 msgid "Responsiveness over 12 rolling months"
 msgstr "過去 12 カ月間の反応率"
 
-#: src/Profile.php:53
+#: src/Profile.php:60
 msgid "Rights management"
 msgstr "権限管理"
 
@@ -1191,10 +1191,10 @@ msgid "Satisfy percent"
 msgstr "満足率"
 
 #: templates/htmleditor_form.html.twig:59
-#: templates/preferenceuserblacklist_form.html.twig:48
-#: templates/profile.html.twig:66
-#: templates/profileauthorizedwidget_form.html.twig:60
-#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:54
+#: templates/preferenceuserblacklist_form.html.twig:47
+#: templates/profile.html.twig:65
+#: templates/profileauthorizedwidget_form.html.twig:59
+#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:53
 msgctxt "button"
 msgid "Save"
 msgstr ""
@@ -1216,7 +1216,7 @@ msgstr "スキーマチェック"
 msgid "Search users of your organisation"
 msgstr "自分の組織内のユーザーを検索"
 
-#: src/Profile.php:177 src/Profile.php:280
+#: src/Profile.php:184 src/Profile.php:287
 msgid "See edit mode"
 msgstr "編集モードを表示"
 
@@ -1232,11 +1232,11 @@ msgstr "ネットワーク警告ブロックを確認"
 msgid "See scheduled maintenances information block"
 msgstr "メンテナンススケジュール情報ブロックを確認"
 
-#: src/Profile.php:276
+#: src/Profile.php:283
 msgid "See the configuration"
 msgstr "設定を確認"
 
-#: src/Profile.php:272
+#: src/Profile.php:279
 msgid "See the dashboard"
 msgstr "ダッシュボードを確認"
 
@@ -1245,7 +1245,7 @@ msgctxt "button"
 msgid "Send"
 msgstr ""
 
-#: src/Profile.php:268 templates/profile.html.twig:60
+#: src/Profile.php:275 templates/profile.html.twig:59
 msgid "Setup stock widget"
 msgstr "在庫ウィジェットの設定"
 
@@ -1254,7 +1254,7 @@ msgstr "在庫ウィジェットの設定"
 msgid "Show %d elements"
 msgstr "%d 件の要素を表示"
 
-#: src/Widget.php:950 src/Menu.php:582
+#: src/Widget.php:949 src/Menu.php:582
 msgid "Show all"
 msgstr "すべて表示"
 
@@ -1397,8 +1397,8 @@ msgstr "メンテナンススケジュールがあります。詳細はログイ
 msgid "Ticket closed"
 msgstr "終了チケット"
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1318
-#: src/Reports/Ticket.php:1324
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1320
+#: src/Reports/Ticket.php:1326
 msgid "Ticket followup"
 msgstr "チケットの回答"
 
@@ -1504,7 +1504,7 @@ msgstr ""
 msgid "Updating all widgets"
 msgstr "すべてのウィジェットを更新しています"
 
-#: templates/groupprofile_form.html.twig:40
+#: templates/groupprofile_form.html.twig:39
 msgid "Use profile group"
 msgstr "プロファイルグループを利用"
 
