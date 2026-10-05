@@ -30,11 +30,6 @@
  * travels in data-* attributes of the button, so no PHP value reaches a script.
  */
 
-const getCsrfToken = () => {
-    const meta = document.querySelector('meta[property="glpi:csrf_token"]');
-    return meta !== null ? meta.getAttribute('content') : '';
-};
-
 document.addEventListener('click', (event) => {
     const button = event.target.closest('button[data-md-create-alert]');
     if (button === null) {
@@ -55,7 +50,6 @@ document.addEventListener('click', (event) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Glpi-Csrf-Token': getCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
         body,

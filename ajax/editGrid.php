@@ -28,8 +28,10 @@
  */
 
 use GlpiPlugin\Mydashboard\Preference;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 if (isset($_POST['edit_mode'])) {
     $pref = new Preference();
@@ -43,7 +45,7 @@ if (isset($_POST['edit_mode'])) {
     // state_save.php). Those checks already reject the writes, but storing the mode
     // without the right leaves the preference claiming a capability the session does
     // not have: fall back to the per-user mode so the stored state stays truthful.
-    if ($mode === 2 && !Session::haveRight("plugin_mydashboard_config", CREATE)) {
+    if ($mode === 2 && !Session::haveRight(Config::$rightname, CREATE)) {
         $mode = 1;
     }
     $input['edit_mode'] = $mode;

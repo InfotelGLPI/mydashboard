@@ -70,7 +70,7 @@ class Alert extends CommonDBTM
     // CommonGLPI's can* methods all answer false while $rightname is empty. The profile
     // checkbox grants CREATE + UPDATE + PURGE (Profile.php), the three levels needed, and
     // not READ, so canView() keeps answering false exactly as before.
-    public static $rightname = 'plugin_mydashboard_config';
+    public static string $rightname = 'plugin_mydashboard_config';
 
     public static $types = [
         'Reminder',
@@ -2982,7 +2982,7 @@ class Alert extends CommonDBTM
                 // Reminder names are stored raw: the template escapes them. This block
                 // is shown to anonymous visitors on the login page (DISPLAY_LOGIN hook).
                 'name' => (string) $listitem['name'],
-                'url' => Session::haveRight("reminder_public", READ)
+                'url' => Session::haveRight(\Reminder::$rightname, READ)
                     ? \Reminder::getFormURLWithID((int) $listitem['id'])
                     : null,
                 // impact_* colors are stored raw; the template escapes them.
@@ -3079,7 +3079,7 @@ class Alert extends CommonDBTM
             'itilcategories_id' => $itilcategories_id,
             'category_options' => $category_options,
             'is_public' => $is_public,
-            'can_edit' => Session::haveRight("reminder_public", UPDATE),
+            'can_edit' => Session::haveRight(\Reminder::$rightname, UPDATE),
             'can_delete' => $with_delete && $id > 0,
         ];
     }
@@ -3207,7 +3207,7 @@ class Alert extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        if (!Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READGROUP])) {
+        if (!Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READMY, \Ticket::READALL, \Ticket::READGROUP])) {
             return false;
         }
 
@@ -3802,7 +3802,7 @@ class Alert extends CommonDBTM
 
             $stats = "";
             if ($iswidget == true
-                && Session::haveRightsOr("ticket", [\Ticket::READALL, \Ticket::READGROUP])) {
+                && Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READALL, \Ticket::READGROUP])) {
                 $params_header = [
                     "widgetId" => $id,
                     "name" => ($type == "all") ? __("Global indicators", "mydashboard") : __(

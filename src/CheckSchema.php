@@ -40,7 +40,7 @@ use Plugin;
  */
 class CheckSchema extends CommonDBTM
 {
-    public static $rightname = 'plugin_mydashboard';
+    public static string $rightname = 'plugin_mydashboard';
     private $table = "";
 
     /**

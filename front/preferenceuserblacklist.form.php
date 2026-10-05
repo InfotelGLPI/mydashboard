@@ -28,11 +28,12 @@
  */
 
 use GlpiPlugin\Mydashboard\PreferenceUserBlacklist;
+use GlpiPlugin\Mydashboard\Menu;
 
 // Align with sibling preference endpoints (dragGrid/editGrid): require a
 // plugin-scoped right before mutating the blacklist, so an authenticated user
 // with no mydashboard access cannot write to its preference table.
-Session::checkRightsOr('plugin_mydashboard', [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 $pub = new PreferenceUserBlacklist();
 

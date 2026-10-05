@@ -48,7 +48,7 @@ class Config extends CommonDBTM
      *
      * @return translated
      */
-    public static $rightname         = "plugin_mydashboard_config";
+    public static string $rightname         = "plugin_mydashboard_config";
     public $can_be_translated = true;
 
     public static function getTypeName($nb = 0)

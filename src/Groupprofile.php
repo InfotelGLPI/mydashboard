@@ -45,8 +45,8 @@ use ProfileRight;
 
 class Groupprofile extends CommonDBTM
 {
-    public static $rightname = 'plugin_mydashboard';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_mydashboard';
+    public bool $dohistory = true;
 
     /**
      * Add a category to profile

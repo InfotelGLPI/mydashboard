@@ -33,6 +33,7 @@ use GlpiPlugin\Mydashboard\Reports\Reports_Line;
 use GlpiPlugin\Mydashboard\Reports\Reports_Pie;
 use GlpiPlugin\Mydashboard\Reports\Reports_Table;
 use GlpiPlugin\Ocsinventoryng\Dashboard;
+use GlpiPlugin\Mydashboard\Menu;
 
 global $CFG_GLPI;
 
@@ -42,7 +43,7 @@ global $CFG_GLPI;
 header('Content-Type: text/plain; charset=UTF-8');
 Html::header_nocache();
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 //Case PluginMydashboardReports_Table32 / PluginMydashboardReports_Table33
 if (isset($_POST['widget'])) {

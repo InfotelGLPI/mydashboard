@@ -62,7 +62,7 @@ class Contract extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [];
-        if (Session::haveRight("contract", READ)) {
+        if (Session::haveRight(\Contract::$rightname, READ)) {
             $widgets = [
                 Menu::$MANAGEMENT => [
                     "contractwidget" => [
@@ -102,7 +102,7 @@ class Contract extends CommonGLPI
         global $DB, $CFG_GLPI;
 
         $dbu = new DbUtils();
-        if (!Session::haveRight("contract", READ)) {
+        if (!Session::haveRight(\Contract::$rightname, READ)) {
             return false;
         }
 

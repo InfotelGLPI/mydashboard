@@ -45,7 +45,7 @@ use Session;
  */
 class KnowbaseItem extends CommonGLPI
 {
-    public static $rightname = 'knowbase';
+    public static string $rightname = 'knowbase';
 
     /**
      * Return the localized name of the current Type

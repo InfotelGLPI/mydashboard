@@ -42,7 +42,7 @@ class Chart extends Module
     private $tabDatasSet;
     private $options = [];
 
-    public static $rightname = "plugin_mydashboard";
+    public static string $rightname = "plugin_mydashboard";
     /**
      * Chart constructor.
      */

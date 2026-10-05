@@ -71,7 +71,7 @@ class RSSFeed extends CommonGLPI
                 "comment" => "",
             ];
         }
-        if (Session::haveRight("rssfeed_public", READ)) {
+        if (Session::haveRight(\RSSFeed::$rightname, READ)) {
             $widgets[Menu::$TOOLS]["rssfeedpublicwidget"] = [
                 "title" => _n('Public RSS feed', 'Public RSS feeds', 2),
                 "type" => Widget::$TABLE,
@@ -92,7 +92,7 @@ class RSSFeed extends CommonGLPI
             case "rssfeedpersonalwidget":
                 return RSSFeed::showListForCentral();
             case "rssfeedpublicwidget":
-                if (Session::haveRight("rssfeed_public", READ)) {
+                if (Session::haveRight(\RSSFeed::$rightname, READ)) {
                     return RSSFeed::showListForCentral(false);
                 }
                 break;
@@ -134,7 +134,7 @@ class RSSFeed extends CommonGLPI
             $title_url = $CFG_GLPI["root_doc"] . "/front/rssfeed.php";
         } else {
             // Show public rssfeeds / not mines : need to have access to public rssfeeds
-            if (!Session::haveRight('rssfeed_public', READ)) {
+            if (!Session::haveRight(\RSSFeed::$rightname, READ)) {
                 return false;
             }
 

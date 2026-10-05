@@ -42,7 +42,7 @@ class Customswidget extends CommonDropdown
     // class inherits CommonDropdown's generic 'dropdown' right, letting any user
     // with that right create a widget whose (unescaped) name is rendered on every
     // other user's dashboard - a stored-XSS vector.
-    public static $rightname = 'plugin_mydashboard_config';
+    public static string $rightname = 'plugin_mydashboard_config';
 
     /**
      * @param int $nb

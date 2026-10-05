@@ -46,7 +46,7 @@ class HTMLEditor extends CommonDBTM
     // The tab is attached to Customswidget, which is gated by
     // 'plugin_mydashboard_config': declaring the weaker 'plugin_mydashboard' here let a
     // plain dashboard user reach the editor through the tab.
-    public static $rightname = 'plugin_mydashboard_config';
+    public static string $rightname = 'plugin_mydashboard_config';
 
     public function rawSearchOptions()
     {

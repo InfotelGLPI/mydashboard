@@ -28,8 +28,9 @@
  */
 
 use GlpiPlugin\Mydashboard\Widget;
+use GlpiPlugin\Mydashboard\Menu;
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 
 $widgets = Widget::getCachedWidgetList();

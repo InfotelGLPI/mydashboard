@@ -144,7 +144,7 @@ class Helper
     public static function getGraphFooter($params)
     {
         $setup_url = null;
-        if (isset($params["setup"]) && Session::haveRightsOr("plugin_mydashboard_stockwidget", [CREATE, UPDATE])) {
+        if (isset($params["setup"]) && Session::haveRightsOr(StockWidget::$rightname, [CREATE, UPDATE])) {
             $setup_url = $params["setup"];
         }
 

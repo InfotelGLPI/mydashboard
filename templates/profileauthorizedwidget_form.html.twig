@@ -31,7 +31,6 @@
 {# "Authorize/Unauthorize all": handled by public/scripts/authorized-widgets.js #}
 <form method="post" action="{{ form_action }}">
     {{ fields.hiddenField('id', profiles_id) }}
-    {{ fields.csrfField() }}
     <table class="tab_cadre_fixe">
         <tr class="tab_bg_2">
             <th colspan="2" class="center b">{{ __('Authorized widgets', 'mydashboard') }}</th>

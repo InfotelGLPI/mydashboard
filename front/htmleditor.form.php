@@ -29,8 +29,9 @@
 
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Customswidget;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRight("plugin_mydashboard_config", UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
 
 $customsWidget = new Customswidget();
 

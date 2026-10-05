@@ -28,11 +28,12 @@
  */
 
 use GlpiPlugin\Mydashboard\Alert;
+use GlpiPlugin\Mydashboard\Config;
 
 // Alerts feed the global ticker shown to every user (including on the login page),
 // so managing them is a plugin-configuration action, not personal dashboard editing.
 // Require the config right, consistent with ajax/createalert.php.
-Session::checkRight("plugin_mydashboard_config", UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
 
 $alert = new Alert();
 

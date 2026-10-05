@@ -63,7 +63,7 @@ class Problem extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [];
-        $showproblem = Session::haveRightsOr('problem', [\Problem::READALL, \Problem::READMY]);
+        $showproblem = Session::haveRightsOr(\Problem::$rightname, [\Problem::READALL, \Problem::READMY]);
 
         if ($showproblem) {
             $widgets = [
@@ -111,7 +111,7 @@ class Problem extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId)
     {
-        $showproblem = Session::haveRightsOr('problem', [\Problem::READALL, \Problem::READMY]);
+        $showproblem = Session::haveRightsOr(\Problem::$rightname, [\Problem::READALL, \Problem::READMY]);
 
         if ($showproblem) {
             switch ($widgetId) {
@@ -160,7 +160,7 @@ class Problem extends CommonGLPI
         $widget->setOption("bFilter", false);
         $widget->setOption("bInfo", false);
 
-        if (!Session::haveRightsOr('problem', [\Problem::READALL, \Problem::READMY])) {
+        if (!Session::haveRightsOr(\Problem::$rightname, [\Problem::READALL, \Problem::READMY])) {
             return false;
         }
 

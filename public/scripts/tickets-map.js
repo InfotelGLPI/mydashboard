@@ -50,11 +50,6 @@ const MARKER_COLORS = [
     [Infinity, 'darkred'],
 ];
 
-const getCsrfToken = () => {
-    const meta = document.querySelector('meta[property="glpi:csrf_token"]');
-    return meta !== null ? meta.getAttribute('content') : '';
-};
-
 /**
  * Serializes the search parameters the way jQuery.param() did (bracket notation),
  * which is what ajax/map.php reads from $_POST['params'].
@@ -149,7 +144,6 @@ const loadPoints = (map, config) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Glpi-Csrf-Token': getCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
         body,

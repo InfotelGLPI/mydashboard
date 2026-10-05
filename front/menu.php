@@ -38,7 +38,7 @@ use GlpiPlugin\Servicecatalog\Main;
 // right on it still learned the feature exists and got the error inside an already
 // started document; and the two session keys written below were positioned by a request
 // that ends in a refusal.
-if (!Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE])) {
+if (!Session::haveRightsOr(Menu::$rightname, [READ, UPDATE])) {
     throw new AccessDeniedHttpException();
 }
 

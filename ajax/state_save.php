@@ -30,8 +30,10 @@
 use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Preference;
 use GlpiPlugin\Mydashboard\Widget;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 $result      = [];
 $grids_saved = [];
@@ -122,7 +124,7 @@ if (!isset($_POST)) {
         $dashboard = new Dashboard();
 
         $edit = Preference::checkEditMode(Session::getLoginUserID());
-        if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+        if (Session::haveRight(Config::$rightname, CREATE) && $edit == 2) {
             $idUser = 0;
 
             // The session only remembers which profile front/menu.php was asked to display;

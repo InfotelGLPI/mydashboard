@@ -41,7 +41,14 @@ use Session;
  */
 class Profile extends \Profile
 {
-    public static $rightname = "profile";
+    public static string $rightname = "profile";
+
+    // Secondary plugin right; the main ones are Menu::$rightname, Config::$rightname and
+    // StockWidget::$rightname
+    public const RIGHT_EDIT = 'plugin_mydashboard_edit';
+
+    // Right of the optional servicecatalog plugin, referenced by name so the class need not exist
+    public const RIGHT_SERVICECATALOG = 'plugin_servicecatalog';
 
     /**
      * @param int $nb
@@ -235,7 +242,7 @@ class Profile extends \Profile
         // When user connects or change profile he goes (when Mydashboard is configured) to the menu
         $pref = Preference::getReplaceCentral();
         if ($pref
-            && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])
+            && Session::haveRightsOr(Menu::$rightname, [CREATE, READ])
             && !isset($_SESSION["glpi_plugin_mydashboard_activating"])) {
             $_SESSION["glpi_plugin_mydashboard_loaded"] = 0;
         } else {

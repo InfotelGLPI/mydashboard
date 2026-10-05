@@ -59,7 +59,7 @@ class Project extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [];
-        $showproject = Session::haveRightsOr('project', [\Project::READALL, \Project::READMY]);
+        $showproject = Session::haveRightsOr(\Project::$rightname, [\Project::READALL, \Project::READMY]);
 
         if ($showproject) {
             $widgets = [
@@ -92,7 +92,7 @@ class Project extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId)
     {
-        $showproject = Session::haveRightsOr('project', [\Project::READALL, \Project::READMY]);
+        $showproject = Session::haveRightsOr(\Project::$rightname, [\Project::READALL, \Project::READMY]);
 
         if ($showproject) {
             switch ($widgetId) {
@@ -131,7 +131,7 @@ class Project extends CommonGLPI
         $widget->setOption("bFilter", false);
         $widget->setOption("bInfo", false);
 
-        if (!Session::haveRightsOr('project', [\Project::READALL, \Project::READMY])) {
+        if (!Session::haveRightsOr(\Project::$rightname, [\Project::READALL, \Project::READMY])) {
             return false;
         }
 

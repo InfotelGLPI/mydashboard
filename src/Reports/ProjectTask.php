@@ -63,7 +63,7 @@ class ProjectTask extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [];
-        $showprojecttask = Session::haveRight('projecttask', \ProjectTask::READMY);
+        $showprojecttask = Session::haveRight(\ProjectTask::$rightname, \ProjectTask::READMY);
 
         if ($showprojecttask) {
             $widgets = [
@@ -96,7 +96,7 @@ class ProjectTask extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId)
     {
-        $showprojecttask = Session::haveRightsOr('projecttask', [\ProjectTask::READMY]);
+        $showprojecttask = Session::haveRightsOr(\ProjectTask::$rightname, [\ProjectTask::READMY]);
 
         if ($showprojecttask) {
             switch ($widgetId) {
@@ -124,7 +124,7 @@ class ProjectTask extends CommonGLPI
 
         $output = [];
 
-        if (!Session::haveRightsOr('projecttask', [\ProjectTask::READMY])) {
+        if (!Session::haveRightsOr(\ProjectTask::$rightname, [\ProjectTask::READMY])) {
             return false;
         }
 

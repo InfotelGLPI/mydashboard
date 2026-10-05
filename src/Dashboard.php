@@ -104,7 +104,7 @@ class Dashboard extends CommonDBTM
 
         // Global dashboard editing reaches the other profiles, but only the ones the active
         // profile may administer — the very scope the core uses to build a profile list.
-        if (!Session::haveRight('plugin_mydashboard_config', CREATE)) {
+        if (!Session::haveRight(Config::$rightname, CREATE)) {
             return false;
         }
 

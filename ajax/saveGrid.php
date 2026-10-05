@@ -30,8 +30,10 @@
 use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Preference;
 use GlpiPlugin\Mydashboard\Widget;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 // Normalize the incoming grid payload before persisting it: decode the client
 // JSON and keep only the geometry keys the dashboard loader reads (id/x/y/w/h),
@@ -79,7 +81,7 @@ if (isset($_POST['users_id'])
     // Global (profile default) grid: CREATE and the global edit mode, like the other
     // global edition endpoints (state_save.php, clearGrid.php, editGrid.php).
     if (
-        Session::haveRight("plugin_mydashboard_config", CREATE)
+        Session::haveRight(Config::$rightname, CREATE)
         && Preference::checkEditMode(Session::getLoginUserID()) == 2
     ) {
         if ($id) {
@@ -133,5 +135,3 @@ if (isset($_POST['users_id'])
 //      //      $GLPI_CACHE->set($ckey, $datajson);
 //   }
 //}
-
-echo Session::getNewCSRFToken();

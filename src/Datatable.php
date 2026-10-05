@@ -39,7 +39,7 @@ class Datatable extends Module
     private $tabDatas = [];
     //    private $tabDatasSet = false;
     private $options = [];
-    public static $rightname = "plugin_mydashboard";
+    public static string $rightname = "plugin_mydashboard";
 
     /**
      * Datatable constructor.

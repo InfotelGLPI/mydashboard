@@ -31,11 +31,6 @@
  * container, whose data-* attributes carry the parent item: no PHP value reaches a script.
  */
 
-const getCsrfToken = () => {
-    const meta = document.querySelector('meta[property="glpi:csrf_token"]');
-    return meta !== null ? meta.getAttribute('content') : '';
-};
-
 /**
  * The form carries the scripts of its dropdowns: a range fragment keeps them runnable
  * once inserted, unlike innerHTML.
@@ -63,7 +58,6 @@ const loadForm = (container, id) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Glpi-Csrf-Token': getCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
         body,

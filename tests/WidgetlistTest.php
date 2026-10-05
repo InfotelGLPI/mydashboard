@@ -93,7 +93,7 @@ class WidgetlistTest extends TestCase
      * Classes dont getWidgetsForItem() construit sa liste sans interroger la base.
      *
      * Ces classes filtrent certains de leurs widgets sur des droits (Session::haveRight()
-     * pour l'inventaire, les utilisateurs, les contrats…), qui lit $DB->isSlave() avant de
+     * pour l'inventaire, les utilisateurs, les contrats…), qui accède à $DB avant de
      * consulter le profil — donc une erreur fatale hors base. Le test les exécute via Session::callAsSystem(), qui
      * désactive ces vérifications en amont de tout accès à $DB : la liste complète est
      * alors déclarée, ce que cette suite vérifie.
@@ -178,10 +178,9 @@ class WidgetlistTest extends TestCase
         $db_backup      = $GLOBALS['DB'] ?? null;
         $session_backup = $_SESSION ?? [];
 
-        // Ici les droits sont bien évalués, donc Session::haveRight() lit $DB->isSlave().
-        // Une instance non connectée suffit : isSlave() ne lit que la propriété $slave,
-        // false par défaut. Toute requête réelle échouerait, ce qui est le comportement
-        // voulu dans une suite unitaire.
+        // Ici les droits sont bien évalués : Session::haveRight() a besoin d'une instance $DB.
+        // Une instance non connectée suffit. Toute requête réelle échouerait, ce qui est le
+        // comportement voulu dans une suite unitaire.
         $GLOBALS['DB'] = new class extends \DBmysql {
             public function __construct() {}
         };

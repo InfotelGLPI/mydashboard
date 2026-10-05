@@ -28,8 +28,10 @@
  */
 
 use GlpiPlugin\Mydashboard\Dashboard;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 $dashboard = new Dashboard();
 
@@ -46,7 +48,7 @@ if (!Dashboard::canManageProfile($profile)) {
     $profile = (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
 }
 
-if ($edit_mode == 2 && Session::haveRight("plugin_mydashboard_config", CREATE)) {
+if ($edit_mode == 2 && Session::haveRight(Config::$rightname, CREATE)) {
     // Global edit mode: clear the profile-wide grid (users_id = 0)
     $options = ["users_id" => 0, "profiles_id" => $profile];
 } else {
@@ -59,5 +61,3 @@ if ($id) {
     $input['id'] = $id;
     $dashboard->delete($input);
 }
-
-echo Session::getNewCSRFToken();

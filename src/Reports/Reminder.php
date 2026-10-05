@@ -64,7 +64,7 @@ class Reminder extends CommonGLPI
                 "comment" => "",
             ];
         }
-        if (Session::haveRight("reminder_public", READ)) {
+        if (Session::haveRight(\Reminder::$rightname, READ)) {
             $widgets[Menu::$TOOLS]["reminderpublicwidget"] = [
                 "title" => _n('Public reminder', 'Public reminders', 2),
                 "type" => Widget::$TABLE,
@@ -88,7 +88,7 @@ class Reminder extends CommonGLPI
                 return self::showListForCentral($widgetId);
 
             case "reminderpublicwidget":
-                if (Session::haveRight("reminder_public", READ)) {
+                if (Session::haveRight(\Reminder::$rightname, READ)) {
                     return self::showListForCentral($widgetId, false);
                 }
                 break;

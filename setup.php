@@ -104,7 +104,7 @@ function plugin_init_mydashboard()
 
         if (Plugin::isPluginActive("mydashboard")) {
             //If user has right to see configuration
-            if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])) {
+            if (Session::haveRightsOr(Config::$rightname, [CREATE, UPDATE])) {
                 $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['mydashboard'] = 'front/config.form.php';
                 //            $PLUGIN_HOOKS['menu_toadd']['mydashboard']['links']['config'] = 'front/config.form.php';
             }
@@ -113,13 +113,13 @@ function plugin_init_mydashboard()
                 $PLUGIN_HOOKS['servicecatalog']['mydashboard'] = [Servicecatalog::class];
             }
 
-            if (Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
+            if (Session::haveRightsOr(Menu::$rightname, [CREATE, READ])) {
                 $PLUGIN_HOOKS[Hooks::MENU_TOADD]['mydashboard']               = ['tools' => Menu::class];
                 $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['mydashboard']      = PLUGIN_MYDASHBOARD_WEBDIR . '/front/menu.php';
                 $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['mydashboard'] = Menu::getIcon();
 
                 if (Plugin::isPluginActive('servicecatalog')
-                    && Session::haveRight("plugin_servicecatalog", READ)) {
+                    && Session::haveRight(Profile::RIGHT_SERVICECATALOG, READ)) {
                     unset($PLUGIN_HOOKS['helpdesk_menu_entry']['mydashboard']);
                 }
                 if (isset($_SERVER['HTTP_REFERER'])
@@ -149,7 +149,7 @@ function plugin_init_mydashboard()
                          </script>";
                                 exit();
                             } elseif (!Plugin::isPluginActive("servicecatalog")
-                                       || Session::haveRight("plugin_servicecatalog", 1)) {
+                                       || Session::haveRight(Profile::RIGHT_SERVICECATALOG, 1)) {
                                 $_SESSION["glpi_plugin_mydashboard_loaded"] = 1;
                                 //                                Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php");
                                 $dest = PLUGIN_MYDASHBOARD_WEBDIR . "/front/menu.php";
@@ -171,11 +171,11 @@ function plugin_init_mydashboard()
 
                 if (Session::getCurrentInterface() == 'central') {
                     if (Preference::getReplaceCentral()
-                        && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
+                        && Session::haveRightsOr(Menu::$rightname, [CREATE, READ])) {
                         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js';
                     } elseif (Config::getReplaceCentralConf()
                                && Preference::getReplaceCentral()
-                               && Session::haveRightsOr("plugin_mydashboard", [CREATE, READ])) {
+                               && Session::haveRightsOr(Menu::$rightname, [CREATE, READ])) {
                         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['mydashboard'][] = 'scripts/replace_central.js';
                     }
                 }
@@ -212,8 +212,8 @@ function plugin_version_mydashboard()
         'homepage'     => 'https://github.com/InfotelGLPI/mydashboard',
         'requirements' => [
             'glpi' => [
-                'min' => '11.0',
-                'max' => '12.0',
+                'min' => '11.0.99',
+                'max' => '12.0.99',
                 'dev' => false,
             ],
         ]];

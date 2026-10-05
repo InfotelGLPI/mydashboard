@@ -29,8 +29,9 @@
 
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Mydashboard\ConfigTranslation;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRight("plugin_mydashboard_config", UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
 
 $translation = new ConfigTranslation();
 

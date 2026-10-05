@@ -34,13 +34,13 @@ use Session;
 
 class Servicecatalog extends CommonGLPI
 {
-    public static $rightname = 'plugin_mydashboard';
+    public static string $rightname = 'plugin_mydashboard';
 
-    public $dohistory = false;
+    public bool $dohistory = false;
 
     public static function canUse()
     {
-        return Session::haveRightsOr("plugin_mydashboard", [CREATE, READ]);
+        return Session::haveRightsOr(Menu::$rightname, [CREATE, READ]);
     }
 
     /**

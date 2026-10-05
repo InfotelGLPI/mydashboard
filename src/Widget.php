@@ -53,8 +53,8 @@ use Session;
  */
 class Widget extends CommonDBTM
 {
-    public static $rightname = "plugin_mydashboard_config";
-    public $dohistory = true;
+    public static string $rightname = "plugin_mydashboard_config";
+    public bool $dohistory = true;
 
     public static $KPI      = 0;
     public static $TABLE    = 1;
@@ -81,7 +81,7 @@ class Widget extends CommonDBTM
 
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr('plugin_mydashboard_config', [CREATE, UPDATE]);
+        return Session::haveRightsOr(Config::$rightname, [CREATE, UPDATE]);
     }
 
     /**
@@ -89,12 +89,12 @@ class Widget extends CommonDBTM
      */
     public static function canView(): bool
     {
-        return Session::haveRight('plugin_mydashboard_config', UPDATE);
+        return Session::haveRight(Config::$rightname, UPDATE);
     }
 
     public static function canUpdate(): bool
     {
-        return Session::haveRight('plugin_mydashboard_config', UPDATE);
+        return Session::haveRight(Config::$rightname, UPDATE);
     }
 
 
@@ -269,7 +269,7 @@ class Widget extends CommonDBTM
      */
     public function getWidgetIdByName($widgetName)
     {
-        unset($this->fields);
+        $this->fields = [];
         if ($this->getFromDBByCrit(['name' => $widgetName]) === false) {
             return null;
         } else {
@@ -680,7 +680,6 @@ class Widget extends CommonDBTM
                             "refreshCallBack" => "function(){return mydashboard.getWidgetData('" . Menu::DASHBOARD_NAME . "','" . $classname . "', '" . $widget->getWidgetId() . "');}",
                             "html"            => $htmlContent,
                             "scripts"         => $scripts,
-                            //                        "_glpi_csrf_token" => Session::getNewCSRFToken()
                         ];
                     $_SESSION["glpi_plugin_mydashboard_widgets"][$widget->getWidgetId()] = json_decode($widget->getWidgetEnableRefresh());
                     //safeJson because refreshCallBack must be a javascript function not a string,

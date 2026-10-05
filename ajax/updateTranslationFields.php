@@ -30,13 +30,14 @@
 use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Mydashboard\ConfigTranslation;
+use GlpiPlugin\Mydashboard\Config;
 
 $AJAX_INCLUDE = 1;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight("plugin_mydashboard_config", UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
 
 if (isset($_POST['itemtype']) && isset($_POST['language'])) {
     // The allow list and the instantiation are both kept here, at the sink: the list says which

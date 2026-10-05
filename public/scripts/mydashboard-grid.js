@@ -45,11 +45,6 @@ const GRID_SELECTOR = '[data-md-grid-config]';
 /** Controller of the grid currently displayed */
 let current = null;
 
-const getCsrfToken = () => {
-    const meta = document.querySelector('meta[property="glpi:csrf_token"]');
-    return meta !== null ? meta.getAttribute('content') : '';
-};
-
 /**
  * Flatten a nested object the way jQuery.param() does (params[type]=1), which is
  * what the ajax endpoints read from $_POST.
@@ -75,7 +70,6 @@ const post = (url, data) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Glpi-Csrf-Token': getCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
         body,
@@ -268,14 +262,13 @@ const createController = (gridEl, config) => {
     };
 
     /**
-     * Post back to the menu with the token the endpoint answered, so the selected
-     * profile survives the reload.
+     * Post back to the menu so the selected profile survives the reload.
      */
-    const submitToMenu = (token) => {
+    const submitToMenu = () => {
         const form = document.createElement('form');
         form.action = urls.menu;
         form.method = 'post';
-        [['profiles_id', config.activeProfile], ['_glpi_csrf_token', token.trim()]].forEach(([name, value]) => {
+        [['profiles_id', config.activeProfile]].forEach(([name, value]) => {
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = name;
@@ -295,8 +288,7 @@ const createController = (gridEl, config) => {
             data.users_id = 0;
         }
         return post(urls.saveGrid, data)
-            .then((response) => response.text())
-            .then((token) => (asDefault ? submitToMenu(token) : reloadMenu()));
+            .then(() => (asDefault ? submitToMenu() : reloadMenu()));
     };
 
     const toggleFullscreen = () => {
@@ -369,7 +361,6 @@ const createController = (gridEl, config) => {
         'save-grid': () => saveGrid(false),
         'save-default-grid': () => saveGrid(true),
         'clear-grid': () => post(urls.clearGrid, {profiles_id: config.activeProfile, edit_mode: config.editMode})
-            .then((response) => response.text())
             .then(submitToMenu),
         'edit-grid': () => post(urls.editGrid, {edit_mode: 1}).then(reloadMenu),
         'edit-default-grid': () => post(urls.editGrid, {edit_mode: 2}).then(reloadMenu),

@@ -53,7 +53,7 @@ class Preference extends CommonDBTM
      */
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE, READ]);
+        return Session::haveRightsOr(Menu::$rightname, [CREATE, UPDATE, READ]);
     }
 
     /**
@@ -61,7 +61,7 @@ class Preference extends CommonDBTM
      */
     public static function canView(): bool
     {
-        return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE, READ]);
+        return Session::haveRightsOr(Menu::$rightname, [CREATE, UPDATE, READ]);
     }
 
     /**

@@ -29,11 +29,12 @@
 
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Mydashboard\Config;
 
 global $CFG_GLPI;
 
 if (Plugin::isPluginActive("mydashboard")) {
-    if (Session::haveRight("plugin_mydashboard_config", UPDATE)) {
+    if (Session::haveRight(Config::$rightname, UPDATE)) {
 
         Html::redirect(PLUGIN_MYDASHBOARD_WEBDIR . "/front/config.form.php");
 

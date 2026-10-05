@@ -64,7 +64,7 @@ class Change extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [];
-        $showchange = Session::haveRightsOr('change', [\Change::READALL, \Change::READMY]);
+        $showchange = Session::haveRightsOr(\Change::$rightname, [\Change::READALL, \Change::READMY]);
 
         if ($showchange) {
             $widgets = [
@@ -118,7 +118,7 @@ class Change extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId)
     {
-        $showchange = Session::haveRightsOr('change', [\Change::READALL, \Change::READMY]);
+        $showchange = Session::haveRightsOr(\Change::$rightname, [\Change::READALL, \Change::READMY]);
 
         if ($showchange) {
             switch ($widgetId) {
@@ -170,7 +170,7 @@ class Change extends CommonGLPI
         $widget->setOption("bFilter", false);
         $widget->setOption("bInfo", false);
 
-        if (!Session::haveRightsOr('change', [\Change::READALL, \Change::READMY])) {
+        if (!Session::haveRightsOr(\Change::$rightname, [\Change::READALL, \Change::READMY])) {
             return false;
         }
 

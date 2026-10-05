@@ -57,7 +57,7 @@ class Planning extends CommonGLPI
      */
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr('plugin_mydashboard', [CREATE, UPDATE]);
+        return Session::haveRightsOr(Menu::$rightname, [CREATE, UPDATE]);
     }
 
     /**
@@ -65,7 +65,7 @@ class Planning extends CommonGLPI
      */
     public static function canView(): bool
     {
-        return Session::haveRight('plugin_mydashboard', READ);
+        return Session::haveRight(Menu::$rightname, READ);
     }
 
 

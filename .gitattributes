@@ -1,0 +1,2 @@
+# Always LF, in the repository and in the working tree (CI and release tools run on Linux)
+* text=auto eol=lf

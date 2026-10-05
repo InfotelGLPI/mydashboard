@@ -31,11 +31,6 @@
  * opened in a new window.
  */
 
-const getCsrfToken = () => {
-    const meta = document.querySelector('meta[property="glpi:csrf_token"]');
-    return meta !== null ? meta.getAttribute('content') : '';
-};
-
 /**
  * Flatten a nested value the way jQuery.param() does (params[key][0]=1), which is what
  * the endpoint reads from $_POST.
@@ -69,7 +64,6 @@ export const openLaunchUrl = (url, fields) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Glpi-Csrf-Token': getCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
         body,

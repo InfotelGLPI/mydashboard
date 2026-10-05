@@ -47,11 +47,11 @@ use Session;
  **/
 class ConfigTranslation extends CommonDBChild
 {
-    public static $itemtype  = 'itemtype';
-    public static $items_id  = 'items_id';
-    public $dohistory = true;
+    public static string $itemtype  = 'itemtype';
+    public static string $items_id  = 'items_id';
+    public bool $dohistory = true;
 
-    public static $rightname = 'plugin_mydashboard_config';
+    public static string $rightname = 'plugin_mydashboard_config';
 
     /**
      * Return the localized name of the current Type

@@ -36,11 +36,6 @@
 
 const SELECTOR = 'table[data-md-datatable]';
 
-const getCsrfToken = () => {
-    const meta = document.querySelector('meta[property="glpi:csrf_token"]');
-    return meta !== null ? meta.getAttribute('content') : '';
-};
-
 const getProfileId = () => {
     const field = document.getElementsByName('profiles_id')[0];
     return field !== undefined ? field.value : '';
@@ -73,7 +68,6 @@ const saveState = (config, state) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Glpi-Csrf-Token': getCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
         body,

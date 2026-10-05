@@ -70,8 +70,8 @@ class Ticket extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
-        $showticket = Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
-        $createticket = Session::haveRight("ticket", CREATE);
+        $showticket = Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
+        $createticket = Session::haveRight(\Ticket::$rightname, CREATE);
 
         $widgets = [
             Menu::$TICKET_REQUESTERVIEW => [
@@ -102,7 +102,7 @@ class Ticket extends CommonGLPI
                 ],
             ],
         ];
-        if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
+        if (Session::haveRightsOr(\TicketValidation::$rightname, TicketValidation::getValidateRights())) {
             $widgets[Menu::$TICKET_REQUESTERVIEW]["ticketlisttovalidatewidget"] = [
                 "title" => __('Your tickets to validate', "mydashboard"),
                 "type" => Widget::$TABLE,
@@ -131,7 +131,7 @@ class Ticket extends CommonGLPI
                 "comment" => "",
             ];
         }
-        if (Session::haveRight('ticket', \Ticket::READGROUP)) {
+        if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
             $widgets[Menu::$TICKET_TECHVIEW]["ticketlistwaitingwidgetgroup"] = [
                 "title" => __('Tickets on pending status'),
                 "type" => Widget::$TABLE,
@@ -184,12 +184,12 @@ class Ticket extends CommonGLPI
      */
     public function getWidgetContentForItem($widgetId)
     {
-        $showticket = Session::haveRightsOr("ticket", [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
-        $createticket = Session::haveRight("ticket", CREATE);
+        $showticket = Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READMY, \Ticket::READALL, \Ticket::READASSIGN]);
+        $createticket = Session::haveRight(\Ticket::$rightname, CREATE);
         switch ($widgetId) {
             //Personnal
             case "ticketlisttovalidatewidget":
-                if (Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
+                if (Session::haveRightsOr(\TicketValidation::$rightname, TicketValidation::getValidateRights())) {
                     return self::showCentralList(0, "tovalidate", false);
                 }
                 break;
@@ -220,22 +220,22 @@ class Ticket extends CommonGLPI
                 break;
                 //Group
             case "ticketlistwaitingwidgetgroup":
-                if (Session::haveRight('ticket', \Ticket::READGROUP)) {
+                if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
                     return self::showCentralList(0, "waiting", true);
                 };
                 break;
             case "ticketlisttoapprovewidgetgroup":
-                if (Session::haveRight('ticket', \Ticket::READGROUP)) {
+                if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
                     return self::showCentralList(0, "toapprove", true);
                 }
                 break;
             case "ticketlistrequestbyselfwidgetgroup":
-                if (Session::haveRight('ticket', \Ticket::READGROUP)) {
+                if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
                     return self::showCentralList(0, "requestbyself", true);
                 }
                 break;
             case "ticketlistobservedwidgetgroup":
-                if (Session::haveRight('ticket', \Ticket::READGROUP)) {
+                if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
                     return self::showCentralList(0, "observed", true);
                 }
                 break;
@@ -282,7 +282,7 @@ class Ticket extends CommonGLPI
         $output = [];
 
         if (!Session::haveRightsOr(\Ticket::$rightname, [CREATE, \Ticket::READALL, \Ticket::READASSIGN])
-            && !Session::haveRightsOr('ticketvalidation', TicketValidation::getValidateRights())) {
+            && !Session::haveRightsOr(\TicketValidation::$rightname, TicketValidation::getValidateRights())) {
             return false;
         }
 
@@ -1034,7 +1034,9 @@ class Ticket extends CommonGLPI
 
         $output = [];
 
-        $showprivate = Session::haveRight("show_full_ticket", 1);
+        // The "show_full_ticket" right no longer exists (always false): use the private followup
+        // right, as showShort() below does
+        $showprivate = Session::haveRight(ITILFollowup::$rightname, ITILFollowup::SEEPRIVATE);
 
         $job = new \Ticket();
         if ($job->getFromDBwithData($ID, 0)) {
@@ -1567,7 +1569,7 @@ class Ticket extends CommonGLPI
 
         $job = new \Ticket();
 
-        $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
+        $showprivate = Session::haveRight(\ITILFollowup::$rightname, ITILFollowup::SEEPRIVATE);
 
         if ($job->getFromDB($id)) {
             // ID and status

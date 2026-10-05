@@ -31,7 +31,6 @@
 {% if canedit %}
     <form method="post" action="{{ profile.getFormURL() }}">
         {{ fields.hiddenField('id', profile.getID()) }}
-        {{ fields.csrfField() }}
 {% endif %}
 
 <table class="tab_cadre_fixehov">

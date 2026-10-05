@@ -29,11 +29,12 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Search\SearchOption;
+use GlpiPlugin\Mydashboard\Menu;
 
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 $result = [];
 if (!isset($_POST['itemtype']) || !isset($_POST['params'])) {

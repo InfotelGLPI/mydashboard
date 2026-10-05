@@ -30,13 +30,14 @@
 use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Mydashboard\Criterias\DisplayData;
 use GlpiPlugin\Mydashboard\Criterias\Year;
+use GlpiPlugin\Mydashboard\Menu;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownUpdateDisplaydata.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 // Refresh the period block of a criteria bar after the mode dropdown changed.
 // The current values are not posted, so every field falls back to its default -- this

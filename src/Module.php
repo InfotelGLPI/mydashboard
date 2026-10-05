@@ -56,7 +56,7 @@ abstract class Module extends CommonGLPI
     private $widgetColorTab;
     protected $titleVisibility = true;
 
-    public static $rightname = "plugin_mydashboard";
+    public static string $rightname = "plugin_mydashboard";
 
     /**
      * @param int $nb

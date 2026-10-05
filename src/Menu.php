@@ -96,7 +96,7 @@ class Menu extends CommonGLPI
     public static $SYSTEM               = 106;
     public static $OTHERS               = 107;
 
-    public static $rightname = "plugin_mydashboard";
+    public static string $rightname = "plugin_mydashboard";
 
     /**
      * @param int $nb
@@ -214,8 +214,8 @@ class Menu extends CommonGLPI
         $menu['title']           = self::getTypeName();
         $menu['page']            = $plugin_page;
         $menu['links']['search'] = $plugin_page;
-        if (Session::haveRightsOr("plugin_mydashboard_config", [CREATE, UPDATE])
-            || Session::haveRight("config", UPDATE)) {
+        if (Session::haveRightsOr(Config::$rightname, [CREATE, UPDATE])
+            || Session::haveRight(\Config::$rightname, UPDATE)) {
             //Entry icon in breadcrumb
             $menu['links']['config'] = Config::getFormURL(false);
         }
@@ -284,7 +284,7 @@ class Menu extends CommonGLPI
                 'icon' => 'ti ti-device-floppy', 'label' => __('Save grid', 'mydashboard'),
             ];
         }
-        if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+        if (Session::haveRight(Config::$rightname, CREATE) && $edit == 2) {
             $actions[] = ['id' => 'save-default-grid', 'class' => 'btn-success',
                 'icon' => 'ti ti-layout-grid', 'label' => __('Save grid', 'mydashboard'),
             ];
@@ -292,12 +292,12 @@ class Menu extends CommonGLPI
         $actions[] = ['id' => 'clear-grid', 'class' => 'btn-danger',
             'icon' => 'ti ti-trash', 'label' => __('Clear grid', 'mydashboard'),
         ];
-        if ($drag < 1 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+        if ($drag < 1 && Session::haveRight(\GlpiPlugin\Mydashboard\Profile::RIGHT_EDIT, 6)) {
             $actions[] = ['id' => 'drag-grid', 'class' => 'btn-outline-warning',
                 'icon' => 'ti ti-lock', 'label' => __('Permit drag / resize widgets', 'mydashboard'),
             ];
         }
-        if ($drag > 0 && Session::haveRight("plugin_mydashboard_edit", 6)) {
+        if ($drag > 0 && Session::haveRight(\GlpiPlugin\Mydashboard\Profile::RIGHT_EDIT, 6)) {
             $actions[] = ['id' => 'undrag-grid', 'class' => 'btn-outline-success',
                 'icon' => 'ti ti-lock-open', 'label' => __('Block drag / resize widgets', 'mydashboard'),
             ];
@@ -305,7 +305,7 @@ class Menu extends CommonGLPI
 
         // Profile selector, in global admin mode only
         $profiles = null;
-        if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+        if (Session::haveRight(Config::$rightname, CREATE) && $edit == 2) {
             $iterator = $DB->request([
                 'SELECT'    => ['glpi_profiles.name', 'glpi_profiles.id'],
                 'FROM'      => Profile::getTable(),
@@ -355,7 +355,7 @@ class Menu extends CommonGLPI
     private function getViewToolbarActions(int $drag): array
     {
         $interface = (Session::getCurrentInterface() == 'central') ? 1 : 0;
-        $can_edit = Session::haveRight("plugin_mydashboard_edit", 6);
+        $can_edit = Session::haveRight(\GlpiPlugin\Mydashboard\Profile::RIGHT_EDIT, 6);
 
         $actions = [];
         if ($drag > 0 && $can_edit) {
@@ -376,7 +376,7 @@ class Menu extends CommonGLPI
                 'icon' => 'ti ti-lock', 'label' => __('Permit drag / resize widgets', 'mydashboard'),
             ];
         }
-        if (Session::haveRight("plugin_mydashboard_config", CREATE)) {
+        if (Session::haveRight(Config::$rightname, CREATE)) {
             $actions[] = ['id' => 'edit-default-grid', 'class' => 'btn-outline-secondary',
                 'icon' => 'ti ti-adjustments', 'label' => __('Custom and save profile grid', 'mydashboard'),
             ];
@@ -613,7 +613,7 @@ class Menu extends CommonGLPI
         // Union of the rule of front/menu.php (READ, UPDATE) and of the former showMenu()
         // (CREATE, READ): the "My view" tab reaches this method through
         // ajax/common.tabs.php, which does not replay the page guard.
-        if (!Session::haveRightsOr("plugin_mydashboard", [READ, UPDATE, CREATE])) {
+        if (!Session::haveRightsOr(Menu::$rightname, [READ, UPDATE, CREATE])) {
             throw new AccessDeniedHttpException();
         }
         $this->users_id = Session::getLoginUserID();

@@ -30,8 +30,10 @@
 use GlpiPlugin\Mydashboard\Dashboard;
 use GlpiPlugin\Mydashboard\Widget;
 use GlpiPlugin\Mydashboard\Preference;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRightsOr("plugin_mydashboard", [READ, CREATE + UPDATE]);
+Session::checkRightsOr(Menu::$rightname, [READ, CREATE + UPDATE]);
 
 $result  = null;
 $gsId    = "";
@@ -49,7 +51,7 @@ if (isset($dashboardWidgets->fields['id'])) {
     $dashboard = new Dashboard();
 
     $edit = Preference::checkEditMode(Session::getLoginUserID());
-    if (Session::haveRight("plugin_mydashboard_config", CREATE) && $edit == 2) {
+    if (Session::haveRight(Config::$rightname, CREATE) && $edit == 2) {
         $idUser    = 0;
         // Cast the incoming profile id to int (consistent with saveGrid/clearGrid), then
         // confront it with the profiles this session may actually manage: it used to be read as

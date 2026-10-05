@@ -34,7 +34,7 @@ namespace GlpiPlugin\Mydashboard;
  */
 class Html extends Module
 {
-    public static $rightname = "plugin_mydashboard";
+    public static string $rightname = "plugin_mydashboard";
 
     /**
      * Html constructor.

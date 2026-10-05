@@ -40,7 +40,7 @@ use State;
 
 class StockWidget extends CommonDBTM
 {
-    public static $rightname = "plugin_mydashboard_stockwidget";
+    public static string $rightname = "plugin_mydashboard_stockwidget";
 
     /**
      * @param int $nb

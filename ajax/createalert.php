@@ -30,8 +30,9 @@
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Mydashboard\Alert;
 use GlpiPlugin\Mydashboard\ItilAlert;
+use GlpiPlugin\Mydashboard\Config;
 
-Session::checkRight("plugin_mydashboard_config", UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
 
 // PHP_SELF points to the GLPI router, never to this file: the former
 // strpos(PHP_SELF, 'createalert.php') guard was always false and the headers were never sent.
