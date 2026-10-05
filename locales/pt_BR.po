@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:15+0000\n"
+"POT-Creation-Date: 2026-10-05 14:53+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Diego Nobre <diego@koruma.com.br>, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/infotelGLPI/"
@@ -39,7 +39,7 @@ msgstr "(filtrados de _MAX_ registros totais)"
 msgid "1 row selected"
 msgstr "1 linha selecionada"
 
-#: src/Widget.php:947
+#: src/Widget.php:946
 msgid "10 rows"
 msgstr "10 linhas"
 
@@ -47,7 +47,7 @@ msgstr "10 linhas"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:948
+#: src/Widget.php:947
 msgid "25 rows"
 msgstr "25 linhas"
 
@@ -55,11 +55,11 @@ msgstr "25 linhas"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:946
+#: src/Widget.php:945
 msgid "5 rows"
 msgstr "5 linhas"
 
-#: src/Widget.php:949
+#: src/Widget.php:948
 msgid "50 rows"
 msgstr "50 linhas"
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Add a new translation"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:41
+#: templates/menu_edit_toolbar.html.twig:40
 msgid "Add widgets"
 msgstr ""
 
@@ -165,11 +165,11 @@ msgstr ""
 msgid "Applied changes"
 msgstr ""
 
-#: templates/profileauthorizedwidget_form.html.twig:43
+#: templates/profileauthorizedwidget_form.html.twig:42
 msgid "Authorize/Unauthorize all"
 msgstr "Autorizar/Desautorizar todos"
 
-#: templates/profileauthorizedwidget_form.html.twig:37
+#: templates/profileauthorizedwidget_form.html.twig:36
 msgid "Authorized widgets"
 msgstr "Widgets autorizados"
 
@@ -256,7 +256,7 @@ msgstr "Limpar grade"
 msgid "Close"
 msgstr "Fechar"
 
-#: templates/menu_edit_toolbar.html.twig:75
+#: templates/menu_edit_toolbar.html.twig:74
 msgid "Close edit mode"
 msgstr "Fechar o modo de edição"
 
@@ -277,7 +277,7 @@ msgstr ""
 msgid "Computers number"
 msgstr ""
 
-#: src/Profile.php:172
+#: src/Profile.php:179
 msgid "Configuration Access"
 msgstr "Configuração de Acesso"
 
@@ -297,7 +297,7 @@ msgstr "Criar um novo alerta"
 msgid "Current year"
 msgstr ""
 
-#: templates/profile.html.twig:44
+#: templates/profile.html.twig:43
 msgid "Custom"
 msgstr "Personalizados"
 
@@ -316,7 +316,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Painel"
 
-#: src/Profile.php:167
+#: src/Profile.php:174
 msgid "Dashboard Access"
 msgstr "Acesso ao Painel"
 
@@ -340,11 +340,11 @@ msgstr "Dados recebidos para"
 msgid "Day"
 msgstr "Dia"
 
-#: templates/groupprofile_form.html.twig:36
+#: templates/groupprofile_form.html.twig:35
 msgid "Default dashboard group"
 msgstr "Grupo padrão do painel"
 
-#: templates/groupprofile_form.html.twig:42
+#: templates/groupprofile_form.html.twig:41
 msgid "Default groups"
 msgstr "Grupos padrão"
 
@@ -514,11 +514,11 @@ msgstr ""
 msgid "Find a widget"
 msgstr "Encontre um widget"
 
-#: templates/preferenceuserblacklist_form.html.twig:37
+#: templates/preferenceuserblacklist_form.html.twig:36
 msgid "From which plugins you want to display the widgets?"
 msgstr "A partir de quais plugins você deseja exibir os widgets?"
 
-#: templates/profile.html.twig:43
+#: templates/profile.html.twig:42
 msgid "Full"
 msgstr "Completo"
 
@@ -692,8 +692,8 @@ msgstr "Lembrete vinculado"
 msgid "Linked with a ticket category"
 msgstr "Vinculado a uma categoria de ticket"
 
+#: templates/menu_edit_toolbar.html.twig:53
 #: templates/menu_edit_toolbar.html.twig:54
-#: templates/menu_edit_toolbar.html.twig:55
 msgid "Load a predefined grid"
 msgstr "Carregar uma grade predefinida"
 
@@ -784,7 +784,7 @@ msgstr "Novos incidentes"
 msgid "New requests"
 msgstr "Novas solicitações"
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1509 src/Alert.php:3442
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1511 src/Alert.php:3442
 #: src/Alert.php:3829
 msgid "New tickets"
 msgstr "Novos chamados"
@@ -797,7 +797,7 @@ msgstr "Nenhum alerta é configurado"
 msgid "No column defined"
 msgstr "Nenhuma coluna definida"
 
-#: src/Chart.php:209 src/Widget.php:763 src/Menu.php:696
+#: src/Chart.php:209 src/Widget.php:762 src/Menu.php:696
 msgid "No data available"
 msgstr "Nenhum dado disponível"
 
@@ -821,7 +821,7 @@ msgstr "Nenhum equipamento fundado"
 msgid "No impact"
 msgstr "Sem impacto"
 
-#: src/Widget.php:1093 src/Alert.php:2691
+#: src/Widget.php:1092 src/Alert.php:2691
 msgid "No informations founded"
 msgstr "Nenhuma informação encontrada"
 
@@ -829,7 +829,7 @@ msgstr "Nenhuma informação encontrada"
 msgid "No matching records found"
 msgstr "Nenhum registro correspondente encontrado"
 
-#: src/Widget.php:1030 src/Alert.php:2828 templates/alert_summary.html.twig:56
+#: src/Widget.php:1029 src/Alert.php:2828 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "Nenhum problema detectado"
 
@@ -841,7 +841,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1061 src/Alert.php:2503
+#: src/Widget.php:1060 src/Alert.php:2503
 msgid "No scheduled maintenance"
 msgstr "Nenhuma Manutenção agendada"
 
@@ -1039,7 +1039,7 @@ msgstr "Permitir arrastar/redimensionar widgets"
 msgid "Pie charts"
 msgstr "Gráfico de setores"
 
-#: front/config.php:47
+#: front/config.php:48
 msgid "Please activate the plugin"
 msgstr "Por favor, ative o plugin"
 
@@ -1073,7 +1073,7 @@ msgstr "Problemas com prioridade muito alta ou alta"
 msgid "Process time by technicians by month"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:64
+#: templates/menu_edit_toolbar.html.twig:63
 msgid "Profile"
 msgstr ""
 
@@ -1180,7 +1180,7 @@ msgstr ""
 msgid "Responsiveness over 12 rolling months"
 msgstr ""
 
-#: src/Profile.php:53
+#: src/Profile.php:60
 msgid "Rights management"
 msgstr "Gestão de permissões"
 
@@ -1205,10 +1205,10 @@ msgid "Satisfy percent"
 msgstr ""
 
 #: templates/htmleditor_form.html.twig:59
-#: templates/preferenceuserblacklist_form.html.twig:48
-#: templates/profile.html.twig:66
-#: templates/profileauthorizedwidget_form.html.twig:60
-#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:54
+#: templates/preferenceuserblacklist_form.html.twig:47
+#: templates/profile.html.twig:65
+#: templates/profileauthorizedwidget_form.html.twig:59
+#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:53
 msgctxt "button"
 msgid "Save"
 msgstr ""
@@ -1232,7 +1232,7 @@ msgstr ""
 msgid "Search users of your organisation"
 msgstr ""
 
-#: src/Profile.php:177 src/Profile.php:280
+#: src/Profile.php:184 src/Profile.php:287
 msgid "See edit mode"
 msgstr "Veja o modo de edição"
 
@@ -1248,11 +1248,11 @@ msgstr "Ver bloco de alerta de rede"
 msgid "See scheduled maintenances information block"
 msgstr "Veja o bloco de informações das manutenções programadas"
 
-#: src/Profile.php:276
+#: src/Profile.php:283
 msgid "See the configuration"
 msgstr "Ver a configuração"
 
-#: src/Profile.php:272
+#: src/Profile.php:279
 msgid "See the dashboard"
 msgstr "Ver o painel"
 
@@ -1261,7 +1261,7 @@ msgctxt "button"
 msgid "Send"
 msgstr ""
 
-#: src/Profile.php:268 templates/profile.html.twig:60
+#: src/Profile.php:275 templates/profile.html.twig:59
 msgid "Setup stock widget"
 msgstr "Widget de estoque de configuração"
 
@@ -1270,7 +1270,7 @@ msgstr "Widget de estoque de configuração"
 msgid "Show %d elements"
 msgstr "Exibir %d elementos"
 
-#: src/Widget.php:950 src/Menu.php:582
+#: src/Widget.php:949 src/Menu.php:582
 msgid "Show all"
 msgstr "Mostre tudo"
 
@@ -1420,8 +1420,8 @@ msgstr ""
 msgid "Ticket closed"
 msgstr "Chamado fechado"
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1318
-#: src/Reports/Ticket.php:1324
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1320
+#: src/Reports/Ticket.php:1326
 msgid "Ticket followup"
 msgstr ""
 
@@ -1527,7 +1527,7 @@ msgstr ""
 msgid "Updating all widgets"
 msgstr "Atualizando todos os Widget"
 
-#: templates/groupprofile_form.html.twig:40
+#: templates/groupprofile_form.html.twig:39
 msgid "Use profile group"
 msgstr "Use o grupo de perfis"
 

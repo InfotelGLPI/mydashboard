@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:15+0000\n"
+"POT-Creation-Date: 2026-10-05 14:53+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: fhuang1984 <168546@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/infotelGLPI/"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "1 row selected"
 msgstr "选中 1 行"
 
-#: src/Widget.php:947
+#: src/Widget.php:946
 msgid "10 rows"
 msgstr "10 条"
 
@@ -45,7 +45,7 @@ msgstr "10 条"
 msgid "2-4 years"
 msgstr ""
 
-#: src/Widget.php:948
+#: src/Widget.php:947
 msgid "25 rows"
 msgstr "25 条"
 
@@ -53,11 +53,11 @@ msgstr "25 条"
 msgid "4-6 years"
 msgstr ""
 
-#: src/Widget.php:946
+#: src/Widget.php:945
 msgid "5 rows"
 msgstr "5 条"
 
-#: src/Widget.php:949
+#: src/Widget.php:948
 msgid "50 rows"
 msgstr "50 条"
 
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Add a new translation"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:41
+#: templates/menu_edit_toolbar.html.twig:40
 msgid "Add widgets"
 msgstr ""
 
@@ -157,11 +157,11 @@ msgstr ""
 msgid "Applied changes"
 msgstr "已应用变更"
 
-#: templates/profileauthorizedwidget_form.html.twig:43
+#: templates/profileauthorizedwidget_form.html.twig:42
 msgid "Authorize/Unauthorize all"
 msgstr "授权/未授权"
 
-#: templates/profileauthorizedwidget_form.html.twig:37
+#: templates/profileauthorizedwidget_form.html.twig:36
 msgid "Authorized widgets"
 msgstr "授权的部件"
 
@@ -248,7 +248,7 @@ msgstr ""
 msgid "Close"
 msgstr "关闭"
 
-#: templates/menu_edit_toolbar.html.twig:75
+#: templates/menu_edit_toolbar.html.twig:74
 msgid "Close edit mode"
 msgstr "退出编辑模式"
 
@@ -269,7 +269,7 @@ msgstr ""
 msgid "Computers number"
 msgstr ""
 
-#: src/Profile.php:172
+#: src/Profile.php:179
 msgid "Configuration Access"
 msgstr "配置访问权限"
 
@@ -289,7 +289,7 @@ msgstr "新建告警"
 msgid "Current year"
 msgstr ""
 
-#: templates/profile.html.twig:44
+#: templates/profile.html.twig:43
 msgid "Custom"
 msgstr ""
 
@@ -308,7 +308,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: src/Profile.php:167
+#: src/Profile.php:174
 msgid "Dashboard Access"
 msgstr "面板访问权限"
 
@@ -332,11 +332,11 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: templates/groupprofile_form.html.twig:36
+#: templates/groupprofile_form.html.twig:35
 msgid "Default dashboard group"
 msgstr "默认面板组"
 
-#: templates/groupprofile_form.html.twig:42
+#: templates/groupprofile_form.html.twig:41
 msgid "Default groups"
 msgstr "默认分组"
 
@@ -506,11 +506,11 @@ msgstr ""
 msgid "Find a widget"
 msgstr ""
 
-#: templates/preferenceuserblacklist_form.html.twig:37
+#: templates/preferenceuserblacklist_form.html.twig:36
 msgid "From which plugins you want to display the widgets?"
 msgstr ""
 
-#: templates/profile.html.twig:43
+#: templates/profile.html.twig:42
 msgid "Full"
 msgstr ""
 
@@ -682,8 +682,8 @@ msgstr ""
 msgid "Linked with a ticket category"
 msgstr "关联工单类别"
 
+#: templates/menu_edit_toolbar.html.twig:53
 #: templates/menu_edit_toolbar.html.twig:54
-#: templates/menu_edit_toolbar.html.twig:55
 msgid "Load a predefined grid"
 msgstr ""
 
@@ -772,7 +772,7 @@ msgstr "新的事件"
 msgid "New requests"
 msgstr "新的请求"
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1509 src/Alert.php:3442
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1511 src/Alert.php:3442
 #: src/Alert.php:3829
 msgid "New tickets"
 msgstr "新的工单"
@@ -785,7 +785,7 @@ msgstr "未设置告警"
 msgid "No column defined"
 msgstr "未定义列"
 
-#: src/Chart.php:209 src/Widget.php:763 src/Menu.php:696
+#: src/Chart.php:209 src/Widget.php:762 src/Menu.php:696
 msgid "No data available"
 msgstr "无可用数据"
 
@@ -809,7 +809,7 @@ msgstr "未发现设备"
 msgid "No impact"
 msgstr ""
 
-#: src/Widget.php:1093 src/Alert.php:2691
+#: src/Widget.php:1092 src/Alert.php:2691
 msgid "No informations founded"
 msgstr ""
 
@@ -817,7 +817,7 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Widget.php:1030 src/Alert.php:2828 templates/alert_summary.html.twig:56
+#: src/Widget.php:1029 src/Alert.php:2828 templates/alert_summary.html.twig:56
 msgid "No problem detected"
 msgstr "为检测到问题"
 
@@ -829,7 +829,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1061 src/Alert.php:2503
+#: src/Widget.php:1060 src/Alert.php:2503
 msgid "No scheduled maintenance"
 msgstr "没有维护计划"
 
@@ -1027,7 +1027,7 @@ msgstr ""
 msgid "Pie charts"
 msgstr "饼图"
 
-#: front/config.php:47
+#: front/config.php:48
 msgid "Please activate the plugin"
 msgstr "请激活插件"
 
@@ -1061,7 +1061,7 @@ msgstr "高级别或重大优先级的问题"
 msgid "Process time by technicians by month"
 msgstr "按月统计技术人员工作耗时"
 
-#: templates/menu_edit_toolbar.html.twig:64
+#: templates/menu_edit_toolbar.html.twig:63
 msgid "Profile"
 msgstr ""
 
@@ -1168,7 +1168,7 @@ msgstr ""
 msgid "Responsiveness over 12 rolling months"
 msgstr ""
 
-#: src/Profile.php:53
+#: src/Profile.php:60
 msgid "Rights management"
 msgstr "权限管理"
 
@@ -1193,10 +1193,10 @@ msgid "Satisfy percent"
 msgstr ""
 
 #: templates/htmleditor_form.html.twig:59
-#: templates/preferenceuserblacklist_form.html.twig:48
-#: templates/profile.html.twig:66
-#: templates/profileauthorizedwidget_form.html.twig:60
-#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:54
+#: templates/preferenceuserblacklist_form.html.twig:47
+#: templates/profile.html.twig:65
+#: templates/profileauthorizedwidget_form.html.twig:59
+#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:53
 msgctxt "button"
 msgid "Save"
 msgstr ""
@@ -1218,7 +1218,7 @@ msgstr ""
 msgid "Search users of your organisation"
 msgstr "检索用户"
 
-#: src/Profile.php:177 src/Profile.php:280
+#: src/Profile.php:184 src/Profile.php:287
 msgid "See edit mode"
 msgstr "查看编辑模式"
 
@@ -1234,11 +1234,11 @@ msgstr ""
 msgid "See scheduled maintenances information block"
 msgstr ""
 
-#: src/Profile.php:276
+#: src/Profile.php:283
 msgid "See the configuration"
 msgstr "查看配置"
 
-#: src/Profile.php:272
+#: src/Profile.php:279
 msgid "See the dashboard"
 msgstr "查看面板"
 
@@ -1247,7 +1247,7 @@ msgctxt "button"
 msgid "Send"
 msgstr ""
 
-#: src/Profile.php:268 templates/profile.html.twig:60
+#: src/Profile.php:275 templates/profile.html.twig:59
 msgid "Setup stock widget"
 msgstr ""
 
@@ -1256,7 +1256,7 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Widget.php:950 src/Menu.php:582
+#: src/Widget.php:949 src/Menu.php:582
 msgid "Show all"
 msgstr "显示全部"
 
@@ -1399,8 +1399,8 @@ msgstr "有计划性维护。请登录查看"
 msgid "Ticket closed"
 msgstr ""
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1318
-#: src/Reports/Ticket.php:1324
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1320
+#: src/Reports/Ticket.php:1326
 msgid "Ticket followup"
 msgstr ""
 
@@ -1506,7 +1506,7 @@ msgstr ""
 msgid "Updating all widgets"
 msgstr "更新所有部件"
 
-#: templates/groupprofile_form.html.twig:40
+#: templates/groupprofile_form.html.twig:39
 msgid "Use profile group"
 msgstr "使用配置文件组"
 
