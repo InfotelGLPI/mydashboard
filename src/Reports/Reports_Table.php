@@ -227,7 +227,7 @@ class Reports_Table extends CommonGLPI
                         'glpi_users.is_active' => 1,
                     ],
                     'GROUPBY' => 'name',
-                    'ORDERBY' => 'realname,firstname ASC',
+                    'ORDERBY' => ['realname', 'firstname ASC'],
                 ];
                 $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
                     'glpi_profiles_users',
