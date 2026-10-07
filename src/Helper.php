@@ -297,7 +297,7 @@ class Helper
             'WHERE' => [
                 'users_id' => $userid,
                 $dbu->getEntitiesRestrictCriteria('glpi_groups', '', $entity, true),
-                '`is_requester`',
+                'glpi_groups.is_requester' => 1,
             ],
         ];
 
