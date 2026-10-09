@@ -85,7 +85,7 @@ do
     #    "{% set labels = {'k': __('Label', 'mydashboard')} %}" stays plain text for xgettext
     #    and the string is silently dropped from the catalogue.
     # 2. Replace "standard input:line_no" by file location in po file comments
-    cat $file | perl -0pe 's/\{\{(.*?)\}\}/<?php $1; ?>/gism; s/\{\%(.*?)\%\}/<?php $1; ?>/gism' | xgettext - \
+    cat $file | perl -0pe 's/\{\{(.*?)\}\}/<?php $1; ?>/gism; s/\{\%-?(.*?)-?\%\}/<?php $1; ?>/gism' | xgettext - \
         -o locales/glpi.pot \
         -L PHP \
         --add-comments=TRANS \

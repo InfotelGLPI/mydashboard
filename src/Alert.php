@@ -885,8 +885,8 @@ class Alert extends CommonDBTM
                 $criteria = [
                     'SELECT' => ['date', 'from', 'reason', 'mailcollectors_id'],
                     'FROM' => 'glpi_notimportedemails',
-                    // The table is entity bound in the core; the widget listed it globally.
-                    'WHERE' => getEntitiesRestrictCriteria('glpi_notimportedemails'),
+                    // No entity restriction: the table has no entities_id column (it is global
+                    // in the core too, guarded by the "config" right checked above).
                     'ORDERBY' => 'date ASC',
                 ];
 
