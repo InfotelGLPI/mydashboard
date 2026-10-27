@@ -1215,61 +1215,53 @@ class Ticket extends CommonGLPI
             $foruser = true;
         }
 
+        // A ticket joined to several actors is counted once
         $criteria = [
             'SELECT' => [
-                'status',
-                'COUNT' => 'glpi_tickets.id AS COUNT',
+                'glpi_tickets.status',
+                'COUNT DISTINCT' => 'glpi_tickets.id AS COUNT',
             ],
             'FROM' => 'glpi_tickets',
             'LEFT JOIN' => [],
-            'WHERE' => [],
+            'WHERE' => getEntitiesRestrictCriteria('glpi_tickets'),
             'GROUPBY' => 'glpi_tickets.status',
         ];
 
+        // Tickets the user requested, or one of their groups when they can see the group tickets
         if ($foruser) {
-            $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                'glpi_tickets_users' => [
-                    'ON' => [
-                        'glpi_tickets' => 'id',
-                        'glpi_tickets_users' => 'tickets_id',
+            $criteria['LEFT JOIN']['glpi_tickets_users'] = [
+                'ON' => [
+                    'glpi_tickets' => 'id',
+                    'glpi_tickets_users' => 'tickets_id',
+                    [
+                        'AND' => ['glpi_tickets_users.type' => CommonITILActor::REQUESTER],
                     ],
                 ],
             ];
+            $requester = ['glpi_tickets_users.users_id' => Session::getLoginUserID()];
 
-            if (isset($_SESSION["glpigroups"])
+            if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)
+                && isset($_SESSION["glpigroups"])
                 && count($_SESSION["glpigroups"])
             ) {
-                $criteria['LEFT JOIN'] = $criteria['LEFT JOIN'] + [
-                    'glpi_groups_tickets' => [
-                        'ON' => [
-                            'glpi_tickets' => 'id',
-                            'glpi_groups_tickets' => 'tickets_id',
+                $criteria['LEFT JOIN']['glpi_groups_tickets'] = [
+                    'ON' => [
+                        'glpi_tickets' => 'id',
+                        'glpi_groups_tickets' => 'tickets_id',
+                        [
+                            'AND' => ['glpi_groups_tickets.type' => CommonITILActor::REQUESTER],
                         ],
                     ],
                 ];
+                $requester['glpi_groups_tickets.groups_id'] = $_SESSION['glpigroups'];
             }
+            $criteria['WHERE'][] = ['OR' => $requester];
         }
 
-        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
-            'glpi_tickets',
-        );
-
-        if ($foruser) {
-            $criteria['WHERE'] = $criteria['WHERE'] + [
-                'glpi_tickets_users.users_id' => Session::getLoginUserID(),
-                'glpi_tickets_users.type' => CommonITILActor::REQUESTER,
-            ];
-
-            if (isset($_SESSION["glpigroups"])
-                && count($_SESSION["glpigroups"])
-            ) {
-                $criteria['WHERE'] = $criteria['WHERE'] + [
-                    'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                    'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
-                ];
-            }
-        }
+        // Deleted tickets apart, in their own counter
         $criteria_deleted = $criteria;
+        $criteria['WHERE']['glpi_tickets.is_deleted'] = 0;
+        $criteria_deleted['WHERE']['glpi_tickets.is_deleted'] = 1;
 
         $iterator = $DB->request($criteria);
         $iterator_deleted = $DB->request($criteria_deleted);
