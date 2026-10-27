@@ -14,18 +14,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 14:53+0000\n"
+"POT-Creation-Date: 2026-10-27 10:14+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Pruebas, 2019\n"
-"Language-Team: Spanish (Spain) (https://www.transifex.com/infotelGLPI/"
-"teams/65490/es_ES/)\n"
+"Language-Team: Spanish (Spain) (https://www.transifex.com/infotelGLPI/teams/"
+"65490/es_ES/)\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/alert_ticket_cell.html.twig:33
+#: ⁨standard input⁩:33
 #, php-format
 msgid "%1$s: %2$s"
 msgstr ""
@@ -78,15 +78,15 @@ msgstr ""
 msgid "> 6 years"
 msgstr ""
 
-#: templates/widget_frame.html.twig:96
+#: ⁨standard input⁩:96
 msgid "Add"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:44
+#: ⁨standard input⁩:44
 msgid "Add a new translation"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:40
+#: ⁨standard input⁩:40
 msgid "Add widgets"
 msgstr ""
 
@@ -98,7 +98,7 @@ msgstr ""
 msgid "Age pyramid"
 msgstr ""
 
-#: src/Alert.php:3018 templates/alert_form.html.twig:33
+#: src/Alert.php:3018 ⁨standard input⁩:33
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Alertas"
@@ -116,11 +116,11 @@ msgid ""
 "timeout)"
 msgstr ""
 
-#: templates/alert_form.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Alert level"
 msgstr "Nivel de alerta"
 
-#: templates/stockwidget_form.html.twig:115
+#: ⁨standard input⁩:115
 msgid "Alert threshold"
 msgstr ""
 
@@ -152,7 +152,7 @@ msgstr ""
 msgid "All unpublished articles"
 msgstr ""
 
-#: templates/checkschema_result.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Altered table"
 msgstr ""
 
@@ -160,11 +160,11 @@ msgstr ""
 msgid "Applied changes"
 msgstr ""
 
-#: templates/profileauthorizedwidget_form.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Authorize/Unauthorize all"
 msgstr "Permitir/Prohibir a todos"
 
-#: templates/profileauthorizedwidget_form.html.twig:36
+#: ⁨standard input⁩:36
 msgid "Authorized widgets"
 msgstr "Widgets autorizados"
 
@@ -172,11 +172,11 @@ msgstr "Widgets autorizados"
 msgid "Automatic actions in error"
 msgstr "Acciones automáticas en error"
 
-#: templates/preferences.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr "Actualización automática de los widgets que se pueden actualizar"
 
-#: templates/menu_widgets_offcanvas.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Availables widgets"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Block drag / resize widgets"
 msgstr "Rechazar arrastrar / redimensionar widget"
 
-#: templates/config_form.html.twig:93
+#: ⁨standard input⁩:93
 msgid "Can take many time if you have many tickets"
 msgstr ""
 
@@ -208,8 +208,8 @@ msgstr ""
 msgid "Cannot create alert without a type"
 msgstr "No se puede crear una alerta sin un tipo"
 
-#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:109
 #: src/Criterias/Other.php:268 src/Criterias/Other.php:477
+#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:109
 msgid "Category"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr "Comprobar si GLPI no tiene problema"
 msgid "Child locations"
 msgstr ""
 
-#: src/Widget.php:172 templates/widget_form.html.twig:33
+#: src/Widget.php:172 ⁨standard input⁩:33
 msgid "Class"
 msgstr ""
 
@@ -246,17 +246,16 @@ msgstr ""
 msgid "Clear grid"
 msgstr "Limpiar tabla"
 
-#: src/Menu.php:574 src/Menu.php:587
-#: templates/menu_widgets_offcanvas.html.twig:33
+#: src/Menu.php:574 src/Menu.php:587 ⁨standard input⁩:33
 msgid "Close"
 msgstr "Cerrar"
 
-#: templates/menu_edit_toolbar.html.twig:74
+#: ⁨standard input⁩:74
 msgid "Close edit mode"
 msgstr "Cerrar modo de edición"
 
-#: src/Reports/Reports_Line.php:625 src/Reports/Reports_Line.php:1269
 #: src/Reports/Reports_Pie.php:1083 src/Reports/Reports_Pie.php:1086
+#: src/Reports/Reports_Line.php:625 src/Reports/Reports_Line.php:1269
 msgid "Closed tickets"
 msgstr "Tickets cerrados"
 
@@ -264,7 +263,7 @@ msgstr "Tickets cerrados"
 msgid "Column visibility"
 msgstr "Visibilidad de columna"
 
-#: templates/alert_item.html.twig:58
+#: ⁨standard input⁩:58
 msgid "Comment"
 msgstr ""
 
@@ -284,15 +283,15 @@ msgstr ""
 msgid "Contracts status"
 msgstr ""
 
-#: templates/alert_item.html.twig:39 templates/alert_item.html.twig:40
+#: ⁨standard input⁩:39 ⁨standard input⁩:40
 msgid "Create a new alert"
 msgstr "Crea una nueva alerta"
 
-#: templates/preferences.html.twig:115
+#: ⁨standard input⁩:115
 msgid "Current year"
 msgstr ""
 
-#: templates/profile.html.twig:43
+#: ⁨standard input⁩:43
 msgid "Custom"
 msgstr "Personalizada"
 
@@ -304,10 +303,10 @@ msgstr "Widgets personalizados"
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Module.php:67 src/Html.php:57 src/Chart.php:63 src/Datatable.php:58
-#: src/Reports/Change.php:58 src/Reports/ProjectTask.php:57
-#: src/Reports/Planning.php:52 src/Reports/Project.php:53
-#: src/Reports/Problem.php:57 src/Dashboard.php:71 src/Menu.php:588
+#: src/Chart.php:63 src/Reports/Project.php:53 src/Reports/Planning.php:52
+#: src/Reports/Change.php:58 src/Reports/Problem.php:57
+#: src/Reports/ProjectTask.php:57 src/Datatable.php:58 src/Dashboard.php:71
+#: src/Html.php:57 src/Menu.php:588 src/Module.php:67
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -335,15 +334,15 @@ msgstr "Data received for"
 msgid "Day"
 msgstr ""
 
-#: templates/groupprofile_form.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Default dashboard group"
 msgstr "Grupo de dashboard predefinido"
 
-#: templates/groupprofile_form.html.twig:41
+#: ⁨standard input⁩:41
 msgid "Default groups"
 msgstr ""
 
-#: templates/alert_form.html.twig:56
+#: ⁨standard input⁩:56
 msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
@@ -352,11 +351,11 @@ msgstr ""
 msgid "Delete widget"
 msgstr "Eliminar widget"
 
-#: templates/checkschema_result.html.twig:85
+#: ⁨standard input⁩:85
 msgid "Destructive queries"
 msgstr ""
 
-#: templates/criteria_display_data.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Display"
 msgstr ""
 
@@ -448,12 +447,11 @@ msgstr ""
 msgid "Edit mode"
 msgstr "Modo edición"
 
-#: templates/config_form.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr "Permitir la posibilidad de visualizar Dashboard en pantalla completa"
 
-#: templates/criteria_period_range.html.twig:32
-#: templates/criteria_filter_date.html.twig:49
+#: ⁨standard input⁩:49 ⁨standard input⁩:32
 msgid "End"
 msgstr ""
 
@@ -493,13 +491,11 @@ msgstr ""
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:57
-#: templates/configtranslation_form.html.twig:56
-#: templates/configtranslation_form.html.twig:64
+#: ⁨standard input⁩:57 ⁨standard input⁩:56 ⁨standard input⁩:64
 msgid "Field"
 msgstr ""
 
-#: templates/criteria_filter_date.html.twig:33
+#: ⁨standard input⁩:33
 msgid "Filter date"
 msgstr ""
 
@@ -507,15 +503,15 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
-#: templates/menu_widgets_offcanvas.html.twig:39
+#: ⁨standard input⁩:39
 msgid "Find a widget"
 msgstr ""
 
-#: templates/preferenceuserblacklist_form.html.twig:36
+#: ⁨standard input⁩:36
 msgid "From which plugins you want to display the widgets?"
 msgstr "Desde que los plugins que desea mostrar los widgets?"
 
-#: templates/profile.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Full"
 msgstr "Completo"
 
@@ -543,7 +539,7 @@ msgstr ""
 msgid "Global"
 msgstr "Global"
 
-#: templates/menu_global_filter_bar.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Global filter"
 msgstr ""
 
@@ -567,19 +563,19 @@ msgstr "Tabla de supervisor de Heldesk"
 msgid "Helpdesk technician grid"
 msgstr "Tabla de técnicos de Helpdesk"
 
-#: templates/alert_ticket_cell.html.twig:33
+#: ⁨standard input⁩:33
 msgid "ID"
 msgstr ""
 
-#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:949 src/Alert.php:623
+#: src/Alert.php:623 src/Reports/Ticket.php:507 src/Reports/Ticket.php:949
 msgid "ID and priority"
 msgstr "ID y prioridad"
 
-#: templates/stockwidget_form.html.twig:108
+#: ⁨standard input⁩:108
 msgid "Icon"
 msgstr ""
 
-#: templates/config_form.html.twig:54
+#: ⁨standard input⁩:54
 msgid "Impact colors for alerts"
 msgstr ""
 
@@ -633,7 +629,7 @@ msgstr[1] "Informaciones"
 msgid "Internal annuary"
 msgstr "Internal annuary"
 
-#: src/Widget.php:163 templates/widget_form.html.twig:32
+#: src/Widget.php:163 ⁨standard input⁩:32
 msgid "Internal name"
 msgstr ""
 
@@ -645,18 +641,15 @@ msgstr "Tabla de administrador de Inventario"
 msgid "Inventory stock alerts"
 msgstr "Alertas de existencias de inventario"
 
-#: templates/stockwidget_form.html.twig:103
+#: ⁨standard input⁩:103
 msgid "Item state"
 msgstr ""
 
-#: templates/stockwidget_form.html.twig:45
-#: templates/stockwidget_form.html.twig:53
+#: ⁨standard input⁩:45 ⁨standard input⁩:53
 msgid "Item type"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:56
-#: templates/configtranslation_form.html.twig:38
-#: templates/configtranslation_form.html.twig:40
+#: ⁨standard input⁩:56 ⁨standard input⁩:38 ⁨standard input⁩:40
 msgid "Language"
 msgstr ""
 
@@ -672,7 +665,7 @@ msgstr ""
 msgid "Last year"
 msgstr ""
 
-#: templates/config_form.html.twig:50
+#: ⁨standard input⁩:50
 msgid "Level of categories to show"
 msgstr "Nivel de categorias a mostrar"
 
@@ -680,16 +673,15 @@ msgstr "Nivel de categorias a mostrar"
 msgid "Line charts"
 msgstr ""
 
-#: templates/alert_item.html.twig:51
+#: ⁨standard input⁩:51
 msgid "Linked reminder"
 msgstr "Recordatorio vinculado"
 
-#: templates/alert_form.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Linked with a ticket category"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:53
-#: templates/menu_edit_toolbar.html.twig:54
+#: ⁨standard input⁩:53 ⁨standard input⁩:54
 msgid "Load a predefined grid"
 msgstr "Cargar una tabla predefinida"
 
@@ -705,7 +697,7 @@ msgstr "Maximizar"
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: templates/checkschema_result.html.twig:29
+#: ⁨standard input⁩:29
 msgid "Missing table"
 msgstr ""
 
@@ -713,9 +705,9 @@ msgstr ""
 msgid "Modification date"
 msgstr "Fecha de modificación"
 
-#: src/Criterias/Month.php:60 src/Criterias/Month.php:77
 #: src/Criterias/Other.php:256 src/Criterias/Other.php:405
-#: src/Criterias/Other.php:427 templates/criteria_period_month.html.twig:29
+#: src/Criterias/Other.php:427 src/Criterias/Month.php:60
+#: src/Criterias/Month.php:77 ⁨standard input⁩:29
 msgid "Month"
 msgstr "Mes"
 
@@ -723,32 +715,32 @@ msgstr "Mes"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:208 src/Preference.php:85 src/Config.php:61 src/Menu.php:108
-#: src/Menu.php:698 templates/menu_action_toolbar.html.twig:32
+#: setup.php:208 src/Config.php:61 src/Preference.php:85 src/Menu.php:108
+#: src/Menu.php:698 ⁨standard input⁩:32
 msgid "My Dashboard"
 msgstr "Mi Dashboard"
 
-#: templates/preferences.html.twig:97
+#: ⁨standard input⁩:97
 msgid "My favorite category for widgets"
 msgstr ""
 
-#: templates/preferences.html.twig:86
+#: ⁨standard input⁩:86
 msgid "My prefered entity for widget"
 msgstr "Mi entidad preferida para widget"
 
-#: templates/preferences.html.twig:61
+#: ⁨standard input⁩:61
 msgid "My prefered groups for widget"
 msgstr ""
 
-#: templates/preferences.html.twig:108
+#: ⁨standard input⁩:108
 msgid "My prefered type for widget"
 msgstr ""
 
-#: templates/preferences.html.twig:116
+#: ⁨standard input⁩:116
 msgid "My prefered year for widget"
 msgstr ""
 
-#: templates/preferences.html.twig:74
+#: ⁨standard input⁩:74
 msgid "My requester prefered groups for widget"
 msgstr ""
 
@@ -756,12 +748,12 @@ msgstr ""
 msgid "My view"
 msgstr "Mi vista"
 
-#: templates/stockwidget_form.html.twig:37 templates/alert_item.html.twig:54
+#: ⁨standard input⁩:54 ⁨standard input⁩:37
 msgid "Name"
 msgstr ""
 
-#: src/ItilAlert.php:92 src/Config.php:319 src/Config.php:516 src/Alert.php:220
-#: src/Alert.php:3128
+#: src/Config.php:319 src/Config.php:516 src/Alert.php:220 src/Alert.php:3128
+#: src/ItilAlert.php:92
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] "Alertas de Red"
@@ -779,12 +771,12 @@ msgstr "Nuevos incidentes"
 msgid "New requests"
 msgstr ""
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1511 src/Alert.php:3442
-#: src/Alert.php:3829
+#: src/Alert.php:3442 src/Alert.php:3829 src/Reports/Ticket.php:114
+#: src/Reports/Ticket.php:1511
 msgid "New tickets"
 msgstr "Nuevos billetes"
 
-#: templates/alert_stock_tiles.html.twig:32
+#: ⁨standard input⁩:32
 msgid "No alerts are setup"
 msgstr "No hay alertas configuradas"
 
@@ -808,7 +800,7 @@ msgstr "No hay datos para el widget"
 msgid "No data received for"
 msgstr "No data received for"
 
-#: templates/widget_equipments.html.twig:38
+#: ⁨standard input⁩:38
 msgid "No equipments founded"
 msgstr "No se han encontrado equipos"
 
@@ -824,15 +816,15 @@ msgstr "No hay información establecida"
 msgid "No matching records found"
 msgstr "No hay registros coincidentes encontrados"
 
-#: src/Widget.php:1029 src/Alert.php:2828 templates/alert_summary.html.twig:56
+#: src/Widget.php:1029 src/Alert.php:2828 ⁨standard input⁩:56
 msgid "No problem detected"
 msgstr "Ningún problema detectado"
 
-#: templates/checkschema_result.html.twig:90
+#: ⁨standard input⁩:90
 msgid "No query could be suggested for this difference."
 msgstr ""
 
-#: templates/graph_header.html.twig:39
+#: ⁨standard input⁩:39
 msgid "No results found"
 msgstr ""
 
@@ -840,7 +832,7 @@ msgstr ""
 msgid "No scheduled maintenance"
 msgstr "No hay mantenimiento programado"
 
-#: templates/menu_grid.html.twig:76
+#: ⁨standard input⁩:76
 msgid "No widgets founded, please add widgets"
 msgstr "Widgets no encontrados, por favor agregue widgets"
 
@@ -856,8 +848,8 @@ msgstr "No es un tabla"
 msgid "Not imported mails in collectors"
 msgstr "Correos no importados en colectores"
 
-#: src/Reports/Reports_Line.php:1270 src/Reports/Reports_Pie.php:1119
-#: src/Reports/Reports_Pie.php:1122
+#: src/Reports/Reports_Pie.php:1119 src/Reports/Reports_Pie.php:1122
+#: src/Reports/Reports_Line.php:1270
 msgid "Not planned"
 msgstr ""
 
@@ -987,14 +979,14 @@ msgstr ""
 msgid "Opened requests without assigned technicians"
 msgstr ""
 
-#: src/Reports/Reports_Line.php:624 src/Reports/Reports_Line.php:901
-#: src/Reports/Reports_Line.php:1268 src/Reports/Reports_Bar.php:1839
-#: src/Reports/Reports_Pie.php:1054 src/Reports/Reports_Pie.php:1057
+#: src/Reports/Reports_Bar.php:1839 src/Reports/Reports_Pie.php:1054
+#: src/Reports/Reports_Pie.php:1057 src/Reports/Reports_Line.php:624
+#: src/Reports/Reports_Line.php:901 src/Reports/Reports_Line.php:1268
 msgid "Opened tickets"
 msgstr "Tickets abiertos"
 
-#: src/Reports/Reports_Line.php:626 src/Reports/Reports_Line.php:903
-#: src/Reports/Reports_Line.php:1271 src/Reports/Reports_Bar.php:125
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:626
+#: src/Reports/Reports_Line.php:903 src/Reports/Reports_Line.php:1271
 msgid "Opened tickets backlog"
 msgstr "Opened tickets backlog"
 
@@ -1002,7 +994,7 @@ msgstr "Opened tickets backlog"
 msgid "PDF export failed. Please try again."
 msgstr ""
 
-#: templates/preferences.html.twig:124
+#: ⁨standard input⁩:124
 msgid "Palette color"
 msgstr ""
 
@@ -1038,8 +1030,9 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
+#: scripts/clean_stock_tickets.php:152
 #: scripts/insert_stock_ticketindicators.php:72
-#: scripts/clean_stock_tickets.php:152 scripts/insert_stock_tickets.php:72
+#: scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr "Plugin disabled"
 
@@ -1047,7 +1040,7 @@ msgstr "Plugin disabled"
 msgid "Plugin setup"
 msgstr ""
 
-#: templates/preferences.html.twig:115
+#: ⁨standard input⁩:115
 msgid "Previous year"
 msgstr ""
 
@@ -1068,7 +1061,7 @@ msgstr "Problemas con prioridad muy alta o mayor"
 msgid "Process time by technicians by month"
 msgstr "Tiempo de proceso por técnico por mes"
 
-#: templates/menu_edit_toolbar.html.twig:63
+#: ⁨standard input⁩:63
 msgid "Profile"
 msgstr ""
 
@@ -1083,7 +1076,7 @@ msgstr ""
 msgid "Projects to be processed"
 msgstr ""
 
-#: templates/alert_form.html.twig:45
+#: ⁨standard input⁩:45
 msgid "Public"
 msgstr ""
 
@@ -1091,16 +1084,16 @@ msgstr ""
 msgid "Publication date"
 msgstr "Fecha de publicación"
 
-#: templates/checkschema_result.html.twig:51
+#: ⁨standard input⁩:51
 msgid "Queries to run"
 msgstr ""
 
-#: templates/config_form.html.twig:87
+#: ⁨standard input⁩:87
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr ""
 
-#: templates/config_form.html.twig:90
+#: ⁨standard input⁩:90
 msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
@@ -1109,7 +1102,7 @@ msgstr ""
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: templates/preferences.html.twig:45
+#: ⁨standard input⁩:45
 msgid "Refresh every "
 msgstr "Actualizar cada"
 
@@ -1117,7 +1110,7 @@ msgstr "Actualizar cada"
 msgid "Refresh widget"
 msgstr "Actualizar widget"
 
-#: templates/preferences.html.twig:52 templates/config_form.html.twig:42
+#: ⁨standard input⁩:42 ⁨standard input⁩:52
 msgid "Replace central interface"
 msgstr "sustituir la interfaz central"
 
@@ -1199,11 +1192,8 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr "Porcentaje satisfactorio"
 
-#: templates/htmleditor_form.html.twig:59
-#: templates/preferenceuserblacklist_form.html.twig:47
-#: templates/profile.html.twig:65
-#: templates/profileauthorizedwidget_form.html.twig:59
-#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:53
+#: ⁨standard input⁩:47 ⁨standard input⁩:65 ⁨standard input⁩:59 ⁨standard input⁩:53
+#: ⁨standard input⁩:51
 msgctxt "button"
 msgid "Save"
 msgstr ""
@@ -1250,12 +1240,12 @@ msgstr "See the configuration"
 msgid "See the dashboard"
 msgstr "See the dashboard"
 
-#: templates/criteria_form.html.twig:57
+#: ⁨standard input⁩:57
 msgctxt "button"
 msgid "Send"
 msgstr ""
 
-#: src/Profile.php:275 templates/profile.html.twig:59
+#: src/Profile.php:275 ⁨standard input⁩:59
 msgid "Setup stock widget"
 msgstr "Configurar stock widget"
 
@@ -1284,8 +1274,7 @@ msgstr ""
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: templates/criteria_period_range.html.twig:28
-#: templates/criteria_filter_date.html.twig:45
+#: ⁨standard input⁩:45 ⁨standard input⁩:28
 msgid "Start"
 msgstr ""
 
@@ -1301,7 +1290,7 @@ msgstr ""
 msgid "Start year"
 msgstr ""
 
-#: templates/criteria_other_status.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Status"
 msgid_plural "Statuses"
 msgstr[0] ""
@@ -1317,7 +1306,7 @@ msgid_plural "Stock widgets"
 msgstr[0] "Widget de stock"
 msgstr[1] "Widgets de stock"
 
-#: templates/checkschema_result.html.twig:80
+#: ⁨standard input⁩:80
 msgid "Suggested queries"
 msgstr ""
 
@@ -1383,25 +1372,25 @@ msgstr[1] ""
 msgid "Technicians"
 msgstr "Técnicos"
 
-#: templates/checkschema_result.html.twig:60
+#: ⁨standard input⁩:60
 msgid ""
 "The following queries remove columns or tables that are not part of the "
 "expected schema: data will be lost. Check that they are not used by another "
 "plugin or by a custom development before running them."
 msgstr ""
 
-#: templates/checkschema_result.html.twig:42
+#: ⁨standard input⁩:42
 msgid "The plugin schema is good"
 msgstr ""
 
-#: templates/checkschema_result.html.twig:45
+#: ⁨standard input⁩:45
 msgid ""
 "The queries below are only suggestions built from the differences found. "
 "Review them, back up your database, then run them manually: they are never "
 "run by the plugin."
 msgstr ""
 
-#: templates/alert_summary.html.twig:65
+#: ⁨standard input⁩:65
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
@@ -1424,12 +1413,12 @@ msgstr ""
 msgid "Tickets late"
 msgstr ""
 
+#: src/Reports/Reports_Bar.php:322 src/Reports/Reports_Bar.php:584
+#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1389
 #: src/Reports/Reports_Line.php:322 src/Reports/Reports_Line.php:1421
 #: src/Reports/Reports_Line.php:1499 src/Reports/Reports_Line.php:1633
 #: src/Reports/Reports_Line.php:1766 src/Reports/Reports_Line.php:1869
 #: src/Reports/Reports_Line.php:2005 src/Reports/Reports_Line.php:2151
-#: src/Reports/Reports_Bar.php:322 src/Reports/Reports_Bar.php:584
-#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1389
 msgid "Tickets number"
 msgstr "Número de tickets"
 
@@ -1454,15 +1443,15 @@ msgstr "Tickets stock by month"
 msgid "Time display"
 msgstr ""
 
-#: src/Config.php:245 templates/config_form.html.twig:67
+#: src/Config.php:245 ⁨standard input⁩:67
 msgid "Title of alerts widget"
 msgstr ""
 
-#: src/Config.php:263 templates/config_form.html.twig:81
+#: src/Config.php:263 ⁨standard input⁩:81
 msgid "Title of informations widget"
 msgstr ""
 
-#: src/Config.php:254 templates/config_form.html.twig:74
+#: src/Config.php:254 ⁨standard input⁩:74
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
@@ -1506,11 +1495,11 @@ msgstr ""
 msgid "Trimester 4"
 msgstr ""
 
-#: templates/stockwidget_form.html.twig:86 templates/alert_form.html.twig:36
+#: ⁨standard input⁩:36 ⁨standard input⁩:86
 msgid "Type"
 msgstr ""
 
-#: templates/checkschema_result.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Unknown table"
 msgstr ""
 
@@ -1518,7 +1507,7 @@ msgstr ""
 msgid "Updating all widgets"
 msgstr "Actualizar todos los widgets"
 
-#: templates/groupprofile_form.html.twig:39
+#: ⁨standard input⁩:39
 msgid "Use profile group"
 msgstr "Usar grupo de perfiles"
 
@@ -1526,12 +1515,11 @@ msgstr "Usar grupo de perfiles"
 msgid "User ticket alerts"
 msgstr "Alertas de tickets de usuario"
 
-#: templates/configtranslation_list.html.twig:58
-#: templates/configtranslation_form.html.twig:67
+#: ⁨standard input⁩:58 ⁨standard input⁩:67
 msgid "Value"
 msgstr ""
 
-#: templates/menu_grid.html.twig:75
+#: ⁨standard input⁩:75
 msgid "Warning"
 msgstr "Advertencia"
 
@@ -1552,11 +1540,9 @@ msgstr "Widget agregado en Dashboard"
 msgid "Without buy date"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:73 src/Criterias/Year.php:73
-#: src/Criterias/Year.php:91 src/Criterias/FilterDate.php:73 src/Menu.php:457
-#: templates/criteria_period_year.html.twig:28
-#: templates/criteria_display_data.html.twig:45
-#: templates/criteria_filter_date.html.twig:56
+#: src/Criterias/Year.php:73 src/Criterias/Year.php:91
+#: src/Criterias/DisplayData.php:73 src/Criterias/FilterDate.php:73
+#: src/Menu.php:457 ⁨standard input⁩:56 ⁨standard input⁩:28 ⁨standard input⁩:45
 msgid "Year"
 msgstr "Año"
 
@@ -1564,7 +1550,7 @@ msgstr "Año"
 msgid "Year to date"
 msgstr ""
 
-#: src/Alert.php:258 templates/widget_equipments.html.twig:31
+#: src/Alert.php:258 ⁨standard input⁩:31
 msgid "Your equipments"
 msgstr "Sus equipos"
 
@@ -1588,7 +1574,7 @@ msgstr ""
 msgid "error"
 msgstr "error"
 
-#: templates/preferences.html.twig:46
+#: ⁨standard input⁩:46
 msgid "minute(s)"
 msgstr "minuto(s)"
 
@@ -1600,8 +1586,8 @@ msgstr "información"
 msgid "warning"
 msgstr "advertencia"
 
-#: src/Criterias/DisplayData.php:153 src/Criterias/FilterDate.php:95
-#: src/Criterias/Other.php:425
+#: src/Criterias/Other.php:425 src/Criterias/DisplayData.php:153
+#: src/Criterias/FilterDate.php:95
 msgid "year"
 msgstr ""
 

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 14:53+0000\n"
+"POT-Creation-Date: 2026-10-27 10:14+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2019\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/infotelGLPI/"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: templates/alert_ticket_cell.html.twig:33
+#: ⁨standard input⁩:33
 #, php-format
 msgid "%1$s: %2$s"
 msgstr ""
@@ -77,15 +77,15 @@ msgstr ""
 msgid "> 6 years"
 msgstr ""
 
-#: templates/widget_frame.html.twig:96
+#: ⁨standard input⁩:96
 msgid "Add"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:44
+#: ⁨standard input⁩:44
 msgid "Add a new translation"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:40
+#: ⁨standard input⁩:40
 msgid "Add widgets"
 msgstr ""
 
@@ -97,7 +97,7 @@ msgstr "Stáří požadavků"
 msgid "Age pyramid"
 msgstr ""
 
-#: src/Alert.php:3018 templates/alert_form.html.twig:33
+#: src/Alert.php:3018 ⁨standard input⁩:33
 msgid "Alert"
 msgid_plural "Alerts"
 msgstr[0] "Výstraha"
@@ -119,11 +119,11 @@ msgid ""
 "timeout)"
 msgstr ""
 
-#: templates/alert_form.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Alert level"
 msgstr "Stupeň výstrahy"
 
-#: templates/stockwidget_form.html.twig:115
+#: ⁨standard input⁩:115
 msgid "Alert threshold"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgstr ""
 msgid "All unpublished articles"
 msgstr ""
 
-#: templates/checkschema_result.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Altered table"
 msgstr ""
 
@@ -163,11 +163,11 @@ msgstr ""
 msgid "Applied changes"
 msgstr "Uplatněné změny"
 
-#: templates/profileauthorizedwidget_form.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Authorize/Unauthorize all"
 msgstr "Pověřit / zrušit pověření pro vše"
 
-#: templates/profileauthorizedwidget_form.html.twig:36
+#: ⁨standard input⁩:36
 msgid "Authorized widgets"
 msgstr "Pověřené ovládací prvky"
 
@@ -175,11 +175,11 @@ msgstr "Pověřené ovládací prvky"
 msgid "Automatic actions in error"
 msgstr "Automatické akce s chybou"
 
-#: templates/preferences.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Automatic refreshing of the widgets that can be refreshed"
 msgstr "Automatické obnovování miniaplikací, u kterých je to možné"
 
-#: templates/menu_widgets_offcanvas.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Availables widgets"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr "Sloupcové grafy"
 msgid "Block drag / resize widgets"
 msgstr "Znemožnit přemisťování a změnu velikosti miniaplikací"
 
-#: templates/config_form.html.twig:93
+#: ⁨standard input⁩:93
 msgid "Can take many time if you have many tickets"
 msgstr ""
 
@@ -211,8 +211,8 @@ msgstr ""
 msgid "Cannot create alert without a type"
 msgstr "Není možné vytvořit výstrahu bez zadání typu"
 
-#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:109
 #: src/Criterias/Other.php:268 src/Criterias/Other.php:477
+#: src/Criterias/ITILCategory.php:75 src/Criterias/ITILCategory.php:109
 msgid "Category"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgstr "Zkontrolovat zda je GLPI v pořádku"
 msgid "Child locations"
 msgstr ""
 
-#: src/Widget.php:172 templates/widget_form.html.twig:33
+#: src/Widget.php:172 ⁨standard input⁩:33
 msgid "Class"
 msgstr ""
 
@@ -249,17 +249,16 @@ msgstr ""
 msgid "Clear grid"
 msgstr "Vyčistit mřížku"
 
-#: src/Menu.php:574 src/Menu.php:587
-#: templates/menu_widgets_offcanvas.html.twig:33
+#: src/Menu.php:574 src/Menu.php:587 ⁨standard input⁩:33
 msgid "Close"
 msgstr "Zavřít"
 
-#: templates/menu_edit_toolbar.html.twig:74
+#: ⁨standard input⁩:74
 msgid "Close edit mode"
 msgstr "Ukončit režim úprav"
 
-#: src/Reports/Reports_Line.php:625 src/Reports/Reports_Line.php:1269
 #: src/Reports/Reports_Pie.php:1083 src/Reports/Reports_Pie.php:1086
+#: src/Reports/Reports_Line.php:625 src/Reports/Reports_Line.php:1269
 msgid "Closed tickets"
 msgstr "Uzavřené požadavky"
 
@@ -267,7 +266,7 @@ msgstr "Uzavřené požadavky"
 msgid "Column visibility"
 msgstr "Viditelnost sloupce"
 
-#: templates/alert_item.html.twig:58
+#: ⁨standard input⁩:58
 msgid "Comment"
 msgstr ""
 
@@ -287,15 +286,15 @@ msgstr ""
 msgid "Contracts status"
 msgstr ""
 
-#: templates/alert_item.html.twig:39 templates/alert_item.html.twig:40
+#: ⁨standard input⁩:39 ⁨standard input⁩:40
 msgid "Create a new alert"
 msgstr "Vytvořit novou výstrahu"
 
-#: templates/preferences.html.twig:115
+#: ⁨standard input⁩:115
 msgid "Current year"
 msgstr ""
 
-#: templates/profile.html.twig:43
+#: ⁨standard input⁩:43
 msgid "Custom"
 msgstr "Uživatelem určené"
 
@@ -307,10 +306,10 @@ msgstr "Uživatelsky určené ovládací prvky"
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Module.php:67 src/Html.php:57 src/Chart.php:63 src/Datatable.php:58
-#: src/Reports/Change.php:58 src/Reports/ProjectTask.php:57
-#: src/Reports/Planning.php:52 src/Reports/Project.php:53
-#: src/Reports/Problem.php:57 src/Dashboard.php:71 src/Menu.php:588
+#: src/Chart.php:63 src/Reports/Project.php:53 src/Reports/Planning.php:52
+#: src/Reports/Change.php:58 src/Reports/Problem.php:57
+#: src/Reports/ProjectTask.php:57 src/Datatable.php:58 src/Dashboard.php:71
+#: src/Html.php:57 src/Menu.php:588 src/Module.php:67
 msgid "Dashboard"
 msgstr "Nástěnka"
 
@@ -338,15 +337,15 @@ msgstr "Obdržena data pro"
 msgid "Day"
 msgstr ""
 
-#: templates/groupprofile_form.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Default dashboard group"
 msgstr "Výchozí skupina nástěnky"
 
-#: templates/groupprofile_form.html.twig:41
+#: ⁨standard input⁩:41
 msgid "Default groups"
 msgstr "Výchozí skupiny"
 
-#: templates/alert_form.html.twig:56
+#: ⁨standard input⁩:56
 msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
@@ -355,11 +354,11 @@ msgstr ""
 msgid "Delete widget"
 msgstr "Smazat miniaplikaci"
 
-#: templates/checkschema_result.html.twig:85
+#: ⁨standard input⁩:85
 msgid "Destructive queries"
 msgstr ""
 
-#: templates/criteria_display_data.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Display"
 msgstr ""
 
@@ -451,12 +450,11 @@ msgstr ""
 msgid "Edit mode"
 msgstr "Režim úprav"
 
-#: templates/config_form.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr "Zpřístupnit možnost zobrazit nástěnku na celou obrazovku"
 
-#: templates/criteria_period_range.html.twig:32
-#: templates/criteria_filter_date.html.twig:49
+#: ⁨standard input⁩:49 ⁨standard input⁩:32
 msgid "End"
 msgstr ""
 
@@ -496,13 +494,11 @@ msgstr ""
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:57
-#: templates/configtranslation_form.html.twig:56
-#: templates/configtranslation_form.html.twig:64
+#: ⁨standard input⁩:57 ⁨standard input⁩:56 ⁨standard input⁩:64
 msgid "Field"
 msgstr ""
 
-#: templates/criteria_filter_date.html.twig:33
+#: ⁨standard input⁩:33
 msgid "Filter date"
 msgstr ""
 
@@ -510,15 +506,15 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
-#: templates/menu_widgets_offcanvas.html.twig:39
+#: ⁨standard input⁩:39
 msgid "Find a widget"
 msgstr ""
 
-#: templates/preferenceuserblacklist_form.html.twig:36
+#: ⁨standard input⁩:36
 msgid "From which plugins you want to display the widgets?"
 msgstr "Ze kterých zásuvných modulů chcete zobrazovat miniaplikace?"
 
-#: templates/profile.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Full"
 msgstr "Plné"
 
@@ -546,7 +542,7 @@ msgstr ""
 msgid "Global"
 msgstr "Globální"
 
-#: templates/menu_global_filter_bar.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Global filter"
 msgstr ""
 
@@ -570,19 +566,19 @@ msgstr "Dohlížení na podporu"
 msgid "Helpdesk technician grid"
 msgstr "Pro technika podpory"
 
-#: templates/alert_ticket_cell.html.twig:33
+#: ⁨standard input⁩:33
 msgid "ID"
 msgstr ""
 
-#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:949 src/Alert.php:623
+#: src/Alert.php:623 src/Reports/Ticket.php:507 src/Reports/Ticket.php:949
 msgid "ID and priority"
 msgstr "Identif. a priorita"
 
-#: templates/stockwidget_form.html.twig:108
+#: ⁨standard input⁩:108
 msgid "Icon"
 msgstr ""
 
-#: templates/config_form.html.twig:54
+#: ⁨standard input⁩:54
 msgid "Impact colors for alerts"
 msgstr "Barvy označující závažnost dopadu výstrah"
 
@@ -638,7 +634,7 @@ msgstr[3] "Informace"
 msgid "Internal annuary"
 msgstr "Vnitřní adresář"
 
-#: src/Widget.php:163 templates/widget_form.html.twig:32
+#: src/Widget.php:163 ⁨standard input⁩:32
 msgid "Internal name"
 msgstr ""
 
@@ -650,18 +646,15 @@ msgstr "Mřížka správce inventáře"
 msgid "Inventory stock alerts"
 msgstr "Výstrahy ohledně zásob inventáře"
 
-#: templates/stockwidget_form.html.twig:103
+#: ⁨standard input⁩:103
 msgid "Item state"
 msgstr ""
 
-#: templates/stockwidget_form.html.twig:45
-#: templates/stockwidget_form.html.twig:53
+#: ⁨standard input⁩:45 ⁨standard input⁩:53
 msgid "Item type"
 msgstr ""
 
-#: templates/configtranslation_list.html.twig:56
-#: templates/configtranslation_form.html.twig:38
-#: templates/configtranslation_form.html.twig:40
+#: ⁨standard input⁩:56 ⁨standard input⁩:38 ⁨standard input⁩:40
 msgid "Language"
 msgstr ""
 
@@ -677,7 +670,7 @@ msgstr ""
 msgid "Last year"
 msgstr ""
 
-#: templates/config_form.html.twig:50
+#: ⁨standard input⁩:50
 msgid "Level of categories to show"
 msgstr "Úroveň kategorií které zobrazit"
 
@@ -685,16 +678,15 @@ msgstr "Úroveň kategorií které zobrazit"
 msgid "Line charts"
 msgstr "Čárové grafy"
 
-#: templates/alert_item.html.twig:51
+#: ⁨standard input⁩:51
 msgid "Linked reminder"
 msgstr "Připojená připomínka"
 
-#: templates/alert_form.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Linked with a ticket category"
 msgstr ""
 
-#: templates/menu_edit_toolbar.html.twig:53
-#: templates/menu_edit_toolbar.html.twig:54
+#: ⁨standard input⁩:53 ⁨standard input⁩:54
 msgid "Load a predefined grid"
 msgstr "Načíst předpřipravenou mřížku"
 
@@ -710,7 +702,7 @@ msgstr "Maximalizovat"
 msgid "Minimize"
 msgstr "Minimalizovat"
 
-#: templates/checkschema_result.html.twig:29
+#: ⁨standard input⁩:29
 msgid "Missing table"
 msgstr ""
 
@@ -718,9 +710,9 @@ msgstr ""
 msgid "Modification date"
 msgstr "Datum úpravy"
 
-#: src/Criterias/Month.php:60 src/Criterias/Month.php:77
 #: src/Criterias/Other.php:256 src/Criterias/Other.php:405
-#: src/Criterias/Other.php:427 templates/criteria_period_month.html.twig:29
+#: src/Criterias/Other.php:427 src/Criterias/Month.php:60
+#: src/Criterias/Month.php:77 ⁨standard input⁩:29
 msgid "Month"
 msgstr "Měsíc"
 
@@ -728,32 +720,32 @@ msgstr "Měsíc"
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:208 src/Preference.php:85 src/Config.php:61 src/Menu.php:108
-#: src/Menu.php:698 templates/menu_action_toolbar.html.twig:32
+#: setup.php:208 src/Config.php:61 src/Preference.php:85 src/Menu.php:108
+#: src/Menu.php:698 ⁨standard input⁩:32
 msgid "My Dashboard"
 msgstr "Nástěnka"
 
-#: templates/preferences.html.twig:97
+#: ⁨standard input⁩:97
 msgid "My favorite category for widgets"
 msgstr ""
 
-#: templates/preferences.html.twig:86
+#: ⁨standard input⁩:86
 msgid "My prefered entity for widget"
 msgstr "Moje upřednostňovaná entita pro ovládací prvek"
 
-#: templates/preferences.html.twig:61
+#: ⁨standard input⁩:61
 msgid "My prefered groups for widget"
 msgstr "Moje upřednostňovaná skupina pro ovládací prvek"
 
-#: templates/preferences.html.twig:108
+#: ⁨standard input⁩:108
 msgid "My prefered type for widget"
 msgstr ""
 
-#: templates/preferences.html.twig:116
+#: ⁨standard input⁩:116
 msgid "My prefered year for widget"
 msgstr ""
 
-#: templates/preferences.html.twig:74
+#: ⁨standard input⁩:74
 msgid "My requester prefered groups for widget"
 msgstr "Mým požadujícím upřednostňované skupiny pro ovládací prvek"
 
@@ -761,12 +753,12 @@ msgstr "Mým požadujícím upřednostňované skupiny pro ovládací prvek"
 msgid "My view"
 msgstr "Můj pohled"
 
-#: templates/stockwidget_form.html.twig:37 templates/alert_item.html.twig:54
+#: ⁨standard input⁩:54 ⁨standard input⁩:37
 msgid "Name"
 msgstr ""
 
-#: src/ItilAlert.php:92 src/Config.php:319 src/Config.php:516 src/Alert.php:220
-#: src/Alert.php:3128
+#: src/Config.php:319 src/Config.php:516 src/Alert.php:220 src/Alert.php:3128
+#: src/ItilAlert.php:92
 msgid "Network alert"
 msgid_plural "Network alerts"
 msgstr[0] "Upozornění ze sítě"
@@ -786,12 +778,12 @@ msgstr "Nové incidenty"
 msgid "New requests"
 msgstr "Nové požadavky"
 
-#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1511 src/Alert.php:3442
-#: src/Alert.php:3829
+#: src/Alert.php:3442 src/Alert.php:3829 src/Reports/Ticket.php:114
+#: src/Reports/Ticket.php:1511
 msgid "New tickets"
 msgstr "Nové požadavky"
 
-#: templates/alert_stock_tiles.html.twig:32
+#: ⁨standard input⁩:32
 msgid "No alerts are setup"
 msgstr "Nejsou nastavené žádné výstrahy"
 
@@ -815,7 +807,7 @@ msgstr "Ovládacímu prvku nebyla dodána žádná data"
 msgid "No data received for"
 msgstr "Neobdržena žádná data pro"
 
-#: templates/widget_equipments.html.twig:38
+#: ⁨standard input⁩:38
 msgid "No equipments founded"
 msgstr "Nebylo nalezeno žádné vybavení"
 
@@ -831,15 +823,15 @@ msgstr "Nebyly nalezeny žádné informace"
 msgid "No matching records found"
 msgstr "Nenalezeny žádné odpovídající záznamy"
 
-#: src/Widget.php:1029 src/Alert.php:2828 templates/alert_summary.html.twig:56
+#: src/Widget.php:1029 src/Alert.php:2828 ⁨standard input⁩:56
 msgid "No problem detected"
 msgstr "Nebyl zjištěn žádný problém"
 
-#: templates/checkschema_result.html.twig:90
+#: ⁨standard input⁩:90
 msgid "No query could be suggested for this difference."
 msgstr ""
 
-#: templates/graph_header.html.twig:39
+#: ⁨standard input⁩:39
 msgid "No results found"
 msgstr ""
 
@@ -847,7 +839,7 @@ msgstr ""
 msgid "No scheduled maintenance"
 msgstr "Žádná naplánovaná údržba"
 
-#: templates/menu_grid.html.twig:76
+#: ⁨standard input⁩:76
 msgid "No widgets founded, please add widgets"
 msgstr "Nebyly nalezeny žádné miniaplikace, přidejte nějaké"
 
@@ -863,8 +855,8 @@ msgstr "Není pole"
 msgid "Not imported mails in collectors"
 msgstr "Nenaimportované e-maily v kolektorech"
 
-#: src/Reports/Reports_Line.php:1270 src/Reports/Reports_Pie.php:1119
-#: src/Reports/Reports_Pie.php:1122
+#: src/Reports/Reports_Pie.php:1119 src/Reports/Reports_Pie.php:1122
+#: src/Reports/Reports_Line.php:1270
 msgid "Not planned"
 msgstr ""
 
@@ -994,14 +986,14 @@ msgstr "Otevřené incidenty, které nejsou přiřazené technikům"
 msgid "Opened requests without assigned technicians"
 msgstr "Otevřené požadavky, které nejsou přiřazené technikům"
 
-#: src/Reports/Reports_Line.php:624 src/Reports/Reports_Line.php:901
-#: src/Reports/Reports_Line.php:1268 src/Reports/Reports_Bar.php:1839
-#: src/Reports/Reports_Pie.php:1054 src/Reports/Reports_Pie.php:1057
+#: src/Reports/Reports_Bar.php:1839 src/Reports/Reports_Pie.php:1054
+#: src/Reports/Reports_Pie.php:1057 src/Reports/Reports_Line.php:624
+#: src/Reports/Reports_Line.php:901 src/Reports/Reports_Line.php:1268
 msgid "Opened tickets"
 msgstr "Otevřené požadavky"
 
-#: src/Reports/Reports_Line.php:626 src/Reports/Reports_Line.php:903
-#: src/Reports/Reports_Line.php:1271 src/Reports/Reports_Bar.php:125
+#: src/Reports/Reports_Bar.php:125 src/Reports/Reports_Line.php:626
+#: src/Reports/Reports_Line.php:903 src/Reports/Reports_Line.php:1271
 msgid "Opened tickets backlog"
 msgstr "Seznam nahromaděných otevřených požadavků"
 
@@ -1009,7 +1001,7 @@ msgstr "Seznam nahromaděných otevřených požadavků"
 msgid "PDF export failed. Please try again."
 msgstr ""
 
-#: templates/preferences.html.twig:124
+#: ⁨standard input⁩:124
 msgid "Palette color"
 msgstr ""
 
@@ -1045,8 +1037,9 @@ msgstr "Koláčové grafy"
 msgid "Please activate the plugin"
 msgstr ""
 
+#: scripts/clean_stock_tickets.php:152
 #: scripts/insert_stock_ticketindicators.php:72
-#: scripts/clean_stock_tickets.php:152 scripts/insert_stock_tickets.php:72
+#: scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr "Zásuvný modul vypnut"
 
@@ -1054,7 +1047,7 @@ msgstr "Zásuvný modul vypnut"
 msgid "Plugin setup"
 msgstr ""
 
-#: templates/preferences.html.twig:115
+#: ⁨standard input⁩:115
 msgid "Previous year"
 msgstr ""
 
@@ -1075,7 +1068,7 @@ msgstr "Problémy s velmi vysokou nebo nejvyšší prioritou"
 msgid "Process time by technicians by month"
 msgstr "Doba zpracovávání techniky v jednotlivých měsících"
 
-#: templates/menu_edit_toolbar.html.twig:63
+#: ⁨standard input⁩:63
 msgid "Profile"
 msgstr ""
 
@@ -1090,7 +1083,7 @@ msgstr ""
 msgid "Projects to be processed"
 msgstr ""
 
-#: templates/alert_form.html.twig:45
+#: ⁨standard input⁩:45
 msgid "Public"
 msgstr ""
 
@@ -1098,16 +1091,16 @@ msgstr ""
 msgid "Publication date"
 msgstr "Datum zveřejnění"
 
-#: templates/checkschema_result.html.twig:51
+#: ⁨standard input⁩:51
 msgid "Queries to run"
 msgstr ""
 
-#: templates/config_form.html.twig:87
+#: ⁨standard input⁩:87
 msgctxt "button"
 msgid "Reconstruct global backlog"
 msgstr ""
 
-#: templates/config_form.html.twig:90
+#: ⁨standard input⁩:90
 msgctxt "button"
 msgid "Reconstruct global indicators per week"
 msgstr ""
@@ -1116,7 +1109,7 @@ msgstr ""
 msgid "Refresh"
 msgstr "Načíst znovu"
 
-#: templates/preferences.html.twig:45
+#: ⁨standard input⁩:45
 msgid "Refresh every "
 msgstr "Znovu načíst každých"
 
@@ -1124,7 +1117,7 @@ msgstr "Znovu načíst každých"
 msgid "Refresh widget"
 msgstr "Znovu načíst miniaplikaci"
 
-#: templates/preferences.html.twig:52 templates/config_form.html.twig:42
+#: ⁨standard input⁩:42 ⁨standard input⁩:52
 msgid "Replace central interface"
 msgstr "Nahradit ústřední rozhraní"
 
@@ -1206,11 +1199,8 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr "Procento spokojenosti"
 
-#: templates/htmleditor_form.html.twig:59
-#: templates/preferenceuserblacklist_form.html.twig:47
-#: templates/profile.html.twig:65
-#: templates/profileauthorizedwidget_form.html.twig:59
-#: templates/alert_form.html.twig:51 templates/groupprofile_form.html.twig:53
+#: ⁨standard input⁩:47 ⁨standard input⁩:65 ⁨standard input⁩:59 ⁨standard input⁩:53
+#: ⁨standard input⁩:51
 msgctxt "button"
 msgid "Save"
 msgstr ""
@@ -1259,12 +1249,12 @@ msgstr "Zobrazit nastavení"
 msgid "See the dashboard"
 msgstr "Zobrazit nástěnku"
 
-#: templates/criteria_form.html.twig:57
+#: ⁨standard input⁩:57
 msgctxt "button"
 msgid "Send"
 msgstr ""
 
-#: src/Profile.php:275 templates/profile.html.twig:59
+#: src/Profile.php:275 ⁨standard input⁩:59
 msgid "Setup stock widget"
 msgstr "Nastavit ovládací prvek zásob"
 
@@ -1293,8 +1283,7 @@ msgstr ""
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: templates/criteria_period_range.html.twig:28
-#: templates/criteria_filter_date.html.twig:45
+#: ⁨standard input⁩:45 ⁨standard input⁩:28
 msgid "Start"
 msgstr ""
 
@@ -1310,7 +1299,7 @@ msgstr ""
 msgid "Start year"
 msgstr ""
 
-#: templates/criteria_other_status.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Status"
 msgid_plural "Statuses"
 msgstr[0] ""
@@ -1330,7 +1319,7 @@ msgstr[1] "Ovládací prvky zásob"
 msgstr[2] "Ovládacích prvků zásob"
 msgstr[3] "Ovládací prvky zásob"
 
-#: templates/checkschema_result.html.twig:80
+#: ⁨standard input⁩:80
 msgid "Suggested queries"
 msgstr ""
 
@@ -1398,25 +1387,25 @@ msgstr[3] ""
 msgid "Technicians"
 msgstr "Technici"
 
-#: templates/checkschema_result.html.twig:60
+#: ⁨standard input⁩:60
 msgid ""
 "The following queries remove columns or tables that are not part of the "
 "expected schema: data will be lost. Check that they are not used by another "
 "plugin or by a custom development before running them."
 msgstr ""
 
-#: templates/checkschema_result.html.twig:42
+#: ⁨standard input⁩:42
 msgid "The plugin schema is good"
 msgstr ""
 
-#: templates/checkschema_result.html.twig:45
+#: ⁨standard input⁩:45
 msgid ""
 "The queries below are only suggestions built from the differences found. "
 "Review them, back up your database, then run them manually: they are never "
 "run by the plugin."
 msgstr ""
 
-#: templates/alert_summary.html.twig:65
+#: ⁨standard input⁩:65
 msgid ""
 "There is at least on planned scheduled maintenance. Please log on to see more"
 msgstr ""
@@ -1439,12 +1428,12 @@ msgstr ""
 msgid "Tickets late"
 msgstr ""
 
+#: src/Reports/Reports_Bar.php:322 src/Reports/Reports_Bar.php:584
+#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1389
 #: src/Reports/Reports_Line.php:322 src/Reports/Reports_Line.php:1421
 #: src/Reports/Reports_Line.php:1499 src/Reports/Reports_Line.php:1633
 #: src/Reports/Reports_Line.php:1766 src/Reports/Reports_Line.php:1869
 #: src/Reports/Reports_Line.php:2005 src/Reports/Reports_Line.php:2151
-#: src/Reports/Reports_Bar.php:322 src/Reports/Reports_Bar.php:584
-#: src/Reports/Reports_Bar.php:978 src/Reports/Reports_Bar.php:1389
 msgid "Tickets number"
 msgstr "Počet požadavků"
 
@@ -1469,15 +1458,15 @@ msgstr "Množství požadavků v měsíci"
 msgid "Time display"
 msgstr ""
 
-#: src/Config.php:245 templates/config_form.html.twig:67
+#: src/Config.php:245 ⁨standard input⁩:67
 msgid "Title of alerts widget"
 msgstr ""
 
-#: src/Config.php:263 templates/config_form.html.twig:81
+#: src/Config.php:263 ⁨standard input⁩:81
 msgid "Title of informations widget"
 msgstr ""
 
-#: src/Config.php:254 templates/config_form.html.twig:74
+#: src/Config.php:254 ⁨standard input⁩:74
 msgid "Title of scheduled maintenances widget"
 msgstr ""
 
@@ -1521,11 +1510,11 @@ msgstr ""
 msgid "Trimester 4"
 msgstr ""
 
-#: templates/stockwidget_form.html.twig:86 templates/alert_form.html.twig:36
+#: ⁨standard input⁩:36 ⁨standard input⁩:86
 msgid "Type"
 msgstr ""
 
-#: templates/checkschema_result.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Unknown table"
 msgstr ""
 
@@ -1533,7 +1522,7 @@ msgstr ""
 msgid "Updating all widgets"
 msgstr "Aktualizují se všechny miniaplikace"
 
-#: templates/groupprofile_form.html.twig:39
+#: ⁨standard input⁩:39
 msgid "Use profile group"
 msgstr "Použít skupinu profilu"
 
@@ -1541,12 +1530,11 @@ msgstr "Použít skupinu profilu"
 msgid "User ticket alerts"
 msgstr "Upozornění na požadavky uživatelů"
 
-#: templates/configtranslation_list.html.twig:58
-#: templates/configtranslation_form.html.twig:67
+#: ⁨standard input⁩:58 ⁨standard input⁩:67
 msgid "Value"
 msgstr ""
 
-#: templates/menu_grid.html.twig:75
+#: ⁨standard input⁩:75
 msgid "Warning"
 msgstr "Varování"
 
@@ -1567,11 +1555,9 @@ msgstr "Miniaplikace přidána na nástěnku"
 msgid "Without buy date"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:73 src/Criterias/Year.php:73
-#: src/Criterias/Year.php:91 src/Criterias/FilterDate.php:73 src/Menu.php:457
-#: templates/criteria_period_year.html.twig:28
-#: templates/criteria_display_data.html.twig:45
-#: templates/criteria_filter_date.html.twig:56
+#: src/Criterias/Year.php:73 src/Criterias/Year.php:91
+#: src/Criterias/DisplayData.php:73 src/Criterias/FilterDate.php:73
+#: src/Menu.php:457 ⁨standard input⁩:56 ⁨standard input⁩:28 ⁨standard input⁩:45
 msgid "Year"
 msgstr "Rok"
 
@@ -1579,7 +1565,7 @@ msgstr "Rok"
 msgid "Year to date"
 msgstr ""
 
-#: src/Alert.php:258 templates/widget_equipments.html.twig:31
+#: src/Alert.php:258 ⁨standard input⁩:31
 msgid "Your equipments"
 msgstr "Vaše vybavení"
 
@@ -1603,7 +1589,7 @@ msgstr ""
 msgid "error"
 msgstr "chyba"
 
-#: templates/preferences.html.twig:46
+#: ⁨standard input⁩:46
 msgid "minute(s)"
 msgstr "minut"
 
@@ -1615,8 +1601,8 @@ msgstr "upozornění"
 msgid "warning"
 msgstr "varování"
 
-#: src/Criterias/DisplayData.php:153 src/Criterias/FilterDate.php:95
-#: src/Criterias/Other.php:425
+#: src/Criterias/Other.php:425 src/Criterias/DisplayData.php:153
+#: src/Criterias/FilterDate.php:95
 msgid "year"
 msgstr ""
 
