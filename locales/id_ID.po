@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 13:04+0000\n"
+"POT-Creation-Date: 2026-11-16 11:43+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Indonesian (Indonesia) (https://www.transifex.com/infotelGLPI/"
@@ -249,8 +249,8 @@ msgstr ""
 msgid "Close edit mode"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1083 src/Reports/Reports_Pie.php:1086
 #: src/Reports/Reports_Line.php:625 src/Reports/Reports_Line.php:1269
+#: src/Reports/Reports_Pie.php:1083 src/Reports/Reports_Pie.php:1086
 msgid "Closed tickets"
 msgstr ""
 
@@ -298,10 +298,10 @@ msgstr ""
 msgid "Custom and save profile grid"
 msgstr ""
 
-#: src/Chart.php:63 src/Reports/Project.php:53 src/Reports/Planning.php:52
-#: src/Reports/Change.php:58 src/Reports/Problem.php:57
-#: src/Reports/ProjectTask.php:57 src/Datatable.php:58 src/Dashboard.php:71
-#: src/Html.php:57 src/Menu.php:588 src/Module.php:67
+#: src/Chart.php:63 src/Dashboard.php:71 src/Reports/Project.php:53
+#: src/Reports/ProjectTask.php:57 src/Reports/Problem.php:57
+#: src/Reports/Change.php:58 src/Reports/Planning.php:52 src/Menu.php:588
+#: src/Module.php:67 src/Html.php:57 src/Datatable.php:58
 msgid "Dashboard"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgstr ""
 msgid "Enable the possibility to display Dashboard in full screen"
 msgstr ""
 
-#: ⁨standard input⁩:49 ⁨standard input⁩:32
+#: ⁨standard input⁩:32 ⁨standard input⁩:49
 msgid "End"
 msgstr ""
 
@@ -560,7 +560,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: src/Alert.php:623 src/Reports/Ticket.php:507 src/Reports/Ticket.php:949
+#: src/Reports/Ticket.php:507 src/Reports/Ticket.php:949 src/Alert.php:623
 msgid "ID and priority"
 msgstr ""
 
@@ -697,9 +697,9 @@ msgstr ""
 msgid "Modification date"
 msgstr ""
 
+#: src/Criterias/Month.php:60 src/Criterias/Month.php:77
 #: src/Criterias/Other.php:256 src/Criterias/Other.php:405
-#: src/Criterias/Other.php:427 src/Criterias/Month.php:60
-#: src/Criterias/Month.php:77 ⁨standard input⁩:29
+#: src/Criterias/Other.php:427 ⁨standard input⁩:29
 msgid "Month"
 msgstr ""
 
@@ -707,8 +707,8 @@ msgstr ""
 msgid "Monthly tickets in progress"
 msgstr ""
 
-#: setup.php:208 src/Config.php:61 src/Preference.php:85 src/Menu.php:108
-#: src/Menu.php:698 ⁨standard input⁩:32
+#: setup.php:212 src/Preference.php:85 src/Menu.php:108 src/Menu.php:698
+#: src/Config.php:61 ⁨standard input⁩:32
 msgid "My Dashboard"
 msgstr ""
 
@@ -762,8 +762,8 @@ msgstr ""
 msgid "New requests"
 msgstr ""
 
-#: src/Alert.php:3442 src/Alert.php:3829 src/Reports/Ticket.php:114
-#: src/Reports/Ticket.php:1503
+#: src/Reports/Ticket.php:114 src/Reports/Ticket.php:1503 src/Alert.php:3442
+#: src/Alert.php:3829
 msgid "New tickets"
 msgstr ""
 
@@ -775,7 +775,7 @@ msgstr ""
 msgid "No column defined"
 msgstr ""
 
-#: src/Chart.php:209 src/Widget.php:762 src/Menu.php:696
+#: src/Chart.php:209 src/Menu.php:696 src/Widget.php:762
 msgid "No data available"
 msgstr ""
 
@@ -799,7 +799,7 @@ msgstr ""
 msgid "No impact"
 msgstr ""
 
-#: src/Widget.php:1092 src/Alert.php:2691
+#: src/Alert.php:2691 src/Widget.php:1092
 msgid "No informations founded"
 msgstr ""
 
@@ -807,7 +807,7 @@ msgstr ""
 msgid "No matching records found"
 msgstr ""
 
-#: src/Widget.php:1029 src/Alert.php:2828 ⁨standard input⁩:56
+#: src/Alert.php:2828 src/Widget.php:1029 ⁨standard input⁩:56
 msgid "No problem detected"
 msgstr ""
 
@@ -819,7 +819,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/Widget.php:1060 src/Alert.php:2503
+#: src/Alert.php:2503 src/Widget.php:1060
 msgid "No scheduled maintenance"
 msgstr ""
 
@@ -839,8 +839,8 @@ msgstr ""
 msgid "Not imported mails in collectors"
 msgstr ""
 
-#: src/Reports/Reports_Pie.php:1119 src/Reports/Reports_Pie.php:1122
-#: src/Reports/Reports_Line.php:1270
+#: src/Reports/Reports_Line.php:1270 src/Reports/Reports_Pie.php:1119
+#: src/Reports/Reports_Pie.php:1122
 msgid "Not planned"
 msgstr ""
 
@@ -970,9 +970,9 @@ msgstr ""
 msgid "Opened requests without assigned technicians"
 msgstr ""
 
-#: src/Reports/Reports_Bar.php:1839 src/Reports/Reports_Pie.php:1054
-#: src/Reports/Reports_Pie.php:1057 src/Reports/Reports_Line.php:624
+#: src/Reports/Reports_Bar.php:1839 src/Reports/Reports_Line.php:624
 #: src/Reports/Reports_Line.php:901 src/Reports/Reports_Line.php:1268
+#: src/Reports/Reports_Pie.php:1054 src/Reports/Reports_Pie.php:1057
 msgid "Opened tickets"
 msgstr ""
 
@@ -1005,7 +1005,7 @@ msgstr ""
 msgid "Percent of use of solution types"
 msgstr ""
 
-#: src/Criterias/DisplayData.php:84 src/Criterias/FilterDate.php:79
+#: src/Criterias/FilterDate.php:79 src/Criterias/DisplayData.php:84
 msgid "Period"
 msgstr ""
 
@@ -1021,9 +1021,8 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: scripts/clean_stock_tickets.php:152
+#: scripts/insert_stock_tickets.php:72 scripts/clean_stock_tickets.php:152
 #: scripts/insert_stock_ticketindicators.php:72
-#: scripts/insert_stock_tickets.php:72
 msgid "Plugin disabled"
 msgstr ""
 
@@ -1101,7 +1100,7 @@ msgstr ""
 msgid "Refresh widget"
 msgstr ""
 
-#: ⁨standard input⁩:42 ⁨standard input⁩:52
+#: ⁨standard input⁩:52 ⁨standard input⁩:42
 msgid "Replace central interface"
 msgstr ""
 
@@ -1183,7 +1182,7 @@ msgstr ""
 msgid "Satisfy percent"
 msgstr ""
 
-#: ⁨standard input⁩:47 ⁨standard input⁩:65 ⁨standard input⁩:59 ⁨standard input⁩:53
+#: ⁨standard input⁩:65 ⁨standard input⁩:59 ⁨standard input⁩:53 ⁨standard input⁩:47
 #: ⁨standard input⁩:51
 msgctxt "button"
 msgid "Save"
@@ -1244,7 +1243,7 @@ msgstr ""
 msgid "Show %d elements"
 msgstr ""
 
-#: src/Widget.php:949 src/Menu.php:582
+#: src/Menu.php:582 src/Widget.php:949
 msgid "Show all"
 msgstr ""
 
@@ -1264,7 +1263,7 @@ msgstr ""
 msgid "Solve delay average (hour)"
 msgstr ""
 
-#: ⁨standard input⁩:45 ⁨standard input⁩:28
+#: ⁨standard input⁩:28 ⁨standard input⁩:45
 msgid "Start"
 msgstr ""
 
@@ -1526,9 +1525,9 @@ msgstr ""
 msgid "Without buy date"
 msgstr ""
 
-#: src/Criterias/Year.php:73 src/Criterias/Year.php:91
-#: src/Criterias/DisplayData.php:73 src/Criterias/FilterDate.php:73
-#: src/Menu.php:457 ⁨standard input⁩:56 ⁨standard input⁩:28 ⁨standard input⁩:45
+#: src/Menu.php:457 src/Criterias/Year.php:73 src/Criterias/Year.php:91
+#: src/Criterias/FilterDate.php:73 src/Criterias/DisplayData.php:73
+#: ⁨standard input⁩:28 ⁨standard input⁩:45 ⁨standard input⁩:56
 msgid "Year"
 msgstr ""
 
@@ -1572,7 +1571,7 @@ msgstr ""
 msgid "warning"
 msgstr ""
 
-#: src/Criterias/Other.php:425 src/Criterias/DisplayData.php:153
-#: src/Criterias/FilterDate.php:95
+#: src/Criterias/Other.php:425 src/Criterias/FilterDate.php:95
+#: src/Criterias/DisplayData.php:153
 msgid "year"
 msgstr ""
