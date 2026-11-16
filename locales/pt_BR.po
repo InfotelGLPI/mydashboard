@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 10:14+0000\n"
+"POT-Creation-Date: 2026-10-27 13:04+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: Diego Nobre <diego@koruma.com.br>, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/infotelGLPI/"
@@ -777,7 +777,7 @@ msgid "New requests"
 msgstr "Novas solicitações"
 
 #: src/Alert.php:3442 src/Alert.php:3829 src/Reports/Ticket.php:114
-#: src/Reports/Ticket.php:1511
+#: src/Reports/Ticket.php:1503
 msgid "New tickets"
 msgstr "Novos chamados"
 
@@ -1409,8 +1409,8 @@ msgstr ""
 msgid "Ticket closed"
 msgstr "Chamado fechado"
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1320
-#: src/Reports/Ticket.php:1326
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1312
+#: src/Reports/Ticket.php:1318
 msgid "Ticket followup"
 msgstr ""
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - MyDashboard plugin 1.7.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 10:14+0000\n"
+"POT-Creation-Date: 2026-10-27 13:04+0000\n"
 "PO-Revision-Date: 2016-07-28 07:50+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>, 2018\n"
 "Language-Team: Indonesian (Indonesia) (https://www.transifex.com/infotelGLPI/"
@@ -763,7 +763,7 @@ msgid "New requests"
 msgstr ""
 
 #: src/Alert.php:3442 src/Alert.php:3829 src/Reports/Ticket.php:114
-#: src/Reports/Ticket.php:1511
+#: src/Reports/Ticket.php:1503
 msgid "New tickets"
 msgstr ""
 
@@ -1386,8 +1386,8 @@ msgstr ""
 msgid "Ticket closed"
 msgstr ""
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1320
-#: src/Reports/Ticket.php:1326
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1312
+#: src/Reports/Ticket.php:1318
 msgid "Ticket followup"
 msgstr ""
 

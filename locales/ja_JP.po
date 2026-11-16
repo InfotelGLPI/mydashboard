@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 10:14+0000\n"
+"POT-Creation-Date: 2026-10-27 13:04+0000\n"
 "PO-Revision-Date: 2020-11-02 16:12+0000\n"
 "Last-Translator: INOUE Daisuke, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/infotelGLPI/teams/"
@@ -763,7 +763,7 @@ msgid "New requests"
 msgstr "新しいリクエスト"
 
 #: src/Alert.php:3442 src/Alert.php:3829 src/Reports/Ticket.php:114
-#: src/Reports/Ticket.php:1511
+#: src/Reports/Ticket.php:1503
 msgid "New tickets"
 msgstr "新しいチケット"
 
@@ -1386,8 +1386,8 @@ msgstr "メンテナンススケジュールがあります。詳細はログイ
 msgid "Ticket closed"
 msgstr "終了チケット"
 
-#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1320
-#: src/Reports/Ticket.php:1326
+#: src/Reports/Ticket.php:170 src/Reports/Ticket.php:1312
+#: src/Reports/Ticket.php:1318
 msgid "Ticket followup"
 msgstr "チケットの回答"
 
