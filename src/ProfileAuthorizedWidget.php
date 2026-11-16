@@ -70,7 +70,13 @@ class ProfileAuthorizedWidget extends CommonDBTM
 
             $ret = [];
             foreach ($table as $key => $line) {
-                $widgetId       = $widget->getWidgetNameById($line['widgets_id']);
+                $widgetId = $widget->getWidgetNameById($line['widgets_id']);
+                // Orphan authorization: the referenced widget no longer exists
+                // (nothing purges these rows when a widget row disappears), so it
+                // cannot match any widget of the list and must not become a null key.
+                if ($widgetId === null) {
+                    continue;
+                }
                 $ret[$widgetId] = $line['id'];
             }
             return $ret;

@@ -139,14 +139,16 @@ function plugin_init_mydashboard()
                                 $toadd = '';
                                 $dest = addslashes($dest);
 
-                                echo "<script type='text/javascript'>
+                                // Html::scriptBlock() adds the nonce of the Content Security Policy,
+                                // which a <script> tag echoed by hand lacks
+                                echo Html::scriptBlock("
                             NomNav = navigator.appName;
                             if (NomNav=='Konqueror') {
                                window.location='" . $dest . $toadd . "';
                             } else {
                                window.location='" . $dest . "';
                             }
-                         </script>";
+                         ");
                                 exit();
                             } elseif (!Plugin::isPluginActive("servicecatalog")
                                        || Session::haveRight(Profile::RIGHT_SERVICECATALOG, 1)) {
@@ -156,14 +158,16 @@ function plugin_init_mydashboard()
                                 $toadd = '';
                                 $dest = addslashes($dest);
 
-                                echo "<script type='text/javascript'>
+                                // Html::scriptBlock() adds the nonce of the Content Security Policy,
+                                // which a <script> tag echoed by hand lacks
+                                echo Html::scriptBlock("
                             NomNav = navigator.appName;
                             if (NomNav=='Konqueror') {
                                window.location='" . $dest . $toadd . "';
                             } else {
                                window.location='" . $dest . "';
                             }
-                         </script>";
+                         ");
                             }
                         }
                     }
@@ -210,6 +214,9 @@ function plugin_version_mydashboard()
         'author'       => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD",
         'license'      => 'GPLv3+',
         'homepage'     => 'https://github.com/InfotelGLPI/mydashboard',
+        // No inline event handler, javascript: URL nor script without nonce: the plugin works
+        // under the Content Security Policy of GLPI
+        'csp_compliant' => true,
         'requirements' => [
             'glpi' => [
                 'min' => '11.0.99',
