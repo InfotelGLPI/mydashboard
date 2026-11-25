@@ -375,13 +375,44 @@ class Widget extends CommonDBTM
     {
         $profiles_id = (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
         $interface   = Session::getCurrentInterface() ?: 'central';
-        $key         = $profiles_id . '_' . $interface;
+        // The authorizations of the profile are part of the key: a widget withdrawn from the
+        // profile, or a profile moved from "all the widgets" to a custom list, is taken into
+        // account at the next request instead of at the next login
+        $key         = $profiles_id . '_' . $interface . '_' . self::getAuthorizationSignature($profiles_id);
 
         if (!isset($_SESSION['glpi_plugin_mydashboard_widget_list'][$key])) {
-            $_SESSION['glpi_plugin_mydashboard_widget_list'][$key] = self::getCompleteWidgetList();
+            // One list per session: the outdated ones are dropped
+            $_SESSION['glpi_plugin_mydashboard_widget_list'] = [$key => self::getCompleteWidgetList()];
         }
 
         return $_SESSION['glpi_plugin_mydashboard_widget_list'][$key];
+    }
+
+    /**
+     * Signature of what decides the widgets of a profile: its dashboard right and its list of
+     * authorized widgets, read from the database (two small queries)
+     */
+    private static function getAuthorizationSignature(int $profiles_id): string
+    {
+        global $DB;
+
+        $right = $DB->request([
+            'SELECT' => 'rights',
+            'FROM'   => \ProfileRight::getTable(),
+            'WHERE'  => ['profiles_id' => $profiles_id, 'name' => Menu::$rightname],
+        ])->current()['rights'] ?? '';
+
+        $authorized = [];
+        foreach ($DB->request([
+            'SELECT' => 'widgets_id',
+            'FROM'   => ProfileAuthorizedWidget::getTable(),
+            'WHERE'  => ['profiles_id' => $profiles_id],
+            'ORDER'  => 'widgets_id',
+        ]) as $row) {
+            $authorized[] = (int) $row['widgets_id'];
+        }
+
+        return md5($right . '|' . implode(',', $authorized));
     }
 
     public static function getCompleteWidgetList($preload = false, $withslashes = false)
@@ -618,6 +649,75 @@ class Widget extends CommonDBTM
     }
 
     /**
+     * Identifiers of the criteria limited to the perimeter of the session: an id posted out of
+     * it is dropped before it reaches a query, a dropdown or the summary of the criteria, which
+     * display the name of what they designate
+     *
+     * @param array<string, mixed> $opt sanitized parameters (sanitizeWidgetParams())
+     *
+     * @return array<string, mixed>
+     */
+    private static function restrictWidgetParamsToSession(array $opt): array
+    {
+        global $DB;
+
+        $tables = [
+            'technicians_groups_id' => \Group::getTable(),
+            'requesters_groups_id'  => \Group::getTable(),
+            'locations_id'          => \Location::getTable(),
+            'multiple_locations_id' => \Location::getTable(),
+            'itilcategories_id'     => \ITILCategory::getTable(),
+            'itilcategorielvl1'     => \ITILCategory::getTable(),
+        ];
+        $users = ['technicians_id', 'multiple_technicians_id', 'users_id'];
+
+        foreach (array_merge(array_keys($tables), $users) as $param) {
+            if (!isset($opt[$param]) || $opt[$param] === '') {
+                continue;
+            }
+            $values = (array) $opt[$param];
+            $ids    = array_values(array_filter(array_map('intval', $values), static fn(int $id): bool => $id > 0));
+            if ($ids === []) {
+                continue;
+            }
+            if (isset($tables[$param])) {
+                $criteria = [
+                    'SELECT' => 'id',
+                    'FROM'   => $tables[$param],
+                    'WHERE'  => ['id' => $ids] + getEntitiesRestrictCriteria($tables[$param], '', '', true),
+                ];
+            } else {
+                // A user with a profile in the active entities, as in the user pickers
+                $criteria = [
+                    'SELECT' => 'users_id AS id',
+                    'FROM'   => 'glpi_profiles_users',
+                    'WHERE'  => ['users_id' => $ids] + getEntitiesRestrictCriteria('glpi_profiles_users', '', '', true),
+                ];
+            }
+            $visible = [];
+            foreach ($DB->request($criteria) as $row) {
+                $visible[(int) $row['id']] = true;
+            }
+            // 0 and empty values keep their meaning (no filter)
+            $kept = array_values(array_filter(
+                $values,
+                static fn($value): bool => (int) $value <= 0 || isset($visible[(int) $value]),
+            ));
+            $opt[$param] = is_array($opt[$param]) ? $kept : ($kept[0] ?? '');
+        }
+
+        if (
+            isset($opt['entities_id'])
+            && $opt['entities_id'] !== ''
+            && !Session::haveAccessToEntity((int) $opt['entities_id'])
+        ) {
+            $opt['entities_id'] = '';
+        }
+
+        return $opt;
+    }
+
+    /**
      * @param       $classname
      * @param       $widgetindex
      * @param       $parent
@@ -635,6 +735,7 @@ class Widget extends CommonDBTM
         // normalized here to prevent SQL injection with only the plugin READ right.
         // The widget class is handed over so it can declare parameters of its own.
         $opt = self::sanitizeWidgetParams($opt, $classname);
+        $opt = self::restrictWidgetParamsToSession($opt);
 
         if (isset($classname) && isset($widgetindex)) {
             $classobject = getItemForItemtype($classname);

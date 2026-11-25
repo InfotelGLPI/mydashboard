@@ -29,19 +29,20 @@
 
 namespace GlpiPlugin\Mydashboard;
 
-use CommonDBTM;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\System\Diagnostic\DatabaseSchemaIntegrityChecker;
 use Plugin;
 
 /**
+ * Schema check tab of the configuration.
  *
+ * Not a CommonDBTM: it has no table of its own, and mapping it onto the configuration table
+ * exposed that row to the generic form and API endpoints with the dashboard right only.
  */
-class CheckSchema extends CommonDBTM
+class CheckSchema extends CommonGLPI
 {
-    public static string $rightname = 'plugin_mydashboard';
-    private $table = "";
+    public static string $rightname = 'plugin_mydashboard_config';
 
     /**
      * functions mandatory
@@ -61,9 +62,32 @@ class CheckSchema extends CommonDBTM
         return "ti ti-check";
     }
 
-    public static function getTable($classname = null)
+    /**
+     * Same right as the configuration page that hosts the tab
+     */
+    public static function canView(): bool
     {
-        return "glpi_plugin_mydashboard_configs";
+        return Config::canView();
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canUpdate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(): bool
+    {
+        return false;
+    }
+
+    public static function canPurge(): bool
+    {
+        return false;
     }
 
     /**
@@ -75,7 +99,7 @@ class CheckSchema extends CommonDBTM
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        if ($item->getType() == Config::class) {
+        if ($item->getType() == Config::class && self::canView()) {
             return self::createTabEntry(self::getTypeName());
         }
         return '';
@@ -91,7 +115,7 @@ class CheckSchema extends CommonDBTM
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        if ($item->getType() == Config::class) {
+        if ($item->getType() == Config::class && self::canView()) {
             $self = new self();
             $self->checkSchema(PLUGIN_MYDASHBOARD_VERSION);
         }

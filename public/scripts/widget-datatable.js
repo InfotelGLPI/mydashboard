@@ -36,6 +36,37 @@
 
 const SELECTOR = 'table[data-md-datatable]';
 
+/*
+ * Copy, Excel and CSV exports end up in spreadsheets, which read a cell starting with
+ * = + - @ or a tab / carriage return as a formula: the cells hold text typed by users
+ * (ticket titles, names, phones). Such a cell is exported with a leading quote; a plain
+ * number ("-12,5") is left as it is, and other cells keep the export of DataTables.
+ */
+const FORMULA_START = /^[=+\-@\t\r]/;
+const PLAIN_NUMBER = /^[-+]?\d[\d\s.,]*$/;
+
+const neutralizeFormula = (data) => {
+    if (typeof data !== 'string') {
+        return data;
+    }
+    // Text of the cell, without running anything of it (DOMParser neither loads images nor
+    // runs scripts)
+    const text = data.includes('<')
+        ? (new DOMParser().parseFromString(data, 'text/html').body.textContent || '')
+        : data;
+    const trimmed = text.trim();
+
+    return FORMULA_START.test(trimmed) && !PLAIN_NUMBER.test(trimmed) ? `'${trimmed}` : data;
+};
+
+const exportOptions = {
+    format: {
+        header: neutralizeFormula,
+        body: neutralizeFormula,
+        footer: neutralizeFormula,
+    },
+};
+
 const getProfileId = () => {
     const field = document.getElementsByName('profiles_id')[0];
     return field !== undefined ? field.value : '';
@@ -132,7 +163,13 @@ const initTable = (table) => {
             {
                 extend: 'collection',
                 text: config.exportLabel,
-                buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
+                buttons: [
+                    { extend: 'copy', exportOptions },
+                    { extend: 'excel', exportOptions },
+                    { extend: 'csv', exportOptions },
+                    'pdf',
+                    'print',
+                ],
             },
         ],
     });

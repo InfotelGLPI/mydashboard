@@ -72,7 +72,8 @@ class Reports_Funnel extends CommonGLPI
         // The only widget of this class aggregates glpi_computers, so it is bound to the
         // core right of the itemtype it reads, as the other report classes do for their own
         // ('contract', 'reminder_public'...).
-        if (!Session::haveRight(\Computer::$rightname, READ)) {
+        // Purchase dates are financial information: the infocom right too, as in the search engine
+        if (!Session::haveRight(\Computer::$rightname, READ) || !Session::haveRight(\Infocom::$rightname, READ)) {
             return [];
         }
 
@@ -141,7 +142,8 @@ class Reports_Funnel extends CommonGLPI
         // The widget list is cached in the session and ajax/refreshWidget.php serves any id
         // that cache holds, so the right is checked again at the content and not only at the
         // declaration.
-        if (!Session::haveRight(\Computer::$rightname, READ)) {
+        // Purchase dates are financial information: the infocom right too, as in the search engine
+        if (!Session::haveRight(\Computer::$rightname, READ) || !Session::haveRight(\Infocom::$rightname, READ)) {
             return false;
         }
 
@@ -336,7 +338,8 @@ class Reports_Funnel extends CommonGLPI
                     'WHERE' => [
                         $is_deleted,
                         'glpi_computers.is_template' => 0,
-                        'glpi_infocoms.buy_date' => ['<', new QueryExpression("CURRENT_DATE - INTERVAL 2 YEAR")],
+                        // Bought less than 2 years ago ('<' counted the older ones)
+                        'glpi_infocoms.buy_date' => ['>', new QueryExpression("CURRENT_DATE - INTERVAL 2 YEAR")],
                     ],
                 ];
 

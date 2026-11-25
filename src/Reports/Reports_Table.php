@@ -451,7 +451,10 @@ class Reports_Table extends CommonGLPI
                 // Nobody may see these articles through the knowledge base itself, so the
                 // widget has to stand in for the visibility criteria it cannot apply: a
                 // profile that does not administer the base only gets its own drafts back.
-                if (!\KnowbaseItem::canUpdate()) {
+                // Every unpublished article is for the administrators of the base only, as the
+                // "all unpublished" list of the core: canUpdate() is also true for a plain
+                // writer (UPDATE), who gets its own drafts only
+                if (!Session::haveRight(\KnowbaseItem::$rightname, \KnowbaseItem::KNOWBASEADMIN)) {
                     $criteria['WHERE']['glpi_knowbaseitems.users_id'] = Session::getLoginUserID();
                 }
 
@@ -465,7 +468,10 @@ class Reports_Table extends CommonGLPI
                 $knowbaseitem = new \KnowbaseItem();
                 if (count($iterator) > 0) {
                     foreach ($iterator as $data) {
-                        $knowbaseitem->getFromDB($data['id']);
+                        // The core rule for a draft: its author or an administrator of the base
+                        if (!$knowbaseitem->can((int) $data['id'], READ)) {
+                            continue;
+                        }
 
                         $datas[$i]["name"] = $knowbaseitem->getLink();
                         // Plain text cells of an HTML rendered table: the author name is free

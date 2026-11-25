@@ -36,6 +36,7 @@ use CommonITILObject;
 use CommonITILValidation;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\DBAL\QueryExpression;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Config;
 use GlpiPlugin\Mydashboard\Datatable;
@@ -303,23 +304,28 @@ class Ticket extends CommonGLPI
 
 
         if ($showgrouptickets) {
-            $search_users_id = [];
-            $search_assign = [];
-            $search_observer = [];
+            // Tickets of the groups of the user: none without a group, nor without the right the
+            // core asks for the role of the group (an empty filter used to list every ticket of
+            // the active entities)
+            $search_users_id = [new QueryExpression('false')];
+            $search_assign = [new QueryExpression('false')];
+            $search_observer = [new QueryExpression('false')];
 
             if (count($_SESSION['glpigroups'])) {
-                $search_assign = [
-                    'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
-                    'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
-                ];
+                if (Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READALL, \Ticket::READASSIGN])) {
+                    $search_assign = [
+                        'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
+                        'glpi_groups_tickets.type' => CommonITILActor::ASSIGN,
+                    ];
+                }
 
-                if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
+                if (Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READALL, \Ticket::READGROUP])) {
                     $search_users_id = [
                         'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
                         'glpi_groups_tickets.type' => CommonITILActor::REQUESTER,
                     ];
                 }
-                if (Session::haveRight(\Ticket::$rightname, \Ticket::READGROUP)) {
+                if (Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READALL, \Ticket::READGROUP])) {
                     $search_observer = [
                         'glpi_groups_tickets.groups_id' => $_SESSION['glpigroups'],
                         'glpi_groups_tickets.type' => CommonITILActor::OBSERVER,
@@ -882,9 +888,16 @@ class Ticket extends CommonGLPI
             }
         }
 
+        // Only the tickets the user may read, as in the lists of the core: the count follows
+        $ticket  = new \Ticket();
+        $numrows = 0;
         foreach ($iterator as $data) {
             $ID = $data["id"];
+            if (!$ticket->can($ID, READ)) {
+                continue;
+            }
             $output['body'][] = self::showVeryShort($ID, $forcetab);
+            $numrows++;
         }
 
         if (!empty($output)) {

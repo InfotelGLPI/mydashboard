@@ -99,7 +99,8 @@ class RequesterGroup
 
         $result = getAllDataFromTable(
             Group::getTable(),
-            ['is_requester' => 1, 'ORDER' => "completename"],
+            // Groups of the entities of the session only
+            ['is_requester' => 1, 'ORDER' => "completename"] + getEntitiesRestrictCriteria(Group::getTable(), '', '', true),
             false,
         );
 

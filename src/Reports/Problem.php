@@ -32,6 +32,7 @@ namespace GlpiPlugin\Mydashboard\Reports;
 use CommonGLPI;
 use CommonITILActor;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Mydashboard\Datatable;
@@ -172,8 +173,10 @@ class Problem extends CommonGLPI
 
 
         if ($showgroupproblems) {
-            $search_users_id = [];
-            $search_assign = [];
+            // Items of the groups of the user: none without a group (an empty filter used to
+            // list every item of the active entities)
+            $search_users_id = [new QueryExpression('false')];
+            $search_assign = [new QueryExpression('false')];
 
             if (count($_SESSION['glpigroups'])) {
 
@@ -247,7 +250,15 @@ class Problem extends CommonGLPI
         }
 
 
-        $iterator = $DB->request($criteria);
+        // Only the problems the user may read: with READMY, those they are an actor of, as in the
+        // lists of the core
+        $iterator = [];
+        $readable = new \Problem();
+        foreach ($DB->request($criteria) as $data) {
+            if ($readable->can((int) $data['id'], READ)) {
+                $iterator[] = $data;
+            }
+        }
         $numrows = count($iterator);
 
         if ($numrows > 0) {

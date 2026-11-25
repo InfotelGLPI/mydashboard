@@ -8,42 +8,48 @@ on:
 name: Create release with tag
 env:
   TAG_VALUE: ${GITHUB_REF/refs\/tags\//}
+
+# Read only by default: only the job below writes, to create the release
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Upload Release Asset
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      # Pinned by its commit (Dependabot proposes the updates); the token is not kept in the
+      # working copy, which is archived
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Build project # This would actually build your project, using zip for an example artifact
         id: build_
         env:
             GITHUB_NAME: ${{ github.event.repository.name }}
-            
-           
-        run: sudo apt-get install libxml-xpath-perl;echo $(xpath -e '/root/versions/version[num="'${GITHUB_REF/refs\/tags\//}'"]/compatibility/text()' $GITHUB_NAME.xml);echo ::set-output name=version_glpi::$(xpath -e '/root/versions/version[num="'${GITHUB_REF/refs\/tags\//}'"]/compatibility/text()' $GITHUB_NAME.xml); rm -rf $GITHUB_NAME.xml tools wiki screenshots test .git .github ISSUE_TEMPLATE.md TODO.txt $GITHUB_NAME.png .gitignore .gitattributes phpstan.neon phpstan-baseline.neon .php-cs-fixer.php .php-cs-fixer.dist.php .php-cs-fixer.cache psalm.xml phpunit.xml phpunit.xml.dist phpunit.integration.xml .phpunit.result.cache;cd ..; tar jcvf glpi-$GITHUB_NAME-${GITHUB_REF/refs\/tags\//}.tar.bz2 $GITHUB_NAME;ls -al;echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//};echo ${{ steps.getxml.outputs.info }};
-       # run: rm -rf $GITHUB_NAME.xml tools wiki screenshots test ISSUE_TEMPLATE.md TODO.txt $GITHUB_NAME.png; tar -zcvf glpi-$GITHUB_NAME-$GITHUB_TAG.tar.gz $GITHUB_NAME
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+        run: |
+          sudo apt-get install libxml-xpath-perl
+          echo $(xpath -e '/root/versions/version[num="'${GITHUB_REF/refs\/tags\//}'"]/compatibility/text()' $GITHUB_NAME.xml)
+          echo "version_glpi=$(xpath -e '/root/versions/version[num="'${GITHUB_REF/refs\/tags\//}'"]/compatibility/text()' $GITHUB_NAME.xml)" >> "$GITHUB_OUTPUT"
+          rm -rf $GITHUB_NAME.xml tools wiki screenshots test .git .github ISSUE_TEMPLATE.md TODO.txt $GITHUB_NAME.png .gitignore .gitattributes phpstan.neon phpstan-baseline.neon .php-cs-fixer.php .php-cs-fixer.dist.php .php-cs-fixer.cache psalm.xml phpunit.xml phpunit.xml.dist phpunit.integration.xml .phpunit.result.cache
+          cd ..
+          tar jcvf glpi-$GITHUB_NAME-${GITHUB_REF/refs\/tags\//}.tar.bz2 $GITHUB_NAME
+          ls -al
+          echo "tag=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_OUTPUT"
+      # The GitHub CLI of the runner replaces actions/create-release and
+      # actions/upload-release-asset, which are archived
+      - name: Create Release and upload the archive
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: | 
-                    GLPI ${{ steps.build_.outputs.version_glpi }} : Version ${{ github.ref }} disponible / available
-          body : Version ${{ steps.build_.outputs.tag }} released for GLPI ${{ steps.build_.outputs.version_glpi }}
-          draft: false
-          prerelease: true
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_NAME: ${{ github.event.repository.name }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: /home/runner/work/${{ github.event.repository.name }}/glpi-${{ github.event.repository.name }}-${{ steps.build_.outputs.tag }}.tar.bz2
-          asset_name: glpi-${{ github.event.repository.name }}-${{ steps.build_.outputs.tag }}.tar.bz2
-          asset_content_type: application/zip
-  
+          TAG: ${{ steps.build_.outputs.tag }}
+          VERSION_GLPI: ${{ steps.build_.outputs.version_glpi }}
+        run: |
+          gh release create "$TAG" "$RUNNER_WORKSPACE/glpi-$GITHUB_NAME-$TAG.tar.bz2" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "GLPI $VERSION_GLPI : Version $GITHUB_REF disponible / available" \
+            --notes "Version $TAG released for GLPI $VERSION_GLPI" \
+            --prerelease

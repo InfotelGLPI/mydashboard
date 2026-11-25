@@ -3157,7 +3157,11 @@ class Reports_Bar extends CommonDBTM
 
         $default = Criteria::manageCriterias($params);
 
-        $limit = $params['opt']['limit'] ?? $default['limit'];
+        // The bounds of the limit criterion (0 meant no limit at all)
+        $limit = (int) ($params['opt']['limit'] ?? $default['limit']);
+        if ($limit <= 0 || $limit > 200) {
+            $limit = 200;
+        }
 
         $year = $params['opt']['year'] ?? $default["year"];
 
@@ -3182,10 +3186,11 @@ class Reports_Bar extends CommonDBTM
                         ],
                     ],
                 ],
+                // Members of the groups of the entities of the session only
                 'WHERE' => [
                     'glpi_groups_users.groups_id' => $selected_group,
                     'glpi_groups.is_assign' => 1,
-                ],
+                ] + getEntitiesRestrictCriteria('glpi_groups', '', '', true),
                 'GROUPBY' => 'glpi_groups_users.users_id',
                 'LIMIT' => $limit,
             ];
@@ -3197,9 +3202,19 @@ class Reports_Bar extends CommonDBTM
             }
         } else {
 
+            // Technicians of the tasks of the tickets of the entities of the session only
             $criteria = [
                 'SELECT' => 'glpi_tickettasks.users_id_tech',
                 'FROM' => 'glpi_tickettasks',
+                'INNER JOIN' => [
+                    'glpi_tickets' => [
+                        'ON' => [
+                            'glpi_tickettasks' => 'tickets_id',
+                            'glpi_tickets'     => 'id',
+                        ],
+                    ],
+                ],
+                'WHERE' => getEntitiesRestrictCriteria('glpi_tickets'),
                 'GROUPBY' => 'glpi_tickettasks.users_id_tech',
                 'LIMIT' => $limit,
             ];
@@ -3357,10 +3372,11 @@ class Reports_Bar extends CommonDBTM
                         ],
                     ],
                 ],
+                // Members of the groups of the entities of the session only
                 'WHERE' => [
                     'glpi_groups_users.groups_id' => $selected_group,
                     'glpi_groups.is_assign' => 1,
-                ],
+                ] + getEntitiesRestrictCriteria('glpi_groups', '', '', true),
                 'GROUPBY' => 'glpi_groups_users.users_id',
             ];
 
