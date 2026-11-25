@@ -421,7 +421,11 @@ class Menu extends CommonGLPI
         ]];
 
         $dbu         = new DbUtils();
-        $groups_data = $dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]);
+        // Groups of the entities of the session only
+        $groups_data = $dbu->getAllDataFromTable(
+            Group::getTable(),
+            ['is_assign' => 1] + getEntitiesRestrictCriteria(Group::getTable(), '', '', true),
+        );
         $groups_list = [];
         foreach ($groups_data as $g) {
             $groups_list[$g['id']] = $g['name'];

@@ -80,7 +80,12 @@ class MultipleLocation
     public static function getDisplayForm($default, $opt, $count)
     {
 
-        $result = getAllDataFromTable(\Location::getTable(), ['ORDER' => "completename"], false);
+        // Locations of the entities of the session only
+        $result = getAllDataFromTable(
+            \Location::getTable(),
+            ['ORDER' => "completename"] + getEntitiesRestrictCriteria(\Location::getTable(), '', '', true),
+            false,
+        );
 
         if (isset($opt[self::$criteria_name])) {
             $multiple_locations_id = (is_array(

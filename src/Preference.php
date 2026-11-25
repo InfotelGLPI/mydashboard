@@ -72,6 +72,42 @@ class Preference extends CommonDBTM
         return self::canCreate();
     }
 
+    /**
+     * A preference row is the one of a user (its id is the id of the user): only that user reads
+     * or changes it, whatever the endpoint (generic form, API)
+     */
+    private function isOwnRow(): bool
+    {
+        $id = (int) ($this->fields['id'] ?? 0);
+
+        return $id > 0 && $id === (int) Session::getLoginUserID();
+    }
+
+    public function canViewItem(): bool
+    {
+        return $this->isOwnRow();
+    }
+
+    public function canCreateItem(): bool
+    {
+        return $this->isOwnRow();
+    }
+
+    public function canUpdateItem(): bool
+    {
+        return $this->isOwnRow();
+    }
+
+    public function canDeleteItem(): bool
+    {
+        return $this->isOwnRow();
+    }
+
+    public function canPurgeItem(): bool
+    {
+        return $this->isOwnRow();
+    }
+
 
     /**
      * @param CommonGLPI $item
@@ -154,12 +190,13 @@ class Preference extends CommonDBTM
 
         $group_choices = [];
         if ($is_central) {
-            foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1]) as $group) {
+            foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_assign' => 1] + getEntitiesRestrictCriteria(Group::getTable(), '', '', true)) as $group) {
                 $group_choices[$group['id']] = $group['name'];
             }
         }
         $requester_group_choices = [];
-        foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1]) as $group) {
+        // Groups of the entities of the session only
+        foreach ($dbu->getAllDataFromTable(Group::getTable(), ['is_requester' => 1] + getEntitiesRestrictCriteria(Group::getTable(), '', '', true)) as $group) {
             $requester_group_choices[$group['id']] = $group['name'];
         }
 
@@ -210,6 +247,17 @@ class Preference extends CommonDBTM
         if (isset($input['color_palette'])
             && !array_key_exists($input['color_palette'], $this->getPalettes())) {
             $input['color_palette'] = '';
+        }
+
+        // Same domain as ajax/editGrid.php and ajax/dragGrid.php: the profile-wide mode 2 needs
+        // the configuration right
+        foreach (['edit_mode', 'drag_mode'] as $mode) {
+            if (isset($input[$mode])) {
+                $input[$mode] = in_array((int) $input[$mode], [0, 1, 2], true) ? (int) $input[$mode] : 0;
+                if ($input[$mode] === 2 && !Session::haveRight(Config::$rightname, CREATE)) {
+                    $input[$mode] = 1;
+                }
+            }
         }
 
         return $input;

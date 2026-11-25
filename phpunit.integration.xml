@@ -2,6 +2,7 @@
    <testsuites>
       <testsuite name="Integration">
          <file>tests/WidgetloadTest.php</file>
+         <file>tests/SecurityFixesTest.php</file>
       </testsuite>
    </testsuites>
 </phpunit>

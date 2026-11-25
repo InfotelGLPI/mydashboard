@@ -172,9 +172,11 @@ class ProjectTask extends CommonGLPI
         switch ($status) {
             case "process": // on affiche les projets assignés au user
 
-                $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
+                // Two OR blocks: appended, a "+" kept the first one only (the finished tasks were
+                // listed)
+                $criteria['WHERE'][] = $search_assign;
 
-                $criteria['WHERE'] = $criteria['WHERE'] + [
+                $criteria['WHERE'][] = [
                     'OR' => [
                         ['glpi_projectstates.is_finished' => 0],
                         ['glpi_projecttasks.projectstates_id' => 0],

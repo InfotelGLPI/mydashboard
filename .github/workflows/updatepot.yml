@@ -5,31 +5,40 @@ on:
     paths-ignore:
       - 'locales/**'
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Read only by default: only the job below writes, to push the updated template
+permissions:
+  contents: read
+
 jobs:
   run:
-    
+
     name: Update POT
-    
+
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      # Pinned by its commit (Dependabot proposes the updates)
       - name: Checkout repo
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: install xgettext
-        
+
         run: sudo apt-get install gettext;
       - name: Update POT
         run: sh tools/extract_template.sh;
 
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v11
-        with:
-          message: "Update POT"
-
-      - name: Push changes
-        uses: actions-go/push@master
-        with:
-          commit-message: ''
-  
+      # Plain git: no third-party action in the job that holds the write token
+      - name: Commit and push changes
+        env:
+          GIT_AUTHOR: ${{ github.actor }}
+        run: |
+          git config user.name "$GIT_AUTHOR"
+          git config user.email "$GIT_AUTHOR@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Update POT"
+            git push
+          fi

@@ -96,12 +96,33 @@ class Config extends CommonDBTM
     {
         foreach (['impact_1', 'impact_2', 'impact_3', 'impact_4', 'impact_5'] as $field) {
             if (isset($input[$field])
-                && !preg_match('/^#[0-9a-fA-F]{3,8}$/', (string) $input[$field])) {
+                && !self::isColor((string) $input[$field])) {
                 // Drop the malformed value so the stored (safe) color is kept unchanged.
                 unset($input[$field]);
             }
         }
         return $input;
+    }
+
+    public function prepareInputForAdd($input)
+    {
+        return $this->prepareInputForUpdate($input);
+    }
+
+    private static function isColor(string $value): bool
+    {
+        return preg_match('/^#[0-9a-fA-F]{3,8}$/', $value) === 1;
+    }
+
+    /**
+     * Color of an impact level, checked when it is read too: it is printed in style attributes,
+     * and a row written by another path than the configuration form is not trusted
+     */
+    public function getImpactColor(int $impact): string
+    {
+        $color = (string) $this->getField('impact_' . $impact);
+
+        return self::isColor($color) ? $color : '';
     }
 
     /**

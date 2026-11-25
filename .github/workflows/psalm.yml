@@ -27,12 +27,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Psalm Security Scan
-        uses: psalm/psalm-github-security-scan@1.4.0
+        uses: psalm/psalm-github-security-scan@9ec1b5e2b854b3f048fa32e8c4aaa9ae05d77345 # 1.4.0
 
       - name: Upload Security Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v4.38.2
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
         with:
           sarif_file: results.sarif

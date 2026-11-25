@@ -31,6 +31,7 @@ namespace GlpiPlugin\Mydashboard\Reports;
 
 use CommonGLPI;
 use Dropdown;
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Mydashboard\Datatable;
 use GlpiPlugin\Mydashboard\Helper;
 use GlpiPlugin\Mydashboard\Menu;
@@ -143,7 +144,9 @@ class Project extends CommonGLPI
 
 
         if ($showgroupprojects) {
-            $search_assign = [];
+            // Projects of the groups of the user: none without a group (an empty filter used to
+            // list every project of the active entities)
+            $search_assign = [new QueryExpression('false')];
 
             if (count($_SESSION['glpigroups'])) {
 
@@ -179,9 +182,11 @@ class Project extends CommonGLPI
         switch ($status) {
             case "process": // on affiche les projets assignés au user
 
-                $criteria['WHERE'] = $criteria['WHERE'] + $search_assign;
+                // Two OR blocks: appended, a "+" kept the first one only (the finished projects
+                // were listed)
+                $criteria['WHERE'][] = $search_assign;
 
-                $criteria['WHERE'] = $criteria['WHERE'] + [ 'OR' => [
+                $criteria['WHERE'][] = [ 'OR' => [
                     ['glpi_projectstates.is_finished' => 0],
                     ['glpi_projects.projectstates_id' => 0],
                 ],
@@ -193,7 +198,15 @@ class Project extends CommonGLPI
                 break;
         }
 
-        $iterator = $DB->request($criteria);
+        // Only the projects the user may read: with READMY, those they are an actor of, as in the
+        // lists of the core
+        $iterator = [];
+        $readable = new \Project();
+        foreach ($DB->request($criteria) as $data) {
+            if ($readable->can((int) $data['id'], READ)) {
+                $iterator[] = $data;
+            }
+        }
         $numrows = count($iterator);
 
         if ($numrows > 0) {

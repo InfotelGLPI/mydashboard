@@ -65,6 +65,11 @@ class KnowbaseItem extends CommonGLPI
      */
     public function getWidgetsForItem()
     {
+        // The knowledge base right (READ or READFAQ) of the core
+        if (!\KnowbaseItem::canView()) {
+            return [];
+        }
+
         $widgets = [
             Menu::$TOOLS => [
                 "knowbaseitempopular" => [
@@ -149,7 +154,22 @@ class KnowbaseItem extends CommonGLPI
         }
 
 
-        $iterator = $DB->request($criteria);
+        // Only the articles the user may read, as the core decides it (right, FAQ only in the
+        // simplified interface, targets, publication dates): checked again here, the list of
+        // the widgets of the session being cached
+        $iterator = [];
+        if (\KnowbaseItem::canView()) {
+            $knowbaseitem = new \KnowbaseItem();
+            $criteria['LIMIT'] = 50;
+            foreach ($DB->request($criteria) as $row) {
+                if ($knowbaseitem->can((int) $row['id'], READ)) {
+                    $iterator[] = $row;
+                }
+                if (count($iterator) >= 10) {
+                    break;
+                }
+            }
+        }
 
         $tab = [];
         $nb = count($iterator);

@@ -320,8 +320,22 @@ class Alert extends CommonDBTM
                 $widgets[Menu::$SYSTEM][$this->getType() . "9"],
             );
         }
+        // Widget "7" lists tickets: only for a profile that may read tickets
+        if (!self::canReadTickets()) {
+            foreach ($widgets as $section => $section_widgets) {
+                unset($widgets[$section][$this->getType() . "7"]);
+            }
+        }
 
         return $widgets;
+    }
+
+    /**
+     * Whether the profile may read tickets at all (the rows are then checked one by one)
+     */
+    private static function canReadTickets(): bool
+    {
+        return Session::haveRightsOr(\Ticket::$rightname, [\Ticket::READMY, \Ticket::READALL, \Ticket::READGROUP, \Ticket::READASSIGN]);
     }
 
     /**
@@ -579,6 +593,10 @@ class Alert extends CommonDBTM
                 break;
 
             case $this->getType() . "7":
+                // Checked again: the list of the widgets of the session is cached
+                if (!self::canReadTickets()) {
+                    return new MydashboardHtml();
+                }
 
                 $link_ticket = Toolbox::getItemTypeFormURL("Ticket");
 
@@ -636,8 +654,11 @@ class Alert extends CommonDBTM
                 if (count($iterator) > 0) {
                     $i = 0;
                     foreach ($iterator as $data) {
+                        // Only the tickets the user may read, as in the lists of the core
                         $ticket = new \Ticket();
-                        $ticket->getFromDB($data['tickets_id']);
+                        if (!$ticket->can((int) $data['tickets_id'], READ)) {
+                            continue;
+                        }
 
                         $users_requesters = [];
                         $requester_names = [];
@@ -975,19 +996,29 @@ class Alert extends CommonDBTM
                 ];
                 $table = Helper::getGraphHeader($params);
 
+                // The stock widgets of the entities of the session only, for the itemtypes the
+                // user may see
                 $stockwidget = new StockWidget();
-                $stocks = $stockwidget->find();
+                $stocks = $stockwidget->find(getEntitiesRestrictCriteria(StockWidget::getTable(), '', '', true));
                 $stock_tiles = [];
-                $types = [];
-                $states = [];
                 if (count($stocks) > 0) {
                     $nb = 0;
                     foreach ($stocks as $data) {
-                        $nb++;
+                        // The filters of a widget are its own: never those of the previous one
+                        $types = [];
+                        $states = [];
                         $alarm = $data['alarm_threshold'];
                         $stock = 0;
                         $color = "olivedrab";
                         $itemtype = $data['itemtype'];
+                        if (
+                            !in_array($itemtype, $CFG_GLPI['state_types'] ?? [], true)
+                            || !is_a($itemtype, \CommonDBTM::class, true)
+                            || !$itemtype::canView()
+                        ) {
+                            continue;
+                        }
+                        $nb++;
                         if ($item = getItemForItemtype($itemtype)) {
                             $itemtable = getTableForItemType($itemtype);
                             $typefield = $dbu->getForeignKeyFieldForTable(
@@ -2567,7 +2598,7 @@ class Alert extends CommonDBTM
             if ($alert->fields['type'] == 0 && $alert->fields['impact'] > 0) {
                 // impact_* colors only ever hold a CSS hex value (validated in
                 // Config::prepareInputForUpdate); the template escapes it anyway.
-                $color = (string) $config->getField('impact_' . $alert->fields['impact']);
+                $color = $config->getImpactColor((int) $alert->fields['impact']);
             }
 
             $document_links = [];
@@ -2799,7 +2830,7 @@ class Alert extends CommonDBTM
 
             // impact_* colors are stored raw; they only ever hold a CSS hex value
             // (validated in Config::prepareInputForUpdate).
-            $impact_color = $config->getField('impact_' . $row['impact']);
+            $impact_color = $config->getImpactColor((int) $row['impact']);
 
             if ($items === []) {
                 // Reminder text is rich HTML stored raw: sanitize it, the template wraps it
@@ -2986,14 +3017,14 @@ class Alert extends CommonDBTM
                     ? \Reminder::getFormURLWithID((int) $listitem['id'])
                     : null,
                 // impact_* colors are stored raw; the template escapes them.
-                'color' => (string) $config->getField("impact_" . $listitem['impact']),
+                'color' => $config->getImpactColor((int) $listitem['impact']),
             ];
         }
 
         return [
             'title' => Config::getTranslatedField($config, 'title_alerts_widget'),
             'icon_class' => "plugin_mydashboard_fa-thermometer-" . ($impact - 1),
-            'color' => (string) $config->getField('impact_' . $impact),
+            'color' => $config->getImpactColor((int) $impact),
             'items' => $items,
         ];
     }

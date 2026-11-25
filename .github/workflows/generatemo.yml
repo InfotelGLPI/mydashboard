@@ -4,34 +4,44 @@ on:
     branches: [ master ]
     paths:
     - '**.po'
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-jobs: 
+
+# Read only by default: only the job below writes, to push the compiled .mo files
+permissions:
+  contents: read
+
+jobs:
   run:
-    
+
     name: Generate mo
     runs-on: ubuntu-latest
-    steps: 
+    permissions:
+      contents: write
+    steps:
+    # Every action is pinned by its commit: a moved tag or branch upstream cannot change the
+    # code that runs with the write token (Dependabot proposes the updates)
     - name: Checkout repo
-      uses: actions/checkout@v7
-      
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
     - name: Setup Perl environment
-      # You may pin to the exact commit or the version.
-      # uses: shogo82148/actions-setup-perl@8d2e3d59a9516b785ed32169d48a4888eaa9b514
-      uses: shogo82148/actions-setup-perl@v1.44.0
+      uses: shogo82148/actions-setup-perl@ac3202722f5744e62a8fa3af3e1aaaebb08861f3 # v1.44.0
+
     - name: msgfmt
-      # You may pin to the exact commit or the version.
-      # uses: whtsky/msgfmt-action@6b2181f051b002182d01a1e1f1aff216230c5a4d
-      uses: whtsky/msgfmt-action@20190305
+      uses: whtsky/msgfmt-action@6b2181f051b002182d01a1e1f1aff216230c5a4d # 20190305
+
     - name: Generate mo
       run:  perl tools/update_mo.pl;
 
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v11
-      with:
-       
-        message: "Generate mo"
-    - name: Push changes
- 
-      uses: actions-go/push@master
-  
+    # Plain git: no third-party action in the job that holds the write token
+    - name: Commit and push changes
+      env:
+        GIT_AUTHOR: ${{ github.actor }}
+      run: |
+        git config user.name "$GIT_AUTHOR"
+        git config user.email "$GIT_AUTHOR@users.noreply.github.com"
+        git add -A
+        if git diff --cached --quiet; then
+          echo "Nothing to commit"
+        else
+          git commit -m "Generate mo"
+          git push
+        fi
